@@ -21,13 +21,13 @@ namespace Engine
         }
     }
 
-    bool RECHARGE_SPELL(Party::Base &party, Spells::Base &spell)
+    bool RECHARGE_SPELL(Party::Base &party, Spells::Base *spell)
     {
         auto result = false;
 
-        if (party.Money >= spell.Recharge)
+        if (party.Money >= spell->Recharge)
         {
-            Engine::GAIN_MONEY(party, -spell.Recharge);
+            Engine::GAIN_MONEY(party, -spell->Recharge);
 
             result = true;
         }
