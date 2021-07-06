@@ -41,7 +41,8 @@ namespace Control
         YES,
         NO,
         BUY,
-        SELL
+        SELL,
+        COMBAT
     };
 
     class Base

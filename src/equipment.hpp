@@ -9,6 +9,7 @@ namespace Equipment
     {
         NONE = -1,
         NORMAL,
+        WEAPON,
         ARMOUR,
         SHIELD
     };

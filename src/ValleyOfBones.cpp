@@ -573,6 +573,18 @@ SDL_Surface *createHeaderButton(SDL_Window *window, const char *text, SDL_Color 
     return button;
 }
 
+void clipValue(int &val, int min, int max)
+{
+    if (val < min)
+    {
+        val = min;
+    }
+    if (val > max)
+    {
+        val = max;
+    }
+}
+
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
 {
     auto splashLogo = "images/legendary-kingdoms.png";
@@ -991,6 +1003,195 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     return false;
 }
 
+bool mapScreen(SDL_Window *window, SDL_Renderer *renderer)
+{
+    auto done = false;
+
+    auto map_valley = createImage("images/valley-of-bones-map-bw.png");
+    auto map_kingdom = createImage("images/legendary-kingdoms-map-small.png");
+
+    auto texture_valley = SDL_CreateTextureFromSurface(renderer, map_valley);
+    auto texture_kingdom = SDL_CreateTextureFromSurface(renderer, map_kingdom);
+
+    auto current_map = 1;
+
+    // Render the image
+    if (window && renderer && map_valley && map_kingdom)
+    {
+        auto selected = false;
+        auto current = -1;
+
+        auto marginw = (1.0 - 2.0 * Margin) * SCREEN_WIDTH;
+
+        auto controls = std::vector<Button>();
+        controls.push_back(Button(0, "icons/map.png", 0, 1, 0, 0, startx, buttony, Control::Type::MAP));
+        controls.push_back(Button(1, "icons/back-button.png", 0, 1, 1, 1, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
+
+        auto offset_x = 0;
+        auto offset_y = 0;
+
+        while (!done)
+        {
+            if (current_map == 1)
+            {
+                SDL_SetWindowTitle(window, "Map: The Valley of Bones");
+            }
+            else
+            {
+                SDL_SetWindowTitle(window, "Map: Legendary Kingdoms");
+            }
+
+            if (current_map == 1)
+            {
+                offset_x = (marginw - (double)text_bounds / map_valley->h * map_valley->w) / 2;
+                offset_y = ((SCREEN_HEIGHT) - (double)text_bounds / map_valley->h * map_valley->h) / 2;
+            }
+            else
+            {
+                offset_x = (marginw - (double)text_bounds / map_kingdom->h * map_kingdom->w) / 2;
+                offset_y = ((SCREEN_HEIGHT) - (double)text_bounds / map_kingdom->h * map_kingdom->h) / 2;
+            }
+
+            // Fill the surface with background color
+            fillWindow(renderer, intWH);
+
+            if (current_map == 1)
+            {
+                fitImage(renderer, map_valley, startx + offset_x, offset_y, marginw, text_bounds);
+            }
+            else
+            {
+                fitImage(renderer, map_kingdom, startx + offset_x, offset_y, marginw, text_bounds);
+            }
+
+            renderButtons(renderer, controls, current, intLB, 8, 4);
+
+            bool scrollUp = false;
+            bool scrollDown = false;
+            bool hold = false;
+
+            if (map_valley && map_kingdom)
+            {
+                auto mousex = 0;
+                auto mousey = 0;
+
+                auto state = SDL_GetMouseState(&mousex, &mousey);
+
+                auto zoomw = (int)(0.40 * (double)(marginw - 2 * offset_x));
+                auto zoomh = (int)(0.40 * (double)text_bounds);
+
+                if (zoomw > zoomh)
+                {
+                    zoomw = zoomh;
+                }
+                else
+                {
+                    zoomh = zoomw;
+                }
+
+                if (current_map == 1)
+                {
+                    clipValue(zoomw, 0, map_valley->w);
+                    clipValue(zoomh, 0, map_valley->h);
+                }
+                else
+                {
+                    clipValue(zoomw, 0, map_kingdom->w);
+                    clipValue(zoomh, 0, map_kingdom->h);
+                }
+
+                auto boundx = startx + offset_x + marginw;
+
+                if (current_map == 1)
+                {
+                    boundx = (int)((double)text_bounds / map_valley->h * (double)map_valley->w);
+                }
+                else
+                {
+                    boundx = (int)((double)text_bounds / map_kingdom->h * (double)map_kingdom->w);
+                }
+
+                if ((mousex >= startx + offset_x) && mousex <= (startx + offset_x + boundx) && mousey >= offset_y && mousey <= (offset_y + text_bounds))
+                {
+                    auto scalex = (double)(mousex - (startx + offset_x)) / boundx;
+                    auto scaley = (double)(mousey - offset_y) / text_bounds;
+
+                    auto centerx = (int)(scalex * (double)map_kingdom->w);
+                    auto centery = (int)(scaley * (double)map_kingdom->h);
+
+                    clipValue(centerx, zoomw / 2, map_kingdom->w - zoomw / 2);
+                    clipValue(centery, zoomh / 2, map_kingdom->h - zoomh / 2);
+
+                    if (current_map == 1)
+                    {
+                        centerx = (int)(scalex * (double)map_valley->w);
+                        centery = (int)(scaley * (double)map_valley->h);
+
+                        clipValue(centerx, zoomw / 2, map_valley->w - zoomw / 2);
+                        clipValue(centery, zoomh / 2, map_valley->h - zoomh / 2);
+                    }
+
+                    if ((current_map == 1 && texture_valley) || (current_map == 0 && texture_kingdom))
+                    {
+                        SDL_Rect src;
+
+                        src.w = zoomw;
+                        src.h = zoomh;
+                        src.x = centerx - zoomw / 2;
+                        src.y = centery - zoomh / 2;
+
+                        SDL_Rect dst;
+
+                        dst.w = zoomw;
+                        dst.h = zoomh;
+                        dst.x = mousex + buttonw / 4;
+                        dst.y = mousey - (buttonh / 4 + zoomh);
+
+                        clipValue(dst.x, buttonw / 4, SCREEN_WIDTH - buttonw / 4 - zoomw);
+                        clipValue(dst.y, buttonh / 4, SCREEN_HEIGHT - buttonh / 4 - zoomh);
+
+                        if (current_map == 1)
+                        {
+                            SDL_RenderCopy(renderer, texture_valley, &src, &dst);
+                        }
+                        else
+                        {
+                            SDL_RenderCopy(renderer, texture_kingdom, &src, &dst);
+                        }
+
+                        drawRect(renderer, dst.w, dst.h, dst.x, dst.y, intBK);
+                    }
+                }
+            }
+
+            done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if (selected && current >= 0 && current < controls.size() && controls[current].Type == Control::Type::BACK)
+            {
+                break;
+            }
+            else if (selected && current >= 0 && current < controls.size() && controls[current].Type == Control::Type::MAP)
+            {
+                current_map = 1 - current_map;
+            }
+        }
+
+        SDL_FreeSurface(map_valley);
+        SDL_FreeSurface(map_kingdom);
+
+        SDL_DestroyTexture(texture_valley);
+        SDL_DestroyTexture(texture_kingdom);
+
+        map_valley = NULL;
+        map_kingdom = NULL;
+
+        texture_valley = NULL;
+        texture_kingdom = NULL;
+    }
+
+    return done;
+}
+
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 {
     auto font_size = 20;
@@ -1111,6 +1312,122 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
     return false;
 }
 
+bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
+{
+    auto font_size = 20;
+    auto text_space = 8;
+
+    auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.";
+
+    auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, textwidth - 2 * text_space);
+
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones";
+
+    auto splash = createImage("images/legendary-kingdoms-logo.png");
+
+    // Render window
+    if (window && renderer && text && splash)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        const char *choices[3] = {"COMBAT", "MAP", "EXIT"};
+
+        auto current = -1;
+
+        auto selected = false;
+
+        auto main_buttonh = 48;
+
+        auto controls = createHTextButtons(choices, 3, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+
+        controls[0].Type = Control::Type::COMBAT;
+        controls[1].Type = Control::Type::MAP;
+        controls[2].Type = Control::Type::QUIT;
+
+        auto done = false;
+
+        auto text_space = 8;
+
+        auto Party = Party::Base();
+
+        while (!done)
+        {
+            // Fill the surface with background
+            fillWindow(renderer, intWH);
+
+            fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+
+            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+            renderText(renderer, text, intBK, startx * 2 + splashw + text_space, starty + text_space, SCREEN_HEIGHT * (1.0 - 2 * Margin) - 2 * text_space, 0);
+
+            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+
+            bool scrollUp = false;
+            bool scrollDown = false;
+            bool hold = false;
+
+            Control::Type result;
+
+            done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if (selected && current >= 0 && current < controls.size())
+            {
+                switch (controls[current].Type)
+                {
+                case Control::Type::COMBAT:
+
+                    done = selectParty(window, renderer, Book::Type::BOOK1, Party);
+
+                    current = -1;
+
+                    selected = false;
+
+                    storyID = 0;
+
+                    break;
+
+                case Control::Type::QUIT:
+
+                    done = true;
+
+                    break;
+
+                case Control::Type::MAP:
+
+                    mapScreen(window, renderer);
+
+                    done = false;
+
+                    current = -1;
+
+                    selected = false;
+
+                    break;
+
+                default:
+
+                    selected = false;
+
+                    done = false;
+
+                    break;
+                }
+            }
+
+            SDL_SetWindowTitle(window, title);
+        }
+
+        SDL_FreeSurface(splash);
+        SDL_FreeSurface(text);
+
+        splash = NULL;
+        text = NULL;
+    }
+
+    return false;
+}
+
 int main(int argc, char **argv)
 {
     SDL_Window *window = NULL;
@@ -1135,9 +1452,11 @@ int main(int argc, char **argv)
 
     if (window && renderer)
     {
-        introScreen(window, renderer);
+        //introScreen(window, renderer);
 
-        mainScreen(window, renderer, storyID);
+        //mainScreen(window, renderer, storyID);
+
+        testScreen(window, renderer, storyID);
 
         // Destroy window and renderer
 
