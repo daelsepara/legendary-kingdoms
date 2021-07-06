@@ -624,6 +624,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
 
+    auto box_space = 10;
     auto character_box = (int)(text_bounds * 2 / 3);
 
     // Render window
@@ -743,7 +744,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                     }
                 }
 
-                putText(renderer, party_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh, textx, starty + text_bounds + infoh - (text_bounds - character_box));
+                putText(renderer, party_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
             }
 
             if (Engine::FIND_LIST(selection, character) >= 0)
