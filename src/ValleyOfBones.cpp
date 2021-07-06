@@ -41,6 +41,9 @@ namespace fs = std::filesystem;
 // Forward declarations
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID);
+bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID);
+
+Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, bool useEquipment);
 
 SDL_Surface *createImage(const char *image)
 {
@@ -626,11 +629,25 @@ bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
     return false;
 }
 
-std::string characterText(Character::Base character)
+std::string characterText(Character::Base character, bool compact)
 {
-    std::string character_text = character.Background;
+    std::string character_text = "";
 
-    character_text += "\n\nATTRIBUTES: ";
+    if (!compact)
+    {
+        character_text = character.Background;
+    }
+    else
+    {
+        character_text = character.Name;
+    }
+
+    if (!compact)
+    {
+        character_text += "\n";
+    }
+
+    character_text += "\nATTRIBUTES: ";
 
     for (auto i = 0; i < character.Attributes.size(); i++)
     {
@@ -642,9 +659,19 @@ std::string characterText(Character::Base character)
         character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": " + std::to_string(character.Attributes[i].Value);
     }
 
-    if (character.SpellCaster)
+    if (!compact)
     {
-        character_text += "\n\nSpellcaster";
+        if (character.SpellCaster)
+        {
+            character_text += "\n\nSpellcaster";
+        }
+    }
+    else
+    {
+        if (character.SpellCaster)
+        {
+            character_text += ", Spellcaster";
+        }
     }
 
     return character_text;
@@ -742,7 +769,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                 text = NULL;
             }
 
-            text = createText(characterText(characters[character]).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
         }
 
         while (!done)
@@ -849,7 +876,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             text = NULL;
                         }
 
-                        text = createText(characterText(characters[character]).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
                     }
 
                     break;
@@ -905,7 +932,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             text = NULL;
                         }
 
-                        text = createText(characterText(characters[character]).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
                     }
 
                     break;
@@ -1258,17 +1285,320 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
     return controls;
 }
 
-Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, bool useEquipment)
+std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> party, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button)
 {
-    auto combatResult = Engine::CombatResult::NONE;
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (party.size() > 0)
+    {
+        for (int i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto adventurer = party[index];
+
+            std::string adventurer_string = characterText(adventurer, true);
+
+            auto button = createHeaderButton(window, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, 0.125 * SCREEN_HEIGHT, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), ((i < (last - start) - 1) ? i + 1 : ((back_button || confirm_button) ? i + 1 : i)), offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (party.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (party.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    if (confirm_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/yes.png", idx, back_button ? idx + 1 : idx, party.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+    }
+
+    if (back_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/back-button.png", confirm_button ? idx - 1 : idx, idx, party.size() > 0 ? (last - start) - 1 : idx, idx, (1.0 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
+    }
+
+    return controls;
+}
+
+int selectCombatant(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
+{
+    auto result = -1;
+
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Combatant";
 
     if (window && renderer)
     {
+        SDL_SetWindowTitle(window, title);
+
         auto flash_message = false;
 
         auto flash_color = intRD;
 
         const char *message = NULL;
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 5000;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        auto main_buttonh = 48;
+
+        auto font_size = 20;
+        auto text_space = 8;
+        auto messageh = 0.25 * SCREEN_HEIGHT;
+        auto infoh = 0.07 * SCREEN_HEIGHT;
+        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto last = offset + limit;
+
+        if (last > party.Party.size())
+        {
+            last = party.Party.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, true);
+
+        auto done = false;
+
+        int selection = -1;
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                for (auto i = offset; i < last; i++)
+                {
+                    auto index = i - offset;
+
+                    if (index >= 0 && index < party.Party.size())
+                    {
+                        if (selection == index)
+                        {
+                            for (auto size = 4; size >= 0; size--)
+                            {
+                                auto w = controls[index].W + 2 * (8 - size);
+                                auto h = controls[index].H + 2 * (8 - size);
+                                auto x = controls[index].X - 8 + size;
+                                auto y = controls[index].Y - 8 + size;
+
+                                drawRect(renderer, w, h, x, y, intDB);
+                            }
+                        }
+                        else if (party.Party[index].Health > 0)
+                        {
+                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intRD);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, 4);
+
+                putHeader(renderer, "Select Combatant", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                putText(renderer, "Combatant", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (selection >= 0 && selection < party.Party.size())
+                {
+                    if (party.Party[selection].Health > 0)
+                    {
+                        putText(renderer, party.Party[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    }
+                    else
+                    {
+                        fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                    }
+                }
+                else
+                {
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putText(renderer, message, font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (selected && current >= 0 && current < controls.size())
+                {
+                    if (controls[current].Type == Control::Type::BACK)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (selection >= 0 && selection < party.Party.size())
+                        {
+                            done = true;
+
+                            result = selection;
+
+                            current = -1;
+
+                            selected = false;
+                        }
+                        else
+                        {
+                            flash_message = true;
+
+                            message = "You must select an adventurer who will attack this round.";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intRD;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION)
+                    {
+                        if (current + offset >= 0 && current + offset < party.Party.size())
+                        {
+                            if (selection == offset + current)
+                            {
+                                selection = -1;
+                            }
+                            else
+                            {
+                                selection = offset + current;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (done)
+            {
+                break;
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    return result;
+}
+
+Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, bool useEquipment)
+{
+    auto combatResult = Engine::CombatResult::NONE;
+
+    auto title = "Legendary Kindoms 1 - The Valley of Bones: Combat";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
 
         Uint32 start_ticks = 0;
 
@@ -1311,6 +1641,8 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
         auto monster_list = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, false);
+
+        auto hasAttacked = std::vector<int>();
 
         while (Engine::COUNT(monsters) > 0 || Engine::COUNT(party.Party) > 0)
         {
@@ -1378,6 +1710,13 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
                         {
                             party_string += " (-)";
                         }
+                        else
+                        {
+                            if (Engine::FIND_LIST(hasAttacked, i) >= 0)
+                            {
+                                party_string += " (*)";
+                            }
+                        }
 
                         count++;
                     }
@@ -1395,7 +1734,7 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message, font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, messageh, startx, starty);
+                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, messageh, startx, starty);
                     }
                     else
                     {
@@ -1425,6 +1764,52 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
 
                             flash_color = intRD;
                         }
+                    }
+                    else if (controls[current].Type == Control::Type::ATTACK)
+                    {
+                        auto result = selectCombatant(window, renderer, party);
+
+                        if (Engine::FIND_LIST(hasAttacked, result) >= 0)
+                        {
+                            flash_message = true;
+
+                            message = std::string(party.Party[result].Name) + " already attacked this round.";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intRD;
+                        }
+                        else
+                        {
+                            hasAttacked.push_back(result);
+
+                            flash_message = true;
+
+                            message = "TODO: " + std::string(party.Party[result].Name) + " attacks!";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intLB;
+                        }
+
+                        if (hasAttacked.size() >= Engine::COUNT(party.Party))
+                        {
+                            flash_message = true;
+
+                            message = "TODO: Opponents attack your party.";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intLB;
+
+                            hasAttacked.clear();
+                        }
+
+                        done = false;
+
+                        current = -1;
+
+                        selected = false;
                     }
                 }
             }
@@ -1601,7 +1986,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, textwidth - 2 * text_space);
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones";
+    auto title = "Debug";
 
     auto splash = createImage("images/legendary-kingdoms-logo.png");
 
