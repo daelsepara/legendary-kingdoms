@@ -17,6 +17,7 @@ namespace Control
         SCROLL_DOWN,
         MAP,
         CHARACTER,
+        PARTY,
         GAME,
         NEW,
         CUSTOM,
@@ -42,7 +43,10 @@ namespace Control
         NO,
         BUY,
         SELL,
-        COMBAT
+        COMBAT,
+        ATTACK,
+        SPELL,
+        FLEE
     };
 
     class Base

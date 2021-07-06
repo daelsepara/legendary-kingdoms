@@ -9,6 +9,14 @@
 
 namespace Engine
 {
+    enum class CombatResult
+    {
+        NONE,
+        VICTORY,
+        DOOM,
+        FLEE
+    };
+
     const char *CURRENCY = "silver";
 
     Party::Base Party = Party::Base();
@@ -22,6 +30,31 @@ namespace Engine
         if (party.Money < 0)
         {
             party.Money = 0;
+        }
+    }
+
+    void GAIN_HEALTH(Character::Base &character, int health)
+    {
+        character.Health += health;
+
+        if (character.Health < 0)
+        {
+            character.Health = 0;
+        }
+
+        if (character.Health > character.MaximumHealth)
+        {
+            character.Health = character.MaximumHealth;
+        }
+    }
+
+    void GAIN_HEALTH(Monster::Base &monster, int health)
+    {
+        monster.Health += health;
+
+        if (monster.Health < 0)
+        {
+            monster.Health = 0;
         }
     }
 
