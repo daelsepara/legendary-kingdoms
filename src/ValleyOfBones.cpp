@@ -1007,7 +1007,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer)
 {
     auto done = false;
 
-    auto map_valley = createImage("images/valley-of-bones-map-bw.png");
+    auto map_valley = createImage("images/valley-of-bones-map.png");
     auto map_kingdom = createImage("images/legendary-kingdoms-map-small.png");
 
     auto texture_valley = SDL_CreateTextureFromSurface(renderer, map_valley);
