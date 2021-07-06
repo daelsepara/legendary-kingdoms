@@ -99,14 +99,6 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
 
             surface = NULL;
         }
-
-        SDL_SetRenderDrawColor(*renderer, 0, 0, 0, 255);
-        SDL_RenderClear(*renderer);
-        SDL_RenderPresent(*renderer);
-
-        SDL_SetRenderDrawColor(*renderer, 0, 0, 0, 255);
-        SDL_RenderClear(*renderer);
-        SDL_RenderPresent(*renderer);
     }
 }
 
@@ -431,7 +423,14 @@ void renderTextButtons(SDL_Renderer *renderer, std::vector<TextButton> controls,
 
             SDL_RenderFillRect(renderer, &rect);
 
-            renderText(renderer, text, bg, x, y, 2 * fontsize, 0);
+            if (i == selected)
+            {
+                renderText(renderer, text, bgSelected, x, y, 2 * fontsize, 0);
+            }
+            else
+            {
+                renderText(renderer, text, bg, x, y, 2 * fontsize, 0);
+            }
 
             SDL_FreeSurface(text);
 
@@ -571,20 +570,129 @@ bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
 
         SDL_RenderPresent(renderer);
 
-        while (!quit)
-        {
-            fillWindow(renderer, intBK);
-
-            fitImage(renderer, splashImage, (SCREEN_WIDTH - 800) / 2, (SCREEN_HEIGHT - 350) / 2, 800, 350);
-
-            Input::WaitForNext(renderer);
-
-            quit = true;
-        }
+        SDL_Delay(3000);
 
         SDL_FreeSurface(splashImage);
 
         splashImage = NULL;
+    }
+
+    return false;
+}
+
+bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
+{
+    auto font_size = 20;
+
+    auto *introduction = "Prepare for adventure in this huge open-world gamebook series. Legendary Kingdoms is a gamebook campaign, where you lead a party of adventurers in a world that adapts to your actions. Venture into ancient ruins, pick a side and lead an army into battle, sail the high seas on your own warship, defeat tyrants or bring them to power. Along the way your party will increase in skill, wealth and renown, allowing them to take on more challenging adventures. Reach the heights of power and you may uncover a dreadful threat to the world itself and go on a mission that spans all six gamebooks in the series.\n\nBook 1: The Valley of Bones takes place in a desert wilderness where tyrant kings oppress the teeming masses in a land strewn with ancient artefacts and ruins. But their grip on power is fragile... and the citizenry are ripe for revolution. It is a land of blood and sand, where civilisation is rare and terrible beasts roam freely.";
+
+    auto splash = createImage("images/valley-of-bones-cover.png");
+
+    auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, SCREEN_WIDTH * (1.0 - 3.0 * Margin) - splashw);
+
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones";
+
+    Character::Base Player;
+
+    // Render window
+    if (window && renderer && splash && text)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        const char *choices[4] = {"New Game", "Load Game", "About", "Exit"};
+
+        auto current = -1;
+
+        auto selected = false;
+
+        auto main_buttonh = 48;
+
+        auto controls = createHTextButtons(choices, 4, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+
+        controls[0].Type = Control::Type::NEW;
+        controls[1].Type = Control::Type::LOAD;
+        controls[2].Type = Control::Type::ABOUT;
+        controls[3].Type = Control::Type::QUIT;
+
+        auto done = false;
+
+        auto text_space = 8;
+
+        while (!done)
+        {
+            // Fill the surface with background
+            fillWindow(renderer, intWH);
+
+            fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+
+            fillRect(renderer, text->w + 2 * text_space, text->h + 2 * text_space, startx * 2 + splashw, texty, intWH);
+
+            renderText(renderer, text, intBK, startx * 2 + splashw + text_space, starty + text_space, SCREEN_HEIGHT * (1.0 - 2 * Margin) - 2 * text_space, 0);
+
+            renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+
+            bool scrollUp = false;
+            bool scrollDown = false;
+            bool hold = false;
+
+            Control::Type result;
+
+            done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if (selected && current >= 0 && current < controls.size())
+            {
+                switch (controls[current].Type)
+                {
+                case Control::Type::NEW:
+
+                    current = -1;
+
+                    selected = false;
+
+                    storyID = 0;
+
+                    break;
+
+                case Control::Type::ABOUT:
+
+                    current = -1;
+
+                    selected = false;
+
+                    break;
+
+                case Control::Type::LOAD:
+
+                    current = -1;
+
+                    selected = false;
+
+                    break;
+
+                case Control::Type::QUIT:
+
+                    done = true;
+
+                    break;
+
+                default:
+
+                    selected = false;
+
+                    done = false;
+
+                    break;
+                }
+            }
+
+            SDL_SetWindowTitle(window, title);
+        }
+
+        SDL_FreeSurface(splash);
+        SDL_FreeSurface(text);
+
+        splash = NULL;
+        text = NULL;
     }
 
     return false;
@@ -613,6 +721,8 @@ int main(int argc, char **argv)
     if (window && renderer)
     {
         quit = introScreen(window, renderer);
+
+        quit = mainScreen(window, renderer, storyID);
 
         // Destroy window and renderer
 
