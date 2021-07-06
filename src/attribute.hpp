@@ -1,17 +1,28 @@
 #ifndef __SKILLS__HPP__
 #define __SKILLS__HPP__
 
+#include <map>
+
 namespace Attribute
 {
     enum class Type
     {
         NONE = 0,
-        FIGTING,
+        FIGHTING,
         STEALTH,
         LORE,
         SURVIVAL,
         CHARISMA,
         ARMOUR
+    };
+
+    std::map<Attribute::Type, const char*> Descriptions = {
+        {Attribute::Type::FIGHTING, "Fighting"},
+        {Attribute::Type::STEALTH, "Stealth"},
+        {Attribute::Type::LORE, "Lore"},
+        {Attribute::Type::SURVIVAL, "Survival"},
+        {Attribute::Type::CHARISMA, "Charisma"},
+        {Attribute::Type::ARMOUR, "Armour"},
     };
 
     class Base

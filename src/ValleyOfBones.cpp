@@ -38,6 +38,10 @@ namespace fs = std::filesystem;
 #include "engine.hpp"
 #include "input.hpp"
 
+// Forward declarations
+bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
+bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID);
+
 SDL_Surface *createImage(const char *image)
 {
     // Load splash image
@@ -580,6 +584,367 @@ bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
     return false;
 }
 
+std::string characterText(Character::Base character)
+{
+    std::string character_text = character.Background;
+
+    character_text += "\n\nATTRIBUTES: ";
+
+    for (auto i = 0; i < character.Attributes.size(); i++)
+    {
+        if (i > 0)
+        {
+            character_text += ", ";
+        }
+
+        character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": " + std::to_string(character.Attributes[i].Value);
+    }
+
+    if (character.SpellCaster)
+    {
+        character_text += "\n\nSpellcaster";
+    }
+
+    return character_text;
+};
+
+bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party)
+{
+    SDL_Surface *adventurer = NULL;
+    SDL_Surface *text = NULL;
+
+    auto *title = "Select adventurers for your party";
+
+    auto font_size = 20;
+    auto garamond_size = 24;
+
+    TTF_Init();
+
+    auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+    auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
+
+    auto character_box = (int)(text_bounds * 2 / 3);
+
+    // Render window
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        const char *choices_add[6] = {"PREVIOUS", "NEXT", "ADD TO PARTY", "START", "BACK"};
+        const char *choices_del[6] = {"PREVIOUS", "NEXT", "REMOVE", "START", "BACK"};
+
+        auto current = -1;
+
+        auto selected = false;
+
+        auto main_buttonh = 0.06 * SCREEN_HEIGHT;
+
+        auto infoh = 0.07 * SCREEN_HEIGHT;
+
+        auto controls_add = createHTextButtons(choices_add, 5, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+        auto controls_del = createHTextButtons(choices_del, 5, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+
+        controls_add[0].Type = Control::Type::BACK;
+        controls_add[1].Type = Control::Type::NEXT;
+        controls_add[2].Type = Control::Type::PLUS;
+        controls_add[3].Type = Control::Type::NEW;
+        controls_add[4].Type = Control::Type::QUIT;
+
+        controls_del[0].Type = Control::Type::BACK;
+        controls_del[1].Type = Control::Type::NEXT;
+        controls_del[2].Type = Control::Type::MINUS;
+        controls_del[3].Type = Control::Type::NEW;
+        controls_del[4].Type = Control::Type::QUIT;
+
+        std::vector<TextButton> *controls;
+
+        auto done = false;
+
+        auto text_space = 8;
+
+        auto Party = Party::Base();
+
+        std::vector<Character::Base> characters = std::vector<Character::Base>();
+
+        if (bookID == Book::Type::BOOK1)
+        {
+            characters = Character::BOOK1;
+        }
+
+        auto selection = std::vector<int>();
+
+        auto character = 0;
+
+        if (character >= 0 && character < characters.size())
+        {
+            if (characters[character].Image != NULL)
+            {
+                if (adventurer != NULL)
+                {
+                    SDL_FreeSurface(adventurer);
+
+                    adventurer = NULL;
+                }
+
+                adventurer = createImage(characters[character].Image);
+            }
+
+            if (text != NULL)
+            {
+                SDL_FreeSurface(text);
+
+                text = NULL;
+            }
+
+            text = createText(characterText(characters[character]).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+        }
+
+        while (!done)
+        {
+            // Fill the surface with background
+            fillWindow(renderer, intWH);
+
+            auto adventurerh = splashw;
+
+            if (adventurer != NULL)
+            {
+                adventurerh = fitImage(renderer, adventurer, startx, starty, splashw, text_bounds);
+            }
+
+            fillRect(renderer, textwidth, character_box, textx, texty, intBE);
+
+            if (text != NULL)
+            {
+                renderText(renderer, text, intBE, textx + text_space, texty + text_space, character_box, 0);
+            }
+
+            if (character >= 0 && character < characters.size())
+            {
+                putText(renderer, characters[character].Name, font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+            }
+
+            if (selection.size() > 0)
+            {
+                putText(renderer, "PARTY", font_mason2, 8, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+
+                std::string party_string = "";
+
+                for (auto i = 0; i < selection.size(); i++)
+                {
+                    if (selection[i] >= 0 && selection[i] < characters.size())
+                    {
+                        if (i > 0)
+                        {
+                            party_string += ", ";
+                        }
+
+                        party_string += characters[selection[i]].Name;
+                    }
+                }
+
+                putText(renderer, party_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh, textx, starty + text_bounds + infoh - (text_bounds - character_box));
+            }
+
+            if (Engine::FIND_LIST(selection, character) >= 0)
+            {
+                renderTextButtons(renderer, controls_del, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+
+                controls = &controls_del;
+            }
+            else
+            {
+                renderTextButtons(renderer, controls_add, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+
+                controls = &controls_add;
+            }
+
+            bool scrollUp = false;
+            bool scrollDown = false;
+            bool hold = false;
+
+            Control::Type result;
+
+            if (Engine::FIND_LIST(selection, character) >= 0)
+            {
+                done = Input::GetInput(renderer, controls_del, current, selected, scrollUp, scrollDown, hold);
+            }
+            else
+            {
+                done = Input::GetInput(renderer, controls_add, current, selected, scrollUp, scrollDown, hold);
+            }
+
+            if (selected && current >= 0 && current < controls->size())
+            {
+                switch (controls->at(current).Type)
+                {
+                case Control::Type::BACK:
+
+                    if (character > 0)
+                    {
+                        character--;
+                    }
+
+                    if (character >= 0 && character < characters.size())
+                    {
+                        if (characters[character].Image != NULL)
+                        {
+                            if (adventurer != NULL)
+                            {
+                                SDL_FreeSurface(adventurer);
+
+                                adventurer = NULL;
+                            }
+
+                            adventurer = createImage(characters[character].Image);
+
+                            if (text != NULL)
+                            {
+                                SDL_FreeSurface(text);
+
+                                text = NULL;
+                            }
+
+                            text = createText(characterText(characters[character]).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        }
+                    }
+
+                    break;
+
+                case Control::Type::PLUS:
+
+                    if (selection.size() < party.Limit)
+                    {
+                        selection.push_back(character);
+                    }
+
+                    break;
+
+                case Control::Type::MINUS:
+
+                    if (selection.size() > 0)
+                    {
+                        auto result = Engine::FIND_LIST(selection, character);
+
+                        if (result >= 0)
+                        {
+                            selection.erase(selection.begin() + result);
+                        }
+                    }
+
+                    break;
+
+                case Control::Type::NEXT:
+
+                    if (character < characters.size() - 1)
+                    {
+                        character++;
+                    }
+
+                    if (character >= 0 && character < characters.size())
+                    {
+                        if (characters[character].Image != NULL)
+                        {
+                            if (adventurer != NULL)
+                            {
+                                SDL_FreeSurface(adventurer);
+
+                                adventurer = NULL;
+                            }
+
+                            adventurer = createImage(characters[character].Image);
+
+                            if (text != NULL)
+                            {
+                                SDL_FreeSurface(text);
+
+                                text = NULL;
+                            }
+
+                            text = createText(characterText(characters[character]).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        }
+                    }
+
+                    break;
+
+                case Control::Type::NEW:
+
+                    done = true;
+
+                    current = -1;
+
+                    selected = false;
+
+                    break;
+
+                case Control::Type::ABOUT:
+
+                    current = -1;
+
+                    selected = false;
+
+                    break;
+
+                case Control::Type::QUIT:
+
+                    done = true;
+
+                    break;
+
+                default:
+
+                    selected = false;
+
+                    done = false;
+
+                    break;
+                }
+            }
+
+            SDL_SetWindowTitle(window, title);
+        }
+    }
+
+    if (adventurer != NULL)
+    {
+        SDL_FreeSurface(adventurer);
+
+        adventurer = NULL;
+    }
+
+    if (text != NULL)
+    {
+        SDL_FreeSurface(text);
+
+        text = NULL;
+    }
+
+    if (font_mason)
+    {
+        TTF_CloseFont(font_mason);
+
+        font_mason = NULL;
+    }
+
+    if (font_mason2)
+    {
+        TTF_CloseFont(font_mason2);
+
+        font_mason2 = NULL;
+    }
+
+    if (font_garamond)
+    {
+        TTF_CloseFont(font_garamond);
+
+        font_garamond = NULL;
+    }
+
+    TTF_Quit();
+
+    return false;
+}
+
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 {
     auto font_size = 20;
@@ -591,8 +956,6 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, SCREEN_WIDTH * (1.0 - 3.0 * Margin) - splashw);
 
     auto title = "Legendary Kingdoms 1 - The Valley of Bones";
-
-    Character::Base Player;
 
     // Render window
     if (window && renderer && splash && text)
@@ -617,6 +980,8 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
         auto done = false;
 
         auto text_space = 8;
+
+        auto Party = Party::Base();
 
         while (!done)
         {
@@ -644,6 +1009,8 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
                 switch (controls[current].Type)
                 {
                 case Control::Type::NEW:
+
+                    done = selectParty(window, renderer, Book::Type::BOOK1, Party);
 
                     current = -1;
 
@@ -718,11 +1085,13 @@ int main(int argc, char **argv)
         storyID = std::atoi(argv[1]);
     }
 
+    auto Party = Party::Base();
+
     if (window && renderer)
     {
-        quit = introScreen(window, renderer);
+        introScreen(window, renderer);
 
-        quit = mainScreen(window, renderer, storyID);
+        mainScreen(window, renderer, storyID);
 
         // Destroy window and renderer
 

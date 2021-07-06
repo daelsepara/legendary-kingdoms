@@ -36,5 +36,22 @@ namespace Engine
 
         return result;
     }
+
+    int FIND_LIST(std::vector<int> selection, int item)
+    {
+        auto found = -1;
+
+        for (auto i = 0; i < selection.size(); i++)
+        {
+            if (selection[i] == item)
+            {
+                found = i;
+
+                break;
+            }
+        }
+
+        return found;
+    }
 }
 #endif
