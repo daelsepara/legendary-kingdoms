@@ -1,7 +1,7 @@
 #ifndef __EQUIPMENT__HPP__
 #define __EQUIPMENT__HPP__
 
-#include "attribute.hpp";
+#include "attribute.hpp"
 
 namespace Equipment
 {

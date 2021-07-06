@@ -1,7 +1,7 @@
 #ifndef __CODES__HPP__
 #define __CODES__HPP__
 
-#include "book.hpp";
+#include "book.hpp"
 
 namespace Codes
 {

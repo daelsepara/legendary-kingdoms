@@ -1,9 +1,9 @@
 #ifndef __ENGINE__HPP__
 #define __ENGINE__HPP__
 
-#include "character.hpp";
-#include "monster.hpp";
-#include "spells.hpp";
+#include "character.hpp"
+#include "monster.hpp"
+#include "spells.hpp"
 
 namespace Engine
 {

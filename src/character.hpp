@@ -4,11 +4,11 @@
 #include <vector>
 #include <string>
 
-#include "attribute.hpp";
-#include "book.hpp";
-#include "codes.hpp";
-#include "equipment.hpp";
-#include "spells.hpp";
+#include "attribute.hpp"
+#include "book.hpp"
+#include "codes.hpp"
+#include "equipment.hpp"
+#include "spells.hpp"
 
 namespace Character
 {
