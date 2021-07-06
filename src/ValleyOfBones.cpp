@@ -571,8 +571,6 @@ bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
 
         SDL_RenderPresent(renderer);
 
-        SDL_Delay(100);
-
         while (!quit)
         {
             fillWindow(renderer, intBK);
