@@ -74,7 +74,7 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
         Recompute();
 
         // Create window and renderer
-        SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN | SDL_RENDERER_ACCELERATED, window, renderer);
+        SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, (SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC), window, renderer);
 
         SDL_SetRenderDrawBlendMode(*renderer, SDL_BLENDMODE_NONE);
 
@@ -168,6 +168,56 @@ int fitImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, in
         position.y = y;
 
         auto texture = SDL_CreateTextureFromSurface(renderer, image);
+
+        if (texture)
+        {
+            SDL_Rect src;
+
+            src.w = image->w;
+            src.h = image->h;
+            src.x = 0;
+            src.y = 0;
+
+            SDL_RenderCopy(renderer, texture, &src, &position);
+
+            SDL_DestroyTexture(texture);
+
+            texture = NULL;
+        }
+    }
+
+    return splash_h;
+}
+
+int fadeImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, int h, Uint8 alpha)
+{
+    int splash_h = image->h;
+    int splash_w = w;
+
+    if (image && renderer)
+    {
+        SDL_Rect position;
+
+        if (w != image->w)
+        {
+            splash_h = (int)((double)w / image->w * image->h);
+            splash_w = w;
+
+            if (splash_h > h)
+            {
+                splash_h = h;
+                splash_w = (int)((double)h / image->h * image->w);
+            }
+        }
+
+        position.w = splash_w;
+        position.h = splash_h;
+        position.x = x;
+        position.y = y;
+
+        auto texture = SDL_CreateTextureFromSurface(renderer, image);
+
+        SDL_SetTextureAlphaMod(texture, alpha);
 
         if (texture)
         {
@@ -454,7 +504,7 @@ std::vector<TextButton> createHTextButtons(const char **choices, int num, int te
 SDL_Surface *createHeaderButton(SDL_Window *window, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x)
 {
     auto button = SDL_CreateRGBSurface(0, w, h, arrow_size, 0, 0, 0, 0);
-    auto text_surface = createText(text, FONT_FILE, 18, color, w, TTF_STYLE_NORMAL);
+    auto text_surface = createText(text, FONT_BOOKMAN, 18, color, w, TTF_STYLE_NORMAL);
 
     if (button && text_surface)
     {
@@ -490,6 +540,58 @@ SDL_Surface *createHeaderButton(SDL_Window *window, const char *text, SDL_Color 
     return button;
 }
 
+bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
+{
+    auto splashLogo = "images/legendary-kingdoms.png";
+
+    auto splashImage = createImage(splashLogo);
+
+    auto quit = false;
+
+    if (window && renderer && splashImage)
+    {
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+        for (Uint8 i = 0; i < (Uint8)255; i += (Uint8)1)
+        {
+            fillWindow(renderer, intBK);
+
+            fadeImage(renderer, splashImage, (SCREEN_WIDTH - 800) / 2, (SCREEN_HEIGHT - 350) / 2, 800, 350, i);
+
+            SDL_RenderPresent(renderer);
+
+            SDL_Delay(5);
+        }
+
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+
+        fillWindow(renderer, intBK);
+
+        fitImage(renderer, splashImage, (SCREEN_WIDTH - 800) / 2, (SCREEN_HEIGHT - 350) / 2, 800, 350);
+
+        SDL_RenderPresent(renderer);
+
+        SDL_Delay(100);
+
+        while (!quit)
+        {
+            fillWindow(renderer, intBK);
+
+            fitImage(renderer, splashImage, (SCREEN_WIDTH - 800) / 2, (SCREEN_HEIGHT - 350) / 2, 800, 350);
+
+            Input::WaitForNext(renderer);
+
+            quit = true;
+        }
+
+        SDL_FreeSurface(splashImage);
+
+        splashImage = NULL;
+    }
+
+    return false;
+}
+
 int main(int argc, char **argv)
 {
     SDL_Window *window = NULL;
@@ -510,9 +612,9 @@ int main(int argc, char **argv)
         storyID = std::atoi(argv[1]);
     }
 
-    if (window)
+    if (window && renderer)
     {
-        Input::WaitForNext(renderer);
+        quit = introScreen(window, renderer);
 
         // Destroy window and renderer
 
