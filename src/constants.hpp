@@ -5,6 +5,7 @@
 
 const char *FONT_BOOKMAN = "fonts/bookman-old-style.ttf";
 const char *FONT_CASLON = "fonts/caslon-regular.otf";
+const char *FONT_DARK11 = "fonts/dark11.ttf";
 const char *FONT_GARAMOND = "fonts/garamond-regular.otf";
 const char *FONT_MASON = "fonts/mason-regular.ttf";
 

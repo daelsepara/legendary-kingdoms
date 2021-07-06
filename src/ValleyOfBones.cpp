@@ -599,7 +599,7 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
     {
         SDL_SetWindowTitle(window, title);
 
-        const char *choices[4] = {"New Game", "Load Game", "About", "Exit"};
+        const char *choices[4] = {"NEW GAME", "LOAD GAME", "ABOUT", "EXIT"};
 
         auto current = -1;
 
@@ -629,7 +629,7 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
             renderText(renderer, text, intBK, startx * 2 + splashw + text_space, starty + text_space, SCREEN_HEIGHT * (1.0 - 2 * Margin) - 2 * text_space, 0);
 
-            renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
 
             bool scrollUp = false;
             bool scrollDown = false;
