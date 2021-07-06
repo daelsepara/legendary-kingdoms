@@ -362,6 +362,36 @@ void drawRect(SDL_Renderer *renderer, int w, int h, int x, int y, int color)
     SDL_RenderDrawRect(renderer, &rect);
 }
 
+void putHeader(SDL_Renderer *renderer, const char *text, TTF_Font *font, int space, SDL_Color fg, Uint32 bg, int style, int w, int h, int x, int y)
+{
+    if (renderer)
+    {
+        TTF_SetFontStyle(font, style);
+
+        auto surface = TTF_RenderText_Blended_Wrapped(font, text, fg, w - 2 * space);
+
+        if (surface)
+        {
+            auto height = (surface->h + 2 * space) < h ? h : (surface->h + 2 * space);
+
+            fillRect(renderer, w, height, x, y, bg);
+
+            if (space > 0)
+            {
+                renderText(renderer, surface, 0, x + space, y + (h - surface->h) / 2, height - 2 * space, 0);
+            }
+            else
+            {
+                renderText(renderer, surface, 0, x + (w - surface->w) / 2, y + (h - surface->h) / 2, height - 2 * space, 0);
+            }
+
+            SDL_FreeSurface(surface);
+
+            surface = NULL;
+        }
+    }
+}
+
 void putText(SDL_Renderer *renderer, const char *text, TTF_Font *font, int space, SDL_Color fg, Uint32 bg, int style, int w, int h, int x, int y)
 {
     if (renderer)
@@ -610,6 +640,8 @@ std::string characterText(Character::Base character)
 
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party)
 {
+    party.Party.clear();
+
     SDL_Surface *adventurer = NULL;
     SDL_Surface *text = NULL;
 
@@ -727,7 +759,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
             if (selection.size() > 0)
             {
-                putText(renderer, "PARTY", font_mason2, 8, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                putHeader(renderer, std::string("PARTY (Limit: " + std::to_string(party.Limit) + ")").c_str(), font_mason2, 8, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                 std::string party_string = "";
 
@@ -798,16 +830,16 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             }
 
                             adventurer = createImage(characters[character].Image);
-
-                            if (text != NULL)
-                            {
-                                SDL_FreeSurface(text);
-
-                                text = NULL;
-                            }
-
-                            text = createText(characterText(characters[character]).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
                         }
+
+                        if (text != NULL)
+                        {
+                            SDL_FreeSurface(text);
+
+                            text = NULL;
+                        }
+
+                        text = createText(characterText(characters[character]).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
                     }
 
                     break;
@@ -854,27 +886,40 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             }
 
                             adventurer = createImage(characters[character].Image);
-
-                            if (text != NULL)
-                            {
-                                SDL_FreeSurface(text);
-
-                                text = NULL;
-                            }
-
-                            text = createText(characterText(characters[character]).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
                         }
+
+                        if (text != NULL)
+                        {
+                            SDL_FreeSurface(text);
+
+                            text = NULL;
+                        }
+
+                        text = createText(characterText(characters[character]).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
                     }
 
                     break;
 
                 case Control::Type::NEW:
 
-                    done = true;
+                    if (selection.size() == party.Limit)
+                    {
+                        for (auto i = 0; i < selection.size(); i++)
+                        {
+                            if (selection[i] >= 0 && selection[i] < characters.size())
+                            {
+                                party.Party.push_back(characters[selection[i]]);
+                            }
+                        }
 
-                    current = -1;
+                        // TODO: Select spells for spellcasters
 
-                    selected = false;
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+                    }
 
                     break;
 
