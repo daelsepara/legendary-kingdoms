@@ -1258,7 +1258,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer)
     return done;
 }
 
-std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button)
+std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int start, int last, int limit, int offsetx, int offsety, int scrolly, bool confirm_button, bool back_button)
 {
     auto controls = std::vector<Button>();
 
@@ -1303,7 +1303,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
         if (spells.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -2821,13 +2821,13 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
         auto font_size = 20;
         auto text_space = 8;
-        auto messageh = 0.25 * SCREEN_HEIGHT;
-        auto infoh = 0.07 * SCREEN_HEIGHT;
-        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto booksize = 2 * (text_bounds) / 3;
-        auto limit = (booksize - text_space) / ((boxh) + 3 * text_space);
+        auto booksize = (int)(2 * (text_bounds) / 3);
+        auto limit = (int)((booksize - text_space) / ((boxh) + 3 * text_space));
         auto last = offset + limit;
 
         if (last > spells.size())
@@ -2837,7 +2837,9 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-        auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, true, false);
+        auto scrolly = startx + infoh + booksize - buttonh - text_space + 1;
+
+        auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, scrolly, true, false);
 
         auto done = false;
 
@@ -2868,36 +2870,47 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                fillRect(renderer, textwidth, booksize, textx, texty + infoh, intBE);
 
-                for (auto i = offset; i < last; i++)
+                if (last - offset > 0)
                 {
-                    auto index = i - offset;
-
-                    if (index >= 0 && index < spells.size())
+                    for (auto i = 0; i < last - offset; i++)
                     {
-                        if (Engine::FIND_LIST(selection, index) >= 0)
+                        if (Engine::FIND_LIST(selection, offset + i) >= 0)
                         {
-                            thickRect(renderer, controls[index].W, controls[index].H, controls[index].X, controls[index].Y, intDB, 2);
+                            thickRect(renderer, controls[i].W, controls[i].H, controls[i].X, controls[i].Y, intLB, 2);
                         }
-                        else if (spells[index].Charged)
+                        else if (spells[offset + i].Charged)
                         {
-                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
                     }
                 }
 
+                if (current >= 0 && current < limit)
+                {
+                    fillRect(renderer, textwidth, text_bounds / 3 - box_space - infoh, textx, texty + infoh + booksize + box_space, intLB);
+
+                    auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size + 2, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+
+                    renderText(renderer, text, intLB, textx + text_space, texty + infoh + booksize + box_space + text_space, text_bounds / 3 - texty, 0);
+
+                    SDL_FreeSurface(text);
+
+                    text = NULL;
+                }
+
                 renderButtons(renderer, controls, current, intLB, space, 4);
 
-                putHeader(renderer, "Select Spell", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, std::string("Choose " + std::to_string(select_limit) + " spell" + (select_limit > 1 ? "s" : "")).c_str(), font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Spell", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putText(renderer, "Selected", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
-                if (selection.size() > 0 && selection.size() <= select_limit)
+                if (selection.size() > 0)
                 {
                     std::string spells_string = "";
 
@@ -2942,9 +2955,80 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
                 done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
-                if (selected && current >= 0 && current < controls.size())
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
                 {
-                    if (controls[current].Type == Control::Type::BACK)
+                    if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > spells.size())
+                            {
+                                last = spells.size();
+                            }
+
+                            controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, scrolly, true, false);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                    {
+                        if (spells.size() - last > 0)
+                        {
+                            if (offset < spells.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > spells.size() - limit)
+                            {
+                                offset = spells.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > spells.size())
+                            {
+                                last = spells.size();
+                            }
+
+                            controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, scrolly, true, false);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (spells.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::BACK)
                     {
                         done = true;
 
@@ -2989,7 +3073,10 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
                             {
                                 if (spells[current + offset].Charged)
                                 {
-                                    selection.push_back(current + offset);
+                                    if (selection.size() < select_limit)
+                                    {
+                                        selection.push_back(current + offset);
+                                    }
                                 }
                                 else
                                 {
@@ -4692,6 +4779,29 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
                     if (Party.Party.size() >= Party.Limit)
                     {
+                        for (auto i = 0; i < Party.Party.size(); i++)
+                        {
+                            if (Party.Party[i].SpellCaster)
+                            {
+                                auto selected = 0;
+
+                                auto selection = std::vector<int>();
+
+                                while (selected < 3)
+                                {
+                                    // TODO: Update this for other books
+                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3);
+
+                                    selected = selection.size();
+                                }
+
+                                for (auto j = 0; j < selection.size(); j++)
+                                {
+                                    Party.Party[i].SpellBook.push_back(Spells::BOOK1_SPELLS[selection[j]]);
+                                }
+                            }
+                        }
+
                         combat = combatScreen(window, renderer, Party, monsters, true, false);
                     }
 
@@ -4721,6 +4831,29 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
                     if (Party.Party.size() >= Party.Limit)
                     {
+                        for (auto i = 0; i < Party.Party.size(); i++)
+                        {
+                            if (Party.Party[i].SpellCaster)
+                            {
+                                auto selected = 0;
+
+                                auto selection = std::vector<int>();
+
+                                while (selected < 3)
+                                {
+                                    // TODO: Update this for other books
+                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3);
+
+                                    selected = selection.size();
+                                }
+
+                                for (auto j = 0; j < selection.size(); j++)
+                                {
+                                    Party.Party[i].SpellBook.push_back(Spells::BOOK1_SPELLS[selection[j]]);
+                                }
+                            }
+                        }
+
                         skillCheck(window, renderer, Party, 2, Attribute::Type::STEALTH, 4, 4);
 
                         done = false;
@@ -4738,6 +4871,29 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
                     if (Party.Party.size() >= Party.Limit)
                     {
+                        for (auto i = 0; i < Party.Party.size(); i++)
+                        {
+                            if (Party.Party[i].SpellCaster)
+                            {
+                                auto selected = 0;
+
+                                auto selection = std::vector<int>();
+
+                                while (selected < 3)
+                                {
+                                    // TODO: Update this for other books
+                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3);
+
+                                    selected = selection.size();
+                                }
+
+                                for (auto j = 0; j < selection.size(); j++)
+                                {
+                                    Party.Party[i].SpellBook.push_back(Spells::BOOK1_SPELLS[selection[j]]);
+                                }
+                            }
+                        }
+
                         skillCheck(window, renderer, Party, 1, Attribute::Type::LORE, 4, 3);
 
                         done = false;
