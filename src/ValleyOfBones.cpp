@@ -2765,7 +2765,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
             auto controls = std::vector<TextButton>();
 
             auto skill_checked = false;
-            
+
             int success_counter = 0;
 
             while (!done)
@@ -2831,7 +2831,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                             if (success_counter >= success)
                             {
-                                message = "Passes the Skill Check!";
+                                message = "Skill Check PASSED!";
 
                                 flash_color = intLB;
 
@@ -2839,7 +2839,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
                             }
                             else
                             {
-                                message = "Fails the Skill Check!";
+                                message = "Skill Check FAILED!";
 
                                 flash_color = intRD;
 
@@ -2853,9 +2853,13 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
                     }
                 }
 
-                fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
+                std::string test_string = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(difficulty) + "+, Success: " + std::to_string(success);
+
+                putHeader(renderer, test_string.c_str(), font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 3 * boxh + 2 * box_space);
 
                 putHeader(renderer, party[team[0]].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+
+                fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
                 auto score1 = 0;
 
@@ -2876,6 +2880,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
                 {
                     putHeader(renderer, party[team[1]].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
 
+                    fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
+
                     auto score2 = 0;
 
                     if (useEquipment)
@@ -2888,8 +2894,6 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
                     }
 
                     std::string adventurer2 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score2);
-
-                    fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
 
                     putText(renderer, adventurer2.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
                 }
@@ -3954,7 +3958,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
     auto font_size = 20;
     auto text_space = 8;
 
-    auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.\n\nTests:\n1 - Combat\n2 - Map\n3 - Team Skill check";
+    auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.\n\nTests:\n1 - Combat\n2 - Map\n3 - Team Skill check\n4 - Individual Skill check";
 
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, textwidth - 2 * text_space);
 
@@ -3973,14 +3977,15 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
         auto main_buttonh = 48;
 
-        const char *choices[4] = {"1", "2", "3", "Exit"};
+        const char *choices[5] = {"1", "2", "3", "4", "Exit"};
 
-        auto controls = createHTextButtons(choices, 4, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+        auto controls = createHTextButtons(choices, 5, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
 
         controls[0].Type = Control::Type::COMBAT;
         controls[1].Type = Control::Type::MAP;
-        controls[2].Type = Control::Type::SKILL;
-        controls[3].Type = Control::Type::QUIT;
+        controls[2].Type = Control::Type::TEAM_SKILL;
+        controls[3].Type = Control::Type::SKILL;
+        controls[4].Type = Control::Type::QUIT;
 
         auto done = false;
 
@@ -4036,7 +4041,19 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
                     break;
 
-                case Control::Type::SKILL:
+                case Control::Type::MAP:
+
+                    mapScreen(window, renderer);
+
+                    done = false;
+
+                    current = -1;
+
+                    selected = false;
+
+                    break;
+
+                case Control::Type::TEAM_SKILL:
 
                     selectParty(window, renderer, Book::Type::BOOK1, Party);
 
@@ -4053,11 +4070,16 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
                     break;
 
-                case Control::Type::MAP:
+                case Control::Type::SKILL:
 
-                    mapScreen(window, renderer);
+                    selectParty(window, renderer, Book::Type::BOOK1, Party);
 
-                    done = false;
+                    if (Party.Party.size() >= Party.Limit)
+                    {
+                        skillCheck(window, renderer, Party, 1, Attribute::Type::LORE, 4, 3);
+
+                        done = false;
+                    }
 
                     current = -1;
 

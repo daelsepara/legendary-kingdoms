@@ -45,6 +45,7 @@ namespace Control
         SELL,
         COMBAT,
         SKILL,
+        TEAM_SKILL,
         ATTACK,
         SPELL,
         FLEE
