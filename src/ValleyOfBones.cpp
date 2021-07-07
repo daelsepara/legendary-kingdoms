@@ -365,6 +365,24 @@ void drawRect(SDL_Renderer *renderer, int w, int h, int x, int y, int color)
     SDL_RenderDrawRect(renderer, &rect);
 }
 
+void thickRect(SDL_Renderer *renderer, int w, int h, int x, int y, int color, int pts)
+{
+    SDL_Rect rect;
+
+    auto space = 2 * pts;
+
+    for (auto size = pts; size >= 0; size--)
+    {
+        rect.w = w + 2 * (space - size);
+        rect.h = w + 2 * (space - size);
+        rect.x = x - space + size;
+        rect.y = y - space + size;
+
+        SDL_SetRenderDrawColor(renderer, R(color), G(color), B(color), A(color));
+        SDL_RenderDrawRect(renderer, &rect);
+    }
+}
+
 void putHeader(SDL_Renderer *renderer, const char *text, TTF_Font *font, int space, SDL_Color fg, Uint32 bg, int style, int w, int h, int x, int y)
 {
     if (renderer)
@@ -407,15 +425,36 @@ void putText(SDL_Renderer *renderer, const char *text, TTF_Font *font, int space
         {
             auto height = (surface->h + 2 * space) < h ? h : (surface->h + 2 * space);
 
-            fillRect(renderer, w, height, x, y, bg);
-
-            if (space > 0)
+            if (x < 0)
             {
-                renderText(renderer, surface, 0, x + space, y + space, height - 2 * space, 0);
+                fillRect(renderer, w, height, (SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - height) / 2, bg);
             }
             else
             {
-                renderText(renderer, surface, 0, x + (w - surface->w) / 2, y + (h - surface->h) / 2, height - 2 * space, 0);
+                fillRect(renderer, w, height, x, y, bg);
+            }
+
+            if (space > 0)
+            {
+                if (x < 0)
+                {
+                    renderText(renderer, surface, 0, (SCREEN_WIDTH - surface->w) / 2 + space, (SCREEN_HEIGHT - height) / 2 + space, height - 2 * space, 0);
+                }
+                else
+                {
+                    renderText(renderer, surface, 0, x + space, y + space, height - 2 * space, 0);
+                }
+            }
+            else
+            {
+                if (x < 0)
+                {
+                    renderText(renderer, surface, 0, (SCREEN_WIDTH - surface->w) / 2 + (w - surface->w), (SCREEN_HEIGHT - surface->h) / 2 + (h - surface->h) / 2, height, 0);
+                }
+                else
+                {
+                    renderText(renderer, surface, 0, x + (w - surface->w) / 2, y + (h - surface->h) / 2, height, 0);
+                }
             }
 
             SDL_FreeSurface(surface);
@@ -629,7 +668,7 @@ bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
     return false;
 }
 
-std::string characterText(Character::Base character, bool compact)
+std::string characterText(Character::Base &character, bool compact)
 {
     std::string character_text = "";
 
@@ -647,7 +686,7 @@ std::string characterText(Character::Base character, bool compact)
         character_text += "\n";
     }
 
-    character_text += "\nATTRIBUTES: ";
+    character_text += "\n";
 
     for (auto i = 0; i < character.Attributes.size(); i++)
     {
@@ -658,6 +697,8 @@ std::string characterText(Character::Base character, bool compact)
 
         character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": " + std::to_string(character.Attributes[i].Value);
     }
+
+    character_text += ", Health: " + std::to_string(character.Health);
 
     if (!compact)
     {
@@ -1217,7 +1258,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer)
     return done;
 }
 
-std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> monsters, int start, int last, int limit, int offsetx, int offsety, bool back_button)
+std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> monsters, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button)
 {
     auto controls = std::vector<Button>();
 
@@ -1275,11 +1316,18 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
         }
     }
 
+    if (confirm_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/yes.png", idx - 1, (back_button ? idx + 1 : idx), monsters.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+    }
+
     if (back_button)
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, monsters.size() > 0 ? (last - start) : idx, idx, (1.0 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
+        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, monsters.size() > 0 ? (last - start) - 1 : idx, idx, (1.0 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
     }
 
     return controls;
@@ -1349,6 +1397,946 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
     return controls;
 }
 
+int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party)
+{
+    auto result = -1;
+
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Assign Damage";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        auto main_buttonh = 48;
+
+        auto font_size = 20;
+        auto text_space = 8;
+        auto messageh = 0.25 * SCREEN_HEIGHT;
+        auto infoh = 0.07 * SCREEN_HEIGHT;
+        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto last = offset + limit;
+
+        if (last > party.size())
+        {
+            last = party.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = combatantList(window, renderer, party, offset, last, limit, textx, texty + infoh + text_space, true, true);
+
+        auto done = false;
+
+        int selection = -1;
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                for (auto i = offset; i < last; i++)
+                {
+                    auto index = i - offset;
+
+                    if (index >= 0 && index < party.size())
+                    {
+                        if (selection == index)
+                        {
+                            for (auto size = 4; size >= 0; size--)
+                            {
+                                auto w = controls[index].W + 2 * (8 - size);
+                                auto h = controls[index].H + 2 * (8 - size);
+                                auto x = controls[index].X - 8 + size;
+                                auto y = controls[index].Y - 8 + size;
+
+                                drawRect(renderer, w, h, x, y, intDB);
+                            }
+                        }
+                        else if (party[index].Health > 0)
+                        {
+                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intRD);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, 4);
+
+                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                putText(renderer, "Assign damage to", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (selection >= 0 && selection < party.size())
+                {
+                    if (party[selection].Health > 0)
+                    {
+                        putText(renderer, party[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    }
+                    else
+                    {
+                        fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                    }
+                }
+                else
+                {
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (selected && current >= 0 && current < controls.size())
+                {
+                    if (controls[current].Type == Control::Type::BACK)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (selection >= 0 && selection < party.size())
+                        {
+                            done = true;
+
+                            result = selection;
+
+                            current = -1;
+
+                            selected = false;
+                        }
+                        else
+                        {
+                            flash_message = true;
+
+                            message = "You must SELECT an adventurer DAMAGED by the attack.";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intRD;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION)
+                    {
+                        if (current + offset >= 0 && current + offset < party.size())
+                        {
+                            if (selection == current + offset)
+                            {
+                                selection = -1;
+                            }
+                            else
+                            {
+                                if (party[current + offset].Health > 0)
+                                {
+                                    selection = current + offset;
+                                }
+                                else
+                                {
+                                    flash_message = true;
+
+                                    message = std::string(party[current + offset].Name) + std::string(" is DEAD!");
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intRD;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (done)
+            {
+                break;
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    return result;
+}
+
+int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment)
+{
+    int combat_damage = 0;
+
+    if (Engine::COUNT(party) > 0 && Engine::COUNT(monsters) > 0)
+    {
+        if (window && renderer)
+        {
+            auto flash_message = false;
+
+            auto flash_color = intRD;
+
+            std::string message = "";
+
+            Uint32 start_ticks = 0;
+
+            Uint32 duration = 3000;
+
+            auto marginx = (int)(Margin * SCREEN_WIDTH);
+
+            auto fullwidth = SCREEN_WIDTH - 2 * marginx;
+
+            auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
+
+            auto headerw = (int)(boxwidth * 0.75);
+
+            auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+
+            auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+
+            auto box_space = 10;
+
+            auto main_buttonh = 48;
+
+            auto done = false;
+
+            auto stage = Engine::AttackStage::START;
+
+            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Attack");
+
+            TTF_Init();
+
+            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+
+            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
+
+            auto text_space = 8;
+
+            auto font_size = 24;
+
+            const char *choices_attack[4] = {"Attack", "Add Focus", "Remove Focus", "Cancel"};
+            const char *choices_defend[1] = {"Attack"};
+            const char *choices_damage[1] = {"Deal Damage"};
+            const char *choices_end[1] = {"Done"};
+            const char *choices_assign[1] = {"Assign"};
+
+            SDL_Surface *dice[6];
+
+            dice[0] = createImage("images/dice/dice1.png");
+            dice[1] = createImage("images/dice/dice2.png");
+            dice[2] = createImage("images/dice/dice3.png");
+            dice[3] = createImage("images/dice/dice4.png");
+            dice[4] = createImage("images/dice/dice5.png");
+            dice[5] = createImage("images/dice/dice6.png");
+
+            auto controls_attack = createHTextButtons(choices_attack, 4, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            controls_attack[0].Type = Control::Type::CONFIRM;
+            controls_attack[1].Type = Control::Type::PLUS;
+            controls_attack[2].Type = Control::Type::MINUS;
+            controls_attack[3].Type = Control::Type::BACK;
+
+            auto controls_defend = createHTextButtons(choices_defend, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            controls_defend[0].Type = Control::Type::CONFIRM;
+            controls_defend[0].W = controls_attack[0].W;
+
+            auto controls_damage = createHTextButtons(choices_damage, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            controls_damage[0].Type = Control::Type::CONFIRM;
+            controls_damage[0].W = controls_attack[0].W;
+
+            auto controls_end = createHTextButtons(choices_end, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            controls_end[0].Type = Control::Type::BACK;
+            controls_end[0].W = controls_attack[0].W;
+
+            auto controls_assign = createHTextButtons(choices_assign, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            controls_assign[0].Type = Control::Type::CONFIRM;
+            controls_assign[0].W = controls_attack[0].W;
+
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto focus = 0;
+
+            std::vector<int> results = std::vector<int>();
+
+            auto attack_score = 1;
+
+            auto cols = (fullwidth - 2 * box_space) / (64 + box_space);
+            auto rows = (boxh - box_space) / (64 + box_space);
+
+            auto controls = std::vector<TextButton>();
+
+            auto damaged = false;
+            auto assigned = false;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
+
+                if (stage != Engine::AttackStage::START)
+                {
+                    if (stage == Engine::AttackStage::ATTACK)
+                    {
+                        if (results.size() == 0)
+                        {
+                            results = Engine::ROLL_DICE(attack_score);
+                        }
+                    }
+
+                    auto row = 0;
+                    auto col = 0;
+
+                    auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
+                    auto offsetx = startx + box_space;
+
+                    int damage = 0;
+
+                    for (auto i = 0; i < results.size(); i++)
+                    {
+                        if (results[i] >= 1 && results[i] <= 6)
+                        {
+                            auto result = results[i] - 1;
+
+                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
+
+                            if (stage == Engine::AttackStage::DAMAGE)
+                            {
+                                if (direction == 0)
+                                {
+                                    if (results[i] >= monsters[opponent].Defence)
+                                    {
+                                        thickRect(renderer, 64, 64, offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), intLB, 2);
+
+                                        damage++;
+                                    }
+                                }
+                                else
+                                {
+                                    if (results[i] >= monsters[opponent].Difficulty)
+                                    {
+                                        thickRect(renderer, 64, 64, offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), intRD, 2);
+
+                                        damage++;
+                                    }
+                                }
+                            }
+
+                            if (col < cols)
+                            {
+                                col++;
+                            }
+                            else
+                            {
+                                col = 0;
+
+                                row++;
+                            }
+                        }
+                    }
+
+                    if (stage == Engine::AttackStage::DAMAGE)
+                    {
+                        if (!damaged)
+                        {
+                            if (direction == 0)
+                            {
+                                Engine::GAIN_HEALTH(monsters[opponent], -damage);
+
+                                combat_damage = damage;
+
+                                flash_message = true;
+
+                                if (damage > 0)
+                                {
+                                    message = std::string(party[combatant].Name) + " DEALS " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!";
+
+                                    flash_color = intLB;
+                                }
+                                else
+                                {
+                                    message = std::string(party[combatant].Name) + "'s ATTACK was INEFFECTIVE!";
+
+                                    flash_color = intRD;
+                                }
+
+                                start_ticks = SDL_GetTicks();
+                            }
+                            else
+                            {
+                                combat_damage = damage;
+
+                                message = std::string(monsters[opponent].Name) + " DEALS " + std::to_string(damage) + " to the party!";
+
+                                start_ticks = SDL_GetTicks();
+
+                                flash_message = true;
+
+                                flash_color = intRD;
+                            }
+
+                            damaged = true;
+                        }
+                    }
+                }
+
+                std::string attacker_string = "";
+
+                fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
+
+                if (direction == 0)
+                {
+                    putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+
+                    auto score = 1;
+
+                    if (useEquipment)
+                    {
+                        score = Engine::FIGHTING_SCORE(party[combatant]);
+                    }
+                    else
+                    {
+                        score = Engine::SCORE(party[combatant], Attribute::Type::FIGHTING);
+                    }
+
+                    attacker_string = "Fighting: " + std::to_string(score);
+                    attacker_string += "\nHealth: " + std::to_string(party[combatant].Health);
+
+                    attack_score = score;
+                }
+                else
+                {
+                    putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                    attacker_string = "Attack: " + std::to_string(monsters[opponent].Attack) + " (" + std::to_string(monsters[opponent].Difficulty) + "+)";
+                    attacker_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
+
+                    attack_score = monsters[opponent].Attack;
+                }
+
+                putText(renderer, attacker_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+
+                std::string defender_string = "";
+
+                if (direction == 0)
+                {
+                    putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                    defender_string = "Defence: " + std::to_string(monsters[opponent].Defence) + "+";
+                    defender_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
+                }
+                else
+                {
+                    if (combatant == -1)
+                    {
+                        putHeader(renderer, "To be determined", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                    }
+                    else
+                    {
+                        putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        defender_string = "Health: " + std::to_string(party[combatant].Health);
+                    }
+                }
+
+                fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
+
+                putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+
+                if (stage == Engine::AttackStage::START)
+                {
+                    if (direction == 0)
+                    {
+                        controls = controls_attack;
+                    }
+                    else
+                    {
+                        controls = controls_defend;
+                    }
+                }
+                else if (stage == Engine::AttackStage::ATTACK)
+                {
+                    controls = controls_damage;
+                }
+                else if (stage == Engine::AttackStage::DAMAGE)
+                {
+                    if (direction == 0)
+                    {
+                        controls = controls_end;
+                    }
+                    else
+                    {
+                        if (!assigned)
+                        {
+                            controls = controls_assign;
+                        }
+                        else
+                        {
+                            controls = controls_end;
+                        }
+                    }
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putText(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (selected && current >= 0 && current < controls.size())
+                {
+                    if (stage == Engine::AttackStage::START && controls[current].Type == Control::Type::BACK)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+
+                        break;
+                    }
+                    else if (stage == Engine::AttackStage::START && controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        stage = Engine::AttackStage::ATTACK;
+                    }
+                    else if (stage == Engine::AttackStage::ATTACK && controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        stage = Engine::AttackStage::DAMAGE;
+                    }
+                    else if (stage == Engine::AttackStage::DAMAGE && controls[current].Type == Control::Type::BACK)
+                    {
+                        stage = Engine::AttackStage::END;
+
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+
+                        break;
+                    }
+                    else if (stage == Engine::AttackStage::DAMAGE && controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (Engine::COUNT(party) > 0)
+                        {
+                            auto result = assignDamage(window, renderer, party);
+
+                            if (party[result].Health > 0)
+                            {
+                                assigned = true;
+
+                                message = std::string(party[result].Name) + " DEALT " + std::to_string(combat_damage) + " DAMAGE!";
+
+                                start_ticks = SDL_GetTicks();
+
+                                flash_message = true;
+
+                                flash_color = intRD;
+
+                                Engine::GAIN_HEALTH(party[result], -combat_damage);
+
+                                combatant = result;
+                            }
+                            else
+                            {
+                                message = std::string(party[result].Name) + " is already DEAD!";
+
+                                start_ticks = SDL_GetTicks();
+
+                                flash_message = true;
+
+                                flash_color = intRD;
+                            }
+                        }
+                        else
+                        {
+                            done = true;
+
+                            selected = false;
+
+                            current = -1;
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (font_mason)
+            {
+                TTF_CloseFont(font_mason);
+
+                font_mason = NULL;
+            }
+
+            if (font_garamond)
+            {
+                TTF_CloseFont(font_garamond);
+
+                font_garamond = NULL;
+            }
+
+            TTF_Quit();
+
+            for (auto i = 0; i < 6; i++)
+            {
+                if (dice[i])
+                {
+                    SDL_FreeSurface(dice[i]);
+
+                    dice[i] = NULL;
+                }
+            }
+        }
+    }
+
+    return combat_damage;
+}
+
+int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters)
+{
+    auto result = -1;
+
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Opponent";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        auto main_buttonh = 48;
+
+        auto font_size = 20;
+        auto text_space = 8;
+        auto messageh = 0.25 * SCREEN_HEIGHT;
+        auto infoh = 0.07 * SCREEN_HEIGHT;
+        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto last = offset + limit;
+
+        if (last > monsters.size())
+        {
+            last = monsters.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, true, false);
+
+        auto done = false;
+
+        int selection = -1;
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                for (auto i = offset; i < last; i++)
+                {
+                    auto index = i - offset;
+
+                    if (index >= 0 && index < monsters.size())
+                    {
+                        if (selection == index)
+                        {
+                            for (auto size = 4; size >= 0; size--)
+                            {
+                                auto w = controls[index].W + 2 * (8 - size);
+                                auto h = controls[index].H + 2 * (8 - size);
+                                auto x = controls[index].X - 8 + size;
+                                auto y = controls[index].Y - 8 + size;
+
+                                drawRect(renderer, w, h, x, y, intDB);
+                            }
+                        }
+                        else if (monsters[index].Health > 0)
+                        {
+                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intRD);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, 4);
+
+                putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                putText(renderer, "Opponent", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (selection >= 0 && selection < monsters.size())
+                {
+                    if (monsters[selection].Health > 0)
+                    {
+                        putText(renderer, monsters[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    }
+                    else
+                    {
+                        fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                    }
+                }
+                else
+                {
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (selected && current >= 0 && current < controls.size())
+                {
+                    if (controls[current].Type == Control::Type::BACK)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (selection >= 0 && selection < monsters.size())
+                        {
+                            done = true;
+
+                            result = selection;
+
+                            current = -1;
+
+                            selected = false;
+                        }
+                        else
+                        {
+                            flash_message = true;
+
+                            message = "You must SELECT an opponent to ATTACK this round.";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intRD;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION)
+                    {
+                        if (current + offset >= 0 && current + offset < monsters.size())
+                        {
+                            if (selection == current + offset)
+                            {
+                                selection = -1;
+                            }
+                            else
+                            {
+                                if (monsters[current + offset].Health > 0)
+                                {
+                                    selection = current + offset;
+                                }
+                                else
+                                {
+                                    flash_message = true;
+
+                                    message = std::string(monsters[current + offset].Name) + std::string(" is DEAD!");
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intRD;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (done)
+            {
+                break;
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    return result;
+}
+
 int selectCombatant(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
 {
     auto result = -1;
@@ -1363,11 +2351,11 @@ int selectCombatant(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
         auto flash_color = intRD;
 
-        const char *message = NULL;
+        std::string message = "";
 
         Uint32 start_ticks = 0;
 
-        Uint32 duration = 5000;
+        Uint32 duration = 3000;
 
         TTF_Init();
 
@@ -1484,7 +2472,7 @@ int selectCombatant(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message, font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                     }
                     else
                     {
@@ -1520,7 +2508,7 @@ int selectCombatant(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         {
                             flash_message = true;
 
-                            message = "You must select an adventurer who will attack this round.";
+                            message = "You must SELECT an adventurer who will attack this round.";
 
                             start_ticks = SDL_GetTicks();
 
@@ -1531,13 +2519,26 @@ int selectCombatant(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     {
                         if (current + offset >= 0 && current + offset < party.Party.size())
                         {
-                            if (selection == offset + current)
+                            if (selection == current + offset)
                             {
                                 selection = -1;
                             }
                             else
                             {
-                                selection = offset + current;
+                                if (party.Party[current + offset].Health > 0)
+                                {
+                                    selection = current + offset;
+                                }
+                                else
+                                {
+                                    flash_message = true;
+
+                                    message = std::string(party.Party[current + offset].Name) + std::string(" is DEAD!");
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intRD;
+                                }
                             }
                         }
                     }
@@ -1602,7 +2603,7 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
 
         Uint32 start_ticks = 0;
 
-        Uint32 duration = 5000;
+        Uint32 duration = 3000;
 
         TTF_Init();
 
@@ -1640,7 +2641,7 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-        auto monster_list = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, false);
+        auto monster_list = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, false, false);
 
         auto hasAttacked = std::vector<int>();
 
@@ -1708,13 +2709,13 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
 
                         if (party.Party[i].Health <= 0)
                         {
-                            party_string += " (-)";
+                            party_string += " (D)";
                         }
                         else
                         {
                             if (Engine::FIND_LIST(hasAttacked, i) >= 0)
                             {
-                                party_string += " (*)";
+                                party_string += " (A)";
                             }
                         }
 
@@ -1734,7 +2735,7 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, messageh, startx, starty);
+                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                     }
                     else
                     {
@@ -1758,7 +2759,7 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
                         {
                             flash_message = true;
 
-                            message = "You cannot flee from this combat.";
+                            message = "You CANNOT FLEE from this combat.";
 
                             start_ticks = SDL_GetTicks();
 
@@ -1773,7 +2774,7 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
                         {
                             flash_message = true;
 
-                            message = std::string(party.Party[result].Name) + " already attacked this round.";
+                            message = std::string(party.Party[result].Name) + " ALREADY ATTACKED this round.";
 
                             start_ticks = SDL_GetTicks();
 
@@ -1781,26 +2782,79 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
                         }
                         else
                         {
-                            hasAttacked.push_back(result);
+                            if (result >= 0 && result < party.Party.size())
+                            {
+                                auto adventurer = party.Party[result];
 
-                            flash_message = true;
+                                if (adventurer.Health > 0)
+                                {
+                                    if (Engine::COUNT(monsters) > 0)
+                                    {
+                                        auto attack = selectOpponent(window, renderer, monsters);
 
-                            message = "TODO: " + std::string(party.Party[result].Name) + " attacks!";
+                                        if (attack >= 0)
+                                        {
+                                            auto damage = attackScreen(window, renderer, party.Party, monsters, result, attack, 0, useEquipment);
 
-                            start_ticks = SDL_GetTicks();
+                                            hasAttacked.push_back(result);
+                                        }
+                                        else
+                                        {
+                                            flash_message = true;
 
-                            flash_color = intLB;
+                                            message = "The attack has failed!";
+
+                                            start_ticks = SDL_GetTicks();
+
+                                            flash_color = intRD;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        flash_message = true;
+
+                                        message = "Your party has prevailed!";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_color = intLB;
+                                    }
+                                }
+                                else
+                                {
+                                    flash_message = true;
+
+                                    message = std::string(party.Party[result].Name) + " is DEAD.";
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intRD;
+                                }
+                            }
                         }
 
                         if (hasAttacked.size() >= Engine::COUNT(party.Party))
                         {
-                            flash_message = true;
+                            if (Engine::COUNT(monsters) > 0)
+                            {
+                                for (auto i = 0; i < monsters.size(); i++)
+                                {
+                                    if (monsters[i].Health > 0)
+                                    {
+                                        auto damage = attackScreen(window, renderer, party.Party, monsters, -1, i, 1, useEquipment);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                done = true;
 
-                            message = "TODO: Opponents attack your party.";
+                                selected = false;
 
-                            start_ticks = SDL_GetTicks();
+                                current = -1;
 
-                            flash_color = intLB;
+                                break;
+                            }
 
                             hasAttacked.clear();
                         }
@@ -1810,6 +2864,19 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
                         current = -1;
 
                         selected = false;
+                    }
+
+                    monster_list = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, false, false);
+
+                    if (Engine::COUNT(monsters) == 0 || Engine::COUNT(party.Party) == 0)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+
+                        break;
                     }
                 }
             }
@@ -1982,7 +3049,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
     auto font_size = 20;
     auto text_space = 8;
 
-    auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.";
+    auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.\n\nTests:\n1 - Combat\n2 - Map";
 
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, textwidth - 2 * text_space);
 
@@ -1995,7 +3062,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
     {
         SDL_SetWindowTitle(window, title);
 
-        const char *choices[3] = {"COMBAT", "MAP", "EXIT"};
+        const char *choices[3] = {"1", "2", "Exit"};
 
         auto current = -1;
 
@@ -2030,7 +3097,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
             renderText(renderer, text, intBK, startx * 2 + splashw + text_space, starty + text_space, SCREEN_HEIGHT * (1.0 - 2 * Margin) - 2 * text_space, 0);
 
-            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+            renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
 
             bool scrollUp = false;
             bool scrollDown = false;

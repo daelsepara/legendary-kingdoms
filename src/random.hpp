@@ -4,63 +4,65 @@
 #include <chrono>
 #include <random>
 
-class Random
+namespace Random
 {
-public:
-
-	std::mt19937_64 generator;
-	std::normal_distribution<double> normalDistribution;
-	std::uniform_real_distribution<double> uniformDistribution;
-	std::uniform_int_distribution<int> uniformIntDistribution;
-
-	Random()
+	class Base
 	{
-		generator = std::mt19937_64(std::chrono::system_clock::now().time_since_epoch().count());
-	}
+	public:
+		std::mt19937_64 generator;
+		std::normal_distribution<double> normalDistribution;
+		std::uniform_real_distribution<double> uniformDistribution;
+		std::uniform_int_distribution<int> uniformIntDistribution;
 
-	Random(int seed)
-	{
-		generator = std::mt19937_64(seed);
-	}
+		Base()
+		{
+			generator = std::mt19937_64(std::chrono::system_clock::now().time_since_epoch().count());
+		}
 
-	void UniformDistribution(double a, double b)
-	{
-		uniformDistribution = std::uniform_real_distribution<double>(a, b);
-	}
+		Base(int seed)
+		{
+			generator = std::mt19937_64(seed);
+		}
 
-	void UniformIntDistribution(int a, int b)
-	{
-		uniformIntDistribution = std::uniform_int_distribution<int>(a, b);
-	}
+		void UniformDistribution(double a, double b)
+		{
+			uniformDistribution = std::uniform_real_distribution<double>(a, b);
+		}
 
-	void UniformDistribution()
-	{
-		UniformDistribution(0.0, 1.0);
-	}
+		void UniformIntDistribution(int a, int b)
+		{
+			uniformIntDistribution = std::uniform_int_distribution<int>(a, b);
+		}
 
-	double NextDouble()
-	{
-		return uniformDistribution(generator);
-	}
+		void UniformDistribution()
+		{
+			UniformDistribution(0.0, 1.0);
+		}
 
-	int NextInt()
-	{
-		return uniformIntDistribution(generator);
-	}
+		double NextDouble()
+		{
+			return uniformDistribution(generator);
+		}
 
-	void NormalDistribution(double mean, double std)
-	{
-		normalDistribution = std::normal_distribution<double>(mean, std);
-	}
+		int NextInt()
+		{
+			return uniformIntDistribution(generator);
+		}
 
-	void NormalDistribution()
-	{
-		NormalDistribution(0.0, 1.0);
-	}
+		void NormalDistribution(double mean, double std)
+		{
+			normalDistribution = std::normal_distribution<double>(mean, std);
+		}
 
-	double NextNormal()
-	{
-		return normalDistribution(generator);
-	}
-};
+		void NormalDistribution()
+		{
+			NormalDistribution(0.0, 1.0);
+		}
+
+		double NextNormal()
+		{
+			return normalDistribution(generator);
+		}
+	};
+}
 #endif

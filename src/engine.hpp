@@ -17,11 +17,19 @@ namespace Engine
         FLEE
     };
 
+    enum class AttackStage
+    {
+        START,
+        ATTACK,
+        DAMAGE,
+        END
+    };
+
     const char *CURRENCY = "silver";
 
     Party::Base Party = Party::Base();
 
-    auto random = Random();
+    auto Random = Random::Base();
 
     void GAIN_MONEY(Party::Base &party, int money)
     {
@@ -93,16 +101,33 @@ namespace Engine
 
     std::vector<int> ROLL_DICE(int count)
     {
-        random.UniformIntDistribution(1, 6);
+        Engine::Random.UniformIntDistribution(1, 6);
 
         auto results = std::vector<int>();
 
         for (auto i = 0; i < count; i++)
         {
-            results.push_back(random.NextInt());
+            results.push_back(Engine::Random.NextInt());
         }
 
         return results;
+    }
+
+    int SCORE(Character::Base &character, Attribute::Type type)
+    {
+        auto score = 1;
+
+        for (auto i = 0; i < character.Attributes.size(); i++)
+        {
+            if (character.Attributes[i].Type == type)
+            {
+                score = character.Attributes[i].Value;
+
+                break;
+            }
+        }
+
+        return score;
     }
 
     int FIGHTING_SCORE(Character::Base &character)
@@ -120,7 +145,7 @@ namespace Engine
             }
         }
 
-        return max;
+        return max > 0 ? Engine::SCORE(character, Attribute::Type::FIGHTING) + max : 1;
     }
 
     int COUNT(std::vector<Monster::Base> &monsters)
