@@ -3961,11 +3961,11 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return result;
 }
 
-int selectCombatant(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
+int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Combatant";
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Party Member";
 
     if (window && renderer)
     {
@@ -4062,9 +4062,9 @@ int selectCombatant(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                 renderButtons(renderer, controls, current, intLB, space, 4);
 
-                putHeader(renderer, "Select Combatant", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Combatant", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putText(renderer, "Selected", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection >= 0 && selection < party.Party.size())
                 {
@@ -4122,7 +4122,7 @@ int selectCombatant(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         {
                             flash_message = true;
 
-                            message = "You must SELECT an adventurer who will attack this round.";
+                            message = "You must SELECT a party member!";
 
                             start_ticks = SDL_GetTicks();
 
@@ -4382,7 +4382,7 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
                     }
                     else if (controls[current].Type == Control::Type::ATTACK)
                     {
-                        auto result = selectCombatant(window, renderer, party);
+                        auto result = selectPartyMember(window, renderer, party);
 
                         if (Engine::FIND_LIST(hasAttacked, result) >= 0)
                         {
