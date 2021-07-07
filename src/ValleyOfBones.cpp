@@ -4722,10 +4722,6 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
         auto Party = Party::Base();
 
-        std::vector<Monster::Base> monsters = {
-            Monster::Base("Goblin", 4, 5, 4, 6, 0),
-            Monster::Base("Orc Bodyguard", 6, 4, 4, 10, 0)};
-
         while (!done)
         {
             // Fill the surface with background
@@ -4781,6 +4777,10 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
                                 }
                             }
                         }
+
+                        std::vector<Monster::Base> monsters = {
+                            Monster::Base("Goblin", 4, 5, 4, 6, 0),
+                            Monster::Base("Orc Bodyguard", 6, 4, 4, 10, 0)};
 
                         combat = combatScreen(window, renderer, Party, monsters, true, false);
                     }

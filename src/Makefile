@@ -11,7 +11,3 @@ valley-of-bones:
 
 clean:
 	rm -f *.exe *.o
-
-test:
-	$(CC) TestDice.cpp $(LINKER_FLAGS) $(INCLUDES) -o TestDice.exe
-

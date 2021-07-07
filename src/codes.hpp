@@ -5,6 +5,13 @@
 
 namespace Codes
 {
+    // Invisible codes to handle situations not explicitly stated in the rules section
+    enum class Type
+    {
+        FIRST_TIME_SALTAD,
+        FOUGHT_IN_ARENA
+    };
+
     class Base
     {
     public:
