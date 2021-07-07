@@ -64,7 +64,7 @@ namespace Spells
     auto WOLF_SPIRIT = Spells::Base("Wolf Spirit", "You summon the spirit of the wolf to help guide you from danger in the natural world. Cast this spell when you fail a Survival check. You gain an additional 3 automatic successes for this check only.", Spells::Scope::ADVENTURE, Spells::Type::WOLF_SPIRIT, 75);
     auto MAGIC_CABINET = Spells::Base("Magic Cabinet", "You summon a magic cabinet made of purple wood. You can use this cabinet to access The Vault, storing and/or taking out as many items as you wish. When you have done this, the cabinet will vanish, until summoned again.", Spells::Scope::ADVENTURE, Spells::Type::MAGIC_CABINET, 100);
 
-    std::vector<Spells::Base> LIST = {Spells::ANIMAL_SPEECH, Spells::ARMOUR_OF_HEAVEN, Spells::ICE_BOLT, Spells::POISON_STREAM, Spells::UNFAILING_STRIKE, Spells::WOLF_SPIRIT, Spells::MAGIC_CABINET};
+    std::vector<Spells::Base> BOOK1_SPELLS = {Spells::ANIMAL_SPEECH, Spells::ARMOUR_OF_HEAVEN, Spells::ICE_BOLT, Spells::POISON_STREAM, Spells::UNFAILING_STRIKE, Spells::WOLF_SPIRIT, Spells::MAGIC_CABINET};
 }
 
 #endif

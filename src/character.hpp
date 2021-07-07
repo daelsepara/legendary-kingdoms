@@ -97,7 +97,11 @@ namespace Party
 
         std::vector<Codes::Base> Codes = std::vector<Codes::Base>();
 
+        std::vector<Equipment::Base> Vault = std::vector<Equipment::Base>();
+
         Book::Type Book = Book::Type::BOOK1;
+
+        int VaultMoney = 0;
 
         int Money = 0;
 
