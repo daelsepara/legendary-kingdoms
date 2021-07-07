@@ -233,5 +233,35 @@ namespace Engine
 
         return result;
     }
+
+    int COUNT(std::vector<Spells::Base> spells, Spells::Scope scope)
+    {
+        auto result = 0;
+
+        for (auto i = 0; i < spells.size(); i++)
+        {
+            if (spells[i].Charged && spells[i].Scope == scope)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    int COUNT(std::vector<Spells::Base> spells, Spells::Type type)
+    {
+        auto result = 0;
+
+        for (auto i = 0; i < spells.size(); i++)
+        {
+            if (spells[i].Charged && spells[i].Type == type)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
 }
 #endif

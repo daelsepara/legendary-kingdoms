@@ -1,6 +1,8 @@
 #ifndef __SPELLS__HPP__
 #define __SPELLS__HPP__
 
+#include <map>
+
 namespace Spells
 {
     enum class Type
@@ -24,6 +26,13 @@ namespace Spells
         SEA_COMBAT,
         ADVENTURE_COMBAT
     };
+
+    std::map<Spells::Scope, const char *> ScopeDescriptions = {
+        {Spells::Scope::ADVENTURE, "Adventure"},
+        {Spells::Scope::COMBAT, "Combat"},
+        {Spells::Scope::MASS_COMBAT, "Mass Combat"},
+        {Spells::Scope::SEA_COMBAT, "Sea Combat"},
+        {Spells::Scope::ADVENTURE, "Adventure/Combat"}};
 
     class Base
     {
