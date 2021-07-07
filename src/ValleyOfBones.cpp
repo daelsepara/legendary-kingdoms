@@ -1397,6 +1397,293 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
     return controls;
 }
 
+int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage)
+{
+    int combat_damage = damage;
+
+    if (character.Health > 0 && Engine::ARMOUR(character) > 0)
+    {
+        if (window && renderer)
+        {
+            auto flash_message = false;
+
+            auto flash_color = intRD;
+
+            std::string message = "";
+
+            Uint32 start_ticks = 0;
+
+            Uint32 duration = 3000;
+
+            auto marginx = (int)(Margin * SCREEN_WIDTH);
+
+            auto fullwidth = SCREEN_WIDTH - 2 * marginx;
+
+            auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
+
+            auto headerw = (int)(boxwidth * 0.75);
+
+            auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+
+            auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+
+            auto box_space = 10;
+
+            auto main_buttonh = 48;
+
+            auto done = false;
+
+            auto stage = Engine::SaveStage::START;
+
+            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Armour Save");
+
+            TTF_Init();
+
+            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+
+            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
+
+            auto text_space = 8;
+
+            auto font_size = 24;
+
+            const char *choices_save[1] = {"Armour Save"};
+            const char *choices_reduce[1] = {"Reduce Damage"};
+            const char *choices_end[1] = {"Done"};
+
+            SDL_Surface *dice[6];
+
+            dice[0] = createImage("images/dice/dice1.png");
+            dice[1] = createImage("images/dice/dice2.png");
+            dice[2] = createImage("images/dice/dice3.png");
+            dice[3] = createImage("images/dice/dice4.png");
+            dice[4] = createImage("images/dice/dice5.png");
+            dice[5] = createImage("images/dice/dice6.png");
+
+            auto controls_save = createHTextButtons(choices_save, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            controls_save[0].Type = Control::Type::CONFIRM;
+            controls_save[0].W = 250;
+
+            auto controls_reduce = createHTextButtons(choices_reduce, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            controls_reduce[0].Type = Control::Type::CONFIRM;
+            controls_reduce[0].W = controls_save[0].W;
+
+            auto controls_end = createHTextButtons(choices_end, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            controls_end[0].Type = Control::Type::BACK;
+            controls_end[0].W = controls_save[0].W;
+
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto focus = 0;
+
+            std::vector<int> results = std::vector<int>();
+
+            auto save_score = Engine::ARMOUR(character);
+
+            if (save_score > combat_damage)
+            {
+                save_score = combat_damage;
+            }
+
+            auto cols = (fullwidth - 2 * box_space) / (64 + box_space);
+            auto rows = (boxh - box_space) / (64 + box_space);
+
+            auto controls = std::vector<TextButton>();
+
+            auto reduced = false;
+            auto assigned = false;
+
+            auto final_damage = combat_damage;
+            auto reduced_damage = 0;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                putHeader(renderer, "Armour save results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
+
+                if (stage != Engine::SaveStage::START)
+                {
+                    if (stage == Engine::SaveStage::SAVE)
+                    {
+                        if (results.size() == 0)
+                        {
+                            results = Engine::ROLL_DICE(save_score);
+                        }
+                    }
+
+                    auto row = 0;
+                    auto col = 0;
+
+                    auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
+                    auto offsetx = startx + box_space;
+
+                    for (auto i = 0; i < results.size(); i++)
+                    {
+                        if (results[i] >= 1 && results[i] <= 6)
+                        {
+                            auto result = results[i] - 1;
+
+                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
+
+                            if (stage == Engine::SaveStage::REDUCE)
+                            {
+                                if (results[i] >= 4)
+                                {
+                                    thickRect(renderer, 64, 64, offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), intLB, 2);
+
+                                    reduced_damage++;
+                                }
+                            }
+
+                            if (col < cols)
+                            {
+                                col++;
+                            }
+                            else
+                            {
+                                col = 0;
+
+                                row++;
+                            }
+                        }
+                    }
+                }
+
+                if (stage == Engine::SaveStage::REDUCE)
+                {
+                    if (!reduced)
+                    {
+                        final_damage = combat_damage - reduced_damage;
+
+                        flash_message = true;
+
+                        if (final_damage > 0)
+                        {
+                            Engine::GAIN_HEALTH(character, -final_damage);
+
+                            message = std::string(character.Name) + " DEALT " + std::to_string(final_damage) + " damage!";
+
+                            flash_color = intRD;
+                        }
+                        else
+                        {
+                            message = std::string(character.Name) + " deflects the attack!";
+
+                            flash_color = intLB;
+                        }
+
+                        start_ticks = SDL_GetTicks();
+
+                        reduced = true;
+                    }
+                }
+
+                std::string defender_string = "";
+
+                fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
+
+                putHeader(renderer, character.Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+
+                defender_string = "Armour: " + std::to_string(save_score);
+                defender_string += "\nHealth: " + std::to_string(character.Health);
+
+                putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+
+                if (stage == Engine::SaveStage::START)
+                {
+                    controls = controls_save;
+                }
+                else if (stage == Engine::SaveStage::SAVE)
+                {
+                    controls = controls_reduce;
+                }
+                else if (stage == Engine::SaveStage::REDUCE)
+                {
+                    controls = controls_end;
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putText(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (selected && current >= 0 && current < controls.size())
+                {
+                    if (stage == Engine::SaveStage::START && controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        stage = Engine::SaveStage::SAVE;
+                    }
+                    else if (stage == Engine::SaveStage::SAVE && controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        stage = Engine::SaveStage::REDUCE;
+                    }
+                    else if (stage == Engine::SaveStage::REDUCE && controls[current].Type == Control::Type::BACK)
+                    {
+                        stage = Engine::SaveStage::END;
+
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+
+                        break;
+                    }
+                }
+            }
+
+            if (font_mason)
+            {
+                TTF_CloseFont(font_mason);
+
+                font_mason = NULL;
+            }
+
+            if (font_garamond)
+            {
+                TTF_CloseFont(font_garamond);
+
+                font_garamond = NULL;
+            }
+
+            TTF_Quit();
+
+            for (auto i = 0; i < 6; i++)
+            {
+                if (dice[i])
+                {
+                    SDL_FreeSurface(dice[i]);
+
+                    dice[i] = NULL;
+                }
+            }
+        }
+    }
+
+    return combat_damage;
+}
+
 int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party)
 {
     auto result = -1;
@@ -1444,7 +1731,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-        auto controls = combatantList(window, renderer, party, offset, last, limit, textx, texty + infoh + text_space, true, true);
+        auto controls = combatantList(window, renderer, party, offset, last, limit, textx, texty + infoh + text_space, true, false);
 
         auto done = false;
 
@@ -2015,27 +2302,60 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                     {
                         if (Engine::COUNT(party) > 0)
                         {
-                            auto result = assignDamage(window, renderer, party);
-
-                            if (party[result].Health > 0)
+                            if (combat_damage > 0)
                             {
-                                assigned = true;
+                                auto result = assignDamage(window, renderer, party);
 
-                                message = std::string(party[result].Name) + " DEALT " + std::to_string(combat_damage) + " DAMAGE!";
+                                if (result >= 0 && result < party.size())
+                                {
+                                    if (party[result].Health > 0)
+                                    {
+                                        assigned = true;
 
-                                start_ticks = SDL_GetTicks();
+                                        if (Engine::ARMOUR(party[result]) > 0)
+                                        {
+                                            auto reduced_damage = armourSave(window, renderer, party[result], combat_damage);
 
-                                flash_message = true;
+                                            done = true;
 
-                                flash_color = intRD;
+                                            selected = false;
 
-                                Engine::GAIN_HEALTH(party[result], -combat_damage);
+                                            current = -1;
 
-                                combatant = result;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            message = std::string(party[result].Name) + " DEALT " + std::to_string(combat_damage) + " DAMAGE!";
+
+                                            start_ticks = SDL_GetTicks();
+
+                                            flash_message = true;
+
+                                            flash_color = intRD;
+
+                                            Engine::GAIN_HEALTH(party[result], -combat_damage);
+
+                                            combatant = result;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        message = std::string(party[result].Name) + " is already DEAD!";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_message = true;
+
+                                        flash_color = intRD;
+                                    }
+                                }
                             }
                             else
                             {
-                                message = std::string(party[result].Name) + " is already DEAD!";
+                                assigned = true;
+
+                                message = "The " + std::string(monsters[opponent].Name) + "'s attack was INEFFECTIVE!";
 
                                 start_ticks = SDL_GetTicks();
 

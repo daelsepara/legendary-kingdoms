@@ -25,6 +25,14 @@ namespace Engine
         END
     };
 
+    enum class SaveStage
+    {
+        START,
+        SAVE,
+        REDUCE,
+        END
+    };
+
     const char *CURRENCY = "silver";
 
     Party::Base Party = Party::Base();
@@ -136,7 +144,7 @@ namespace Engine
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
-            if (character.Equipment[i].Type == Equipment::Type::WEAPON && character.Equipment[i].Modifies == Attribute::Type::FIGHTING)
+            if (character.Equipment[i].Type == Equipment::Type::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
             {
                 if (character.Equipment[i].Modifier >= max)
                 {
@@ -146,6 +154,46 @@ namespace Engine
         }
 
         return max > 0 ? Engine::SCORE(character, Attribute::Type::FIGHTING) + max : 1;
+    }
+
+    int MAX(Character::Base &character, Equipment::Type type, Attribute::Type attribute)
+    {
+        auto max = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Type == type && character.Equipment[i].Attribute == attribute)
+            {
+                if (character.Equipment[i].Modifier > max)
+                {
+                    max = character.Equipment[i].Modifier;
+                }
+            }
+        }
+
+        return max;
+    }
+
+    int MODIFIER(Character::Base &character, Equipment::Type type, Attribute::Type attribute)
+    {
+        auto modifier = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Type == type && character.Equipment[i].Attribute == attribute)
+            {
+                modifier += character.Equipment[i].Modifier;
+            }
+        }
+
+        return modifier;
+    }
+
+    int ARMOUR(Character::Base &character)
+    {
+        auto armour = MAX(character, Equipment::Type::SHIELD, Attribute::Type::ARMOUR) + MAX(character, Equipment::Type::ARMOUR, Attribute::Type::ARMOUR) + MODIFIER(character, Equipment::Type::NORMAL, Attribute::Type::ARMOUR);
+
+        return armour;
     }
 
     int COUNT(std::vector<Monster::Base> &monsters)

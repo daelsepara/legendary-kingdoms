@@ -24,10 +24,26 @@ namespace Equipment
         Equipment::Type Type = Equipment::Type::NORMAL;
 
         // Modifiers
-        Attribute::Type Modifies = Attribute::Type::NONE;
+        Attribute::Type Attribute = Attribute::Type::NONE;
 
         int Modifier = 0;
+
+        Base(const char *name, const char *description, Equipment::Type type, Attribute::Type modifies, int modifier)
+        {
+            Name = name;
+
+            Description = description;
+
+            Type = type;
+
+            Attribute = modifies;
+
+            Modifier = modifier;
+        }
     };
+
+    auto LEATHER_ARMOUR1 = Equipment::Base("LEATHER ARMOUR", "LEATHER ARMOUR", Equipment::Type::ARMOUR, Attribute::Type::ARMOUR, 1);
+    auto SHIELD2 = Equipment::Base("SHIELD", "SHIELD", Equipment::Type::SHIELD, Attribute::Type::ARMOUR, 2);
 }
 
 #endif
