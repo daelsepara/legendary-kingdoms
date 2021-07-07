@@ -2111,6 +2111,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                         }
                     }
 
+                    if (direction == 1)
+                    {
+                        damage += monsters[opponent].Auto;
+                    }
+
                     if (stage == Engine::AttackStages::DAMAGE)
                     {
                         if (!damaged)
@@ -2183,7 +2188,14 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 else
                 {
                     putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                    
                     attacker_string = "Attack: " + std::to_string(monsters[opponent].Attack) + " (" + std::to_string(monsters[opponent].Difficulty) + "+)";
+
+                    if (monsters[opponent].Auto > 0)
+                    {
+                        attacker_string += " +" + std::to_string(monsters[opponent].Auto) + " Auto";
+                    }
+
                     attacker_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
 
                     attack_score = monsters[opponent].Attack;
