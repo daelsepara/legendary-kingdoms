@@ -44,6 +44,7 @@ namespace Control
         BUY,
         SELL,
         COMBAT,
+        SKILL,
         ATTACK,
         SPELL,
         FLEE

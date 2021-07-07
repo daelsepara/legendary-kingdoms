@@ -374,7 +374,7 @@ void thickRect(SDL_Renderer *renderer, int w, int h, int x, int y, int color, in
     for (auto size = pts; size >= 0; size--)
     {
         rect.w = w + 2 * (space - size);
-        rect.h = w + 2 * (space - size);
+        rect.h = h + 2 * (space - size);
         rect.x = x - space + size;
         rect.y = y - space + size;
 
@@ -1433,7 +1433,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
             auto done = false;
 
-            auto stage = Engine::SaveStage::START;
+            auto stage = Engine::ArmourSaveStages::START;
 
             SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Armour Save");
 
@@ -1511,9 +1511,9 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                 putHeader(renderer, "Armour save results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
                 fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
-                if (stage != Engine::SaveStage::START)
+                if (stage != Engine::ArmourSaveStages::START)
                 {
-                    if (stage == Engine::SaveStage::SAVE)
+                    if (stage == Engine::ArmourSaveStages::SAVE)
                     {
                         if (results.size() == 0)
                         {
@@ -1535,7 +1535,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
                             fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
 
-                            if (stage == Engine::SaveStage::REDUCE)
+                            if (stage == Engine::ArmourSaveStages::REDUCE)
                             {
                                 if (results[i] >= 4)
                                 {
@@ -1559,7 +1559,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                     }
                 }
 
-                if (stage == Engine::SaveStage::REDUCE)
+                if (stage == Engine::ArmourSaveStages::REDUCE)
                 {
                     if (!reduced)
                     {
@@ -1599,15 +1599,15 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
                 putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
-                if (stage == Engine::SaveStage::START)
+                if (stage == Engine::ArmourSaveStages::START)
                 {
                     controls = controls_save;
                 }
-                else if (stage == Engine::SaveStage::SAVE)
+                else if (stage == Engine::ArmourSaveStages::SAVE)
                 {
                     controls = controls_reduce;
                 }
-                else if (stage == Engine::SaveStage::REDUCE)
+                else if (stage == Engine::ArmourSaveStages::REDUCE)
                 {
                     controls = controls_end;
                 }
@@ -1630,17 +1630,17 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
                 if (selected && current >= 0 && current < controls.size())
                 {
-                    if (stage == Engine::SaveStage::START && controls[current].Type == Control::Type::CONFIRM)
+                    if (stage == Engine::ArmourSaveStages::START && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::SaveStage::SAVE;
+                        stage = Engine::ArmourSaveStages::SAVE;
                     }
-                    else if (stage == Engine::SaveStage::SAVE && controls[current].Type == Control::Type::CONFIRM)
+                    else if (stage == Engine::ArmourSaveStages::SAVE && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::SaveStage::REDUCE;
+                        stage = Engine::ArmourSaveStages::REDUCE;
                     }
-                    else if (stage == Engine::SaveStage::REDUCE && controls[current].Type == Control::Type::BACK)
+                    else if (stage == Engine::ArmourSaveStages::REDUCE && controls[current].Type == Control::Type::BACK)
                     {
-                        stage = Engine::SaveStage::END;
+                        stage = Engine::ArmourSaveStages::END;
 
                         done = true;
 
@@ -1968,7 +1968,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
             auto done = false;
 
-            auto stage = Engine::AttackStage::START;
+            auto stage = Engine::AttackStages::START;
 
             SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Attack");
 
@@ -2050,9 +2050,9 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
                 fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
-                if (stage != Engine::AttackStage::START)
+                if (stage != Engine::AttackStages::START)
                 {
-                    if (stage == Engine::AttackStage::ATTACK)
+                    if (stage == Engine::AttackStages::ATTACK)
                     {
                         if (results.size() == 0)
                         {
@@ -2076,7 +2076,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                             fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
 
-                            if (stage == Engine::AttackStage::DAMAGE)
+                            if (stage == Engine::AttackStages::DAMAGE)
                             {
                                 if (direction == 0)
                                 {
@@ -2111,7 +2111,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                         }
                     }
 
-                    if (stage == Engine::AttackStage::DAMAGE)
+                    if (stage == Engine::AttackStages::DAMAGE)
                     {
                         if (!damaged)
                         {
@@ -2216,7 +2216,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                 putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
-                if (stage == Engine::AttackStage::START)
+                if (stage == Engine::AttackStages::START)
                 {
                     if (direction == 0)
                     {
@@ -2227,11 +2227,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                         controls = controls_defend;
                     }
                 }
-                else if (stage == Engine::AttackStage::ATTACK)
+                else if (stage == Engine::AttackStages::ATTACK)
                 {
                     controls = controls_damage;
                 }
-                else if (stage == Engine::AttackStage::DAMAGE)
+                else if (stage == Engine::AttackStages::DAMAGE)
                 {
                     if (direction == 0)
                     {
@@ -2268,7 +2268,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                 if (selected && current >= 0 && current < controls.size())
                 {
-                    if (stage == Engine::AttackStage::START && controls[current].Type == Control::Type::BACK)
+                    if (stage == Engine::AttackStages::START && controls[current].Type == Control::Type::BACK)
                     {
                         done = true;
 
@@ -2278,17 +2278,17 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                         break;
                     }
-                    else if (stage == Engine::AttackStage::START && controls[current].Type == Control::Type::CONFIRM)
+                    else if (stage == Engine::AttackStages::START && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::AttackStage::ATTACK;
+                        stage = Engine::AttackStages::ATTACK;
                     }
-                    else if (stage == Engine::AttackStage::ATTACK && controls[current].Type == Control::Type::CONFIRM)
+                    else if (stage == Engine::AttackStages::ATTACK && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::AttackStage::DAMAGE;
+                        stage = Engine::AttackStages::DAMAGE;
                     }
-                    else if (stage == Engine::AttackStage::DAMAGE && controls[current].Type == Control::Type::BACK)
+                    else if (stage == Engine::AttackStages::DAMAGE && controls[current].Type == Control::Type::BACK)
                     {
-                        stage = Engine::AttackStage::END;
+                        stage = Engine::AttackStages::END;
 
                         done = true;
 
@@ -2298,7 +2298,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                         break;
                     }
-                    else if (stage == Engine::AttackStage::DAMAGE && controls[current].Type == Control::Type::CONFIRM)
+                    else if (stage == Engine::AttackStages::DAMAGE && controls[current].Type == Control::Type::CONFIRM)
                     {
                         if (Engine::COUNT(party) > 0)
                         {
@@ -2610,6 +2610,591 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                                     start_ticks = SDL_GetTicks();
 
                                     flash_color = intRD;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (done)
+            {
+                break;
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    return result;
+}
+
+bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment)
+{
+    bool test_result = false;
+
+    if (Engine::COUNT(party) > 0 && Engine::COUNT(party) >= team.size())
+    {
+        if (window && renderer)
+        {
+            auto flash_message = false;
+
+            auto flash_color = intRD;
+
+            std::string message = "";
+
+            Uint32 start_ticks = 0;
+
+            Uint32 duration = 3000;
+
+            auto marginx = (int)(Margin * SCREEN_WIDTH);
+
+            auto fullwidth = SCREEN_WIDTH - 2 * marginx;
+
+            auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
+
+            auto headerw = (int)(boxwidth * 0.75);
+
+            auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+
+            auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+
+            auto box_space = 10;
+
+            auto main_buttonh = 48;
+
+            auto done = false;
+
+            auto stage = Engine::SkillTestStage::START;
+
+            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Skill Check");
+
+            TTF_Init();
+
+            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+
+            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
+
+            auto text_space = 8;
+
+            auto font_size = 24;
+
+            const char *choices_skill[3] = {"Skill Check", "Add Focus", "Remove Focus"};
+            const char *choices_confirm[1] = {"Confirm"};
+            const char *choices_end[1] = {"Done"};
+
+            SDL_Surface *dice[6];
+
+            dice[0] = createImage("images/dice/dice1.png");
+            dice[1] = createImage("images/dice/dice2.png");
+            dice[2] = createImage("images/dice/dice3.png");
+            dice[3] = createImage("images/dice/dice4.png");
+            dice[4] = createImage("images/dice/dice5.png");
+            dice[5] = createImage("images/dice/dice6.png");
+
+            auto controls_skill = createHTextButtons(choices_skill, 3, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            controls_skill[0].Type = Control::Type::CONFIRM;
+            controls_skill[1].Type = Control::Type::PLUS;
+            controls_skill[2].Type = Control::Type::MINUS;
+
+            auto controls_confirm = createHTextButtons(choices_confirm, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            controls_confirm[0].Type = Control::Type::CONFIRM;
+            controls_confirm[0].W = controls_skill[0].W;
+
+            auto controls_end = createHTextButtons(choices_end, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            controls_end[0].Type = Control::Type::BACK;
+            controls_end[0].W = controls_skill[0].W;
+
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto focus = 0;
+
+            std::vector<int> results = std::vector<int>();
+
+            auto skill_score = 0;
+
+            for (auto i = 0; i < team.size(); i++)
+            {
+                skill_score += Engine::SCORE(party[team[i]], Skill) + Engine::MAX(party[team[i]], Equipment::Type::NORMAL, Skill);
+            }
+
+            if (skill_score > 20)
+            {
+                skill_score = 20;
+            }
+
+            auto cols = (fullwidth - 2 * box_space) / (64 + box_space);
+            auto rows = (boxh - box_space) / (64 + box_space);
+
+            auto controls = std::vector<TextButton>();
+
+            auto skill_checked = false;
+            
+            int success_counter = 0;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                putHeader(renderer, "Skill Check Results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+
+                fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
+
+                if (stage != Engine::SkillTestStage::START)
+                {
+                    if (stage == Engine::SkillTestStage::CHECK)
+                    {
+                        if (results.size() == 0)
+                        {
+                            results = Engine::ROLL_DICE(skill_score);
+                        }
+                    }
+
+                    auto row = 0;
+                    auto col = 0;
+
+                    auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
+                    auto offsetx = startx + box_space;
+
+                    for (auto i = 0; i < results.size(); i++)
+                    {
+                        if (results[i] >= 1 && results[i] <= 6)
+                        {
+                            auto result = results[i] - 1;
+
+                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
+
+                            if (stage == Engine::SkillTestStage::TEST)
+                            {
+                                if (results[i] >= difficulty)
+                                {
+                                    thickRect(renderer, 64, 64, offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), intLB, 2);
+
+                                    success_counter++;
+                                }
+                            }
+
+                            if (col < cols)
+                            {
+                                col++;
+                            }
+                            else
+                            {
+                                col = 0;
+
+                                row++;
+                            }
+                        }
+                    }
+
+                    if (stage == Engine::SkillTestStage::TEST)
+                    {
+                        if (!skill_checked)
+                        {
+                            flash_message = true;
+
+                            if (success_counter >= success)
+                            {
+                                message = "Passes the Skill Check!";
+
+                                flash_color = intLB;
+
+                                test_result = true;
+                            }
+                            else
+                            {
+                                message = "Fails the Skill Check!";
+
+                                flash_color = intRD;
+
+                                test_result = false;
+                            }
+
+                            start_ticks = SDL_GetTicks();
+
+                            skill_checked = true;
+                        }
+                    }
+                }
+
+                fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
+
+                putHeader(renderer, party[team[0]].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+
+                auto score1 = 0;
+
+                if (useEquipment)
+                {
+                    score1 = Engine::SCORE(party[team[0]], Skill) + Engine::MAX(party[team[0]], Equipment::Type::NORMAL, Skill);
+                }
+                else
+                {
+                    score1 = Engine::SCORE(party[team[0]], Skill);
+                }
+
+                std::string adventurer1 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score1);
+
+                putText(renderer, adventurer1.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+
+                if (team.size() > 1)
+                {
+                    putHeader(renderer, party[team[1]].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+
+                    auto score2 = 0;
+
+                    if (useEquipment)
+                    {
+                        score2 = Engine::SCORE(party[team[1]], Skill) + Engine::MAX(party[team[1]], Equipment::Type::NORMAL, Skill);
+                    }
+                    else
+                    {
+                        score2 = Engine::SCORE(party[team[1]], Skill);
+                    }
+
+                    std::string adventurer2 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score2);
+
+                    fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
+
+                    putText(renderer, adventurer2.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+                }
+
+                if (stage == Engine::SkillTestStage::START)
+                {
+                    controls = controls_skill;
+                }
+                else if (stage == Engine::SkillTestStage::CHECK)
+                {
+                    controls = controls_confirm;
+                }
+                else if (stage == Engine::SkillTestStage::TEST)
+                {
+                    controls = controls_end;
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putText(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (selected && current >= 0 && current < controls.size())
+                {
+                    if (stage == Engine::SkillTestStage::START && controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        stage = Engine::SkillTestStage::CHECK;
+                    }
+                    else if (stage == Engine::SkillTestStage::CHECK && controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        stage = Engine::SkillTestStage::TEST;
+                    }
+                    else if (stage == Engine::SkillTestStage::TEST && controls[current].Type == Control::Type::BACK)
+                    {
+                        stage = Engine::SkillTestStage::END;
+
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+
+                        break;
+                    }
+                }
+            }
+
+            if (font_mason)
+            {
+                TTF_CloseFont(font_mason);
+
+                font_mason = NULL;
+            }
+
+            if (font_garamond)
+            {
+                TTF_CloseFont(font_garamond);
+
+                font_garamond = NULL;
+            }
+
+            TTF_Quit();
+
+            for (auto i = 0; i < 6; i++)
+            {
+                if (dice[i])
+                {
+                    SDL_FreeSurface(dice[i]);
+
+                    dice[i] = NULL;
+                }
+            }
+        }
+    }
+
+    return test_result;
+}
+
+bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int team_size, Attribute::Type skill, int difficulty, int success)
+{
+    bool result = false;
+
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Skill Check";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        auto main_buttonh = 48;
+
+        auto font_size = 20;
+        auto text_space = 8;
+        auto messageh = 0.25 * SCREEN_HEIGHT;
+        auto infoh = 0.07 * SCREEN_HEIGHT;
+        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto last = offset + limit;
+
+        if (last > party.Party.size())
+        {
+            last = party.Party.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, true);
+
+        auto done = false;
+
+        auto selection = std::vector<int>();
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                for (auto i = offset; i < last; i++)
+                {
+                    auto index = i - offset;
+
+                    if (index >= 0 && index < party.Party.size())
+                    {
+                        if (Engine::FIND_LIST(selection, index) >= 0)
+                        {
+                            thickRect(renderer, controls[index].W, controls[index].H, controls[index].X, controls[index].Y, intDB, 2);
+                        }
+                        else if (party.Party[index].Health > 0)
+                        {
+                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intRD);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, 4);
+
+                putHeader(renderer, "Select Adventurer", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                putText(renderer, "Selected", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (selection.size() >= 0)
+                {
+                    std::string adventurers = "";
+
+                    for (auto i = 0; i < selection.size(); i++)
+                    {
+                        if (selection[i] >= 0 && selection[i] < party.Party.size())
+                        {
+                            if (party.Party[selection[i]].Health > 0)
+                            {
+                                if (adventurers.length() > 0)
+                                {
+                                    adventurers += "\n";
+                                }
+
+                                adventurers += party.Party[selection[i]].Name;
+                            }
+                        }
+                    }
+
+                    if (adventurers.length() > 0)
+                    {
+                        putText(renderer, adventurers.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    }
+                    else
+                    {
+                        fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                    }
+                }
+                else
+                {
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (selected && current >= 0 && current < controls.size())
+                {
+                    if (controls[current].Type == Control::Type::BACK)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (selection.size() >= team_size && selection.size() < party.Limit)
+                        {
+                            done = true;
+
+                            result = skillTestScreen(window, renderer, party.Party, selection, skill, difficulty, success, true);
+
+                            current = -1;
+
+                            selected = false;
+                        }
+                        else
+                        {
+                            flash_message = true;
+
+                            message = "You must select the adventurer(s) who will perform the skill check.";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intRD;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION)
+                    {
+                        if (current + offset >= 0 && current + offset < party.Party.size())
+                        {
+                            auto index = Engine::FIND_LIST(selection, current + offset);
+
+                            if (index >= 0)
+                            {
+                                selection.erase(selection.begin() + index);
+                            }
+                            else
+                            {
+                                if (selection.size() < team_size)
+                                {
+                                    if (party.Party[current + offset].Health > 0)
+                                    {
+                                        selection.push_back(current + offset);
+                                    }
+                                    else
+                                    {
+                                        flash_message = true;
+
+                                        message = std::string(party.Party[current + offset].Name) + std::string(" is DEAD!");
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_color = intRD;
+                                    }
                                 }
                             }
                         }
@@ -3369,7 +3954,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
     auto font_size = 20;
     auto text_space = 8;
 
-    auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.\n\nTests:\n1 - Combat\n2 - Map";
+    auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.\n\nTests:\n1 - Combat\n2 - Map\n3 - Team Skill check";
 
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, textwidth - 2 * text_space);
 
@@ -3382,19 +3967,20 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
     {
         SDL_SetWindowTitle(window, title);
 
-        const char *choices[3] = {"1", "2", "Exit"};
-
         auto current = -1;
 
         auto selected = false;
 
         auto main_buttonh = 48;
 
-        auto controls = createHTextButtons(choices, 3, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+        const char *choices[4] = {"1", "2", "3", "Exit"};
+
+        auto controls = createHTextButtons(choices, 4, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
 
         controls[0].Type = Control::Type::COMBAT;
         controls[1].Type = Control::Type::MAP;
-        controls[2].Type = Control::Type::QUIT;
+        controls[2].Type = Control::Type::SKILL;
+        controls[3].Type = Control::Type::QUIT;
 
         auto done = false;
 
@@ -3435,21 +4021,35 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
                 {
                 case Control::Type::COMBAT:
 
-                    done = selectParty(window, renderer, Book::Type::BOOK1, Party);
+                    selectParty(window, renderer, Book::Type::BOOK1, Party);
 
-                    combat = combatScreen(window, renderer, Party, monsters, true, false);
+                    if (Party.Party.size() >= Party.Limit)
+                    {
+                        combat = combatScreen(window, renderer, Party, monsters, true, false);
+                    }
+
+                    done = false;
 
                     current = -1;
 
                     selected = false;
 
-                    storyID = 0;
-
                     break;
 
-                case Control::Type::QUIT:
+                case Control::Type::SKILL:
 
-                    done = true;
+                    selectParty(window, renderer, Book::Type::BOOK1, Party);
+
+                    if (Party.Party.size() >= Party.Limit)
+                    {
+                        skillCheck(window, renderer, Party, 2, Attribute::Type::STEALTH, 4, 4);
+
+                        done = false;
+                    }
+
+                    current = -1;
+
+                    selected = false;
 
                     break;
 
@@ -3462,6 +4062,12 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
                     current = -1;
 
                     selected = false;
+
+                    break;
+
+                case Control::Type::QUIT:
+
+                    done = true;
 
                     break;
 

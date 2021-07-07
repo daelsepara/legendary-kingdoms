@@ -17,7 +17,7 @@ namespace Engine
         FLEE
     };
 
-    enum class AttackStage
+    enum class AttackStages
     {
         START,
         ATTACK,
@@ -25,11 +25,19 @@ namespace Engine
         END
     };
 
-    enum class SaveStage
+    enum class ArmourSaveStages
     {
         START,
         SAVE,
         REDUCE,
+        END
+    };
+
+    enum class SkillTestStage
+    {
+        START,
+        TEST,
+        CHECK,
         END
     };
 
