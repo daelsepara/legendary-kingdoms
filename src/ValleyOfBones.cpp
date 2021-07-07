@@ -3214,31 +3214,21 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
 
                 fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
 
-                for (auto i = offset; i < last; i++)
+                if (last - offset > 0)
                 {
-                    auto index = i - offset;
-
-                    if (index >= 0 && index < monsters.size())
+                    for (auto i = 0; i < last - offset; i++)
                     {
-                        if (selection == index)
+                        if (selection == offset + i)
                         {
-                            for (auto size = 4; size >= 0; size--)
-                            {
-                                auto w = controls[index].W + 2 * (8 - size);
-                                auto h = controls[index].H + 2 * (8 - size);
-                                auto x = controls[index].X - 8 + size;
-                                auto y = controls[index].Y - 8 + size;
-
-                                drawRect(renderer, w, h, x, y, intDB);
-                            }
+                            thickRect(renderer, controls[i].W, controls[i].H, controls[i].X, controls[i].Y, intLB, 2);
                         }
-                        else if (monsters[index].Health > 0)
+                        else if (monsters[offset + i].Health > 0)
                         {
-                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
                     }
                 }
@@ -4051,31 +4041,21 @@ int selectCombatant(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                 fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
 
-                for (auto i = offset; i < last; i++)
+                if (last - offset > 0)
                 {
-                    auto index = i - offset;
-
-                    if (index >= 0 && index < party.Party.size())
+                    for (auto i = 0; i < last - offset; i++)
                     {
-                        if (selection == index)
+                        if (selection == offset + i)
                         {
-                            for (auto size = 4; size >= 0; size--)
-                            {
-                                auto w = controls[index].W + 2 * (8 - size);
-                                auto h = controls[index].H + 2 * (8 - size);
-                                auto x = controls[index].X - 8 + size;
-                                auto y = controls[index].Y - 8 + size;
-
-                                drawRect(renderer, w, h, x, y, intDB);
-                            }
+                            thickRect(renderer, controls[i].W, controls[i].H, controls[i].X, controls[i].Y, intLB, 2);
                         }
-                        else if (party.Party[index].Health > 0)
+                        else if (party.Party[offset + i].Health > 0)
                         {
-                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
                     }
                 }
