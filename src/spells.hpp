@@ -5,6 +5,13 @@
 
 namespace Spells
 {
+    enum class Select
+    {
+        SPELLBOOK,
+        UNLEARN,
+        CAST_SPELL
+    };
+
     enum class Type
     {
         NONE = -1,

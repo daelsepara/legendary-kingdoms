@@ -16,6 +16,14 @@ namespace Attribute
         ARMOUR
     };
 
+    enum class Test
+    {
+        START,
+        CHECK,
+        CONFIRM,
+        END
+    };
+
     std::map<Attribute::Type, const char*> Descriptions = {
         {Attribute::Type::FIGHTING, "Fighting"},
         {Attribute::Type::STEALTH, "Stealth"},

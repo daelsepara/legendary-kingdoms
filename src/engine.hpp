@@ -9,7 +9,7 @@
 
 namespace Engine
 {
-    enum class CombatResult
+    enum class Combat
     {
         NONE,
         VICTORY,
@@ -17,7 +17,7 @@ namespace Engine
         FLEE
     };
 
-    enum class AttackStages
+    enum class Attack
     {
         START,
         ATTACK,
@@ -25,19 +25,11 @@ namespace Engine
         END
     };
 
-    enum class ArmourSaveStages
+    enum class ArmourSave
     {
         START,
         SAVE,
         REDUCE,
-        END
-    };
-
-    enum class SkillTestStage
-    {
-        START,
-        TEST,
-        CHECK,
         END
     };
 

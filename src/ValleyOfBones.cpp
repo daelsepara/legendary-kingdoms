@@ -43,7 +43,7 @@ bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID);
 
-Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, bool useEquipment);
+Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, bool useEquipment);
 
 SDL_Surface *createImage(const char *image)
 {
@@ -1501,7 +1501,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
             auto done = false;
 
-            auto stage = Engine::ArmourSaveStages::START;
+            auto stage = Engine::ArmourSave::START;
 
             SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Armour Save");
 
@@ -1579,9 +1579,9 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                 putHeader(renderer, "Armour save results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
                 fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
-                if (stage != Engine::ArmourSaveStages::START)
+                if (stage != Engine::ArmourSave::START)
                 {
-                    if (stage == Engine::ArmourSaveStages::SAVE)
+                    if (stage == Engine::ArmourSave::SAVE)
                     {
                         if (results.size() == 0)
                         {
@@ -1603,7 +1603,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
                             fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
 
-                            if (stage == Engine::ArmourSaveStages::REDUCE)
+                            if (stage == Engine::ArmourSave::REDUCE)
                             {
                                 if (results[i] >= 4)
                                 {
@@ -1627,7 +1627,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                     }
                 }
 
-                if (stage == Engine::ArmourSaveStages::REDUCE)
+                if (stage == Engine::ArmourSave::REDUCE)
                 {
                     if (!reduced)
                     {
@@ -1667,15 +1667,15 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
                 putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
-                if (stage == Engine::ArmourSaveStages::START)
+                if (stage == Engine::ArmourSave::START)
                 {
                     controls = controls_save;
                 }
-                else if (stage == Engine::ArmourSaveStages::SAVE)
+                else if (stage == Engine::ArmourSave::SAVE)
                 {
                     controls = controls_reduce;
                 }
-                else if (stage == Engine::ArmourSaveStages::REDUCE)
+                else if (stage == Engine::ArmourSave::REDUCE)
                 {
                     controls = controls_end;
                 }
@@ -1698,17 +1698,17 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
                 if (selected && current >= 0 && current < controls.size())
                 {
-                    if (stage == Engine::ArmourSaveStages::START && controls[current].Type == Control::Type::CONFIRM)
+                    if (stage == Engine::ArmourSave::START && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::ArmourSaveStages::SAVE;
+                        stage = Engine::ArmourSave::SAVE;
                     }
-                    else if (stage == Engine::ArmourSaveStages::SAVE && controls[current].Type == Control::Type::CONFIRM)
+                    else if (stage == Engine::ArmourSave::SAVE && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::ArmourSaveStages::REDUCE;
+                        stage = Engine::ArmourSave::REDUCE;
                     }
-                    else if (stage == Engine::ArmourSaveStages::REDUCE && controls[current].Type == Control::Type::BACK)
+                    else if (stage == Engine::ArmourSave::REDUCE && controls[current].Type == Control::Type::BACK)
                     {
-                        stage = Engine::ArmourSaveStages::END;
+                        stage = Engine::ArmourSave::END;
 
                         done = true;
 
@@ -2036,7 +2036,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
             auto done = false;
 
-            auto stage = Engine::AttackStages::START;
+            auto stage = Engine::Attack::START;
 
             SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Attack");
 
@@ -2089,8 +2089,6 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
             std::vector<int> results = std::vector<int>();
 
-            auto attack_score = fighting_score;
-
             auto cols = (fullwidth - 2 * box_space) / (64 + box_space);
             auto rows = (boxh - box_space) / (64 + box_space);
 
@@ -2106,13 +2104,13 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                 putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
                 fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
-                if (stage != Engine::AttackStages::START)
+                if (stage != Engine::Attack::START)
                 {
-                    if (stage == Engine::AttackStages::ATTACK)
+                    if (stage == Engine::Attack::ATTACK)
                     {
                         if (results.size() == 0)
                         {
-                            results = Engine::ROLL_DICE(attack_score);
+                            results = Engine::ROLL_DICE(fighting_score);
                         }
                     }
 
@@ -2132,7 +2130,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
                             fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
 
-                            if (stage == Engine::AttackStages::DAMAGE)
+                            if (stage == Engine::Attack::DAMAGE)
                             {
                                 if (results[i] >= monsters[opponent].Defence)
                                 {
@@ -2155,7 +2153,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                         }
                     }
 
-                    if (stage == Engine::AttackStages::DAMAGE)
+                    if (stage == Engine::Attack::DAMAGE)
                     {
                         if (!damaged)
                         {
@@ -2185,35 +2183,28 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                     }
                 }
 
-                std::string attacker_string = "";
-
-                fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
-
                 putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
-
-                attacker_string = "Magic Fighting Score: " + std::to_string(attack_score);
-
+                fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
+                std::string attacker_string = "Magic Fighting Score: " + std::to_string(fighting_score);
                 putText(renderer, attacker_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
-                std::string defender_string = "";
-
                 putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
-                defender_string = "Defence: " + std::to_string(monsters[opponent].Defence) + "+";
-                defender_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
-
                 fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
-
+                std::string defender_string = "Defence: " + std::to_string(monsters[opponent].Defence) + "+\nHealth: " + std::to_string(monsters[opponent].Health);
                 putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
-                if (stage == Engine::AttackStages::START)
+                std::string spell_string = "SPELL: " + std::string(spell.Name);
+                putHeader(renderer, spell_string.c_str(), font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 3 * boxh + 2 * box_space);
+
+                if (stage == Engine::Attack::START)
                 {
                     controls = controls_attack;
                 }
-                else if (stage == Engine::AttackStages::ATTACK)
+                else if (stage == Engine::Attack::ATTACK)
                 {
                     controls = controls_damage;
                 }
-                else if (stage == Engine::AttackStages::DAMAGE)
+                else if (stage == Engine::Attack::DAMAGE)
                 {
                     controls = controls_end;
                 }
@@ -2236,7 +2227,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
                 if (selected && current >= 0 && current < controls.size())
                 {
-                    if (stage == Engine::AttackStages::START && controls[current].Type == Control::Type::BACK)
+                    if (stage == Engine::Attack::START && controls[current].Type == Control::Type::BACK)
                     {
                         done = true;
 
@@ -2246,17 +2237,17 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
                         break;
                     }
-                    else if (stage == Engine::AttackStages::START && controls[current].Type == Control::Type::CONFIRM)
+                    else if (stage == Engine::Attack::START && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::AttackStages::ATTACK;
+                        stage = Engine::Attack::ATTACK;
                     }
-                    else if (stage == Engine::AttackStages::ATTACK && controls[current].Type == Control::Type::CONFIRM)
+                    else if (stage == Engine::Attack::ATTACK && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::AttackStages::DAMAGE;
+                        stage = Engine::Attack::DAMAGE;
                     }
-                    else if (stage == Engine::AttackStages::DAMAGE && controls[current].Type == Control::Type::BACK)
+                    else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::BACK)
                     {
-                        stage = Engine::AttackStages::END;
+                        stage = Engine::Attack::END;
 
                         done = true;
 
@@ -2336,7 +2327,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
             auto done = false;
 
-            auto stage = Engine::AttackStages::START;
+            auto stage = Engine::Attack::START;
 
             SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Attack");
 
@@ -2418,9 +2409,9 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
                 fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
-                if (stage != Engine::AttackStages::START)
+                if (stage != Engine::Attack::START)
                 {
-                    if (stage == Engine::AttackStages::ATTACK)
+                    if (stage == Engine::Attack::ATTACK)
                     {
                         if (results.size() == 0)
                         {
@@ -2444,7 +2435,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                             fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
 
-                            if (stage == Engine::AttackStages::DAMAGE)
+                            if (stage == Engine::Attack::DAMAGE)
                             {
                                 if (direction == 0)
                                 {
@@ -2484,7 +2475,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                         damage += monsters[opponent].Auto;
                     }
 
-                    if (stage == Engine::AttackStages::DAMAGE)
+                    if (stage == Engine::Attack::DAMAGE)
                     {
                         if (!damaged)
                         {
@@ -2596,7 +2587,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                 putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
-                if (stage == Engine::AttackStages::START)
+                if (stage == Engine::Attack::START)
                 {
                     if (direction == 0)
                     {
@@ -2607,11 +2598,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                         controls = controls_defend;
                     }
                 }
-                else if (stage == Engine::AttackStages::ATTACK)
+                else if (stage == Engine::Attack::ATTACK)
                 {
                     controls = controls_damage;
                 }
-                else if (stage == Engine::AttackStages::DAMAGE)
+                else if (stage == Engine::Attack::DAMAGE)
                 {
                     if (direction == 0)
                     {
@@ -2648,7 +2639,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                 if (selected && current >= 0 && current < controls.size())
                 {
-                    if (stage == Engine::AttackStages::START && controls[current].Type == Control::Type::BACK)
+                    if (stage == Engine::Attack::START && controls[current].Type == Control::Type::BACK)
                     {
                         done = true;
 
@@ -2658,17 +2649,17 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                         break;
                     }
-                    else if (stage == Engine::AttackStages::START && controls[current].Type == Control::Type::CONFIRM)
+                    else if (stage == Engine::Attack::START && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::AttackStages::ATTACK;
+                        stage = Engine::Attack::ATTACK;
                     }
-                    else if (stage == Engine::AttackStages::ATTACK && controls[current].Type == Control::Type::CONFIRM)
+                    else if (stage == Engine::Attack::ATTACK && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::AttackStages::DAMAGE;
+                        stage = Engine::Attack::DAMAGE;
                     }
-                    else if (stage == Engine::AttackStages::DAMAGE && controls[current].Type == Control::Type::BACK)
+                    else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::BACK)
                     {
-                        stage = Engine::AttackStages::END;
+                        stage = Engine::Attack::END;
 
                         done = true;
 
@@ -2678,7 +2669,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                         break;
                     }
-                    else if (stage == Engine::AttackStages::DAMAGE && controls[current].Type == Control::Type::CONFIRM)
+                    else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::CONFIRM)
                     {
                         if (Engine::COUNT(party) > 0)
                         {
@@ -2789,7 +2780,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
     return combat_damage;
 }
 
-std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int select_limit)
+std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode)
 {
     auto select_result = std::vector<int>();
 
@@ -2906,7 +2897,22 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
                 renderButtons(renderer, controls, current, intLB, space, 4);
 
-                putHeader(renderer, std::string("Choose " + std::to_string(select_limit) + " spell" + (select_limit > 1 ? "s" : "")).c_str(), font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                std::string list_header = "Choose " + (select_limit > 1 ? std::to_string(select_limit) : "a") + " spell" + (select_limit > 1 ? "s" : "") + " to ";
+                
+                if (mode == Spells::Select::SPELLBOOK)
+                {
+                    list_header += "add to spellbook";
+                }
+                else if (mode == Spells::Select::CAST_SPELL)
+                {
+                    list_header = "cast";
+                }
+                else if (mode == Spells::Select::UNLEARN)
+                {
+                    list_header = "unlearn";
+                }
+
+                putHeader(renderer, list_header.c_str(), font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 putText(renderer, "Selected", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -3052,7 +3058,18 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
                         {
                             flash_message = true;
 
-                            message = "You must select SPELL(s) to USE.";
+                            if (mode == Spells::Select::CAST_SPELL)
+                            {
+                                message = "You must select a spell to CAST.";
+                            }
+                            else if (mode == Spells::Select::SPELLBOOK)
+                            {
+                                message = "You must select spells to add to your spellbook.";
+                            }
+                            else if (mode == Spells::Select::UNLEARN)
+                            {
+                                message = "You must select a spell to erase from your spellbook.";
+                            }
 
                             start_ticks = SDL_GetTicks();
 
@@ -3408,7 +3425,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
             auto done = false;
 
-            auto stage = Engine::SkillTestStage::START;
+            auto stage = Attribute::Test::START;
 
             SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Skill Check");
 
@@ -3491,9 +3508,9 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
-                if (stage != Engine::SkillTestStage::START)
+                if (stage != Attribute::Test::START)
                 {
-                    if (stage == Engine::SkillTestStage::CHECK)
+                    if (stage == Attribute::Test::CONFIRM)
                     {
                         if (results.size() == 0)
                         {
@@ -3515,7 +3532,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                             fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
 
-                            if (stage == Engine::SkillTestStage::TEST)
+                            if (stage == Attribute::Test::CHECK)
                             {
                                 if (results[i] >= difficulty)
                                 {
@@ -3538,7 +3555,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
                         }
                     }
 
-                    if (stage == Engine::SkillTestStage::TEST)
+                    if (stage == Attribute::Test::CHECK)
                     {
                         if (!skill_checked)
                         {
@@ -3613,15 +3630,15 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
                     putText(renderer, adventurer2.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
                 }
 
-                if (stage == Engine::SkillTestStage::START)
+                if (stage == Attribute::Test::START)
                 {
                     controls = controls_skill;
                 }
-                else if (stage == Engine::SkillTestStage::CHECK)
+                else if (stage == Attribute::Test::CONFIRM)
                 {
                     controls = controls_confirm;
                 }
-                else if (stage == Engine::SkillTestStage::TEST)
+                else if (stage == Attribute::Test::CHECK)
                 {
                     controls = controls_end;
                 }
@@ -3644,17 +3661,17 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 if (selected && current >= 0 && current < controls.size())
                 {
-                    if (stage == Engine::SkillTestStage::START && controls[current].Type == Control::Type::CONFIRM)
+                    if (stage == Attribute::Test::START && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::SkillTestStage::CHECK;
+                        stage = Attribute::Test::CONFIRM;
                     }
-                    else if (stage == Engine::SkillTestStage::CHECK && controls[current].Type == Control::Type::CONFIRM)
+                    else if (stage == Attribute::Test::CONFIRM && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::SkillTestStage::TEST;
+                        stage = Attribute::Test::CHECK;
                     }
-                    else if (stage == Engine::SkillTestStage::TEST && controls[current].Type == Control::Type::BACK)
+                    else if (stage == Attribute::Test::CHECK && controls[current].Type == Control::Type::BACK)
                     {
-                        stage = Engine::SkillTestStage::END;
+                        stage = Attribute::Test::END;
 
                         done = true;
 
@@ -4199,9 +4216,9 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
     return result;
 }
 
-Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, bool useEquipment)
+Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, bool useEquipment)
 {
-    auto combatResult = Engine::CombatResult::NONE;
+    auto combatResult = Engine::Combat::NONE;
 
     auto title = "Legendary Kindoms 1 - The Valley of Bones: Combat";
 
@@ -4367,7 +4384,7 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
                         {
                             done = true;
 
-                            combatResult = Engine::CombatResult::FLEE;
+                            combatResult = Engine::Combat::FLEE;
                         }
                         else
                         {
@@ -4556,9 +4573,9 @@ Engine::CombatResult combatScreen(SDL_Window *window, SDL_Renderer *renderer, Pa
         }
     }
 
-    if (combatResult != Engine::CombatResult::FLEE && combatResult != Engine::CombatResult::NONE)
+    if (combatResult != Engine::Combat::FLEE && combatResult != Engine::Combat::NONE)
     {
-        combatResult = Engine::COUNT(party.Party) > 0 ? Engine::CombatResult::VICTORY : Engine::CombatResult::DOOM;
+        combatResult = Engine::COUNT(party.Party) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DOOM;
     }
 
     return combatResult;
@@ -4743,7 +4760,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
-            auto combat = Engine::CombatResult::NONE;
+            auto combat = Engine::Combat::NONE;
 
             if (selected && current >= 0 && current < controls.size())
             {
@@ -4766,7 +4783,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
                                 while (selected < 3)
                                 {
                                     // TODO: Update this for other books
-                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3);
+                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3, Spells::Select::SPELLBOOK);
 
                                     selected = selection.size();
                                 }
@@ -4822,7 +4839,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
                                 while (selected < 3)
                                 {
                                     // TODO: Update this for other books
-                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3);
+                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3, Spells::Select::SPELLBOOK);
 
                                     selected = selection.size();
                                 }
@@ -4862,7 +4879,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
                                 while (selected < 3)
                                 {
                                     // TODO: Update this for other books
-                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3);
+                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3, Spells::Select::SPELLBOOK);
 
                                     selected = selection.size();
                                 }
