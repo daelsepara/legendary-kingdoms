@@ -45,6 +45,7 @@ namespace Control
         BUY,
         SELL,
         COMBAT,
+        ADVENTURE,
         SKILL,
         TEAM_SKILL,
         ATTACK,

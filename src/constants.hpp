@@ -19,6 +19,7 @@ const SDL_Color clrYW = {247, 173, 7, 0};
 const SDL_Color clrLY = {247, 237, 7, 0};
 const SDL_Color clrMG = {191, 0, 191, 0};
 const SDL_Color clrLM = {255, 0, 255, 0};
+const SDL_Color clrBR = {132, 85, 62, 0};
 
 const Uint32 intBK = 0x00000000;
 const Uint32 intRD = 0xFFFF0000;
@@ -30,9 +31,8 @@ const Uint32 intYW = 0xFFF7AD07;
 const Uint32 intLY = 0xFFF7ED07;
 const Uint32 intMG = 0xFFBF00BF;
 const Uint32 intLM = 0xFFFF00FF;
-
-// Dark Blue in ARGB format
 const Uint32 intDB = 0xFF07073A;
+const Uint32 intBR = 0xFF84553E;
 
 // Beige in ARG format
 const Uint32 intBE = 0xFFF5F5DC;

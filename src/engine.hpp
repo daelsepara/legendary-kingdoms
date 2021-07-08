@@ -226,7 +226,7 @@ namespace Engine
         return result;
     }
 
-    int COUNT(std::vector<Spells::Base> spells, Spells::Scope scope)
+    int COUNT(std::vector<Spells::Base> &spells, Spells::Scope scope)
     {
         auto result = 0;
 
@@ -241,13 +241,28 @@ namespace Engine
         return result;
     }
 
-    int COUNT(std::vector<Spells::Base> spells, Spells::Type type)
+    int COUNT(std::vector<Spells::Base> &spells, Spells::Type type)
     {
         auto result = 0;
 
         for (auto i = 0; i < spells.size(); i++)
         {
             if (spells[i].Charged && spells[i].Type == type)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    int SPELLCASTERS(std::vector<Character::Base> &adventurers)
+    {
+        auto result = 0;
+
+        for (auto i = 0; i < adventurers.size(); i++)
+        {
+            if (adventurers[i].SpellCaster)
             {
                 result++;
             }

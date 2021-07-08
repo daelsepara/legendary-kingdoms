@@ -406,15 +406,36 @@ void putHeader(SDL_Renderer *renderer, const char *text, TTF_Font *font, int spa
         {
             auto height = (surface->h + 2 * space) < h ? h : (surface->h + 2 * space);
 
-            fillRect(renderer, w, height, x, y, bg);
-
-            if (space > 0)
+            if (x < 0)
             {
-                renderText(renderer, surface, 0, x + space, y + (h - surface->h) / 2, height - 2 * space, 0);
+                fillRect(renderer, w, height, (SCREEN_WIDTH - w) / 2, (SCREEN_HEIGHT - height) / 2, bg);
             }
             else
             {
-                renderText(renderer, surface, 0, x + (w - surface->w) / 2, y + (h - surface->h) / 2, height - 2 * space, 0);
+                fillRect(renderer, w, height, x, y, bg);
+            }
+
+            if (space > 0)
+            {
+                if (x < 0)
+                {
+                    renderText(renderer, surface, 0, (SCREEN_WIDTH - surface->w) / 2 + space, y + (SCREEN_HEIGHT - surface->h) / 2, height - 2 * space, 0);
+                }
+                else
+                {
+                    renderText(renderer, surface, 0, x + space, y + (h - surface->h) / 2, height - 2 * space, 0);
+                }
+            }
+            else
+            {
+                if (x < 0)
+                {
+                    renderText(renderer, surface, 0, (SCREEN_WIDTH - surface->w) / 2, y + (SCREEN_HEIGHT - surface->h) / 2, height - 2 * space, 0);
+                }
+                else
+                {
+                    renderText(renderer, surface, 0, x + (w - surface->w) / 2, y + (h - surface->h) / 2, height - 2 * space, 0);
+                }
             }
 
             SDL_FreeSurface(surface);
@@ -827,6 +848,55 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
                 putText(renderer, party[character].Name, font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
             }
 
+            if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::SPELLBOOK)
+            {
+                if (party[character].SpellCaster && party[character].SpellBook.size() > 0)
+                {
+                    putHeader(renderer, "SPELLBOOK", font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+
+                    std::string spellbook_string = "";
+
+                    for (auto i = 0; i < party[character].SpellBook.size(); i++)
+                    {
+                        if (i > 0)
+                        {
+                            spellbook_string += ", ";
+                        }
+
+                        spellbook_string += party[character].SpellBook[i].Name;
+                    }
+
+                    putText(renderer, spellbook_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                }
+            }
+
+            if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::EQUIPMENT)
+            {
+                if (party[character].Equipment.size() > 0)
+                {
+                    putHeader(renderer, "EQUIPMENT", font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+
+                    std::string equipment_string = "";
+
+                    for (auto i = 0; i < party[character].Equipment.size(); i++)
+                    {
+                        if (i > 0)
+                        {
+                            equipment_string += ", ";
+                        }
+
+                        equipment_string += party[character].Equipment[i].Name;
+
+                        if (party[character].Equipment[i].Attribute != Attribute::Type::NONE)
+                        {
+                            equipment_string += " (+ " + std::to_string(party[character].Equipment[i].Modifier) + " " + std::string(Attribute::Descriptions[party[character].Equipment[i].Attribute]) + ")";
+                        }
+                    }
+
+                    putText(renderer, equipment_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                }
+            }
+
             renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
 
             bool scrollUp = false;
@@ -1084,7 +1154,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
             if (selection.size() > 0)
             {
-                putHeader(renderer, std::string("PARTY (Limit: " + std::to_string(party.Limit) + ")").c_str(), font_mason2, 8, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                putHeader(renderer, std::string("PARTY (Limit: " + std::to_string(party.Limit) + ")").c_str(), font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                 std::string party_string = "";
 
@@ -1231,32 +1301,34 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                         {
                             if (selection[i] >= 0 && selection[i] < characters.size())
                             {
-                                party.Party.push_back(characters[selection[i]]);
-                            }
+                                auto character = characters[selection[i]];
 
-                            if (party.Party[i].SpellCaster)
-                            {
-                                // TODO: Update this for other books
-                                if (bookID == Book::Type::BOOK1)
+                                if (character.SpellCaster)
                                 {
-                                    auto selected = 0;
-
-                                    auto spell_selection = std::vector<int>();
-
-                                    auto spellBook = Spells::BOOK1_SPELLS;
-
-                                    while (selected < 3)
+                                    // TODO: Update this for other books
+                                    if (bookID == Book::Type::BOOK1)
                                     {
-                                        spell_selection = selectSpell(window, renderer, spellBook, 3, Spells::Select::SPELLBOOK);
+                                        auto spells_selected = 0;
 
-                                        selected = spell_selection.size();
-                                    }
+                                        auto spell_selection = std::vector<int>();
 
-                                    for (auto j = 0; j < spell_selection.size(); j++)
-                                    {
-                                        party.Party[i].SpellBook.push_back(spellBook[selection[j]]);
+                                        auto spellBook = Spells::BOOK1_SPELLS;
+
+                                        while (spells_selected < 3)
+                                        {
+                                            spell_selection = selectSpell(window, renderer, spellBook, 3, Spells::Select::SPELLBOOK);
+
+                                            spells_selected = spell_selection.size();
+                                        }
+
+                                        for (auto j = 0; j < spell_selection.size(); j++)
+                                        {
+                                            character.SpellBook.push_back(spellBook[spell_selection[j]]);
+                                        }
                                     }
                                 }
+
+                                party.Party.push_back(character);
                             }
                         }
 
@@ -1846,7 +1918,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Armour save results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Armour save results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
                 fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::ArmourSave::START)
@@ -1930,9 +2002,9 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
-                putHeader(renderer, character.Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, character.Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
-                defender_string = "Armour: " + std::to_string(save_score);
+                defender_string = "Armour Save: +" + std::to_string(save_score);
                 defender_string += "\nHealth: " + std::to_string(character.Health);
 
                 putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
@@ -1954,7 +2026,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, -1, -1);
+                        putHeader(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -2133,9 +2205,9 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                 renderButtons(renderer, controls, current, intLB, space, 4);
 
-                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Assign damage to", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putText(renderer, "Assign damage to", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection >= 0 && selection < party.size())
                 {
@@ -2157,7 +2229,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -2371,7 +2443,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
                 fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::Attack::START)
@@ -2453,18 +2525,18 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                     }
                 }
 
-                putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
                 std::string attacker_string = "Magic Fighting Score: " + std::to_string(fighting_score);
                 putText(renderer, attacker_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
-                putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                 fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
                 std::string defender_string = "Defence: " + std::to_string(monsters[opponent].Defence) + "+\nHealth: " + std::to_string(monsters[opponent].Health);
                 putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
                 std::string spell_string = "SPELL: " + std::string(spell.Name);
-                putHeader(renderer, spell_string.c_str(), font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 3 * boxh + 2 * box_space);
+                putHeader(renderer, spell_string.c_str(), font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 3 * boxh + 2 * box_space);
 
                 if (stage == Engine::Attack::START)
                 {
@@ -2483,7 +2555,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, -1, -1);
+                        putHeader(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -2676,7 +2748,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
                 fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::Attack::START)
@@ -2776,13 +2848,16 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                             {
                                 combat_damage = damage;
 
-                                message = std::string(monsters[opponent].Name) + " DEALS " + std::to_string(damage) + " to the party!";
+                                if (combat_damage > 0)
+                                {
+                                    message = std::string(monsters[opponent].Name) + " DEALS " + std::to_string(damage) + " to the party!";
 
-                                start_ticks = SDL_GetTicks();
+                                    start_ticks = SDL_GetTicks();
 
-                                flash_message = true;
+                                    flash_message = true;
 
-                                flash_color = intRD;
+                                    flash_color = intRD;
+                                }
                             }
 
                             damaged = true;
@@ -2796,7 +2871,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                 if (direction == 0)
                 {
-                    putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                    putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                     auto score = 1;
 
@@ -2816,7 +2891,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 }
                 else
                 {
-                    putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                    putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                     attacker_string = "Attack: " + std::to_string(monsters[opponent].Attack) + " (" + std::to_string(monsters[opponent].Difficulty) + "+)";
 
@@ -2836,7 +2911,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                 if (direction == 0)
                 {
-                    putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                    putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                     defender_string = "Defence: " + std::to_string(monsters[opponent].Defence) + "+";
                     defender_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
                 }
@@ -2844,11 +2919,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 {
                     if (combatant == -1)
                     {
-                        putHeader(renderer, "To be determined", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, "To be determined", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                     }
                     else
                     {
-                        putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Health: " + std::to_string(party[combatant].Health);
                     }
                 }
@@ -2895,7 +2970,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, -1, -1);
+                        putHeader(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -3182,9 +3257,9 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
                     list_header = "unlearn";
                 }
 
-                putHeader(renderer, list_header.c_str(), font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, list_header.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Selected", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection.size() > 0)
                 {
@@ -3221,7 +3296,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -3318,7 +3393,10 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
                         {
                             done = true;
 
-                            select_result = selection;
+                            for (auto i = 0; i < selection.size(); i++)
+                            {
+                                select_result.push_back(selection[i]);
+                            }
 
                             current = -1;
 
@@ -3522,9 +3600,9 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
 
                 renderButtons(renderer, controls, current, intLB, space, 4);
 
-                putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Opponent", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putText(renderer, "Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection >= 0 && selection < monsters.size())
                 {
@@ -3546,7 +3624,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -3774,7 +3852,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Skill Check Results", font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Skill Check Results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -3857,9 +3935,9 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 std::string test_string = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(difficulty) + "+, Success: " + std::to_string(success);
 
-                putHeader(renderer, test_string.c_str(), font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 3 * boxh + 2 * box_space);
+                putHeader(renderer, test_string.c_str(), font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 3 * boxh + 2 * box_space);
 
-                putHeader(renderer, party[team[0]].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party[team[0]].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
@@ -3880,7 +3958,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 if (team.size() > 1)
                 {
-                    putHeader(renderer, party[team[1]].Name, font_mason, 8, clrWH, intDB, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                    putHeader(renderer, party[team[1]].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
 
                     fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
 
@@ -3917,7 +3995,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, -1, -1);
+                        putHeader(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -3983,6 +4061,243 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
     }
 
     return test_result;
+}
+
+bool selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Control::Type mode)
+{
+    bool result = false;
+
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Cast Spell";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        auto main_buttonh = 48;
+
+        auto font_size = 20;
+        auto text_space = 8;
+        auto messageh = 0.25 * SCREEN_HEIGHT;
+        auto infoh = 0.07 * SCREEN_HEIGHT;
+        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto last = offset + limit;
+
+        if (last > party.size())
+        {
+            last = party.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = combatantList(window, renderer, party, offset, last, limit, textx, texty + infoh + text_space, true, true);
+
+        auto done = false;
+
+        auto selection = -1;
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                if (last - offset > 0)
+                {
+                    for (auto i = 0; i < last - offset; i++)
+                    {
+                        if (selection == offset + i)
+                        {
+                            thickRect(renderer, controls[i].W, controls[i].H, controls[i].X, controls[i].Y, intLB, 2);
+                        }
+                        else if (party[offset + i].Health > 0)
+                        {
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, 4);
+
+                putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (selection >= 0 && selection < party.size())
+                {
+                    putText(renderer, party[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+                else
+                {
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (selected && current >= 0 && current < controls.size())
+                {
+                    if (controls[current].Type == Control::Type::BACK)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (selection >= 0 && selection < party.size())
+                        {
+                            if (party[selection].SpellCaster)
+                            {
+                            }
+                            else
+                            {
+                                flash_message = true;
+
+                                message = std::string(party[selection].Name) + " cannot cast spells!";
+
+                                start_ticks = SDL_GetTicks();
+
+                                flash_color = intRD;
+                            }
+                        }
+                        else
+                        {
+                            flash_message = true;
+
+                            message = "You must select the adventurer to cast a spell.";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intRD;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION)
+                    {
+                        if (current + offset >= 0 && current + offset < party.size())
+                        {
+                            if (selection == current + offset)
+                            {
+                                selection = -1;
+                            }
+                            else
+                            {
+                                if (party[current + offset].Health > 0)
+                                {
+                                    selection = current + offset;
+                                }
+                                else
+                                {
+                                    flash_message = true;
+
+                                    message = std::string(party[current + offset].Name) + std::string(" is DEAD!");
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intRD;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (done)
+            {
+                break;
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    return result;
 }
 
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int team_size, Attribute::Type skill, int difficulty, int success)
@@ -4088,9 +4403,9 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                 renderButtons(renderer, controls, current, intLB, space, 4);
 
-                putHeader(renderer, "Select Adventurer", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Select Adventurer", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Selected", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection.size() >= 0)
                 {
@@ -4130,7 +4445,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -4349,9 +4664,9 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
                 renderButtons(renderer, controls, current, intLB, space, 4);
 
-                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Selected", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection >= 0 && selection < party.Party.size())
                 {
@@ -4373,7 +4688,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -4589,9 +4904,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                 }
 
-                putHeader(renderer, "Opponents", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Opponents", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Party", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putText(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (Engine::COUNT(party.Party) > 0)
                 {
@@ -4636,7 +4951,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -4776,22 +5091,43 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::SPELL)
                     {
-                        auto combat_spells = 0;
-
-                        for (auto i = 0; i < party.Party.size(); i++)
+                        if (Engine::SPELLCASTERS(party.Party) > 0)
                         {
-                            if (party.Party[i].Health > 0 && party.Party[i].SpellCaster)
+                            auto combat_spells = 0;
+
+                            for (auto i = 0; i < party.Party.size(); i++)
                             {
-                                combat_spells += Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::COMBAT);
-                                combat_spells += Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::ADVENTURE_COMBAT);
+                                if (party.Party[i].Health > 0 && party.Party[i].SpellCaster)
+                                {
+                                    combat_spells += Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::COMBAT);
+                                    combat_spells += Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::ADVENTURE_COMBAT);
+                                }
+                            }
+
+                            if (combat_spells <= 0)
+                            {
+                                flash_message = true;
+
+                                message = "Your PARTY does not have any usable COMBAT spells.";
+
+                                start_ticks = SDL_GetTicks();
+
+                                flash_color = intRD;
+                            }
+                            else
+                            {
+                                done = selectCaster(window, renderer, party.Party, Control::Type::COMBAT);
+
+                                selected = false;
+
+                                current = -1;
                             }
                         }
-
-                        if (combat_spells <= 0)
+                        else
                         {
                             flash_message = true;
 
-                            message = "Your PARTY does not have any usable COMBAT spells.";
+                            message = "There are NO SPELLCASTERS in your PARTY!";
 
                             start_ticks = SDL_GetTicks();
 
