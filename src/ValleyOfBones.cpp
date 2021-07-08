@@ -4075,9 +4075,9 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
     return test_result;
 }
 
-bool selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Control::Type mode)
+int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<int> hasAttacked, Control::Type mode)
 {
-    bool result = false;
+    auto result = -1;
 
     auto title = "Legendary Kingdoms 1 - The Valley of Bones: Cast Spell";
 
@@ -4207,11 +4207,15 @@ bool selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charac
                 {
                     if (controls[current].Type == Control::Type::BACK)
                     {
-                        done = true;
+                        done = false;
 
                         current = -1;
 
                         selected = false;
+
+                        result = -1;
+
+                        break;
                     }
                     else if (controls[current].Type == Control::Type::CONFIRM)
                     {
@@ -4219,44 +4223,81 @@ bool selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charac
                         {
                             if (party[selection].SpellCaster)
                             {
-                                auto spell = selectSpell(window, renderer, party[selection].SpellBook, 1, Spells::Select::CAST_SPELL);
-
-                                if (mode == Control::Type::COMBAT)
+                                if (hasAttacked.size() > 0 && Engine::FIND_LIST(hasAttacked, selection) >= 0)
                                 {
-                                    if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::COMBAT)
-                                    {
-                                    }
-                                    else if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE_COMBAT)
-                                    {
-                                    }
-                                    else
-                                    {
-                                        flash_message = true;
+                                    flash_message = true;
 
-                                        message = std::string(party[selection].Name) + " cannot cast " + std::string(party[selection].SpellBook[spell[0]].Name) + " during COMBAT!";
+                                    message = std::string(party[selection].Name) + " already attacked this turn!";
 
-                                        start_ticks = SDL_GetTicks();
+                                    start_ticks = SDL_GetTicks();
 
-                                        flash_color = intRD;
-                                    }
+                                    flash_color = intRD;
                                 }
-                                else if (mode == Control::Type::ADVENTURE)
+                                else
                                 {
-                                    if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE)
+                                    auto spell = selectSpell(window, renderer, party[selection].SpellBook, 1, Spells::Select::CAST_SPELL);
+
+                                    if (mode == Control::Type::COMBAT)
                                     {
+                                        if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::COMBAT)
+                                        {
+                                            // TODO: Cast Spell
+                                            result = selection;
+
+                                            done = true;
+
+                                            break;
+                                        }
+                                        else if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE_COMBAT)
+                                        {
+                                            // TODO: Cast Spell
+                                            result = selection;
+
+                                            done = true;
+
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            flash_message = true;
+
+                                            message = std::string(party[selection].Name) + " cannot cast " + std::string(party[selection].SpellBook[spell[0]].Name) + " during COMBAT!";
+
+                                            start_ticks = SDL_GetTicks();
+
+                                            flash_color = intRD;
+                                        }
                                     }
-                                    else if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE_COMBAT)
+                                    else if (mode == Control::Type::ADVENTURE)
                                     {
-                                    }
-                                    else
-                                    {
-                                        flash_message = true;
+                                        if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE)
+                                        {
+                                            // TODO: Cast Spell
+                                            result = selection;
 
-                                        message = std::string(party[selection].Name) + " cannot cast " + std::string(party[selection].SpellBook[spell[0]].Name) + " at this time!";
+                                            done = true;
 
-                                        start_ticks = SDL_GetTicks();
+                                            break;
+                                        }
+                                        else if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE_COMBAT)
+                                        {
+                                            // TODO: Cast Spell
+                                            result = selection;
 
-                                        flash_color = intRD;
+                                            done = true;
+
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            flash_message = true;
+
+                                            message = std::string(party[selection].Name) + " cannot cast " + std::string(party[selection].SpellBook[spell[0]].Name) + " at this time!";
+
+                                            start_ticks = SDL_GetTicks();
+
+                                            flash_color = intRD;
+                                        }
                                     }
                                 }
                             }
@@ -5151,8 +5192,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (party.Party[i].Health > 0 && party.Party[i].SpellCaster)
                                 {
-                                    combat_spells += Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::COMBAT);
-                                    combat_spells += Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::ADVENTURE_COMBAT);
+                                    auto spells = Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::COMBAT) + Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::ADVENTURE_COMBAT);
+
+                                    combat_spells += spells;
                                 }
                             }
 
@@ -5168,7 +5210,12 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                             else
                             {
-                                done = selectCaster(window, renderer, party.Party, Control::Type::COMBAT);
+                                auto result = selectCaster(window, renderer, party.Party, hasAttacked, Control::Type::COMBAT);
+
+                                if (result >= 0 && result < party.Party.size())
+                                {
+                                    hasAttacked.push_back(result);
+                                }
 
                                 selected = false;
 
@@ -5242,6 +5289,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
     if (combatResult != Engine::Combat::FLEE && combatResult != Engine::Combat::NONE)
     {
         combatResult = Engine::COUNT(party.Party) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DOOM;
+    }
+
+    for (auto i = 0; i < party.Party.size(); i++)
+    {
+        Engine::REMOVE_STATUS(party.Party[i], Character::Status::ARMOUR3);
     }
 
     return combatResult;

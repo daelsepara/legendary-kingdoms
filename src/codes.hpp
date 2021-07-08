@@ -5,7 +5,7 @@
 
 namespace Codes
 {
-    // Invisible codes to handle situations not explicitly stated in the rules section. Can also be used to handle temporary effects
+    // Invisible (Party level) codes to handle situations not explicitly stated in the rules section. Can also be used to handle temporary effects
     enum class Type
     {
         FIRST_TIME_SALTAD,

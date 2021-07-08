@@ -189,9 +189,49 @@ namespace Engine
         return modifier;
     }
 
+    bool HAS_STATUS(Character::Base &character, Character::Status status)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < character.Status.size(); i++)
+        {
+            if (character.Status[i] == status)
+            {
+                result = true;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    void REMOVE_STATUS(Character::Base &character, Character::Status status)
+    {
+        for (auto i = 0; i < character.Status.size(); i++)
+        {
+            if (character.Status[i] == status)
+            {
+                character.Status.erase(character.Status.begin() + i);
+
+                break;
+            }
+        }
+    }
+
+    void CLEAR_STATUS(Character::Base &character)
+    {
+        character.Status.clear();
+    }
+
     int ARMOUR(Character::Base &character)
     {
         auto armour = MAX(character, Equipment::Type::SHIELD, Attribute::Type::ARMOUR) + MAX(character, Equipment::Type::ARMOUR, Attribute::Type::ARMOUR) + MODIFIER(character, Equipment::Type::NORMAL, Attribute::Type::ARMOUR);
+
+        if (Engine::HAS_STATUS(character, Character::Status::ARMOUR3))
+        {
+            armour += 3;
+        }
 
         return armour;
     }

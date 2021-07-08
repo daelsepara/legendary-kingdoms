@@ -24,6 +24,11 @@ namespace Character
         BRASH
     };
 
+    enum class Status
+    {
+        ARMOUR3
+    };
+
     class Base
     {
     public:
@@ -40,6 +45,9 @@ namespace Character
         std::vector<Equipment::Base> Equipment = std::vector<Equipment::Base>();
 
         std::vector<Spells::Base> SpellBook = std::vector<Spells::Base>();
+
+        // Temporary Status Codes
+        std::vector<Character::Status> Status = std::vector<Character::Status>();
 
         int Health = 0;
 
