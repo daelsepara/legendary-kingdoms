@@ -22,6 +22,18 @@ An Implementation of Legendary Kingdoms 1 - The Valley of Bones done in C++ and 
 
 ![Select Party](/screenshots/select-party.png)
 
+**View Party**
+
+![View Party](/screenshots/view-party.png)
+
+**Combat Screens**
+
+![Combat Screen 1](/screenshots/combat-screen-1.png)
+
+![Combat Screen 2](/screenshots/combat-screen-2.png)
+
+![Combat Screen 3](/screenshots/combat-screen-3.png)
+
 **Map Screen**
 
 ![Map Screen](/screenshots/map-screen.png)
