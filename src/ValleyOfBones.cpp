@@ -41,9 +41,20 @@ namespace fs = std::filesystem;
 // Forward declarations
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID);
+bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
+bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int team_size, Attribute::Type skill, int difficulty, int success);
+bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID);
+bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party);
 
 Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, bool useEquipment);
+
+int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
+int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment);
+int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters);
+int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
+
+std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
 
 SDL_Surface *createImage(const char *image)
 {
@@ -718,6 +729,240 @@ std::string characterText(Character::Base &character, bool compact)
     return character_text;
 };
 
+bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party)
+{
+    SDL_Surface *adventurer = NULL;
+    SDL_Surface *text = NULL;
+
+    auto *title = "View Party";
+
+    auto font_size = 20;
+    auto garamond_size = 24;
+
+    TTF_Init();
+
+    auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+    auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
+
+    auto box_space = 10;
+    auto character_box = (int)(text_bounds * 2 / 3);
+
+    // Render window
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        const char *choices[5] = {"PREVIOUS", "NEXT", "EQUIPMENT", "SPELLBOOK", "BACK"};
+
+        auto current = -1;
+
+        auto selected = false;
+
+        auto main_buttonh = 0.06 * SCREEN_HEIGHT;
+
+        auto infoh = 0.07 * SCREEN_HEIGHT;
+
+        auto controls = createHTextButtons(choices, 5, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+
+        controls[0].Type = Control::Type::MINUS;
+        controls[1].Type = Control::Type::PLUS;
+        controls[2].Type = Control::Type::EQUIPMENT;
+        controls[3].Type = Control::Type::SPELLBOOK;
+        controls[4].Type = Control::Type::BACK;
+
+        auto done = false;
+
+        auto text_space = 8;
+
+        auto Party = Party::Base();
+
+        auto character = 0;
+
+        if (character >= 0 && character < party.size())
+        {
+            if (party[character].Image != NULL)
+            {
+                if (adventurer != NULL)
+                {
+                    SDL_FreeSurface(adventurer);
+
+                    adventurer = NULL;
+                }
+
+                adventurer = createImage(party[character].Image);
+            }
+
+            if (text != NULL)
+            {
+                SDL_FreeSurface(text);
+
+                text = NULL;
+            }
+
+            text = createText(characterText(party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+        }
+
+        while (!done)
+        {
+            // Fill the surface with background
+            fillWindow(renderer, intWH);
+
+            auto adventurerh = splashw;
+
+            if (adventurer != NULL)
+            {
+                adventurerh = fitImage(renderer, adventurer, startx, starty, splashw, text_bounds);
+            }
+
+            fillRect(renderer, textwidth, character_box, textx, texty, intBE);
+
+            if (text != NULL)
+            {
+                renderText(renderer, text, intBE, textx + text_space, texty + text_space, character_box, 0);
+            }
+
+            if (character >= 0 && character < party.size() && adventurer)
+            {
+                putText(renderer, party[character].Name, font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+            }
+
+            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+
+            bool scrollUp = false;
+            bool scrollDown = false;
+            bool hold = false;
+
+            done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if (selected && current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::MINUS)
+                {
+
+                    if (character > 0)
+                    {
+                        character--;
+                    }
+
+                    if (character >= 0 && character < party.size())
+                    {
+                        if (party[character].Image != NULL)
+                        {
+                            if (adventurer != NULL)
+                            {
+                                SDL_FreeSurface(adventurer);
+
+                                adventurer = NULL;
+                            }
+
+                            adventurer = createImage(party[character].Image);
+                        }
+
+                        if (text != NULL)
+                        {
+                            SDL_FreeSurface(text);
+
+                            text = NULL;
+                        }
+
+                        text = createText(characterText(party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                    }
+                }
+                else if (controls[current].Type == Control::Type::PLUS)
+                {
+                    if (character < party.size() - 1)
+                    {
+                        character++;
+                    }
+
+                    if (character >= 0 && character < party.size())
+                    {
+                        if (party[character].Image != NULL)
+                        {
+                            if (adventurer != NULL)
+                            {
+                                SDL_FreeSurface(adventurer);
+
+                                adventurer = NULL;
+                            }
+
+                            adventurer = createImage(party[character].Image);
+                        }
+
+                        if (text != NULL)
+                        {
+                            SDL_FreeSurface(text);
+
+                            text = NULL;
+                        }
+
+                        text = createText(characterText(party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                    }
+                }
+                else if (controls[current].Type == Control::Type::EQUIPMENT)
+                {
+                    done = false;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::SPELLBOOK)
+                {
+                    done = false;
+
+                    selected = false;
+                }
+
+                else if (controls[current].Type == Control::Type::BACK)
+                {
+                    done = true;
+
+                    break;
+                }
+            }
+        }
+    }
+
+    if (adventurer != NULL)
+    {
+        SDL_FreeSurface(adventurer);
+
+        adventurer = NULL;
+    }
+
+    if (text != NULL)
+    {
+        SDL_FreeSurface(text);
+
+        text = NULL;
+    }
+
+    if (font_mason)
+    {
+        TTF_CloseFont(font_mason);
+
+        font_mason = NULL;
+    }
+
+    if (font_mason2)
+    {
+        TTF_CloseFont(font_mason2);
+
+        font_mason2 = NULL;
+    }
+
+    if (font_garamond)
+    {
+        TTF_CloseFont(font_garamond);
+
+        font_garamond = NULL;
+    }
+
+    TTF_Quit();
+
+    return false;
+}
+
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party)
 {
     party.Party.clear();
@@ -744,8 +989,8 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     {
         SDL_SetWindowTitle(window, title);
 
-        const char *choices_add[6] = {"PREVIOUS", "NEXT", "ADD TO PARTY", "START", "BACK"};
-        const char *choices_del[6] = {"PREVIOUS", "NEXT", "REMOVE", "START", "BACK"};
+        const char *choices_add[5] = {"PREVIOUS", "NEXT", "ADD TO PARTY", "START", "BACK"};
+        const char *choices_del[5] = {"PREVIOUS", "NEXT", "REMOVE", "START", "BACK"};
 
         auto current = -1;
 
@@ -987,6 +1232,31 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             if (selection[i] >= 0 && selection[i] < characters.size())
                             {
                                 party.Party.push_back(characters[selection[i]]);
+                            }
+
+                            if (party.Party[i].SpellCaster)
+                            {
+                                // TODO: Update this for other books
+                                if (bookID == Book::Type::BOOK1)
+                                {
+                                    auto selected = 0;
+
+                                    auto spell_selection = std::vector<int>();
+
+                                    auto spellBook = Spells::BOOK1_SPELLS;
+
+                                    while (selected < 3)
+                                    {
+                                        spell_selection = selectSpell(window, renderer, spellBook, 3, Spells::Select::SPELLBOOK);
+
+                                        selected = spell_selection.size();
+                                    }
+
+                                    for (auto j = 0; j < spell_selection.size(); j++)
+                                    {
+                                        party.Party[i].SpellBook.push_back(spellBook[selection[j]]);
+                                    }
+                                }
                             }
                         }
 
@@ -2898,7 +3168,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
                 renderButtons(renderer, controls, current, intLB, space, 4);
 
                 std::string list_header = "Choose " + (select_limit > 1 ? std::to_string(select_limit) : "a") + " spell" + (select_limit > 1 ? "s" : "") + " to ";
-                
+
                 if (mode == Spells::Select::SPELLBOOK)
                 {
                     list_header += "add to spellbook";
@@ -4397,6 +4667,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             flash_color = intRD;
                         }
                     }
+                    else if (controls[current].Type == Control::Type::PARTY)
+                    {
+                        done = viewParty(window, renderer, party.Party);
+
+                        selected = false;
+
+                        current = -1;
+                    }
                     else if (controls[current].Type == Control::Type::ATTACK)
                     {
                         auto result = selectPartyMember(window, renderer, party);
@@ -4764,54 +5042,24 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
 
             if (selected && current >= 0 && current < controls.size())
             {
-                switch (controls[current].Type)
+                if (controls[current].Type == Control::Type::COMBAT)
                 {
-                case Control::Type::COMBAT:
-
                     selectParty(window, renderer, Book::Type::BOOK1, Party);
 
-                    if (Party.Party.size() >= Party.Limit)
-                    {
-                        for (auto i = 0; i < Party.Party.size(); i++)
-                        {
-                            if (Party.Party[i].SpellCaster)
-                            {
-                                auto selected = 0;
+                    std::vector<Monster::Base> monsters = {
+                        Monster::Base("Goblin", 4, 5, 4, 6, 0),
+                        Monster::Base("Orc Bodyguard", 6, 4, 4, 10, 0)};
 
-                                auto selection = std::vector<int>();
-
-                                while (selected < 3)
-                                {
-                                    // TODO: Update this for other books
-                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3, Spells::Select::SPELLBOOK);
-
-                                    selected = selection.size();
-                                }
-
-                                for (auto j = 0; j < selection.size(); j++)
-                                {
-                                    Party.Party[i].SpellBook.push_back(Spells::BOOK1_SPELLS[selection[j]]);
-                                }
-                            }
-                        }
-
-                        std::vector<Monster::Base> monsters = {
-                            Monster::Base("Goblin", 4, 5, 4, 6, 0),
-                            Monster::Base("Orc Bodyguard", 6, 4, 4, 10, 0)};
-
-                        combat = combatScreen(window, renderer, Party, monsters, true, false);
-                    }
+                    combat = combatScreen(window, renderer, Party, monsters, true, false);
 
                     done = false;
 
                     current = -1;
 
                     selected = false;
-
-                    break;
-
-                case Control::Type::MAP:
-
+                }
+                else if (controls[current].Type == Control::Type::MAP)
+                {
                     mapScreen(window, renderer);
 
                     done = false;
@@ -4819,100 +5067,30 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID)
                     current = -1;
 
                     selected = false;
-
-                    break;
-
-                case Control::Type::TEAM_SKILL:
-
+                }
+                else if (controls[current].Type == Control::Type::TEAM_SKILL)
+                {
                     selectParty(window, renderer, Book::Type::BOOK1, Party);
 
-                    if (Party.Party.size() >= Party.Limit)
-                    {
-                        for (auto i = 0; i < Party.Party.size(); i++)
-                        {
-                            if (Party.Party[i].SpellCaster)
-                            {
-                                auto selected = 0;
-
-                                auto selection = std::vector<int>();
-
-                                while (selected < 3)
-                                {
-                                    // TODO: Update this for other books
-                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3, Spells::Select::SPELLBOOK);
-
-                                    selected = selection.size();
-                                }
-
-                                for (auto j = 0; j < selection.size(); j++)
-                                {
-                                    Party.Party[i].SpellBook.push_back(Spells::BOOK1_SPELLS[selection[j]]);
-                                }
-                            }
-                        }
-
-                        skillCheck(window, renderer, Party, 2, Attribute::Type::STEALTH, 4, 4);
-
-                        done = false;
-                    }
+                    skillCheck(window, renderer, Party, 2, Attribute::Type::STEALTH, 4, 4);
 
                     current = -1;
 
                     selected = false;
-
-                    break;
-
-                case Control::Type::SKILL:
-
+                }
+                else if (controls[current].Type == Control::Type::SKILL)
+                {
                     selectParty(window, renderer, Book::Type::BOOK1, Party);
 
-                    if (Party.Party.size() >= Party.Limit)
-                    {
-                        for (auto i = 0; i < Party.Party.size(); i++)
-                        {
-                            if (Party.Party[i].SpellCaster)
-                            {
-                                auto selected = 0;
-
-                                auto selection = std::vector<int>();
-
-                                while (selected < 3)
-                                {
-                                    // TODO: Update this for other books
-                                    selection = selectSpell(window, renderer, Spells::BOOK1_SPELLS, 3, Spells::Select::SPELLBOOK);
-
-                                    selected = selection.size();
-                                }
-
-                                for (auto j = 0; j < selection.size(); j++)
-                                {
-                                    Party.Party[i].SpellBook.push_back(Spells::BOOK1_SPELLS[selection[j]]);
-                                }
-                            }
-                        }
-
-                        skillCheck(window, renderer, Party, 1, Attribute::Type::LORE, 4, 3);
-
-                        done = false;
-                    }
+                    skillCheck(window, renderer, Party, 1, Attribute::Type::LORE, 4, 3);
 
                     current = -1;
 
                     selected = false;
-
-                    break;
-
-                case Control::Type::QUIT:
-
+                }
+                else if (controls[current].Type == Control::Type::QUIT)
+                {
                     done = true;
-
-                    break;
-
-                default:
-
-                    selected = false;
-
-                    done = false;
 
                     break;
                 }

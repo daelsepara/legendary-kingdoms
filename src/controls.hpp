@@ -29,6 +29,7 @@ namespace Control
         GLOSSARY,
         ACTION,
         BACK,
+        EQUIPMENT,
         USE,
         DROP,
         CONFIRM,
@@ -48,6 +49,7 @@ namespace Control
         TEAM_SKILL,
         ATTACK,
         SPELL,
+        SPELLBOOK,
         FLEE
     };
 
