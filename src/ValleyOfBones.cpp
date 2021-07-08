@@ -1903,8 +1903,10 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                 save_score = combat_damage;
             }
 
-            auto cols = (fullwidth - 2 * box_space) / (64 + box_space);
-            auto rows = (boxh - box_space) / (64 + box_space);
+            auto size_dice = 64;
+
+            auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+            auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -1919,7 +1921,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                 fillWindow(renderer, intWH);
 
                 putHeader(renderer, "Armour save results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
-                fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
+                fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::ArmourSave::START)
                 {
@@ -1943,13 +1945,13 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                         {
                             auto result = results[i] - 1;
 
-                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
+                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
 
                             if (stage == Engine::ArmourSave::REDUCE)
                             {
                                 if (results[i] >= 4)
                                 {
-                                    thickRect(renderer, 64, 64, offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), intLB, 2);
+                                    thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
 
                                     reduced_damage++;
                                 }
@@ -2207,7 +2209,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                 putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Assign damage to", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Assign damage to", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection >= 0 && selection < party.size())
                 {
@@ -2431,8 +2433,10 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
             std::vector<int> results = std::vector<int>();
 
-            auto cols = (fullwidth - 2 * box_space) / (64 + box_space);
-            auto rows = (boxh - box_space) / (64 + box_space);
+            auto size_dice = 64;
+
+            auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+            auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -2444,7 +2448,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                 fillWindow(renderer, intWH);
 
                 putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
-                fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
+                fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::Attack::START)
                 {
@@ -2470,13 +2474,13 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                         {
                             auto result = results[i] - 1;
 
-                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
+                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
 
                             if (stage == Engine::Attack::DAMAGE)
                             {
                                 if (results[i] >= monsters[opponent].Defence)
                                 {
-                                    thickRect(renderer, 64, 64, offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), intLB, 2);
+                                    thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
 
                                     damage++;
                                 }
@@ -2536,7 +2540,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                 putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
                 std::string spell_string = "SPELL: " + std::string(spell.Name);
-                putHeader(renderer, spell_string.c_str(), font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 3 * boxh + 2 * box_space);
+                putHeader(renderer, spell_string.c_str(), font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                 if (stage == Engine::Attack::START)
                 {
@@ -2736,8 +2740,10 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
             auto attack_score = 1;
 
-            auto cols = (fullwidth - 2 * box_space) / (64 + box_space);
-            auto rows = (boxh - box_space) / (64 + box_space);
+            auto size_dice = 64;
+
+            auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+            auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -2749,7 +2755,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 fillWindow(renderer, intWH);
 
                 putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
-                fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
+                fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::Attack::START)
                 {
@@ -2775,7 +2781,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                         {
                             auto result = results[i] - 1;
 
-                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
+                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
 
                             if (stage == Engine::Attack::DAMAGE)
                             {
@@ -2783,7 +2789,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                                 {
                                     if (results[i] >= monsters[opponent].Defence)
                                     {
-                                        thickRect(renderer, 64, 64, offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), intLB, 2);
+                                        thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
 
                                         damage++;
                                     }
@@ -2792,7 +2798,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                                 {
                                     if (results[i] >= monsters[opponent].Difficulty)
                                     {
-                                        thickRect(renderer, 64, 64, offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), intRD, 2);
+                                        thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intRD, 2);
 
                                         damage++;
                                     }
@@ -2857,6 +2863,10 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                                     flash_message = true;
 
                                     flash_color = intRD;
+                                }
+                                else
+                                {
+                                    assigned = true;
                                 }
                             }
 
@@ -3259,7 +3269,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
                 putHeader(renderer, list_header.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection.size() > 0)
                 {
@@ -3602,7 +3612,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
 
                 putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection >= 0 && selection < monsters.size())
                 {
@@ -3839,8 +3849,10 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
                 skill_score = 20;
             }
 
-            auto cols = (fullwidth - 2 * box_space) / (64 + box_space);
-            auto rows = (boxh - box_space) / (64 + box_space);
+            auto size_dice = 64;
+
+            auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+            auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -3854,7 +3866,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 putHeader(renderer, "Skill Check Results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
-                fillRect(renderer, fullwidth, boxh * 2, startx, starty + infoh + boxh + box_space + infoh, intBE);
+                fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Attribute::Test::START)
                 {
@@ -3878,13 +3890,13 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
                         {
                             auto result = results[i] - 1;
 
-                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), 64, 64);
+                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
 
                             if (stage == Attribute::Test::CHECK)
                             {
                                 if (results[i] >= difficulty)
                                 {
-                                    thickRect(renderer, 64, 64, offsetx + (col) * (box_space + 64), offsety + (row) * (box_space + 64), intLB, 2);
+                                    thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
 
                                     success_counter++;
                                 }
@@ -3935,7 +3947,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 std::string test_string = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(difficulty) + "+, Success: " + std::to_string(success);
 
-                putHeader(renderer, test_string.c_str(), font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 3 * boxh + 2 * box_space);
+                putHeader(renderer, test_string.c_str(), font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                 putHeader(renderer, party[team[0]].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
@@ -4166,7 +4178,7 @@ bool selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charac
 
                 putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection >= 0 && selection < party.size())
                 {
@@ -4207,6 +4219,46 @@ bool selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charac
                         {
                             if (party[selection].SpellCaster)
                             {
+                                auto spell = selectSpell(window, renderer, party[selection].SpellBook, 1, Spells::Select::CAST_SPELL);
+
+                                if (mode == Control::Type::COMBAT)
+                                {
+                                    if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::COMBAT)
+                                    {
+                                    }
+                                    else if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE_COMBAT)
+                                    {
+                                    }
+                                    else
+                                    {
+                                        flash_message = true;
+
+                                        message = std::string(party[selection].Name) + " cannot cast " + std::string(party[selection].SpellBook[spell[0]].Name) + " during COMBAT!";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_color = intRD;
+                                    }
+                                }
+                                else if (mode == Control::Type::ADVENTURE)
+                                {
+                                    if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE)
+                                    {
+                                    }
+                                    else if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE_COMBAT)
+                                    {
+                                    }
+                                    else
+                                    {
+                                        flash_message = true;
+
+                                        message = std::string(party[selection].Name) + " cannot cast " + std::string(party[selection].SpellBook[spell[0]].Name) + " at this time!";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_color = intRD;
+                                    }
+                                }
                             }
                             else
                             {
@@ -4405,7 +4457,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                 putHeader(renderer, "Select Adventurer", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection.size() >= 0)
                 {
@@ -4666,7 +4718,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
                 putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection >= 0 && selection < party.Party.size())
                 {
@@ -4906,7 +4958,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                 putHeader(renderer, "Opponents", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putText(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (Engine::COUNT(party.Party) > 0)
                 {
