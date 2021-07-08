@@ -52,7 +52,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment);
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters);
-int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
+int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Control::Type mode);
 
 std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
 
@@ -848,9 +848,31 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
                 putText(renderer, party[character].Name, font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
             }
 
-            if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::SPELLBOOK)
+            if (character >= 0 && character < party.size())
             {
-                if (party[character].SpellCaster && party[character].SpellBook.size() > 0)
+                if (party[character].Status.size() > 0)
+                {
+                    putHeader(renderer, "Status", font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+
+                    std::string status_string = "";
+
+                    for (auto i = 0; i < party[character].Status.size(); i++)
+                    {
+                        if (i > 0)
+                        {
+                            status_string += ", ";
+                        }
+
+                        status_string += Character::StatusDescriptions[party[character].Status[i]];
+                    }
+
+                    putText(renderer, status_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                }
+            }
+
+            if (current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::SPELLBOOK && party[character].SpellCaster && party[character].SpellBook.size() > 0)
                 {
                     putHeader(renderer, "SPELLBOOK", font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
@@ -868,11 +890,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
 
                     putText(renderer, spellbook_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
-            }
-
-            if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::EQUIPMENT)
-            {
-                if (party[character].Equipment.size() > 0)
+                else if (controls[current].Type == Control::Type::EQUIPMENT && party[character].Equipment.size() > 0)
                 {
                     putHeader(renderer, "EQUIPMENT", font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
@@ -2303,11 +2321,6 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                     }
                 }
             }
-
-            if (done)
-            {
-                break;
-            }
         }
 
         if (font_garamond)
@@ -2575,6 +2588,8 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                 {
                     if (stage == Engine::Attack::START && controls[current].Type == Control::Type::BACK)
                     {
+                        combat_damage = -1;
+
                         done = true;
 
                         current = -1;
@@ -3185,7 +3200,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
         auto scrolly = startx + infoh + booksize - buttonh - text_space + 1;
 
-        auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, scrolly, true, false);
+        auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, scrolly, true, (mode == Spells::Select::CAST_SPELL ? true : false));
 
         auto done = false;
 
@@ -3391,11 +3406,15 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
                     }
                     else if (controls[current].Type == Control::Type::BACK)
                     {
+                        select_result.clear();
+
                         done = true;
 
                         current = -1;
 
                         selected = false;
+
+                        break;
                     }
                     else if (controls[current].Type == Control::Type::CONFIRM)
                     {
@@ -3467,11 +3486,6 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
                         }
                     }
                 }
-            }
-
-            if (done)
-            {
-                break;
             }
         }
 
@@ -3705,11 +3719,6 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                         }
                     }
                 }
-            }
-
-            if (done)
-            {
-                break;
             }
         }
 
@@ -4075,7 +4084,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
     return test_result;
 }
 
-int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<int> hasAttacked, Control::Type mode)
+int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, Control::Type mode)
 {
     auto result = -1;
 
@@ -4207,7 +4216,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 {
                     if (controls[current].Type == Control::Type::BACK)
                     {
-                        done = false;
+                        done = true;
 
                         current = -1;
 
@@ -4237,67 +4246,182 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                                 {
                                     auto spell = selectSpell(window, renderer, party[selection].SpellBook, 1, Spells::Select::CAST_SPELL);
 
-                                    if (mode == Control::Type::COMBAT)
+                                    if (spell.size() > 0)
                                     {
-                                        if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::COMBAT)
+                                        auto i = spell[0];
+
+                                        if (mode == Control::Type::COMBAT)
                                         {
-                                            // TODO: Cast Spell
-                                            result = selection;
+                                            if (party[selection].SpellBook[i].Scope == Spells::Scope::COMBAT || party[selection].SpellBook[i].Scope == Spells::Scope::ADVENTURE_COMBAT)
+                                            {
+                                                auto cast = false;
 
-                                            done = true;
+                                                if (party[selection].SpellBook[i].Type == Spells::Type::ARMOUR_OF_HEAVEN)
+                                                {
+                                                    auto target = selectPartyMember(window, renderer, party, Control::Type::SPELL_TARGET);
 
-                                            break;
+                                                    if (Engine::HAS_STATUS(party[target], Character::Status::ARMOUR3))
+                                                    {
+                                                        flash_message = true;
+
+                                                        message = std::string(party[target].Name) + " already has the " + std::string(party[selection].SpellBook[i].Name) + "!";
+
+                                                        start_ticks = SDL_GetTicks();
+
+                                                        flash_color = intRD;
+                                                    }
+                                                    else
+                                                    {
+                                                        Engine::GAIN_STATUS(party[target], Character::Status::ARMOUR3);
+
+                                                        cast = true;
+                                                    }
+                                                }
+                                                else if (party[selection].SpellBook[i].Type == Spells::Type::ICE_BOLT)
+                                                {
+                                                    if (Engine::COUNT(monsters) > 0)
+                                                    {
+                                                        auto target = selectOpponent(window, renderer, monsters);
+
+                                                        if (target >= 0)
+                                                        {
+                                                            auto damage = magicAttackScreen(window, renderer, party, monsters, party[selection].SpellBook[i], selection, target, 8);
+
+                                                            if (damage >= 0)
+                                                            {
+                                                                cast = true;
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        flash_message = true;
+
+                                                        message = "There are no targets for " + std::string(party[selection].SpellBook[i].Name) + "!";
+
+                                                        start_ticks = SDL_GetTicks();
+
+                                                        flash_color = intRD;
+                                                    }
+                                                }
+                                                else if (party[selection].SpellBook[i].Type == Spells::Type::UNFAILING_STRIKE)
+                                                {
+                                                    if (Engine::COUNT(monsters) > 0)
+                                                    {
+                                                        auto target = selectOpponent(window, renderer, monsters);
+
+                                                        if (target >= 0)
+                                                        {
+                                                            Engine::GAIN_HEALTH(monsters[target], -3);
+
+                                                            cast = true;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        flash_message = true;
+
+                                                        message = "There are no targets for " + std::string(party[selection].SpellBook[i].Name) + "!";
+
+                                                        start_ticks = SDL_GetTicks();
+
+                                                        flash_color = intRD;
+                                                    }
+                                                }
+                                                else if (party[selection].SpellBook[i].Type == Spells::Type::POSION_STREAM)
+                                                {
+                                                    if (Engine::COUNT(monsters) > 0)
+                                                    {
+                                                        auto max_targets = std::min(2, Engine::COUNT(monsters));
+
+                                                        auto targets = std::vector<int>();
+
+                                                        while (targets.size() < max_targets)
+                                                        {
+                                                            auto target = selectOpponent(window, renderer, monsters);
+
+                                                            if (target >= 0)
+                                                            {
+                                                                if (Engine::FIND_LIST(targets, target) < 0)
+                                                                {
+                                                                    auto damage = magicAttackScreen(window, renderer, party, monsters, party[selection].SpellBook[i], selection, target, 5);
+
+                                                                    if (damage >= 0)
+                                                                    {
+                                                                        targets.push_back(target);
+
+                                                                        cast = true;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        flash_message = true;
+
+                                                        message = "There are no targets for " + std::string(party[selection].SpellBook[i].Name) + "!";
+
+                                                        start_ticks = SDL_GetTicks();
+
+                                                        flash_color = intRD;
+                                                    }
+                                                }
+
+                                                if (cast)
+                                                {
+                                                    party[selection].SpellBook[i].Charged = false;
+
+                                                    result = selection;
+
+                                                    done = true;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                flash_message = true;
+
+                                                message = std::string(party[selection].Name) + " cannot cast " + std::string(party[selection].SpellBook[spell[0]].Name) + " during COMBAT!";
+
+                                                start_ticks = SDL_GetTicks();
+
+                                                flash_color = intRD;
+                                            }
                                         }
-                                        else if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE_COMBAT)
+                                        else if (mode == Control::Type::ADVENTURE)
                                         {
-                                            // TODO: Cast Spell
-                                            result = selection;
+                                            if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE || party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE_COMBAT)
+                                            {
+                                                // TODO: Cast Spell
+                                                result = selection;
 
-                                            done = true;
+                                                done = true;
+                                            }
+                                            else
+                                            {
+                                                flash_message = true;
 
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            flash_message = true;
+                                                message = std::string(party[selection].Name) + " cannot cast " + std::string(party[selection].SpellBook[spell[0]].Name) + " at this time!";
 
-                                            message = std::string(party[selection].Name) + " cannot cast " + std::string(party[selection].SpellBook[spell[0]].Name) + " during COMBAT!";
+                                                start_ticks = SDL_GetTicks();
 
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_color = intRD;
+                                                flash_color = intRD;
+                                            }
                                         }
                                     }
-                                    else if (mode == Control::Type::ADVENTURE)
+                                    else
                                     {
-                                        if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE)
-                                        {
-                                            // TODO: Cast Spell
-                                            result = selection;
+                                        selected = false;
 
-                                            done = true;
-
-                                            break;
-                                        }
-                                        else if (party[selection].SpellBook[spell[0]].Scope == Spells::Scope::ADVENTURE_COMBAT)
-                                        {
-                                            // TODO: Cast Spell
-                                            result = selection;
-
-                                            done = true;
-
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            flash_message = true;
-
-                                            message = std::string(party[selection].Name) + " cannot cast " + std::string(party[selection].SpellBook[spell[0]].Name) + " at this time!";
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_color = intRD;
-                                        }
+                                        current = -1;
                                     }
                                 }
                             }
@@ -4351,11 +4475,6 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                         }
                     }
                 }
-            }
-
-            if (done)
-            {
-                break;
             }
         }
 
@@ -4615,11 +4734,6 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     }
                 }
             }
-
-            if (done)
-            {
-                break;
-            }
         }
 
         if (font_garamond)
@@ -4656,7 +4770,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return result;
 }
 
-int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
+int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Control::Type mode)
 {
     auto result = -1;
 
@@ -4696,14 +4810,14 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
         auto last = offset + limit;
 
-        if (last > party.Party.size())
+        if (last > party.size())
         {
-            last = party.Party.size();
+            last = party.size();
         }
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-        auto controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, true);
+        auto controls = combatantList(window, renderer, party, offset, last, limit, textx, texty + infoh + text_space, true, true);
 
         auto done = false;
 
@@ -4744,7 +4858,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         {
                             thickRect(renderer, controls[i].W, controls[i].H, controls[i].X, controls[i].Y, intLB, 2);
                         }
-                        else if (party.Party[offset + i].Health > 0)
+                        else if (party[offset + i].Health > 0)
                         {
                             drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
                         }
@@ -4757,15 +4871,26 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
                 renderButtons(renderer, controls, current, intLB, space, 4);
 
-                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                if (mode == Control::Type::COMBAT)
+                {
+                    putHeader(renderer, "Choose the adventurer attacking this round", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (mode == Control::Type::SPELL_TARGET)
+                {
+                    putHeader(renderer, "Choose target for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else
+                {
+                    putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
 
                 putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
-                if (selection >= 0 && selection < party.Party.size())
+                if (selection >= 0 && selection < party.size())
                 {
-                    if (party.Party[selection].Health > 0)
+                    if (party[selection].Health > 0)
                     {
-                        putText(renderer, party.Party[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                        putText(renderer, party[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                     }
                     else
                     {
@@ -4803,7 +4928,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     }
                     else if (controls[current].Type == Control::Type::CONFIRM)
                     {
-                        if (selection >= 0 && selection < party.Party.size())
+                        if (selection >= 0 && selection < party.size())
                         {
                             done = true;
 
@@ -4826,7 +4951,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     }
                     else if (controls[current].Type == Control::Type::ACTION)
                     {
-                        if (current + offset >= 0 && current + offset < party.Party.size())
+                        if (current + offset >= 0 && current + offset < party.size())
                         {
                             if (selection == current + offset)
                             {
@@ -4834,7 +4959,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                             }
                             else
                             {
-                                if (party.Party[current + offset].Health > 0)
+                                if (party[current + offset].Health > 0)
                                 {
                                     selection = current + offset;
                                 }
@@ -4842,7 +4967,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                 {
                                     flash_message = true;
 
-                                    message = std::string(party.Party[current + offset].Name) + std::string(" is DEAD!");
+                                    message = std::string(party[current + offset].Name) + std::string(" is DEAD!");
 
                                     start_ticks = SDL_GetTicks();
 
@@ -4852,11 +4977,6 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         }
                     }
                 }
-            }
-
-            if (done)
-            {
-                break;
             }
         }
 
@@ -4954,7 +5074,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         auto hasAttacked = std::vector<int>();
 
-        while (Engine::COUNT(monsters) > 0 || Engine::COUNT(party.Party) > 0)
+        while (Engine::COUNT(monsters) > 0 && Engine::COUNT(party.Party) > 0)
         {
             auto done = false;
 
@@ -5077,7 +5197,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::PARTY)
                     {
-                        done = viewParty(window, renderer, party.Party);
+                        viewParty(window, renderer, party.Party);
 
                         selected = false;
 
@@ -5085,7 +5205,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::ATTACK)
                     {
-                        auto result = selectPartyMember(window, renderer, party);
+                        auto result = selectPartyMember(window, renderer, party.Party, Control::Type::COMBAT);
 
                         if (Engine::FIND_LIST(hasAttacked, result) >= 0)
                         {
@@ -5162,21 +5282,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     }
                                 }
                             }
-                            else
-                            {
-                                done = true;
-
-                                selected = false;
-
-                                current = -1;
-
-                                break;
-                            }
 
                             hasAttacked.clear();
                         }
-
-                        done = false;
 
                         current = -1;
 
@@ -5210,10 +5318,18 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                             else
                             {
-                                auto result = selectCaster(window, renderer, party.Party, hasAttacked, Control::Type::COMBAT);
+                                auto result = selectCaster(window, renderer, party.Party, monsters, hasAttacked, Control::Type::COMBAT);
 
                                 if (result >= 0 && result < party.Party.size())
                                 {
+                                    flash_message = true;
+
+                                    message = std::string(party.Party[result].Name) + " CASTS a spell!";
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intLB;
+
                                     hasAttacked.push_back(result);
                                 }
 
@@ -5235,21 +5351,15 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
 
                     monster_list = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, false, false);
+                }
 
-                    if (Engine::COUNT(monsters) == 0 || Engine::COUNT(party.Party) == 0)
-                    {
-                        done = true;
-
-                        current = -1;
-
-                        selected = false;
-
-                        break;
-                    }
+                if (Engine::COUNT(party.Party) == 0 || Engine::COUNT(monsters) == 0)
+                {
+                    done = true;
                 }
             }
 
-            if (done)
+            if (combatResult == Engine::Combat::FLEE)
             {
                 break;
             }
@@ -5290,6 +5400,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
     {
         combatResult = Engine::COUNT(party.Party) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DOOM;
     }
+
+    // Clear temporary status, e.g. magic effects
 
     for (auto i = 0; i < party.Party.size(); i++)
     {

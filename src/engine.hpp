@@ -206,6 +206,14 @@ namespace Engine
         return result;
     }
 
+    void GAIN_STATUS(Character::Base &character, Character::Status status)
+    {
+        if (!Engine::HAS_STATUS(character, status))
+        {
+            character.Status.push_back(status);
+        }
+    }
+
     void REMOVE_STATUS(Character::Base &character, Character::Status status)
     {
         for (auto i = 0; i < character.Status.size(); i++)

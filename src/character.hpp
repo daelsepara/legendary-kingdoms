@@ -10,6 +10,8 @@
 #include "equipment.hpp"
 #include "spells.hpp"
 
+#include <map>
+
 namespace Character
 {
     // Handle unique characters
@@ -28,6 +30,9 @@ namespace Character
     {
         ARMOUR3
     };
+
+    std::map<Character::Status, const char *> StatusDescriptions = {
+        {Character::Status::ARMOUR3, "+3 Armour"}};
 
     class Base
     {
