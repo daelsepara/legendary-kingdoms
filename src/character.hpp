@@ -147,6 +147,8 @@ namespace Party
 
         Character::Type Current = Character::Type::NONE;
 
+        std::map<std::pair<Character::Type, Character::Type>, int> Hearts = std::map<std::pair<Character::Type, Character::Type>, int>();
+        
         Base()
         {
         }
