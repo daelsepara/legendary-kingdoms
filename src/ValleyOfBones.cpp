@@ -51,8 +51,10 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
 Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, bool useEquipment);
 
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
+int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party);
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment);
 int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, Spells::Base &spell, int combatant, int opponent, int fighting_score);
+int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, Control::Type mode);
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets);
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Control::Type mode);
 
@@ -155,8 +157,8 @@ void renderImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y)
 
 int fitImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, int h)
 {
-    int splash_h = image->h;
-    int splash_w = w;
+    auto splash_h = image->h;
+    auto splash_w = w;
 
     if (image && renderer)
     {
@@ -203,8 +205,8 @@ int fitImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, in
 
 int fadeImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, int h, Uint8 alpha)
 {
-    int splash_h = image->h;
-    int splash_w = w;
+    auto splash_h = image->h;
+    auto splash_w = w;
 
     if (image && renderer)
     {
@@ -253,8 +255,8 @@ int fadeImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, i
 
 void stretchImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, int h)
 {
-    int splash_h = image->h;
-    int splash_w = w;
+    auto splash_h = image->h;
+    auto splash_w = w;
 
     if (image && renderer)
     {
@@ -512,8 +514,8 @@ void renderTextButtons(SDL_Renderer *renderer, std::vector<TextButton> controls,
         {
             auto text = createText(controls[i].Text, ttf, fontsize, fg, controls[i].W, style);
 
-            int x = controls[i].X + (controls[i].W - text->w) / 2;
-            int y = controls[i].Y + (controls[i].H - text->h) / 2;
+            auto x = controls[i].X + (controls[i].W - text->w) / 2;
+            auto y = controls[i].Y + (controls[i].H - text->h) / 2;
 
             SDL_Rect rect;
 
@@ -594,12 +596,36 @@ std::vector<TextButton> createHTextButtons(const char **choices, int num, int te
 
         for (auto i = 0; i < num; i++)
         {
-            int left = i > 0 ? i - 1 : i;
-            int right = i < num - 1 ? i + 1 : i;
-            int up = i;
-            int down = i;
+            auto left = i > 0 ? i - 1 : i;
+            auto right = i < num - 1 ? i + 1 : i;
+            auto up = i;
+            auto down = i;
 
             auto x = text_x + i * (text_buttonw + text_space * 2) + text_space;
+
+            auto button = TextButton(i, choices[i], left, right, up, down, x, text_y, text_buttonw, text_buttonh);
+
+            controls.push_back(button);
+        }
+    }
+
+    return controls;
+}
+
+std::vector<TextButton> createFixedTextButtons(const char **choices, int num, int text_buttonw, int text_buttonh, int button_space, int text_x, int text_y)
+{
+    auto controls = std::vector<TextButton>();
+
+    if (num > 0)
+    {
+        for (auto i = 0; i < num; i++)
+        {
+            auto left = i > 0 ? i - 1 : i;
+            auto right = i < num - 1 ? i + 1 : i;
+            auto up = i;
+            auto down = i;
+
+            auto x = text_x + i * (text_buttonw + button_space);
 
             auto button = TextButton(i, choices[i], left, right, up, down, x, text_y, text_buttonw, text_buttonh);
 
@@ -784,7 +810,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
 
         auto main_buttonh = 0.06 * SCREEN_HEIGHT;
 
-        auto infoh = 0.07 * SCREEN_HEIGHT;
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
 
         auto controls = createHTextButtons(choices, 5, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
 
@@ -1088,7 +1114,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
         auto main_buttonh = 0.06 * SCREEN_HEIGHT;
 
-        auto infoh = 0.07 * SCREEN_HEIGHT;
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
 
         auto controls_add = createHTextButtons(choices_add, 5, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
         auto controls_del = createHTextButtons(choices_del, 5, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
@@ -1628,7 +1654,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     if (spells.size() > 0)
     {
-        for (int i = 0; i < last - start; i++)
+        for (auto i = 0; i < last - start; i++)
         {
             auto index = start + i;
 
@@ -1696,7 +1722,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
     if (monsters.size() > 0)
     {
-        for (int i = 0; i < last - start; i++)
+        for (auto i = 0; i < last - start; i++)
         {
             auto index = start + i;
 
@@ -1771,7 +1797,7 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
 
     if (party.size() > 0)
     {
-        for (int i = 0; i < last - start; i++)
+        for (auto i = 0; i < last - start; i++)
         {
             auto index = start + i;
 
@@ -1829,7 +1855,7 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
 
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage)
 {
-    int combat_damage = damage;
+    auto combat_damage = damage;
 
     if (character.Health > 0 && Engine::ARMOUR(character) > 0)
     {
@@ -1890,17 +1916,16 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto controls_save = createHTextButtons(choices_save, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto main_buttonw = 250;
+
+            auto controls_save = createFixedTextButtons(choices_save, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_save[0].Type = Control::Type::CONFIRM;
-            controls_save[0].W = 250;
 
-            auto controls_reduce = createHTextButtons(choices_reduce, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto controls_reduce = createFixedTextButtons(choices_reduce, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_reduce[0].Type = Control::Type::CONFIRM;
-            controls_reduce[0].W = controls_save[0].W;
 
-            auto controls_end = createHTextButtons(choices_end, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto controls_end = createFixedTextButtons(choices_end, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_end[0].Type = Control::Type::BACK;
-            controls_end[0].W = controls_save[0].W;
 
             auto current = -1;
 
@@ -2148,9 +2173,9 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
         auto font_size = 20;
         auto text_space = 8;
-        auto messageh = 0.25 * SCREEN_HEIGHT;
-        auto infoh = 0.07 * SCREEN_HEIGHT;
-        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
@@ -2167,7 +2192,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
         auto done = false;
 
-        int selection = -1;
+        auto selection = -1;
 
         while (!done)
         {
@@ -2211,7 +2236,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                                 auto x = controls[index].X - 8 + size;
                                 auto y = controls[index].Y - 8 + size;
 
-                                drawRect(renderer, w, h, x, y, intDB);
+                                drawRect(renderer, w, h, x, y, intLB);
                             }
                         }
                         else if (party[index].Health > 0)
@@ -2361,7 +2386,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
 int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, Spells::Base &spell, int combatant, int opponent, int fighting_score)
 {
-    int combat_damage = 0;
+    auto combat_damage = 0;
 
     if (Engine::COUNT(party) > 0 && Engine::COUNT(monsters) > 0)
     {
@@ -2422,15 +2447,17 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto controls_attack = createHTextButtons(choices_attack, 2, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto main_buttonw = 250;
+
+            auto controls_attack = createFixedTextButtons(choices_attack, 2, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_attack[0].Type = Control::Type::CONFIRM;
             controls_attack[1].Type = Control::Type::BACK;
 
-            auto controls_damage = createHTextButtons(choices_damage, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto controls_damage = createFixedTextButtons(choices_damage, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_damage[0].Type = Control::Type::CONFIRM;
             controls_damage[0].W = controls_attack[0].W;
 
-            auto controls_end = createHTextButtons(choices_end, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto controls_end = createFixedTextButtons(choices_end, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_end[0].Type = Control::Type::BACK;
             controls_end[0].W = controls_attack[0].W;
 
@@ -2481,7 +2508,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                     auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
                     auto offsetx = startx + box_space;
 
-                    int damage = 0;
+                    auto damage = 0;
 
                     for (auto i = 0; i < results.size(); i++)
                     {
@@ -2656,7 +2683,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment)
 {
-    int combat_damage = 0;
+    auto combat_damage = 0;
 
     if (Engine::COUNT(party) > 0 && Engine::COUNT(monsters) > 0)
     {
@@ -2719,27 +2746,25 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto controls_attack = createHTextButtons(choices_attack, 4, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto main_buttonw = 250;
+
+            auto controls_attack = createFixedTextButtons(choices_attack, 4, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_attack[0].Type = Control::Type::CONFIRM;
             controls_attack[1].Type = Control::Type::PLUS;
             controls_attack[2].Type = Control::Type::MINUS;
             controls_attack[3].Type = Control::Type::BACK;
 
-            auto controls_defend = createHTextButtons(choices_defend, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto controls_defend = createFixedTextButtons(choices_defend, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_defend[0].Type = Control::Type::CONFIRM;
-            controls_defend[0].W = controls_attack[0].W;
 
-            auto controls_damage = createHTextButtons(choices_damage, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto controls_damage = createFixedTextButtons(choices_damage, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_damage[0].Type = Control::Type::CONFIRM;
-            controls_damage[0].W = controls_attack[0].W;
 
-            auto controls_end = createHTextButtons(choices_end, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto controls_end = createFixedTextButtons(choices_end, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_end[0].Type = Control::Type::BACK;
-            controls_end[0].W = controls_attack[0].W;
 
-            auto controls_assign = createHTextButtons(choices_assign, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto controls_assign = createFixedTextButtons(choices_assign, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_assign[0].Type = Control::Type::CONFIRM;
-            controls_assign[0].W = controls_attack[0].W;
 
             auto current = -1;
 
@@ -3557,9 +3582,9 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
 
         auto font_size = 20;
         auto text_space = 8;
-        auto messageh = 0.25 * SCREEN_HEIGHT;
-        auto infoh = 0.07 * SCREEN_HEIGHT;
-        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
@@ -3576,7 +3601,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
 
         auto done = false;
 
-        int selection = -1;
+        auto selection = -1;
 
         while (!done)
         {
@@ -3847,18 +3872,18 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto controls_skill = createHTextButtons(choices_skill, 3, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto main_buttonw = 250;
+
+            auto controls_skill = createFixedTextButtons(choices_skill, 3, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_skill[0].Type = Control::Type::CONFIRM;
             controls_skill[1].Type = Control::Type::PLUS;
             controls_skill[2].Type = Control::Type::MINUS;
 
-            auto controls_confirm = createHTextButtons(choices_confirm, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto controls_confirm = createFixedTextButtons(choices_confirm, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_confirm[0].Type = Control::Type::CONFIRM;
-            controls_confirm[0].W = controls_skill[0].W;
 
-            auto controls_end = createHTextButtons(choices_end, 1, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+            auto controls_end = createFixedTextButtons(choices_end, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_end[0].Type = Control::Type::BACK;
-            controls_end[0].W = controls_skill[0].W;
 
             auto current = -1;
 
@@ -4144,9 +4169,9 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
         auto font_size = 20;
         auto text_space = 8;
-        auto messageh = 0.25 * SCREEN_HEIGHT;
-        auto infoh = 0.07 * SCREEN_HEIGHT;
-        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
@@ -4569,9 +4594,9 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         auto font_size = 20;
         auto text_space = 8;
-        auto messageh = 0.25 * SCREEN_HEIGHT;
-        auto infoh = 0.07 * SCREEN_HEIGHT;
-        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
@@ -4625,7 +4650,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     {
                         if (Engine::FIND_LIST(selection, index) >= 0)
                         {
-                            thickRect(renderer, controls[index].W, controls[index].H, controls[index].X, controls[index].Y, intDB, 2);
+                            thickRect(renderer, controls[index].W, controls[index].H, controls[index].X, controls[index].Y, intLB, 2);
                         }
                         else if (party.Party[index].Health > 0)
                         {
@@ -4827,9 +4852,9 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
         auto font_size = 20;
         auto text_space = 8;
-        auto messageh = 0.25 * SCREEN_HEIGHT;
-        auto infoh = 0.07 * SCREEN_HEIGHT;
-        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
@@ -4846,7 +4871,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
         auto done = false;
 
-        int selection = -1;
+        auto selection = -1;
 
         while (!done)
         {
@@ -5080,9 +5105,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         auto font_size = 20;
         auto text_space = 8;
-        auto messageh = 0.25 * SCREEN_HEIGHT;
-        auto infoh = 0.07 * SCREEN_HEIGHT;
-        auto boxh = 0.125 * SCREEN_HEIGHT;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
