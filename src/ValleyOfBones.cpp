@@ -37,6 +37,7 @@ namespace fs = std::filesystem;
 #include "controls.hpp"
 #include "engine.hpp"
 #include "input.hpp"
+#include "story.hpp"
 
 // Forward declarations
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
@@ -51,6 +52,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment);
+int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, Spells::Base &spell, int combatant, int opponent, int fighting_score);
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets);
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Control::Type mode);
 
@@ -5708,11 +5710,13 @@ int main(int argc, char **argv)
 
     if (window && renderer)
     {
-        //introScreen(window, renderer);
-
-        //mainScreen(window, renderer, storyID);
-
+#if defined(DEBUG)
         testScreen(window, renderer, storyID);
+#else
+        introScreen(window, renderer);
+
+        mainScreen(window, renderer, storyID);
+#endif
 
         // Destroy window and renderer
 

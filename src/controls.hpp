@@ -36,7 +36,7 @@ namespace Control
         QUIT,
         PLUS,
         MINUS,
-        TRADE,
+        BARTER,
         GIVE,
         STEAL,
         LOSE,

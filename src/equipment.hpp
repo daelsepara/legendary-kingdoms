@@ -28,6 +28,11 @@ namespace Equipment
 
         int Modifier = 0;
 
+        Base()
+        {
+            
+        }
+
         Base(const char *name, const char *description, Equipment::Type type, Attribute::Type modifies, int modifier)
         {
             Name = name;
