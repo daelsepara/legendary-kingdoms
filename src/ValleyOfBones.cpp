@@ -39,6 +39,8 @@ namespace fs = std::filesystem;
 #include "input.hpp"
 #include "story.hpp"
 
+#include "book1.hpp"
+
 // Forward declarations
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, int storyID);
@@ -5725,6 +5727,10 @@ int main(int argc, char **argv)
     auto quit = false;
 
     auto storyID = 0;
+
+    auto bookID = Book::Type::BOOK1;
+
+    Book1::InitializeStories();
 
     if (argc > 1)
     {
