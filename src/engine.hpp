@@ -9,6 +9,8 @@
 
 namespace Engine
 {
+    typedef std::pair<Book::Type, int> Destination;
+
     enum class Combat
     {
         NONE,

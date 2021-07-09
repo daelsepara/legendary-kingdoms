@@ -5,7 +5,8 @@ namespace Book
 {
     enum class Type
     {
-        BOOK1 = 1,
+        NONE = 0,
+        BOOK1,
         BOOK2,
         BOOK3,
         BOOK4,

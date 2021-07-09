@@ -9,6 +9,7 @@
 #include "equipment.hpp"
 #include "attribute.hpp"
 #include "character.hpp"
+#include "monster.hpp"
 #include "engine.hpp"
 
 namespace Choice
@@ -57,82 +58,113 @@ namespace Choice
 
         int Success = 0;
 
-        int Destination = -1;
+        Engine::Destination Destination;
 
-        Base(const char *text, int destination)
+        Base(const char *text, Engine::Destination destination)
         {
             Text = text;
+
             Type = Choice::Type::NORMAL;
+
             Destination = destination;
         }
 
-        Base(const char *text, int destination, std::vector<Equipment::Base> equipment)
+        Base(const char *text, Engine::Destination destination, std::vector<Equipment::Base> equipment)
         {
             Text = text;
-            Destination = destination;
+
             Type = Choice::Type::EQUIPMENT;
+
             Equipment = equipment;
+
+            Destination = destination;
         }
 
-        Base(const char *text, int destination, Choice::Type type, std::vector<Equipment::Base> equipment)
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment)
         {
             Text = text;
-            Destination = destination;
+
             Type = type;
+
             Equipment = equipment;
+
+            Destination = destination;
         }
 
-        Base(const char *text, int destination, Choice::Type type, std::vector<Equipment::Base> equipment, int value)
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, int value)
         {
             Text = text;
-            Destination = destination;
+
             Type = type;
+
             Equipment = equipment;
+
             Value = value;
+
+            Destination = destination;
         }
 
-        Base(const char *text, int destination, std::vector<Attribute::Type> attributes, int difficulty, int success)
+        Base(const char *text, Engine::Destination destination, std::vector<Attribute::Type> attributes, int difficulty, int success)
         {
             Type = Choice::Type::ATTRIBUTES;
+
             Text = text;
-            Destination = destination;
+
             Attributes = attributes;
+
             Difficulty = difficulty;
+
             Success = success;
+
+            Destination = destination;
         }
 
-        Base(const char *text, int destination, Choice::Type type, std::vector<Attribute::Type> attributes, int difficulty, int success)
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Attribute::Type> attributes, int difficulty, int success)
         {
             Text = text;
-            Destination = destination;
+
             Type = type;
+
             Attributes = attributes;
+
             Difficulty = difficulty;
+
             Success = success;
+
+            Destination = destination;
         }
 
-        Base(const char *text, int destination, std::vector<Codes::Base> codes)
+        Base(const char *text, Engine::Destination destination, std::vector<Codes::Base> codes)
         {
             Text = text;
-            Destination = destination;
+
             Type = Choice::Type::CODES;
+
             Codes = codes;
+
+            Destination = destination;
         }
 
-        Base(const char *text, int destination, Choice::Type type, std::vector<Codes::Base> codes)
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Codes::Base> codes)
         {
             Text = text;
-            Destination = destination;
+
             Type = type;
+
             Codes = codes;
+
+            Destination = destination;
         }
 
-        Base(const char *text, int destination, Choice::Type type, int value)
+        Base(const char *text, Engine::Destination destination, Choice::Type type, int value)
         {
             Text = text;
-            Destination = destination;
+
             Type = type;
+
             Value = value;
+
+            Destination = destination;
         }
     };
 } // namespace Choice
@@ -159,7 +191,9 @@ namespace Story
     class Base
     {
     public:
-        int ID = 0;
+        Book::Type BookID = Book::Type::NONE;
+
+        int ID = -1;
 
         const char *Text = NULL;
 
@@ -190,17 +224,21 @@ namespace Story
 
         Story::Type Type = Story::Type::NORMAL;
 
+        // Results of combat
+        Engine::Combat Combat = Engine::Combat::NONE;
+
+        std::vector<Monster::Base> Monsters = std::vector<Monster::Base>();
+
+        bool CanFlee = false;
+
         // Handle background events
-        virtual int Background(Party::Base &party) { return -1; };
-        virtual int Background(Character::Base &player) { return -1; };
+        virtual Engine::Destination Background(Party::Base &party) { return {Book::Type::NONE, -1}; };
 
         // Handle events before story branches
         virtual void Event(Party::Base &party){};
-        virtual void Event(Character::Base &player){};
 
-        // Jump to next section
-        virtual int Continue(Party::Base &party) { return -1; };
-        virtual int Continue(Character::Base &player) { return -1; };
+        // Jump to next book/section
+        virtual Engine::Destination Continue(Party::Base &party) { return {Book::Type::NONE, -1}; };
 
         Base()
         {
@@ -241,7 +279,7 @@ namespace Story
 
         controls.push_back(Button(idx, "icons/map.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::MAP));
         controls.push_back(Button(idx + 1, "icons/disk.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::GAME));
-        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::CHARACTER));
+        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 3, "icons/items.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::USE));
         controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::NEXT));
         controls.push_back(Button(idx + 5, "icons/exit.png", idx + 4, idx + 5, compact ? idx + 5 : 1, idx + 5, (1.0 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
@@ -265,7 +303,7 @@ namespace Story
 
         controls.push_back(Button(idx, "icons/map.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::MAP));
         controls.push_back(Button(idx + 1, "icons/disk.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::GAME));
-        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::CHARACTER));
+        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 3, "icons/items.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::USE));
         controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::NEXT));
         controls.push_back(Button(idx + 5, "icons/shop.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::SHOP));
@@ -290,7 +328,7 @@ namespace Story
 
         controls.push_back(Button(idx, "icons/map.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::MAP));
         controls.push_back(Button(idx + 1, "icons/disk.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::GAME));
-        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::CHARACTER));
+        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 3, "icons/items.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::USE));
         controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::NEXT));
         controls.push_back(Button(idx + 5, "icons/selling.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::SELL));
@@ -315,7 +353,7 @@ namespace Story
 
         controls.push_back(Button(idx, "icons/map.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::MAP));
         controls.push_back(Button(idx + 1, "icons/disk.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::GAME));
-        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::CHARACTER));
+        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 3, "icons/items.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::USE));
         controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::NEXT));
         controls.push_back(Button(idx + 5, "icons/shop.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::SHOP));
@@ -341,7 +379,7 @@ namespace Story
 
         controls.push_back(Button(idx, "icons/map.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::MAP));
         controls.push_back(Button(idx + 1, "icons/disk.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::GAME));
-        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::CHARACTER));
+        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 3, "icons/items.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::USE));
         controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::NEXT));
         controls.push_back(Button(idx + 5, "icons/exhange.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::BARTER));
@@ -366,7 +404,7 @@ namespace Story
 
         controls.push_back(Button(idx, "icons/map.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::MAP));
         controls.push_back(Button(idx + 1, "icons/disk.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::GAME));
-        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::CHARACTER));
+        controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 3, "icons/items.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::USE));
         controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::NEXT));
         controls.push_back(Button(idx + 5, "icons/shop.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::SHOP));
@@ -400,6 +438,8 @@ namespace Story
     public:
         NotImplemented()
         {
+            BookID = Book::Type::NONE;
+
             ID = -1;
 
             Title = "Not implemented yet";
@@ -410,7 +450,7 @@ namespace Story
 
     auto notImplemented = NotImplemented();
 
-    void *FIND_STORY(int id, std::vector<Story::Base *> Stories)
+    void *FIND_STORY(int id, std::vector<Story::Base *> &Stories)
     {
         Story::Base *story = &notImplemented;
 
