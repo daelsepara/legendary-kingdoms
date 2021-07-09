@@ -1916,7 +1916,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto main_buttonw = 250;
+            auto main_buttonw = 220;
 
             auto controls_save = createFixedTextButtons(choices_save, 1, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_save[0].Type = Control::Type::CONFIRM;
@@ -2447,7 +2447,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto main_buttonw = 250;
+            auto main_buttonw = 220;
 
             auto controls_attack = createFixedTextButtons(choices_attack, 2, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_attack[0].Type = Control::Type::CONFIRM;
@@ -2746,7 +2746,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto main_buttonw = 250;
+            auto main_buttonw = 220;
 
             auto controls_attack = createFixedTextButtons(choices_attack, 4, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_attack[0].Type = Control::Type::CONFIRM;
@@ -3872,7 +3872,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto main_buttonw = 250;
+            auto main_buttonw = 220;
 
             auto controls_skill = createFixedTextButtons(choices_skill, 3, main_buttonw, main_buttonh, 10, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
             controls_skill[0].Type = Control::Type::CONFIRM;
