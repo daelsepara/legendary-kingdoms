@@ -51,7 +51,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment);
-int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters);
+int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets);
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Control::Type mode);
 
 std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
@@ -3523,7 +3523,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
     return select_result;
 }
 
-int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters)
+int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets)
 {
     auto result = -1;
 
@@ -3672,13 +3672,39 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                     {
                         if (selection >= 0 && selection < monsters.size())
                         {
-                            done = true;
+                            if (previousTargets.size() > 0)
+                            {
+                                if (Engine::FIND_LIST(previousTargets, selection) >= 0)
+                                {
+                                    flash_message = true;
 
-                            result = selection;
+                                    message = "That opponent has been ATTACKED before! Choose another target!";
 
-                            current = -1;
+                                    start_ticks = SDL_GetTicks();
 
-                            selected = false;
+                                    flash_color = intRD;
+                                }
+                                else
+                                {
+                                    done = true;
+
+                                    result = selection;
+
+                                    current = -1;
+
+                                    selected = false;
+                                }
+                            }
+                            else
+                            {
+                                done = true;
+
+                                result = selection;
+
+                                current = -1;
+
+                                selected = false;
+                            }
                         }
                         else
                         {
@@ -4281,7 +4307,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                                                 {
                                                     if (Engine::COUNT(monsters) > 0)
                                                     {
-                                                        auto target = selectOpponent(window, renderer, monsters);
+                                                        auto target = selectOpponent(window, renderer, monsters, {});
 
                                                         if (target >= 0)
                                                         {
@@ -4308,7 +4334,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                                                 {
                                                     if (Engine::COUNT(monsters) > 0)
                                                     {
-                                                        auto target = selectOpponent(window, renderer, monsters);
+                                                        auto target = selectOpponent(window, renderer, monsters, {});
 
                                                         if (target >= 0)
                                                         {
@@ -4338,24 +4364,21 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                                                         while (targets.size() < max_targets)
                                                         {
-                                                            auto target = selectOpponent(window, renderer, monsters);
+                                                            auto target = selectOpponent(window, renderer, monsters, targets);
 
                                                             if (target >= 0)
                                                             {
-                                                                if (Engine::FIND_LIST(targets, target) < 0)
+                                                                auto damage = magicAttackScreen(window, renderer, party, monsters, party[selection].SpellBook[i], selection, target, 5);
+
+                                                                if (damage >= 0)
                                                                 {
-                                                                    auto damage = magicAttackScreen(window, renderer, party, monsters, party[selection].SpellBook[i], selection, target, 5);
+                                                                    targets.push_back(target);
 
-                                                                    if (damage >= 0)
-                                                                    {
-                                                                        targets.push_back(target);
-
-                                                                        cast = true;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        break;
-                                                                    }
+                                                                    cast = true;
+                                                                }
+                                                                else
+                                                                {
+                                                                    break;
                                                                 }
                                                             }
                                                             else
@@ -5227,7 +5250,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     if (Engine::COUNT(monsters) > 0)
                                     {
-                                        auto attack = selectOpponent(window, renderer, monsters);
+                                        auto attack = selectOpponent(window, renderer, monsters, {});
 
                                         if (attack >= 0)
                                         {
