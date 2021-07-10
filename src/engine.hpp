@@ -243,7 +243,7 @@ namespace Engine
 
     int ARMOUR(Character::Base &character)
     {
-        auto armour = MAX(character, Equipment::Class::SHIELD, Attribute::Type::ARMOUR) + MAX(character, Equipment::Class::ARMOUR, Attribute::Type::ARMOUR) + MODIFIER(character, Equipment::Class::NORMAL, Attribute::Type::ARMOUR);
+        auto armour = MAX(character, Equipment::Class::SHIELD, Attribute::Type::ARMOUR) + MAX(character, Equipment::Class::ARMOUR, Attribute::Type::ARMOUR) + MAX(character, Equipment::Class::ROBE, Attribute::Type::ARMOUR) + MODIFIER(character, Equipment::Class::NORMAL, Attribute::Type::ARMOUR);
 
         if (Engine::HAS_STATUS(character, Character::Status::ARMOUR3))
         {
