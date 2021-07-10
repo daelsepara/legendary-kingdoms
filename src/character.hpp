@@ -8,6 +8,8 @@
 #include "book.hpp"
 #include "codes.hpp"
 #include "equipment.hpp"
+#include "location.hpp"
+#include "ship.hpp"
 #include "spells.hpp"
 
 #include <map>
@@ -143,6 +145,10 @@ namespace Party
         int Money = 0;
 
         int Limit = 4;
+
+        Location::Type Location = Location::Type::NONE;
+
+        Ship::Base Ship = Ship::Base();
 
         Book::Type Book = Book::Type::BOOK1;
 

@@ -36,7 +36,8 @@ namespace Choice
         BRIBE,
         PAY_WITH,
         SELL,
-        BARTER
+        BARTER,
+        SHIP
     };
 
     class Base
@@ -46,7 +47,7 @@ namespace Choice
 
         Choice::Type Type = Choice::Type::NORMAL;
 
-        std::vector<Character::Base>& Characters = Party::Empty;
+        std::vector<Character::Base> &Characters = Party::Empty;
 
         std::vector<Attribute::Type> Attributes = std::vector<Attribute::Type>();
 
@@ -69,6 +70,15 @@ namespace Choice
             Text = text;
 
             Type = Choice::Type::NORMAL;
+
+            Destination = destination;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type)
+        {
+            Text = text;
+
+            Type = type;
 
             Destination = destination;
         }
@@ -180,7 +190,6 @@ namespace Choice
             DestinationFailed = destinationFailed;
         }
 
-
         Base(const char *text, Engine::Destination destination, std::vector<Codes::Base> codes)
         {
             Text = text;
@@ -286,6 +295,10 @@ namespace Story
 
         // Jump to next book/section
         virtual Engine::Destination Continue(Party::Base &party) { return {Book::Type::NONE, -1}; };
+
+        // Callbacks
+        virtual void SkillCheck(std::vector<Character::Base> &party, bool outcome, std::vector<int> selection){};
+        virtual void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection){};
 
         Base()
         {

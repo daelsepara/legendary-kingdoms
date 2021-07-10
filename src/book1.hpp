@@ -84,7 +84,7 @@ namespace Book1
 
             ID = 3;
 
-            Text = "The treasure chest contains 200 silver coins and a BLUESTONE. Take what you wish.\n\nYou gained the code A45.";
+            Text = "The treasure chest contains 200 SILVER COINS and a BLUESTONE. Take what you wish.\n\nYou gained the code A45.";
 
             Bye = "Not wishing to tarry longer, you depart the chamber and return to the crossroads.";
 
@@ -313,6 +313,333 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
     };
 
+    class Story010 : public Story::Base
+    {
+    public:
+        Story010()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 10;
+
+            Text = "\"You should send the man to the Church of Cursus and have priests ritually scar him,\" says Ti'quon coldly.\n\n\"That way he shall be both punished and spiritually improved.\"\n\n\"Yes!\" hisses the King. \"The scarring is most painful. Send this dog to the church!\"\n\nThe poor man is dragged away, and the king retires with his councillors to discuss other business. You take the opportunity to slip away from the hall.\n\n\"A rather harsh punishment, ritual scarring,\" you mutter to Ti'quon as you exit the building.\n\n\"True enough,\" admits Ti'quon. \"Except that I noticed the poor man had already been scarred by the priests, and it is forbidden to perform the ritual twice. Getting him out of the sight of the mad king seemed to be the most important thing.\"\n\nYou shake your head, smiling.\n\nYou gained the code A34.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 34)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story011 : public Story::Base
+    {
+    public:
+        Story011()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 11;
+
+            Text = "You carefully begin to sneak out of the chamber, but you are out of luck. The orcs spot you as you attempt to climb the stairs, and leap to a savage attack.\n\nThe slaves cannot help you in this battle, as their chains are too short to attack the orcs now they are at the back of the chamber fighting you.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 213}; }
+    };
+
+    class Story012 : public Story::Base
+    {
+    public:
+        Story012()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 12;
+
+            Text = "You are making your way across the Westroad, an ancient highway built-up to resist the burying sands of the Valley. Travellers and soldiers pass intermittently, making their way between the cities of Saltdad and Clifftop.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            Engine::Random.UniformIntDistribution(1, 6);
+
+            auto result = Engine::Random.NextInt();
+
+            if (result < 3)
+            {
+                return {Book::Type::BOOK1, 466};
+            }
+            else if (result == 3)
+            {
+                return {Book::Type::BOOK1, 397};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 596};
+            }
+        }
+    };
+
+    class Story013 : public Story::Base
+    {
+    public:
+        Story013()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 13;
+
+            Text = "What do you wish to do now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Board your ship", {Book::Type::BOOK1, 851}, Choice::Type::SHIP));
+            Choices.push_back(Choice::Base("Enter the wide tunnel", {Book::Type::BOOK1, 593}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story014 : public Story::Base
+    {
+    public:
+        Story014()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 14;
+
+            Text = "You have returned to the Tumblestones, in the hope of discovering more ancient secrets. Alas, a recent sandstorm has buried the exposed stones, with only the stern face of the old king left unburied, to stare across his ruined empire for all eternity.\n\nDisappointed, you leave.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 453}; }
+    };
+
+    class Story015 : public Story::Base
+    {
+    public:
+        Story015()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 15;
+
+            Text = "There are few valuables amongst the goblins, though you manage to scavenge 15 SILVER COINS from the entire horde. Pleased to have survived you make your way onwards.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 15);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 395}; }
+    };
+
+    class Story016 : public Story::Base
+    {
+    public:
+        Story016()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 16;
+
+            Text = "You have chosen to battle one of the dark knights of Abraxas. Good luck!\n\nNote: On any round when Skallos does not take damage, he will unleash a roar of black magic. Each party member must lose 1 point of Health, and Skallos will restore 4 points of Health, up to his maximum of 20 Health points.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Combat = Engine::Combat::NONE;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Skallos", Monster::Type::SKALLOS, 9, 4, 5, 20, 0),
+                Monster::Base("Green Skeletons", 8, 4, 3, 30, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 811}; }
+    };
+
+    class Story017 : public Story::Base
+    {
+    public:
+        Story017()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 17;
+
+            Text = "The Iron King is most displeased to see you. He clicks his fingers and soon you have been dragged away to the dungeons for a gruesome session of torture. Each party member LOSES 4 Health points. Afterwards, the king has the guards dispose of you as they see fit.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::TITHE_REPORT}))
+            {
+                return {Book::Type::BOOK1, 246};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            for (auto i = 0; i < party.Party.size(); i++)
+            {
+                Engine::GAIN_HEALTH(party.Party[i], -4);
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 55}; }
+    };
+
+    class Story018 : public Story::Base
+    {
+    public:
+        std::string temp_text = "";
+
+        Story018()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 18;
+
+            Text = "The door in front of you is stuck. To get it open you will have to force it.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::Base(Book::Type::BOOK1, 57)}))
+            {
+                return {Book::Type::BOOK1, 350};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_text = "";
+
+            Choices.clear();
+
+            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::PRYBAR}))
+            {
+                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 4+, Required Successs: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 4, 3));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 5+, Required Successs: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 5, 3));
+            }
+
+            Choices.push_back(Choice::Base("Consider other exits from the room", {Book::Type::BOOK1, 494}));
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "The door pops open. You gain the code A57.\n\nYou can explore the corridor beyond.";
+
+                Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 57)});
+            }
+            else
+            {
+                temp_text = std::string(party.Party[selection[0]].Name) + " LOSES 1 Health Point.";
+
+                Bye = temp_text.c_str();
+
+                Engine::GAIN_HEALTH(party.Party[selection[0]], -1);
+            }
+        }
+    };
+
+    // Dummy event to trigger Bye message in BOOK1:018
+    class Event018 : public Story::Base
+    {
+    public:
+        std::string temp_text = "";
+
+        Event018()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -18;
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            return {Book::Type::BOOK1, 18};
+        }
+    };
+
+    class Story019 : public Story::Base
+    {
+    public:
+        Story019()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 19;
+
+            Image = "images/book1/dreadful_city.png";
+
+            Text = "You are in a dreadful city of poor mud-brick and grass hovels, surrounded by weed-filled cropland. Even the most impressive buildings are little more than timber halls, sagging under the weight of their own roofs. The local peasants are care-worn and well whipped, scarcely better dressed than slaves. The wealthier members of the town dress less well than a Saltdad commoner. The dissonant bells of the church of Cursus clang across town, followed by dirge-like processions of rag-wearing choristers singing hymns of dull praise to their uncaring deity.\n\nThe whole rotten town is perched atop a cliff some fifty or so feet tall, and yet this is a port city. A gigantic cargo crane leers over a thin and precarious path to the wooden harbour below, where at least some signs of life and love can be heard from the cluster of taverns that serve the sailors.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Visit the king's hall", {Book::Type::BOOK1, 557}));
+            Choices.push_back(Choice::Base("Go to the marketplace", {Book::Type::BOOK1, 759}));
+            Choices.push_back(Choice::Base("Go to the slave market", {Book::Type::BOOK1, 152}));
+            Choices.push_back(Choice::Base("Visit the harbourside taverns", {Book::Type::BOOK1, 505}));
+            Choices.push_back(Choice::Base("Go to the Church of Cursus", {Book::Type::BOOK1, 207}));
+            Choices.push_back(Choice::Base("Head to the dockyard", {Book::Type::BOOK1, 703}));
+            Choices.push_back(Choice::Base("Explore the city", {Book::Type::BOOK1, 354}));
+            Choices.push_back(Choice::Base("Leave the city east, along the road", {Book::Type::BOOK1, 12}));
+            Choices.push_back(Choice::Base("Leave the city south, into the desert", {Book::Type::BOOK1, 725}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -322,10 +649,24 @@ namespace Book1
     auto story007 = Story007();
     auto story008 = Story008();
     auto story009 = Story009();
+    auto story010 = Story010();
+    auto story011 = Story011();
+    auto story012 = Story012();
+    auto story013 = Story013();
+    auto story014 = Story014();
+    auto story015 = Story015();
+    auto story016 = Story016();
+    auto story017 = Story017();
+    auto story018 = Story018();
+    auto event018 = Event018();
+    auto story019 = Story019();
 
     void InitializeStories()
     {
-        Book1::Stories = {&story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009};
+        Book1::Stories = {
+            &event018,
+            &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
+            &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019};
     }
 }
 #endif

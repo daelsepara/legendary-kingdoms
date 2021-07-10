@@ -36,7 +36,9 @@ namespace fs = std::filesystem;
 #include "constants.hpp"
 #include "controls.hpp"
 #include "engine.hpp"
+#include "location.hpp"
 #include "input.hpp"
+#include "ship.hpp"
 #include "story.hpp"
 
 #include "book1.hpp"
@@ -47,7 +49,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Book::Type book, Story::Base *story);
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
-bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, int team_size, Attribute::Type skill, int difficulty, int success);
+bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection);
 bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
 bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
@@ -883,7 +885,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
 
                 putHeader(renderer, "Money", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
 
-                putText(renderer, (std::to_string(party.Money) + std::string(" silver")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+                putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
 
                 putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -2716,6 +2718,8 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
                             if (damage > 0)
                             {
+                                monsters[opponent].Damaged = true;
+
                                 message = std::string(party[combatant].Name) + "'s" + std::string(spell.Name) + " DEALS " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!";
 
                                 flash_color = intLB;
@@ -2955,11 +2959,14 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
             auto damaged = false;
             auto assigned = false;
 
+            auto special_event_trigger = true;
+
             while (!done)
             {
                 fillWindow(renderer, intWH);
 
                 putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::Attack::START)
@@ -3042,6 +3049,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                                 if (damage > 0)
                                 {
+                                    monsters[opponent].Damaged = true;
+
                                     message = std::string(party[combatant].Name) + " DEALS " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!";
 
                                     flash_color = intLB;
@@ -3077,6 +3086,31 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                             damaged = true;
                         }
+                    }
+                }
+                else
+                {
+                    if (direction == 1 && special_event_trigger)
+                    {
+                        if (monsters[opponent].Type == Monster::Type::SKALLOS && !monsters[opponent].Damaged)
+                        {
+                            flash_message = true;
+
+                            flash_color = intRD;
+
+                            message = "Skallos unleashes a roar of black magic! Each party member LOSES 1 Health. Skallos RECOVERS 4 Health Points!";
+
+                            for (auto i = 0; i < party.size(); i++)
+                            {
+                                Engine::GAIN_HEALTH(party[i], -1);
+                            }
+
+                            Engine::GAIN_HEALTH(monsters[opponent], 4);
+
+                            start_ticks = SDL_GetTicks();
+                        }
+
+                        special_event_trigger = false;
                     }
                 }
 
@@ -4528,6 +4562,8 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                                                         if (target >= 0)
                                                         {
+                                                            monsters[target].Damaged = true;
+
                                                             Engine::GAIN_HEALTH(monsters[target], -3);
 
                                                             cast = true;
@@ -4725,7 +4761,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
     return result;
 }
 
-bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, int team_size, Attribute::Type skill, int difficulty, int success)
+bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection)
 {
     bool result = false;
 
@@ -4776,7 +4812,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
 
         auto done = false;
 
-        auto selection = std::vector<int>();
+        selection = std::vector<int>();
 
         while (!done)
         {
@@ -5268,14 +5304,10 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         auto main_buttonh = 48;
 
-        const char *choices[4] = {"VIEW PARTY", "ATTACK", "CAST SPELL", "FLEE"};
+        const char *choices_attack[4] = {"VIEW PARTY", "ATTACK", "CAST SPELL", "FLEE"};
+        const char *choices_defend[4] = {"VIEW PARTY", "DEFEND", "CAST SPELL", "FLEE"};
 
-        auto controls = createHTextButtons(choices, 4, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
-
-        controls[0].Type = Control::Type::PARTY;
-        controls[1].Type = Control::Type::ATTACK;
-        controls[2].Type = Control::Type::SPELL;
-        controls[3].Type = Control::Type::FLEE;
+        std::vector<TextButton> controls;
 
         auto font_size = 20;
         auto text_space = 8;
@@ -5318,6 +5350,20 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             while (!done)
             {
+                if (hasAttacked.size() < Engine::COUNT(party.Party))
+                {
+                    controls = createHTextButtons(choices_attack, 4, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+                }
+                else
+                {
+                    controls = createHTextButtons(choices_defend, 4, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+                }
+
+                controls[0].Type = Control::Type::PARTY;
+                controls[1].Type = Control::Type::ATTACK;
+                controls[2].Type = Control::Type::SPELL;
+                controls[3].Type = Control::Type::FLEE;
+
                 fillWindow(renderer, intWH);
 
                 if (splash)
@@ -5429,67 +5475,70 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::ATTACK)
                     {
-                        auto result = selectPartyMember(window, renderer, party.Party, Control::Type::COMBAT);
-
-                        if (Engine::FIND_LIST(hasAttacked, result) >= 0)
+                        if (Engine::COUNT(party.Party) > 0 && hasAttacked.size() < Engine::COUNT(party.Party))
                         {
-                            flash_message = true;
+                            auto result = selectPartyMember(window, renderer, party.Party, Control::Type::COMBAT);
 
-                            message = std::string(party.Party[result].Name) + " ALREADY ATTACKED this round.";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
-                        }
-                        else
-                        {
-                            if (result >= 0 && result < party.Party.size())
+                            if (Engine::FIND_LIST(hasAttacked, result) >= 0)
                             {
-                                auto adventurer = party.Party[result];
+                                flash_message = true;
 
-                                if (adventurer.Health > 0)
+                                message = std::string(party.Party[result].Name) + " ALREADY ATTACKED this round.";
+
+                                start_ticks = SDL_GetTicks();
+
+                                flash_color = intRD;
+                            }
+                            else
+                            {
+                                if (result >= 0 && result < party.Party.size())
                                 {
-                                    if (Engine::COUNT(monsters) > 0)
+                                    auto adventurer = party.Party[result];
+
+                                    if (adventurer.Health > 0)
                                     {
-                                        auto attack = selectOpponent(window, renderer, monsters, {});
-
-                                        if (attack >= 0)
+                                        if (Engine::COUNT(monsters) > 0)
                                         {
-                                            auto damage = attackScreen(window, renderer, party.Party, monsters, result, attack, 0, useEquipment);
+                                            auto attack = selectOpponent(window, renderer, monsters, {});
 
-                                            hasAttacked.push_back(result);
+                                            if (attack >= 0)
+                                            {
+                                                auto damage = attackScreen(window, renderer, party.Party, monsters, result, attack, 0, useEquipment);
+
+                                                hasAttacked.push_back(result);
+                                            }
+                                            else
+                                            {
+                                                flash_message = true;
+
+                                                message = "The attack has failed!";
+
+                                                start_ticks = SDL_GetTicks();
+
+                                                flash_color = intRD;
+                                            }
                                         }
                                         else
                                         {
                                             flash_message = true;
 
-                                            message = "The attack has failed!";
+                                            message = "Your party has prevailed!";
 
                                             start_ticks = SDL_GetTicks();
 
-                                            flash_color = intRD;
+                                            flash_color = intLB;
                                         }
                                     }
                                     else
                                     {
                                         flash_message = true;
 
-                                        message = "Your party has prevailed!";
+                                        message = std::string(party.Party[result].Name) + " is DEAD.";
 
                                         start_ticks = SDL_GetTicks();
 
-                                        flash_color = intLB;
+                                        flash_color = intRD;
                                     }
-                                }
-                                else
-                                {
-                                    flash_message = true;
-
-                                    message = std::string(party.Party[result].Name) + " is DEAD.";
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
                                 }
                             }
                         }
@@ -5500,7 +5549,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 for (auto i = 0; i < monsters.size(); i++)
                                 {
-                                    if (monsters[i].Health > 0)
+                                    if (monsters[i].Health > 0 && Engine::COUNT(party.Party) > 0)
                                     {
                                         auto damage = attackScreen(window, renderer, party.Party, monsters, -1, i, 1, useEquipment);
                                     }
@@ -5508,6 +5557,12 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
 
                             hasAttacked.clear();
+
+                            // clear damaged flag for next round
+                            for (auto i = 0; i < monsters.size(); i++)
+                            {
+                                monsters[i].Damaged = false;
+                            }
                         }
 
                         current = -1;
@@ -5516,57 +5571,70 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::SPELL)
                     {
-                        if (Engine::SPELLCASTERS(party.Party) > 0)
+                        if (Engine::COUNT(party.Party) > 0 && hasAttacked.size() < Engine::COUNT(party.Party))
                         {
-                            auto combat_spells = 0;
-
-                            for (auto i = 0; i < party.Party.size(); i++)
+                            if (Engine::SPELLCASTERS(party.Party) > 0)
                             {
-                                if (party.Party[i].Health > 0 && party.Party[i].SpellCaster)
-                                {
-                                    auto spells = Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::COMBAT) + Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::ADVENTURE_COMBAT);
+                                auto combat_spells = 0;
 
-                                    combat_spells += spells;
+                                for (auto i = 0; i < party.Party.size(); i++)
+                                {
+                                    if (party.Party[i].Health > 0 && party.Party[i].SpellCaster)
+                                    {
+                                        auto spells = Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::COMBAT) + Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::ADVENTURE_COMBAT);
+
+                                        combat_spells += spells;
+                                    }
+                                }
+
+                                if (combat_spells <= 0)
+                                {
+                                    flash_message = true;
+
+                                    message = "Your PARTY does not have any usable COMBAT spells.";
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intRD;
+                                }
+                                else
+                                {
+                                    auto result = selectCaster(window, renderer, party.Party, monsters, hasAttacked, Control::Type::COMBAT);
+
+                                    if (result >= 0 && result < party.Party.size())
+                                    {
+                                        flash_message = true;
+
+                                        message = std::string(party.Party[result].Name) + " CASTS a spell!";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_color = intLB;
+
+                                        hasAttacked.push_back(result);
+                                    }
+
+                                    selected = false;
+
+                                    current = -1;
                                 }
                             }
-
-                            if (combat_spells <= 0)
+                            else
                             {
                                 flash_message = true;
 
-                                message = "Your PARTY does not have any usable COMBAT spells.";
+                                message = "There are NO SPELLCASTERS in your PARTY!";
 
                                 start_ticks = SDL_GetTicks();
 
                                 flash_color = intRD;
-                            }
-                            else
-                            {
-                                auto result = selectCaster(window, renderer, party.Party, monsters, hasAttacked, Control::Type::COMBAT);
-
-                                if (result >= 0 && result < party.Party.size())
-                                {
-                                    flash_message = true;
-
-                                    message = std::string(party.Party[result].Name) + " CASTS a spell!";
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intLB;
-
-                                    hasAttacked.push_back(result);
-                                }
-
-                                selected = false;
-
-                                current = -1;
                             }
                         }
                         else
                         {
                             flash_message = true;
 
-                            message = "There are NO SPELLCASTERS in your PARTY!";
+                            message = "Your PARTY has already ATTACKED this round.";
 
                             start_ticks = SDL_GetTicks();
 
@@ -6259,7 +6327,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     {
                         Engine::GET_EQUIPMENT(party.Party[character], take);
 
-                        while (!Engine::VERIFY_EQUIPMENT(party.Party[character]))
+                        while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[character]))
                         {
                             inventoryScreen(window, renderer, party.Party[character], party.Party[character].Equipment, Control::Type::DROP, 0);
                         }
@@ -6441,7 +6509,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
             }
 
-            if (!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space)))
+            if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && Engine::COUNT(party.OtherParty) > 0)
             {
                 putHeader(renderer, "Other Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
 
@@ -6475,17 +6543,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space, intBE);
                 }
             }
-
-            if (error)
+            else if (!splash || (splash && splash_h < (text_bounds - 3 * boxh - 2 * infoh - box_space)))
             {
-                if ((SDL_GetTicks() - start_ticks) < duration)
-                {
-                    putText(renderer, message, font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
-                }
-                else
-                {
-                    error = false;
-                }
+                putHeader(renderer, "Money", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+
+                putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
             }
 
             SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -6501,6 +6563,18 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 if (i != current)
                 {
                     drawRect(renderer, controls[i].W + 2 * text_space, controls[i].H + 2 * text_space, controls[i].X - text_space, controls[i].Y - text_space, intBK);
+                }
+            }
+
+            if (error)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message, font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                }
+                else
+                {
+                    error = false;
                 }
             }
 
@@ -6524,7 +6598,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (story->Choices[current].Characters.size() > 0)
                             {
-                                auto success = skillCheck(window, renderer, story->Choices[current].Characters, 1, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success);
+                                auto selection = std::vector<int>();
+
+                                auto success = skillCheck(window, renderer, story->Choices[current].Characters, 1, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
+
+                                story->SkillCheck(story->Choices[current].Characters, success, selection);
 
                                 if (success)
                                 {
@@ -6537,7 +6615,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                             else
                             {
-                                auto success = skillCheck(window, renderer, party.Party, 1, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success);
+                                auto selection = std::vector<int>();
+
+                                auto success = skillCheck(window, renderer, party.Party, 1, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
+
+                                story->SkillCheck(party, success, selection);
 
                                 if (success)
                                 {
@@ -6557,7 +6639,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (story->Choices[current].Characters.size() > 0)
                             {
-                                auto success = skillCheck(window, renderer, story->Choices[current].Characters, 2, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success);
+                                auto selection = std::vector<int>();
+
+                                auto success = skillCheck(window, renderer, story->Choices[current].Characters, 2, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
+
+                                story->SkillCheck(story->Choices[current].Characters, success, selection);
 
                                 if (success)
                                 {
@@ -6570,7 +6656,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                             else
                             {
-                                auto success = skillCheck(window, renderer, party.Party, 2, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success);
+                                auto selection = std::vector<int>();
+
+                                auto success = skillCheck(window, renderer, party.Party, 2, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
+
+                                story->SkillCheck(party, success, selection);
 
                                 if (success)
                                 {
@@ -6588,9 +6678,81 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[current].Type == Choice::Type::EQUIPMENT)
                         {
+                            auto equipment = std::vector<Equipment::Type>();
+
+                            for (auto i = 0; i < story->Choices[current].Equipment.size(); i++)
+                            {
+                                equipment.push_back(story->Choices[current].Equipment[i].Type);
+                            }
+
+                            if (Engine::VERIFY_EQUIPMENT(party.Party, equipment))
+                            {
+                                next = findStory(story->Choices[current].Destination);
+
+                                done = true;
+
+                                break;
+                            }
+                            else
+                            {
+                                error = true;
+
+                                if (story->Choices[current].Equipment.size() > 1)
+                                {
+                                    message = "You do not have the REQUIRED ITEMS!";
+                                }
+                                else
+                                {
+                                    message = "You do not have the REQUIRED ITEM!";
+                                }
+
+                                start_ticks = SDL_GetTicks();
+                            }
                         }
                         else if (story->Choices[current].Type == Choice::Type::ANY_EQUIPMENT)
                         {
+                            auto equipment = std::vector<Equipment::Type>();
+
+                            for (auto i = 0; i < story->Choices[current].Equipment.size(); i++)
+                            {
+                                equipment.push_back(story->Choices[current].Equipment[i].Type);
+                            }
+
+                            if (Engine::VERIFY_ANY_EQUIPMENT(party.Party, equipment))
+                            {
+                                next = findStory(story->Choices[current].Destination);
+
+                                done = true;
+
+                                break;
+                            }
+                            else
+                            {
+                                error = true;
+
+                                message = "You do not have any of the REQUIRED ITEMS!";
+
+                                start_ticks = SDL_GetTicks();
+                            }
+                        }
+                        else if (story->Choices[current].Type == Choice::Type::SHIP)
+                        {
+                            if (party.Ship.Type != Ship::Type::NONE && party.Ship.Location == party.Location)
+                            {
+                                next = findStory(story->Choices[current].Destination);
+
+                                done = true;
+
+                                break;
+                            }
+                            else
+                            {
+                                error = true;
+
+                                message = "You do not a ship at this Location!";
+
+                                start_ticks = SDL_GetTicks();
+                            }
                         }
                         else if (story->Choices[current].Type == Choice::Type::CODES)
                         {
@@ -6918,7 +7080,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                 }
 
-                if (!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space)))
+                if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && Engine::COUNT(party.OtherParty) > 0)
                 {
                     putHeader(renderer, "Other Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
 
@@ -6951,6 +7113,12 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space, intBE);
                     }
+                }
+                else if (!splash || (splash && splash_h < (text_bounds - 3 * boxh - 2 * infoh - box_space)))
+                {
+                    putHeader(renderer, "Money", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+
+                    putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
                 }
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -7504,7 +7672,9 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                 {
                     selectParty(window, renderer, Book::Type::BOOK1, Party);
 
-                    skillCheck(window, renderer, Party.Party, 2, Attribute::Type::STEALTH, 4, 4);
+                    auto selection = std::vector<int>();
+
+                    skillCheck(window, renderer, Party.Party, 2, Attribute::Type::STEALTH, 4, 4, selection);
 
                     current = -1;
 
@@ -7514,7 +7684,9 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                 {
                     selectParty(window, renderer, Book::Type::BOOK1, Party);
 
-                    skillCheck(window, renderer, Party.Party, 1, Attribute::Type::LORE, 4, 3);
+                    auto selection = std::vector<int>();
+
+                    skillCheck(window, renderer, Party.Party, 1, Attribute::Type::LORE, 4, 3, selection);
 
                     current = -1;
 

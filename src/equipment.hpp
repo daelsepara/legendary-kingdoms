@@ -19,7 +19,9 @@ namespace Equipment
         NONE = 0,
         LEATHER_ARMOUR1,
         SHIELD2,
-        BLUESTONE
+        BLUESTONE,
+        TITHE_REPORT,
+        PRYBAR
     };
 
     class Base
@@ -61,6 +63,8 @@ namespace Equipment
     auto LEATHER_ARMOUR1 = Equipment::Base("LEATHER ARMOUR", "LEATHER ARMOUR", Equipment::Class::ARMOUR, Equipment::Type::LEATHER_ARMOUR1, Attribute::Type::ARMOUR, 1);
     auto SHIELD2 = Equipment::Base("SHIELD", "SHIELD", Equipment::Class::SHIELD, Equipment::Type::SHIELD2, Attribute::Type::ARMOUR, 2);
     auto BLUESTONE = Equipment::Base("BLUESTONE", "BLUESTONE", Equipment::Class::NORMAL, Equipment::Type::BLUESTONE, Attribute::Type::NONE, 0);
+    auto TITHE_REPORT = Equipment::Base("TITHE REPORT", "TITHE REPORT", Equipment::Class::NORMAL, Equipment::Type::TITHE_REPORT, Attribute::Type::NONE, 0);
+    auto PRYBAR = Equipment::Base("PRYBAR", "PRYBAR", Equipment::Class::NORMAL, Equipment::Type::PRYBAR, Attribute::Type::NONE, 0);
 }
 
 #endif

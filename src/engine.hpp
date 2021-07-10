@@ -2,9 +2,9 @@
 #define __ENGINE__HPP__
 
 #include "character.hpp"
+#include "location.hpp"
 #include "monster.hpp"
 #include "spells.hpp"
-
 #include "random.hpp"
 
 #include <map>
@@ -72,6 +72,11 @@ namespace Engine
     {
         monster.Health += health;
 
+        if (monster.Health > monster.MaximumHealth)
+        {
+            monster.Health = monster.MaximumHealth;
+        }
+        
         if (monster.Health < 0)
         {
             monster.Health = 0;
@@ -364,9 +369,83 @@ namespace Engine
         }
     }
 
-    bool VERIFY_EQUIPMENT(Character::Base &player)
+    bool VERIFY_EQUIPMENT_LIMIT(Character::Base &player)
     {
         return player.Equipment.size() <= player.MaximumEquipment;
+    }
+
+    int COUNT_EQUIPMENT(Character::Base &player, std::vector<Equipment::Type> equipment)
+    {
+        auto found = 0;
+
+        for (auto i = 0; i < equipment.size(); i++)
+        {
+            if (Engine::FIND_EQUIPMENT(player, equipment[i]) >= 0)
+            {
+                found++;
+            }
+        }
+
+        return found;
+    }
+
+    bool VERIFY_EQUIPMENT(Character::Base &player, std::vector<Equipment::Type> equipment)
+    {
+        auto found = 0;
+
+        if (equipment.size() > 0)
+        {
+            for (auto i = 0; i < equipment.size(); i++)
+            {
+                auto result = Engine::FIND_EQUIPMENT(player, equipment[i]);
+
+                if (result >= 0)
+                {
+                    found++;
+                }
+            }
+        }
+
+        return found >= equipment.size();
+    }
+
+    bool VERIFY_ANY_EQUIPMENT(Character::Base &player, std::vector<Equipment::Type> equpment)
+    {
+        return Engine::COUNT_EQUIPMENT(player, equpment) > 0;
+    }
+
+    bool VERIFY_EQUIPMENT(std::vector<Character::Base> &party, std::vector<Equipment::Type> equipment)
+    {
+        auto found = false;
+
+        for (auto i = 0; i < party.size(); i++)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party[i], equipment))
+            {
+                found = true;
+
+                break;
+            }
+        }
+
+        return found;
+    }
+
+    bool VERIFY_ANY_EQUIPMENT(std::vector<Character::Base> &party, std::vector<Equipment::Type> equipment)
+    {
+        auto found = false;
+
+        for (auto i = 0; i < party.size(); i++)
+        {
+            if (Engine::VERIFY_ANY_EQUIPMENT(party[i], equipment))
+            {
+                found = true;
+
+                break;
+            }
+        }
+
+        return found;
     }
 
     int FIND_CODEWORD(Party::Base &party, Codes::Base code)

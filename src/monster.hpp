@@ -6,6 +6,12 @@
 
 namespace Monster
 {
+    enum class Type
+    {
+        NORMAL = 0,
+        SKALLOS
+    };
+
     class Base
     {
     public:
@@ -19,7 +25,13 @@ namespace Monster
 
         int Health = 0;
 
+        int MaximumHealth = 0;
+
         int Auto = 0;
+
+        Monster::Type Type = Monster::Type::NORMAL;
+
+        bool Damaged = false;
 
         Base()
         {
@@ -36,6 +48,27 @@ namespace Monster
             Defence = defence;
 
             Health = health;
+
+            MaximumHealth = health;
+
+            Auto = damage;
+        }
+
+        Base(const char *name, Monster::Type type, int attack, int difficulty, int defence, int health, int damage)
+        {
+            Name = name;
+
+            Type = type;
+
+            Attack = attack;
+
+            Difficulty = difficulty;
+
+            Defence = defence;
+
+            Health = health;
+
+            MaximumHealth = health;
 
             Auto = damage;
         }
