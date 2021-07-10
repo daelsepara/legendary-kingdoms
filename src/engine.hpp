@@ -7,6 +7,8 @@
 
 #include "random.hpp"
 
+#include <map>
+
 namespace Engine
 {
     typedef std::pair<Book::Type, int> Destination;
@@ -146,7 +148,7 @@ namespace Engine
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
-            if (character.Equipment[i].Type == Equipment::Type::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
+            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
             {
                 if (character.Equipment[i].Modifier >= max)
                 {
@@ -158,13 +160,13 @@ namespace Engine
         return max > 0 ? Engine::SCORE(character, Attribute::Type::FIGHTING) + max : 1;
     }
 
-    int MAX(Character::Base &character, Equipment::Type type, Attribute::Type attribute)
+    int MAX(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
     {
         auto max = 0;
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
-            if (character.Equipment[i].Type == type && character.Equipment[i].Attribute == attribute)
+            if (character.Equipment[i].Class == type && character.Equipment[i].Attribute == attribute)
             {
                 if (character.Equipment[i].Modifier > max)
                 {
@@ -176,13 +178,13 @@ namespace Engine
         return max;
     }
 
-    int MODIFIER(Character::Base &character, Equipment::Type type, Attribute::Type attribute)
+    int MODIFIER(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
     {
         auto modifier = 0;
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
-            if (character.Equipment[i].Type == type && character.Equipment[i].Attribute == attribute)
+            if (character.Equipment[i].Class == type && character.Equipment[i].Attribute == attribute)
             {
                 modifier += character.Equipment[i].Modifier;
             }
@@ -236,7 +238,7 @@ namespace Engine
 
     int ARMOUR(Character::Base &character)
     {
-        auto armour = MAX(character, Equipment::Type::SHIELD, Attribute::Type::ARMOUR) + MAX(character, Equipment::Type::ARMOUR, Attribute::Type::ARMOUR) + MODIFIER(character, Equipment::Type::NORMAL, Attribute::Type::ARMOUR);
+        auto armour = MAX(character, Equipment::Class::SHIELD, Attribute::Type::ARMOUR) + MAX(character, Equipment::Class::ARMOUR, Attribute::Type::ARMOUR) + MODIFIER(character, Equipment::Class::NORMAL, Attribute::Type::ARMOUR);
 
         if (Engine::HAS_STATUS(character, Character::Status::ARMOUR3))
         {
@@ -319,6 +321,145 @@ namespace Engine
         }
 
         return result;
+    }
+
+    void GET_EQUIPMENT(Character::Base &player, std::vector<Equipment::Base> equipment)
+    {
+        player.Equipment.insert(player.Equipment.end(), equipment.begin(), equipment.end());
+    }
+
+    int FIND_EQUIPMENT(Character::Base &character, Equipment::Type item)
+    {
+        auto found = -1;
+
+        if (character.Equipment.size() > 0)
+        {
+            for (auto i = 0; i < character.Equipment.size(); i++)
+            {
+                if (character.Equipment[i].Type == item)
+                {
+                    found = i;
+
+                    break;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    void LOSE_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> items)
+    {
+        if (character.Equipment.size() > 0 && items.size() > 0)
+        {
+            for (auto i = 0; i < items.size(); i++)
+            {
+                auto result = Engine::FIND_EQUIPMENT(character, items[i]);
+
+                if (result >= 0)
+                {
+                    character.Equipment.erase(character.Equipment.begin() + result);
+                }
+            }
+        }
+    }
+
+    bool VERIFY_EQUIPMENT(Character::Base &player)
+    {
+        return player.Equipment.size() <= player.MaximumEquipment;
+    }
+
+    int FIND_CODEWORD(Party::Base &party, Codes::Base code)
+    {
+        auto found = -1;
+
+        if (party.Codes.size() > 0)
+        {
+            for (auto i = 0; i < party.Codes.size(); i++)
+            {
+                if (party.Codes[i].Type == code.Type && party.Codes[i].Code == code.Code)
+                {
+                    found = i;
+
+                    break;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    int FIND_CODEWORDS(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        auto found = 0;
+
+        if (party.Codes.size() > 0 && codes.size() > 0)
+        {
+            for (auto i = 0; i < codes.size(); i++)
+            {
+                auto result = Engine::FIND_CODEWORD(party, codes[i]);
+
+                if (result >= 0)
+                {
+                    found++;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    bool VERIFY_CODES_ANY(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        return Engine::FIND_CODEWORDS(party, codes) > 0;
+    }
+
+    bool VERIFY_CODES_ALL(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        return Engine::FIND_CODEWORDS(party, codes) == codes.size();
+    }
+
+    bool VERIFY_CODES(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        return Engine::VERIFY_CODES_ALL(party, codes);
+    }
+
+    void GET_CODES(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        for (auto i = 0; i < codes.size(); i++)
+        {
+            if (!Engine::VERIFY_CODES(party, {codes[i]}))
+            {
+                party.Codes.push_back(codes[i]);
+            }
+        }
+    }
+
+    int FIND_CHARACTER(Party::Base &party, Character::Type type)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Type == type)
+            {
+                result = -1;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    void GAIN_HEARTS(Party::Base &party, Character::Type from, Character::Type to, int heart)
+    {
+        std::pair<Character::Type, Character::Type> romance = {from, to};
+
+        if (party.Hearts.count(romance) > 0)
+        {
+            party.Hearts[romance] += heart;
+        }
     }
 }
 #endif

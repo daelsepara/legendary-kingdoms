@@ -49,6 +49,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Bye = NULL;
+
             Combat = Engine::Combat::NONE;
 
             CanFlee = true;
@@ -62,6 +64,8 @@ namespace Book1
         {
             if (Combat == Engine::Combat::FLEE)
             {
+                Bye = "The orcs chase you out of the dungeon.";
+
                 return {Book::Type::BOOK1, 515};
             }
             else
@@ -71,12 +75,94 @@ namespace Book1
         }
     };
 
+    class Story003 : public Story::Base
+    {
+    public:
+        Story003()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 3;
+
+            Text = "The treasure chest contains 200 silver coins and a BLUESTONE. Take what you wish.\n\nYou gained the code A45.";
+
+            Bye = "Not wishing to tarry longer, you depart the chamber and return to the crossroads.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::BLUESTONE};
+
+            Limit = 1;
+
+            Engine::GAIN_MONEY(party, 200);
+
+            Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 45)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 46}; }
+    };
+
+    class Story004 : public Story::Base
+    {
+    public:
+        Story004()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 4;
+
+            Text = "You swoop Amelia up into your arms just before she reaches the wine barrel. She shrieks in delight and throws an arm around your neck.\n\n\"Is it my prinsh charming?\" she slurs, nuzzling into your chest.\n\n\"Well... if by prince you meant castle pot-washer, then yes,\" you smile, carrying her over to her quarters in the palace.\n\n\"Tell me something,\" says Amelia dreamily, between snoozes, as you bear her through the palace. \"Why are you so charming to everyone except me?\"\n\n\"Charming is another word for lying,\" you say in a rare moment of honesty. \"I'd never lie to you, Amelia...\"\n\nHer snores cut off a potentially romantic moment. Tucking her into bed you go to join the rest of your companions.\n\nAmelia has gained a HEART for Brash. Brash also gains a HEART for Amelia.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEARTS(party, Character::Type::AMELIA_PASS_DAYNE, Character::Type::BRASH, 1);
+            Engine::GAIN_HEARTS(party, Character::Type::BRASH, Character::Type::AMELIA_PASS_DAYNE, 1);
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            return {Book::Type::BOOK1, 280};
+        }
+    };
+
+    class Story005 : public Story::Base
+    {
+    public:
+        Story005()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 5;
+
+            Text = "You meet up with the lead scholar, Emlyn Pass-Ross, who is already loading supplies onto the mules. She is joined by three other young scholars who look fresh out of university. They don't look the type who could handle themselves in a dangerous jungle.\n\n\"We'll follow our established route into the jungle, and then branch off south once we reach the checkpoint,\" says Emlyn. \"We've discovered all sorts of interesting plants, but so far surprisingly little that is edible.\"\n\n\"What kind of dangers will we face?\" you ask.\n\n\"Most of the jungle beasts leave us alone... to be honest, the monkeys are the most dangerous things you'll find. They travel in huge packs. They're intelligent, thieving sorts. You should watch out for them.\"\n\nSir Lawrence emerges from his tent to kiss his daughter goodbye and to wish you luck. Soon you have emerged from the wooden gates of Lhasbreath and are making your way towards the wall of trees that is the Lhasbreath jungle. Within the canopy of the jungle it is hot and humid. The ground is moist and seems to be the nest of thousands of tiny, biting insects. It must have rained recently, for the path ahead is flooded. Emlyn curses. She intended to take that route through the jungle to reach the checkpoint.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Follow the flooded path anyway", {Book::Type::BOOK1, 609}));
+            Choices.push_back(Choice::Base("Take the expedition off the path and lead them through the jungle", {Book::Type::BOOK1, 863}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
+    auto story003 = Story003();
+    auto story004 = Story004();
+    auto story005 = Story005();
 
     void InitializeStories()
     {
-        Book1::Stories = {&story001, &story002};
+        Book1::Stories = {&story001, &story002, &story003, &story004, &story005};
     }
 }
 #endif

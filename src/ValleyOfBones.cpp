@@ -43,12 +43,15 @@ namespace fs = std::filesystem;
 
 // Forward declarations
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
+bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Equipment::Base> &Items, Control::Type mode, int limit);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
+bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Book::Type book, Story::Base *story);
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int team_size, Attribute::Type skill, int difficulty, int success);
 bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
+bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
-bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party);
+bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
 
 Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, bool useEquipment);
 
@@ -61,6 +64,9 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Control::Type mode);
 
 std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
+
+Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
+Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
 
 SDL_Surface *createImage(const char *image)
 {
@@ -780,7 +786,7 @@ std::string characterText(Character::Base &character, bool compact)
     return character_text;
 };
 
-bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party)
+bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
 {
     SDL_Surface *adventurer = NULL;
     SDL_Surface *text = NULL;
@@ -793,6 +799,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
     TTF_Init();
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
     auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
 
@@ -804,23 +811,26 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
     {
         SDL_SetWindowTitle(window, title);
 
-        const char *choices[5] = {"PREVIOUS", "NEXT", "EQUIPMENT", "SPELLBOOK", "BACK"};
+        const char *choices[6] = {"PARTY", "PREVIOUS", "NEXT", "EQUIPMENT", "SPELLBOOK", "BACK"};
 
-        auto current = -1;
+        auto current = 0;
 
         auto selected = false;
 
-        auto main_buttonh = 0.06 * SCREEN_HEIGHT;
+        auto main_buttonh = (int)(0.06 * SCREEN_HEIGHT);
 
         auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
 
-        auto controls = createHTextButtons(choices, 5, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+        auto controls = createHTextButtons(choices, 6, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
 
-        controls[0].Type = Control::Type::MINUS;
-        controls[1].Type = Control::Type::PLUS;
-        controls[2].Type = Control::Type::EQUIPMENT;
-        controls[3].Type = Control::Type::SPELLBOOK;
-        controls[4].Type = Control::Type::BACK;
+        controls[0].Type = Control::Type::PARTY;
+        controls[1].Type = Control::Type::MINUS;
+        controls[2].Type = Control::Type::PLUS;
+        controls[3].Type = Control::Type::EQUIPMENT;
+        controls[4].Type = Control::Type::SPELLBOOK;
+        controls[5].Type = Control::Type::BACK;
 
         auto done = false;
 
@@ -828,11 +838,13 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
 
         auto Party = Party::Base();
 
+        auto summary_view = true;
+
         auto character = 0;
 
-        if (character >= 0 && character < party.size())
+        if (character >= 0 && character < party.Party.size())
         {
-            if (party[character].Image != NULL)
+            if (party.Party[character].Image != NULL)
             {
                 if (adventurer != NULL)
                 {
@@ -841,7 +853,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
                     adventurer = NULL;
                 }
 
-                adventurer = createImage(party[character].Image);
+                adventurer = createImage(party.Party[character].Image);
             }
 
             if (text != NULL)
@@ -851,7 +863,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
                 text = NULL;
             }
 
-            text = createText(characterText(party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+            text = createText(characterText(party.Party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
         }
 
         while (!done)
@@ -861,83 +873,137 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
 
             auto adventurerh = splashw;
 
-            if (adventurer != NULL)
+            if (current != 0 && adventurer != NULL && !summary_view)
             {
                 adventurerh = fitImage(renderer, adventurer, startx, starty, splashw, text_bounds);
             }
-
-            fillRect(renderer, textwidth, character_box, textx, texty, intBE);
-
-            if (text != NULL)
+            else
             {
+                putHeader(renderer, "Overview", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+
+                putHeader(renderer, "Money", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+
+                putText(renderer, (std::to_string(party.Money) + std::string(" silver")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+
+                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (Engine::COUNT(party.Party) > 0)
+                {
+                    std::string party_string = "";
+
+                    auto count = 0;
+
+                    for (auto i = 0; i < party.Party.size(); i++)
+                    {
+                        if (count > 0)
+                        {
+                            party_string += "\n";
+                        }
+
+                        party_string += party.Party[i].Name;
+
+                        if (party.Party[i].Health <= 0)
+                        {
+                            party_string += " (D)";
+                        }
+
+                        count++;
+                    }
+
+                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+
+                putHeader(renderer, "Codes", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, (character_box - infoh), textx, (texty + infoh), intBE);
+
+                std::string code_string = "";
+
+                for (auto i = 0; i < party.Codes.size(); i++)
+                {
+                    if (i > 0)
+                    {
+                        code_string += ", ";
+                    }
+
+                    code_string += std::string(Codes::Prefix[party.Codes[i].Type]) + std::to_string(party.Codes[i].Code);
+                }
+
+                putText(renderer, code_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth - 2 * text_space, (character_box - infoh - 2 * text_space), textx, (texty + infoh));
+            }
+
+            if (current != 0 && text != NULL && !summary_view)
+            {
+                fillRect(renderer, textwidth, character_box, textx, texty, intBE);
+
                 renderText(renderer, text, intBE, textx + text_space, texty + text_space, character_box, 0);
             }
 
-            if (character >= 0 && character < party.size() && adventurer)
+            if (current != 0 && character >= 0 && character < party.Party.size() && adventurer && !summary_view)
             {
-                putText(renderer, party[character].Name, font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+                putText(renderer, party.Party[character].Name, font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
             }
 
-            if (character >= 0 && character < party.size())
+            if (current != 0 && character >= 0 && character < party.Party.size() && !summary_view)
             {
-                if (party[character].Status.size() > 0)
+                if (party.Party[character].Status.size() > 0)
                 {
                     putHeader(renderer, "Status", font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string status_string = "";
 
-                    for (auto i = 0; i < party[character].Status.size(); i++)
+                    for (auto i = 0; i < party.Party[character].Status.size(); i++)
                     {
                         if (i > 0)
                         {
                             status_string += ", ";
                         }
 
-                        status_string += Character::StatusDescriptions[party[character].Status[i]];
+                        status_string += Character::StatusDescriptions[party.Party[character].Status[i]];
                     }
 
                     putText(renderer, status_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
             }
 
-            if (current >= 0 && current < controls.size())
+            if (current >= 0 && current < controls.size() && !summary_view)
             {
-                if (controls[current].Type == Control::Type::SPELLBOOK && party[character].SpellCaster && party[character].SpellBook.size() > 0)
+                if (controls[current].Type == Control::Type::SPELLBOOK && party.Party[character].SpellCaster && party.Party[character].SpellBook.size() > 0)
                 {
                     putHeader(renderer, "SPELLBOOK", font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string spellbook_string = "";
 
-                    for (auto i = 0; i < party[character].SpellBook.size(); i++)
+                    for (auto i = 0; i < party.Party[character].SpellBook.size(); i++)
                     {
                         if (i > 0)
                         {
                             spellbook_string += ", ";
                         }
 
-                        spellbook_string += party[character].SpellBook[i].Name;
+                        spellbook_string += party.Party[character].SpellBook[i].Name;
                     }
 
                     putText(renderer, spellbook_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
-                else if (controls[current].Type == Control::Type::EQUIPMENT && party[character].Equipment.size() > 0)
+                else if (controls[current].Type == Control::Type::EQUIPMENT && party.Party[character].Equipment.size() > 0)
                 {
                     putHeader(renderer, "EQUIPMENT", font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string equipment_string = "";
 
-                    for (auto i = 0; i < party[character].Equipment.size(); i++)
+                    for (auto i = 0; i < party.Party[character].Equipment.size(); i++)
                     {
                         if (i > 0)
                         {
                             equipment_string += ", ";
                         }
 
-                        equipment_string += party[character].Equipment[i].Name;
+                        equipment_string += party.Party[character].Equipment[i].Name;
 
-                        if (party[character].Equipment[i].Attribute != Attribute::Type::NONE)
+                        if (party.Party[character].Equipment[i].Attribute != Attribute::Type::NONE)
                         {
-                            equipment_string += " (+ " + std::to_string(party[character].Equipment[i].Modifier) + " " + std::string(Attribute::Descriptions[party[character].Equipment[i].Attribute]) + ")";
+                            equipment_string += " (+ " + std::to_string(party.Party[character].Equipment[i].Modifier) + " " + std::string(Attribute::Descriptions[party.Party[character].Equipment[i].Attribute]) + ")";
                         }
                     }
 
@@ -953,19 +1019,30 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
 
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
+            if (current == 0)
+            {
+                summary_view = true;
+            }
+            else if (current > 0)
+            {
+                if (current < controls.size() && controls[current].Type != Control::Type::BACK)
+                {
+                    summary_view = false;
+                }
+            }
+
             if (selected && current >= 0 && current < controls.size())
             {
                 if (controls[current].Type == Control::Type::MINUS)
                 {
-
                     if (character > 0)
                     {
                         character--;
                     }
 
-                    if (character >= 0 && character < party.size())
+                    if (character >= 0 && character < party.Party.size())
                     {
-                        if (party[character].Image != NULL)
+                        if (party.Party[character].Image != NULL)
                         {
                             if (adventurer != NULL)
                             {
@@ -974,7 +1051,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
                                 adventurer = NULL;
                             }
 
-                            adventurer = createImage(party[character].Image);
+                            adventurer = createImage(party.Party[character].Image);
                         }
 
                         if (text != NULL)
@@ -984,19 +1061,19 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
                             text = NULL;
                         }
 
-                        text = createText(characterText(party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        text = createText(characterText(party.Party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
                     }
                 }
                 else if (controls[current].Type == Control::Type::PLUS)
                 {
-                    if (character < party.size() - 1)
+                    if (character < party.Party.size() - 1)
                     {
                         character++;
                     }
 
-                    if (character >= 0 && character < party.size())
+                    if (character >= 0 && character < party.Party.size())
                     {
-                        if (party[character].Image != NULL)
+                        if (party.Party[character].Image != NULL)
                         {
                             if (adventurer != NULL)
                             {
@@ -1005,7 +1082,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
                                 adventurer = NULL;
                             }
 
-                            adventurer = createImage(party[character].Image);
+                            adventurer = createImage(party.Party[character].Image);
                         }
 
                         if (text != NULL)
@@ -1015,11 +1092,19 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
                             text = NULL;
                         }
 
-                        text = createText(characterText(party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        text = createText(characterText(party.Party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
                     }
                 }
                 else if (controls[current].Type == Control::Type::EQUIPMENT)
                 {
+                    if (character >= 0 && character < party.Party.size())
+                    {
+                        if (party.Party[character].Equipment.size() > 0)
+                        {
+                            inventoryScreen(window, renderer, party.Party[character], party.Party[character].Equipment, Control::Type::USE, 0);
+                        }
+                    }
+
                     done = false;
 
                     selected = false;
@@ -1069,6 +1154,13 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character
         font_mason2 = NULL;
     }
 
+    if (font_dark11)
+    {
+        TTF_CloseFont(font_dark11);
+
+        font_dark11 = NULL;
+    }
+
     if (font_garamond)
     {
         TTF_CloseFont(font_garamond);
@@ -1114,7 +1206,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
         auto selected = false;
 
-        auto main_buttonh = 0.06 * SCREEN_HEIGHT;
+        auto main_buttonh = (int)(0.06 * SCREEN_HEIGHT);
 
         auto infoh = (int)(0.07 * SCREEN_HEIGHT);
 
@@ -1646,6 +1738,75 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer)
     }
 
     return done;
+}
+
+std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, bool confirm_button, bool back_button)
+{
+    auto font_size = 28;
+    auto text_space = 8;
+    auto textwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+
+    auto controls = std::vector<Button>();
+
+    if (list.size() > 0)
+    {
+        for (int i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            std::string item_string = list[index].Name;
+
+            if (list[index].Attribute != Attribute::Type::NONE)
+            {
+                item_string += " (+ " + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]) + ")";
+            }
+
+            auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, textwidth - 4 * text_space, TTF_STYLE_NORMAL);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : texty + 2 * text_space);
+
+            controls.push_back(Button(i, text, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), textx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = textwidth - 4 * text_space;
+
+            controls[i].H = text->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (list.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (list.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    if (confirm_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/yes.png", idx - 1, back_button ? idx + 1 : idx, idx - 1, idx, startx, buttony, Control::Type::CONFIRM));
+    }
+
+    if (back_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, list.size() > 0 ? (last - start) : idx, idx, (1.0 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
+    }
+
+    return controls;
 }
 
 std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int start, int last, int limit, int offsetx, int offsety, int scrolly, bool confirm_button, bool back_button)
@@ -3905,7 +4066,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
             for (auto i = 0; i < team.size(); i++)
             {
-                skill_score += Engine::SCORE(party[team[i]], Skill) + Engine::MAX(party[team[i]], Equipment::Type::NORMAL, Skill);
+                skill_score += Engine::SCORE(party[team[i]], Skill) + Engine::MAX(party[team[i]], Equipment::Class::NORMAL, Skill);
             }
 
             if (skill_score > 20)
@@ -4021,7 +4182,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 if (useEquipment)
                 {
-                    score1 = Engine::SCORE(party[team[0]], Skill) + Engine::MAX(party[team[0]], Equipment::Type::NORMAL, Skill);
+                    score1 = Engine::SCORE(party[team[0]], Skill) + Engine::MAX(party[team[0]], Equipment::Class::NORMAL, Skill);
                 }
                 else
                 {
@@ -4042,7 +4203,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                     if (useEquipment)
                     {
-                        score2 = Engine::SCORE(party[team[1]], Skill) + Engine::MAX(party[team[1]], Equipment::Type::NORMAL, Skill);
+                        score2 = Engine::SCORE(party[team[1]], Skill) + Engine::MAX(party[team[1]], Equipment::Class::NORMAL, Skill);
                     }
                     else
                     {
@@ -4931,6 +5092,10 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                 {
                     putHeader(renderer, "Choose target for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
+                else if (mode == Control::Type::EQUIPMENT)
+                {
+                    putHeader(renderer, "Give the items(s) to", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
                 else
                 {
                     putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -5249,7 +5414,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::PARTY)
                     {
-                        viewParty(window, renderer, party.Party);
+                        viewParty(window, renderer, party);
 
                         selected = false;
 
@@ -5479,6 +5644,661 @@ Story::Base *findStory(Engine::Destination destination)
     return next;
 }
 
+bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Equipment::Base> &Items, Control::Type mode, int limit)
+{
+    if (Items.size() > 0)
+    {
+        auto font_size = 28;
+        auto text_space = 8;
+        auto scrollSpeed = 1;
+        auto display_limit = (text_bounds - text_space) / (font_size + 7 * text_space / 2);
+
+        auto offset = 0;
+
+        auto last = offset + display_limit;
+
+        if (last > Items.size())
+        {
+            last = Items.size();
+        }
+
+        const char *message = NULL;
+
+        std::string temp_message = "";
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        auto done = false;
+
+        auto textwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+
+        auto controls = equipmentList(window, renderer, Items, offset, last, display_limit, false, true);
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        auto selected = false;
+        auto current = -1;
+        auto quit = false;
+        auto scrollUp = false;
+        auto scrollDown = false;
+        auto hold = false;
+
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.150 * SCREEN_HEIGHT);
+        auto box_space = 10;
+
+        while (!done)
+        {
+            last = offset + display_limit;
+
+            if (last > Items.size())
+            {
+                last = Items.size();
+            }
+
+            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Equipment");
+
+            fillWindow(renderer, intWH);
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putText(renderer, message, font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            if (!flash_message)
+            {
+                if (mode == Control::Type::DROP)
+                {
+                    putText(renderer, "You are carrying too many items. Select item(s) to DROP.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                }
+                else if (mode == Control::Type::USE)
+                {
+                    putText(renderer, "Select an item to USE", font_garamond, text_space, clrWH, intLB, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                }
+                else if (mode == Control::Type::LOSE)
+                {
+                    std::string stolen_message = "DROP item(s) until only " + std::to_string(limit) + " item" + std::string(limit > 1 ? "s" : "") + " remains.";
+
+                    putText(renderer, stolen_message.c_str(), font_garamond, text_space, clrWH, intLB, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                }
+                else
+                {
+                    putText(renderer, "You are carrying these items", font_garamond, text_space, clrWH, intLB, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                }
+            }
+
+            putText(renderer, "Health", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (boxh + infoh - 1));
+            putText(renderer, (std::to_string(character.Health)).c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - boxh);
+
+            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+            for (auto idx = offset; idx < last; idx++)
+            {
+                auto i = idx - offset;
+
+                drawRect(renderer, controls[i].W + 2 * text_space, controls[i].H + 2 * text_space, controls[i].X - text_space, controls[i].Y - text_space, intBK);
+            }
+
+            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+
+            done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (offset > 0)
+                    {
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + display_limit;
+
+                        if (last > Items.size())
+                        {
+                            last = Items.size();
+                        }
+
+                        controls.clear();
+
+                        controls = equipmentList(window, renderer, Items, offset, last, display_limit, false, true);
+
+                        SDL_Delay(50);
+                    }
+
+                    if (offset <= 0)
+                    {
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                {
+                    if (Items.size() - last > 0)
+                    {
+                        if (offset < Items.size() - display_limit)
+                        {
+                            offset += scrollSpeed;
+                        }
+
+                        if (offset > Items.size() - display_limit)
+                        {
+                            offset = Items.size() - display_limit;
+                        }
+
+                        last = offset + display_limit;
+
+                        if (last > Items.size())
+                        {
+                            last = Items.size();
+                        }
+
+                        controls.clear();
+
+                        controls = equipmentList(window, renderer, Items, offset, last, display_limit, false, true);
+
+                        SDL_Delay(50);
+
+                        if (offset > 0)
+                        {
+                            if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                            {
+                                current++;
+                            }
+                        }
+                    }
+
+                    if (Items.size() - last <= 0)
+                    {
+                        selected = false;
+
+                        current = -1;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if ((current + offset >= 0) && (current + offset) < Items.size())
+                    {
+                        auto item = Items[current + offset];
+
+                        if (mode == Control::Type::DROP)
+                        {
+                            Items.erase(Items.begin() + (current + offset));
+
+                            if (offset > 0)
+                            {
+                                offset--;
+                            }
+
+                            last = offset + display_limit;
+
+                            if (last > Items.size())
+                            {
+                                last = Items.size();
+                            }
+
+                            controls.clear();
+
+                            controls = equipmentList(window, renderer, Items, offset, last, display_limit, false, true);
+
+                            std::string description = item.Name;
+
+                            if (item.Attribute != Attribute::Type::NONE)
+                            {
+                                description += " (+ " + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                            }
+
+                            temp_message = description + " DROPPED!";
+
+                            message = temp_message.c_str();
+
+                            flash_color = intRD;
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_message = true;
+
+                            selected = false;
+
+                            current = -1;
+                        }
+                        else if (mode == Control::Type::LOSE)
+                        {
+                            if (Items.size() > limit)
+                            {
+                                Items.erase(Items.begin() + (current + offset));
+
+                                Engine::LOSE_EQUIPMENT(character, {item.Type});
+
+                                if (offset > 0)
+                                {
+                                    offset--;
+                                }
+
+                                last = offset + display_limit;
+
+                                if (last > Items.size())
+                                {
+                                    last = Items.size();
+                                }
+
+                                controls.clear();
+
+                                controls = equipmentList(window, renderer, Items, offset, last, display_limit, false, true);
+
+                                std::string description = item.Name;
+
+                                if (item.Attribute != Attribute::Type::NONE)
+                                {
+                                    description += " (+ " + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                }
+
+                                temp_message = description + " DROPPED!";
+
+                                message = temp_message.c_str();
+
+                                flash_color = intRD;
+
+                                start_ticks = SDL_GetTicks();
+
+                                flash_message = true;
+
+                                selected = false;
+
+                                current = -1;
+                            }
+                        }
+                        else if (mode == Control::Type::USE)
+                        {
+                            bool used_up = false;
+
+                            if (used_up)
+                            {
+                                if (Items.size() > 0)
+                                {
+                                    Items.erase(Items.begin() + (current + offset));
+
+                                    Engine::LOSE_EQUIPMENT(character, {item.Type});
+
+                                    if (offset > 0)
+                                    {
+                                        offset--;
+                                    }
+
+                                    last = offset + display_limit;
+
+                                    if (last > Items.size())
+                                    {
+                                        last = Items.size();
+                                    }
+
+                                    controls.clear();
+
+                                    controls = equipmentList(window, renderer, Items, offset, last, display_limit, false, true);
+                                }
+                            }
+
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    done = true;
+
+                    break;
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        TTF_Quit();
+    }
+
+    return false;
+}
+
+bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button)
+{
+    auto done = false;
+
+    if (TakeLimit > 0)
+    {
+        auto font_size = 28;
+        auto text_space = 8;
+        auto scrollSpeed = 1;
+        auto limit = (text_bounds - text_space) / (font_size + 7 * text_space / 2);
+        auto offset = 0;
+        auto last = offset + limit;
+
+        if (last > equipment.size())
+        {
+            last = equipment.size();
+        }
+
+        const char *message = NULL;
+
+        auto error = false;
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        auto textwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+
+        auto controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        auto selected = false;
+        auto current = -1;
+        auto quit = false;
+        auto scrollUp = false;
+        auto scrollDown = false;
+        auto hold = false;
+
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+
+        auto selection = std::vector<int>();
+
+        while (!done)
+        {
+            last = offset + limit;
+
+            if (last > equipment.size())
+            {
+                last = equipment.size();
+            }
+
+            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Take Items");
+
+            fillWindow(renderer, intWH);
+
+            if (error)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putText(renderer, message, font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh * 2, startx, starty);
+                }
+                else
+                {
+                    error = false;
+                }
+            }
+
+            if (!error)
+            {
+                std::string take_message = "";
+
+                if (equipment.size() > 1)
+                {
+                    if (TakeLimit > 1)
+                    {
+                        if (TakeLimit == equipment.size())
+                        {
+                            take_message = "You can TAKE any number of items.";
+                        }
+                        else
+                        {
+                            take_message = "You can TAKE up to " + std::to_string(TakeLimit) + " items.";
+                        }
+                    }
+                    else
+                    {
+                        take_message = "Choose an item to KEEP.";
+                    }
+                }
+                else
+                {
+                    take_message = "KEEP this item?";
+                }
+
+                putText(renderer, take_message.c_str(), font_garamond, text_space, clrWH, intLB, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+            }
+
+            std::string take = "";
+
+            if (selection.size() > 0)
+            {
+                for (auto i = 0; i < selection.size(); i++)
+                {
+                    if (i > 0)
+                    {
+                        take += ", ";
+                    }
+
+                    std::string description = equipment[selection[i]].Name;
+
+                    take += description;
+                }
+            }
+
+            putText(renderer, "SELECTED", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putText(renderer, selection.size() > 0 ? take.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+
+            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+            if (last - offset > 0)
+            {
+                for (auto i = 0; i < last - offset; i++)
+                {
+                    if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                    {
+                        drawRect(renderer, controls[i].W + 2 * text_space, controls[i].H + 2 * text_space, controls[i].X - text_space, controls[i].Y - text_space, intBK);
+                    }
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+
+            done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (offset > 0)
+                    {
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > equipment.size())
+                        {
+                            last = equipment.size();
+                        }
+
+                        controls.clear();
+
+                        controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
+
+                        SDL_Delay(50);
+                    }
+
+                    if (offset <= 0)
+                    {
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                {
+                    if (equipment.size() - last > 0)
+                    {
+                        if (offset < equipment.size() - limit)
+                        {
+                            offset += scrollSpeed;
+                        }
+
+                        if (offset > equipment.size() - limit)
+                        {
+                            offset = equipment.size() - limit;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > equipment.size())
+                        {
+                            last = equipment.size();
+                        }
+
+                        controls.clear();
+
+                        controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
+
+                        SDL_Delay(50);
+
+                        if (offset > 0)
+                        {
+                            if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                            {
+                                current++;
+                            }
+                        }
+                    }
+
+                    if (equipment.size() - last <= 0)
+                    {
+                        selected = false;
+
+                        current = -1;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if (current >= 0 && current < controls.size())
+                    {
+                        auto result = Engine::FIND_LIST(selection, offset + current);
+
+                        if (result >= 0)
+                        {
+                            selection.erase(selection.begin() + result);
+                        }
+                        else
+                        {
+                            if (selection.size() < TakeLimit)
+                            {
+                                selection.push_back(offset + current);
+                            }
+                        }
+                    }
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                {
+                    auto take = std::vector<Equipment::Base>();
+
+                    for (auto i = 0; i < selection.size(); i++)
+                    {
+                        take.push_back(equipment[selection[i]]);
+                    }
+
+                    auto character = selectPartyMember(window, renderer, party.Party, Control::Type::EQUIPMENT);
+
+                    if (character >= 0 && character < party.Party.size())
+                    {
+                        Engine::GET_EQUIPMENT(party.Party[character], take);
+
+                        while (!Engine::VERIFY_EQUIPMENT(party.Party[character]))
+                        {
+                            inventoryScreen(window, renderer, party.Party[character], party.Party[character].Equipment, Control::Type::DROP, 0);
+                        }
+
+                        done = true;
+                    }
+                    else
+                    {
+                        done = false;
+                    }
+
+                    current = -1;
+
+                    selected = false;
+
+                    break;
+                }
+                else if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    done = false;
+
+                    break;
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        TTF_Quit();
+    }
+
+    return done;
+}
+
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story)
 {
     Story::Base *next = &Story::notImplemented;
@@ -5534,13 +6354,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto idx = choices.size();
 
         controls.push_back(Button(idx, "icons/map.png", idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::MAP));
-        controls.push_back(Button(idx + 1, "icons/user.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::CHARACTER));
+        controls.push_back(Button(idx + 1, "icons/user.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 2, "icons/items.png", idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::USE));
         controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, idx - 1, idx + 3, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
 
         TTF_Init();
 
-        auto font = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
 
         auto font_mason = TTF_OpenFont(FONT_MASON, 24);
 
@@ -5564,7 +6384,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             }
             else
             {
-                SDL_SetWindowTitle(window, (std::string("The Coils of Hate (Revised): ") + std::string(3 - std::to_string(std::abs(story->ID)).length(), '0') + std::to_string(std::abs(story->ID))).c_str());
+                SDL_SetWindowTitle(window, (std::string("Legendary Kingdoms 1 - The Valley of Bones: ") + std::string(3 - std::to_string(std::abs(story->ID)).length(), '0') + std::to_string(std::abs(story->ID))).c_str());
             }
 
             fillWindow(renderer, intWH);
@@ -5618,7 +6438,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putText(renderer, message, font, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                    putText(renderer, message, font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
                 else
                 {
@@ -5707,8 +6527,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
                 else if (controls[current].Type == Control::Type::PARTY && !hold)
                 {
-
-                    viewParty(window, renderer, party.Party);
+                    viewParty(window, renderer, party);
 
                     current = -1;
 
@@ -5743,11 +6562,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             }
         }
 
-        if (font)
+        if (font_garamond)
         {
-            TTF_CloseFont(font);
+            TTF_CloseFont(font_garamond);
 
-            font = NULL;
+            font_garamond = NULL;
         }
 
         if (font_mason)
@@ -5810,7 +6629,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
     TTF_Init();
 
-    auto font = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
 
@@ -5947,7 +6766,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
                 else
                 {
-                    SDL_SetWindowTitle(window, (std::string("The Coils of Hate (Revised): ") + std::string(3 - std::to_string(std::abs(story->ID)).length(), '0') + std::to_string(std::abs(story->ID))).c_str());
+                    SDL_SetWindowTitle(window, (std::string("Legendary Kingdoms 1 - The Valley of Bones: ") + std::string(3 - std::to_string(std::abs(story->ID)).length(), '0') + std::to_string(std::abs(story->ID))).c_str());
                 }
 
                 fillWindow(renderer, intWH);
@@ -6010,7 +6829,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                     }
                     else
                     {
@@ -6081,11 +6900,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                 if (story->Type == Story::Type::DOOM)
                 {
-                    putText(renderer, "This adventure is over.", font, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                    putText(renderer, "This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
                 else if (Engine::COUNT(party.Party) <= 0)
                 {
-                    putText(renderer, "Your party has died. This adventure is over.", font, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                    putText(renderer, "Your party has died. This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
 
                 renderButtons(renderer, controls, current, intLB, border_space, border_pts);
@@ -6129,7 +6948,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::PARTY && !hold)
                     {
-                        viewParty(window, renderer, party.Party);
+                        viewParty(window, renderer, party);
 
                         current = -1;
 
@@ -6183,6 +7002,20 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         if (Engine::COUNT(party.Party) > 0)
                         {
+                            if (story->Take.size() > 0 && story->Limit > 0)
+                            {
+                                auto done = takeScreen(window, renderer, party, story->Take, story->Limit, true);
+
+                                if (!done)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    story->Limit = 0;
+                                }
+                            }
+
                             current = -1;
 
                             selected = false;
@@ -6279,11 +7112,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         background = NULL;
     }
 
-    if (font)
+    if (font_garamond)
     {
-        TTF_CloseFont(font);
+        TTF_CloseFont(font_garamond);
 
-        font = NULL;
+        font_garamond = NULL;
     }
 
     if (font_mason)

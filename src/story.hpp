@@ -58,7 +58,9 @@ namespace Choice
 
         int Success = 0;
 
-        Engine::Destination Destination;
+        Engine::Destination Destination = {Book::Type::NONE, -1};
+
+        Engine::Destination DestinationFailed = {Book::Type::NONE, -1};
 
         Base(const char *text, Engine::Destination destination)
         {
@@ -104,7 +106,7 @@ namespace Choice
             Destination = destination;
         }
 
-        Base(const char *text, Engine::Destination destination, std::vector<Attribute::Type> attributes, int difficulty, int success)
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, std::vector<Attribute::Type> attributes, int difficulty, int success)
         {
             Type = Choice::Type::ATTRIBUTES;
 
@@ -117,9 +119,11 @@ namespace Choice
             Success = success;
 
             Destination = destination;
+
+            DestinationFailed = destinationFailed;
         }
 
-        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Attribute::Type> attributes, int difficulty, int success)
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, std::vector<Attribute::Type> attributes, int difficulty, int success)
         {
             Text = text;
 
@@ -132,6 +136,8 @@ namespace Choice
             Success = success;
 
             Destination = destination;
+
+            DestinationFailed = destinationFailed;
         }
 
         Base(const char *text, Engine::Destination destination, std::vector<Codes::Base> codes)

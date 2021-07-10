@@ -5,13 +5,21 @@
 
 namespace Equipment
 {
-    enum class Type
+    enum class Class
     {
         NONE = -1,
         NORMAL,
         WEAPON,
         ARMOUR,
         SHIELD
+    };
+
+    enum class Type
+    {
+        NONE = 0,
+        LEATHER_ARMOUR1,
+        SHIELD2,
+        BLUESTONE
     };
 
     class Base
@@ -21,7 +29,9 @@ namespace Equipment
 
         const char *Description = NULL;
 
-        Equipment::Type Type = Equipment::Type::NORMAL;
+        Equipment::Class Class = Equipment::Class::NORMAL;
+
+        Equipment::Type Type = Equipment::Type::NONE;
 
         // Modifiers
         Attribute::Type Attribute = Attribute::Type::NONE;
@@ -30,16 +40,17 @@ namespace Equipment
 
         Base()
         {
-            
         }
 
-        Base(const char *name, const char *description, Equipment::Type type, Attribute::Type modifies, int modifier)
+        Base(const char *name, const char *description, Equipment::Class equipmentClass, Equipment::Type equipmentType, Attribute::Type modifies, int modifier)
         {
             Name = name;
 
             Description = description;
 
-            Type = type;
+            Class = equipmentClass;
+
+            Type = equipmentType;
 
             Attribute = modifies;
 
@@ -47,8 +58,9 @@ namespace Equipment
         }
     };
 
-    auto LEATHER_ARMOUR1 = Equipment::Base("LEATHER ARMOUR", "LEATHER ARMOUR", Equipment::Type::ARMOUR, Attribute::Type::ARMOUR, 1);
-    auto SHIELD2 = Equipment::Base("SHIELD", "SHIELD", Equipment::Type::SHIELD, Attribute::Type::ARMOUR, 2);
+    auto LEATHER_ARMOUR1 = Equipment::Base("LEATHER ARMOUR", "LEATHER ARMOUR", Equipment::Class::ARMOUR, Equipment::Type::LEATHER_ARMOUR1, Attribute::Type::ARMOUR, 1);
+    auto SHIELD2 = Equipment::Base("SHIELD", "SHIELD", Equipment::Class::SHIELD, Equipment::Type::SHIELD2, Attribute::Type::ARMOUR, 2);
+    auto BLUESTONE = Equipment::Base("BLUESTONE", "BLUESTONE", Equipment::Class::NORMAL, Equipment::Type::BLUESTONE, Attribute::Type::NONE, 0);
 }
 
 #endif
