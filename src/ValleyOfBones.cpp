@@ -3100,14 +3100,26 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                             message = "Skallos unleashes a roar of black magic! Each party member LOSES 1 Health. Skallos RECOVERS 4 Health Points!";
 
-                            for (auto i = 0; i < party.size(); i++)
-                            {
-                                Engine::GAIN_HEALTH(party[i], -1);
-                            }
+                            start_ticks = SDL_GetTicks();
+
+                            Engine::GAIN_HEALTH(party, -1);
 
                             Engine::GAIN_HEALTH(monsters[opponent], 4);
+                        }
+                        else if (monsters[opponent].Type == Monster::Type::SNAKEMAN_PRIEST)
+                        {
+                            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::HYGLIPH_FLOWER}))
+                            {
+                                flash_message = true;
 
-                            start_ticks = SDL_GetTicks();
+                                flash_color = intRD;
+
+                                message = "The priest is put off by the pungent odour of the HYGLIPH FLOWER and requires a 5+ to his attack rolls to inflict damage during this battle.";
+
+                                start_ticks = SDL_GetTicks();
+
+                                monsters[opponent].Difficulty = 5;
+                            }
                         }
 
                         special_event_trigger = false;
@@ -5556,6 +5568,20 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                             }
 
+                            // After combat round trigger
+                            if (Engine::HAS_MONSTER(monsters, Monster::Type::SNAKEMAN_PRIEST))
+                            {
+                                flash_message = true;
+
+                                flash_color = intRD;
+
+                                message = "Blocks of stone come raining down from the walls! The priest and each party member LOSES 1 Health!";
+
+                                Engine::GAIN_HEALTH(party.Party, -1);
+
+                                Engine::GAIN_HEALTH(monsters, -1);
+                            }
+
                             hasAttacked.clear();
 
                             // clear damaged flag for next round
@@ -6754,6 +6780,20 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 start_ticks = SDL_GetTicks();
                             }
                         }
+                        else if (story->Choices[current].Type == Choice::Type::ADD_MAX_HEALTH)
+                        {
+                            auto target = selectPartyMember(window, renderer, party.Party, Control::Type::SPELL_TARGET);
+
+                            party.Party[target].MaximumHealth += story->Choices[current].Value;
+
+                            Engine::GAIN_HEALTH(party.Party[target], story->Choices[current].Value);
+
+                            next = findStory(story->Choices[current].Destination);
+
+                            done = true;
+
+                            break;
+                        }
                         else if (story->Choices[current].Type == Choice::Type::CODES)
                         {
                         }
@@ -7493,7 +7533,7 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
         while (!done)
         {
             auto Party = Party::Base();
-            
+
             // Fill the surface with background
             fillWindow(renderer, intWH);
 

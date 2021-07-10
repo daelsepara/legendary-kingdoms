@@ -631,13 +631,12 @@ namespace Book1
 
             ID = -18;
 
+            Choices.clear();
+
             Controls = Story::Controls::NONE;
         }
 
-        Engine::Destination Background(Party::Base &party)
-        {
-            return {Book::Type::BOOK1, 18};
-        }
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 18}; }
     };
 
     class Story019 : public Story::Base
@@ -665,6 +664,241 @@ namespace Book1
             Choices.push_back(Choice::Base("Leave the city south, into the desert", {Book::Type::BOOK1, 725}));
 
             Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story020 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story020()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 20;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The passageway opens up into a long hall, lined with stamped bronze plates. Torches burn in brackets along the walls, illuminating hideous murals of serpents devouring animals, trees and rocks. You see daylight ahead and come upon a chamber whose roof is open to the blazing sun. It is another temple chamber with black altars and fine silverwork dominating the room.\n\nRising from his position in front of the high altar, a snakeman priest in flowing vestal robes turns to gaze at you with piercing eyes.\n\n\"The heretic slaves return!\" he hisses. \"Do not think that you can seek repentance from the lord of judgement now! Once a traitor, always a traitor!\"";
+
+            Monsters.clear();
+
+            Combat = Engine::Combat::NONE;
+
+            CanFlee = false;
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Base(Book::Type::BOOK1, 41)}))
+            {
+                PreText += "\n\n\"We have betrayed no one!\" you reply. \"You have trapped us here. Allow us to leave and we will do you no harm.\"\n\n\"Liars! You have stolen our god!\" spits the snakeman priest. \"Our breed faulters and dies. Now, you shall die with us!\" The snakeman hisses foul words of sorcery. Suddenly the temple walls begin to crack, and blocks of stone rain down upon you. Even as the temple collapses the snakeman priest advances towards you, brandishing his staff.";
+
+                Monsters = {Monster::Base("Snakeman Priest", Monster::Type::SNAKEMAN_PRIEST, 4, 4, 3, 16, 0)};
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::Base(Book::Type::BOOK1, 41)}))
+            {
+                return {Book::Type::BOOK1, 714};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 881};
+            }
+        }
+    };
+
+    class Story021 : public Story::Base
+    {
+    public:
+        Story021()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 21;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
+            Text = "You are steering along the jungle peninsula, across waters known as Cape Porta. It is a famous lair of pirates and other ne'er-do-wells.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::Random.UniformIntDistribution(1, 6);
+
+            auto result = Engine::Random.NextInt();
+
+            Choices.clear();
+
+            if (result != 1)
+            {
+                Choices.push_back(Choice::Base("Sail north towards Clifftop", {Book::Type::BOOK1, 82}));
+                Choices.push_back(Choice::Base("Sail east towards Cursus", {Book::Type::BOOK1, 814}));
+                Choices.push_back(Choice::Base("Sail west towards THE SAVAGE LANDS", {Book::Type::BOOK5, 85}));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 429}; }
+    };
+
+    class Story022 : public Story::Base
+    {
+    public:
+        Story022()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 22;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
+            Text = "Avoiding Chellar's room, you still manage to secure a pretty horde of items. You may take any or all of the following: JEWELLERY BOX, CALLIGRAPHY INK, SILVER IDOL, GOLD PORTRAIT, BRONZE SCORPION. You emerge with Brekken back onto the landing. You decide, with a mutual nod, that you have pushed your luck far enough in the house and make your way back out of the windows and into the streets of the city.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::JEWELLERY_BOX, Equipment::CALLIGRAPHY_INK, Equipment::SILVER_IDOL, Equipment::GOLD_PORTRAIT, Equipment::BRONZE_SCORPION};
+
+            Limit = 5;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 833}; }
+    };
+
+    class Story023 : public Story::Base
+    {
+    public:
+        Story023()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 23;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
+            Text = "You emerge into a short corridor running west to east. To the west you can make out a crossroads. To the east a flight of stairs leads upwards. There is a door in the south wall.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go west", {Book::Type::BOOK1, 310}));
+            Choices.push_back(Choice::Base("Go east, up the stairs", {Book::Type::BOOK1, 437}));
+            Choices.push_back(Choice::Base("Go through the door in the south wall", {Book::Type::BOOK1, 604}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story024 : public Story::Base
+    {
+    public:
+        Story024()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 24;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
+            Text = "You have entered a chamber which is well furnished with flags and banners. It has the feel of a Chalice temple, although there is no sign that anyone actually worships here. A statue of a kneeling monk sits at the far end of the room. There are two exits from the chamber, each of them leading to a tunnel with stairs ascending.\n\nYou gain the code A77.\n\nSuddenly you see a light coming down the left-hand stairwell. Something is coming... but it is walking softly, as you cannot make out the sound of footsteps.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Hide behind the statue", {Book::Type::BOOK1, 782}));
+            Choices.push_back(Choice::Base("Confront whoever is coming down the stairs", {Book::Type::BOOK1, 757}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 77)});
+        }
+    };
+
+    class Story025 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story025()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 25;
+
+            Image = "images/book1/salt_mines.png";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You stand in the shadow of the Stonewalls, the finger-like crags soaring high into the burning sky. Cut into the roots of a tall mountain are the infamous salt mines of Saltdad. Dozens of warehouses are scattered around the entrance of the mine, with workers boiling away the salt from rock with water drawn from the Cold River to the east. Below your feet, and deep into the mountain, you know that thousands of slaves toil in the grim darkness.\n\nThe mine guards bring you to the owners, hard-faced men with unflinching stares.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Base(Book::Type::BOOK1, 1)}))
+            {
+                PreText += "\n\n\"I suppose you are here about the troglodytes,\" sighs Clavod, the mine master. \"We are losing so many slaves it starts to become worth protecting them after a while. The deal is 25 silver for each troglodyte head you bring me. Take it or leave it.\"\n\nClavod sees your blank expression. \"Unless you came to arrange salt transportation, of course,\" he says hastily. \"We can transport salt to ships moored in Clifftop or Cursus.\"";
+
+                Choices.push_back(Choice::Base("Accept the mission to hunt the troglodytes", {Book::Type::BOOK1, 681}));
+                Choices.push_back(Choice::Base("Sell him some TROGLODYTE HEADS", {Book::Type::BOOK1, 233}, {Equipment::TROGLODYTE_HEAD}));
+                Choices.push_back(Choice::Base("Express interest in buying salt for your ships", {Book::Type::BOOK1, 575}));
+                Choices.push_back(Choice::Base("Apologise for wasting the mine master’s time and leave", {Book::Type::BOOK1, 722}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 532}; }
+    };
+
+    class Story026 : public Story::Base
+    {
+    public:
+        Story026()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 26;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
+            Text = "You pour the liquid metal into the well and cross your fingers. Soon, the runes around the circle blaze into light, dousing you with brilliant coloured energies. When the glow finally wears off you feel stronger than before.";
+
+            Bye = "Feeling more vigorous than ever, you return to the crossroads.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member and increase their maximum, unwounded Health score by 1 point.", {Book::Type::BOOK1, 566}, Choice::Type::ADD_MAX_HEALTH, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            for (auto i = 0; i < party.Party.size(); i++)
+            {
+                if (Engine::VERIFY_EQUIPMENT(party.Party[i], {Equipment::Type::QUICKSILVER}))
+                {
+                    Engine::LOSE_EQUIPMENT(party.Party[i], {Equipment::Type::QUICKSILVER});
+
+                    break;
+                }
+            }
         }
     };
 

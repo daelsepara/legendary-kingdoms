@@ -37,7 +37,8 @@ namespace Choice
         PAY_WITH,
         SELL,
         BARTER,
-        SHIP
+        SHIP,
+        ADD_MAX_HEALTH
     };
 
     class Base

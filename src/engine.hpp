@@ -68,6 +68,14 @@ namespace Engine
         }
     }
 
+    void GAIN_HEALTH(std::vector<Character::Base> &party, int health)
+    {
+        for (auto i = 0; i < party.size(); i++)
+        {
+            Engine::GAIN_HEALTH(party[i], health);
+        }
+    }
+
     void GAIN_HEALTH(Monster::Base &monster, int health)
     {
         monster.Health += health;
@@ -80,6 +88,14 @@ namespace Engine
         if (monster.Health < 0)
         {
             monster.Health = 0;
+        }
+    }
+
+    void GAIN_HEALTH(std::vector<Monster::Base> &monsters, int health)
+    {
+        for (auto i = 0; i < monsters.size(); i++)
+        {
+            Engine::GAIN_HEALTH(monsters[i], health);
         }
     }
 
@@ -675,6 +691,23 @@ namespace Engine
 
             party.Party.erase(party.Party.begin() + result);
         }
+    }
+
+    bool HAS_MONSTER(std::vector<Monster::Base> &monsters, Monster::Type type)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < monsters.size(); i++)
+        {
+            if (monsters[i].Type == type && monsters[i].Health > 0)
+            {
+                result = true;
+
+                break;
+            }
+        }
+
+        return result;
     }
 }
 #endif

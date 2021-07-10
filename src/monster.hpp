@@ -9,7 +9,8 @@ namespace Monster
     enum class Type
     {
         NORMAL = 0,
-        SKALLOS
+        SKALLOS,
+        SNAKEMAN_PRIEST
     };
 
     class Base

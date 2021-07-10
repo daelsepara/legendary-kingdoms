@@ -22,7 +22,15 @@ namespace Equipment
         SHIELD2,
         BLUESTONE,
         TITHE_REPORT,
-        PRYBAR
+        PRYBAR,
+        HYGLIPH_FLOWER,
+        JEWELLERY_BOX,
+        CALLIGRAPHY_INK,
+        SILVER_IDOL,
+        GOLD_PORTRAIT,
+        BRONZE_SCORPION,
+        TROGLODYTE_HEAD,
+        QUICKSILVER
     };
 
     class Base
@@ -70,6 +78,14 @@ namespace Equipment
     auto BLUESTONE = Equipment::Base("BLUESTONE", "BLUESTONE", Equipment::Class::NORMAL, Equipment::Type::BLUESTONE, Attribute::Type::NONE, 0, false);
     auto TITHE_REPORT = Equipment::Base("TITHE REPORT", "TITHE REPORT", Equipment::Class::NORMAL, Equipment::Type::TITHE_REPORT, Attribute::Type::NONE, 0, false);
     auto PRYBAR = Equipment::Base("PRYBAR", "PRYBAR", Equipment::Class::NORMAL, Equipment::Type::PRYBAR, Attribute::Type::NONE, 0, false);
+    auto HYGLIPH_FLOWER = Equipment::Base("HYGLIPH FLOWER", "HYGLIPH FLOWER", Equipment::Class::NORMAL, Equipment::Type::HYGLIPH_FLOWER, Attribute::Type::NONE, 0, false);
+    auto JEWELLERY_BOX = Equipment::Base("JEWELLERY BOX", "JEWELLERY BOX", Equipment::Class::NORMAL, Equipment::Type::JEWELLERY_BOX, Attribute::Type::NONE, 0, false);
+    auto CALLIGRAPHY_INK = Equipment::Base("CALLIGRAPHY INK", "CALLIGRAPHY INK", Equipment::Class::NORMAL, Equipment::Type::CALLIGRAPHY_INK, Attribute::Type::NONE, 0, false);
+    auto SILVER_IDOL = Equipment::Base("SILVER IDOL", "SILVER IDOL", Equipment::Class::NORMAL, Equipment::Type::SILVER_IDOL, Attribute::Type::NONE, 0, false);
+    auto GOLD_PORTRAIT = Equipment::Base("GOLD PORTRAIT", "GOLD PORTRAIT", Equipment::Class::NORMAL, Equipment::Type::GOLD_PORTRAIT, Attribute::Type::NONE, 0, false);
+    auto BRONZE_SCORPION = Equipment::Base("BRONZE SCORPION", "BRONZE SCORPION", Equipment::Class::NORMAL, Equipment::Type::BRONZE_SCORPION, Attribute::Type::NONE, 0, false);
+    auto TROGLODYTE_HEAD = Equipment::Base("TROGLODYTE HEAD", "TROGLODYTE HEAD", Equipment::Class::NORMAL, Equipment::Type::TROGLODYTE_HEAD, Attribute::Type::NONE, 0, false);
+    auto QUICKSILVER = Equipment::Base("QUICKSILVER", "QUICKSILVER", Equipment::Class::NORMAL, Equipment::Type::QUICKSILVER, Attribute::Type::NONE, 0, false);
 }
 
 #endif
