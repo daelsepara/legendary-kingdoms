@@ -76,7 +76,7 @@ namespace Engine
         {
             monster.Health = monster.MaximumHealth;
         }
-        
+
         if (monster.Health < 0)
         {
             monster.Health = 0;
@@ -165,6 +165,28 @@ namespace Engine
         return max > 0 ? Engine::SCORE(character, Attribute::Type::FIGHTING) + max : 1;
     }
 
+    bool TWO_HANDED(Character::Base &character)
+    {
+        auto result = false;
+
+        auto max = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
+            {
+                if (character.Equipment[i].Modifier >= max)
+                {
+                    max = character.Equipment[i].Modifier;
+
+                    result = character.Equipment[i].TwoHanded;
+                }
+            }
+        }
+
+        return result;
+    }
+
     int MAX(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
     {
         auto max = 0;
@@ -243,7 +265,12 @@ namespace Engine
 
     int ARMOUR(Character::Base &character)
     {
-        auto armour = MAX(character, Equipment::Class::SHIELD, Attribute::Type::ARMOUR) + MAX(character, Equipment::Class::ARMOUR, Attribute::Type::ARMOUR) + MAX(character, Equipment::Class::ROBE, Attribute::Type::ARMOUR) + MODIFIER(character, Equipment::Class::NORMAL, Attribute::Type::ARMOUR);
+        auto armour = MAX(character, Equipment::Class::ARMOUR, Attribute::Type::ARMOUR) + MAX(character, Equipment::Class::ROBE, Attribute::Type::ARMOUR) + MODIFIER(character, Equipment::Class::NORMAL, Attribute::Type::ARMOUR);
+
+        if (!Engine::TWO_HANDED(character))
+        {
+            armour += MAX(character, Equipment::Class::SHIELD, Attribute::Type::ARMOUR);
+        }
 
         if (Engine::HAS_STATUS(character, Character::Status::ARMOUR3))
         {
