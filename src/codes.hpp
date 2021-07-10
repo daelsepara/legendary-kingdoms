@@ -11,7 +11,8 @@ namespace Codes
     enum class Type
     {
         FIRST_TIME_SALTAD,
-        FOUGHT_IN_ARENA
+        FOUGHT_IN_ARENA,
+        SILVER_IDOL
     };
 
     std::map<Book::Type, const char *> Prefix = {

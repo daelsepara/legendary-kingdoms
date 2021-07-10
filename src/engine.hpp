@@ -435,6 +435,72 @@ namespace Engine
         }
     }
 
+    int FIND_CODEWORD(Party::Base &party, Codes::Type code)
+    {
+        auto found = -1;
+
+        if (party.InvisibleCodes.size() > 0)
+        {
+            for (auto i = 0; i < party.InvisibleCodes.size(); i++)
+            {
+                if (party.InvisibleCodes[i] == code)
+                {
+                    found = i;
+
+                    break;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    int FIND_CODEWORDS(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        auto found = 0;
+
+        if (party.InvisibleCodes.size() > 0 && codes.size() > 0)
+        {
+            for (auto i = 0; i < codes.size(); i++)
+            {
+                auto result = Engine::FIND_CODEWORD(party, codes[i]);
+
+                if (result >= 0)
+                {
+                    found++;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    bool VERIFY_CODES_ANY(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        return Engine::FIND_CODEWORDS(party, codes) > 0;
+    }
+
+    bool VERIFY_CODES_ALL(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        return Engine::FIND_CODEWORDS(party, codes) == codes.size();
+    }
+
+    bool VERIFY_CODES(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        return Engine::VERIFY_CODES_ALL(party, codes);
+    }
+
+    void GET_CODES(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        for (auto i = 0; i < codes.size(); i++)
+        {
+            if (!Engine::VERIFY_CODES(party, {codes[i]}))
+            {
+                party.InvisibleCodes.push_back(codes[i]);
+            }
+        }
+    }
+
     int FIND_CHARACTER(Party::Base &party, Character::Type type)
     {
         auto result = -1;
@@ -443,7 +509,24 @@ namespace Engine
         {
             if (party.Party[i].Type == type)
             {
-                result = -1;
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIND_CHARACTER(std::vector<Character::Base> &party, Character::Type type)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.size(); i++)
+        {
+            if (party[i].Type == type)
+            {
+                result = i;
 
                 break;
             }
@@ -459,6 +542,32 @@ namespace Engine
         if (party.Hearts.count(romance) > 0)
         {
             party.Hearts[romance] += heart;
+        }
+    }
+
+    void REJOIN(Party::Base &party)
+    {
+        party.IsParty = true;
+
+        if (party.Current.Type != Character::Type::NONE)
+        {
+            party.Party.push_back(party.Current);
+        }
+
+        party.Current = Character::Nobody;
+    }
+
+    void GO_SOLO(Party::Base &party, Character::Type character)
+    {
+        auto result = Engine::FIND_CHARACTER(party.Party, character);
+
+        if (result >= 0)
+        {
+            party.Current = party.Party[result];
+
+            party.IsParty = false;
+
+            party.Party.erase(party.Party.begin() + result);
         }
     }
 }

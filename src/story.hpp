@@ -46,6 +46,8 @@ namespace Choice
 
         Choice::Type Type = Choice::Type::NORMAL;
 
+        std::vector<Character::Base>& Characters = Party::Empty;
+
         std::vector<Attribute::Type> Attributes = std::vector<Attribute::Type>();
 
         std::vector<Equipment::Base> Equipment = std::vector<Equipment::Base>();
@@ -106,6 +108,25 @@ namespace Choice
             Destination = destination;
         }
 
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, std::vector<Character::Base> &characters, std::vector<Attribute::Type> attributes, int difficulty, int success)
+        {
+            Type = Choice::Type::ATTRIBUTES;
+
+            Text = text;
+
+            Characters = characters;
+
+            Attributes = attributes;
+
+            Difficulty = difficulty;
+
+            Success = success;
+
+            Destination = destination;
+
+            DestinationFailed = destinationFailed;
+        }
+
         Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, std::vector<Attribute::Type> attributes, int difficulty, int success)
         {
             Type = Choice::Type::ATTRIBUTES;
@@ -139,6 +160,26 @@ namespace Choice
 
             DestinationFailed = destinationFailed;
         }
+
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, std::vector<Character::Base> &characters, Choice::Type type, std::vector<Attribute::Type> attributes, int difficulty, int success)
+        {
+            Text = text;
+
+            Type = type;
+
+            Characters = characters;
+
+            Attributes = attributes;
+
+            Difficulty = difficulty;
+
+            Success = success;
+
+            Destination = destination;
+
+            DestinationFailed = destinationFailed;
+        }
+
 
         Base(const char *text, Engine::Destination destination, std::vector<Codes::Base> codes)
         {

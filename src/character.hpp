@@ -117,14 +117,20 @@ namespace Character
     auto BRASH = Character::Base("Brash", Character::Type::BRASH, "images/characters/brash.png", "Brash was born in Royce, in the duchy of Pendrilor. He was a pot washer in Vasthall, the stately home of Duchess Elenor Mauntell, but unwisely engaged in a love triangle with her and King Frances Goldwell. Fleeing before he could be hung, Brash has since lived on his wits, travelling the world to escape the King's agents. He can talk his way out of almost anything, and his ability to escape danger is second-to-none. One day, Brash will need to sort out the mess he left behind in Vasthall, but not until he has gained a little worldly experience.", {Attribute::Base(Attribute::Type::FIGHTING, 2), Attribute::Base(Attribute::Type::STEALTH, 4), Attribute::Base(Attribute::Type::LORE, 3), Attribute::Base(Attribute::Type::SURVIVAL, 1), Attribute::Base(Attribute::Type::CHARISMA, 5)}, {}, 8, false);
 
     std::vector<Character::Base> BOOK1 = {Character::SAR_JESSICA_DAYNE, Character::LORD_TIQUON, Character::TASHA, Character::AMELIA_PASS_DAYNE, Character::AKIHIRO_OF_CHALICE, Character::BRASH};
+
+    auto Nobody = Character::Base();
 }
 
 namespace Party
 {
+    auto Empty = std::vector<Character::Base>();
+
     class Base
     {
     public:
         std::vector<Character::Base> Party = std::vector<Character::Base>();
+
+        std::vector<Character::Base> OtherParty = std::vector<Character::Base>();
 
         std::vector<Codes::Base> Codes = std::vector<Codes::Base>();
 
@@ -145,7 +151,7 @@ namespace Party
         // TODO: Ensure that IsParty and Current is consistent: When IsParty = false, Current != Character::Type::NONE. When IsParty = true, Current = Character::Type::NONE.
         bool IsParty = true;
 
-        Character::Type Current = Character::Type::NONE;
+        Character::Base Current = Character::Base();
 
         std::map<std::pair<Character::Type, Character::Type>, int> Hearts = std::map<std::pair<Character::Type, Character::Type>, int>();
 

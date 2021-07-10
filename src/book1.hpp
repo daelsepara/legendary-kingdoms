@@ -154,15 +154,178 @@ namespace Book1
         }
     };
 
+    class Story006 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story006()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 6;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You have already attempted to find a silver idol in the Caves of Uranu.";
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::SILVER_IDOL}))
+            {
+                PreText += " You were successful and you do not need to look again.";
+            }
+            else
+            {
+                PreText += " You failed, you will not find another here.";
+            }
+
+            PreText += " Either way, you must choose again.";
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            return {Book::Type::BOOK1, 346};
+        }
+    };
+
+    class Story007 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story007()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 7;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            auto jessica = Engine::FIND_CHARACTER(party.OtherParty, Character::Type::SAR_JESSICA_DAYNE) >= 0;
+            auto akihiro = Engine::FIND_CHARACTER(party.OtherParty, Character::Type::AKIHIRO_OF_CHALICE) >= 0;
+
+            if (jessica || akihiro)
+            {
+                if (jessica && akihiro)
+                {
+                    PreText = "Sar Jessica Dayne and Akihiro";
+                }
+                else if (jessica)
+                {
+                    PreText = "Sar Jessica Dayne";
+                }
+                else
+                {
+                    PreText = "Akihiro";
+                }
+
+                PreText += "'s sense of personal honour is too strict to attempt such a strategy.";
+            }
+            else
+            {
+                PreText = "The guards have been looking at you with hungry eyes recently. You sidle up to the gate-house guards, suggesting all sorts of pleasures could await them in exchange for a few paltry rations.";
+
+                Choices.push_back(Choice::Base("Seduce the Guards (Team check: Charisma 3+, Required Successs: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            return {Book::Type::BOOK1, 169};
+        }
+    };
+
+    class Story008 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story008()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 8;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            PreText = "You cast your eye over the book. It seems to detail instructions about how to prepare skeletons for animation and control.";
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Base(Book::Type::BOOK1, 75)}))
+            {
+                PreText += "\n\nIt looks like the hard work has been done for you. Four skeletons have been laid out and prepared in exactly the right way for animation. The book claims you will even be able to have the skeletons fight for you, though they lack the wit for more complex tasks.";
+
+                Choices.push_back(Choice::Base("Invoke the ritual", {Book::Type::BOOK1, 419}));
+                Choices.push_back(Choice::Base("Return to the crossroads", {Book::Type::BOOK1, 310}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            return {Book::Type::BOOK1, 419};
+        }
+    };
+
+    class Story009 : public Story::Base
+    {
+    public:
+        Story009()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 9;
+
+            Text = "With a high kick you send the final monk sprawling. The other monks in the temple lower their eyes and return to their duties, unwilling to block your progress further. You retrieve your weapon and march smartly into the temple.\n\nHonnu is waiting for you, cross-legged on the floor. You join him in meditation for an hour or so, your companions venturing elsewhere in the city now they can see you are safe. \"It is rare for a supplicant to be granted the trials of perfection twice, but you are an unusual man, Akihiro. You must know that your father never returned from the trials. But I sense in you a steel he never had.\"\n\n\"Thank you, Honnu,\" you say, bowing your head.\n\n\"There would be little point in having you study at the temple, you are already skilled in your craft,\" shrugs Honnu. \"Instead I shall send you straight onto your tasks. Two must be completed before you are deemed worthy. It is traditional to send an applicant to retrieve some trifling artefact as proof of dedication; a tedious matter, since the only item of true worth is enlightenment. Therefore, I bid you find me a SILVER IDOL. Find yourself, Akihiro, whilst you are at it.\"\n\n\"Where can I find a SILVER IDOL?\" you ask unsurely.\n\n\"I'm sure more than one exists, but a man of open mind and willing to embrace his destiny might find one in the caves of Uranu,\" suggests Honnu. \"That place has tested, and slain, many a kensai aspirant. Go wisely, Akihiro. I shall see you soon.\"\n\nYou gained the code A50.";
+
+            Bye = "You rise, bow, and go to re-join your companions.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 50)});
+
+            Engine::REJOIN(party);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
     auto story004 = Story004();
     auto story005 = Story005();
+    auto story006 = Story006();
+    auto story007 = Story007();
+    auto story008 = Story008();
+    auto story009 = Story009();
 
     void InitializeStories()
     {
-        Book1::Stories = {&story001, &story002, &story003, &story004, &story005};
+        Book1::Stories = {&story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009};
     }
 }
 #endif
