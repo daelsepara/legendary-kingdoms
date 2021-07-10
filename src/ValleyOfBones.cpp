@@ -7490,10 +7490,10 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
         auto text_space = 8;
 
-        auto Party = Party::Base();
-
         while (!done)
         {
+            auto Party = Party::Base();
+            
             // Fill the surface with background
             fillWindow(renderer, intWH);
 
@@ -7734,8 +7734,6 @@ int main(int argc, char **argv)
     {
         storyID = std::atoi(argv[1]);
     }
-
-    auto Party = Party::Base();
 
     if (window && renderer)
     {

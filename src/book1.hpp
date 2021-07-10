@@ -40,6 +40,8 @@ namespace Book1
 
             ID = 2;
 
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
             Text = "The orcs snarl as they see you, lurching to attack.";
 
             Choices.clear();
@@ -83,6 +85,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 3;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "The treasure chest contains 200 SILVER COINS and a BLUESTONE. Take what you wish.\n\nYou gained the code A45.";
 
@@ -162,6 +166,8 @@ namespace Book1
         Story006()
         {
             BookID = Book::Type::BOOK1;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             ID = 6;
 
@@ -259,6 +265,8 @@ namespace Book1
 
             ID = 8;
 
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -294,6 +302,8 @@ namespace Book1
 
             ID = 9;
 
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
             Text = "With a high kick you send the final monk sprawling. The other monks in the temple lower their eyes and return to their duties, unwilling to block your progress further. You retrieve your weapon and march smartly into the temple.\n\nHonnu is waiting for you, cross-legged on the floor. You join him in meditation for an hour or so, your companions venturing elsewhere in the city now they can see you are safe. \"It is rare for a supplicant to be granted the trials of perfection twice, but you are an unusual man, Akihiro. You must know that your father never returned from the trials. But I sense in you a steel he never had.\"\n\n\"Thank you, Honnu,\" you say, bowing your head.\n\n\"There would be little point in having you study at the temple, you are already skilled in your craft,\" shrugs Honnu. \"Instead I shall send you straight onto your tasks. Two must be completed before you are deemed worthy. It is traditional to send an applicant to retrieve some trifling artefact as proof of dedication; a tedious matter, since the only item of true worth is enlightenment. Therefore, I bid you find me a SILVER IDOL. Find yourself, Akihiro, whilst you are at it.\"\n\n\"Where can I find a SILVER IDOL?\" you ask unsurely.\n\n\"I'm sure more than one exists, but a man of open mind and willing to embrace his destiny might find one in the caves of Uranu,\" suggests Honnu. \"That place has tested, and slain, many a kensai aspirant. Go wisely, Akihiro. I shall see you soon.\"\n\nYou gained the code A50.";
 
             Bye = "You rise, bow, and go to re-join your companions.";
@@ -322,6 +332,8 @@ namespace Book1
 
             ID = 10;
 
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
             Text = "\"You should send the man to the Church of Cursus and have priests ritually scar him,\" says Ti'quon coldly.\n\n\"That way he shall be both punished and spiritually improved.\"\n\n\"Yes!\" hisses the King. \"The scarring is most painful. Send this dog to the church!\"\n\nThe poor man is dragged away, and the king retires with his councillors to discuss other business. You take the opportunity to slip away from the hall.\n\n\"A rather harsh punishment, ritual scarring,\" you mutter to Ti'quon as you exit the building.\n\n\"True enough,\" admits Ti'quon. \"Except that I noticed the poor man had already been scarred by the priests, and it is forbidden to perform the ritual twice. Getting him out of the sight of the mad king seemed to be the most important thing.\"\n\nYou shake your head, smiling.\n\nYou gained the code A34.";
 
             Choices.clear();
@@ -346,6 +358,8 @@ namespace Book1
 
             ID = 11;
 
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
             Text = "You carefully begin to sneak out of the chamber, but you are out of luck. The orcs spot you as you attempt to climb the stairs, and leap to a savage attack.\n\nThe slaves cannot help you in this battle, as their chains are too short to attack the orcs now they are at the back of the chamber fighting you.";
 
             Choices.clear();
@@ -364,6 +378,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 12;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "You are making your way across the Westroad, an ancient highway built-up to resist the burying sands of the Valley. Travellers and soldiers pass intermittently, making their way between the cities of Saltdad and Clifftop.";
 
@@ -402,6 +418,8 @@ namespace Book1
 
             ID = 13;
 
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
             Text = "What do you wish to do now?";
 
             Choices.clear();
@@ -421,6 +439,8 @@ namespace Book1
 
             ID = 14;
 
+            Image = "images/book1/valley-of-bones-logo-bw.png";
+
             Text = "You have returned to the Tumblestones, in the hope of discovering more ancient secrets. Alas, a recent sandstorm has buried the exposed stones, with only the stern face of the old king left unburied, to stare across his ruined empire for all eternity.\n\nDisappointed, you leave.";
 
             Choices.clear();
@@ -439,6 +459,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 15;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "There are few valuables amongst the goblins, though you manage to scavenge 15 SILVER COINS from the entire horde. Pleased to have survived you make your way onwards.";
 
@@ -463,6 +485,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 16;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "You have chosen to battle one of the dark knights of Abraxas. Good luck!\n\nNote: On any round when Skallos does not take damage, he will unleash a roar of black magic. Each party member must lose 1 point of Health, and Skallos will restore 4 points of Health, up to his maximum of 20 Health points.";
 
@@ -493,6 +517,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 17;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "The Iron King is most displeased to see you. He clicks his fingers and soon you have been dragged away to the dungeons for a gruesome session of torture. Each party member LOSES 4 Health points. Afterwards, the king has the guards dispose of you as they see fit.";
 
@@ -534,6 +560,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 18;
+
+            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "The door in front of you is stuck. To get it open you will have to force it.";
 
