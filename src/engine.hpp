@@ -6,6 +6,7 @@
 #include "monster.hpp"
 #include "spells.hpp"
 #include "random.hpp"
+#include "ship.hpp"
 
 #include <map>
 
@@ -797,6 +798,23 @@ namespace Engine
         for (auto i = 0; i < monsters.size(); i++)
         {
             if (monsters[i].Type == type && monsters[i].Health > 0)
+            {
+                result = true;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    bool HAS_SHIP(Party::Base &party, Location::Type location)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < party.Fleet.size(); i++)
+        {
+            if (party.Fleet[i].Type != Ship::Type::NONE && party.Fleet[i].Location == location)
             {
                 result = true;
 

@@ -4,13 +4,16 @@
 #include <vector>
 #include <string>
 
+
 #include "attribute.hpp"
 #include "book.hpp"
 #include "codes.hpp"
 #include "equipment.hpp"
 #include "location.hpp"
-#include "ship.hpp"
 #include "spells.hpp"
+
+#include "army.hpp"
+#include "ship.hpp"
 
 #include <map>
 
@@ -62,7 +65,7 @@ namespace Character
 
         int MaximumHealth = 0;
 
-        int MaximumEquipment = 8;
+        int MaximumEquipment = 10;
 
         int SpellBookLimit = 6;
 
@@ -150,7 +153,9 @@ namespace Party
 
         Location::Type Location = Location::Type::NONE;
 
-        Ship::Base Ship = Ship::Base();
+        std::vector<Ship::Base> Fleet = std::vector<Ship::Base>();
+
+        std::vector<Army::Base> Army = std::vector<Army::Base>();
 
         Book::Type Book = Book::Type::BOOK1;
 

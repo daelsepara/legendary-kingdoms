@@ -6826,7 +6826,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[current].Type == Choice::Type::SHIP)
                         {
-                            if (party.Ship.Type != Ship::Type::NONE && party.Ship.Location == party.Location)
+                            if (Engine::HAS_SHIP(party, party.Location))
                             {
                                 next = findStory(story->Choices[current].Destination);
 
@@ -6838,7 +6838,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 error = true;
 
-                                message = "You do not a ship at this Location!";
+                                message = "You do not a ship at this location!";
 
                                 start_ticks = SDL_GetTicks();
                             }
