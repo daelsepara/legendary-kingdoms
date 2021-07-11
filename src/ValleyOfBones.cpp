@@ -5149,7 +5149,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                 }
                 else if (mode == Control::Type::EQUIPMENT)
                 {
-                    putHeader(renderer, "Give the items(s) to", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Give the item(s) to", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
@@ -5580,6 +5580,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 Engine::GAIN_HEALTH(party.Party, -1);
 
                                 Engine::GAIN_HEALTH(monsters, -1);
+
+                                start_ticks = SDL_GetTicks();
                             }
 
                             hasAttacked.clear();

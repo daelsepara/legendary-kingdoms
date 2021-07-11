@@ -858,7 +858,7 @@ namespace Book1
                 Choices.push_back(Choice::Base("Accept the mission to hunt the troglodytes", {Book::Type::BOOK1, 681}));
                 Choices.push_back(Choice::Base("Sell him some TROGLODYTE HEADS", {Book::Type::BOOK1, 233}, {Equipment::TROGLODYTE_HEAD}));
                 Choices.push_back(Choice::Base("Express interest in buying salt for your ships", {Book::Type::BOOK1, 575}));
-                Choices.push_back(Choice::Base("Apologise for wasting the mine master’s time and leave", {Book::Type::BOOK1, 722}));
+                Choices.push_back(Choice::Base("Apologise for wasting the mine master's time and leave", {Book::Type::BOOK1, 722}));
             }
 
             Text = PreText.c_str();
@@ -922,13 +922,21 @@ namespace Book1
     auto story018 = Story018();
     auto event018 = Event018();
     auto story019 = Story019();
+    auto story020 = Story020();
+    auto story021 = Story021();
+    auto story022 = Story022();
+    auto story023 = Story023();
+    auto story024 = Story024();
+    auto story025 = Story025();
+    auto story026 = Story026();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
-            &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019};
+            &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
+            &story020, &story021, &story022, &story023, &story024, &story025, &story026};
     }
 }
 #endif
