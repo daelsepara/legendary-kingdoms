@@ -55,7 +55,10 @@ namespace Engine
 
     void GAIN_HEALTH(Character::Base &character, int health)
     {
-        character.Health += health;
+        if (character.Health > 0)
+        {
+            character.Health += health;
+        }
 
         if (character.Health < 0)
         {
@@ -78,11 +81,21 @@ namespace Engine
 
     void GAIN_HEALTH(Monster::Base &monster, int health)
     {
-        monster.Health += health;
+        if (monster.Health > 0)
+        {
+            monster.Health += health;
+        }
 
         if (monster.Health > monster.MaximumHealth)
         {
-            monster.Health = monster.MaximumHealth;
+            if (monster.Type == Monster::Type::ZEALOT)
+            {
+                monster.MaximumHealth = monster.Health;
+            }
+            else
+            {
+                monster.Health = monster.MaximumHealth;
+            }
         }
 
         if (monster.Health < 0)
@@ -253,6 +266,23 @@ namespace Engine
         return result;
     }
 
+    bool HAS_STATUS(std::vector<Character::Base> &party, Character::Status status)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < party.size(); i++)
+        {
+            if (Engine::HAS_STATUS(party[i], status))
+            {
+                result = true;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
     void GAIN_STATUS(Character::Base &character, Character::Status status)
     {
         if (!Engine::HAS_STATUS(character, status))
@@ -412,9 +442,54 @@ namespace Engine
         }
     }
 
+    void LOSE_EQUIPMENT(std::vector<Character::Base> &party, std::vector<Equipment::Type> items)
+    {
+        for (auto i = 0; i < items.size(); i++)
+        {
+            for (auto j = 0; j < party.size(); j++)
+            {
+                auto result = Engine::FIND_EQUIPMENT(party[j], items[i]);
+
+                if (result >= 0)
+                {
+                    party[j].Equipment.erase(party[j].Equipment.begin() + result);
+
+                    // break out of party loop
+                    break;
+                }
+            }
+        }
+    }
+
+    void LOSE_EQUIPMENT(std::vector<Character::Base> &party, Equipment::Type item, int count)
+    {
+        for (auto i = 0; i < count; i++)
+        {
+            Engine::LOSE_EQUIPMENT(party, {item});
+        }
+    }
+
     bool VERIFY_EQUIPMENT_LIMIT(Character::Base &player)
     {
         return player.Equipment.size() <= player.MaximumEquipment;
+    }
+
+    int COUNT_EQUIPMENT(Character::Base &character, Equipment::Type item)
+    {
+        auto found = 0;
+
+        if (character.Equipment.size() > 0)
+        {
+            for (auto i = 0; i < character.Equipment.size(); i++)
+            {
+                if (character.Equipment[i].Type == item)
+                {
+                    found++;
+                }
+            }
+        }
+
+        return found;
     }
 
     int COUNT_EQUIPMENT(Character::Base &player, std::vector<Equipment::Type> equipment)
@@ -423,10 +498,22 @@ namespace Engine
 
         for (auto i = 0; i < equipment.size(); i++)
         {
-            if (Engine::FIND_EQUIPMENT(player, equipment[i]) >= 0)
+            if (Engine::COUNT_EQUIPMENT(player, equipment[i]) >= 0)
             {
                 found++;
             }
+        }
+
+        return found;
+    }
+
+    int COUNT_EQUIPMENT(std::vector<Character::Base> &party, std::vector<Equipment::Type> equipment)
+    {
+        auto found = 0;
+
+        for (auto i = 0; i < party.size(); i++)
+        {
+            found += Engine::COUNT_EQUIPMENT(party[i], equipment);
         }
 
         return found;
@@ -491,7 +578,7 @@ namespace Engine
         return found;
     }
 
-    int FIND_CODEWORD(Party::Base &party, Codes::Base code)
+    int FIND_CODE(Party::Base &party, Codes::Base code)
     {
         auto found = -1;
 
@@ -511,7 +598,7 @@ namespace Engine
         return found;
     }
 
-    int FIND_CODEWORDS(Party::Base &party, std::vector<Codes::Base> codes)
+    int FIND_CODES(Party::Base &party, std::vector<Codes::Base> codes)
     {
         auto found = 0;
 
@@ -519,7 +606,7 @@ namespace Engine
         {
             for (auto i = 0; i < codes.size(); i++)
             {
-                auto result = Engine::FIND_CODEWORD(party, codes[i]);
+                auto result = Engine::FIND_CODE(party, codes[i]);
 
                 if (result >= 0)
                 {
@@ -533,12 +620,12 @@ namespace Engine
 
     bool VERIFY_CODES_ANY(Party::Base &party, std::vector<Codes::Base> codes)
     {
-        return Engine::FIND_CODEWORDS(party, codes) > 0;
+        return Engine::FIND_CODES(party, codes) > 0;
     }
 
     bool VERIFY_CODES_ALL(Party::Base &party, std::vector<Codes::Base> codes)
     {
-        return Engine::FIND_CODEWORDS(party, codes) == codes.size();
+        return Engine::FIND_CODES(party, codes) == codes.size();
     }
 
     bool VERIFY_CODES(Party::Base &party, std::vector<Codes::Base> codes)
@@ -557,7 +644,7 @@ namespace Engine
         }
     }
 
-    int FIND_CODEWORD(Party::Base &party, Codes::Type code)
+    int FIND_CODE(Party::Base &party, Codes::Type code)
     {
         auto found = -1;
 
@@ -577,7 +664,7 @@ namespace Engine
         return found;
     }
 
-    int FIND_CODEWORDS(Party::Base &party, std::vector<Codes::Type> codes)
+    int FIND_CODES(Party::Base &party, std::vector<Codes::Type> codes)
     {
         auto found = 0;
 
@@ -585,7 +672,7 @@ namespace Engine
         {
             for (auto i = 0; i < codes.size(); i++)
             {
-                auto result = Engine::FIND_CODEWORD(party, codes[i]);
+                auto result = Engine::FIND_CODE(party, codes[i]);
 
                 if (result >= 0)
                 {
@@ -599,12 +686,12 @@ namespace Engine
 
     bool VERIFY_CODES_ANY(Party::Base &party, std::vector<Codes::Type> codes)
     {
-        return Engine::FIND_CODEWORDS(party, codes) > 0;
+        return Engine::FIND_CODES(party, codes) > 0;
     }
 
     bool VERIFY_CODES_ALL(Party::Base &party, std::vector<Codes::Type> codes)
     {
-        return Engine::FIND_CODEWORDS(party, codes) == codes.size();
+        return Engine::FIND_CODES(party, codes) == codes.size();
     }
 
     bool VERIFY_CODES(Party::Base &party, std::vector<Codes::Type> codes)
@@ -677,6 +764,16 @@ namespace Engine
         }
 
         party.Current = Character::Nobody;
+    }
+
+    void CONSOLIDATE(Party::Base &party)
+    {
+        if (party.OtherParty.size() > 0)
+        {
+            party.Party.insert(party.Party.end(), party.OtherParty.begin(), party.OtherParty.end());
+
+            party.OtherParty.clear();
+        }
     }
 
     void GO_SOLO(Party::Base &party, Character::Type character)

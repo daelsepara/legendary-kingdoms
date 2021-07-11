@@ -40,8 +40,6 @@ namespace Book1
 
             ID = 2;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             Text = "The orcs snarl as they see you, lurching to attack.";
 
             Choices.clear();
@@ -85,8 +83,6 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 3;
-
-            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "The treasure chest contains 200 SILVER COINS and a BLUESTONE. Take what you wish.\n\nYou gained the code A45.";
 
@@ -167,8 +163,6 @@ namespace Book1
         {
             BookID = Book::Type::BOOK1;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             ID = 6;
 
             Choices.clear();
@@ -242,7 +236,7 @@ namespace Book1
             {
                 PreText = "The guards have been looking at you with hungry eyes recently. You sidle up to the gate-house guards, suggesting all sorts of pleasures could await them in exchange for a few paltry rations.";
 
-                Choices.push_back(Choice::Base("Seduce the Guards (Team check: Charisma 3+, Required Successs: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
+                Choices.push_back(Choice::Base("Seduce the Guards (Team: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
             }
 
             Text = PreText.c_str();
@@ -264,8 +258,6 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 8;
-
-            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -302,8 +294,6 @@ namespace Book1
 
             ID = 9;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             Text = "With a high kick you send the final monk sprawling. The other monks in the temple lower their eyes and return to their duties, unwilling to block your progress further. You retrieve your weapon and march smartly into the temple.\n\nHonnu is waiting for you, cross-legged on the floor. You join him in meditation for an hour or so, your companions venturing elsewhere in the city now they can see you are safe. \"It is rare for a supplicant to be granted the trials of perfection twice, but you are an unusual man, Akihiro. You must know that your father never returned from the trials. But I sense in you a steel he never had.\"\n\n\"Thank you, Honnu,\" you say, bowing your head.\n\n\"There would be little point in having you study at the temple, you are already skilled in your craft,\" shrugs Honnu. \"Instead I shall send you straight onto your tasks. Two must be completed before you are deemed worthy. It is traditional to send an applicant to retrieve some trifling artefact as proof of dedication; a tedious matter, since the only item of true worth is enlightenment. Therefore, I bid you find me a SILVER IDOL. Find yourself, Akihiro, whilst you are at it.\"\n\n\"Where can I find a SILVER IDOL?\" you ask unsurely.\n\n\"I'm sure more than one exists, but a man of open mind and willing to embrace his destiny might find one in the caves of Uranu,\" suggests Honnu. \"That place has tested, and slain, many a kensai aspirant. Go wisely, Akihiro. I shall see you soon.\"\n\nYou gained the code A50.";
 
             Bye = "You rise, bow, and go to re-join your companions.";
@@ -332,8 +322,6 @@ namespace Book1
 
             ID = 10;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             Text = "\"You should send the man to the Church of Cursus and have priests ritually scar him,\" says Ti'quon coldly.\n\n\"That way he shall be both punished and spiritually improved.\"\n\n\"Yes!\" hisses the King. \"The scarring is most painful. Send this dog to the church!\"\n\nThe poor man is dragged away, and the king retires with his councillors to discuss other business. You take the opportunity to slip away from the hall.\n\n\"A rather harsh punishment, ritual scarring,\" you mutter to Ti'quon as you exit the building.\n\n\"True enough,\" admits Ti'quon. \"Except that I noticed the poor man had already been scarred by the priests, and it is forbidden to perform the ritual twice. Getting him out of the sight of the mad king seemed to be the most important thing.\"\n\nYou shake your head, smiling.\n\nYou gained the code A34.";
 
             Choices.clear();
@@ -358,8 +346,6 @@ namespace Book1
 
             ID = 11;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             Text = "You carefully begin to sneak out of the chamber, but you are out of luck. The orcs spot you as you attempt to climb the stairs, and leap to a savage attack.\n\nThe slaves cannot help you in this battle, as their chains are too short to attack the orcs now they are at the back of the chamber fighting you.";
 
             Choices.clear();
@@ -378,8 +364,6 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 12;
-
-            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "You are making your way across the Westroad, an ancient highway built-up to resist the burying sands of the Valley. Travellers and soldiers pass intermittently, making their way between the cities of Saltdad and Clifftop.";
 
@@ -418,8 +402,6 @@ namespace Book1
 
             ID = 13;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             Text = "What do you wish to do now?";
 
             Choices.clear();
@@ -439,8 +421,6 @@ namespace Book1
 
             ID = 14;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             Text = "You have returned to the Tumblestones, in the hope of discovering more ancient secrets. Alas, a recent sandstorm has buried the exposed stones, with only the stern face of the old king left unburied, to stare across his ruined empire for all eternity.\n\nDisappointed, you leave.";
 
             Choices.clear();
@@ -459,8 +439,6 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 15;
-
-            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "There are few valuables amongst the goblins, though you manage to scavenge 15 SILVER COINS from the entire horde. Pleased to have survived you make your way onwards.";
 
@@ -485,8 +463,6 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 16;
-
-            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "You have chosen to battle one of the dark knights of Abraxas. Good luck!\n\nNote: On any round when Skallos does not take damage, he will unleash a roar of black magic. Each party member must lose 1 point of Health, and Skallos will restore 4 points of Health, up to his maximum of 20 Health points.";
 
@@ -517,8 +493,6 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 17;
-
-            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "The Iron King is most displeased to see you. He clicks his fingers and soon you have been dragged away to the dungeons for a gruesome session of torture. Each party member LOSES 4 Health points. Afterwards, the king has the guards dispose of you as they see fit.";
 
@@ -561,8 +535,6 @@ namespace Book1
 
             ID = 18;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             Text = "The door in front of you is stuck. To get it open you will have to force it.";
 
             Controls = Story::Controls::STANDARD;
@@ -590,11 +562,11 @@ namespace Book1
 
             if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::PRYBAR}))
             {
-                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 4+, Required Successs: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 4, 3));
+                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 4, 3));
             }
             else
             {
-                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 5+, Required Successs: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 5, 3));
+                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 5, 3));
             }
 
             Choices.push_back(Choice::Base("Consider other exits from the room", {Book::Type::BOOK1, 494}));
@@ -678,8 +650,6 @@ namespace Book1
 
             ID = 20;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -727,8 +697,6 @@ namespace Book1
 
             ID = 21;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             Text = "You are steering along the jungle peninsula, across waters known as Cape Porta. It is a famous lair of pirates and other ne'er-do-wells.";
 
             Controls = Story::Controls::STANDARD;
@@ -746,7 +714,7 @@ namespace Book1
             {
                 Choices.push_back(Choice::Base("Sail north towards Clifftop", {Book::Type::BOOK1, 82}));
                 Choices.push_back(Choice::Base("Sail east towards Cursus", {Book::Type::BOOK1, 814}));
-                Choices.push_back(Choice::Base("Sail west towards THE SAVAGE LANDS", {Book::Type::BOOK5, 85}));
+                Choices.push_back(Choice::Base("Sail west towards THE SAVAGE LANDS", {Book::Type::BOOK5, 75}));
             }
         }
 
@@ -761,8 +729,6 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 22;
-
-            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "Avoiding Chellar's room, you still manage to secure a pretty horde of items. You may take any or all of the following: JEWELLERY BOX, CALLIGRAPHY INK, SILVER IDOL, GOLD PORTRAIT, BRONZE SCORPION. You emerge with Brekken back onto the landing. You decide, with a mutual nod, that you have pushed your luck far enough in the house and make your way back out of the windows and into the streets of the city.";
 
@@ -790,8 +756,6 @@ namespace Book1
 
             ID = 23;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             Text = "You emerge into a short corridor running west to east. To the west you can make out a crossroads. To the east a flight of stairs leads upwards. There is a door in the south wall.";
 
             Choices.clear();
@@ -811,8 +775,6 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 24;
-
-            Image = "images/book1/valley-of-bones-logo-bw.png";
 
             Text = "You have entered a chamber which is well furnished with flags and banners. It has the feel of a Chalice temple, although there is no sign that anyone actually worships here. A statue of a kneeling monk sits at the far end of the room. There are two exits from the chamber, each of them leading to a tunnel with stairs ascending.\n\nYou gain the code A77.\n\nSuddenly you see a light coming down the left-hand stairwell. Something is coming... but it is walking softly, as you cannot make out the sound of footsteps.";
 
@@ -876,8 +838,6 @@ namespace Book1
 
             ID = 26;
 
-            Image = "images/book1/valley-of-bones-logo-bw.png";
-
             Text = "You pour the liquid metal into the well and cross your fingers. Soon, the runes around the circle blaze into light, dousing you with brilliant coloured energies. When the glow finally wears off you feel stronger than before.";
 
             Bye = "Feeling more vigorous than ever, you return to the crossroads.";
@@ -900,6 +860,169 @@ namespace Book1
                 }
             }
         }
+    };
+
+    class Story027 : public Story::Base
+    {
+    public:
+        Story027()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 27;
+
+            Text = "The Everchild presents you with a bar of GOLD BULLION to help convince the mercenaries to change sides. Ayleta has been in private communication with the mercenaries for some time and has already negotiated a safe path between the mercenary encampment and the Everchild's forces.\n\nYou are received coolly by the unit captain, who cautiously welcomes you into his tent with his officers and bodyguards around him. You state your opinion that the Everchild's victory in the coming conflict is all but certain, and that she is willing to let mercenary companies that co-operate with her depart safely. Matters soon turn to money, with the mercenary captain suggesting that quite a lot of additional money will be coming his way should the patriarch win the battle, and Saltdad and other cities need to be supressed. He is also worried about his reputation if he plays turncoat without fighting even a single battle for his employer.\n\nOnly party members assigned to the mercenary team may assist with this skill check.\n\nNote: If you give the mercenaries a bar of GOLD BULLION, the DC of this check becomes 5+. If you give them two bars, the DC becomes 4+. If you give them three bars the DC becomes 2+.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+            Choices.push_back(Choice::Base("Give the mercenaries a GOLD BULLION bar", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION1}, 1));
+            Choices.push_back(Choice::Base("Give the mercenaries two GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 2));
+            Choices.push_back(Choice::Base("Give the mercenaries three GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 3));
+            Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
+
+            Take = {Equipment::GOLD_BULLION};
+
+            Limit = 1;
+        }
+    };
+
+    class Event027 : public Story::Base
+    {
+    public:
+        Event027()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -27;
+
+            Text = "Only party members assigned to the mercenary team may assist with this skill check.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION1}))
+            {
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 5+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 7));
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION2}))
+            {
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 4+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 7));
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION2}))
+            {
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 2+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 2, 7));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
+            }
+        }
+    };
+
+    class Story028 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story028()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 28;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            PreText = "You come across a group of zealots from Cursus, sweeping the land for any heretics or unbelievers they can find. ";
+
+            Choices.clear();
+
+            if (!Engine::HAS_STATUS(party.Party, Character::Status::RITUAL_SCARRING))
+            {
+                PreText += "They bombard you with questions about the faith, to determine your worthiness.";
+
+                Choices.push_back(Choice::Base("Answer Cursite zealots (Team: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 657}, {Book::Type::BOOK1, -28}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 4));
+            }
+            else
+            {
+                PreText += "The zealots let you pass.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 657}; }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "The zealots reluctantly let you go.";
+            }
+        }
+    };
+
+    class Event028 : public Story::Base
+    {
+    public:
+        Event028()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -28;
+
+            Text = "Your heretical ignorance drives them into a killer frenzy and you must fight.\n\nNote: The zealot healer will only attack if he is the last opponent standing. Otherwise he will heal each zealot 2 Health points. These additional points can take them over their starting health.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Combat = Engine::Combat::NONE;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Zealot", Monster::Type::ZEALOT, 3, 4, 4, 10, 0),
+                Monster::Base("Zealot", Monster::Type::ZEALOT, 4, 4, 4, 11, 0),
+                Monster::Base("Zealot", Monster::Type::ZEALOT, 3, 4, 4, 10, 0),
+                Monster::Base("Zealot Healer", Monster::Type::ZEALOT_HEALER, 3, 4, 4, 15, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 63}; }
+    };
+
+    class Story029 : public Story::Base
+    {
+    public:
+        Story029()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 29;
+
+            Text = "You curse as the thief fades from view. You cannot face the owner of the house for shame, and instead slip away into the city.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
     };
 
     auto story001 = Story001();
@@ -929,14 +1052,19 @@ namespace Book1
     auto story024 = Story024();
     auto story025 = Story025();
     auto story026 = Story026();
+    auto event027 = Event027();
+    auto story027 = Story027();
+    auto story028 = Story028();
+    auto event028 = Event028();
+    auto story029 = Story029();
 
     void InitializeStories()
     {
         Book1::Stories = {
-            &event018,
+            &event018, &event027, &event028,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
-            &story020, &story021, &story022, &story023, &story024, &story025, &story026};
+            &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029};
     }
 }
 #endif

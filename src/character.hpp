@@ -30,11 +30,13 @@ namespace Character
 
     enum class Status
     {
-        ARMOUR3
+        ARMOUR3,
+        RITUAL_SCARRING
     };
 
     std::map<Character::Status, const char *> StatusDescriptions = {
-        {Character::Status::ARMOUR3, "+3 Armour"}};
+        {Character::Status::ARMOUR3, "+3 Armour"},
+        {Character::Status::RITUAL_SCARRING, "Ritual Scarring"}};
 
     class Base
     {

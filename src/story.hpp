@@ -38,7 +38,8 @@ namespace Choice
         SELL,
         BARTER,
         SHIP,
-        ADD_MAX_HEALTH
+        ADD_MAX_HEALTH,
+        BRIBE_CODEWORD
     };
 
     class Base
@@ -55,6 +56,7 @@ namespace Choice
         std::vector<Equipment::Base> Equipment = std::vector<Equipment::Base>();
 
         std::vector<Codes::Base> Codes = std::vector<Codes::Base>();
+        std::vector<Codes::Type> InvisibleCodes = std::vector<Codes::Type>();
 
         int Value = 0;
 
@@ -218,6 +220,21 @@ namespace Choice
             Text = text;
 
             Type = type;
+
+            Value = value;
+
+            Destination = destination;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, std::vector<Codes::Type> codes, int value)
+        {
+            Text = text;
+
+            Type = type;
+
+            Equipment = equipment;
+
+            InvisibleCodes = codes;
 
             Value = value;
 

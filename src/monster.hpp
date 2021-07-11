@@ -10,7 +10,9 @@ namespace Monster
     {
         NORMAL = 0,
         SKALLOS,
-        SNAKEMAN_PRIEST
+        SNAKEMAN_PRIEST,
+        ZEALOT,
+        ZEALOT_HEALER
     };
 
     class Base

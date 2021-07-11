@@ -30,7 +30,8 @@ namespace Equipment
         GOLD_PORTRAIT,
         BRONZE_SCORPION,
         TROGLODYTE_HEAD,
-        QUICKSILVER
+        QUICKSILVER,
+        GOLD_BULLION
     };
 
     class Base
@@ -86,6 +87,7 @@ namespace Equipment
     auto BRONZE_SCORPION = Equipment::Base("BRONZE SCORPION", "BRONZE SCORPION", Equipment::Class::NORMAL, Equipment::Type::BRONZE_SCORPION, Attribute::Type::NONE, 0, false);
     auto TROGLODYTE_HEAD = Equipment::Base("TROGLODYTE HEAD", "TROGLODYTE HEAD", Equipment::Class::NORMAL, Equipment::Type::TROGLODYTE_HEAD, Attribute::Type::NONE, 0, false);
     auto QUICKSILVER = Equipment::Base("QUICKSILVER", "QUICKSILVER", Equipment::Class::NORMAL, Equipment::Type::QUICKSILVER, Attribute::Type::NONE, 0, false);
+    auto GOLD_BULLION = Equipment::Base("GOLD BULLION", "GOLD BULLION", Equipment::Class::NORMAL, Equipment::Type::GOLD_BULLION, Attribute::Type::NONE, 0, false);
 }
 
 #endif

@@ -4947,7 +4947,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
                     }
                     else if (controls[current].Type == Control::Type::CONFIRM)
                     {
-                        if (selection.size() >= team_size && selection.size() < party.size())
+                        if (selection.size() >= team_size && selection.size() <= party.size())
                         {
                             done = true;
 
@@ -5563,7 +5563,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     if (monsters[i].Health > 0 && Engine::COUNT(party.Party) > 0)
                                     {
-                                        auto damage = attackScreen(window, renderer, party.Party, monsters, -1, i, 1, useEquipment);
+                                        if (monsters[i].Type == Monster::Type::ZEALOT_HEALER && Engine::COUNT(monsters) == 1)
+                                        {
+                                            attackScreen(window, renderer, party.Party, monsters, -1, i, 1, useEquipment);
+                                        }
+                                        else
+                                        {
+                                            attackScreen(window, renderer, party.Party, monsters, -1, i, 1, useEquipment);
+                                        }
                                     }
                                 }
                             }
@@ -5580,6 +5587,18 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 Engine::GAIN_HEALTH(party.Party, -1);
 
                                 Engine::GAIN_HEALTH(monsters, -1);
+
+                                start_ticks = SDL_GetTicks();
+                            }
+                            else if (Engine::HAS_MONSTER(monsters, Monster::Type::ZEALOT_HEALER) && Engine::COUNT(monsters) > 1)
+                            {
+                                flash_message = true;
+
+                                flash_color = intRD;
+
+                                message = "The zealot healer HEALS each ZEALOT for 2 Health Points!";
+
+                                Engine::GAIN_HEALTH(monsters, 2);
 
                                 start_ticks = SDL_GetTicks();
                             }
@@ -5743,6 +5762,10 @@ Story::Base *findStory(Engine::Destination destination)
     {
         next = (Story::Base *)Story::FIND_STORY(storyID, Book1::Stories);
     }
+
+    next->BookID = bookID;
+
+    next->ID = storyID;
 
     return next;
 }
@@ -6537,6 +6560,24 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
             }
 
+            if (!splash)
+            {
+                std::string title_string = std::string(Book::Title[story->BookID]) + ": ";
+
+                if (story->ID != -1)
+                {
+                    title_string += std::string(3 - std::to_string(std::abs(story->ID)).length(), '0') + std::to_string(std::abs(story->ID));
+
+                    putText(renderer, title_string.c_str(), font_mason, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                }
+                else
+                {
+                    title_string += "Not Implemented";
+
+                    putText(renderer, title_string.c_str(), font_mason, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                }
+            }
+
             if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && Engine::COUNT(party.OtherParty) > 0)
             {
                 putHeader(renderer, "Other Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
@@ -6630,15 +6671,22 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 auto success = skillCheck(window, renderer, story->Choices[current].Characters, 1, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
 
-                                story->SkillCheck(story->Choices[current].Characters, success, selection);
+                                if (selection.size() == 1)
+                                {
+                                    story->SkillCheck(story->Choices[current].Characters, success, selection);
 
-                                if (success)
-                                {
-                                    next = findStory(story->Choices[current].Destination);
-                                }
-                                else
-                                {
-                                    next = findStory(story->Choices[current].DestinationFailed);
+                                    if (success)
+                                    {
+                                        next = findStory(story->Choices[current].Destination);
+                                    }
+                                    else
+                                    {
+                                        next = findStory(story->Choices[current].DestinationFailed);
+                                    }
+
+                                    done = true;
+
+                                    break;
                                 }
                             }
                             else
@@ -6647,21 +6695,24 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 auto success = skillCheck(window, renderer, party.Party, 1, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
 
-                                story->SkillCheck(party, success, selection);
+                                if (selection.size() == 1)
+                                {
+                                    story->SkillCheck(party, success, selection);
 
-                                if (success)
-                                {
-                                    next = findStory(story->Choices[current].Destination);
-                                }
-                                else
-                                {
-                                    next = findStory(story->Choices[current].DestinationFailed);
+                                    if (success)
+                                    {
+                                        next = findStory(story->Choices[current].Destination);
+                                    }
+                                    else
+                                    {
+                                        next = findStory(story->Choices[current].DestinationFailed);
+                                    }
+
+                                    done = true;
+
+                                    break;
                                 }
                             }
-
-                            done = true;
-
-                            break;
                         }
                         else if (story->Choices[current].Type == Choice::Type::TEAM_ATTRIBUTES)
                         {
@@ -6671,15 +6722,22 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 auto success = skillCheck(window, renderer, story->Choices[current].Characters, 2, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
 
-                                story->SkillCheck(story->Choices[current].Characters, success, selection);
+                                if (selection.size() == 2)
+                                {
+                                    story->SkillCheck(story->Choices[current].Characters, success, selection);
 
-                                if (success)
-                                {
-                                    next = findStory(story->Choices[current].Destination);
-                                }
-                                else
-                                {
-                                    next = findStory(story->Choices[current].DestinationFailed);
+                                    if (success)
+                                    {
+                                        next = findStory(story->Choices[current].Destination);
+                                    }
+                                    else
+                                    {
+                                        next = findStory(story->Choices[current].DestinationFailed);
+                                    }
+
+                                    done = true;
+
+                                    break;
                                 }
                             }
                             else
@@ -6688,21 +6746,24 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 auto success = skillCheck(window, renderer, party.Party, 2, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
 
-                                story->SkillCheck(party, success, selection);
+                                if (selection.size() == 2)
+                                {
+                                    story->SkillCheck(party, success, selection);
 
-                                if (success)
-                                {
-                                    next = findStory(story->Choices[current].Destination);
-                                }
-                                else
-                                {
-                                    next = findStory(story->Choices[current].DestinationFailed);
+                                    if (success)
+                                    {
+                                        next = findStory(story->Choices[current].Destination);
+                                    }
+                                    else
+                                    {
+                                        next = findStory(story->Choices[current].DestinationFailed);
+                                    }
+
+                                    done = true;
+
+                                    break;
                                 }
                             }
-
-                            done = true;
-
-                            break;
                         }
                         else if (story->Choices[current].Type == Choice::Type::EQUIPMENT)
                         {
@@ -6795,6 +6856,45 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             done = true;
 
                             break;
+                        }
+                        else if (story->Choices[current].Type == Choice::Type::BRIBE_CODEWORD)
+                        {
+                            auto equipment = std::vector<Equipment::Type>();
+
+                            for (auto i = 0; i < story->Choices[current].Equipment.size(); i++)
+                            {
+                                equipment.push_back(story->Choices[current].Equipment[i].Type);
+                            }
+
+                            auto count = Engine::COUNT_EQUIPMENT(party.Party, equipment);
+
+                            if (count >= story->Choices[current].Value)
+                            {
+                                Engine::LOSE_EQUIPMENT(party.Party, equipment[0], story->Choices[current].Value);
+
+                                Engine::GET_CODES(party, story->Choices[current].InvisibleCodes);
+
+                                next = findStory(story->Choices[current].Destination);
+
+                                done = true;
+
+                                break;
+                            }
+                            else
+                            {
+                                if (story->Choices[current].Value > 1)
+                                {
+                                    message = "You do not have the REQUIRED ITEMS!";
+                                }
+                                else
+                                {
+                                    message = "You do not have the REQUIRED ITEM!";
+                                }
+
+                                error = true;
+
+                                start_ticks = SDL_GetTicks();
+                            }
                         }
                         else if (story->Choices[current].Type == Choice::Type::CODES)
                         {
@@ -7087,6 +7187,24 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     splash_h = fitImage(renderer, splash, startx, texty, splashw, text_bounds);
                 }
 
+                if (!splash)
+                {
+                    std::string title_string = std::string(Book::Title[book]) + ": ";
+
+                    if (story->ID != -1)
+                    {
+                        title_string += std::string(3 - std::to_string(std::abs(story->ID)).length(), '0') + std::to_string(std::abs(story->ID));
+
+                        putText(renderer, title_string.c_str(), font_mason, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    }
+                    else
+                    {
+                        title_string += "Not Implemented";
+
+                        putText(renderer, title_string.c_str(), font_mason, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    }
+                }
+
                 if (!splash || (splash && splash_h < (text_bounds - 2 * boxh - infoh)))
                 {
                     putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
@@ -7371,6 +7489,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             auto next = renderChoices(window, renderer, party, story);
 
+                            book = next->BookID;
+
                             if (next->ID != story->ID)
                             {
                                 if (story->Bye)
@@ -7559,7 +7679,7 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                 {
                 case Control::Type::NEW:
 
-                    done = selectParty(window, renderer, Book::Type::BOOK1, Party);
+                    done = selectParty(window, renderer, bookID, Party);
 
                     if (Party.Party.size() == 4)
                     {

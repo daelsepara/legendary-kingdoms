@@ -12,7 +12,10 @@ namespace Codes
     {
         FIRST_TIME_SALTAD,
         FOUGHT_IN_ARENA,
-        SILVER_IDOL
+        SILVER_IDOL,
+        BRIBE_GOLD_BULLION1,
+        BRIBE_GOLD_BULLION2,
+        BRIBE_GOLD_BULLION3
     };
 
     std::map<Book::Type, const char *> Prefix = {
