@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 
-
 #include "attribute.hpp"
 #include "book.hpp"
 #include "codes.hpp"
@@ -152,6 +151,8 @@ namespace Party
         int Limit = 4;
 
         Location::Type Location = Location::Type::NONE;
+
+        int CurrentShip = -1;
 
         std::vector<Ship::Base> Fleet = std::vector<Ship::Base>();
 

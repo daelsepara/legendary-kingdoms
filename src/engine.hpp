@@ -812,6 +812,14 @@ namespace Engine
     {
         auto result = false;
 
+        if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
+        {
+            if (party.Fleet[party.CurrentShip].Type != Ship::Type::NONE && party.Fleet[party.CurrentShip].Location == location)
+            {
+                result = true;
+            }
+        }
+
         for (auto i = 0; i < party.Fleet.size(); i++)
         {
             if (party.Fleet[i].Type != Ship::Type::NONE && party.Fleet[i].Location == location)
