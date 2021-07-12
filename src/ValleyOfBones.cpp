@@ -5698,7 +5698,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}) && combatRound == 0)
                             {
-                                message = "Your PARTY does not get to ATTACK FIRST or CAST SPELLs this round!";
+                                message = "Your PARTY does not get to ATTACK First nor CAST SPELLs this round!";
                             }
                             else
                             {
@@ -5724,11 +5724,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
             {
                 break;
             }
-        }
-
-        if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}))
-        {
-            Engine::LOSE_CODES(party, {Codes::Type::LAST_IN_COMBAT});
         }
 
         if (font_garamond)
@@ -5768,6 +5763,10 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
     }
 
     // Clear temporary status, e.g. magic effects
+    if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}))
+    {
+        Engine::LOSE_CODES(party, {Codes::Type::LAST_IN_COMBAT});
+    }
 
     for (auto i = 0; i < party.Party.size(); i++)
     {
@@ -6452,6 +6451,13 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return done;
 }
 
+std::vector<Button> createChoices(std::vector<Choice::Base> choices, int start, int last, int limit)
+{
+    auto controls = std::vector<Button>();
+
+    return controls;
+}
+
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story)
 {
     Story::Base *next = &Story::notImplemented;
@@ -6508,8 +6514,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         controls.push_back(Button(idx, "icons/map.png", idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::MAP));
         controls.push_back(Button(idx + 1, "icons/user.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::PARTY));
-        controls.push_back(Button(idx + 2, "icons/items.png", idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::USE));
-        controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, idx - 1, idx + 3, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
+        controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, idx - 1, idx + 2, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
 
         TTF_Init();
 

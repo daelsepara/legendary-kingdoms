@@ -1102,6 +1102,25 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 2}; }
     };
 
+    class Story032 : public Story::Base
+    {
+    public:
+        Story032()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 32;
+
+            Text = "You quietly utter the correct counter spells to render the arcane wards passive. Slipping inside you can see Descantos himself, an elderly wizard, in deep meditation -- no doubt preparing his spells for tomorrow's conflict.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Sneak up to the wizard and slit his throat", {Book::Type::BOOK1, 336}));
+            Choices.push_back(Choice::Base("Overwhelm and stab the wizard to death in a sudden rush", {Book::Type::BOOK1, 877}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -1136,6 +1155,7 @@ namespace Book1
     auto story029 = Story029();
     auto story030 = Story030();
     auto story031 = Story031();
+    auto story032 = Story032();
 
     void InitializeStories()
     {
@@ -1144,7 +1164,7 @@ namespace Book1
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
-            &story030, &story031};
+            &story030, &story031, &story032};
     }
 }
 #endif
