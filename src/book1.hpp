@@ -1025,6 +1025,83 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
     };
 
+    class Story030 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story030()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 30;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You sit down with the nomad chief and share a pipe of smoking weed with him. He is a jovial fellow, unaffected by the woes of a nomadic life.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Base(Book::Type::BOOK1, 1)}) || Engine::VERIFY_CODES(party, {Codes::Base(Book::Type::BOOK1, 37)}))
+            {
+                PreText += "\n\nYou have nothing of importance to discuss with him.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (!Engine::VERIFY_CODES(party, {Codes::Base(Book::Type::BOOK1, 1)}) || Engine::VERIFY_CODES(party, {Codes::Base(Book::Type::BOOK1, 37)}))
+            {
+                return {Book::Type::BOOK1, 473};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 737};
+            }
+        }
+    };
+
+    class Story031 : public Story::Base
+    {
+    public:
+        Story031()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 31;
+
+            Text = "As you approach the door you do not see the orcs from the nearby guardroom closing in behind you.\n\nNote: The orcs get the first combat turn, not you.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::Base(Book::Type::BOOK1, 56)}))
+            {
+                return {Book::Type::BOOK1, 788};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::LAST_IN_COMBAT});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 2}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -1057,6 +1134,8 @@ namespace Book1
     auto story028 = Story028();
     auto event028 = Event028();
     auto story029 = Story029();
+    auto story030 = Story030();
+    auto story031 = Story031();
 
     void InitializeStories()
     {
@@ -1064,7 +1143,8 @@ namespace Book1
             &event018, &event027, &event028,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
-            &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029};
+            &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
+            &story030, &story031};
     }
 }
 #endif

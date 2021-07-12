@@ -15,7 +15,8 @@ namespace Codes
         SILVER_IDOL,
         BRIBE_GOLD_BULLION1,
         BRIBE_GOLD_BULLION2,
-        BRIBE_GOLD_BULLION3
+        BRIBE_GOLD_BULLION3,
+        LAST_IN_COMBAT
     };
 
     std::map<Book::Type, const char *> Prefix = {

@@ -685,6 +685,19 @@ namespace Engine
         return found;
     }
 
+    void LOSE_CODES(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        for (auto i = 0; i < codes.size(); i++)
+        {
+            auto result = Engine::FIND_CODE(party, codes[i]);
+
+            if (result >= 0)
+            {
+                party.InvisibleCodes.erase(party.InvisibleCodes.begin() + result);
+            }
+        }
+    }
+
     bool VERIFY_CODES_ANY(Party::Base &party, std::vector<Codes::Type> codes)
     {
         return Engine::FIND_CODES(party, codes) > 0;

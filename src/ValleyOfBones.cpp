@@ -5342,6 +5342,19 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         auto hasAttacked = std::vector<int>();
 
+        if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}))
+        {
+            for (auto i = 0; i < party.Party.size(); i++)
+            {
+                if (party.Party[i].Health > 0)
+                {
+                    hasAttacked.push_back(i);
+                }
+            }
+        }
+
+        int combatRound = 0;
+
         while (Engine::COUNT(monsters) > 0 && Engine::COUNT(party.Party) > 0)
         {
             auto done = false;
@@ -5605,6 +5618,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             hasAttacked.clear();
 
+                            combatRound++;
+
                             // clear damaged flag for next round
                             for (auto i = 0; i < monsters.size(); i++)
                             {
@@ -5681,7 +5696,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             flash_message = true;
 
-                            message = "Your PARTY has already ATTACKED this round.";
+                            if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}) && combatRound == 0)
+                            {
+                                message = "Your PARTY does not get to ATTACK FIRST or CAST SPELLs this round!";
+                            }
+                            else
+                            {
+                                message = "Your PARTY has already ATTACKED this round.";
+                            }
 
                             start_ticks = SDL_GetTicks();
 
@@ -5702,6 +5724,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
             {
                 break;
             }
+        }
+
+        if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}))
+        {
+            Engine::LOSE_CODES(party, {Codes::Type::LAST_IN_COMBAT});
         }
 
         if (font_garamond)
