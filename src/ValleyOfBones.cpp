@@ -890,13 +890,9 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
-            if (current >= 0 && current < controls.size())
+            if (current > 0 && current < controls.size())
             {
-                if (controls[current].Type == Control::Type::ARMY)
-                {
-                    putHeader(renderer, "Army", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
-                else if (controls[current].Type == Control::Type::FLEET)
+                if (controls[current].Type == Control::Type::FLEET)
                 {
                     putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
@@ -911,7 +907,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             }
             else
             {
-                fillRect(renderer, textwidth, infoh, textx, texty, intBR);
+                putHeader(renderer, "Army", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
 
             renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
@@ -6815,13 +6811,9 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
             fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
-            if (current >= 0 && current < controls.size())
+            if (current > 0 && current < controls.size())
             {
-                if (controls[current].Type == Control::Type::BUY_SELL_SHIP)
-                {
-                    putHeader(renderer, "Ship Prices", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
-                else if (controls[current].Type == Control::Type::REPAIR_SHIP)
+                if (controls[current].Type == Control::Type::REPAIR_SHIP)
                 {
                     putHeader(renderer, "Repair Costs", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
@@ -6836,7 +6828,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
             }
             else
             {
-                fillRect(renderer, textwidth, infoh, textx, texty, intBR);
+                putHeader(renderer, "Ship Prices", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
 
             renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
@@ -6983,6 +6975,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space) / (font_size * 2 + text_space * 4);
         auto last = offset + limit;
+
+        if (last > choices.size())
+        {
+            last = choices.size();
+        }
 
         auto controls = createChoices(window, renderer, choices, offset, last, limit, textx, texty);
 
@@ -7136,7 +7133,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                 if (current != index)
                 {
-                    if (index >= 0 && index < choices.size())
+                    if (index >= 0 && index < controls.size())
                     {
                         drawRect(renderer, controls[index].W + 16, controls[index].H + 16, controls[index].X - 8, controls[index].Y - 8, intBK);
                     }
