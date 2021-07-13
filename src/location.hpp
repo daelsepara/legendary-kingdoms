@@ -10,16 +10,16 @@ namespace Location
     enum class Type
     {
         NONE = -1,
+        CLIFFTOP,
         SALTDAD,
         CURSUS
     };
 
-    std::map<Location::Type, const char*> Description = {
+    std::map<Location::Type, const char *> Description = {
         {Location::Type::NONE, "Unknown"},
+        {Location::Type::CLIFFTOP, "Clifftop"},
         {Location::Type::SALTDAD, "Saltdad"},
-        {Location::Type::CURSUS, "Cursus"}
-    };
-
+        {Location::Type::CURSUS, "Cursus"}};
 
     enum class BattleField
     {

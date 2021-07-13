@@ -639,6 +639,11 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SET_LOCATION(party, Location::Type::CLIFFTOP);
+        }
     };
 
     class Story020 : public Story::Base
@@ -826,6 +831,8 @@ namespace Book1
             }
 
             Text = PreText.c_str();
+
+            Engine::SET_LOCATION(party, Location::Type::SALTDAD);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 532}; }
@@ -1165,6 +1172,41 @@ namespace Book1
         }
     };
 
+    class Story100 : public Story::Base
+    {
+    public:
+        Story100()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 100;
+
+            Text = "With precise incantations you launch yourself into the ether, towards the Valley of Bones.\n\nWhere do you wish to appear?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Chalice", {Book::Type::BOOK1, 450}));
+            Choices.push_back(Choice::Base("Clifftop", {Book::Type::BOOK1, 19}));
+            Choices.push_back(Choice::Base("Cursus", {Book::Type::BOOK1, 340}));
+            Choices.push_back(Choice::Base("Lhasbreath Oasis", {Book::Type::BOOK1, 590}));
+            Choices.push_back(Choice::Base("Lhasbreath", {Book::Type::BOOK1, 775}));
+            Choices.push_back(Choice::Base("Lhasbreath Jungle", {Book::Type::BOOK1, 370}));
+            Choices.push_back(Choice::Base("Luutanesh", {Book::Type::BOOK1, 614}));
+            Choices.push_back(Choice::Base("Saltdad", {Book::Type::BOOK1, 75}));
+            Choices.push_back(Choice::Base("The Blackwall", {Book::Type::BOOK1, 691}));
+            Choices.push_back(Choice::Base("The Caves of Uranu", {Book::Type::BOOK1, 346}));
+            Choices.push_back(Choice::Base("The Granite Hills", {Book::Type::BOOK1, 275}));
+            Choices.push_back(Choice::Base("The Palace of Unbraaki", {Book::Type::BOOK1, 890}));
+            Choices.push_back(Choice::Base("The Ruins of Mordain", {Book::Type::BOOK1, 515}));
+            Choices.push_back(Choice::Base("The Salt Mines of Saltdad", {Book::Type::BOOK1, 25}));
+            Choices.push_back(Choice::Base("The Salt Plains", {Book::Type::BOOK1, 460}));
+            Choices.push_back(Choice::Base("The Temple of the Unbroken", {Book::Type::BOOK1, 535}));
+            Choices.push_back(Choice::Base("The Tumblestones", {Book::Type::BOOK1, 137}));
+            Choices.push_back(Choice::Base("The Withered Steppes", {Book::Type::BOOK1, 115}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -1201,6 +1243,7 @@ namespace Book1
     auto story031 = Story031();
     auto story032 = Story032();
     auto story033 = Story033();
+    auto story100 = Story100();
 
     void InitializeStories()
     {
@@ -1209,7 +1252,8 @@ namespace Book1
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
-            &story030, &story031, &story032, &story033};
+            &story030, &story031, &story032, &story033,
+            &story100};
     }
 }
 #endif
