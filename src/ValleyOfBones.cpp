@@ -44,9 +44,11 @@ namespace fs = std::filesystem;
 #include "book1.hpp"
 
 // Forward declarations
+bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
 bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Equipment::Base> &Items, Control::Type mode, int limit);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
+bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
 bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Book::Type book, Story::Base *story);
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection);
@@ -882,15 +884,15 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             {
                 if (controls[current].Type == Control::Type::ARMY)
                 {
-                    putHeader(renderer, "Army", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "ARMY", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::FLEET)
                 {
-                    putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "FLEET", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::ROMANCE)
                 {
-                    putHeader(renderer, "Romance", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "ROMANCE", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
@@ -6661,6 +6663,173 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return done;
 }
 
+bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
+{
+    auto *title = "Harbour";
+
+    auto font_size = 20;
+    auto garamond_size = 24;
+
+    TTF_Init();
+
+    auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+    auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
+
+    auto box_space = 10;
+    auto character_box = (int)(text_bounds * 2 / 3);
+
+    // Render window
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        const char *choices[4] = {"BUY/SELL SHIPS", "REPAIR SHIP", "BUY/SELL CARGO", "BACK"};
+
+        auto current = 0;
+
+        auto selected = false;
+
+        auto main_buttonh = (int)(0.06 * SCREEN_HEIGHT);
+
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
+
+        auto controls = createHTextButtons(choices, 4, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
+
+        controls[0].Type = Control::Type::BUY_SELL_SHIP;
+        controls[1].Type = Control::Type::REPAIR_SHIP;
+        controls[2].Type = Control::Type::BUY_SELL_CARGO;
+        controls[3].Type = Control::Type::BACK;
+
+        auto done = false;
+
+        auto text_space = 8;
+
+        auto Party = Party::Base();
+
+        while (!done)
+        {
+            // Fill the surface with background
+            fillWindow(renderer, intWH);
+
+            auto adventurerh = splashw;
+
+            putHeader(renderer, "Location", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+            putText(renderer, Location::Description[party.Location], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
+
+            putHeader(renderer, "Money", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+
+            putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+            if (Engine::COUNT(party.Party) > 0)
+            {
+                std::string party_string = "";
+
+                auto count = 0;
+
+                for (auto i = 0; i < party.Party.size(); i++)
+                {
+                    if (count > 0)
+                    {
+                        party_string += "\n";
+                    }
+
+                    party_string += party.Party[i].Name;
+
+                    if (party.Party[i].Health <= 0)
+                    {
+                        party_string += " (D)";
+                    }
+
+                    count++;
+                }
+
+                putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            }
+
+            fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
+
+            if (current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::BUY_SELL_SHIP)
+                {
+                    putHeader(renderer, "SHIP PRICES", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (controls[current].Type == Control::Type::REPAIR_SHIP)
+                {
+                    putHeader(renderer, "REPAIR COSTS", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (controls[current].Type == Control::Type::BUY_SELL_CARGO)
+                {
+                    putHeader(renderer, "CARGO PRICES", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else
+                {
+                    fillRect(renderer, textwidth, infoh, textx, texty, intBR);
+                }
+            }
+            else
+            {
+                fillRect(renderer, textwidth, infoh, textx, texty, intBR);
+            }
+
+            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+
+            bool scrollUp = false;
+            bool scrollDown = false;
+            bool hold = false;
+
+            done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if (selected && current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::BACK)
+                {
+                    done = true;
+
+                    break;
+                }
+            }
+        }
+    }
+
+    if (font_mason)
+    {
+        TTF_CloseFont(font_mason);
+
+        font_mason = NULL;
+    }
+
+    if (font_mason2)
+    {
+        TTF_CloseFont(font_mason2);
+
+        font_mason2 = NULL;
+    }
+
+    if (font_dark11)
+    {
+        TTF_CloseFont(font_dark11);
+
+        font_dark11 = NULL;
+    }
+
+    if (font_garamond)
+    {
+        TTF_CloseFont(font_garamond);
+
+        font_garamond = NULL;
+    }
+
+    TTF_Quit();
+
+    return false;
+}
+
 std::vector<Button> createChoices(std::vector<Choice::Base> choices, int start, int last, int limit)
 {
     auto controls = std::vector<Button>();
@@ -6734,6 +6903,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
+        auto font_dark2 = TTF_OpenFont(FONT_DARK11, 30);
+
         int splash_h = splashw;
 
         if (splash)
@@ -6804,19 +6975,19 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             if (!splash)
             {
-                std::string title_string = std::string(Book::Title[story->BookID]) + ": ";
+                std::string title_string = std::string(Book::Title[story->BookID]) + "\n";
 
                 if (story->ID != -1)
                 {
                     title_string += std::string(3 - std::to_string(std::abs(story->ID)).length(), '0') + std::to_string(std::abs(story->ID));
 
-                    putText(renderer, title_string.c_str(), font_mason, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_dark2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
                 else
                 {
                     title_string += "Not Implemented";
 
-                    putText(renderer, title_string.c_str(), font_mason, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_dark2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
             }
 
@@ -7233,6 +7404,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             font_mason = NULL;
         }
 
+        if (font_dark2)
+        {
+            TTF_CloseFont(font_dark2);
+
+            font_dark2 = NULL;
+        }
+
         TTF_Quit();
 
         if (splash)
@@ -7284,6 +7462,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
 
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+    auto font_dark2 = TTF_OpenFont(FONT_DARK11, 30);
 
     auto infoh = (int)(0.07 * SCREEN_HEIGHT);
     auto boxh = (int)(0.125 * SCREEN_HEIGHT);
@@ -7435,19 +7615,19 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                 if (!splash)
                 {
-                    std::string title_string = std::string(Book::Title[book]) + ": ";
+                    std::string title_string = std::string(Book::Title[book]) + "\n";
 
                     if (story->ID != -1)
                     {
                         title_string += std::string(3 - std::to_string(std::abs(story->ID)).length(), '0') + std::to_string(std::abs(story->ID));
 
-                        putText(renderer, title_string.c_str(), font_mason, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        putText(renderer, title_string.c_str(), font_dark2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                     }
                     else
                     {
                         title_string += "Not Implemented";
 
-                        putText(renderer, title_string.c_str(), font_mason, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        putText(renderer, title_string.c_str(), font_dark2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                     }
                 }
 
@@ -7675,8 +7855,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         selected = false;
                     }
-                    else if (controls[current].Type == Control::Type::USE && !hold)
+                    else if (controls[current].Type == Control::Type::HARBOUR && !hold)
                     {
+                        harbourScreen(window, renderer, party, story);
+
                         current = -1;
 
                         selected = false;
@@ -7839,6 +8021,13 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         TTF_CloseFont(font_mason);
 
         font_mason = NULL;
+    }
+
+    if (font_dark2)
+    {
+        TTF_CloseFont(font_dark2);
+
+        font_dark2 = NULL;
     }
 
     if (font_dark11)

@@ -56,7 +56,10 @@ namespace Control
         HARBOUR,
         ARMY,
         FLEET,
-        ROMANCE
+        ROMANCE,
+        BUY_SELL_SHIP,
+        BUY_SELL_CARGO,
+        REPAIR_SHIP
     };
 
     class Base
