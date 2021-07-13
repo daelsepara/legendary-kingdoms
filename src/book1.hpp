@@ -55,6 +55,8 @@ namespace Book1
 
             CanFlee = true;
 
+            FleeRound = 0;
+
             Monsters = {
                 Monster::Base("Orc", 6, 4, 4, 8, 0),
                 Monster::Base("Orc", 4, 4, 3, 9, 0)};
@@ -1121,6 +1123,48 @@ namespace Book1
         }
     };
 
+    class Story033 : public Story::Base
+    {
+    public:
+        Story033()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 33;
+
+            Text = "The harbour of Cursus is long and shallow. The jetties reach far out beyond the coast, each wide enough for a pair of dragonyaks to drag the cargoes of ships to the warehouses on the beach.\n\nYou may buy a ship here, if you have enough money. The largest vessel for sale is the CURSITE WAR GALLEY, a coastal-hugging warship which carries little cargo, but is the only vessel that can even hope to compete with the more advanced vessels of Royce and Drakehallow. A smaller, but more efficient, single-masted COG is also available. The WAR GALLEY will cost 1500 silver coins, and the COG 800 silver coins. When you buy a ship note that it is currently docked in Cursus harbour.\n\nYou can repair any ship you have in Cursus harbour. Each Health point you restore costs 50 silver coins. You can restore your ship up to its starting Health value. You can sell a COG here for 250 silver coins, a CURSITE WAR GALLEY for 500 silver coins and a CARRACK for 1500 silver coins. You cannot sell other kinds of ship here.\n\nYou can buy cargo for your ship here, as well. These goods are too large for your characters to carry, but they can be loaded onto any ship you have in Cursus harbour. You cannot buy more cargo units than you can store in your ship (for instance, a Cog can carry 2 Cargo Units). You can also sell any goods you are carrying in your ships for the same price as well:\n\nSALT: 600 silver coins\nCROPS: 500 silver coins\nSTEEL: 3000 silver coins\nSPICES: 3300 silver coins\nWINE: 2100 silver coins\nSLAVES: 1000 silver coins";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Return to the city centre", {Book::Type::BOOK1, 340}));
+            Choices.push_back(Choice::Base("Set sail on one of your ships", {Book::Type::BOOK1, 499}));
+
+            Controls = Story::Controls::HARBOUR;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SET_LOCATION(party, Location::Type::CURSUS);
+
+            // TODO: Carrack Stats
+            Ships = {
+                {Ship::Base("COG", Ship::Type::COG, Location::Type::CURSUS, 4, 7, 2), 800, 250},
+                {Ship::Base("CURSITE WAR GALLEY", Ship::Type::CURSITE_WAR_GALLEY, Location::Type::CURSUS, 6, 9, 1), 1500, 500},
+                {Ship::Base("CARRACK", Ship::Type::CARRACK, Location::Type::CURSUS, 6, 9, 1), -1, 1500}};
+
+            Cargo = {
+                {Cargo::Type::SALT, 600, 600},
+                {Cargo::Type::CROPS, 500, 500},
+                {Cargo::Type::STEEL, 3000, 3000},
+                {Cargo::Type::SPICES, 3300, 3300},
+                {Cargo::Type::WINE, 2100, 2100},
+                {Cargo::Type::SLAVES, 1000, 1000}
+
+            };
+
+            ShipRepairPrice = 50;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -1156,6 +1200,7 @@ namespace Book1
     auto story030 = Story030();
     auto story031 = Story031();
     auto story032 = Story032();
+    auto story033 = Story033();
 
     void InitializeStories()
     {
@@ -1164,7 +1209,7 @@ namespace Book1
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
-            &story030, &story031, &story032};
+            &story030, &story031, &story032, &story033};
     }
 }
 #endif

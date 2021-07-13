@@ -52,7 +52,11 @@ namespace Control
         SPELL,
         SPELL_TARGET,
         SPELLBOOK,
-        FLEE
+        FLEE,
+        HARBOUR,
+        ARMY,
+        FLEET,
+        ROMANCE
     };
 
     class Base

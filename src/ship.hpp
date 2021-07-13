@@ -13,6 +13,7 @@ namespace Ship
         NONE = -1,
         COG,
         CURSITE_WAR_GALLEY,
+        WAR_GALLEY,
         CARRACK
     };
 
@@ -32,13 +33,30 @@ namespace Ship
 
         int MaximumHealth = 0;
 
-        std::vector<Cargo::Type> Cargo = std::vector<Cargo::Type>();
+        std::vector<Cargo::Type> Cargo = {};
 
         int MaximumCargo = 0;
 
         Base()
         {
 
+        }
+
+        Base(const char*name, Ship::Type type, Location::Type location, int fighting, int health, int maximumCargo)
+        {
+            Name = name;
+
+            Type = type;
+
+            Location = location;
+
+            Fighting = fighting;
+
+            Health = health;
+
+            MaximumHealth = health;
+
+            MaximumCargo = maximumCargo;
         }
     };
 }

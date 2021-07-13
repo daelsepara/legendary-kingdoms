@@ -2,6 +2,7 @@
 #define __ENGINE__HPP__
 
 #include "character.hpp"
+#include "equipment.hpp"
 #include "location.hpp"
 #include "monster.hpp"
 #include "spells.hpp"
@@ -13,6 +14,10 @@
 namespace Engine
 {
     typedef std::pair<Book::Type, int> Destination;
+    typedef std::tuple<Ship::Base, int, int> ShipPrices;
+    typedef std::tuple<Cargo::Type, int, int> CargoPrices;
+    typedef std::pair<Equipment::Base, int> EquipmentPrice;
+    typedef std::pair<Equipment::Base, std::vector<Equipment::Base>> BarterExchanges;
 
     enum class Combat
     {
@@ -844,6 +849,19 @@ namespace Engine
         }
 
         return result;
+    }
+
+    void SET_LOCATION(Party::Base &party, Location::Type location)
+    {
+        if (party.CurrentShip >= 0 && party.Fleet.size())
+        {
+            if (party.Fleet[party.CurrentShip].Location == party.Location)
+            {
+                party.Fleet[party.CurrentShip].Location = location;
+            }
+        }
+
+        party.Location = location;
     }
 }
 #endif

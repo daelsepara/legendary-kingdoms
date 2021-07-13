@@ -1,6 +1,8 @@
 #ifndef __LOCATION__HPP__
 #define __LOCATION__HPP__
 
+#include <map>
+
 #include "location.hpp"
 
 namespace Location
@@ -8,8 +10,16 @@ namespace Location
     enum class Type
     {
         NONE = -1,
-        SALTAD
+        SALTDAD,
+        CURSUS
     };
+
+    std::map<Location::Type, const char*> Description = {
+        {Location::Type::NONE, "Unknown"},
+        {Location::Type::SALTDAD, "Saltdad"},
+        {Location::Type::CURSUS, "Cursus"}
+    };
+
 
     enum class BattleField
     {
