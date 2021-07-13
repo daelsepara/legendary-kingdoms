@@ -350,6 +350,14 @@ SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Co
 
     auto font = TTF_OpenFont(ttf, font_size);
 
+    if (font != NULL)
+    {
+        if (std::strcmp(ttf, FONT_DARK11) == 0)
+        {
+            TTF_SetFontKerning(font, 0);
+        }
+    }
+
     if (font)
     {
         TTF_SetFontStyle(font, style);
@@ -651,7 +659,7 @@ std::vector<TextButton> createFixedTextButtons(const char **choices, int num, in
 SDL_Surface *createHeaderButton(SDL_Window *window, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x)
 {
     auto button = SDL_CreateRGBSurface(0, w, h, arrow_size, 0, 0, 0, 0);
-    auto text_surface = createText(text, FONT_BOOKMAN, 18, color, w, TTF_STYLE_NORMAL);
+    auto text_surface = createText(text, FONT_GARAMOND, 24, color, w, TTF_STYLE_NORMAL);
 
     if (button && text_surface)
     {
@@ -800,9 +808,11 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     TTF_Init();
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
     auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
+    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+    TTF_SetFontKerning(font_dark11, 0);
 
     auto box_space = 10;
     auto character_box = (int)(text_bounds * 2 / 3);
@@ -884,15 +894,15 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             {
                 if (controls[current].Type == Control::Type::ARMY)
                 {
-                    putHeader(renderer, "ARMY", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Army", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::FLEET)
                 {
-                    putHeader(renderer, "FLEET", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::ROMANCE)
                 {
-                    putHeader(renderer, "ROMANCE", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Romance", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
@@ -970,9 +980,11 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
     TTF_Init();
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
     auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
+    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+    TTF_SetFontKerning(font_dark11, 0);
 
     auto box_space = 10;
     auto character_box = (int)(text_bounds * 2 / 3);
@@ -2504,15 +2516,14 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
         TTF_Init();
 
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
         auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
 
         auto main_buttonh = 48;
 
-        auto font_size = 20;
         auto text_space = 8;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = (int)(0.07 * SCREEN_HEIGHT);
@@ -3585,14 +3596,15 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-
+        auto font_garamond2 = TTF_OpenFont(FONT_GARAMOND, 28);
         auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
 
         auto main_buttonh = 48;
 
-        auto font_size = 20;
+        auto font_size = 24;
         auto text_space = 8;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = (int)(0.07 * SCREEN_HEIGHT);
@@ -3668,7 +3680,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
                 {
                     fillRect(renderer, textwidth, text_bounds / 3 - box_space - infoh, textx, texty + infoh + booksize + box_space, intLB);
 
-                    auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size + 2, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                    auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
                     renderText(renderer, text, intLB, textx + text_space, texty + infoh + booksize + box_space + text_space, text_bounds / 3 - texty, 0);
 
@@ -3733,7 +3745,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), font_garamond2, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -3908,6 +3920,13 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
             font_garamond = NULL;
         }
 
+        if (font_garamond2)
+        {
+            TTF_CloseFont(font_garamond2);
+
+            font_garamond2 = NULL;
+        }
+
         if (font_dark11)
         {
             TTF_CloseFont(font_dark11);
@@ -3958,10 +3977,10 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-
         auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
 
         auto main_buttonh = 48;
 
@@ -4158,6 +4177,13 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                     }
                 }
             }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
         }
 
         if (font_garamond)
@@ -4545,10 +4571,10 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-
         auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
 
         auto main_buttonh = 48;
 
@@ -4972,10 +4998,10 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-
         auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
 
         auto main_buttonh = 48;
 
@@ -5237,10 +5263,10 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-
         auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
 
         auto main_buttonh = 48;
 
@@ -5485,10 +5511,10 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-
         auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
 
         auto main_buttonh = 48;
 
@@ -6049,6 +6075,8 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
+        TTF_SetFontKerning(font_dark11, 0);
+
         auto selected = false;
         auto current = -1;
         auto quit = false;
@@ -6397,6 +6425,8 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
+        TTF_SetFontKerning(font_dark11, 0);
+
         auto selected = false;
         auto current = -1;
         auto quit = false;
@@ -6673,9 +6703,11 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
     TTF_Init();
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
     auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
+    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+    TTF_SetFontKerning(font_dark11, 0);
 
     auto box_space = 10;
     auto character_box = (int)(text_bounds * 2 / 3);
@@ -6757,15 +6789,15 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
             {
                 if (controls[current].Type == Control::Type::BUY_SELL_SHIP)
                 {
-                    putHeader(renderer, "SHIP PRICES", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Ship Prices", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::REPAIR_SHIP)
                 {
-                    putHeader(renderer, "REPAIR COSTS", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Repair Costs", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::BUY_SELL_CARGO)
                 {
-                    putHeader(renderer, "CARGO PRICES", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Cargo Prices", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
@@ -6898,12 +6930,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-
         auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
+        auto font_mason2 = TTF_OpenFont(FONT_MASON, 28);
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
-        auto font_dark2 = TTF_OpenFont(FONT_DARK11, 30);
+        TTF_SetFontKerning(font_dark11, 0);
 
         int splash_h = splashw;
 
@@ -6981,13 +7012,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 {
                     title_string += std::string(3 - std::to_string(std::abs(story->ID)).length(), '0') + std::to_string(std::abs(story->ID));
 
-                    putText(renderer, title_string.c_str(), font_dark2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
                 else
                 {
                     title_string += "Not Implemented";
 
-                    putText(renderer, title_string.c_str(), font_dark2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
             }
 
@@ -7404,11 +7435,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             font_mason = NULL;
         }
 
-        if (font_dark2)
+        if (font_mason2)
         {
-            TTF_CloseFont(font_dark2);
+            TTF_CloseFont(font_mason2);
 
-            font_dark2 = NULL;
+            font_mason2 = NULL;
         }
 
         TTF_Quit();
@@ -7458,12 +7489,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     TTF_Init();
 
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
+    auto font_mason2 = TTF_OpenFont(FONT_MASON, 28);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
-    auto font_dark2 = TTF_OpenFont(FONT_DARK11, 30);
+    TTF_SetFontKerning(font_dark11, 0);
 
     auto infoh = (int)(0.07 * SCREEN_HEIGHT);
     auto boxh = (int)(0.125 * SCREEN_HEIGHT);
@@ -7621,13 +7651,13 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         title_string += std::string(3 - std::to_string(std::abs(story->ID)).length(), '0') + std::to_string(std::abs(story->ID));
 
-                        putText(renderer, title_string.c_str(), font_dark2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                     }
                     else
                     {
                         title_string += "Not Implemented";
 
-                        putText(renderer, title_string.c_str(), font_dark2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                     }
                 }
 
@@ -8023,11 +8053,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         font_mason = NULL;
     }
 
-    if (font_dark2)
+    if (font_mason2)
     {
-        TTF_CloseFont(font_dark2);
+        TTF_CloseFont(font_mason2);
 
-        font_dark2 = NULL;
+        font_mason2 = NULL;
     }
 
     if (font_dark11)
