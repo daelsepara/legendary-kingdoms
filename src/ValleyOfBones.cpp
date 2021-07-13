@@ -1131,7 +1131,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
             {
                 if (party.Party[character].Status.size() > 0)
                 {
-                    putHeader(renderer, "Status", font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                    putHeader(renderer, "Status", font_mason2, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string status_string = "";
 
@@ -1145,7 +1145,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
                         status_string += Character::StatusDescriptions[party.Party[character].Status[i]];
                     }
 
-                    putText(renderer, status_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                    putText(renderer, status_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
             }
 
@@ -1153,7 +1153,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
             {
                 if (controls[current].Type == Control::Type::SPELLBOOK && party.Party[character].SpellCaster && party.Party[character].SpellBook.size() > 0)
                 {
-                    putHeader(renderer, "SPELLBOOK", font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                    putHeader(renderer, "SPELLBOOK", font_mason2, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string spellbook_string = "";
 
@@ -1167,11 +1167,11 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
                         spellbook_string += party.Party[character].SpellBook[i].Name;
                     }
 
-                    putText(renderer, spellbook_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                    putText(renderer, spellbook_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
                 else if (controls[current].Type == Control::Type::EQUIPMENT && party.Party[character].Equipment.size() > 0)
                 {
-                    putHeader(renderer, "EQUIPMENT", font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                    putHeader(renderer, "EQUIPMENT", font_mason2, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string equipment_string = "";
 
@@ -1190,7 +1190,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
                         }
                     }
 
-                    putText(renderer, equipment_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                    putText(renderer, equipment_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
             }
 
@@ -1384,6 +1384,16 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     auto box_space = 10;
     auto character_box = (int)(text_bounds * 2 / 3);
 
+    auto flash_message = false;
+
+    auto flash_color = intRD;
+
+    std::string message = "";
+
+    Uint32 start_ticks = 0;
+
+    Uint32 duration = 3000;
+
     // Render window
     if (window && renderer)
     {
@@ -1484,7 +1494,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
             if (selection.size() > 0)
             {
-                putHeader(renderer, std::string("PARTY (Limit: " + std::to_string(party.Limit) + ")").c_str(), font_mason2, 8, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                putHeader(renderer, std::string("PARTY (Limit: " + std::to_string(party.Limit) + ")").c_str(), font_mason2, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                 std::string party_string = "";
 
@@ -1501,7 +1511,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                     }
                 }
 
-                putText(renderer, party_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                putText(renderer, party_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
             }
 
             if (Engine::FIND_LIST(selection, character) >= 0)
@@ -1520,6 +1530,18 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
             bool scrollUp = false;
             bool scrollDown = false;
             bool hold = false;
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
 
             if (Engine::FIND_LIST(selection, character) >= 0)
             {
@@ -1662,13 +1684,21 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             }
                         }
 
-                        // TODO: Select spells for spellcasters
-
                         done = true;
 
                         current = -1;
 
                         selected = false;
+                    }
+                    else
+                    {
+                        flash_message = true;
+
+                        message = "Please select up to 4 party members!";
+
+                        start_ticks = SDL_GetTicks();
+
+                        flash_color = intRD;
                     }
 
                     break;
@@ -2019,7 +2049,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             spell_string += "\nType: " + std::string(Spells::ScopeDescriptions[spell.Scope]) + ", Charged: " + std::string(spell.Charged ? "Yes" : "No") + ", Recharge: " + std::to_string(spell.Recharge);
 
-            auto button = createHeaderButton(window, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, 0.125 * SCREEN_HEIGHT, text_space);
+            auto button = createHeaderButton(window, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (int)(0.125 * SCREEN_HEIGHT), text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
@@ -2094,7 +2124,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             monster_string += ", Defense: " + std::to_string(monster.Defence) + "+, Health: " + std::to_string(monster.Health);
 
-            auto button = createHeaderButton(window, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, 0.125 * SCREEN_HEIGHT, text_space);
+            auto button = createHeaderButton(window, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (int)(0.125 * SCREEN_HEIGHT), text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
@@ -2158,7 +2188,7 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
 
             std::string adventurer_string = characterText(adventurer, true);
 
-            auto button = createHeaderButton(window, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, 0.125 * SCREEN_HEIGHT, text_space);
+            auto button = createHeaderButton(window, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (int)(0.125 * SCREEN_HEIGHT), text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
@@ -2318,7 +2348,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Armour save results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Armour save results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::ArmourSave::START)
@@ -2402,12 +2432,12 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
-                putHeader(renderer, character.Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, character.Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 defender_string = "Armour Save: +" + std::to_string(save_score);
                 defender_string += "\nHealth: " + std::to_string(character.Health);
 
-                putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                 if (stage == Engine::ArmourSave::START)
                 {
@@ -2426,7 +2456,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -2841,7 +2871,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Attack Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::Attack::START)
@@ -2925,18 +2955,18 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                     }
                 }
 
-                putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
                 std::string attacker_string = "Magic Fighting Score: " + std::to_string(fighting_score);
-                putText(renderer, attacker_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
-                putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                 fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
                 std::string defender_string = "Defence: " + std::to_string(monsters[opponent].Defence) + "+\nHealth: " + std::to_string(monsters[opponent].Health);
-                putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+                putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
                 std::string spell_string = "SPELL: " + std::string(spell.Name);
-                putHeader(renderer, spell_string.c_str(), font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+                putHeader(renderer, spell_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                 if (stage == Engine::Attack::START)
                 {
@@ -2955,7 +2985,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -3152,7 +3182,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Attack Results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Attack Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -3319,7 +3349,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                 if (direction == 0)
                 {
-                    putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                    putHeader(renderer, party[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                     auto score = 1;
 
@@ -3339,7 +3369,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 }
                 else
                 {
-                    putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                    putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                     attacker_string = "Attack: " + std::to_string(monsters[opponent].Attack) + " (" + std::to_string(monsters[opponent].Difficulty) + "+)";
 
@@ -3353,13 +3383,13 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                     attack_score = monsters[opponent].Attack;
                 }
 
-                putText(renderer, attacker_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                 std::string defender_string = "";
 
                 if (direction == 0)
                 {
-                    putHeader(renderer, monsters[opponent].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                    putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                     defender_string = "Defence: " + std::to_string(monsters[opponent].Defence) + "+";
                     defender_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
                 }
@@ -3367,18 +3397,18 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 {
                     if (combatant == -1)
                     {
-                        putHeader(renderer, "To be determined", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, "To be determined", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                     }
                     else
                     {
-                        putHeader(renderer, party[combatant].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, party[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Health: " + std::to_string(party[combatant].Health);
                     }
                 }
 
                 fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
 
-                putText(renderer, defender_string.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+                putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
                 if (stage == Engine::Attack::START)
                 {
@@ -3418,7 +3448,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -4337,7 +4367,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Skill Check Results", font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Skill Check Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -4420,9 +4450,9 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 std::string test_string = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(difficulty) + "+, Success: " + std::to_string(success);
 
-                putHeader(renderer, test_string.c_str(), font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+                putHeader(renderer, test_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
-                putHeader(renderer, party[team[0]].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party[team[0]].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
@@ -4439,11 +4469,11 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 std::string adventurer1 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score1);
 
-                putText(renderer, adventurer1.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                putText(renderer, adventurer1.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                 if (team.size() > 1)
                 {
-                    putHeader(renderer, party[team[1]].Name, font_mason, 8, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                    putHeader(renderer, party[team[1]].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
 
                     fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
 
@@ -4460,7 +4490,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                     std::string adventurer2 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score2);
 
-                    putText(renderer, adventurer2.c_str(), font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+                    putText(renderer, adventurer2.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
                 }
 
                 if (stage == Attribute::Test::START)
@@ -4480,7 +4510,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -6862,9 +6892,53 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
     return false;
 }
 
-std::vector<Button> createChoices(std::vector<Choice::Base> choices, int start, int last, int limit)
+std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, std::vector<Choice::Base> choices, int start, int last, int limit, int offsetx, int offsety)
 {
     auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (choices.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto button = createHeaderButton(window, choices[index].Text, clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (choices.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (choices.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+    controls.push_back(Button(idx, "icons/map.png", idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::MAP));
+    controls.push_back(Button(idx + 1, "icons/user.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, idx - 1, idx + 2, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -6898,8 +6972,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto scrollUp = false;
         auto scrollDown = false;
         auto hold = false;
-
-        auto controls = std::vector<Button>();
+        auto scrollSpeed = 1;
 
         auto font_size = 28;
         auto text_space = 8;
@@ -6907,25 +6980,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto infoh = (int)(0.07 * SCREEN_HEIGHT);
         auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - 2 * text_space) / (font_size * 2 + text_space * 4);
+        auto last = offset + limit;
 
-        for (int i = 0; i < choices.size(); i++)
-        {
-            auto text = createText(choices[i].Text, FONT_GARAMOND, font_size, clrBK, textwidth - (4 * text_space), TTF_STYLE_NORMAL);
-
-            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : texty + 2 * text_space);
-
-            controls.push_back(Button(i, text, i, i, (i > 0 ? i - 1 : i), (i < choices.size() ? i + 1 : i), textx + 2 * text_space, y, Control::Type::ACTION));
-
-            controls[i].W = textwidth - (4 * text_space);
-
-            controls[i].H = text->h;
-        }
-
-        auto idx = choices.size();
-
-        controls.push_back(Button(idx, "icons/map.png", idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::MAP));
-        controls.push_back(Button(idx + 1, "icons/user.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::PARTY));
-        controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, idx - 1, idx + 2, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
+        auto controls = createChoices(window, renderer, choices, offset, last, limit, textx, texty);
 
         TTF_Init();
 
@@ -7071,11 +7130,16 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
 
-            for (auto i = 0; i < story->Choices.size(); i++)
+            for (auto i = offset; i < last; i++)
             {
-                if (i != current)
+                auto index = i - offset;
+
+                if (current != index)
                 {
-                    drawRect(renderer, controls[i].W + 2 * text_space, controls[i].H + 2 * text_space, controls[i].X - text_space, controls[i].Y - text_space, intBK);
+                    if (index >= 0 && index < choices.size())
+                    {
+                        drawRect(renderer, controls[index].W + 16, controls[index].H + 16, controls[index].X - 8, controls[index].Y - 8, intBK);
+                    }
                 }
             }
 
@@ -7093,39 +7157,112 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
-            if (selected && current >= 0 && current < controls.size())
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
             {
-                if (controls[current].Type == Control::Type::ACTION && !hold)
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
                 {
-                    if (current >= 0 && current < story->Choices.size())
+                    if (offset > 0)
                     {
-                        if (story->Choices[current].Type == Choice::Type::NORMAL)
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
                         {
-                            next = findStory(story->Choices[current].Destination);
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > choices.size())
+                        {
+                            last = choices.size();
+                        }
+
+                        controls = createChoices(window, renderer, choices, offset, last, limit, textx, texty);
+
+                        SDL_Delay(50);
+                    }
+
+                    if (offset <= 0)
+                    {
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                {
+                    if (choices.size() - last > 0)
+                    {
+                        if (offset < choices.size() - limit)
+                        {
+                            offset += scrollSpeed;
+                        }
+
+                        if (offset > choices.size() - limit)
+                        {
+                            offset = choices.size() - limit;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > choices.size())
+                        {
+                            last = choices.size();
+                        }
+
+                        controls = createChoices(window, renderer, choices, offset, last, limit, textx, texty);
+
+                        SDL_Delay(50);
+
+                        if (offset > 0)
+                        {
+                            if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                            {
+                                current++;
+                            }
+                        }
+                    }
+
+                    if (choices.size() - last <= 0)
+                    {
+                        selected = false;
+
+                        current = -1;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    auto choice = current + offset;
+
+                    if (choice >= 0 && choice < story->Choices.size())
+                    {
+                        if (story->Choices[choice].Type == Choice::Type::NORMAL)
+                        {
+                            next = findStory(story->Choices[choice].Destination);
 
                             done = true;
 
                             break;
                         }
-                        else if (story->Choices[current].Type == Choice::Type::ATTRIBUTES)
+                        else if (story->Choices[choice].Type == Choice::Type::ATTRIBUTES)
                         {
-                            if (story->Choices[current].Characters.size() > 0)
+                            if (story->Choices[choice].Characters.size() > 0)
                             {
                                 auto selection = std::vector<int>();
 
-                                auto success = skillCheck(window, renderer, story->Choices[current].Characters, 1, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
+                                auto success = skillCheck(window, renderer, story->Choices[choice].Characters, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
 
                                 if (selection.size() == 1)
                                 {
-                                    story->SkillCheck(story->Choices[current].Characters, success, selection);
+                                    story->SkillCheck(story->Choices[choice].Characters, success, selection);
 
                                     if (success)
                                     {
-                                        next = findStory(story->Choices[current].Destination);
+                                        next = findStory(story->Choices[choice].Destination);
                                     }
                                     else
                                     {
-                                        next = findStory(story->Choices[current].DestinationFailed);
+                                        next = findStory(story->Choices[choice].DestinationFailed);
                                     }
 
                                     done = true;
@@ -7137,7 +7274,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 auto selection = std::vector<int>();
 
-                                auto success = skillCheck(window, renderer, party.Party, 1, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
+                                auto success = skillCheck(window, renderer, party.Party, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
 
                                 if (selection.size() == 1)
                                 {
@@ -7145,11 +7282,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     if (success)
                                     {
-                                        next = findStory(story->Choices[current].Destination);
+                                        next = findStory(story->Choices[choice].Destination);
                                     }
                                     else
                                     {
-                                        next = findStory(story->Choices[current].DestinationFailed);
+                                        next = findStory(story->Choices[choice].DestinationFailed);
                                     }
 
                                     done = true;
@@ -7158,25 +7295,25 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                             }
                         }
-                        else if (story->Choices[current].Type == Choice::Type::TEAM_ATTRIBUTES)
+                        else if (story->Choices[choice].Type == Choice::Type::TEAM_ATTRIBUTES)
                         {
-                            if (story->Choices[current].Characters.size() > 0)
+                            if (story->Choices[choice].Characters.size() > 0)
                             {
                                 auto selection = std::vector<int>();
 
-                                auto success = skillCheck(window, renderer, story->Choices[current].Characters, 2, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
+                                auto success = skillCheck(window, renderer, story->Choices[choice].Characters, 2, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
 
                                 if (selection.size() == 2)
                                 {
-                                    story->SkillCheck(story->Choices[current].Characters, success, selection);
+                                    story->SkillCheck(story->Choices[choice].Characters, success, selection);
 
                                     if (success)
                                     {
-                                        next = findStory(story->Choices[current].Destination);
+                                        next = findStory(story->Choices[choice].Destination);
                                     }
                                     else
                                     {
-                                        next = findStory(story->Choices[current].DestinationFailed);
+                                        next = findStory(story->Choices[choice].DestinationFailed);
                                     }
 
                                     done = true;
@@ -7188,7 +7325,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 auto selection = std::vector<int>();
 
-                                auto success = skillCheck(window, renderer, party.Party, 2, story->Choices[current].Attributes[0], story->Choices[current].Difficulty, story->Choices[current].Success, selection);
+                                auto success = skillCheck(window, renderer, party.Party, 2, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
 
                                 if (selection.size() == 2)
                                 {
@@ -7196,11 +7333,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     if (success)
                                     {
-                                        next = findStory(story->Choices[current].Destination);
+                                        next = findStory(story->Choices[choice].Destination);
                                     }
                                     else
                                     {
-                                        next = findStory(story->Choices[current].DestinationFailed);
+                                        next = findStory(story->Choices[choice].DestinationFailed);
                                     }
 
                                     done = true;
@@ -7209,18 +7346,18 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                             }
                         }
-                        else if (story->Choices[current].Type == Choice::Type::EQUIPMENT)
+                        else if (story->Choices[choice].Type == Choice::Type::EQUIPMENT)
                         {
                             auto equipment = std::vector<Equipment::Type>();
 
-                            for (auto i = 0; i < story->Choices[current].Equipment.size(); i++)
+                            for (auto i = 0; i < story->Choices[choice].Equipment.size(); i++)
                             {
-                                equipment.push_back(story->Choices[current].Equipment[i].Type);
+                                equipment.push_back(story->Choices[choice].Equipment[i].Type);
                             }
 
                             if (Engine::VERIFY_EQUIPMENT(party.Party, equipment))
                             {
-                                next = findStory(story->Choices[current].Destination);
+                                next = findStory(story->Choices[choice].Destination);
 
                                 done = true;
 
@@ -7230,7 +7367,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 error = true;
 
-                                if (story->Choices[current].Equipment.size() > 1)
+                                if (story->Choices[choice].Equipment.size() > 1)
                                 {
                                     message = "You do not have the REQUIRED ITEMS!";
                                 }
@@ -7242,18 +7379,18 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 start_ticks = SDL_GetTicks();
                             }
                         }
-                        else if (story->Choices[current].Type == Choice::Type::ANY_EQUIPMENT)
+                        else if (story->Choices[choice].Type == Choice::Type::ANY_EQUIPMENT)
                         {
                             auto equipment = std::vector<Equipment::Type>();
 
-                            for (auto i = 0; i < story->Choices[current].Equipment.size(); i++)
+                            for (auto i = 0; i < story->Choices[choice].Equipment.size(); i++)
                             {
-                                equipment.push_back(story->Choices[current].Equipment[i].Type);
+                                equipment.push_back(story->Choices[choice].Equipment[i].Type);
                             }
 
                             if (Engine::VERIFY_ANY_EQUIPMENT(party.Party, equipment))
                             {
-                                next = findStory(story->Choices[current].Destination);
+                                next = findStory(story->Choices[choice].Destination);
 
                                 done = true;
 
@@ -7268,11 +7405,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 start_ticks = SDL_GetTicks();
                             }
                         }
-                        else if (story->Choices[current].Type == Choice::Type::SHIP)
+                        else if (story->Choices[choice].Type == Choice::Type::SHIP)
                         {
                             if (Engine::HAS_SHIP(party, party.Location))
                             {
-                                next = findStory(story->Choices[current].Destination);
+                                next = findStory(story->Choices[choice].Destination);
 
                                 done = true;
 
@@ -7287,38 +7424,38 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 start_ticks = SDL_GetTicks();
                             }
                         }
-                        else if (story->Choices[current].Type == Choice::Type::ADD_MAX_HEALTH)
+                        else if (story->Choices[choice].Type == Choice::Type::ADD_MAX_HEALTH)
                         {
                             auto target = selectPartyMember(window, renderer, party.Party, Control::Type::SPELL_TARGET);
 
-                            party.Party[target].MaximumHealth += story->Choices[current].Value;
+                            party.Party[target].MaximumHealth += story->Choices[choice].Value;
 
-                            Engine::GAIN_HEALTH(party.Party[target], story->Choices[current].Value);
+                            Engine::GAIN_HEALTH(party.Party[target], story->Choices[choice].Value);
 
-                            next = findStory(story->Choices[current].Destination);
+                            next = findStory(story->Choices[choice].Destination);
 
                             done = true;
 
                             break;
                         }
-                        else if (story->Choices[current].Type == Choice::Type::BRIBE_CODEWORD)
+                        else if (story->Choices[choice].Type == Choice::Type::BRIBE_CODEWORD)
                         {
                             auto equipment = std::vector<Equipment::Type>();
 
-                            for (auto i = 0; i < story->Choices[current].Equipment.size(); i++)
+                            for (auto i = 0; i < story->Choices[choice].Equipment.size(); i++)
                             {
-                                equipment.push_back(story->Choices[current].Equipment[i].Type);
+                                equipment.push_back(story->Choices[choice].Equipment[i].Type);
                             }
 
                             auto count = Engine::COUNT_EQUIPMENT(party.Party, equipment);
 
-                            if (count >= story->Choices[current].Value)
+                            if (count >= story->Choices[choice].Value)
                             {
-                                Engine::LOSE_EQUIPMENT(party.Party, equipment[0], story->Choices[current].Value);
+                                Engine::LOSE_EQUIPMENT(party.Party, equipment[0], story->Choices[choice].Value);
 
-                                Engine::GET_CODES(party, story->Choices[current].InvisibleCodes);
+                                Engine::GET_CODES(party, story->Choices[choice].InvisibleCodes);
 
-                                next = findStory(story->Choices[current].Destination);
+                                next = findStory(story->Choices[choice].Destination);
 
                                 done = true;
 
@@ -7326,7 +7463,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                             else
                             {
-                                if (story->Choices[current].Value > 1)
+                                if (story->Choices[choice].Value > 1)
                                 {
                                     message = "You do not have the REQUIRED ITEMS!";
                                 }
@@ -7340,43 +7477,43 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 start_ticks = SDL_GetTicks();
                             }
                         }
-                        else if (story->Choices[current].Type == Choice::Type::CODES)
+                        else if (story->Choices[choice].Type == Choice::Type::CODES)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::GET_EQUIPMENT)
+                        else if (story->Choices[choice].Type == Choice::Type::GET_EQUIPMENT)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::PAY_WITH)
+                        else if (story->Choices[choice].Type == Choice::Type::PAY_WITH)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::SELL)
+                        else if (story->Choices[choice].Type == Choice::Type::SELL)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::LOSE_EQUIPMENT)
+                        else if (story->Choices[choice].Type == Choice::Type::LOSE_EQUIPMENT)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::BRIBE)
+                        else if (story->Choices[choice].Type == Choice::Type::BRIBE)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::GET_CODES)
+                        else if (story->Choices[choice].Type == Choice::Type::GET_CODES)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::LOSE_CODES)
+                        else if (story->Choices[choice].Type == Choice::Type::LOSE_CODES)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::LOSE_ALL)
+                        else if (story->Choices[choice].Type == Choice::Type::LOSE_ALL)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::LOSE_MONEY)
+                        else if (story->Choices[choice].Type == Choice::Type::LOSE_MONEY)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::GAIN_MONEY)
+                        else if (story->Choices[choice].Type == Choice::Type::GAIN_MONEY)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::MONEY)
+                        else if (story->Choices[choice].Type == Choice::Type::MONEY)
                         {
                         }
-                        else if (story->Choices[current].Type == Choice::Type::LIFE)
+                        else if (story->Choices[choice].Type == Choice::Type::LIFE)
                         {
                         }
                     }
