@@ -3603,7 +3603,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
 {
     auto select_result = std::vector<int>();
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Opponent";
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Spell";
 
     if (window && renderer)
     {
@@ -3896,13 +3896,47 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                             {
                                 message = "You must select a spell to CAST.";
                             }
-                            else if (mode == Spells::Select::SPELLBOOK)
+                            else if (mode == Spells::Select::SPELLBOOK || mode == Spells::Select::UNLEARN)
                             {
-                                message = "You must select spells to add to your spellbook.";
-                            }
-                            else if (mode == Spells::Select::UNLEARN)
-                            {
-                                message = "You must select a spell to erase from your spellbook.";
+                                message = "You must select ";
+
+                                if (select_limit > 1)
+                                {
+                                    message += std::to_string(select_limit);
+                                }
+                                else
+                                {
+                                    message += "a";
+                                }
+
+                                message += " spell";
+
+                                if (select_limit > 1)
+                                {
+                                    message += "s";
+                                }
+
+                                message += " to ";
+
+                                if (mode == Spells::Select::SPELLBOOK)
+                                {
+                                    message += "add to ";
+                                }
+                                else
+                                {
+                                    message += "erase from ";
+                                }
+
+                                if (caster.Type != Character::Type::NONE)
+                                {
+                                    message += std::string(caster.Name) + "'s";
+                                }
+                                else
+                                {
+                                    message += "your";
+                                }
+
+                                message += " spellbook.";
                             }
 
                             start_ticks = SDL_GetTicks();
@@ -4585,7 +4619,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Cast Spell";
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Caster";
 
     if (window && renderer)
     {
@@ -5381,6 +5415,10 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                 else if (mode == Control::Type::SPELL_TARGET)
                 {
                     putHeader(renderer, "Choose target for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (mode == Control::Type::LEARN_SPELL)
+                {
+                    putHeader(renderer, "Choose the spellcaster who learns this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (mode == Control::Type::EQUIPMENT)
                 {
@@ -6421,6 +6459,387 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base
     }
 
     return false;
+}
+
+bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Spells::Base> spells, bool back_button)
+{
+    auto done = false;
+
+    if (spells.size() > 0)
+    {
+        auto font_size = 28;
+        auto text_space = 8;
+        auto scrollSpeed = 1;
+        auto offset = 0;
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto booksize = (int)(2 * (text_bounds) / 3);
+        auto box_space = 10;
+        auto limit = (int)((booksize - text_space) / ((boxh) + 3 * text_space));
+        auto last = offset + limit;
+
+        if (last > spells.size())
+        {
+            last = spells.size();
+        }
+
+        auto scrolly = startx + infoh + booksize - buttonh - text_space + 1;
+
+        std::string message = "";
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        auto textwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+
+        auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, scrolly, true, true);
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto selected = false;
+        auto current = -1;
+        auto quit = false;
+        auto scrollUp = false;
+        auto scrollDown = false;
+        auto hold = false;
+
+        auto selection = std::vector<int>();
+
+        while (!done)
+        {
+            last = offset + limit;
+
+            if (last > spells.size())
+            {
+                last = spells.size();
+            }
+
+            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Learn Spells");
+
+            fillWindow(renderer, intWH);
+
+            std::string spell_string = "";
+
+            if (selection.size() > 0)
+            {
+                for (auto i = 0; i < selection.size(); i++)
+                {
+                    if (i > 0)
+                    {
+                        spell_string += ", ";
+                    }
+
+                    std::string description = spells[selection[i]].Name;
+
+                    spell_string += description;
+                }
+            }
+
+            putText(renderer, "SELECTED", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putText(renderer, selection.size() > 0 ? spell_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+
+            putHeader(renderer, "You can COPY the following spells", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+            fillRect(renderer, textwidth, booksize, textx, texty + infoh, intBE);
+
+            if (last - offset > 0)
+            {
+                for (auto i = 0; i < last - offset; i++)
+                {
+                    if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                    {
+                        thickRect(renderer, controls[i].W, controls[i].H, controls[i].X, controls[i].Y, intLB, 2);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + 2 * text_space, controls[i].H + 2 * text_space, controls[i].X - text_space, controls[i].Y - text_space, intBK);
+                    }
+                }
+            }
+
+            if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::ACTION)
+            {
+                fillRect(renderer, textwidth, text_bounds / 3 - box_space - infoh, textx, texty + infoh + booksize + box_space, intLB);
+
+                auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+
+                renderText(renderer, text, intLB, textx + text_space, texty + infoh + booksize + box_space + text_space, text_bounds / 3 - texty, 0);
+
+                SDL_FreeSurface(text);
+
+                text = NULL;
+            }
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+
+            done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (offset > 0)
+                    {
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > spells.size())
+                        {
+                            last = spells.size();
+                        }
+
+                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, scrolly, true, true);
+
+                        SDL_Delay(50);
+                    }
+
+                    if (offset <= 0)
+                    {
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                {
+                    if (spells.size() - last > 0)
+                    {
+                        if (offset < spells.size() - limit)
+                        {
+                            offset += scrollSpeed;
+                        }
+
+                        if (offset > spells.size() - limit)
+                        {
+                            offset = spells.size() - limit;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > spells.size())
+                        {
+                            last = spells.size();
+                        }
+
+                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, scrolly, true, true);
+
+                        SDL_Delay(50);
+
+                        if (offset > 0)
+                        {
+                            if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                            {
+                                current++;
+                            }
+                        }
+                    }
+
+                    if (spells.size() - last <= 0)
+                    {
+                        selected = false;
+
+                        current = -1;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if (current >= 0 && current < controls.size())
+                    {
+                        auto result = Engine::FIND_LIST(selection, offset + current);
+
+                        if (result >= 0)
+                        {
+                            selection.erase(selection.begin() + result);
+                        }
+                        else
+                        {
+                            if (selection.size() < spells.size())
+                            {
+                                selection.push_back(offset + current);
+                            }
+                        }
+                    }
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                {
+                    if (selection.size() > 0)
+                    {
+                        auto learn = std::vector<Spells::Base>();
+
+                        for (auto i = 0; i < selection.size(); i++)
+                        {
+                            learn.push_back(spells[selection[i]]);
+                        }
+
+                        auto character = selectPartyMember(window, renderer, party.Party, Control::Type::LEARN_SPELL);
+
+                        if (character >= 0 && character < party.Party.size())
+                        {
+                            if (party.Party[character].SpellCaster)
+                            {
+                                auto learned = false;
+
+                                for (auto i = 0; i < learn.size(); i++)
+                                {
+                                    if (Engine::VERIFY_SPELL(party.Party[character], {learn[i].Type}))
+                                    {
+                                        learned = true;
+
+                                        message = std::string(party.Party[character].Name) + " already knows the " + std::string(learn[i].Name) + " spell!";
+
+                                        break;
+                                    }
+                                }
+
+                                if (learned)
+                                {
+                                    flash_message = true;
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    done = false;
+
+                                    current = -1;
+
+                                    selected = false;
+
+                                    flash_color = intRD;
+                                }
+                                else
+                                {
+                                    for (auto i = 0; i < learn.size(); i++)
+                                    {
+                                        party.Party[character].SpellBook.push_back(learn[i]);
+                                    }
+
+                                    while (!Engine::VERIFY_SPELL_LIMIT(party.Party[character]))
+                                    {
+                                        auto spell_selection = selectSpell(window, renderer, party.Party[character], party.Party[character].SpellBook, party.Party[character].SpellBook.size() - party.Party[character].SpellBookLimit, Spells::Select::UNLEARN);
+
+                                        if (spell_selection.size() > 0)
+                                        {
+                                            auto newSpellBook = std::vector<Spells::Base>();
+
+                                            for (auto i = 0; i < party.Party[character].SpellBook.size(); i++)
+                                            {
+                                                if (Engine::FIND_LIST(spell_selection, spell_selection[i]) < 0)
+                                                {
+                                                    newSpellBook.push_back(party.Party[character].SpellBook[spell_selection[i]]);
+                                                }
+                                            }
+
+                                            party.Party[character].SpellBook = newSpellBook;
+                                        }
+                                    }
+
+                                    message = "Spell";
+
+                                    if (selection.size() > 1)
+                                    {
+                                        message += "s";
+                                    }
+
+                                    message += " COPIED to " + std::string(party.Party[character].Name) += "'s spellbook!";
+
+                                    flash_message = true;
+
+                                    flash_color = intLB;
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    done = false;
+
+                                    current = -1;
+
+                                    selected = false;
+
+                                    selection.clear();
+                                }
+                            }
+                            else
+                            {
+                                message = std::string(party.Party[character].Name) + " is not a SpellCaster!";
+
+                                flash_message = true;
+
+                                flash_color = intRD;
+
+                                start_ticks = SDL_GetTicks();
+
+                                done = false;
+
+                                current = -1;
+
+                                selected = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        done = true;
+
+                        break;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    done = false;
+
+                    break;
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        TTF_Quit();
+    }
+
+    return done;
 }
 
 bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button)
@@ -8423,7 +8842,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         {
                             auto result = combatScreen(window, renderer, party, story->Monsters, story->CanFlee, story->FleeRound, true);
 
-                            story->Combat(party, result);
+                            story->afterCombat(party, result);
                         }
 
                         if (Engine::COUNT(party.Party) > 0)
@@ -8439,6 +8858,20 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 else
                                 {
                                     story->Limit = 0;
+                                }
+                            }
+
+                            if (story->Spells.size() > 0 && Engine::SPELLCASTERS(party.Party) > 0)
+                            {
+                                auto done = spellScreen(window, renderer, party, story->Spells, true);
+
+                                if (!done)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    story->Spells.clear();
                                 }
                             }
 

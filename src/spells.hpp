@@ -32,7 +32,8 @@ namespace Spells
         COMBAT,
         MASS_COMBAT,
         SEA_COMBAT,
-        ADVENTURE_COMBAT
+        ADVENTURE_COMBAT,
+        EXPLORATION
     };
 
     std::map<Spells::Scope, const char *> ScopeDescriptions = {
@@ -40,7 +41,8 @@ namespace Spells
         {Spells::Scope::COMBAT, "Combat"},
         {Spells::Scope::MASS_COMBAT, "Mass Combat"},
         {Spells::Scope::SEA_COMBAT, "Sea Combat"},
-        {Spells::Scope::ADVENTURE, "Adventure/Combat"}};
+        {Spells::Scope::ADVENTURE, "Adventure/Combat"},
+        {Spells::EXPLORATION, "Exploration"}};
 
     class Base
     {
@@ -78,9 +80,9 @@ namespace Spells
     auto ICE_BOLT = Spells::Base("Ice Bolt", "You conjure a great block of ice and hurl it at your foe with magical strength. Make an immediate attack with a Fighting score of 8 against any opponent.", Spells::Scope::COMBAT, Spells::Type::ICE_BOLT, 50);
     auto POISON_STREAM = Spells::Base("Poison Stream", "A sickly green poison jets from your hands. Make two immediate attacks with a Fighting score of 5, against two different opponents.", Spells::Scope::COMBAT, Spells::Type::POSION_STREAM, 50);
     auto UNFAILING_STRIKE = Spells::Base("Unfailing Strike", "A pillar of energy sizzles into a single foe. Choose an opponent to lose 3 Health.", Spells::Scope::COMBAT, Spells::Type::UNFAILING_STRIKE, 50);
-    auto WOLF_SPIRIT = Spells::Base("Wolf Spirit", "You summon the spirit of the wolf to help guide you from danger in the natural world. Cast this spell when you fail a Survival check. You gain an additional 3 automatic successes for this check only.", Spells::Scope::ADVENTURE, Spells::Type::WOLF_SPIRIT, 75);
+    auto WOLF_SPIRIT = Spells::Base("Wolf Spirit", "You summon the spirit of the wolf to help guide you from danger in the natural world. Cast this spell when you fail a Survival check. You gain an additional 3 automatic successes for this check only.", Spells::Scope::EXPLORATION, Spells::Type::WOLF_SPIRIT, 75);
     auto MAGIC_CABINET = Spells::Base("Magic Cabinet", "You summon a magic cabinet made of purple wood. You can use this cabinet to access The Vault, storing and/or taking out as many items as you wish. When you have done this, the cabinet will vanish, until summoned again.", Spells::Scope::ADVENTURE, Spells::Type::MAGIC_CABINET, 100);
-    auto WISDOM = Spells::Base("Wisdom", "Your mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.", Spells::Scope::ADVENTURE, Spells::Type::WISDOM, 75);
+    auto WISDOM = Spells::Base("Wisdom", "Your mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.", Spells::Scope::EXPLORATION, Spells::Type::WISDOM, 75);
 
     std::vector<Spells::Base> BOOK1_SPELLS = {Spells::ANIMAL_SPEECH, Spells::ARMOUR_OF_HEAVEN, Spells::ICE_BOLT, Spells::POISON_STREAM, Spells::UNFAILING_STRIKE, Spells::WOLF_SPIRIT, Spells::MAGIC_CABINET};
 }

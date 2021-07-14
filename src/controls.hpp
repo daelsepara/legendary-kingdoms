@@ -59,7 +59,8 @@ namespace Control
         ROMANCE,
         BUY_SELL_SHIP,
         BUY_SELL_CARGO,
-        REPAIR_SHIP
+        REPAIR_SHIP,
+        LEARN_SPELL
     };
 
     class Base

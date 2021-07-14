@@ -826,6 +826,55 @@ namespace Engine
         return result;
     }
 
+    int FIND_SPELL(Character::Base &character, Spells::Type spell)
+    {
+        auto found = -1;
+
+        if (character.SpellCaster)
+        {
+            for (auto i = 0; i < character.SpellBook.size(); i++)
+            {
+                if (character.SpellBook[i].Type == spell)
+                {
+                    found = i;
+
+                    break;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    bool VERIFY_SPELL(Character::Base &character, std::vector<Spells::Type> spells)
+    {
+        auto found = 0;
+
+        for (auto i = 0; i < spells.size(); i++)
+        {
+            auto result = Engine::FIND_SPELL(character, spells[i]);
+
+            if (result >= 0)
+            {
+                found++;
+            }
+        }
+
+        return found >= spells.size();
+    }
+
+    bool VERIFY_SPELL_LIMIT(Character::Base &player)
+    {
+        if (player.SpellCaster)
+        {
+            return player.SpellBook.size() <= player.SpellBookLimit;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     bool HAS_SHIP(Party::Base &party, Location::Type location)
     {
         auto result = false;

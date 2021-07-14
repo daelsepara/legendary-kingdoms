@@ -1173,6 +1173,32 @@ namespace Book1
         }
     };
 
+    class Story034 : public Story::Base
+    {
+    public:
+        Story034()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 34;
+
+            Text = "You return to the large burial chamber. The ghouls are long gone, and there is no more treasure to be found here. If you wish you can scribe the spell on the bronze tablet into your spellbook, if you have had reason to remove it:\n\nWisdom (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.";
+
+            Bye = "You return to the crossroads.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Spells = {Spells::WISDOM};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 46}; }
+    };
+
     class Story100 : public Story::Base
     {
     public:
@@ -1244,6 +1270,7 @@ namespace Book1
     auto story031 = Story031();
     auto story032 = Story032();
     auto story033 = Story033();
+    auto story034 = Story034();
     auto story100 = Story100();
 
     void InitializeStories()
@@ -1253,7 +1280,7 @@ namespace Book1
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
-            &story030, &story031, &story032, &story033,
+            &story030, &story031, &story032, &story033, &story034,
             &story100};
     }
 }
