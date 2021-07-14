@@ -67,7 +67,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets);
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Control::Type mode);
 
-std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
+std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Character::Base &caster, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
 
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
 Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
@@ -1664,7 +1664,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
                                         while (spells_selected < 3)
                                         {
-                                            spell_selection = selectSpell(window, renderer, spellBook, 3, Spells::Select::SPELLBOOK);
+                                            spell_selection = selectSpell(window, renderer, character, spellBook, 3, Spells::Select::SPELLBOOK);
 
                                             spells_selected = spell_selection.size();
                                         }
@@ -3599,7 +3599,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
     return combat_damage;
 }
 
-std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode)
+std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Character::Base &caster, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode)
 {
     auto select_result = std::vector<int>();
 
@@ -3721,7 +3721,14 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
                 if (mode == Spells::Select::SPELLBOOK)
                 {
-                    list_header += "add to spellbook";
+                    list_header += "add to ";
+
+                    if (caster.Type != Character::Type::NONE)
+                    {
+                        list_header += std::string(caster.Name) + "'s ";
+                    }
+
+                    list_header += "spellbook";
                 }
                 else if (mode == Spells::Select::CAST_SPELL)
                 {
@@ -4734,7 +4741,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                                 }
                                 else
                                 {
-                                    auto spell = selectSpell(window, renderer, party[selection].SpellBook, 1, Spells::Select::CAST_SPELL);
+                                    auto spell = selectSpell(window, renderer, party[selection], party[selection].SpellBook, 1, Spells::Select::CAST_SPELL);
 
                                     if (spell.size() > 0)
                                     {
@@ -8859,7 +8866,10 @@ int main(int argc, char **argv)
 #if defined(DEBUG)
         testScreen(window, renderer, bookID, storyID);
 #else
-        //introScreen(window, renderer);
+        if (storyID < 2)
+        {
+            introScreen(window, renderer);
+        }
 
         mainScreen(window, renderer, bookID, storyID);
 #endif
