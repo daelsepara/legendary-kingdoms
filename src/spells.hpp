@@ -42,7 +42,7 @@ namespace Spells
         {Spells::Scope::MASS_COMBAT, "Mass Combat"},
         {Spells::Scope::SEA_COMBAT, "Sea Combat"},
         {Spells::Scope::ADVENTURE, "Adventure/Combat"},
-        {Spells::EXPLORATION, "Exploration"}};
+        {Spells::Scope::EXPLORATION, "Exploration"}};
 
     class Base
     {
