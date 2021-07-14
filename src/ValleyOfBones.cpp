@@ -6774,7 +6774,7 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
     controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::REPAIR_SHIP));
     controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::BUY_SELL_CARGO));
     controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
@@ -6837,7 +6837,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
     controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::REPAIR_SHIP));
     controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::BUY_SELL_CARGO));
     controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
@@ -6958,6 +6958,65 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
+            if (current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::BUY_SELL_SHIP)
+                {
+                    if (current_mode != Control::Type::BUY_SELL_SHIP)
+                    {
+                        offset = 0;
+
+                        last = offset + limit;
+
+                        if (last > harbour->Ships.size())
+                        {
+                            last = harbour->Ships.size();
+                        }
+
+                        controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, texty + infoh);
+
+                        current = last - offset;
+                    }
+
+                    current_mode = Control::Type::BUY_SELL_SHIP;
+                }
+                else if (controls[current].Type == Control::Type::REPAIR_SHIP)
+                {
+                    if (current_mode != Control::Type::REPAIR_SHIP)
+                    {
+                        offset = 0;
+
+                        last = 0;
+
+                        controls = harbourControls(window, renderer);
+
+                        current = 1;
+                    }
+
+                    current_mode = Control::Type::REPAIR_SHIP;
+                }
+                else if (controls[current].Type == Control::Type::BUY_SELL_CARGO)
+                {
+                    if (current_mode != Control::Type::BUY_SELL_CARGO)
+                    {
+                        offset = 0;
+
+                        last = offset + limit;
+
+                        if (last > harbour->Cargo.size())
+                        {
+                            last = harbour->Cargo.size();
+                        }
+
+                        controls = cargoList(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
+
+                        current = last - offset + 3;
+                    }
+
+                    current_mode = Control::Type::BUY_SELL_CARGO;
+                }
+            }
+
             fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
             if (current_mode == Control::Type::BUY_SELL_SHIP)
@@ -6982,63 +7041,6 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
             else
             {
                 fillRect(renderer, textwidth, infoh, textx, texty, intBR);
-            }
-
-            if (current >= 0 && current < controls.size())
-            {
-                if (controls[current].Type == Control::Type::BUY_SELL_SHIP)
-                {
-                    if (current_mode != Control::Type::BUY_SELL_SHIP)
-                    {
-                        offset = 0;
-
-                        last = offset + limit;
-
-                        if (last > harbour->Ships.size())
-                        {
-                            last = harbour->Ships.size();
-                        }
-
-                        controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, texty + infoh);
-
-                        current_mode = Control::Type::BUY_SELL_SHIP;
-                    }
-                }
-                else if (controls[current].Type == Control::Type::REPAIR_SHIP)
-                {
-                    if (current_mode != Control::Type::REPAIR_SHIP)
-                    {
-                        offset = 0;
-
-                        last = 0;
-
-                        controls = harbourControls(window, renderer);
-
-                        current_mode = Control::Type::REPAIR_SHIP;
-                    }
-                }
-                else if (controls[current].Type == Control::Type::BUY_SELL_CARGO)
-                {
-                    if (current_mode != Control::Type::BUY_SELL_CARGO)
-                    {
-                        offset = 0;
-
-                        last = 0;
-
-                        offset = 0;
-
-                        last = offset + limit;
-
-                        if (last > harbour->Cargo.size())
-                        {
-                            last = harbour->Cargo.size();
-                        }
-
-                        controls = cargoList(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
-
-                        current_mode = Control::Type::BUY_SELL_CARGO;
-                    }
-                }
             }
 
             for (auto i = offset; i < last; i++)
