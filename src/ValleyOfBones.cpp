@@ -656,10 +656,10 @@ std::vector<TextButton> createFixedTextButtons(const char **choices, int num, in
     return controls;
 }
 
-SDL_Surface *createHeaderButton(SDL_Window *window, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x)
+SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_size, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x)
 {
     auto button = SDL_CreateRGBSurface(0, w, h, arrow_size, 0, 0, 0, 0);
-    auto text_surface = createText(text, FONT_GARAMOND, 24, color, w, TTF_STYLE_NORMAL);
+    auto text_surface = createText(text, font, font_size, color, w, TTF_STYLE_NORMAL);
 
     if (button && text_surface)
     {
@@ -2045,7 +2045,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             spell_string += "\nType: " + std::string(Spells::ScopeDescriptions[spell.Scope]) + ", Charged: " + std::string(spell.Charged ? "Yes" : "No") + ", Recharge: " + std::to_string(spell.Recharge);
 
-            auto button = createHeaderButton(window, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (int)(0.125 * SCREEN_HEIGHT), text_space);
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (int)(0.125 * SCREEN_HEIGHT), text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
@@ -2120,7 +2120,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             monster_string += ", Defense: " + std::to_string(monster.Defence) + "+, Health: " + std::to_string(monster.Health);
 
-            auto button = createHeaderButton(window, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (int)(0.125 * SCREEN_HEIGHT), text_space);
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (int)(0.125 * SCREEN_HEIGHT), text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
@@ -2184,7 +2184,7 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
 
             std::string adventurer_string = characterText(adventurer, true);
 
-            auto button = createHeaderButton(window, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (int)(0.125 * SCREEN_HEIGHT), text_space);
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (int)(0.125 * SCREEN_HEIGHT), text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
@@ -6719,18 +6719,159 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return done;
 }
 
+std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargoList, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (cargoList.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto cargo = std::get<0>(cargoList[index]);
+
+            auto buy = std::get<1>(cargoList[index]);
+
+            auto sell = std::get<2>(cargoList[index]);
+
+            std::string cargo_string = Cargo::Description[cargo];
+
+            cargo_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + " Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (cargoList.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (cargoList.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+
+    return controls;
+}
+
+std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::ShipPrices> &ships, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (ships.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto ship = std::get<0>(ships[index]);
+
+            auto buy = std::get<1>(ships[index]);
+
+            auto sell = std::get<2>(ships[index]);
+
+            std::string ship_string = "[" + std::string(ship.Name) + "] Fighting: " + std::to_string(ship.Fighting) + ", Health: " + std::to_string(ship.Health) + ", Cargo: " + std::to_string(ship.MaximumCargo) + " unit(s)";
+
+            ship_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + " Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (ships.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (ships.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+
+    return controls;
+}
+
+std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    auto idx = 0;
+
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx + 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx + 2, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx + 3, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+
+    return controls;
+}
+
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
     auto *title = "Harbour";
 
-    auto font_size = 20;
-    auto garamond_size = 24;
+    auto font_size = 28;
 
     TTF_Init();
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 32);
     auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
     TTF_SetFontKerning(font_dark11, 0);
@@ -6749,24 +6890,32 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
         auto selected = false;
 
-        auto main_buttonh = (int)(0.06 * SCREEN_HEIGHT);
-
         auto infoh = (int)(0.07 * SCREEN_HEIGHT);
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
-
-        auto controls = createHTextButtons(choices, 4, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
-
-        controls[0].Type = Control::Type::BUY_SELL_SHIP;
-        controls[1].Type = Control::Type::REPAIR_SHIP;
-        controls[2].Type = Control::Type::BUY_SELL_CARGO;
-        controls[3].Type = Control::Type::BACK;
-
-        auto done = false;
-
         auto text_space = 8;
 
-        auto Party = Party::Base();
+        auto offset = 0;
+        auto limit = (text_bounds - 2 * text_space - infoh) / (font_size * 2 + text_space * 4);
+        auto last = offset + limit;
+
+        if (last > harbour->Ships.size())
+        {
+            last = harbour->Ships.size();
+        }
+
+        auto controls = std::vector<Button>();
+
+        controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, (texty + infoh));
+
+        auto current_mode = Control::Type::BUY_SELL_SHIP;
+
+        bool scrollUp = false;
+        bool scrollDown = false;
+        auto scrollSpeed = 1;
+        bool hold = false;
+
+        auto done = false;
 
         while (!done)
         {
@@ -6811,37 +6960,244 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
             fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
-            if (current > 0 && current < controls.size())
-            {
-                if (controls[current].Type == Control::Type::REPAIR_SHIP)
-                {
-                    putHeader(renderer, "Repair Costs", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
-                else if (controls[current].Type == Control::Type::BUY_SELL_CARGO)
-                {
-                    putHeader(renderer, "Cargo Prices", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
-                else
-                {
-                    fillRect(renderer, textwidth, infoh, textx, texty, intBR);
-                }
-            }
-            else
+            if (current_mode == Control::Type::BUY_SELL_SHIP)
             {
                 putHeader(renderer, "Ship Prices", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
+            else if (current_mode == Control::Type::REPAIR_SHIP)
+            {
+                putHeader(renderer, "Repair Costs", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+                if (harbour->ShipRepairPrice > 0)
+                {
+                    std::string repair_string = "You can repair any ship you have here. It costs " + std::to_string(harbour->ShipRepairPrice) + " silver coins to restore each Health point. You can restore your ship up to its starting Health value.";
 
-            bool scrollUp = false;
-            bool scrollDown = false;
-            bool hold = false;
+                    putText(renderer, repair_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                }
+            }
+            else if (current_mode == Control::Type::BUY_SELL_CARGO)
+            {
+                putHeader(renderer, "Cargo Prices", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else
+            {
+                fillRect(renderer, textwidth, infoh, textx, texty, intBR);
+            }
+
+            if (current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::BUY_SELL_SHIP)
+                {
+                    if (current_mode != Control::Type::BUY_SELL_SHIP)
+                    {
+                        offset = 0;
+
+                        last = offset + limit;
+
+                        if (last > harbour->Ships.size())
+                        {
+                            last = harbour->Ships.size();
+                        }
+
+                        controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, texty + infoh);
+
+                        current_mode = Control::Type::BUY_SELL_SHIP;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::REPAIR_SHIP)
+                {
+                    if (current_mode != Control::Type::REPAIR_SHIP)
+                    {
+                        offset = 0;
+
+                        last = 0;
+
+                        controls = harbourControls(window, renderer);
+
+                        current_mode = Control::Type::REPAIR_SHIP;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::BUY_SELL_CARGO)
+                {
+                    if (current_mode != Control::Type::BUY_SELL_CARGO)
+                    {
+                        offset = 0;
+
+                        last = 0;
+
+                        offset = 0;
+
+                        last = offset + limit;
+
+                        if (last > harbour->Cargo.size())
+                        {
+                            last = harbour->Cargo.size();
+                        }
+
+                        controls = cargoList(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
+
+                        current_mode = Control::Type::BUY_SELL_CARGO;
+                    }
+                }
+            }
+
+            for (auto i = offset; i < last; i++)
+            {
+                auto index = i - offset;
+
+                if (current != index)
+                {
+                    if (index >= 0 && index < controls.size())
+                    {
+                        drawRect(renderer, controls[index].W + 16, controls[index].H + 16, controls[index].X - 8, controls[index].Y - 8, intBK);
+                    }
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, 8, 4);
 
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
-            if (selected && current >= 0 && current < controls.size())
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
             {
-                if (controls[current].Type == Control::Type::BACK)
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (offset > 0)
+                    {
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (current_mode == Control::Type::BUY_SELL_SHIP)
+                        {
+                            if (last > harbour->Ships.size())
+                            {
+                                last = harbour->Ships.size();
+                            }
+
+                            controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, texty + infoh);
+                        }
+                        else if (current_mode == Control::Type::BUY_SELL_CARGO)
+                        {
+                            if (last > harbour->Cargo.size())
+                            {
+                                last = harbour->Cargo.size();
+                            }
+
+                            controls = cargoList(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
+                        }
+
+                        SDL_Delay(50);
+                    }
+
+                    if (offset <= 0)
+                    {
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                {
+                    if (current_mode == Control::Type::BUY_SELL_SHIP)
+                    {
+                        if (harbour->Ships.size() - last > 0)
+                        {
+                            if (offset < harbour->Ships.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > harbour->Ships.size() - limit)
+                            {
+                                offset = harbour->Ships.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > harbour->Ships.size())
+                            {
+                                last = harbour->Ships.size();
+                            }
+
+                            controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, texty + infoh);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (harbour->Ships.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (current_mode == Control::Type::BUY_SELL_CARGO)
+                    {
+                        if (harbour->Cargo.size() - last > 0)
+                        {
+                            if (offset < harbour->Cargo.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > harbour->Cargo.size() - limit)
+                            {
+                                offset = harbour->Cargo.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > harbour->Cargo.size())
+                            {
+                                last = harbour->Cargo.size();
+                            }
+
+                            controls = cargoList(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (harbour->Cargo.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+
+                    SDL_Delay(50);
+
+                    if (offset > 0)
+                    {
+                        if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                        {
+                            current++;
+                        }
+                    }
+                }
+                else if (controls[current].Type == Control::Type::BACK)
                 {
                     done = true;
 
@@ -6896,7 +7252,7 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
         {
             auto index = start + i;
 
-            auto button = createHeaderButton(window, choices[index].Text, clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, choices[index].Text, clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
