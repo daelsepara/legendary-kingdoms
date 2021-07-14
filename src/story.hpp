@@ -279,6 +279,8 @@ namespace Story
 
         const char *Image = NULL;
 
+        Story::Type Type = Story::Type::NORMAL;
+
         Story::Controls Controls = Story::Controls::NONE;
 
         std::vector<Choice::Base> Choices = {};
@@ -289,23 +291,23 @@ namespace Story
         // Player selects items to take up to a certain limit
         std::vector<Equipment::Base> Take = {};
 
+        // Player selects spells to learn
+        std::vector<Spells::Base> Spells = {};
+
         // Player selects items to lose
         std::vector<Equipment::Base> ToLose = {};
 
-        int Limit = 0;
-
-        int LimitSkills = 0;
-
-        Story::Type Type = Story::Type::NORMAL;
-
-        // Results of combat
-        Engine::Combat Combat = Engine::Combat::NONE;
-
+        // Combat encounters
         std::vector<Monster::Base> Monsters = {};
 
         int FleeRound = -1;
 
         bool CanFlee = false;
+
+        // Limits
+        int Limit = 0;
+
+        int LimitSkills = 0;
 
         // Harbour
         std::vector<Engine::ShipPrices> Ships = {};
@@ -324,6 +326,7 @@ namespace Story
         // Callbacks
         virtual void SkillCheck(std::vector<Character::Base> &party, bool outcome, std::vector<int> selection){};
         virtual void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection){};
+        virtual void afterCombat(Party::Base &party, Engine::Combat result){};
 
         Base()
         {

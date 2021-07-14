@@ -8421,7 +8421,9 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         if (Engine::COUNT(story->Monsters) > 0)
                         {
-                            story->Combat = combatScreen(window, renderer, party, story->Monsters, story->CanFlee, story->FleeRound, true);
+                            auto result = combatScreen(window, renderer, party, story->Monsters, story->CanFlee, story->FleeRound, true);
+
+                            story->Combat(party, result);
                         }
 
                         if (Engine::COUNT(party.Party) > 0)

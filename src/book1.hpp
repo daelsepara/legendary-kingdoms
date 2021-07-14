@@ -34,6 +34,8 @@ namespace Book1
     class Story002 : public Story::Base
     {
     public:
+        Engine::Destination destination;
+
         Story002()
         {
             BookID = Book::Type::BOOK1;
@@ -49,9 +51,9 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Bye = NULL;
+            destination = {Book::Type::BOOK1, 478};
 
-            Combat = Engine::Combat::NONE;
+            Bye = NULL;
 
             CanFlee = true;
 
@@ -64,15 +66,20 @@ namespace Book1
 
         Engine::Destination Continue(Party::Base &party)
         {
-            if (Combat == Engine::Combat::FLEE)
+            return destination;
+        }
+
+        void afterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::FLEE)
             {
                 Bye = "The orcs chase you out of the dungeon.";
 
-                return {Book::Type::BOOK1, 515};
+                destination = {Book::Type::BOOK1, 515};
             }
             else
             {
-                return {Book::Type::BOOK1, 478};
+                destination = {Book::Type::BOOK1, 478};
             }
         }
     };
@@ -475,8 +482,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Combat = Engine::Combat::NONE;
-
             CanFlee = false;
 
             Monsters = {
@@ -667,8 +672,6 @@ namespace Book1
             PreText = "The passageway opens up into a long hall, lined with stamped bronze plates. Torches burn in brackets along the walls, illuminating hideous murals of serpents devouring animals, trees and rocks. You see daylight ahead and come upon a chamber whose roof is open to the blazing sun. It is another temple chamber with black altars and fine silverwork dominating the room.\n\nRising from his position in front of the high altar, a snakeman priest in flowing vestal robes turns to gaze at you with piercing eyes.\n\n\"The heretic slaves return!\" he hisses. \"Do not think that you can seek repentance from the lord of judgement now! Once a traitor, always a traitor!\"";
 
             Monsters.clear();
-
-            Combat = Engine::Combat::NONE;
 
             CanFlee = false;
 
@@ -1001,8 +1004,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Combat = Engine::Combat::NONE;
-
             CanFlee = false;
 
             Monsters = {
