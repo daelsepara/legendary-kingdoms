@@ -777,21 +777,69 @@ namespace Engine
     {
         party.IsParty = true;
 
-        if (party.Current.Type != Character::Type::NONE)
+        if (party.Current >= 0 && party.Party.size())
         {
-            party.Party.push_back(party.Current);
+            party.Party[party.Current].Team = Team::Type::NONE;
         }
 
-        party.Current = Character::Nobody;
+        party.Current = -1;
+    }
+
+    int FIND_LIST(std::vector<Team::Type> selection, Team::Type team)
+    {
+        auto found = -1;
+
+        for (auto i = 0; i < selection.size(); i++)
+        {
+            if (selection[i] == team)
+            {
+                found = i;
+
+                break;
+            }
+        }
+
+        return found;
+    }
+
+    int COUNT_TEAMS(Party::Base &party)
+    {
+        auto teams = std::vector<Team::Type>();
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (Engine::FIND_LIST(teams, party.Party[i].Team) < 0 && party.Party[i].Team != Team::Type::NONE)
+            {
+                teams.push_back(party.Party[i].Team);
+            }
+        }
+
+        return teams.size();
+    }
+
+    std::vector<Team::Type> GET_TEAMS(Party::Base &party)
+    {
+        auto teams = std::vector<Team::Type>();
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (Engine::FIND_LIST(teams, party.Party[i].Team) < 0 && party.Party[i].Team != Team::Type::NONE)
+            {
+                teams.push_back(party.Party[i].Team);
+            }
+        }
+
+        return teams;
     }
 
     void CONSOLIDATE(Party::Base &party)
     {
-        if (party.OtherParty.size() > 0)
+        if (Engine::COUNT_TEAMS(party) > 0)
         {
-            party.Party.insert(party.Party.end(), party.OtherParty.begin(), party.OtherParty.end());
-
-            party.OtherParty.clear();
+            for (auto i = 0; i < party.Party.size(); i++)
+            {
+                party.Party[i].Team = Team::Type::NONE;
+            }
         }
     }
 
@@ -801,11 +849,11 @@ namespace Engine
 
         if (result >= 0)
         {
-            party.Current = party.Party[result];
+            party.Current = result;
 
             party.IsParty = false;
 
-            party.Party.erase(party.Party.begin() + result);
+            party.Party[result].Team = Team::Type::SOLO;
         }
     }
 

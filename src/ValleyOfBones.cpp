@@ -51,7 +51,7 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
 bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Book::Type book, Story::Base *story);
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
-bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection);
+bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection);
 bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
 bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
@@ -1125,7 +1125,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
 
             if (current != 0 && character >= 0 && character < party.Party.size() && !summary_view)
             {
-                if (party.Party[character].Status.size() > 0)
+                if ((party.Party[character].Status.size() > 0) || (party.Party[character].Team != Team::Type::NONE))
                 {
                     putHeader(renderer, "Status", font_mason2, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
@@ -1139,6 +1139,21 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
                         }
 
                         status_string += Character::StatusDescriptions[party.Party[character].Status[i]];
+                    }
+
+                    if (party.Party[character].Team != Team::Type::NONE)
+                    {
+                        if (status_string.length() > 0)
+                        {
+                            status_string += ", ";
+                        }
+
+                        status_string += std::string(Team::Descriptions[party.Party[character].Team]);
+
+                        if (party.Party[character].Team != Team::Type::SOLO)
+                        {
+                            status_string += " team";
+                        }
                     }
 
                     putText(renderer, status_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
@@ -5042,7 +5057,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
     return result;
 }
 
-bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection)
+bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection)
 {
     bool result = false;
 
@@ -5253,7 +5268,24 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
                                 {
                                     if (party[current + offset].Health > 0)
                                     {
-                                        selection.push_back(current + offset);
+                                        if (team != Team::Type::NONE)
+                                        {
+                                            selection.push_back(current + offset);
+                                        }
+                                        else if (party[current + offset].Team == team)
+                                        {
+                                            selection.push_back(current + offset);
+                                        }
+                                        else
+                                        {
+                                            flash_message = true;
+
+                                            message = std::string(party[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!";
+
+                                            start_ticks = SDL_GetTicks();
+
+                                            flash_color = intRD;
+                                        }
                                     }
                                     else
                                     {
@@ -7862,34 +7894,27 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
             }
 
-            if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && Engine::COUNT(party.OtherParty) > 0)
+            if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && Engine::COUNT_TEAMS(party) > 0)
             {
-                putHeader(renderer, "Other Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+                putHeader(renderer, "Teams", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
 
-                if (Engine::COUNT(party.OtherParty) > 0)
+                auto teams = Engine::GET_TEAMS(party);
+
+                if (teams.size() > 0)
                 {
-                    std::string party_string = "";
+                    std::string teams_string = "";
 
-                    auto count = 0;
-
-                    for (auto i = 0; i < party.OtherParty.size(); i++)
+                    for (auto i = 0; i < teams.size(); i++)
                     {
-                        if (count > 0)
+                        if (i > 0)
                         {
-                            party_string += "\n";
+                            teams_string += "\n";
                         }
 
-                        party_string += party.OtherParty[i].Name;
-
-                        if (party.OtherParty[i].Health <= 0)
-                        {
-                            party_string += " (D)";
-                        }
-
-                        count++;
+                        teams_string += Team::Descriptions[teams[i]];
                     }
 
-                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
+                    putText(renderer, teams_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
                 }
                 else
                 {
@@ -8027,104 +8052,50 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::ATTRIBUTES)
                         {
-                            if (story->Choices[choice].Characters.size() > 0)
+                            auto selection = std::vector<int>();
+
+                            auto success = skillCheck(window, renderer, party.Party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
+
+                            if (selection.size() == 1)
                             {
-                                auto selection = std::vector<int>();
+                                story->SkillCheck(party.Party, success, selection);
 
-                                auto success = skillCheck(window, renderer, story->Choices[choice].Characters, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
-
-                                if (selection.size() == 1)
+                                if (success)
                                 {
-                                    story->SkillCheck(story->Choices[choice].Characters, success, selection);
-
-                                    if (success)
-                                    {
-                                        next = findStory(story->Choices[choice].Destination);
-                                    }
-                                    else
-                                    {
-                                        next = findStory(story->Choices[choice].DestinationFailed);
-                                    }
-
-                                    done = true;
-
-                                    break;
+                                    next = findStory(story->Choices[choice].Destination);
                                 }
-                            }
-                            else
-                            {
-                                auto selection = std::vector<int>();
-
-                                auto success = skillCheck(window, renderer, party.Party, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
-
-                                if (selection.size() == 1)
+                                else
                                 {
-                                    story->SkillCheck(party, success, selection);
-
-                                    if (success)
-                                    {
-                                        next = findStory(story->Choices[choice].Destination);
-                                    }
-                                    else
-                                    {
-                                        next = findStory(story->Choices[choice].DestinationFailed);
-                                    }
-
-                                    done = true;
-
-                                    break;
+                                    next = findStory(story->Choices[choice].DestinationFailed);
                                 }
+
+                                done = true;
+
+                                break;
                             }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::TEAM_ATTRIBUTES)
                         {
-                            if (story->Choices[choice].Characters.size() > 0)
+                            auto selection = std::vector<int>();
+
+                            auto success = skillCheck(window, renderer, party.Party, story->Choices[choice].Team, 2, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
+
+                            if (selection.size() == 2)
                             {
-                                auto selection = std::vector<int>();
+                                story->SkillCheck(party.Party, success, selection);
 
-                                auto success = skillCheck(window, renderer, story->Choices[choice].Characters, 2, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
-
-                                if (selection.size() == 2)
+                                if (success)
                                 {
-                                    story->SkillCheck(story->Choices[choice].Characters, success, selection);
-
-                                    if (success)
-                                    {
-                                        next = findStory(story->Choices[choice].Destination);
-                                    }
-                                    else
-                                    {
-                                        next = findStory(story->Choices[choice].DestinationFailed);
-                                    }
-
-                                    done = true;
-
-                                    break;
+                                    next = findStory(story->Choices[choice].Destination);
                                 }
-                            }
-                            else
-                            {
-                                auto selection = std::vector<int>();
-
-                                auto success = skillCheck(window, renderer, party.Party, 2, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
-
-                                if (selection.size() == 2)
+                                else
                                 {
-                                    story->SkillCheck(party, success, selection);
-
-                                    if (success)
-                                    {
-                                        next = findStory(story->Choices[choice].Destination);
-                                    }
-                                    else
-                                    {
-                                        next = findStory(story->Choices[choice].DestinationFailed);
-                                    }
-
-                                    done = true;
-
-                                    break;
+                                    next = findStory(story->Choices[choice].DestinationFailed);
                                 }
+
+                                done = true;
+
+                                break;
                             }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::EQUIPMENT)
@@ -8614,34 +8585,27 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                 }
 
-                if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && Engine::COUNT(party.OtherParty) > 0)
+                if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && Engine::COUNT_TEAMS(party) > 0)
                 {
-                    putHeader(renderer, "Other Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+                    putHeader(renderer, "Teams", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
 
-                    if (Engine::COUNT(party.OtherParty) > 0)
+                    auto teams = Engine::GET_TEAMS(party);
+
+                    if (teams.size() > 0)
                     {
-                        std::string party_string = "";
+                        std::string teams_string = "";
 
-                        auto count = 0;
-
-                        for (auto i = 0; i < party.OtherParty.size(); i++)
+                        for (auto i = 0; i < teams.size(); i++)
                         {
-                            if (count > 0)
+                            if (i > 0)
                             {
-                                party_string += "\n";
+                                teams_string += "\n";
                             }
 
-                            party_string += party.OtherParty[i].Name;
-
-                            if (party.OtherParty[i].Health <= 0)
-                            {
-                                party_string += " (D)";
-                            }
-
-                            count++;
+                            teams_string += Team::Descriptions[teams[i]];
                         }
 
-                        putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
+                        putText(renderer, teams_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
                     }
                     else
                     {
@@ -9235,7 +9199,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     auto selection = std::vector<int>();
 
-                    skillCheck(window, renderer, Party.Party, 2, Attribute::Type::STEALTH, 4, 4, selection);
+                    skillCheck(window, renderer, Party.Party, Team::Type::NONE, 2, Attribute::Type::STEALTH, 4, 4, selection);
 
                     current = -1;
 
@@ -9247,7 +9211,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     auto selection = std::vector<int>();
 
-                    skillCheck(window, renderer, Party.Party, 1, Attribute::Type::LORE, 4, 3, selection);
+                    skillCheck(window, renderer, Party.Party, Team::Type::NONE, 1, Attribute::Type::LORE, 4, 3, selection);
 
                     current = -1;
 

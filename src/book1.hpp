@@ -221,8 +221,11 @@ namespace Book1
         {
             Choices.clear();
 
-            auto jessica = Engine::FIND_CHARACTER(party.OtherParty, Character::Type::SAR_JESSICA_DAYNE) >= 0;
-            auto akihiro = Engine::FIND_CHARACTER(party.OtherParty, Character::Type::AKIHIRO_OF_CHALICE) >= 0;
+            auto index_j = Engine::FIND_CHARACTER(party.Party, Character::Type::SAR_JESSICA_DAYNE);
+            auto index_a = Engine::FIND_CHARACTER(party.Party, Character::Type::AKIHIRO_OF_CHALICE);
+
+            auto jessica = index_j >= 0 && party.Party[index_j].Team == Team::Type::DISTRACTION;
+            auto akihiro = index_a >= 0 && party.Party[index_a].Team == Team::Type::DISTRACTION;
 
             if (jessica || akihiro)
             {
@@ -245,7 +248,7 @@ namespace Book1
             {
                 PreText = "The guards have been looking at you with hungry eyes recently. You sidle up to the gate-house guards, suggesting all sorts of pleasures could await them in exchange for a few paltry rations.";
 
-                Choices.push_back(Choice::Base("Seduce the Guards (Team: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
+                Choices.push_back(Choice::Base("Seduce the Guards (Team: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, Team::Type::DISTRACTION, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
             }
 
             Text = PreText.c_str();
@@ -894,7 +897,7 @@ namespace Book1
             Choices.push_back(Choice::Base("Give the mercenaries a GOLD BULLION bar", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION1}, 1));
             Choices.push_back(Choice::Base("Give the mercenaries two GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 2));
             Choices.push_back(Choice::Base("Give the mercenaries three GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 3));
-            Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
+            Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
 
             Take = {Equipment::GOLD_BULLION};
 
@@ -922,19 +925,19 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION1}))
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 5+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 5+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 7));
             }
             else if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION2}))
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 4+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 4+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 7));
             }
             else if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION2}))
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 2+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 2, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 2+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 2, 7));
             }
             else
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, party.OtherParty, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
             }
         }
     };

@@ -16,6 +16,25 @@
 
 #include <map>
 
+namespace Team
+{
+    enum class Type
+    {
+        NONE,
+        SOLO,
+        WEAPONS,
+        DISTRACTION,
+        MERCENARY
+    };
+
+    std::map<Team::Type, const char *> Descriptions = {
+        {Team::Type::NONE, "None"},
+        {Team::Type::NONE, "Solo"},
+        {Team::Type::WEAPONS, "Weapons"},
+        {Team::Type::DISTRACTION, "Distraction"},
+        {Team::Type::MERCENARY, "Mercenary"}};
+}
+
 namespace Character
 {
     // Handle unique characters
@@ -59,6 +78,8 @@ namespace Character
 
         // Temporary Status Codes
         std::vector<Character::Status> Status = std::vector<Character::Status>();
+
+        Team::Type Team = Team::Type::NONE;
 
         int Health = 0;
 
@@ -136,8 +157,6 @@ namespace Party
     public:
         std::vector<Character::Base> Party = std::vector<Character::Base>();
 
-        std::vector<Character::Base> OtherParty = std::vector<Character::Base>();
-
         std::vector<Codes::Base> Codes = std::vector<Codes::Base>();
 
         std::vector<Codes::Type> InvisibleCodes = std::vector<Codes::Type>();
@@ -165,7 +184,7 @@ namespace Party
         // TODO: Ensure that IsParty and Current is consistent: When IsParty = false, Current != Character::Type::NONE. When IsParty = true, Current = Character::Type::NONE.
         bool IsParty = true;
 
-        Character::Base Current = Character::Base();
+        int Current = -1;
 
         std::map<std::pair<Character::Type, Character::Type>, int> Hearts = std::map<std::pair<Character::Type, Character::Type>, int>();
 
