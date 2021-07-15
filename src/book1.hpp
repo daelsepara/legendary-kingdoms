@@ -223,25 +223,39 @@ namespace Book1
 
             auto jessica = Engine::IN_TEAM(party, Character::Type::SAR_JESSICA_DAYNE, Team::Type::DISTRACTION);
             auto akihiro = Engine::IN_TEAM(party, Character::Type::AKIHIRO_OF_CHALICE, Team::Type::DISTRACTION);
-            ;
 
             if (jessica || akihiro)
             {
                 if (jessica && akihiro)
                 {
-                    PreText = "Sar Jessica Dayne and Akihiro";
+                    PreText = "Sar Jessica Dayne and Akihiro refuse";
                 }
                 else if (jessica)
                 {
-                    PreText = "Sar Jessica Dayne";
+                    PreText = "Sar Jessica Dayne refuses";
                 }
                 else
                 {
-                    PreText = "Akihiro";
+                    PreText = "Akihiro refuses";
                 }
 
-                PreText += "'s sense of personal honour ";
-                
+                PreText += " to comply. ";
+
+                if (jessica && akihiro)
+                {
+                    PreText = "Their";
+                }
+                else if (jessica)
+                {
+                    PreText = "Sar Jessica Dayne's";
+                }
+                else
+                {
+                    PreText = "Akihiro's";
+                }
+
+                PreText += " sense of personal honour ";
+
                 if (jessica && akihiro)
                 {
                     PreText = "are";
