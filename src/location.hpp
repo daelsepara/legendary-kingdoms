@@ -3,8 +3,6 @@
 
 #include <map>
 
-#include "location.hpp"
-
 namespace Location
 {
     enum class Type
