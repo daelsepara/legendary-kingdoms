@@ -759,6 +759,11 @@ std::string characterText(Character::Base &character, bool compact)
     else
     {
         character_text = character.Name;
+
+        if (character.Team != Team::Type::NONE)
+        {
+            character_text += ", Team: " + std::string(Team::Descriptions[character.Team]);
+        }
     }
 
     if (!compact)
@@ -849,10 +854,10 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ARMY));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::FLEET));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::ROMANCE));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, army.size() > 0 ? idx - 1 : idx, idx, startx, buttony, Control::Type::ARMY));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, army.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::FLEET));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, army.size() > 0 ? idx - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::ROMANCE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, army.size() > 0 ? idx - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -923,10 +928,10 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ARMY));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::FLEET));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::ROMANCE));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? idx - 1 : idx, idx, startx, buttony, Control::Type::ARMY));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, ships.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::FLEET));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, ships.size() > 0 ? idx - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::ROMANCE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, ships.size() > 0 ? idx - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -996,10 +1001,10 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ARMY));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::FLEET));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::ROMANCE));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, hearts.size() > 0 ? idx - 1 : idx, idx, startx, buttony, Control::Type::ARMY));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, hearts.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::FLEET));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, hearts.size() > 0 ? idx - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::ROMANCE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, hearts.size() > 0 ? idx - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -2688,7 +2693,7 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
 
             std::string adventurer_string = characterText(adventurer, true);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (int)(0.125 * SCREEN_HEIGHT), text_space);
+            auto button = createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (int)(0.125 * SCREEN_HEIGHT), text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
@@ -3437,7 +3442,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                             {
                                 monsters[opponent].Damaged = true;
 
-                                message = std::string(party[combatant].Name) + "'s" + std::string(spell.Name) + " DEALS " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!";
+                                message = std::string(party[combatant].Name) + "'s " + std::string(spell.Name) + " DEALS " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!";
 
                                 flash_color = intLB;
                             }
@@ -5757,7 +5762,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
                                 {
                                     if (party[current + offset].Health > 0)
                                     {
-                                        if (team != Team::Type::NONE)
+                                        if (team == Team::Type::NONE)
                                         {
                                             selection.push_back(current + offset);
                                         }
@@ -7721,33 +7726,33 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::REPAIR_SHIP));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::BUY_SELL_CARGO));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? idx - 1 : idx, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, ships.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, ships.size() > 0 ? idx - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, ships.size() > 0 ? idx - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
 
     return controls;
 }
 
-std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargoList, int start, int last, int limit, int offsetx, int offsety)
+std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargo, int start, int last, int limit, int offsetx, int offsety)
 {
     auto controls = std::vector<Button>();
 
     auto text_space = 8;
 
-    if (cargoList.size() > 0)
+    if (cargo.size() > 0)
     {
         for (auto i = 0; i < last - start; i++)
         {
             auto index = start + i;
 
-            auto cargo = std::get<0>(cargoList[index]);
+            auto cargo_unit = std::get<0>(cargo[index]);
 
-            auto buy = std::get<1>(cargoList[index]);
+            auto buy = std::get<1>(cargo[index]);
 
-            auto sell = std::get<2>(cargoList[index]);
+            auto sell = std::get<2>(cargo[index]);
 
-            std::string cargo_string = Cargo::Description[cargo];
+            std::string cargo_string = Cargo::Description[cargo_unit];
 
             cargo_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + " Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
 
@@ -7765,7 +7770,7 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     auto idx = controls.size();
 
-    if (cargoList.size() > limit)
+    if (cargo.size() > limit)
     {
         if (start > 0)
         {
@@ -7774,7 +7779,7 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
             idx++;
         }
 
-        if (cargoList.size() - last > 0)
+        if (cargo.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
 
@@ -7784,10 +7789,10 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::REPAIR_SHIP));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::BUY_SELL_CARGO));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, cargo.size() > 0 ? idx - 1 : idx, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, cargo.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, cargo.size() > 0 ? idx - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, cargo.size() > 0 ? idx - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
 
     return controls;
 }

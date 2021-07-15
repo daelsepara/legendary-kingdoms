@@ -40,7 +40,8 @@ namespace Choice
         BARTER,
         SHIP,
         ADD_MAX_HEALTH,
-        BRIBE_CODEWORD
+        BRIBE_CODEWORD,
+        GAIN_ABILITY_SCORE
     };
 
     class Base

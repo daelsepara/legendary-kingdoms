@@ -221,11 +221,9 @@ namespace Book1
         {
             Choices.clear();
 
-            auto index_j = Engine::FIND_CHARACTER(party.Party, Character::Type::SAR_JESSICA_DAYNE);
-            auto index_a = Engine::FIND_CHARACTER(party.Party, Character::Type::AKIHIRO_OF_CHALICE);
-
-            auto jessica = index_j >= 0 && party.Party[index_j].Team == Team::Type::DISTRACTION;
-            auto akihiro = index_a >= 0 && party.Party[index_a].Team == Team::Type::DISTRACTION;
+            auto jessica = Engine::IN_TEAM(party, Character::Type::SAR_JESSICA_DAYNE, Team::Type::DISTRACTION);
+            auto akihiro = Engine::IN_TEAM(party, Character::Type::AKIHIRO_OF_CHALICE, Team::Type::DISTRACTION);
+            ;
 
             if (jessica || akihiro)
             {
@@ -242,7 +240,18 @@ namespace Book1
                     PreText = "Akihiro";
                 }
 
-                PreText += "'s sense of personal honour is too strict to attempt such a strategy.";
+                PreText += "'s sense of personal honour ";
+                
+                if (jessica && akihiro)
+                {
+                    PreText = "are";
+                }
+                else
+                {
+                    PreText = "is";
+                }
+
+                PreText += " too strict to attempt such a strategy.";
             }
             else
             {

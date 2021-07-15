@@ -964,5 +964,27 @@ namespace Engine
 
         party.Location = location;
     }
+
+    bool IN_TEAM(Party::Base &party, Character::Type character, Team::Type team)
+    {
+        auto found = false;
+
+        auto result = Engine::FIND_CHARACTER(party.Party, character);
+
+        if (result >= 0 && result < party.Party.size())
+        {
+            if (party.Party[result].Team == team || team == Team::Type::NONE)
+            {
+                found = true;
+            }
+        }
+
+        return found;
+    }
+
+    bool IN_PARTY(Party::Base &party, Character::Type character)
+    {
+        return Engine::IN_TEAM(party, character, Team::Type::NONE);
+    }
 }
 #endif
