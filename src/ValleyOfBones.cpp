@@ -798,18 +798,223 @@ std::string characterText(Character::Base &character, bool compact)
     return character_text;
 };
 
+std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (army.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto unit = army[index];
+
+            std::string ship_string = "[" + std::string(unit.Name) + "] Strength: " + std::to_string(unit.Strength) + ", Morale: " + std::to_string(unit.Morale);
+
+            ship_string += "\nPosition: " + std::string(Location::BattleFieldDescription[unit.Position]) + " Garrison: " + std::string(Location::Description[unit.Garrison]);
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (army.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (army.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ARMY));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::FLEET));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::ROMANCE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+
+    return controls;
+}
+
+std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (ships.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto ship = ships[index];
+
+            std::string ship_string = "[" + std::string(ship.Name) + "] Fighting: " + std::to_string(ship.Fighting) + ", Health: " + std::to_string(ship.Health) + ", Cargo Units: " + std::to_string(ship.MaximumCargo);
+
+            ship_string += "\nLocation: " + std::string(Location::Description[ship.Location]);
+
+            if (ship.Cargo.size() > 0)
+            {
+                ship_string += " Cargo: ";
+
+                for (auto j = 0; j < ship.Cargo.size(); j++)
+                {
+                    if (j > 0)
+                    {
+                        ship_string += ", ";
+                    }
+
+                    ship_string += Cargo::Description[ship.Cargo[j]];
+                }
+            }
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (ships.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (ships.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ARMY));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::FLEET));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::ROMANCE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+
+    return controls;
+}
+
+std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std::map<Character::Romance, int> &hearts, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (hearts.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto ship = hearts.begin();
+
+            std::advance(ship, index);
+
+            Character::Romance romance = ship->first;
+
+            auto from = Character::ALL[Engine::FIND_CHARACTER(Character::ALL, romance.first)];
+            auto to = Character::ALL[Engine::FIND_CHARACTER(Character::ALL, romance.second)];
+
+            auto count = ship->second;
+
+            std::string ship_string = std::string(from.Name) + " has " + std::to_string(count) + " heart";
+
+            if (count > 1)
+            {
+                ship_string += "s";
+            }
+
+            ship_string += " for " + std::string(to.Name) + ".";
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (hearts.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (hearts.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ARMY));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::FLEET));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::ROMANCE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+
+    return controls;
+}
+
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
 {
-    auto *title = "Party Details";
+    auto *title = "Legendary Kingdoms 1 - The Valley of Bones: Party";
 
-    auto font_size = 20;
-    auto garamond_size = 24;
+    auto font_size = 28;
 
     TTF_Init();
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 32);
     auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
     TTF_SetFontKerning(font_dark11, 0);
@@ -822,30 +1027,36 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     {
         SDL_SetWindowTitle(window, title);
 
-        const char *choices[4] = {"ARMY", "FLEET", "ROMANCE", "BACK"};
-
         auto current = 0;
 
         auto selected = false;
 
-        auto main_buttonh = (int)(0.06 * SCREEN_HEIGHT);
-
         auto infoh = (int)(0.07 * SCREEN_HEIGHT);
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
-
-        auto controls = createHTextButtons(choices, 4, main_buttonh, startx, SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh);
-
-        controls[0].Type = Control::Type::ARMY;
-        controls[1].Type = Control::Type::FLEET;
-        controls[2].Type = Control::Type::ROMANCE;
-        controls[3].Type = Control::Type::BACK;
-
-        auto done = false;
-
         auto text_space = 8;
 
-        auto Party = Party::Base();
+        auto offset = 0;
+        auto limit = (text_bounds - 2 * text_space - infoh) / (font_size * 2 + text_space * 4);
+        auto last = offset + limit;
+
+        if (last > party.Army.size())
+        {
+            last = party.Army.size();
+        }
+
+        auto controls = std::vector<Button>();
+
+        controls = armyList(window, renderer, party.Army, offset, last, limit, textx, (texty + infoh));
+
+        auto current_mode = Control::Type::ARMY;
+
+        bool scrollUp = false;
+        bool scrollDown = false;
+        auto scrollSpeed = 1;
+        bool hold = false;
+
+        auto done = false;
 
         while (!done)
         {
@@ -888,39 +1099,317 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
-            fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
-
-            if (current > 0 && current < controls.size())
+            if (current >= 0 && current < controls.size())
             {
-                if (controls[current].Type == Control::Type::FLEET)
+                if (controls[current].Type == Control::Type::ARMY)
                 {
-                    putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    if (current_mode != Control::Type::ARMY)
+                    {
+                        offset = 0;
+
+                        last = offset + limit;
+
+                        if (last > party.Army.size())
+                        {
+                            last = party.Army.size();
+                        }
+
+                        controls = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh);
+
+                        if (party.Army.size() - last > 0)
+                        {
+                            current = last - offset + 1;
+                        }
+                        else
+                        {
+                            current = last - offset;
+                        }
+                    }
+
+                    current_mode = Control::Type::ARMY;
+                }
+                else if (controls[current].Type == Control::Type::FLEET)
+                {
+                    if (current_mode != Control::Type::FLEET)
+                    {
+                        offset = 0;
+
+                        last = offset + limit;
+
+                        if (last > party.Fleet.size())
+                        {
+                            last = party.Fleet.size();
+                        }
+
+                        controls = shipList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
+
+                        if (party.Fleet.size() - last > 0)
+                        {
+                            current = last - offset + 2;
+                        }
+                        else
+                        {
+                            current = last - offset + 1;
+                        }
+                    }
+
+                    current_mode = Control::Type::FLEET;
                 }
                 else if (controls[current].Type == Control::Type::ROMANCE)
                 {
-                    putHeader(renderer, "Romance", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
-                else
-                {
-                    fillRect(renderer, textwidth, infoh, textx, texty, intBR);
+                    if (current_mode != Control::Type::ROMANCE)
+                    {
+                        offset = 0;
+
+                        last = offset + limit;
+
+                        if (last > party.Hearts.size())
+                        {
+                            last = party.Hearts.size();
+                        }
+
+                        controls = romanceList(window, renderer, party.Hearts, offset, last, limit, textx, texty + infoh);
+
+                        if (party.Hearts.size() - last > 0)
+                        {
+                            current = last - offset + 3;
+                        }
+                        else
+                        {
+                            current = last - offset + 2;
+                        }
+                    }
+
+                    current_mode = Control::Type::ROMANCE;
                 }
             }
-            else
+
+            fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
+
+            if (current_mode == Control::Type::ARMY)
             {
                 putHeader(renderer, "Army", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
+            else if (current_mode == Control::Type::FLEET)
+            {
+                putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else if (current_mode == Control::Type::ROMANCE)
+            {
+                putHeader(renderer, "Romance", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else
+            {
+                fillRect(renderer, textwidth, infoh, textx, texty, intBR);
+            }
 
-            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+            for (auto i = offset; i < last; i++)
+            {
+                auto index = i - offset;
 
-            bool scrollUp = false;
-            bool scrollDown = false;
-            bool hold = false;
+                if (current != index)
+                {
+                    if (index >= 0 && index < controls.size())
+                    {
+                        drawRect(renderer, controls[index].W + 16, controls[index].H + 16, controls[index].X - 8, controls[index].Y - 8, intBK);
+                    }
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, 8, 4);
 
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
-            if (selected && current >= 0 && current < controls.size())
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
             {
-                if (controls[current].Type == Control::Type::BACK)
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (offset > 0)
+                    {
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (current_mode == Control::Type::ARMY)
+                        {
+                            if (last > party.Army.size())
+                            {
+                                last = party.Army.size();
+                            }
+
+                            controls = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh);
+                        }
+                        else if (current_mode == Control::Type::FLEET)
+                        {
+                            if (last > party.Fleet.size())
+                            {
+                                last = party.Fleet.size();
+                            }
+
+                            controls = shipList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
+                        }
+                        else if (current_mode == Control::Type::ROMANCE)
+                        {
+                            if (last > party.Hearts.size())
+                            {
+                                last = party.Hearts.size();
+                            }
+
+                            controls = romanceList(window, renderer, party.Hearts, offset, last, limit, textx, texty + infoh);
+                        }
+
+                        SDL_Delay(50);
+                    }
+
+                    if (offset <= 0)
+                    {
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                {
+                    if (current_mode == Control::Type::ARMY)
+                    {
+                        if (party.Army.size() - last > 0)
+                        {
+                            if (offset < party.Army.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > party.Army.size() - limit)
+                            {
+                                offset = party.Army.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Army.size())
+                            {
+                                last = party.Army.size();
+                            }
+
+                            controls = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (party.Army.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (current_mode == Control::Type::FLEET)
+                    {
+                        if (party.Fleet.size() - last > 0)
+                        {
+                            if (offset < party.Fleet.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > party.Fleet.size() - limit)
+                            {
+                                offset = party.Fleet.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Fleet.size())
+                            {
+                                last = party.Fleet.size();
+                            }
+
+                            controls = shipList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (party.Fleet.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (current_mode == Control::Type::ROMANCE)
+                    {
+                        if (party.Hearts.size() - last > 0)
+                        {
+                            if (offset < party.Hearts.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > party.Hearts.size() - limit)
+                            {
+                                offset = party.Hearts.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Hearts.size())
+                            {
+                                last = party.Hearts.size();
+                            }
+
+                            controls = romanceList(window, renderer, party.Hearts, offset, last, limit, textx, texty + infoh);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (party.Hearts.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+
+                    SDL_Delay(50);
+
+                    if (offset > 0)
+                    {
+                        if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                        {
+                            current++;
+                        }
+                    }
+                }
+                else if (controls[current].Type == Control::Type::BACK)
                 {
                     done = true;
 
@@ -968,7 +1457,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
     SDL_Surface *adventurer = NULL;
     SDL_Surface *text = NULL;
 
-    auto *title = "View Party";
+    auto *title = "Legendary Kingdoms 1 - The Valley of Bones: View Party";
 
     auto font_size = 20;
     auto garamond_size = 24;
@@ -1381,7 +1870,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     SDL_Surface *adventurer = NULL;
     SDL_Surface *text = NULL;
 
-    auto *title = "Select adventurers for your party";
+    auto *title = "Legendary Kingdoms 1 - The Valley of Bones: Select adventurers for your party";
 
     auto font_size = 20;
     auto garamond_size = 24;
@@ -7177,69 +7666,6 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return done;
 }
 
-std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargoList, int start, int last, int limit, int offsetx, int offsety)
-{
-    auto controls = std::vector<Button>();
-
-    auto text_space = 8;
-
-    if (cargoList.size() > 0)
-    {
-        for (auto i = 0; i < last - start; i++)
-        {
-            auto index = start + i;
-
-            auto cargo = std::get<0>(cargoList[index]);
-
-            auto buy = std::get<1>(cargoList[index]);
-
-            auto sell = std::get<2>(cargoList[index]);
-
-            std::string cargo_string = Cargo::Description[cargo];
-
-            cargo_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + " Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
-
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
-            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
-
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
-
-            controls[i].W = button->w;
-
-            controls[i].H = button->h;
-        }
-    }
-
-    auto idx = controls.size();
-
-    if (cargoList.size() > limit)
-    {
-        if (start > 0)
-        {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
-
-            idx++;
-        }
-
-        if (cargoList.size() - last > 0)
-        {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
-
-            idx++;
-        }
-    }
-
-    idx = controls.size();
-
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::REPAIR_SHIP));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::BUY_SELL_CARGO));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
-
-    return controls;
-}
-
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::ShipPrices> &ships, int start, int last, int limit, int offsetx, int offsety)
 {
     auto controls = std::vector<Button>();
@@ -7303,6 +7729,69 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     return controls;
 }
 
+std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargoList, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (cargoList.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto cargo = std::get<0>(cargoList[index]);
+
+            auto buy = std::get<1>(cargoList[index]);
+
+            auto sell = std::get<2>(cargoList[index]);
+
+            std::string cargo_string = Cargo::Description[cargo];
+
+            cargo_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + " Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (cargoList.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (cargoList.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx - 1, idx, startx, buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx - 1, idx + 1, startx + (220 + button_space), buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * (220 + button_space), buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx - 1, idx + 3, startx + 3 * (220 + button_space), buttony, Control::Type::BACK));
+
+    return controls;
+}
+
 std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer)
 {
     auto controls = std::vector<Button>();
@@ -7321,7 +7810,7 @@ std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer)
 
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
-    auto *title = "Harbour";
+    auto *title = "Legendary Kingdoms 1 - The Valley of Bones: Harbour";
 
     auto font_size = 28;
 
@@ -7433,7 +7922,14 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
                         controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, texty + infoh);
 
-                        current = last - offset;
+                        if (harbour->Ships.size() - last > 0)
+                        {
+                            current = last - offset + 1;
+                        }
+                        else
+                        {
+                            current = last - offset;
+                        }
                     }
 
                     current_mode = Control::Type::BUY_SELL_SHIP;
@@ -7468,7 +7964,14 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
                         controls = cargoList(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
 
-                        current = last - offset + 3;
+                        if (harbour->Cargo.size() - last > 0)
+                        {
+                            current = last - offset + 3;
+                        }
+                        else
+                        {
+                            current = last - offset + 2;
+                        }
                     }
 
                     current_mode = Control::Type::BUY_SELL_CARGO;
@@ -8058,7 +8561,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (selection.size() == 1)
                             {
-                                story->SkillCheck(party.Party, success, selection);
+                                story->SkillCheck(party, success, selection);
 
                                 if (success)
                                 {
@@ -8082,7 +8585,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (selection.size() == 2)
                             {
-                                story->SkillCheck(party.Party, success, selection);
+                                story->SkillCheck(party, success, selection);
 
                                 if (success)
                                 {
@@ -8806,7 +9309,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         {
                             auto result = combatScreen(window, renderer, party, story->Monsters, story->CanFlee, story->FleeRound, true);
 
-                            story->afterCombat(party, result);
+                            story->AfterCombat(party, result);
                         }
 
                         if (Engine::COUNT(party.Party) > 0)
@@ -9111,7 +9614,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, textwidth - 2 * text_space);
 
-    auto title = "Debug";
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Debug";
 
     auto splash = createImage("images/legendary-kingdoms-logo.png");
 

@@ -29,6 +29,15 @@ namespace Location
         RIGHT_FLANK_FRONT,
         RIGHT_FLANK_SUPPORT
     };
+
+    std::map<Location::BattleField, const char *> BattleFieldDescription = {
+        {Location::BattleField::NONE, ""},
+        {Location::BattleField::LEFT_FLANK_FRONT, "Left Flank Front"},
+        {Location::BattleField::LEFT_FLANK_SUPPORT, "Left Flank Support"},
+        {Location::BattleField::CENTRE_FRONT, "Centre Front"},
+        {Location::BattleField::CENTRE_SUPPORT, "Center Support"},
+        {Location::BattleField::RIGHT_FLANK_FRONT, "Right Flank Front"},
+        {Location::BattleField::RIGHT_FLANK_SUPPORT, "Right Flank Support"}};
 }
 
 #endif

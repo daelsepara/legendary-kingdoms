@@ -55,6 +55,8 @@ namespace Character
         RITUAL_SCARRING
     };
 
+    typedef std::pair<Character::Type, Character::Type> Romance;
+
     std::map<Character::Status, const char *> StatusDescriptions = {
         {Character::Status::ARMOUR3, "+3 Armour"},
         {Character::Status::RITUAL_SCARRING, "Ritual Scarring"}};
@@ -145,6 +147,8 @@ namespace Character
 
     std::vector<Character::Base> BOOK1 = {Character::SAR_JESSICA_DAYNE, Character::LORD_TIQUON, Character::TASHA, Character::AMELIA_PASS_DAYNE, Character::AKIHIRO_OF_CHALICE, Character::BRASH};
 
+    std::vector<Character::Base> ALL = {Character::SAR_JESSICA_DAYNE, Character::LORD_TIQUON, Character::TASHA, Character::AMELIA_PASS_DAYNE, Character::AKIHIRO_OF_CHALICE, Character::BRASH};
+
     auto Nobody = Character::Base();
 }
 
@@ -186,7 +190,7 @@ namespace Party
 
         int Current = -1;
 
-        std::map<std::pair<Character::Type, Character::Type>, int> Hearts = std::map<std::pair<Character::Type, Character::Type>, int>();
+        std::map<Character::Romance, int> Hearts = {};
 
         Base()
         {

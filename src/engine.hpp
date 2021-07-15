@@ -765,11 +765,15 @@ namespace Engine
 
     void GAIN_HEARTS(Party::Base &party, Character::Type from, Character::Type to, int heart)
     {
-        std::pair<Character::Type, Character::Type> romance = {from, to};
+        Character::Romance romance = {from, to};
 
         if (party.Hearts.count(romance) > 0)
         {
             party.Hearts[romance] += heart;
+        }
+        else
+        {
+            party.Hearts[romance] = heart;
         }
     }
 

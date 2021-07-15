@@ -325,9 +325,8 @@ namespace Story
         virtual Engine::Destination Continue(Party::Base &party) { return {Book::Type::NONE, -1}; };
 
         // Callbacks
-        virtual void SkillCheck(std::vector<Character::Base> &party, bool outcome, std::vector<int> selection){};
         virtual void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection){};
-        virtual void afterCombat(Party::Base &party, Engine::Combat result){};
+        virtual void AfterCombat(Party::Base &party, Engine::Combat result){};
 
         Base()
         {

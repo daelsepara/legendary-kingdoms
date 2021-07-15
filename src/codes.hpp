@@ -16,7 +16,8 @@ namespace Codes
         BRIBE_GOLD_BULLION1,
         BRIBE_GOLD_BULLION2,
         BRIBE_GOLD_BULLION3,
-        LAST_IN_COMBAT
+        LAST_IN_COMBAT,
+        WEAPON_AND_DISTRACTION
     };
 
     std::map<Book::Type, const char *> Prefix = {

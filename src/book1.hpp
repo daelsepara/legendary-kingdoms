@@ -69,7 +69,7 @@ namespace Book1
             return destination;
         }
 
-        void afterCombat(Party::Base &party, Engine::Combat result)
+        void AfterCombat(Party::Base &party, Engine::Combat result)
         {
             if (result == Engine::Combat::FLEE)
             {
@@ -1202,6 +1202,116 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 46}; }
     };
 
+    class Story035 : public Story::Base
+    {
+    public:
+        Story035()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 35;
+
+            Text = "\"You say the captain wishes to see us? And he mentioned a promotion?\" presses the guard.\n\n\"Apparently his current lieutenant is not up to scratch,\" shrugs Brash. \"He's asked to see other guards as well. I imagine the first to see the captain will probably get the promotion.\"\n\nThe guards push past you in their eagerness to get to the captain's office.\n\nNote: Your distraction team can join up with the weapon's team for all future checks.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::WEAPON_AND_DISTRACTION});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 456}; }
+    };
+
+    class Story036 : public Story::Base
+    {
+    public:
+        Story036()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 36;
+
+            Text = "You are in the ogre's bedroom. It would be too unpleasant (not to mention unhygienic) to rest here yourselves, so you gingerly make your way back outside.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 310}; }
+    };
+
+    class Story037 : public Story::Base
+    {
+    public:
+        Story037()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 37;
+
+            Text = "The Lhasbreath barbarian suddenly jolts, a blade sticking out of his chest. He falls away, to reveal a smirking Tash, her crude sword dripping with blood.\n\n\"Thanks, Tash,\" smiles Jessica, helped to her feet by the clever thief. Sar Jessica won't soon forget this.\n\nJessica has gained a heart for Tasha. Tasha also gains a heart for Sar Jessica.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::Type::TASHA, 1);
+            Engine::GAIN_HEARTS(party, Character::Type::TASHA, Character::Type::SAR_JESSICA_DAYNE, 1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 753}; }
+    };
+
+    class Story038 : public Story::Base
+    {
+    public:
+        Story038()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 38;
+
+            Text = "You kill the orc in a single stroke. He keels over, the book slipping from his grasp.\n\nYou gain the code A71.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the black book he was reading", {Book::Type::BOOK1, 119}));
+            Choices.push_back(Choice::Base("Close the door and go somewhere else", {Book::Type::BOOK1, 821}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 71)});
+        }
+    };
+
+    class Story039 : public Story::Base
+    {
+    public:
+        Story039()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 39;
+
+            Text = "You join the disorganised caravan guards, barking orders at them to form a defensive line and protect their archers.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Order the caravan guards (Team: Charisma 5+, Successes: 3)", {Book::Type::BOOK1, 542}, {Book::Type::BOOK1, 451}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     class Story100 : public Story::Base
     {
     public:
@@ -1274,6 +1384,11 @@ namespace Book1
     auto story032 = Story032();
     auto story033 = Story033();
     auto story034 = Story034();
+    auto story035 = Story035();
+    auto story036 = Story036();
+    auto story037 = Story037();
+    auto story038 = Story038();
+    auto story039 = Story039();
     auto story100 = Story100();
 
     void InitializeStories()
@@ -1283,7 +1398,7 @@ namespace Book1
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
-            &story030, &story031, &story032, &story033, &story034,
+            &story030, &story031, &story032, &story033, &story034, &story035, &story036, &story037, &story038, &story039,
             &story100};
     }
 }
