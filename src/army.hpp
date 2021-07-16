@@ -9,7 +9,8 @@ namespace Army
 {
     enum class Type
     {
-        NONE = -1
+        NONE = -1,
+        LHASBREATH_BERSERKERS
     };
 
     class Base
@@ -35,6 +36,23 @@ namespace Army
         Base()
         {
 
+        }
+
+        Base(const char* name, Army::Type type, Location::Type garrison, int strength, int morale)
+        {
+            Name = name;
+
+            Type = type;
+
+            Garrison = garrison;
+
+            Strength = strength;
+
+            MaximumStrength = strength;
+
+            Morale = morale;
+
+            MaximumMorale = morale;
         }
     };
 }

@@ -10,14 +10,16 @@ namespace Location
         NONE = -1,
         CLIFFTOP,
         SALTDAD,
-        CURSUS
+        CURSUS,
+        LUUTANESH
     };
 
     std::map<Location::Type, const char *> Description = {
         {Location::Type::NONE, "Unknown"},
         {Location::Type::CLIFFTOP, "Clifftop"},
         {Location::Type::SALTDAD, "Saltdad"},
-        {Location::Type::CURSUS, "Cursus"}};
+        {Location::Type::CURSUS, "Cursus"},
+        {Location::Type::LUUTANESH, "Luutanesh"}};
 
     enum class BattleField
     {
@@ -31,7 +33,7 @@ namespace Location
     };
 
     std::map<Location::BattleField, const char *> BattleFieldDescription = {
-        {Location::BattleField::NONE, ""},
+        {Location::BattleField::NONE, "(None)"},
         {Location::BattleField::LEFT_FLANK_FRONT, "Left Flank Front"},
         {Location::BattleField::LEFT_FLANK_SUPPORT, "Left Flank Support"},
         {Location::BattleField::CENTRE_FRONT, "Centre Front"},

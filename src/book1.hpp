@@ -1335,6 +1335,40 @@ namespace Book1
         }
     };
 
+    class Story040 : public Story::Base
+    {
+    public:
+        Story040()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 40;
+
+            Text = "With a dramatic flourish you unroll the DRAGON HEAD from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Lhasbreath Berserkers]: Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nYou gained the code A16.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::GAIN_ATTRIBUTE_SCORE, {Attribute::Type::SURVIVAL}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::DRAGON_HEAD});
+
+            auto location = Location::Type::LUUTANESH;
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::QUEEN_IN_SALTDAD}))
+            {
+                location = Location::Type::SALTDAD;
+            }
+
+            Army = {Army::Base("Lhasbreath Berserkers", Army::Type::LHASBREATH_BERSERKERS, location, 5, 2)};
+
+            Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 16)});
+        }
+    };
+
     class Story100 : public Story::Base
     {
     public:
@@ -1412,6 +1446,7 @@ namespace Book1
     auto story037 = Story037();
     auto story038 = Story038();
     auto story039 = Story039();
+    auto story040 = Story040();
     auto story100 = Story100();
 
     void InitializeStories()
@@ -1422,6 +1457,7 @@ namespace Book1
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
             &story030, &story031, &story032, &story033, &story034, &story035, &story036, &story037, &story038, &story039,
+            &story040,
             &story100};
     }
 }

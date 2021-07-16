@@ -41,7 +41,7 @@ namespace Choice
         SHIP,
         ADD_MAX_HEALTH,
         BRIBE_CODEWORD,
-        GAIN_ABILITY_SCORE
+        GAIN_ATTRIBUTE_SCORE
     };
 
     class Base
@@ -243,6 +243,19 @@ namespace Choice
 
             Destination = destination;
         }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Attribute::Type> attributes, int value)
+        {
+            Text = text;
+
+            Type = type;
+
+            Attributes = attributes;
+
+            Value = value;
+
+            Destination = destination;
+        }
     };
 } // namespace Choice
 
@@ -295,6 +308,9 @@ namespace Story
 
         // Player selects spells to learn
         std::vector<Spells::Base> Spells = {};
+
+        // Player selects units to add to army
+        std::vector<Army::Base> Army = {};
 
         // Player selects items to lose
         std::vector<Equipment::Base> ToLose = {};

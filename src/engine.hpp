@@ -35,6 +35,14 @@ namespace Engine
         END
     };
 
+    enum class RaiseAttribute
+    {
+        START,
+        RAISE,
+        CONFIRM,
+        END
+    };
+
     enum class ArmourSave
     {
         START,
@@ -180,6 +188,24 @@ namespace Engine
         }
 
         return score;
+    }
+
+    void GAIN_SCORE(Character::Base &character, Attribute::Type type, int score)
+    {
+        for (auto i = 0; i < character.Attributes.size(); i++)
+        {
+            if (character.Attributes[i].Type == type)
+            {
+                character.Attributes[i].Value += score;
+
+                if (character.Attributes[i].Value < 1)
+                {
+                    character.Attributes[i].Value = 1;
+                }
+
+                break;
+            }
+        }
     }
 
     int FIGHTING_SCORE(Character::Base &character)
@@ -448,17 +474,17 @@ namespace Engine
         }
     }
 
-    void LOSE_EQUIPMENT(std::vector<Character::Base> &party, std::vector<Equipment::Type> items)
+    void LOSE_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> items)
     {
         for (auto i = 0; i < items.size(); i++)
         {
-            for (auto j = 0; j < party.size(); j++)
+            for (auto j = 0; j < party.Party.size(); j++)
             {
-                auto result = Engine::FIND_EQUIPMENT(party[j], items[i]);
+                auto result = Engine::FIND_EQUIPMENT(party.Party[j], items[i]);
 
                 if (result >= 0)
                 {
-                    party[j].Equipment.erase(party[j].Equipment.begin() + result);
+                    party.Party[j].Equipment.erase(party.Party[j].Equipment.begin() + result);
 
                     // break out of party loop
                     break;
@@ -467,7 +493,7 @@ namespace Engine
         }
     }
 
-    void LOSE_EQUIPMENT(std::vector<Character::Base> &party, Equipment::Type item, int count)
+    void LOSE_EQUIPMENT(Party::Base &party, Equipment::Type item, int count)
     {
         for (auto i = 0; i < count; i++)
         {

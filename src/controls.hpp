@@ -60,7 +60,8 @@ namespace Control
         BUY_SELL_SHIP,
         BUY_SELL_CARGO,
         REPAIR_SHIP,
-        LEARN_SPELL
+        LEARN_SPELL,
+        GAIN_ATTRIBUTE_SCORE
     };
 
     class Base
