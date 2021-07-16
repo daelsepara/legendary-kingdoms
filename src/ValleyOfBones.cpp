@@ -4230,41 +4230,44 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
 
                 if (stage != Engine::RaiseAttribute::START)
                 {
-                    if (stage == Engine::RaiseAttribute::RAISE)
-                    {
-                        if (results.size() == 0)
-                        {
-                            results = Engine::ROLL_DICE(rolls);
-                        }
-                    }
-
-                    auto row = 0;
-                    auto col = 0;
-
-                    auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
-                    auto offsetx = startx + box_space;
-
                     auto success = 0;
 
-                    for (auto i = 0; i < results.size(); i++)
+                    if (rolls > 0)
                     {
-                        if (results[i] >= 1 && results[i] <= 6)
+                        if (stage == Engine::RaiseAttribute::RAISE)
                         {
-                            auto result = results[i] - 1;
-
-                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
-
-                            success += results[i];
-
-                            if (col < cols)
+                            if (results.size() == 0)
                             {
-                                col++;
+                                results = Engine::ROLL_DICE(rolls);
                             }
-                            else
-                            {
-                                col = 0;
+                        }
 
-                                row++;
+                        auto row = 0;
+                        auto col = 0;
+
+                        auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
+                        auto offsetx = startx + box_space;
+
+                        for (auto i = 0; i < results.size(); i++)
+                        {
+                            if (results[i] >= 1 && results[i] <= 6)
+                            {
+                                auto result = results[i] - 1;
+
+                                fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
+
+                                success += results[i];
+
+                                if (col < cols)
+                                {
+                                    col++;
+                                }
+                                else
+                                {
+                                    col = 0;
+
+                                    row++;
+                                }
                             }
                         }
                     }
@@ -4273,7 +4276,36 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
                     {
                         if (!confirmed)
                         {
-                            if (success > Engine::SCORE(character, attribute))
+                            if (rolls > 0)
+                            {
+                                if (success > Engine::SCORE(character, attribute))
+                                {
+                                    Engine::GAIN_SCORE(character, attribute, score);
+
+                                    message = std::string(character.Name) + "'s " + std::string(Attribute::Descriptions[attribute]) + " increased by " + std::to_string(score) + "!";
+
+                                    flash_color = intLB;
+
+                                    flash_message = true;
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    increase = score;
+                                }
+                                else
+                                {
+                                    message = std::string(character.Name) + "'s " + std::string(Attribute::Descriptions[attribute]) + " score did not increase.";
+
+                                    flash_color = intRD;
+
+                                    flash_message = true;
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    increase = 0;
+                                }
+                            }
+                            else
                             {
                                 Engine::GAIN_SCORE(character, attribute, score);
 
@@ -4286,18 +4318,6 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
                                 start_ticks = SDL_GetTicks();
 
                                 increase = score;
-                            }
-                            else
-                            {
-                                message = std::string(character.Name) + "'s " + std::string(Attribute::Descriptions[attribute]) + " score did not increase.";
-
-                                flash_color = intRD;
-
-                                flash_message = true;
-
-                                start_ticks = SDL_GetTicks();
-
-                                increase = 0;
                             }
 
                             confirmed = true;
@@ -4358,7 +4378,14 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
                     }
                     else if (stage == Engine::RaiseAttribute::START && controls[current].Type == Control::Type::CONFIRM)
                     {
-                        stage = Engine::RaiseAttribute::RAISE;
+                        if (rolls > 0)
+                        {
+                            stage = Engine::RaiseAttribute::RAISE;
+                        }
+                        else
+                        {
+                            stage = Engine::RaiseAttribute::CONFIRM;
+                        }
                     }
                     else if (stage == Engine::RaiseAttribute::RAISE && controls[current].Type == Control::Type::CONFIRM)
                     {
