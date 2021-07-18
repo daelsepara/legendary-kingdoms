@@ -5386,7 +5386,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     }
                 }
 
-                std::string test_string = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(difficulty) + "+, Success: " + std::to_string(success);
+                std::string test_string = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(difficulty) + "+, Success: " + (success > 0 ? std::to_string(success) : std::string("Special"));
 
                 putHeader(renderer, test_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
