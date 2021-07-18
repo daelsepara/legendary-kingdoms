@@ -45,7 +45,8 @@ namespace Choice
         RAISE_ATTRIBUTE_SCORE,
         PARTY_RAISE_ATTRIBUTE,
         PARTY_RAISE_HEALTH,
-        RANDOM_EVENT
+        RANDOM_EVENT,
+        CHOOSE_PARTY_MEMBER
     };
 
     class Base

@@ -184,10 +184,13 @@ namespace Party
         // For tracking recent success (team checks, individual checks)
         int RecentSuccesses = 0;
 
+        // Last Selected Party Member
+        int LastSelected = -1;
+
         // Romance histogram
         std::map<Character::Romance, int> Hearts = {};
 
-        // TODO: Ensure that IsParty and Current is consistent: When IsParty = false, Current != Character::Type::NONE. When IsParty = true, Current = Character::Type::NONE.
+        // TODO: Ensure that IsParty and Current is consistent: When IsParty = false, Current != -1. When IsParty = true, -1.
         bool IsParty = true;
 
         int Current = -1;

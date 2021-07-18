@@ -890,7 +890,7 @@ namespace Book1
 
             ID = 27;
 
-            Text = "The Everchild presents you with a bar of GOLD BULLION to help convince the mercenaries to change sides. Ayleta has been in private communication with the mercenaries for some time and has already negotiated a safe path between the mercenary encampment and the Everchild's forces.\n\nYou are received coolly by the unit captain, who cautiously welcomes you into his tent with his officers and bodyguards around him. You state your opinion that the Everchild's victory in the coming conflict is all but certain, and that she is willing to let mercenary companies that co-operate with her depart safely. Matters soon turn to money, with the mercenary captain suggesting that quite a lot of additional money will be coming his way should the patriarch win the battle, and Saltdad and other cities need to be supressed. He is also worried about his reputation if he plays turncoat without fighting even a single battle for his employer.\n\nOnly party members assigned to the mercenary team may assist with this skill check.\n\nNote: If you give the mercenaries a bar of GOLD BULLION, the DC of this check becomes 5+. If you give them two bars, the DC becomes 4+. If you give them three bars the DC becomes 2+.";
+            Text = "The Everchild presents you with a bar of GOLD BULLION to help convince the mercenaries to change sides. Ayleta has been in private communication with the mercenaries for some time and has already negotiated a safe path between the mercenary encampment and the Everchild's forces.\n\nYou are received coolly by the unit captain, who cautiously welcomes you into his tent with his officers and bodyguards around him. You state your opinion that the Everchild's victory in the coming conflict is all but certain, and that she is willing to let mercenary companies that co-operate with her depart safely. Matters soon turn to money, with the mercenary captain suggesting that quite a lot of additional money will be coming his way should the patriarch win the battle, and Saltdad and other cities need to be supressed. He is also worried about his reputation if he plays turncoat without fighting even a single battle for his employer.\n\nOnly party members assigned to the MERCENARY TEAM may assist with this skill check.\n\nNote: If you give the mercenaries a bar of GOLD BULLION, the DC of this check becomes 5+. If you give them two bars, the DC becomes 4+. If you give them three bars the DC becomes 2+.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -918,7 +918,7 @@ namespace Book1
 
             ID = -27;
 
-            Text = "Only party members assigned to the mercenary team may assist with this skill check.";
+            Text = "Only party members assigned to the MERCENARY TEAM may assist with this skill check.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -1215,7 +1215,7 @@ namespace Book1
 
             ID = 35;
 
-            Text = "\"You say the captain wishes to see us? And he mentioned a promotion?\" presses the guard.\n\n\"Apparently his current lieutenant is not up to scratch,\" shrugs Brash. \"He's asked to see other guards as well. I imagine the first to see the captain will probably get the promotion.\"\n\nThe guards push past you in their eagerness to get to the captain's office.\n\nNote: Your distraction team can join up with the weapon's team for all future checks.";
+            Text = "\"You say the captain wishes to see us? And he mentioned a promotion?\" presses the guard.\n\n\"Apparently his current lieutenant is not up to scratch,\" shrugs Brash. \"He's asked to see other guards as well. I imagine the first to see the captain will probably get the promotion.\"\n\nThe guards push past you in their eagerness to get to the captain's office.\n\nNote: Your DISTRACTION TEAM can join up with the WEAPON's TEAM for all future checks.";
 
             Choices.clear();
 
@@ -1531,6 +1531,70 @@ namespace Book1
         }
     };
 
+    class Story045 : public Story::Base
+    {
+    public:
+        Story045()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 45;
+
+            Text = "Timing it just right, you begin to shove one another in the water queue. To make it convincing, you start to exchange a few hard blows, attempting to drag other slaves in the queue into your rumble.\n\nEach party member involved in the fight LOSES 1 Health point.\n\nNote: Only party members assigned to the DISTRACTION TEAM can contribute to the check.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Team::Type::DISTRACTION, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party.Party, Team::Type::DISTRACTION, -1);
+        }
+    };
+
+    class Story046 : public Story::Base
+    {
+    public:
+        Story046()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 46;
+
+            Text = "You have returned to the crossroads. Above you daylight streams through the exit shaft.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go northwest", {Book::Type::BOOK1, 761}));
+            Choices.push_back(Choice::Base("Go northeast", {Book::Type::BOOK1, 801}));
+            Choices.push_back(Choice::Base("Go southeast", {Book::Type::BOOK1, 869}));
+            Choices.push_back(Choice::Base("Go southwest", {Book::Type::BOOK1, 217}));
+            Choices.push_back(Choice::Base("Climb back up to the surface", {Book::Type::BOOK1, 426}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story047 : public Story::Base
+    {
+    public:
+        Story047()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 47;
+
+            Text = "You gather round and attempt to pull apart the barrier, but despite its crude appearance it is actually very well built. Even sledgehammers and mules couldn't pull this barricade down from this side. Is this as far as the orcs have penetrated into the complex?\n\nGrumbling with irritation, you head back east towards the small room you came from.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 821}; }
+    };
+
     class Story100 : public Story::Base
     {
     public:
@@ -1614,6 +1678,9 @@ namespace Book1
     auto story043 = Story043();
     auto story044 = Story044();
     auto event044 = Event044();
+    auto story045 = Story045();
+    auto story046 = Story046();
+    auto story047 = Story047();
     auto story100 = Story100();
 
     void InitializeStories()
@@ -1624,7 +1691,7 @@ namespace Book1
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
             &story030, &story031, &story032, &story033, &story034, &story035, &story036, &story037, &story038, &story039,
-            &story040, &story041, &story042, &story043, &story044,
+            &story040, &story041, &story042, &story043, &story044, &story045, &story046, &story047,
             &story100};
     }
 }

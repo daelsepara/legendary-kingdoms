@@ -62,7 +62,8 @@ namespace Control
         REPAIR_SHIP,
         LEARN_SPELL,
         ROLL_FOR_ATTRIBUTE_INCREASE,
-        RAISE_ATTRIBUTE_SCORE
+        RAISE_ATTRIBUTE_SCORE,
+        HEALTH
     };
 
     class Base
