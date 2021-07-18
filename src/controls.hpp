@@ -61,7 +61,8 @@ namespace Control
         BUY_SELL_CARGO,
         REPAIR_SHIP,
         LEARN_SPELL,
-        GAIN_ATTRIBUTE_SCORE
+        ROLL_FOR_ATTRIBUTE_INCREASE,
+        RAISE_ATTRIBUTE_SCORE
     };
 
     class Base

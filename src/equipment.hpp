@@ -32,7 +32,9 @@ namespace Equipment
         TROGLODYTE_HEAD,
         QUICKSILVER,
         GOLD_BULLION,
-        DRAGON_HEAD
+        DRAGON_HEAD,
+        SCROLL_OF_RAGE,
+        BRONZE_LOCKET
     };
 
     class Base
@@ -90,6 +92,8 @@ namespace Equipment
     auto QUICKSILVER = Equipment::Base("QUICKSILVER", "QUICKSILVER", Equipment::Class::NORMAL, Equipment::Type::QUICKSILVER, Attribute::Type::NONE, 0, false);
     auto GOLD_BULLION = Equipment::Base("GOLD BULLION", "GOLD BULLION", Equipment::Class::NORMAL, Equipment::Type::GOLD_BULLION, Attribute::Type::NONE, 0, false);
     auto DRAGON_HEAD = Equipment::Base("DRAGON HEAD", "DRAGON HEAD", Equipment::Class::NORMAL, Equipment::Type::DRAGON_HEAD, Attribute::Type::NONE, 0, false);
+    auto SCROLL_OF_RAGE = Equipment::Base("SCROLL OF RAGE", "SCROLL OF RAGE", Equipment::Class::NORMAL, Equipment::Type::SCROLL_OF_RAGE, Attribute::Type::NONE, 0, false);
+    auto BRONZE_LOCKET = Equipment::Base("BRONZE LOCKET", "BRONZE LOCKET", Equipment::Class::NORMAL, Equipment::Type::BRONZE_LOCKET, Attribute::Type::NONE, 0, false);
 }
 
 #endif

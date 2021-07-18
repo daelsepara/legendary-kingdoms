@@ -41,8 +41,10 @@ namespace Choice
         SHIP,
         ADD_MAX_HEALTH,
         BRIBE_CODEWORD,
-        GAIN_ATTRIBUTE_SCORE,
-        PARTY_RAISE_ATTRIBUTE
+        ROLL_FOR_ATTRIBUTE_INCREASE,
+        RAISE_ATTRIBUTE_SCORE,
+        PARTY_RAISE_ATTRIBUTE,
+        PARTY_RAISE_HEALTH
     };
 
     class Base

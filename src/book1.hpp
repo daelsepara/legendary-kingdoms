@@ -25,6 +25,11 @@ namespace Book1
             Controls = Story::Controls::STANDARD;
         }
 
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::STARTED_IN_BOOK1});
+        }
+
         Engine::Destination Continue(Party::Base &party)
         {
             return {Book::Type::BOOK1, 641};
@@ -628,8 +633,6 @@ namespace Book1
     class Event018 : public Story::Base
     {
     public:
-        std::string temp_text = "";
-
         Event018()
         {
             BookID = Book::Type::BOOK1;
@@ -1347,7 +1350,7 @@ namespace Book1
             Text = "With a dramatic flourish you unroll the DRAGON HEAD from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Lhasbreath Berserkers]: Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nYou gained the code A16.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::GAIN_ATTRIBUTE_SCORE, {Attribute::Type::SURVIVAL}, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -1380,15 +1383,173 @@ namespace Book1
 
             Text = "Dazzling sunlight almost blinds you as you emerge into daylight. You are in a sandy, secluded alleyway, the sounds of marketplace hawkers reaching your ears. You quickly help the Everchild out of the drains, hiding her behind some tall baskets as you check for the guards.\n\n\"We are free!\" she gasps. \"I feared I might die in that terrible place.\"\n\n\"What will you do now?\" you ask. \"You cannot stay in the city...\"\n\n\"No -- here we shall divide for safety,\" she agrees. \"Che Long can look after me from here on in. I cannot thank you enough for your safe delivery of myself and my followers. I can give you no reward, and you owe me nothing, but...\"\n\nYou silence her as you duck behind the baskets. A guard patrol of men in gleaming bronze armour clank past, wickedly shaped halberds in their grasp. \"The Bronzeguard,\" hisses Che Long. \"The elite warriors and boot lickers of the Iron King. Their amour is supposedly enchanted, dug up from the palace vaults by the Iron King's servants.\"\n\n\"They are still men underneath,\" you growl.\n\n\"If you hate tyranny and would see justice restored, come and find me in the Cold River Inn, in Luutanesh,\" implores the Everchild. \"The path to freedom is long and difficult, but together we can find a way to end the bloody reign of the Iron King forever.\"\n\nThe coast is clear, and Che Long quickly bows to you. \"We must go before the general alarm is raised. You have my thanks. Come majesty.\"\n\nAt that the Everchild dons a cowl over her head and slips into the crowds with her followers. \n\nYour experiences in the arena have taught you much. You may raise one skill (Fighting, Stealth, Lore, etc) by one point for each of your characters.\n\nYou gain the code A6.";
 
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
             Choices.clear();
-            Choices.push_back(Choice::Base("Each of your characters may raise one skill by one point", {Book::Type::BOOK1, 313}, Choice::Type::PARTY_RAISE_ATTRIBUTE, 1));
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::STARTED_IN_BOOK1}))
+            {
+                Choices.push_back(Choice::Base("Each of your characters raises one skill by one point", {Book::Type::BOOK1, 313}, Choice::Type::PARTY_RAISE_ATTRIBUTE, 1));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Each of your characters raises maximum health points by one point", {Book::Type::BOOK1, 313}, Choice::Type::PARTY_RAISE_HEALTH, 1));
+            }
+
+            Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 6)});
+        }
+    };
+
+    class Story042 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story042()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 42;
+
+            Choices.clear();
 
             Controls = Story::Controls::STANDARD;
         }
 
         void Event(Party::Base &party)
         {
-            Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 6)});
+            PreText = "You return to the small reading room, mouldering books scattered across the tiny library.";
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::FIRST_TIME_SCROLL_OF_RAGE}))
+            {
+                PreText += "\n\nYou find a SCROLL OF RAGE here.";
+
+                Engine::GET_CODES(party, {Codes::Type::FIRST_TIME_SCROLL_OF_RAGE});
+            }
+            else
+            {
+                if (!Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::SCROLL_OF_RAGE}))
+                {
+                    PreText += "\n\nYou are surprised to see the SCROLL OF RAGE back on the shelf, in the same place you found it last time. It seems that the scroll teleports back here each time it is used.";
+                }
+                else
+                {
+                    PreText += "\n\nYou find nothing of interest here.";
+                }
+            }
+
+            if (!Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::SCROLL_OF_RAGE}))
+            {
+                Take = {Equipment::SCROLL_OF_RAGE};
+
+                Limit = 1;
+
+                PreText += "\n\nYou can take the SCROLL OF RAGE. ";
+            }
+            else
+            {
+                Take = {};
+
+                Limit = 0;
+            }
+
+            PreText += "You cannot have more than one SCROLL OF RAGE equipped at any given time. You can use it in combat to increase the Fighting score of each of your party members by 1 point until the end of the combat. After one use it will teleport back to the bookshelf in this room.";
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 494}; }
+    };
+
+    class Story043 : public Story::Base
+    {
+    public:
+        Story043()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 43;
+
+            Text = "Janus is overjoyed to see the LOCKET. You hand it over to him and he cradles it in his hands. \"Now I can remember Alidale always!\" he sighs. He opens the LOCKET to have a look inside, when suddenly there is a flash and a profusion of smoke.\n\nStepping out of the smoke comes a young woman, a wizard by the looks of her, coughing and waving the smoke away from her face. \"Alidale?\" gasps Janus. \"Why! You don't look a day older than when you left for that temple!\"\n\n\"Janus!\" she cries overjoyed. \"You... do look a bit older, if I'm honest. I must have been in that locket for a long time.\"\n\nAlidale explains that she was surrounded by hideous serpent men and was forced to transport herself inside her locket for protection. The snake men assumed she had teleported away, but in fact she has been trapped in the locket for all these years. She never expected a rescue would take forty summers. She has little to reward you with but shares with you some of her many discoveries and insights into the ancient world that she has uncovered in her travels.\n\nYou gained the code A29.";
+
+            Bye = "Bidding the odd couple farewell, you resume your journey.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of LORE", {Book::Type::BOOK1, 614}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::LORE}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::BRONZE_LOCKET});
+
+            Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 29)});
+        }
+    };
+
+    class Story044 : public Story::Base
+    {
+    public:
+        Story044()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 44;
+
+            Text = "Tackling the room will come in two stages. Firstly, you must attempt to figure out the safest route. By examining the positions of the orc bodies you might be able to figure out which parts of the room are safe and which parts are deadly traps. Secondly, someone must attempt to carefully sneak through the room.\n\nNote: You cannot fail this test.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Discern the safe route (Team check: Lore 5+, Successes: Special)", {Book::Type::BOOK1, -44}, {Book::Type::BOOK1, -44}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 5, 0));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event044 : public Story::Base
+    {
+    public:
+        std::string temp_string = "";
+
+        Event044()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -44;
+
+            Text = "Next, pick someone to try and sneak through the room.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            int success = 7 - party.RecentSuccesses;
+
+            if (success < 0)
+            {
+                success = 0;
+            }
+
+            temp_string = "Sneak through the room (Individual check: Stealth 4+, Successes: ";
+
+            if (success > 0)
+            {
+                temp_string += std::to_string(success);
+            }
+            else
+            {
+                temp_string += "Guaranteed";
+            }
+
+            temp_string += ")";
+
+            Choices.clear();
+
+            Choices.push_back(Choice::Base(temp_string.c_str(), {Book::Type::BOOK1, 385}, {Book::Type::BOOK1, 769}, {Attribute::Type::STEALTH}, 4, success));
         }
     };
 
@@ -1471,17 +1632,21 @@ namespace Book1
     auto story039 = Story039();
     auto story040 = Story040();
     auto story041 = Story041();
+    auto story042 = Story042();
+    auto story043 = Story043();
+    auto story044 = Story044();
+    auto event044 = Event044();
     auto story100 = Story100();
 
     void InitializeStories()
     {
         Book1::Stories = {
-            &event018, &event027, &event028,
+            &event018, &event027, &event028, &event044,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
             &story030, &story031, &story032, &story033, &story034, &story035, &story036, &story037, &story038, &story039,
-            &story040, &story041,
+            &story040, &story041, &story042, &story043, &story044,
             &story100};
     }
 }

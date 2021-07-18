@@ -56,7 +56,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
 bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
-bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
+bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, bool inCombat);
 
 Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
 
@@ -1531,7 +1531,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     return false;
 }
 
-bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
+bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, bool inCombat)
 {
     SDL_Surface *adventurer = NULL;
     SDL_Surface *text = NULL;
@@ -1871,7 +1871,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
                     {
                         if (party.Party[character].Equipment.size() > 0)
                         {
-                            inventoryScreen(window, renderer, party.Party[character], party.Party[character].Equipment, Control::Type::USE, 0);
+                            inventoryScreen(window, renderer, party.Party[character], party.Party[character].Equipment, (inCombat ? Control::Type::COMBAT : Control::Type::USE), 0);
                         }
                     }
 
@@ -6622,7 +6622,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                 {
                     putHeader(renderer, "Choose target for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
-                else if (mode == Control::Type::GAIN_ATTRIBUTE_SCORE)
+                else if (mode == Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE || mode == Control::Type::RAISE_ATTRIBUTE_SCORE)
                 {
                     putHeader(renderer, "Choose party member to gain the ATTRIBUTE increase", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
@@ -7081,7 +7081,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::PARTY)
                     {
-                        viewParty(window, renderer, party);
+                        viewParty(window, renderer, party, true);
 
                         selected = false;
 
@@ -7475,7 +7475,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base
                 {
                     putText(renderer, "You are carrying too many items. Select item(s) to DROP.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
-                else if (mode == Control::Type::USE)
+                else if (mode == Control::Type::USE || mode == Control::Type::COMBAT)
                 {
                     putText(renderer, "Select an item to USE", font_garamond, text_space, clrWH, intLB, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
@@ -9759,13 +9759,31 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 start_ticks = SDL_GetTicks();
                             }
                         }
-                        else if (story->Choices[choice].Type == Choice::Type::GAIN_ATTRIBUTE_SCORE)
+                        else if (story->Choices[choice].Type == Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE)
                         {
-                            auto target = selectPartyMember(window, renderer, party.Party, Control::Type::GAIN_ATTRIBUTE_SCORE);
+                            auto target = selectPartyMember(window, renderer, party.Party, Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE);
 
                             if (target >= 0 && target < party.Party.size())
                             {
                                 auto increase = gainAttributeScore(window, renderer, party.Party[target], story->Choices[current].Attributes[0], story->Choices[current].Value, 2);
+
+                                if (increase >= 0)
+                                {
+                                    next = findStory(story->Choices[choice].Destination);
+
+                                    done = true;
+
+                                    break;
+                                }
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::RAISE_ATTRIBUTE_SCORE)
+                        {
+                            auto target = selectPartyMember(window, renderer, party.Party, Control::Type::RAISE_ATTRIBUTE_SCORE);
+
+                            if (target >= 0 && target < party.Party.size())
+                            {
+                                auto increase = gainAttributeScore(window, renderer, party.Party[target], story->Choices[current].Attributes[0], story->Choices[current].Value, 0);
 
                                 if (increase >= 0)
                                 {
@@ -9796,6 +9814,29 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                         increase = gainAttributeScore(window, renderer, party.Party[i], attribute, story->Choices[choice].Value, 0);
                                     }
+                                }
+                            }
+
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::PARTY_RAISE_HEALTH)
+                        {
+                            for (auto i = 0; i < party.Party.size(); i++)
+                            {
+                                if (party.Party[i].Health > 0)
+                                {
+                                    party.Party[i].MaximumHealth += story->Choices[choice].Value;
+
+                                    if (party.Party[i].MaximumHealth < 0)
+                                    {
+                                        party.Party[i].MaximumHealth = 0;
+                                    }
+
+                                    Engine::GAIN_HEALTH(party.Party[i], story->Choices[choice].Value);
                                 }
                             }
 
@@ -9856,7 +9897,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
                 else if (controls[current].Type == Control::Type::PARTY && !hold)
                 {
-                    viewParty(window, renderer, party);
+                    viewParty(window, renderer, party, false);
 
                     current = -1;
 
@@ -10323,7 +10364,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::PARTY && !hold)
                     {
-                        viewParty(window, renderer, party);
+                        viewParty(window, renderer, party, false);
 
                         current = -1;
 

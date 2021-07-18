@@ -93,6 +93,17 @@ namespace Engine
         }
     }
 
+    void GAIN_HEALTH(std::vector<Character::Base> &party, Team::Type team, int health)
+    {
+        for (auto i = 0; i < party.size(); i++)
+        {
+            if (party[i].Team == team)
+            {
+                Engine::GAIN_HEALTH(party[i], health);
+            }
+        }
+    }
+
     void GAIN_HEALTH(Monster::Base &monster, int health)
     {
         if (monster.Health > 0)

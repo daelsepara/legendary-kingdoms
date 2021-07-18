@@ -10,6 +10,12 @@ namespace Codes
     // Invisible (Party level) codes to handle situations not explicitly stated in the rules section. Can also be used to handle temporary effects
     enum class Type
     {
+        STARTED_IN_BOOK1,
+        STARTED_IN_BOOK2,
+        STARTED_IN_BOOK3,
+        STARTED_IN_BOOK4,
+        STARTED_IN_BOOK5,
+        STARTED_IN_BOOK6,
         FIRST_TIME_SALTAD,
         FOUGHT_IN_ARENA,
         SILVER_IDOL,
@@ -18,7 +24,8 @@ namespace Codes
         BRIBE_GOLD_BULLION3,
         LAST_IN_COMBAT,
         WEAPON_AND_DISTRACTION,
-        QUEEN_IN_SALTDAD
+        QUEEN_IN_SALTDAD,
+        FIRST_TIME_SCROLL_OF_RAGE
     };
 
     std::map<Book::Type, const char *> Prefix = {
