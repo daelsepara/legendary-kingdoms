@@ -1369,6 +1369,29 @@ namespace Book1
         }
     };
 
+    class Story041 : public Story::Base
+    {
+    public:
+        Story041()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 41;
+
+            Text = "Dazzling sunlight almost blinds you as you emerge into daylight. You are in a sandy, secluded alleyway, the sounds of marketplace hawkers reaching your ears. You quickly help the Everchild out of the drains, hiding her behind some tall baskets as you check for the guards.\n\n\"We are free!\" she gasps. \"I feared I might die in that terrible place.\"\n\n\"What will you do now?\" you ask. \"You cannot stay in the city...\"\n\n\"No -- here we shall divide for safety,\" she agrees. \"Che Long can look after me from here on in. I cannot thank you enough for your safe delivery of myself and my followers. I can give you no reward, and you owe me nothing, but...\"\n\nYou silence her as you duck behind the baskets. A guard patrol of men in gleaming bronze armour clank past, wickedly shaped halberds in their grasp. \"The Bronzeguard,\" hisses Che Long. \"The elite warriors and boot lickers of the Iron King. Their amour is supposedly enchanted, dug up from the palace vaults by the Iron King's servants.\"\n\n\"They are still men underneath,\" you growl.\n\n\"If you hate tyranny and would see justice restored, come and find me in the Cold River Inn, in Luutanesh,\" implores the Everchild. \"The path to freedom is long and difficult, but together we can find a way to end the bloody reign of the Iron King forever.\"\n\nThe coast is clear, and Che Long quickly bows to you. \"We must go before the general alarm is raised. You have my thanks. Come majesty.\"\n\nAt that the Everchild dons a cowl over her head and slips into the crowds with her followers. \n\nYour experiences in the arena have taught you much. You may raise one skill (Fighting, Stealth, Lore, etc) by one point for each of your characters.\n\nYou gain the code A6.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Each of your characters may raise one skill by one point", {Book::Type::BOOK1, 313}, Choice::Type::PARTY_RAISE_ATTRIBUTE, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 6)});
+        }
+    };
+
     class Story100 : public Story::Base
     {
     public:
@@ -1447,6 +1470,7 @@ namespace Book1
     auto story038 = Story038();
     auto story039 = Story039();
     auto story040 = Story040();
+    auto story041 = Story041();
     auto story100 = Story100();
 
     void InitializeStories()
@@ -1457,7 +1481,7 @@ namespace Book1
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
             &story030, &story031, &story032, &story033, &story034, &story035, &story036, &story037, &story038, &story039,
-            &story040,
+            &story040, &story041,
             &story100};
     }
 }

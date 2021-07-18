@@ -58,6 +58,8 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
 
+Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
+
 Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, int fleeRound, bool useEquipment);
 
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
@@ -803,6 +805,63 @@ std::string characterText(Character::Base &character, bool compact)
 
     return character_text;
 };
+
+std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Attribute::Type> &attributes, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (attributes.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            std::string attributes_string = std::string(Attribute::Descriptions[attributes[index]]);
+
+            if (character.Type != Character::Type::NONE)
+            {
+                attributes_string += ": " + std::to_string(Engine::SCORE(character, attributes[index]));
+            }
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 28, attributes_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (attributes.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (attributes.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, "icons/yes.png", idx, idx, attributes.size() > 0 ? idx - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+
+    return controls;
+}
 
 std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int offsetx, int offsety, bool party_controls)
 {
@@ -6162,6 +6221,294 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
     return result;
 }
 
+Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase)
+{
+    auto result = Attribute::Type::NONE;
+
+    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Attribute";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto main_buttonh = 48;
+
+        auto font_size = 20;
+        auto text_space = 8;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto last = offset + limit;
+
+        std::vector<Attribute::Type> attributes = {Attribute::Type::FIGHTING, Attribute::Type::STEALTH, Attribute::Type::LORE, Attribute::Type::SURVIVAL, Attribute::Type::CHARISMA};
+
+        if (last > attributes.size())
+        {
+            last = attributes.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = attributeList(window, renderer, character, attributes, offset, last, limit, textx, texty + infoh + text_space);
+
+        auto done = false;
+
+        auto selection = -1;
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                if (last - offset > 0)
+                {
+                    for (auto i = 0; i < last - offset; i++)
+                    {
+                        if (selection == offset + i)
+                        {
+                            thickRect(renderer, controls[i].W, controls[i].H, controls[i].X, controls[i].Y, intLB, 2);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, 4);
+
+                std::string select_string = "Which of " + std::string(character.Name) + "'s attributes will be raised by " + std::to_string(increase) + "?";
+
+                putHeader(renderer, select_string.c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                putHeader(renderer, "Attribute", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (selection >= 0 && selection < attributes.size())
+                {
+                    putText(renderer, Attribute::Descriptions[attributes[selection]], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+                else
+                {
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+                {
+                    if (controls[current].Type == Control::Type::BACK)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > attributes.size())
+                            {
+                                last = attributes.size();
+                            }
+
+                            controls.clear();
+
+                            controls = attributeList(window, renderer, character, attributes, offset, last, limit, textx, texty + infoh + text_space);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                    {
+                        if (attributes.size() - last > 0)
+                        {
+                            if (offset < attributes.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > attributes.size() - limit)
+                            {
+                                offset = attributes.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > attributes.size())
+                            {
+                                last = attributes.size();
+                            }
+
+                            controls.clear();
+
+                            controls = attributeList(window, renderer, character, attributes, offset, last, limit, textx, texty + infoh + text_space);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (attributes.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (selection >= 0 && selection < attributes.size())
+                        {
+                            done = true;
+
+                            result = attributes[selection];
+
+                            current = -1;
+
+                            selected = false;
+                        }
+                        else
+                        {
+                            flash_message = true;
+
+                            message = "You must SELECT an ATTRIBUTE!";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intRD;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION)
+                    {
+                        if (current + offset >= 0 && current + offset < attributes.size())
+                        {
+                            if (selection == current + offset)
+                            {
+                                selection = -1;
+                            }
+                            else
+                            {
+                                selection = current + offset;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    return result;
+}
+
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Control::Type mode)
 {
     auto result = -1;
@@ -6320,7 +6667,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
                 done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
-                if (selected && current >= 0 && current < controls.size())
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
                 {
                     if (controls[current].Type == Control::Type::BACK)
                     {
@@ -6329,6 +6676,81 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
                         current = -1;
 
                         selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.size())
+                            {
+                                last = party.size();
+                            }
+
+                            controls.clear();
+
+                            auto controls = combatantList(window, renderer, party, offset, last, limit, textx, texty + infoh + text_space, true, true);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                    {
+                        if (party.size() - last > 0)
+                        {
+                            if (offset < party.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > party.size() - limit)
+                            {
+                                offset = party.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.size())
+                            {
+                                last = party.size();
+                            }
+
+                            controls.clear();
+
+                            auto controls = combatantList(window, renderer, party, offset, last, limit, textx, texty + infoh + text_space, true, true);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (party.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
                     }
                     else if (controls[current].Type == Control::Type::CONFIRM)
                     {
@@ -9351,6 +9773,29 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                             }
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::PARTY_RAISE_ATTRIBUTE)
+                        {
+                            for (auto i = 0; i < party.Party.size(); i++)
+                            {
+                                if (party.Party[i].Health > 0)
+                                {
+                                    auto attribute = Attribute::Type::NONE;
+
+                                    while (attribute == Attribute::Type::NONE)
+                                    {
+                                        attribute = selectAttribute(window, renderer, party.Party[i], story->Choices[choice].Value);
+                                    }
+
+                                    gainAttributeScore(window, renderer, party.Party[i], attribute, story->Choices[choice].Value, 0);
+                                }
+                            }
+
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::CODES)
                         {
                         }
@@ -9392,23 +9837,17 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                     }
                 }
-                else if (controls[current].Type == Control::Type::PARTY && !hold)
-                {
-                    viewParty(window, renderer, party);
-
-                    current = -1;
-
-                    selected = false;
-                }
-                else if (controls[current].Type == Control::Type::USE && !hold)
-                {
-                    current = -1;
-
-                    selected = false;
-                }
                 else if (controls[current].Type == Control::Type::MAP && !hold)
                 {
                     mapScreen(window, renderer);
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::PARTY && !hold)
+                {
+                    viewParty(window, renderer, party);
 
                     current = -1;
 
