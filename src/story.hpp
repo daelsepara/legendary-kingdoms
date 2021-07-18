@@ -44,7 +44,8 @@ namespace Choice
         ROLL_FOR_ATTRIBUTE_INCREASE,
         RAISE_ATTRIBUTE_SCORE,
         PARTY_RAISE_ATTRIBUTE,
-        PARTY_RAISE_HEALTH
+        PARTY_RAISE_HEALTH,
+        RANDOM_EVENT
     };
 
     class Base
@@ -63,6 +64,8 @@ namespace Choice
         std::vector<Codes::Base> Codes = std::vector<Codes::Base>();
 
         std::vector<Codes::Type> InvisibleCodes = std::vector<Codes::Type>();
+
+        std::vector<std::tuple<int, const char *, Engine::Destination>> RandomDestinations = {};
 
         int Value = 0;
 
@@ -258,6 +261,17 @@ namespace Choice
             Value = value;
 
             Destination = destination;
+        }
+
+        Base(const char *text, std::vector<std::tuple<int, const char *, Engine::Destination>> destinations, int value)
+        {
+            Text = text;
+
+            Type = Choice::Type::RANDOM_EVENT;
+
+            RandomDestinations = destinations;
+
+            Value = value;
         }
     };
 } // namespace Choice

@@ -58,10 +58,6 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, bool inCombat);
 
-Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
-
-Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, int fleeRound, bool useEquipment);
-
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
 int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party);
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment);
@@ -70,10 +66,15 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets);
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Control::Type mode);
 
-std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Character::Base &caster, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
+Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
 
+Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, int fleeRound, bool useEquipment);
+
+Story::Base *findStory(Engine::Destination destination);
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
 Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
+
+std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Character::Base &caster, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
 
 SDL_Surface *createImage(const char *image)
 {
@@ -9845,6 +9846,36 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             done = true;
 
                             break;
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::RANDOM_EVENT)
+                        {
+                            auto results = Engine::ROLL_DICE(story->Choices[choice].Value);
+
+                            auto sum = 0;
+
+                            for (auto i = 0; i < results.size(); i++)
+                            {
+                                sum += results[i];
+                            }
+
+                            for (auto i = 0; i < story->Choices[choice].RandomDestinations.size(); i++)
+                            {
+                                if (sum <= std::get<0>(story->Choices[choice].RandomDestinations[i]))
+                                {
+                                    story->Bye = std::get<1>(story->Choices[choice].RandomDestinations[i]);
+
+                                    next = findStory(std::get<2>(story->Choices[choice].RandomDestinations[i]));
+
+                                    done = true;
+
+                                    break;
+                                }
+                            }
+
+                            if (done)
+                            {
+                                break;
+                            }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::CODES)
                         {

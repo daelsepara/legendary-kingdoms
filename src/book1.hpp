@@ -408,28 +408,9 @@ namespace Book1
             Text = "You are making your way across the Westroad, an ancient highway built-up to resist the burying sands of the Valley. Travellers and soldiers pass intermittently, making their way between the cities of Saltdad and Clifftop.";
 
             Choices.clear();
+            Choices.push_back(Choice::Base("Random Event", {{2, NULL, {Book::Type::BOOK1, 466}}, {3, NULL, {Book::Type::BOOK1, 397}}, {6, NULL, {Book::Type::BOOK1, 569}}}, 1));
 
             Controls = Story::Controls::STANDARD;
-        }
-
-        Engine::Destination Continue(Party::Base &party)
-        {
-            Engine::Random.UniformIntDistribution(1, 6);
-
-            auto result = Engine::Random.NextInt();
-
-            if (result < 3)
-            {
-                return {Book::Type::BOOK1, 466};
-            }
-            else if (result == 3)
-            {
-                return {Book::Type::BOOK1, 397};
-            }
-            else
-            {
-                return {Book::Type::BOOK1, 596};
-            }
         }
     };
 
@@ -553,10 +534,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            for (auto i = 0; i < party.Party.size(); i++)
-            {
-                Engine::GAIN_HEALTH(party.Party[i], -4);
-            }
+            Engine::GAIN_HEALTH(party.Party, -4);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 55}; }
