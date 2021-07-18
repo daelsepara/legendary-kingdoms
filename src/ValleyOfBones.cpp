@@ -4460,6 +4460,8 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
 
                         selected = false;
 
+                        increase = score;
+
                         break;
                     }
                 }
@@ -9779,14 +9781,19 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (party.Party[i].Health > 0)
                                 {
-                                    auto attribute = Attribute::Type::NONE;
+                                    auto increase = -1;
 
-                                    while (attribute == Attribute::Type::NONE)
+                                    while (increase <= 0)
                                     {
-                                        attribute = selectAttribute(window, renderer, party.Party[i], story->Choices[choice].Value);
-                                    }
+                                        auto attribute = Attribute::Type::NONE;
 
-                                    gainAttributeScore(window, renderer, party.Party[i], attribute, story->Choices[choice].Value, 0);
+                                        while (attribute == Attribute::Type::NONE)
+                                        {
+                                            attribute = selectAttribute(window, renderer, party.Party[i], story->Choices[choice].Value);
+                                        }
+
+                                        increase = gainAttributeScore(window, renderer, party.Party[i], attribute, story->Choices[choice].Value, 0);
+                                    }
                                 }
                             }
 
