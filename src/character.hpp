@@ -175,22 +175,27 @@ namespace Party
 
         Location::Type Location = Location::Type::NONE;
 
-        int CurrentShip = -1;
-
         std::vector<Ship::Base> Fleet = std::vector<Ship::Base>();
+
+        int CurrentShip = -1;
 
         std::vector<Army::Base> Army = std::vector<Army::Base>();
 
-        Book::Type Book = Book::Type::BOOK1;
+        // For tracking recent success (team checks, individual checks)
+        int RecentSuccesses = 0;
 
-        int StoryID = 0;
+        // Romance histogram
+        std::map<Character::Romance, int> Hearts = {};
 
         // TODO: Ensure that IsParty and Current is consistent: When IsParty = false, Current != Character::Type::NONE. When IsParty = true, Current = Character::Type::NONE.
         bool IsParty = true;
 
         int Current = -1;
 
-        std::map<Character::Romance, int> Hearts = {};
+        // Book reference
+        Book::Type Book = Book::Type::BOOK1;
+
+        int StoryID = 0;
 
         Base()
         {

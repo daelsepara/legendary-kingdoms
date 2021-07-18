@@ -52,8 +52,8 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
 bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Book::Type book, Story::Base *story);
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
-bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection);
-bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
+bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection);
+bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
 bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
@@ -5186,11 +5186,11 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
     return result;
 }
 
-bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment)
+bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment)
 {
     bool test_result = false;
 
-    if (Engine::COUNT(party) > 0 && Engine::COUNT(party) >= team.size())
+    if (Engine::COUNT(party.Party) > 0 && Engine::COUNT(party.Party) >= team.size())
     {
         if (window && renderer)
         {
@@ -5280,7 +5280,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
             for (auto i = 0; i < team.size(); i++)
             {
-                skill_score += Engine::SCORE(party[team[i]], Skill) + Engine::MAX(party[team[i]], Equipment::Class::NORMAL, Skill);
+                skill_score += Engine::SCORE(party.Party[team[i]], Skill) + Engine::MAX(party.Party[team[i]], Equipment::Class::NORMAL, Skill);
             }
 
             if (skill_score > 20)
@@ -5360,6 +5360,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
                         {
                             flash_message = true;
 
+                            party.RecentSuccesses = success_counter;
+
                             if (success_counter >= success)
                             {
                                 message = "Skill Check PASSED!";
@@ -5388,7 +5390,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 putHeader(renderer, test_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
-                putHeader(renderer, party[team[0]].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Party[team[0]].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
@@ -5396,11 +5398,11 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 if (useEquipment)
                 {
-                    score1 = Engine::SCORE(party[team[0]], Skill) + Engine::MAX(party[team[0]], Equipment::Class::NORMAL, Skill);
+                    score1 = Engine::SCORE(party.Party[team[0]], Skill) + Engine::MAX(party.Party[team[0]], Equipment::Class::NORMAL, Skill);
                 }
                 else
                 {
-                    score1 = Engine::SCORE(party[team[0]], Skill);
+                    score1 = Engine::SCORE(party.Party[team[0]], Skill);
                 }
 
                 std::string adventurer1 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score1);
@@ -5409,7 +5411,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                 if (team.size() > 1)
                 {
-                    putHeader(renderer, party[team[1]].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                    putHeader(renderer, party.Party[team[1]].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
 
                     fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
 
@@ -5417,11 +5419,11 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Cha
 
                     if (useEquipment)
                     {
-                        score2 = Engine::SCORE(party[team[1]], Skill) + Engine::MAX(party[team[1]], Equipment::Class::NORMAL, Skill);
+                        score2 = Engine::SCORE(party.Party[team[1]], Skill) + Engine::MAX(party.Party[team[1]], Equipment::Class::NORMAL, Skill);
                     }
                     else
                     {
-                        score2 = Engine::SCORE(party[team[1]], Skill);
+                        score2 = Engine::SCORE(party.Party[team[1]], Skill);
                     }
 
                     std::string adventurer2 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score2);
@@ -5941,7 +5943,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
     return result;
 }
 
-bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection)
+bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection)
 {
     bool result = false;
 
@@ -5981,14 +5983,14 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
         auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
         auto last = offset + limit;
 
-        if (last > party.size())
+        if (last > party.Party.size())
         {
-            last = party.size();
+            last = party.Party.size();
         }
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-        auto controls = combatantList(window, renderer, party, offset, last, limit, textx, texty + infoh + text_space, true, true);
+        auto controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, true);
 
         auto done = false;
 
@@ -6025,13 +6027,13 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
                 {
                     auto index = i - offset;
 
-                    if (index >= 0 && index < party.size())
+                    if (index >= 0 && index < party.Party.size())
                     {
                         if (Engine::FIND_LIST(selection, index) >= 0)
                         {
                             thickRect(renderer, controls[index].W, controls[index].H, controls[index].X, controls[index].Y, intLB, 2);
                         }
-                        else if (party[index].Health > 0)
+                        else if (party.Party[index].Health > 0)
                         {
                             drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
                         }
@@ -6061,16 +6063,16 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
 
                     for (auto i = 0; i < selection.size(); i++)
                     {
-                        if (selection[i] >= 0 && selection[i] < party.size())
+                        if (selection[i] >= 0 && selection[i] < party.Party.size())
                         {
-                            if (party[selection[i]].Health > 0)
+                            if (party.Party[selection[i]].Health > 0)
                             {
                                 if (adventurers.length() > 0)
                                 {
                                     adventurers += "\n";
                                 }
 
-                                adventurers += party[selection[i]].Name;
+                                adventurers += party.Party[selection[i]].Name;
                             }
                         }
                     }
@@ -6115,7 +6117,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
                     }
                     else if (controls[current].Type == Control::Type::CONFIRM)
                     {
-                        if (selection.size() >= team_size && selection.size() <= party.size())
+                        if (selection.size() >= team_size && selection.size() <= party.Party.size())
                         {
                             done = true;
 
@@ -6138,7 +6140,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
                     }
                     else if (controls[current].Type == Control::Type::ACTION)
                     {
-                        if (current + offset >= 0 && current + offset < party.size())
+                        if (current + offset >= 0 && current + offset < party.Party.size())
                         {
                             auto index = Engine::FIND_LIST(selection, current + offset);
 
@@ -6150,13 +6152,13 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
                             {
                                 if (selection.size() < team_size)
                                 {
-                                    if (party[current + offset].Health > 0)
+                                    if (party.Party[current + offset].Health > 0)
                                     {
                                         if (team == Team::Type::NONE)
                                         {
                                             selection.push_back(current + offset);
                                         }
-                                        else if (party[current + offset].Team == team)
+                                        else if (party.Party[current + offset].Team == team)
                                         {
                                             selection.push_back(current + offset);
                                         }
@@ -6164,7 +6166,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
                                         {
                                             flash_message = true;
 
-                                            message = std::string(party[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!";
+                                            message = std::string(party.Party[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!";
 
                                             start_ticks = SDL_GetTicks();
 
@@ -6175,7 +6177,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, std::vector<Characte
                                     {
                                         flash_message = true;
 
-                                        message = std::string(party[current + offset].Name) + std::string(" is DEAD!");
+                                        message = std::string(party.Party[current + offset].Name) + std::string(" is DEAD!");
 
                                         start_ticks = SDL_GetTicks();
 
@@ -9582,7 +9584,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto selection = std::vector<int>();
 
-                            auto success = skillCheck(window, renderer, party.Party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
+                            auto success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
 
                             if (selection.size() == 1)
                             {
@@ -9606,7 +9608,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto selection = std::vector<int>();
 
-                            auto success = skillCheck(window, renderer, party.Party, story->Choices[choice].Team, 2, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
+                            auto success = skillCheck(window, renderer, party, story->Choices[choice].Team, 2, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
 
                             if (selection.size() == 2)
                             {
@@ -10781,7 +10783,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     auto selection = std::vector<int>();
 
-                    skillCheck(window, renderer, Party.Party, Team::Type::NONE, 2, Attribute::Type::STEALTH, 4, 4, selection);
+                    skillCheck(window, renderer, Party, Team::Type::NONE, 2, Attribute::Type::STEALTH, 4, 4, selection);
 
                     current = -1;
 
@@ -10793,7 +10795,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     auto selection = std::vector<int>();
 
-                    skillCheck(window, renderer, Party.Party, Team::Type::NONE, 1, Attribute::Type::LORE, 4, 3, selection);
+                    skillCheck(window, renderer, Party, Team::Type::NONE, 1, Attribute::Type::LORE, 4, 3, selection);
 
                     current = -1;
 
