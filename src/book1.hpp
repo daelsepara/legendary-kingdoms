@@ -143,10 +143,7 @@ namespace Book1
             Engine::GAIN_HEARTS(party, Character::Type::BRASH, Character::Type::AMELIA_PASS_DAYNE, 1);
         }
 
-        Engine::Destination Continue(Party::Base &party)
-        {
-            return {Book::Type::BOOK1, 280};
-        }
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 280}; }
     };
 
     class Story005 : public Story::Base
@@ -1914,6 +1911,356 @@ namespace Book1
         }
     };
 
+    class Story060 : public Story::Base
+    {
+    public:
+        Engine::Destination destination;
+
+        Story060()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 60;
+
+            Text = "The thief is almost in grabbing range. He turns a corner only to find himself in a dead-end alley. He curses and draws his sword. \"You've bitten off more than you can chew, foreigners!\" he spits.\n\nNote: Only party members still in the chase can fight in this battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Team = Team::Type::CHASE;
+
+            destination = {Book::Type::BOOK1, 391};
+
+            Bye = NULL;
+
+            CanFlee = false;
+
+            Monsters = {Monster::Base("Thief of Royce", 5, 4, 4, 14, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            return destination;
+        }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                destination = {Book::Type::BOOK1, 391};
+            }
+            else if (Engine::COUNT(party.Party) > 0)
+            {
+                for (auto i = 0; i < party.Party.size(); i++)
+                {
+                    if (party.Party[i].Team == Team::Type::CHASE)
+                    {
+                        party.Party[i].Equipment.clear();
+                    }
+                }
+
+                Bye = "The team you sent to chase the thief are all dead. The thief has taken all of their possessions. The remaining party members are mourning the loss.";
+
+                destination = {Book::Type::BOOK1, 450};
+            }
+        }
+    };
+
+    class Story061 : public Story::Base
+    {
+    public:
+        Story061()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 61;
+
+            Text = "You carry Amelia to bed after a few feeble protestations. Once she is safely tucked-in the rest of the party retire as well.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            {
+                if (party.Party[party.LastSelected].Type == Character::Type::BRASH)
+                {
+                    return {Book::Type::BOOK1, 4};
+                }
+                else if (party.Party[party.LastSelected].Type == Character::Type::TASHA)
+                {
+                    return {Book::Type::BOOK1, 870};
+                }
+                else
+                {
+                    return {Book::Type::NONE, -1};
+                }
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 280}; }
+    };
+
+    class Story062 : public Story::Base
+    {
+    public:
+        Story062()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 62;
+
+            Text = "That night, you stroll along the terrace, the night a canopy of stars, reflected in the watery rice paddies that surround the house. You need some fresh air. Being treated as a hero all day and night can be exhausting.\n\nYou spy Brash leaning back on a chair, his feet up on the railings, a cup of rice wine in hand. He stares out over the still landscape.\n\n\"Silver for your thoughts,\" you say, causing Brash to yelp in surprise, fall off his chair and crash to ground.\n\n\"Ah! Akihiro! Always catching me at my best!\" Brash says sheepishly. You offer him a hand up, the fair lad accepting, pulled almost into an embrace. He blushes and backs away.\n\n\"Not like you to lose your tongue, my friend,\" you smile. \"You've been avoiding me, I sense.\"\n\n\"A bit,\" he says. \"I just don't know what to do with myself these days...\"\n\n\"How so?\" you ask. When he doesn't respond you flick him a silver coin, which he catches with his quick reflexes. He looks at it in his hand and realises he has been fooled.\n\n\"I've been thinking about you,\" he admits. \"Quite a bit. I don't know what to do about it. The kind of feelings I have aren't allowed in Royce.\"\n\n\"They are not allowed anywhere,\" you say, joining him at the railings. \"There are many men who would rather kill than love. And more who would kill to stop love, no matter how earnest. I will never hurry you, Brash, but I do not accept uncertainty. If you feel for me what I feel for you, you must be sure. Once done, we cannot undo it.\"\n\nYou are disturbed by a creak on the floorboards. You turn to see your sister arriving on the terrace. \"Come, Akihiro, you are asked for! Do not keep the people from their hero!\"\n\n\"The price of fame,\" you smile. \"Come, Brash. Walking out on a party is not done.\"\n\nYou offer him your hand, and he accepts, squeezing before releasing.\n\nAkihiro has gained a HEART for Brash. Brash also gains a HEART for Akihiro.\n\nYou gained the code A98.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(98)});
+
+            Engine::GAIN_HEARTS(party, Character::Type::AKIHIRO_OF_CHALICE, Character::Type::BRASH, 1);
+            Engine::GAIN_HEARTS(party, Character::Type::BRASH, Character::Type::AKIHIRO_OF_CHALICE, 1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story063 : public Story::Base
+    {
+    public:
+        Story063()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 63;
+
+            Text = "The zealots had a few minor talismans and some gaudy jewellery you sell at a marketplace for 25 SILVER COINS. It seems a paltry reward for such a battle.\n\nWhere will you travel now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North, towards the Temple of the Unbroken", {Book::Type::BOOK1, 535}));
+            Choices.push_back(Choice::Base("East, towards the city of Cursus", {Book::Type::BOOK1, 340}));
+            Choices.push_back(Choice::Base("West, towards the Mordain Ruins", {Book::Type::BOOK1, 515}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 25);
+        }
+    };
+
+    class Story064 : public Story::Base
+    {
+    public:
+        Story064()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 64;
+
+            Text = "With the ascendancy of the Everchild the streets have become safer and justice more accessible to the common people. Good news for the city, but it makes for a dull walk through the ramshackle town.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story065 : public Story::Base
+    {
+    public:
+        Story065()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 65;
+
+            Text = "The party member reading the book is standing immobile, lost in the mystic words of the cursed book.\n\nWhat does the rest of the party do?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Snatch the book from their grasp", {Book::Type::BOOK1, 771}));
+            Choices.push_back(Choice::Base("Abandon the party member to their madness", {Book::Type::BOOK1, 84}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story066 : public Story::Base
+    {
+    public:
+        Story066()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 66;
+
+            Text = "You spend several days in the handsomely appointed Cold River Inn.\n\nNote: For every 5 SILVER COINS you spend, each party member can RECOVER 1 Health point.\n\nSpell casters can also spend silver here to RECHARGE their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
+
+            RestPrice = 5;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Return to the Everchild's hideout", {Book::Type::BOOK1, 263}));
+            Choices.push_back(Choice::Base("Leave Luutanesh", {Book::Type::BOOK1, 614}));
+
+            Controls = Story::Controls::INN;
+        }
+    };
+
+    class Story067 : public Story::Base
+    {
+    public:
+        Story067()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 67;
+
+            Text = "You descend into the basement, carved out of cliff rock, and decorated with thick carpets and ever-burning candlesticks. Eventually you emerge into an oval chamber. To the south an archway leads to another circular room filled with strange, glowing runes. In the north wall is a strong, round steel door. It appears to have no handle or lock upon it. Perhaps this is the fabled vault of Unbraaki?\n\nOn either side of the vault are bookcases which are stacked with blank paper. Your entrance has created a draught, and a single blank sheet tumbles from the stacks to drift to the floor. You watch with growing nervousness as another sheet floats free and then another and another. The sheets of paper fold themselves rapidly, joining together and folding and refolding into shapes. Soon, a man-like figure has formed, followed by another and another. A paper tiger is folded into completion, as well as a fierce dragon. As one, the paper figures turn, swirls of sheets whipping around them like a snowstorm. They advance towards you.\n\nNotes: You cannot make armour saves against the attacks of these paper opponents.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(92)}))
+            {
+                return {Book::Type::BOOK1, 803};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::HAS_SPELL_ANY(party, {Spells::Type::ORB_OF_ANNIHILATION, Spells::Type::MAELSTROM}))
+            {
+                Choices.push_back(Choice::Base("Cast Orb of Annihilation or Maelstrom", {Book::Type::BOOK1, 121}));
+                Choices.push_back(Choice::Base("Defend yourselves against these weird opponents", {Book::Type::BOOK1, -67}));
+            }
+            else
+            {
+                Monsters = {
+                    Monster::Base("Paper Golems", Monster::Type::PAPER, 4, 4, 4, 10, 0),
+                    Monster::Base("Paper Tiger", Monster::Type::PAPER, 5, 4, 4, 6, 0),
+                    Monster::Base("Paper Dragon", Monster::Type::PAPER, 5, 4, 4, 6, 0)};
+
+                CanFlee = false;
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 168}; }
+    };
+
+    class Event067 : public Story::Base
+    {
+    public:
+        Event067()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -67;
+
+            Text = "Defend yourselves against these weird opponents.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {
+                Monster::Base("Paper Golems", Monster::Type::PAPER, 4, 4, 4, 10, 0),
+                Monster::Base("Paper Tiger", Monster::Type::PAPER, 5, 4, 4, 6, 0),
+                Monster::Base("Paper Dragon", Monster::Type::PAPER, 5, 4, 4, 6, 0)};
+
+            CanFlee = false;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 168}; }
+    };
+
+    class Story068 : public Story::Base
+    {
+    public:
+        Story068()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 68;
+
+            Text = "Akini is delighted as you return her aunt to the family home. She thanks you profusely. \"I do not understand why strangers would perform such a kindness for me, but you have my eternal thanks,\" she smiles. She presents you with some FINE BOOTS (Stealth +2). \"These were cast out by my lady because one has a tiny scuff on the heel,\" says Akini. \"I shall never wear noble garments again. Let them be worn by those of noble heart, such as you.\"";
+
+            Bye = "You bow and take your leave.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::FINE_BOOTS2};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story069 : public Story::Base
+    {
+    public:
+        Story069()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 69;
+
+            Text = "You enter a small alchemical laboratory. A rack where potion bottles are stored is empty, presumably already looted by the orcs. However, two potions seem to be in the process of being brewed, an open book listing the instructions on a table which shares space with many alembics and beakers. There are two doors in this room, one to the west, and another to the east.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Attempt to complete the creation of the potions", {Book::Type::BOOK1, 482}));
+            Choices.push_back(Choice::Base("Pass through the door in the western wall", {Book::Type::BOOK1, 256}));
+            Choices.push_back(Choice::Base("Return to the corridor through the east door", {Book::Type::BOOK1, 755}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(73)}))
+            {
+                return {Book::Type::BOOK1, 873};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
     class Story100 : public Story::Base
     {
     public:
@@ -2012,18 +2359,30 @@ namespace Book1
     auto story057 = Story057();
     auto story058 = Story058();
     auto story059 = Story059();
+    auto story060 = Story060();
+    auto story061 = Story061();
+    auto story062 = Story062();
+    auto story063 = Story063();
+    auto story064 = Story064();
+    auto story065 = Story065();
+    auto story066 = Story066();
+    auto story067 = Story067();
+    auto event067 = Event067();
+    auto story068 = Story068();
+    auto story069 = Story069();
     auto story100 = Story100();
 
     void InitializeStories()
     {
         Book1::Stories = {
-            &event018, &event027, &event028, &event044,
+            &event018, &event027, &event028, &event044, &event067,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
             &story030, &story031, &story032, &story033, &story034, &story035, &story036, &story037, &story038, &story039,
             &story040, &story041, &story042, &story043, &story044, &story045, &story046, &story047, &story048, &story049,
             &story050, &story051, &story052, &story053, &story054, &story055, &story056, &story057, &story058, &story059,
+            &story060, &story061, &story062, &story063, &story064, &story065, &story066, &story067, &story068, &story069,
             &story100};
     }
 }

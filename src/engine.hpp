@@ -23,7 +23,7 @@ namespace Engine
     {
         NONE,
         VICTORY,
-        DOOM,
+        DEFEAT,
         FLEE
     };
 
@@ -1015,6 +1015,63 @@ namespace Engine
         }
 
         return found >= spells.size();
+    }
+
+    bool VERIFY_SPELL_ANY(Character::Base &character, std::vector<Spells::Type> spells)
+    {
+        auto found = 0;
+
+        for (auto i = 0; i < spells.size(); i++)
+        {
+            auto result = Engine::FIND_SPELL(character, spells[i]);
+
+            if (result >= 0)
+            {
+                found++;
+            }
+        }
+
+        return found > 0;
+    }
+
+    bool HAS_SPELL(Party::Base &party, std::vector<Spells::Type> spells)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Health > 0 && party.Party[i].SpellCaster && party.Party[i].SpellBook.size() > 0)
+            {
+                result = Engine::VERIFY_SPELL(party.Party[i], spells);
+
+                if (result)
+                {
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    bool HAS_SPELL_ANY(Party::Base &party, std::vector<Spells::Type> spells)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Health > 0 && party.Party[i].SpellCaster && party.Party[i].SpellBook.size() > 0)
+            {
+                result = Engine::VERIFY_SPELL_ANY(party.Party[i], spells);
+
+                if (result)
+                {
+                    break;
+                }
+            }
+        }
+
+        return result;
     }
 
     bool VERIFY_SPELL_LIMIT(Character::Base &player)

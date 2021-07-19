@@ -12,7 +12,8 @@ namespace Monster
         SKALLOS,
         SNAKEMAN_PRIEST,
         ZEALOT,
-        ZEALOT_HEALER
+        ZEALOT_HEALER,
+        PAPER
     };
 
     class Base

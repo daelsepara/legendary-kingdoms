@@ -22,7 +22,9 @@ namespace Spells
         UNFAILING_STRIKE,
         WOLF_SPIRIT,
         MAGIC_CABINET,
-        WISDOM
+        WISDOM,
+        ORB_OF_ANNIHILATION,
+        MAELSTROM
     };
 
     enum class Scope

@@ -36,7 +36,8 @@ namespace Equipment
         SCROLL_OF_RAGE,
         BRONZE_LOCKET,
         SEAL_OF_HOUSE_ROSS,
-        VIAL_OF_POISON
+        VIAL_OF_POISON,
+        FINE_BOOTS2
     };
 
     class Base
@@ -98,6 +99,7 @@ namespace Equipment
     auto BRONZE_LOCKET = Equipment::Base("BRONZE LOCKET", "BRONZE LOCKET", Equipment::Class::NORMAL, Equipment::Type::BRONZE_LOCKET, Attribute::Type::NONE, 0, false);
     auto SEAL_OF_HOUSE_ROSS = Equipment::Base("SEAL OF HOUSE ROSS", "SEAL OF HOUSE ROSS", Equipment::Class::NORMAL, Equipment::Type::SEAL_OF_HOUSE_ROSS, Attribute::Type::NONE, 0, false);
     auto VIAL_OF_POISON = Equipment::Base("VIAL OF POISON", "VIAL OF POISON", Equipment::Class::NORMAL, Equipment::Type::VIAL_OF_POISON, Attribute::Type::NONE, 0, false);
+    auto FINE_BOOTS2 = Equipment::Base("FINE BOOTS", "FINE BOOTS", Equipment::Class::NORMAL, Equipment::Type::FINE_BOOTS2, Attribute::Type::STEALTH, 2, false);
 }
 
 #endif

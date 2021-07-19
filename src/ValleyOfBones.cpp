@@ -60,8 +60,8 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, bool inCombat);
 
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
-int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party);
-int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment);
+int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Team::Type team);
+int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Team::Type team, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment);
 int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, Spells::Base &spell, int combatant, int opponent, int fighting_score);
 int selectCaster(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, Control::Type mode);
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets);
@@ -3105,7 +3105,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
     return combat_damage;
 }
 
-int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party)
+int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Team::Type team)
 {
     auto result = -1;
 
@@ -3294,7 +3294,20 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                             {
                                 if (party[current + offset].Health > 0)
                                 {
-                                    selection = current + offset;
+                                    if (team == Team::Type::NONE || party[current + offset].Team == team)
+                                    {
+                                        selection = current + offset;
+                                    }
+                                    else
+                                    {
+                                        flash_message = true;
+
+                                        message = std::string(party[current + offset].Name) + " is not part of the " + Team::Descriptions[team] + " team!";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_color = intRD;
+                                    }
                                 }
                                 else
                                 {
@@ -3646,7 +3659,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
     return combat_damage;
 }
 
-int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment)
+int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Team::Type team, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment)
 {
     auto combat_damage = 0;
 
@@ -4084,7 +4097,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                         {
                             if (combat_damage > 0)
                             {
-                                auto result = assignDamage(window, renderer, party);
+                                auto result = assignDamage(window, renderer, party, team);
 
                                 if (result >= 0 && result < party.size())
                                 {
@@ -4092,7 +4105,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                                     {
                                         assigned = true;
 
-                                        if (Engine::ARMOUR(party[result]) > 0)
+                                        if (Engine::ARMOUR(party[result]) > 0 && monsters[opponent].Type != Monster::Type::PAPER)
                                         {
                                             auto reduced_damage = armourSave(window, renderer, party[result], combat_damage);
 
@@ -4116,7 +4129,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
                                             Engine::GAIN_HEALTH(party[result], -combat_damage);
 
-                                            combatant = result;
+                                            combat_damage = result;
                                         }
                                     }
                                     else
@@ -7465,7 +7478,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                             if (attack >= 0)
                                             {
-                                                auto damage = attackScreen(window, renderer, party.Party, monsters, result, attack, 0, useEquipment);
+                                                auto damage = attackScreen(window, renderer, party.Party, team, monsters, result, attack, 0, useEquipment);
 
                                                 hasAttacked.push_back(result);
 
@@ -7520,11 +7533,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     {
                                         if (monsters[i].Type == Monster::Type::ZEALOT_HEALER && Engine::COUNT(monsters) == 1)
                                         {
-                                            attackScreen(window, renderer, party.Party, monsters, -1, i, 1, useEquipment);
+                                            attackScreen(window, renderer, party.Party, team, monsters, -1, i, 1, useEquipment);
                                         }
                                         else
                                         {
-                                            attackScreen(window, renderer, party.Party, monsters, -1, i, 1, useEquipment);
+                                            attackScreen(window, renderer, party.Party, team, monsters, -1, i, 1, useEquipment);
                                         }
                                     }
                                 }
@@ -7701,7 +7714,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
     if (combatResult != Engine::Combat::FLEE && combatResult != Engine::Combat::NONE)
     {
-        combatResult = Engine::COUNT(party.Party, team) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DOOM;
+        combatResult = Engine::COUNT(party.Party, team) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DEFEAT;
     }
 
     // Clear temporary status, e.g. magic effects
@@ -10545,6 +10558,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         else if (story->Controls == Story::Controls::HARBOUR)
         {
             controls = Story::HarbourControls(compact);
+        }
+        else if (story->Controls == Story::Controls::INN)
+        {
+            controls = Story::InnControls(compact);
         }
         else
         {

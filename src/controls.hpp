@@ -24,6 +24,7 @@ namespace Control
         LOAD,
         SAVE,
         SHOP,
+        INN,
         NEXT,
         ENCYCLOPEDIA,
         GLOSSARY,
