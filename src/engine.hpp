@@ -415,6 +415,50 @@ namespace Engine
         return result;
     }
 
+    int COUNT(std::vector<Character::Base> &adventurers, Team::Type team)
+    {
+        auto result = 0;
+
+        if (team == Team::Type::NONE)
+        {
+            return Engine::COUNT(adventurers);
+        }
+        else
+        {
+            for (auto i = 0; i < adventurers.size(); i++)
+            {
+                if (adventurers[i].Health > 0 && (adventurers[i].Team == team))
+                {
+                    result++;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    int TEAM_SIZE(std::vector<Character::Base> &adventurers, Team::Type team)
+    {
+        auto result = 0;
+
+        if (team == Team::Type::NONE)
+        {
+            return Engine::COUNT(adventurers);
+        }
+        else
+        {
+            for (auto i = 0; i < adventurers.size(); i++)
+            {
+                if (adventurers[i].Team == team)
+                {
+                    result++;
+                }
+            }
+        }
+
+        return result;
+    }
+
     int COUNT(std::vector<Spells::Base> &spells, Spells::Scope scope)
     {
         auto result = 0;
