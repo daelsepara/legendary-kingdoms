@@ -43,6 +43,14 @@ namespace Engine
         END
     };
 
+    enum class Retreat
+    {
+        START,
+        RETREAT,
+        CONFIRM,
+        END
+    };
+
     enum class ArmourSave
     {
         START,
@@ -101,6 +109,14 @@ namespace Engine
             {
                 Engine::GAIN_HEALTH(party[i], health);
             }
+        }
+    }
+
+    void REST(Party::Base &party)
+    {
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            party.Party[i].Health = party.Party[i].MaximumHealth;
         }
     }
 
@@ -1022,6 +1038,40 @@ namespace Engine
     bool IN_PARTY(Party::Base &party, Character::Type character)
     {
         return Engine::IN_TEAM(party, character, Team::Type::NONE);
+    }
+
+    int FIND_UNIT(std::vector<Army::Base> &army, Army::Type unit)
+    {
+        int result = -1;
+
+        for (auto i = 0; i < army.size(); i++)
+        {
+            if (army[i].Type == unit)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIND_UNIT(std::vector<Army::Base> &army, Location::BattleField position)
+    {
+        int result = -1;
+
+        for (auto i = 0; i < army.size(); i++)
+        {
+            if (army[i].Position == position)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
     }
 }
 #endif

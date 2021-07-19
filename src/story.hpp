@@ -46,7 +46,8 @@ namespace Choice
         PARTY_RAISE_ATTRIBUTE,
         PARTY_RAISE_HEALTH,
         RANDOM_EVENT,
-        CHOOSE_PARTY_MEMBER
+        CHOOSE_PARTY_MEMBER,
+        RETREAT
     };
 
     class Base
@@ -77,6 +78,8 @@ namespace Choice
         Engine::Destination Destination = {Book::Type::NONE, -1};
 
         Engine::Destination DestinationFailed = {Book::Type::NONE, -1};
+
+        Location::Type Location = Location::Type::NONE;
 
         Base(const char *text, Engine::Destination destination)
         {
@@ -271,6 +274,19 @@ namespace Choice
             Type = Choice::Type::RANDOM_EVENT;
 
             RandomDestinations = destinations;
+
+            Value = value;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, Location::Type location, int value)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Location = location;
 
             Value = value;
         }

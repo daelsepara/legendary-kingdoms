@@ -51,6 +51,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
 bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Book::Type book, Story::Base *story);
+bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int unit, Location::Type &location, int threshold, int rolls);
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection);
 bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
@@ -4183,6 +4184,311 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
     return combat_damage;
 }
 
+bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int unit, Location::Type &location, int threshold, int rolls)
+{
+    auto retreats = false;
+
+    if (party.Army.size() > 0)
+    {
+        if (window && renderer)
+        {
+            auto flash_message = false;
+
+            auto flash_color = intRD;
+
+            std::string message = "";
+
+            Uint32 start_ticks = 0;
+
+            Uint32 duration = 3000;
+
+            auto marginx = (int)(Margin * SCREEN_WIDTH);
+
+            auto fullwidth = SCREEN_WIDTH - 2 * marginx;
+
+            auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
+
+            auto headerw = (int)(boxwidth * 0.75);
+
+            auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+
+            auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+
+            auto box_space = 10;
+
+            auto main_buttonh = 48;
+
+            auto done = false;
+
+            auto stage = Engine::Retreat::START;
+
+            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Retreat Army");
+
+            TTF_Init();
+
+            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+
+            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
+
+            auto text_space = 8;
+
+            auto font_size = 24;
+
+            const char *choices_retreat[1] = {"Retreat"};
+            const char *choices_confirm[1] = {"Confirm"};
+            const char *choices_end[1] = {"Done"};
+
+            SDL_Surface *dice[6];
+
+            dice[0] = createImage("images/dice/dice1.png");
+            dice[1] = createImage("images/dice/dice2.png");
+            dice[2] = createImage("images/dice/dice3.png");
+            dice[3] = createImage("images/dice/dice4.png");
+            dice[4] = createImage("images/dice/dice5.png");
+            dice[5] = createImage("images/dice/dice6.png");
+
+            auto main_buttonw = 220;
+
+            auto controls_retreat = createFixedTextButtons(choices_retreat, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+            controls_retreat[0].Type = Control::Type::CONFIRM;
+
+            auto controls_confirm = createFixedTextButtons(choices_confirm, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+            controls_confirm[0].Type = Control::Type::CONFIRM;
+
+            auto controls_end = createFixedTextButtons(choices_end, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+            controls_end[0].Type = Control::Type::BACK;
+
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto focus = 0;
+
+            std::vector<int> results = {};
+
+            auto size_dice = 64;
+
+            auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+            auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
+
+            auto controls = std::vector<TextButton>();
+
+            auto confirmed = false;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                putHeader(renderer, "Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
+
+                if (stage != Engine::Retreat::START)
+                {
+                    auto success = 0;
+
+                    if (rolls > 0)
+                    {
+                        if (stage == Engine::Retreat::RETREAT)
+                        {
+                            if (results.size() == 0)
+                            {
+                                results = Engine::ROLL_DICE(rolls);
+                            }
+                        }
+
+                        auto row = 0;
+                        auto col = 0;
+
+                        auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
+                        auto offsetx = startx + box_space;
+
+                        for (auto i = 0; i < results.size(); i++)
+                        {
+                            if (results[i] >= 1 && results[i] <= 6)
+                            {
+                                auto result = results[i] - 1;
+
+                                fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
+
+                                success += results[i];
+
+                                if (col < cols)
+                                {
+                                    col++;
+                                }
+                                else
+                                {
+                                    col = 0;
+
+                                    row++;
+                                }
+                            }
+                        }
+                    }
+
+                    if (stage == Engine::Retreat::CONFIRM)
+                    {
+                        if (!confirmed)
+                        {
+                            if (rolls > 0)
+                            {
+                                if (success > threshold)
+                                {
+                                    retreats = true;
+
+                                    message = std::string(party.Army[unit].Name) + " retreats safely to " + std::string(Location::Description[location]) + ".";
+
+                                    flash_color = intLB;
+
+                                    flash_message = true;
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    party.Army[unit].Morale = party.Army[unit].MaximumMorale;
+
+                                    party.Army[unit].Garrison = location;
+                                }
+                                else
+                                {
+                                    retreats = false;
+
+                                    message = std::string(party.Army[unit].Name) + " destroyed.";
+
+                                    flash_color = intRD;
+
+                                    flash_message = true;
+
+                                    start_ticks = SDL_GetTicks();
+                                }
+                            }
+                            else
+                            {
+                                retreats = true;
+
+                                message = std::string(party.Army[unit].Name) + " retreats safely to " + std::string(Location::Description[location]) + ".";
+
+                                flash_color = intLB;
+
+                                flash_message = true;
+
+                                start_ticks = SDL_GetTicks();
+
+                                party.Army[unit].Morale = party.Army[unit].MaximumMorale;
+
+                                party.Army[unit].Garrison = location;
+                            }
+
+                            confirmed = true;
+                        }
+                    }
+                }
+
+                putHeader(renderer, party.Army[unit].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
+                std::string army_string = "Strength: " + std::to_string(party.Army[unit].Strength) + " Morale: " + std::to_string(party.Army[unit].Morale) + "\nPosition: " + Location::BattleFieldDescription[party.Army[unit].Position];
+                putText(renderer, army_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+
+                std::string attribute_string = "Retreat: Difficulty " + std::to_string(threshold);
+                putHeader(renderer, attribute_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+
+                if (stage == Engine::Retreat::START)
+                {
+                    controls = controls_retreat;
+                }
+                else if (stage == Engine::Retreat::RETREAT)
+                {
+                    controls = controls_confirm;
+                }
+                else if (stage == Engine::Retreat::CONFIRM)
+                {
+                    controls = controls_end;
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (selected && current >= 0 && current < controls.size())
+                {
+                    if (stage == Engine::Retreat::START && controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (rolls > 0)
+                        {
+                            stage = Engine::Retreat::RETREAT;
+                        }
+                        else
+                        {
+                            stage = Engine::Retreat::CONFIRM;
+                        }
+                    }
+                    else if (stage == Engine::Retreat::RETREAT && controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        stage = Engine::Retreat::CONFIRM;
+                    }
+                    else if (stage == Engine::Retreat::CONFIRM && controls[current].Type == Control::Type::BACK)
+                    {
+                        stage = Engine::Retreat::END;
+
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+
+                        break;
+                    }
+                }
+            }
+
+            if (font_mason)
+            {
+                TTF_CloseFont(font_mason);
+
+                font_mason = NULL;
+            }
+
+            if (font_garamond)
+            {
+                TTF_CloseFont(font_garamond);
+
+                font_garamond = NULL;
+            }
+
+            TTF_Quit();
+
+            for (auto i = 0; i < 6; i++)
+            {
+                if (dice[i])
+                {
+                    SDL_FreeSurface(dice[i]);
+
+                    dice[i] = NULL;
+                }
+            }
+        }
+    }
+
+    return retreats;
+}
+
 int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, Attribute::Type &attribute, int score, int rolls)
 {
     auto increase = 0;
@@ -4390,7 +4696,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
                 std::string attacker_string = std::string(Attribute::Descriptions[attribute]) + " Score: " + std::to_string(Engine::SCORE(character, attribute));
                 putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
-                std::string attribute_string = "Raise : " + std::string(Attribute::Descriptions[attribute]);
+                std::string attribute_string = "Raise: " + std::string(Attribute::Descriptions[attribute]);
                 putHeader(renderer, attribute_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                 if (stage == Engine::RaiseAttribute::START)
@@ -9912,6 +10218,42 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 start_ticks = SDL_GetTicks();
                             }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::RETREAT)
+                        {
+                            if (party.Army.size() > 0)
+                            {
+                                std::vector<Location::BattleField> positions = {Location::BattleField::LEFT_FLANK_FRONT, Location::BattleField::LEFT_FLANK_SUPPORT, Location::BattleField::CENTRE_FRONT, Location::BattleField::CENTRE_SUPPORT, Location::BattleField::RIGHT_FLANK_FRONT, Location::BattleField::RIGHT_FLANK_SUPPORT};
+
+                                for (auto i = 0; i < positions.size(); i++)
+                                {
+                                    auto unit = Engine::FIND_UNIT(party.Army, positions[i]);
+
+                                    if (unit >= 0 && unit < party.Army.size())
+                                    {
+                                        auto location = story->Choices[choice].Location;
+
+                                        auto retreat = retreatArmy(window, renderer, party, unit, location, story->Choices[choice].Value, 1);
+
+                                        if (retreat)
+                                        {
+                                            party.Army[unit].Garrison = location;
+                                            party.Army[unit].Position = Location::BattleField::NONE;
+                                            party.Army[unit].Morale = party.Army[unit].MaximumMorale;
+                                        }
+                                        else
+                                        {
+                                            party.Army.erase(party.Army.begin() + unit);
+                                        }
+                                    }
+                                }
+                            }
+
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
                         }
                         else if (story->Choices[choice].Type == Choice::Type::CODES)
                         {

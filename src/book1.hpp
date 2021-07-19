@@ -1595,6 +1595,57 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 821}; }
     };
 
+    class Story048 : public Story::Base
+    {
+    public:
+        Story048()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 48;
+
+            Text = "The enemy are too numerous. Horns are sounded, and your forces begin a general retreat. Fortunately, you have the open desert to scatter into and a rearward base to reform at, but casualties are almost inevitable.\n\nThe queen is appalled at her loss but marshals her forces with a mother's tenderness. \"This is not the end,\" she vows. \"We must rebuild our forces and gather new allies. Clifftop isn't going anywhere, and neither am I.\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Retreat to Saltdad", {Book::Type::BOOK1, 620}, Choice::Type::RETREAT, Location::Type::SALTDAD, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story049 : public Story::Base
+    {
+    public:
+        Story049()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 49;
+
+            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are RESTORED to MAXIMUM Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive 600 SILVER COINS as a reward. In addition, he presents you with a SEAL OF HOUSE ROSS. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nYou gained the code A85.";
+
+            Bye = "Thanking Sir Lawrence and Emlyn for their generosity, you depart into the city.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::SURVIVAL}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::SEAL_OF_HOUSE_ROSS};
+
+            Limit = 1;
+
+            Engine::GAIN_MONEY(party, 600);
+
+            Engine::REST(party);
+
+            Engine::GET_CODES(party, {Codes::Base(Book::Type::BOOK1, 85)});
+        }
+    };
+
     class Story100 : public Story::Base
     {
     public:
@@ -1681,6 +1732,8 @@ namespace Book1
     auto story045 = Story045();
     auto story046 = Story046();
     auto story047 = Story047();
+    auto story048 = Story048();
+    auto story049 = Story049();
     auto story100 = Story100();
 
     void InitializeStories()
@@ -1691,7 +1744,7 @@ namespace Book1
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
             &story030, &story031, &story032, &story033, &story034, &story035, &story036, &story037, &story038, &story039,
-            &story040, &story041, &story042, &story043, &story044, &story045, &story046, &story047,
+            &story040, &story041, &story042, &story043, &story044, &story045, &story046, &story047, &story048, &story049,
             &story100};
     }
 }
