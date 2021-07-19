@@ -3891,6 +3891,14 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                                 }
                                 else
                                 {
+                                    message = "The " + std::string(monsters[opponent].Name) + "'s attack was INEFFECTIVE!";
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_message = true;
+
+                                    flash_color = intRD;
+
                                     assigned = true;
                                 }
                             }
