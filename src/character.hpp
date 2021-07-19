@@ -24,7 +24,8 @@ namespace Team
         SOLO,
         WEAPONS,
         DISTRACTION,
-        MERCENARY
+        MERCENARY,
+        CHASE
     };
 
     std::map<Team::Type, const char *> Descriptions = {
@@ -52,7 +53,8 @@ namespace Character
     enum class Status
     {
         ARMOUR3,
-        RITUAL_SCARRING
+        RITUAL_SCARRING,
+        ENRAGED
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;

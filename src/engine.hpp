@@ -200,114 +200,6 @@ namespace Engine
         return results;
     }
 
-    int SCORE(Character::Base &character, Attribute::Type type)
-    {
-        auto score = 1;
-
-        for (auto i = 0; i < character.Attributes.size(); i++)
-        {
-            if (character.Attributes[i].Type == type)
-            {
-                score = character.Attributes[i].Value;
-
-                break;
-            }
-        }
-
-        return score;
-    }
-
-    void GAIN_SCORE(Character::Base &character, Attribute::Type type, int score)
-    {
-        for (auto i = 0; i < character.Attributes.size(); i++)
-        {
-            if (character.Attributes[i].Type == type)
-            {
-                character.Attributes[i].Value += score;
-
-                if (character.Attributes[i].Value < 1)
-                {
-                    character.Attributes[i].Value = 1;
-                }
-
-                break;
-            }
-        }
-    }
-
-    int FIGHTING_SCORE(Character::Base &character)
-    {
-        auto max = 0;
-
-        for (auto i = 0; i < character.Equipment.size(); i++)
-        {
-            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
-            {
-                if (character.Equipment[i].Modifier >= max)
-                {
-                    max = character.Equipment[i].Modifier;
-                }
-            }
-        }
-
-        return max > 0 ? Engine::SCORE(character, Attribute::Type::FIGHTING) + max : 1;
-    }
-
-    bool TWO_HANDED(Character::Base &character)
-    {
-        auto result = false;
-
-        auto max = 0;
-
-        for (auto i = 0; i < character.Equipment.size(); i++)
-        {
-            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
-            {
-                if (character.Equipment[i].Modifier >= max)
-                {
-                    max = character.Equipment[i].Modifier;
-
-                    result = character.Equipment[i].TwoHanded;
-                }
-            }
-        }
-
-        return result;
-    }
-
-    int MAX(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
-    {
-        auto max = 0;
-
-        for (auto i = 0; i < character.Equipment.size(); i++)
-        {
-            if (character.Equipment[i].Class == type && character.Equipment[i].Attribute == attribute)
-            {
-                if (character.Equipment[i].Modifier > max)
-                {
-                    max = character.Equipment[i].Modifier;
-                }
-            }
-        }
-
-        return max;
-    }
-
-    int MODIFIER(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
-    {
-        auto modifier = 0;
-
-        for (auto i = 0; i < character.Equipment.size(); i++)
-        {
-            if (character.Equipment[i].Class == type && character.Equipment[i].Attribute == attribute)
-            {
-                modifier += character.Equipment[i].Modifier;
-            }
-        }
-
-        return modifier;
-    }
-
     bool HAS_STATUS(Character::Base &character, Character::Status status)
     {
         auto result = false;
@@ -366,6 +258,119 @@ namespace Engine
     void CLEAR_STATUS(Character::Base &character)
     {
         character.Status.clear();
+    }
+
+    int SCORE(Character::Base &character, Attribute::Type type)
+    {
+        auto score = 1;
+
+        for (auto i = 0; i < character.Attributes.size(); i++)
+        {
+            if (character.Attributes[i].Type == type)
+            {
+                score = character.Attributes[i].Value;
+
+                break;
+            }
+        }
+
+        return score;
+    }
+
+    void GAIN_SCORE(Character::Base &character, Attribute::Type type, int score)
+    {
+        for (auto i = 0; i < character.Attributes.size(); i++)
+        {
+            if (character.Attributes[i].Type == type)
+            {
+                character.Attributes[i].Value += score;
+
+                if (character.Attributes[i].Value < 1)
+                {
+                    character.Attributes[i].Value = 1;
+                }
+
+                break;
+            }
+        }
+    }
+
+    int FIGHTING_SCORE(Character::Base &character)
+    {
+        auto max = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
+            {
+                if (character.Equipment[i].Modifier >= max)
+                {
+                    max = character.Equipment[i].Modifier;
+                }
+            }
+        }
+
+        if (Engine::HAS_STATUS(character, Character::Status::ENRAGED))
+        {
+            max += 1;
+        }
+
+        return max > 0 ? Engine::SCORE(character, Attribute::Type::FIGHTING) + max : 1;
+    }
+
+    bool TWO_HANDED(Character::Base &character)
+    {
+        auto result = false;
+
+        auto max = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
+            {
+                if (character.Equipment[i].Modifier >= max)
+                {
+                    max = character.Equipment[i].Modifier;
+
+                    result = character.Equipment[i].TwoHanded;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    int MAX(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
+    {
+        auto max = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class == type && character.Equipment[i].Attribute == attribute)
+            {
+                if (character.Equipment[i].Modifier > max)
+                {
+                    max = character.Equipment[i].Modifier;
+                }
+            }
+        }
+
+        return max;
+    }
+
+    int MODIFIER(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
+    {
+        auto modifier = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class == type && character.Equipment[i].Attribute == attribute)
+            {
+                modifier += character.Equipment[i].Modifier;
+            }
+        }
+
+        return modifier;
     }
 
     int ARMOUR(Character::Base &character)

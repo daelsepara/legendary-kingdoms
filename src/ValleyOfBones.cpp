@@ -63,13 +63,13 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party);
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment);
 int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, Spells::Base &spell, int combatant, int opponent, int fighting_score);
-int selectCaster(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, Control::Type mode);
+int selectCaster(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, Control::Type mode);
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets);
-int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Control::Type mode);
+int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Control::Type mode);
 
 Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
 
-Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, int fleeRound, bool useEquipment);
+Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, bool canFlee, int fleeRound, bool useEquipment);
 
 Story::Base *findStory(Engine::Destination destination);
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
@@ -3941,6 +3941,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
                     else
                     {
                         score = Engine::SCORE(party[combatant], Attribute::Type::FIGHTING);
+
+                        if (Engine::HAS_STATUS(party[combatant], Character::Status::ENRAGED))
+                        {
+                            score++;
+                        }
                     }
 
                     attacker_string = "Fighting: " + std::to_string(score);
@@ -5823,7 +5828,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
     return test_result;
 }
 
-int selectCaster(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, Control::Type mode)
+int selectCaster(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, Control::Type mode)
 {
     auto result = -1;
 
@@ -5997,7 +6002,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                                 if (party.Party[selection].SpellBook[i].Type == Spells::Type::ARMOUR_OF_HEAVEN)
                                                 {
-                                                    auto target = selectPartyMember(window, renderer, party, Control::Type::SPELL_TARGET);
+                                                    auto target = selectPartyMember(window, renderer, party, team, Control::Type::SPELL_TARGET);
 
                                                     if (Engine::HAS_STATUS(party.Party[target], Character::Status::ARMOUR3))
                                                     {
@@ -6197,7 +6202,20 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 if (party.Party[current + offset].Health > 0)
                                 {
-                                    selection = current + offset;
+                                    if (team == Team::Type::NONE || party.Party[current + offset].Team == team)
+                                    {
+                                        selection = current + offset;
+                                    }
+                                    else
+                                    {
+                                        flash_message = true;
+
+                                        message = std::string(party.Party[current + offset].Name) + " is not part of the " + Team::Descriptions[team] + " team!";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_color = intRD;
+                                    }
                                 }
                                 else
                                 {
@@ -6820,7 +6838,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
     return result;
 }
 
-int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Control::Type mode)
+int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Control::Type mode)
 {
     auto result = -1;
 
@@ -7106,7 +7124,20 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                             {
                                 if (party.Party[current + offset].Health > 0)
                                 {
-                                    selection = current + offset;
+                                    if (team == Team::Type::NONE || party.Party[current + offset].Team == team)
+                                    {
+                                        selection = current + offset;
+                                    }
+                                    else
+                                    {
+                                        flash_message = true;
+
+                                        message = std::string(party.Party[current + offset].Name) + " is not part of the " + Team::Descriptions[team] + " team!";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_color = intRD;
+                                    }
                                 }
                                 else
                                 {
@@ -7161,7 +7192,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
     return result;
 }
 
-Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, bool canFlee, int fleeRound, bool useEquipment)
+Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, bool canFlee, int fleeRound, bool useEquipment)
 {
     auto combatResult = Engine::Combat::NONE;
 
@@ -7235,7 +7266,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         int combatRound = 0;
 
-        while (Engine::COUNT(monsters) > 0 && Engine::COUNT(party.Party) > 0)
+        while (Engine::COUNT(monsters) > 0 && Engine::COUNT(party.Party, team) > 0)
         {
             auto done = false;
 
@@ -7255,7 +7286,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             while (!done)
             {
-                if (hasAttacked.size() < Engine::COUNT(party.Party))
+                if (hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team))
                 {
                     controls = createHTextButtons(choices_attack, 4, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
                 }
@@ -7296,7 +7327,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                 putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
-                if (Engine::COUNT(party.Party) > 0)
+                if (Engine::COUNT(party.Party, team) > 0)
                 {
                     std::string party_string = "";
 
@@ -7406,9 +7437,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::ATTACK)
                     {
-                        if (Engine::COUNT(party.Party) > 0 && hasAttacked.size() < Engine::COUNT(party.Party))
+                        if (Engine::COUNT(party.Party, team) > 0 && hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team))
                         {
-                            auto result = selectPartyMember(window, renderer, party, Control::Type::COMBAT);
+                            auto result = selectPartyMember(window, renderer, party, team, Control::Type::COMBAT);
 
                             if (Engine::FIND_LIST(hasAttacked, result) >= 0)
                             {
@@ -7479,13 +7510,13 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                         }
 
-                        if (hasAttacked.size() >= Engine::COUNT(party.Party))
+                        if (hasAttacked.size() >= Engine::COUNT(party.Party, team))
                         {
                             if (Engine::COUNT(monsters) > 0)
                             {
                                 for (auto i = 0; i < monsters.size(); i++)
                                 {
-                                    if (monsters[i].Health > 0 && Engine::COUNT(party.Party) > 0)
+                                    if (monsters[i].Health > 0 && Engine::COUNT(party.Party, team) > 0)
                                     {
                                         if (monsters[i].Type == Monster::Type::ZEALOT_HEALER && Engine::COUNT(monsters) == 1)
                                         {
@@ -7544,7 +7575,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::SPELL)
                     {
-                        if (Engine::COUNT(party.Party) > 0 && hasAttacked.size() < Engine::COUNT(party.Party))
+                        if (Engine::COUNT(party.Party, team) > 0 && hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team))
                         {
                             if (Engine::SPELLCASTERS(party.Party) > 0)
                             {
@@ -7552,7 +7583,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 for (auto i = 0; i < party.Party.size(); i++)
                                 {
-                                    if (party.Party[i].Health > 0 && party.Party[i].SpellCaster)
+                                    if (party.Party[i].Health > 0 && party.Party[i].SpellCaster && (team == Team::Type::NONE || party.Party[i].Team == team))
                                     {
                                         auto spells = Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::COMBAT) + Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::ADVENTURE_COMBAT);
 
@@ -7572,7 +7603,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                                 else
                                 {
-                                    auto result = selectCaster(window, renderer, party, monsters, hasAttacked, Control::Type::COMBAT);
+                                    auto result = selectCaster(window, renderer, party, team, monsters, hasAttacked, Control::Type::COMBAT);
 
                                     if (result >= 0 && result < party.Party.size())
                                     {
@@ -7625,7 +7656,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     monster_list = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, false, false);
                 }
 
-                if (Engine::COUNT(party.Party) == 0 || Engine::COUNT(monsters) == 0)
+                if (Engine::COUNT(party.Party, team) == 0 || Engine::COUNT(monsters) == 0)
                 {
                     done = true;
                 }
@@ -7670,7 +7701,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
     if (combatResult != Engine::Combat::FLEE && combatResult != Engine::Combat::NONE)
     {
-        combatResult = Engine::COUNT(party.Party) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DOOM;
+        combatResult = Engine::COUNT(party.Party, team) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DOOM;
     }
 
     // Clear temporary status, e.g. magic effects
@@ -7681,7 +7712,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
     for (auto i = 0; i < party.Party.size(); i++)
     {
-        Engine::REMOVE_STATUS(party.Party[i], Character::Status::ARMOUR3);
+        if (team == Team::Type::NONE || party.Party[i].Team == team)
+        {
+            Engine::REMOVE_STATUS(party.Party[i], Character::Status::ARMOUR3);
+            Engine::REMOVE_STATUS(party.Party[i], Character::Status::ENRAGED);
+        }
     }
 
     return combatResult;
@@ -8562,7 +8597,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             learn.push_back(spells[selection[i]]);
                         }
 
-                        auto character = selectPartyMember(window, renderer, party, Control::Type::LEARN_SPELL);
+                        auto character = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::LEARN_SPELL);
 
                         if (character >= 0 && character < party.Party.size())
                         {
@@ -8951,7 +8986,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         take.push_back(equipment[selection[i]]);
                     }
 
-                    auto character = selectPartyMember(window, renderer, party, Control::Type::EQUIPMENT);
+                    auto character = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::EQUIPMENT);
 
                     if (character >= 0 && character < party.Party.size())
                     {
@@ -10025,7 +10060,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::ADD_MAX_HEALTH)
                         {
-                            auto target = selectPartyMember(window, renderer, party, Control::Type::HEALTH);
+                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::HEALTH);
 
                             party.Party[target].MaximumHealth += story->Choices[choice].Value;
 
@@ -10078,7 +10113,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE)
                         {
-                            auto target = selectPartyMember(window, renderer, party, Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE);
+                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE);
 
                             if (target >= 0 && target < party.Party.size())
                             {
@@ -10096,7 +10131,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::RAISE_ATTRIBUTE_SCORE)
                         {
-                            auto target = selectPartyMember(window, renderer, party, Control::Type::RAISE_ATTRIBUTE_SCORE);
+                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
 
                             if (target >= 0 && target < party.Party.size())
                             {
@@ -10199,7 +10234,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             while (selected < 0 || selected >= party.Party.size())
                             {
-                                selected = selectPartyMember(window, renderer, party, Control::Type::PARTY);
+                                selected = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::PARTY);
                             }
 
                             if (story->Choices[choice].Team == Team::Type::NONE || party.Party[selected].Team == story->Choices[choice].Team)
@@ -10824,7 +10859,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         if (Engine::COUNT(story->Monsters) > 0)
                         {
-                            auto result = combatScreen(window, renderer, party, story->Monsters, story->CanFlee, story->FleeRound, true);
+                            auto result = combatScreen(window, renderer, party, story->Team, story->Monsters, story->CanFlee, story->FleeRound, true);
 
                             story->AfterCombat(party, result);
                         }
@@ -11209,7 +11244,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                         Monster::Base("Goblin", 4, 5, 4, 6, 0),
                         Monster::Base("Orc Bodyguard", 6, 4, 4, 10, 0)};
 
-                    combat = combatScreen(window, renderer, Party, monsters, true, -1, false);
+                    combat = combatScreen(window, renderer, Party, Team::Type::NONE, monsters, true, -1, false);
 
                     done = false;
 

@@ -341,6 +341,8 @@ namespace Story
 
         Story::Type Type = Story::Type::NORMAL;
 
+        Team::Type Team = Team::Type::NONE;
+
         Story::Controls Controls = Story::Controls::NONE;
 
         std::vector<Choice::Base> Choices = {};
