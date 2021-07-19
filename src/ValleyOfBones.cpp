@@ -65,7 +65,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, Spells::Base &spell, int combatant, int opponent, int fighting_score);
 int selectCaster(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, Control::Type mode);
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets);
-int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Control::Type mode);
+int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Equipment::Base equipment, Control::Type mode);
 
 Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
 
@@ -6023,7 +6023,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                                 if (party.Party[selection].SpellBook[i].Type == Spells::Type::ARMOUR_OF_HEAVEN)
                                                 {
-                                                    auto target = selectPartyMember(window, renderer, party, team, Control::Type::SPELL_TARGET);
+                                                    auto target = selectPartyMember(window, renderer, party, team, Equipment::NONE, Control::Type::SPELL_TARGET);
 
                                                     if (Engine::HAS_STATUS(party.Party[target], Character::Status::ARMOUR3))
                                                     {
@@ -6859,7 +6859,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
     return result;
 }
 
-int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Control::Type mode)
+int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Equipment::Base equipment, Control::Type mode)
 {
     auto result = -1;
 
@@ -6978,7 +6978,16 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 }
                 else if (mode == Control::Type::EQUIPMENT)
                 {
-                    putHeader(renderer, "Give the item(s) to", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    if (equipment.Type != Equipment::Type::NONE)
+                    {
+                        std::string equipment_string = "Give the " + std::string(equipment.Name) + " to";
+
+                        putHeader(renderer, equipment_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    }
+                    else
+                    {
+                        putHeader(renderer, "Give the item(s) to", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    }
                 }
                 else if (mode == Control::Type::HEALTH)
                 {
@@ -7460,7 +7469,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     {
                         if (Engine::COUNT(party.Party, team) > 0 && hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team))
                         {
-                            auto result = selectPartyMember(window, renderer, party, team, Control::Type::COMBAT);
+                            auto result = selectPartyMember(window, renderer, party, team, Equipment::NONE, Control::Type::COMBAT);
 
                             if (Engine::FIND_LIST(hasAttacked, result) >= 0)
                             {
@@ -8618,7 +8627,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             learn.push_back(spells[selection[i]]);
                         }
 
-                        auto character = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::LEARN_SPELL);
+                        auto character = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::LEARN_SPELL);
 
                         if (character >= 0 && character < party.Party.size())
                         {
@@ -9004,26 +9013,25 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                     for (auto i = 0; i < selection.size(); i++)
                     {
-                        take.push_back(equipment[selection[i]]);
-                    }
+                        auto character = -1;
 
-                    auto character = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::EQUIPMENT);
-
-                    if (character >= 0 && character < party.Party.size())
-                    {
-                        Engine::GET_EQUIPMENT(party.Party[character], take);
-
-                        while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[character]))
+                        while (character < 0 || character > party.Party.size())
                         {
-                            inventoryScreen(window, renderer, party.Party[character], party.Party[character].Equipment, Control::Type::DROP, 0);
-                        }
+                            character = selectPartyMember(window, renderer, party, Team::Type::NONE, equipment[selection[i]], Control::Type::EQUIPMENT);
 
-                        done = true;
+                            if (character >= 0 && character < party.Party.size())
+                            {
+                                Engine::GET_EQUIPMENT(party.Party[character], take);
+
+                                while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[character]))
+                                {
+                                    inventoryScreen(window, renderer, party.Party[character], party.Party[character].Equipment, Control::Type::DROP, 0);
+                                }
+                            }
+                        }
                     }
-                    else
-                    {
-                        done = false;
-                    }
+
+                    done = true;
 
                     current = -1;
 
@@ -10081,7 +10089,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::ADD_MAX_HEALTH)
                         {
-                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::HEALTH);
+                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::HEALTH);
 
                             party.Party[target].MaximumHealth += story->Choices[choice].Value;
 
@@ -10134,7 +10142,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE)
                         {
-                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE);
+                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE);
 
                             if (target >= 0 && target < party.Party.size())
                             {
@@ -10152,7 +10160,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::RAISE_ATTRIBUTE_SCORE)
                         {
-                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
+                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
 
                             if (target >= 0 && target < party.Party.size())
                             {
@@ -10255,7 +10263,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             while (selected < 0 || selected >= party.Party.size())
                             {
-                                selected = selectPartyMember(window, renderer, party, Team::Type::NONE, Control::Type::PARTY);
+                                selected = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::PARTY);
                             }
 
                             if (story->Choices[choice].Team == Team::Type::NONE || party.Party[selected].Team == story->Choices[choice].Team)
