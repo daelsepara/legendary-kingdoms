@@ -33,7 +33,8 @@ namespace Team
         {Team::Type::NONE, "Solo"},
         {Team::Type::WEAPONS, "Weapons"},
         {Team::Type::DISTRACTION, "Distraction"},
-        {Team::Type::MERCENARY, "Mercenary"}};
+        {Team::Type::MERCENARY, "Mercenary"},
+        {Team::Type::CHASE, "Chase"}};
 }
 
 namespace Character
