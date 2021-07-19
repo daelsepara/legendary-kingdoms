@@ -25,7 +25,8 @@ namespace Codes
         LAST_IN_COMBAT,
         WEAPON_AND_DISTRACTION,
         QUEEN_IN_SALTDAD,
-        FIRST_TIME_SCROLL_OF_RAGE
+        FIRST_TIME_SCROLL_OF_RAGE,
+        SPEAK_BANDO
     };
 
     std::map<Book::Type, const char *> Prefix = {
@@ -49,6 +50,36 @@ namespace Codes
             Code = code;
         }
     };
+
+    Codes::Base A(int code)
+    {
+        return Codes::Base(Book::Type::BOOK1, code);
+    }
+
+    Codes::Base B(int code)
+    {
+        return Codes::Base(Book::Type::BOOK2, code);
+    }
+
+    Codes::Base C(int code)
+    {
+        return Codes::Base(Book::Type::BOOK3, code);
+    }
+
+    Codes::Base D(int code)
+    {
+        return Codes::Base(Book::Type::BOOK4, code);
+    }
+
+    Codes::Base E(int code)
+    {
+        return Codes::Base(Book::Type::BOOK5, code);
+    }
+
+    Codes::Base F(int code)
+    {
+        return Codes::Base(Book::Type::BOOK6, code);
+    }
 }
 
 #endif

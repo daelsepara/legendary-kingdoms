@@ -1073,5 +1073,23 @@ namespace Engine
 
         return result;
     }
+
+    void SINK_SHIP(Party::Base &party)
+    {
+        if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
+        {
+            party.Fleet.erase(party.Fleet.begin() + party.CurrentShip);
+        }
+
+        party.CurrentShip = -1;
+    }
+
+    void LOSE_ALL(Party::Base &party)
+    {
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            party.Party[i].Equipment.clear();
+        }
+    }
 }
 #endif
