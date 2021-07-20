@@ -1155,7 +1155,7 @@ namespace Engine
 
     void SET_LOCATION(Party::Base &party, Location::Type location)
     {
-        if (party.CurrentShip >= 0 && party.Fleet.size())
+        if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
         {
             if (party.Fleet[party.CurrentShip].Location == party.Location)
             {

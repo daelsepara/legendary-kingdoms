@@ -11297,6 +11297,29 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::CODES)
                         {
+                            if (Engine::VERIFY_CODES(party, story->Choices[choice].Codes))
+                            {
+                                next = findStory(story->Choices[choice].Destination);
+
+                                done = true;
+
+                                break;
+                            }
+                            else
+                            {
+                                if (story->Choices[choice].Codes.size() > 1)
+                                {
+                                    message = "You do not have the required codes!";
+                                }
+                                else
+                                {
+                                    message = "You do not have the required code!";
+                                }
+
+                                error = true;
+
+                                start_ticks = SDL_GetTicks();
+                            }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::PAY_WITH)
                         {

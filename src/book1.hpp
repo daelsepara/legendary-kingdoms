@@ -720,6 +720,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::SET_LOCATION(party, Location::Type::CAPE_PORTA);
+
             Engine::Random.UniformIntDistribution(1, 6);
 
             auto result = Engine::Random.NextInt();
@@ -730,7 +732,7 @@ namespace Book1
             {
                 Choices.push_back(Choice::Base("Sail north towards Clifftop", {Book::Type::BOOK1, 82}));
                 Choices.push_back(Choice::Base("Sail east towards Cursus", {Book::Type::BOOK1, 814}));
-                Choices.push_back(Choice::Base("Sail west towards THE SAVAGE LANDS", {Book::Type::BOOK5, 75}));
+                Choices.push_back(Choice::Base("(The Savage Lands) Sail west towards the Savage Lands", {Book::Type::BOOK5, 75}));
             }
         }
 
@@ -868,15 +870,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            for (auto i = 0; i < party.Party.size(); i++)
-            {
-                if (Engine::VERIFY_EQUIPMENT(party.Party[i], {Equipment::Type::QUICKSILVER}))
-                {
-                    Engine::LOSE_EQUIPMENT(party.Party[i], {Equipment::Type::QUICKSILVER});
-
-                    break;
-                }
-            }
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::QUICKSILVER});
         }
     };
 
@@ -2584,6 +2578,192 @@ namespace Book1
         }
     };
 
+    class Story080 : public Story::Base
+    {
+    public:
+        Story080()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 80;
+
+            Text = "Holding your torches high you begin to make your way into the crevice, carefully watching your feet in the dancing firelight as they crunch near the eggs. A giant spider above you crawls along the ceiling, as if tracking your progress through her nursery.\n\n\"Step where we step,\" you advise the Everchild's followers as you move carefully forwards.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Navigate the spider's nest (Team: Survival 4+, Successes: 5)", {Book::Type::BOOK1, 461}, {Book::Type::BOOK1, 260}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 5));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story081 : public Story::Base
+    {
+    public:
+        Story081()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 81;
+
+            Text = "Longport Bay is a county in the kingdom of Royce. It is famed for its steelwork, good agricultural land and the dreadful rivalry of its noble houses. The county is fiercely feudal, with commoners unable to travel freely without a lord's consent. It is also famous for its jousts and fairs, and in good years the locals can grow fat on the rich foodstuffs served at these frequent celebrations. According to the scroll, the county is currently ruled by House Bailey, who were once mere stewards of their rivals House Dayne. That house has seen something of a fall in fortunes lately, and now stand in lower esteem than the Baileys. However, the scroll warns you that all sorts could have changed since the time it was written, as the politics in Longport Bay is both bloody and unpredictable.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SET_LOCATION(party, Location::Type::LONGPORT_BAY);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 680}; }
+    };
+
+    class Story082 : public Story::Base
+    {
+    public:
+        Story082()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 82;
+
+            Text = "You are sailing along the northwest coast of the Valley of Bones. A steady sea breeze counters what would otherwise be an unbearably hot sun. Great cliffs line the coast. Atop them sits a ramshackle city of crude adobe buildings and assorted ruins. A harbour juts dangerously from the cliff face, moored ships bobbing like corks against the pounding waves. Drenched harbourside taverns sit squalidly amongst the docks.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Pull into Clifftop harbour", {Book::Type::BOOK1, 703}));
+            Choices.push_back(Choice::Base("(Drakehallow) Sail north, past the Stonewalls", {Book::Type::BOOK6, 420}));
+            Choices.push_back(Choice::Base("(Crown and Tower) Sail west into the Bayswater Channel", {Book::Type::BOOK2, 392}));
+            Choices.push_back(Choice::Base("Sail south to Cape Porta", {Book::Type::BOOK1, 21}));
+            Choices.push_back(Choice::Base("(Code: A32) Consider doing something else", {Book::Type::BOOK1, 643}, {Codes::A(32)}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story083 : public Story::Base
+    {
+    public:
+        Story083()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 83;
+
+            Text = "You hold out the ENGAGEMENT RING. \"The RING was not sold, it was stolen,\" you insist. \"I found this in the hideout of a group of nefarious thieves. She wants you to have it. She loved you, she was not using you.\"\n\nDulcimer takes the RING, swallowing hard.\n\n\"Is my lord really so poor a judge of character?\" you continue. \"The girl has a noble spirit and an honest temperament. It was not witchcraft but love that was the cause of her deception. Do not damage your family name further with this ridiculous feud with a common house. There is nothing to gain but dishonour.\"\n\nDulcimer's father agrees. \"Now that there is no financial loss to the family this matter should be closed quickly. You may take the girl's aunt back to her family. However, Akini is not to cross our path again.\"\n\nAkini's aunt is released, and you escort her back to her home.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::ENGAGEMENT_RING});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 68}; }
+    };
+
+    class Story084 : public Story::Base
+    {
+    public:
+        Story084()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 84;
+
+            Text = "It is all too obvious what has happened. Your companion is doomed for all time to read that cursed book -- but to disturb them would invoke such a terrible wrath you might not survive. You carefully remove the items and money your companions was carrying. After this you say your sorry farewells, hoping that some part of your friend is still aware deep down inside.\n\nThis party member is lost forever. Curiously, if you ever return to this room, the party member will have vanished.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take.clear();
+
+            Limit = 0;
+
+            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            {
+                for (auto i = 0; i < party.Party[party.LastSelected].Equipment.size(); i++)
+                {
+                    auto item = party.Party[party.LastSelected].Equipment[i];
+
+                    if (item.Class != Equipment::Class::WEAPON && item.Class != Equipment::Class::ARMOUR)
+                    {
+                        Take.push_back(item);
+                    }
+                }
+
+                Limit = Take.size();
+
+                party.Party.erase(party.Party.begin() + party.LastSelected);
+
+                party.Current = -1;
+
+                party.LastSelected = -1;
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 821}; }
+    };
+
+    class Story085 : public Story::Base
+    {
+    public:
+        Story085()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 85;
+
+            Text = "Only paupers use the rope bridges... as they have a tendency to suddenly break.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Random Event", {{1, NULL, {Book::Type::BOOK1, 824}}, {6, NULL, {Book::Type::BOOK1, 519}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story086 : public Story::Base
+    {
+    public:
+        std::string temp_text = "";
+
+        Story086()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 86;
+
+            Text = "You go amongst the king's councillors, trying to find one who might be able to arrange an appointment for you.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Arrange an audience (Team: Charisma 5+, Successes: 5)", {Book::Type::BOOK1, 134}, {Book::Type::BOOK1, 775}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 5));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (!outcome)
+            {
+                Bye = "You cannot find anyone to represent you. Eventually it gets dark and the hall is closed to foreigners.";
+            }
+        }
+    };
+
     class Story089 : public Story::Base
     {
     public:
@@ -2757,6 +2937,13 @@ namespace Book1
     auto story078 = Story078();
     auto event078 = Event078();
     auto story079 = Story079();
+    auto story080 = Story080();
+    auto story081 = Story081();
+    auto story082 = Story082();
+    auto story083 = Story083();
+    auto story084 = Story084();
+    auto story085 = Story085();
+    auto story086 = Story086();
     auto story089 = Story089();
     auto event089 = Event089();
     auto story100 = Story100();
@@ -2773,7 +2960,7 @@ namespace Book1
             &story050, &story051, &story052, &story053, &story054, &story055, &story056, &story057, &story058, &story059,
             &story060, &story061, &story062, &story063, &story064, &story065, &story066, &story067, &story068, &story069,
             &story070, &story071, &story072, &story073, &story074, &story075, &story076, &story077, &story078, &story079,
-            &story089,
+            &story080, &story081, &story082, &story083, &story084, &story085, &story086, &story089,
             &story100};
     }
 }

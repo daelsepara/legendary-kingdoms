@@ -44,7 +44,8 @@ namespace Equipment
         CRUDE_BLADE,
         MAUL,
         INCENSE,
-        TALISMAN_OF_ST_ELIAS
+        TALISMAN_OF_ST_ELIAS,
+        ENGAGEMENT_RING
     };
 
     class Base
@@ -136,6 +137,7 @@ namespace Equipment
     auto MAUL = Equipment::Base("MAUL", "MAUL", Equipment::Class::WEAPON, Equipment::Type::MAUL, Attribute::Type::FIGHTING, 1, true);
     auto INCENSE = Equipment::Base("INCENSE", "INCENSE", Equipment::Class::NORMAL, Equipment::Type::INCENSE, Attribute::Type::NONE, 0, false);
     auto TALISMAN_OF_ST_ELIAS = Equipment::Base("TALISMAN of St. Elias", "TALISMAN of St. Elias", Equipment::Class::NORMAL, Equipment::Type::TALISMAN_OF_ST_ELIAS, Attribute::Type::NONE, 0, false);
+    auto ENGAGEMENT_RING = Equipment::Base("ENGAGEMENT RING", "ENGAGEMENT RING", Equipment::Class::NORMAL, Equipment::Type::ENGAGEMENT_RING, Attribute::Type::NONE, 0, false);
 }
 
 #endif
