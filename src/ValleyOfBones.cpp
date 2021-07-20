@@ -8190,7 +8190,7 @@ bool equipmentScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         }
                         else
                         {
-                            message = "You cannot use the " std::string(item.Name) + " when not in combat!";
+                            message = "You cannot use the " + std::string(item.Name) + " when not in combat!";
 
                             flash_color = intRD;
 
