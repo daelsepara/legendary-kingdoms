@@ -614,6 +614,8 @@ namespace Book1
 
             ID = -18;
 
+            DisplayID = 18;
+
             Choices.clear();
 
             Controls = Story::Controls::NONE;
@@ -915,6 +917,8 @@ namespace Book1
 
             ID = -27;
 
+            DisplayID = 27;
+
             Text = "Only party members assigned to the MERCENARY TEAM may assist with this skill check.";
 
             Controls = Story::Controls::STANDARD;
@@ -998,6 +1002,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = -28;
+
+            DisplayID = 28;
 
             Text = "Your heretical ignorance drives them into a killer frenzy and you must fight.\n\nNote: The zealot healer will only attack if he is the last opponent standing. Otherwise he will heal each zealot 2 Health points. These additional points can take them over their starting health.";
 
@@ -1494,6 +1500,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = -44;
+
+            DisplayID = 44;
 
             Text = "Next, pick someone to try and sneak through the room.";
 
@@ -2181,6 +2189,8 @@ namespace Book1
 
             ID = -67;
 
+            DisplayID = 67;
+
             Text = "Defend yourselves against these weird opponents.";
 
             Choices.clear();
@@ -2370,6 +2380,8 @@ namespace Book1
 
             ID = -73;
 
+            DisplayID = 73;
+
             Text = "Where will you go?";
 
             Choices.clear();
@@ -2470,6 +2482,8 @@ namespace Book1
 
             ID = -76;
 
+            DisplayID = 76;
+
             Choices.clear();
             Choices.push_back(Choice::Base("Examine the missing south wall", {Book::Type::BOOK1, 645}));
             Choices.push_back(Choice::Base("Leave the room and return to the crossroads", {Book::Type::BOOK1, 566}));
@@ -2539,6 +2553,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = -78;
+
+            DisplayID = 78;
 
             Text = "This is no normal quicksand, as there is not a drop of moisture in the cave. Nonetheless the hungry earth is pulling them down quickly.";
 
