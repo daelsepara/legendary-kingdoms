@@ -48,7 +48,8 @@ namespace Choice
         PARTY_RAISE_HEALTH,
         RANDOM_EVENT,
         CHOOSE_PARTY_MEMBER,
-        RETREAT
+        RETREAT,
+        DELIVER
     };
 
     class Base
@@ -302,6 +303,21 @@ namespace Choice
 
             Value = value;
         }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, Location::Type location, int value)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Equipment = equipment;
+
+            Location = location;
+
+            Value = value;
+        }
     };
 } // namespace Choice
 
@@ -320,8 +336,7 @@ namespace Story
         SHOP,
         BARTER,
         HARBOUR,
-        INN,
-        CARGO
+        INN
     };
 
     class Base
