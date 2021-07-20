@@ -40,7 +40,11 @@ namespace Equipment
         FINE_BOOTS2,
         REGISTRY_PAPERS,
         GREY_TALISMAN,
-        BARBARIAN_BODY
+        BARBARIAN_BODY,
+        CRUDE_BLADE,
+        MAUL,
+        INCENSE,
+        TALISMAN_OF_ST_ELIAS
     };
 
     class Base
@@ -128,6 +132,10 @@ namespace Equipment
     auto REGISTRY_PAPERS = Equipment::Base("REGISTRY PAPERS", "REGISTRY PAPERS", Equipment::Class::NORMAL, Equipment::Type::REGISTRY_PAPERS, Attribute::Type::NONE, 0, false);
     auto GREY_TALISMAN = Equipment::Base("GREY TALISMAN", "GREY TALISMAN", Equipment::Class::NORMAL, Equipment::Type::GREY_TALISMAN, Attribute::Type::NONE, 0, false);
     auto BARBARIAN_BODY = Equipment::Base("BARBARIAN BODY", "BARBARIAN BODY", Equipment::Class::NORMAL, Equipment::Type::BARBARIAN_BODY, Attribute::Type::NONE, 0, 4, false);
+    auto CRUDE_BLADE = Equipment::Base("CRUDE BLADE", "CRUDE BLADE", Equipment::Class::WEAPON, Equipment::Type::CRUDE_BLADE, Attribute::Type::FIGHTING, 0, false);
+    auto MAUL = Equipment::Base("MAUL", "MAUL", Equipment::Class::WEAPON, Equipment::Type::MAUL, Attribute::Type::FIGHTING, 1, true);
+    auto INCENSE = Equipment::Base("INCENSE", "INCENSE", Equipment::Class::NORMAL, Equipment::Type::INCENSE, Attribute::Type::NONE, 0, false);
+    auto TALISMAN_OF_ST_ELIAS = Equipment::Base("TALISMAN of St. Elias", "TALISMAN of St. Elias", Equipment::Class::NORMAL, Equipment::Type::TALISMAN_OF_ST_ELIAS, Attribute::Type::NONE, 0, false);
 }
 
 #endif

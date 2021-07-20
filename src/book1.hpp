@@ -2584,6 +2584,57 @@ namespace Book1
         }
     };
 
+    class Story089 : public Story::Base
+    {
+    public:
+        Story089()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 89;
+
+            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful.\n\nIf you have a ship docked in Clifftop, you can also buy up to three cargo units of SALT from the merchants for 500 SILVER COINS each. They will deliver this cargo straight to your ship provided there is room for it.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Buy one cargo unit of SALT", {Book::Type::BOOK1, -89}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 500));
+            Choices.push_back(Choice::Base("Buy two cargo units of SALT", {Book::Type::BOOK1, -89}, Choice::Type::DELIVER, {Cargo::Type::SALT, Cargo::Type::SALT}, Location::Type::CLIFFTOP, 1000));
+            Choices.push_back(Choice::Base("Buy three cargo units of SALT", {Book::Type::BOOK1, -89}, Choice::Type::DELIVER, {Cargo::Type::SALT, Cargo::Type::SALT, Cargo::Type::SALT}, Location::Type::CLIFFTOP, 1500));
+            Choices.push_back(Choice::Base("You have finished your trading", {Book::Type::BOOK1, 569}));
+
+            Controls = Story::Controls::SHOP;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Shop = {
+                {Equipment::CRUDE_BLADE, 25, 10},
+                {Equipment::MAUL, 50, 20},
+                {Equipment::SHIELD2, 50, 25},
+                {Equipment::INCENSE, -1, 90},
+                {Equipment::BLUESTONE, -1, 45},
+                {Equipment::TALISMAN_OF_ST_ELIAS, -1, 150}};
+        }
+    };
+
+    class Event089 : public Story::Base
+    {
+    public:
+        Event089()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -89;
+
+            DisplayID = 89;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 89}; }
+    };
+
     class Story100 : public Story::Base
     {
     public:
@@ -2706,12 +2757,14 @@ namespace Book1
     auto story078 = Story078();
     auto event078 = Event078();
     auto story079 = Story079();
+    auto story089 = Story089();
+    auto event089 = Event089();
     auto story100 = Story100();
 
     void InitializeStories()
     {
         Book1::Stories = {
-            &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078,
+            &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &event089,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -2720,6 +2773,7 @@ namespace Book1
             &story050, &story051, &story052, &story053, &story054, &story055, &story056, &story057, &story058, &story059,
             &story060, &story061, &story062, &story063, &story064, &story065, &story066, &story067, &story068, &story069,
             &story070, &story071, &story072, &story073, &story074, &story075, &story076, &story077, &story078, &story079,
+            &story089,
             &story100};
     }
 }

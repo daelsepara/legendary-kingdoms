@@ -68,7 +68,8 @@ namespace Control
         GAIN_HEALTH,
         LOSE_HEALTH,
         TRANSFER,
-        VAULT
+        VAULT,
+        ENTER_SHOP
     };
 
     class Base

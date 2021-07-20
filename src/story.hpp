@@ -81,6 +81,8 @@ namespace Choice
 
         Engine::Destination DestinationFailed = {Book::Type::NONE, -1};
 
+        std::vector<Cargo::Type> Delivery = {};
+
         Location::Type Location = Location::Type::NONE;
 
         Base(const char *text, Engine::Destination destination)
@@ -304,7 +306,7 @@ namespace Choice
             Value = value;
         }
 
-        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, Location::Type location, int value)
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Cargo::Type> delivery, Location::Type location, int value)
         {
             Text = text;
 
@@ -312,7 +314,7 @@ namespace Choice
 
             Destination = destination;
 
-            Equipment = equipment;
+            Delivery = delivery;
 
             Location = location;
 
