@@ -1545,7 +1545,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
     TTF_Init();
 
-    auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
     auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
@@ -1765,9 +1765,26 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
                         equipment_string += party.Party[character].Equipment[i].Name;
 
-                        if (party.Party[character].Equipment[i].Attribute != Attribute::Type::NONE)
+                        if (party.Party[character].Equipment[i].Attribute != Attribute::Type::NONE || party.Party[character].Equipment[i].AdditionalSlots > 0)
                         {
-                            equipment_string += " (+ " + std::to_string(party.Party[character].Equipment[i].Modifier) + " " + std::string(Attribute::Descriptions[party.Party[character].Equipment[i].Attribute]) + ")";
+                            equipment_string += " (";
+
+                            if (party.Party[character].Equipment[i].Attribute != Attribute::Type::NONE)
+                            {
+                                equipment_string += "+ " + std::to_string(party.Party[character].Equipment[i].Modifier) + " " + std::string(Attribute::Descriptions[party.Party[character].Equipment[i].Attribute]);
+                            }
+
+                            if (party.Party[character].Equipment[i].AdditionalSlots > 0)
+                            {
+                                if (party.Party[character].Equipment[i].Attribute != Attribute::Type::NONE)
+                                {
+                                    equipment_string += ", ";
+                                }
+
+                                equipment_string += std::to_string(party.Party[character].Equipment[i].AdditionalSlots + 1) + " slots";
+                            }
+
+                            equipment_string += +")";
                         }
                     }
 
@@ -2557,9 +2574,26 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 
             std::string item_string = list[index].Name;
 
-            if (list[index].Attribute != Attribute::Type::NONE)
+            if (list[index].Attribute != Attribute::Type::NONE || list[index].AdditionalSlots > 0)
             {
-                item_string += " (+ " + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]) + ")";
+                item_string += " (";
+
+                if (list[index].Attribute != Attribute::Type::NONE)
+                {
+                    item_string += "+ " + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]);
+                }
+
+                if (list[index].AdditionalSlots > 0)
+                {
+                    if (list[index].Attribute != Attribute::Type::NONE)
+                    {
+                        item_string += ", ";
+                    }
+
+                    item_string += std::to_string(list[index].AdditionalSlots + 1) + " slots";
+                }
+
+                item_string += ")";
             }
 
             auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, textwidth - 4 * text_space, TTF_STYLE_NORMAL);
@@ -6993,6 +7027,14 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 {
                     putHeader(renderer, "Choose party member to receive Maximum Health increase", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
+                else if (mode == Control::Type::GAIN_HEALTH)
+                {
+                    putHeader(renderer, "Choose party member to recover health point(s)", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (mode == Control::Type::LOSE_HEALTH)
+                {
+                    putHeader(renderer, "Choose party member to lose health point(s)", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
                 else if (mode == Control::Type::PARTY)
                 {
                     putHeader(renderer, "Choose party member", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -9009,8 +9051,6 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
                 else if (controls[current].Type == Control::Type::CONFIRM && !hold)
                 {
-                    auto take = std::vector<Equipment::Base>();
-
                     for (auto i = 0; i < selection.size(); i++)
                     {
                         auto character = -1;
@@ -9021,7 +9061,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                             if (character >= 0 && character < party.Party.size())
                             {
-                                Engine::GET_EQUIPMENT(party.Party[character], take);
+                                Engine::GET_EQUIPMENT(party.Party[character], {equipment[selection[i]]});
 
                                 while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[character]))
                                 {
@@ -9834,7 +9874,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             }
             else if (!splash || (splash && splash_h < (text_bounds - 3 * boxh - 2 * infoh - box_space)))
             {
-                putHeader(renderer, "Money", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                putHeader(renderer, "Money", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
 
                 putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
             }
@@ -10101,6 +10141,18 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             break;
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::GAIN_HEALTH)
+                        {
+                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, (story->Choices[choice].Value > 0 ? Control::Type::GAIN_HEALTH : Control::Type::LOSE_HEALTH));
+
+                            Engine::GAIN_HEALTH(party.Party[target], story->Choices[choice].Value);
+
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::BRIBE_CODEWORD)
                         {
                             auto equipment = std::vector<Equipment::Type>();
@@ -10319,10 +10371,18 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             break;
                         }
-                        else if (story->Choices[choice].Type == Choice::Type::CODES)
-                        {
-                        }
                         else if (story->Choices[choice].Type == Choice::Type::GET_EQUIPMENT)
+                        {
+                            done = takeScreen(window, renderer, party, story->Choices[choice].Equipment, story->Choices[choice].Equipment.size(), true);
+
+                            if (done)
+                            {
+                                next = findStory(story->Choices[choice].Destination);
+
+                                break;
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::CODES)
                         {
                         }
                         else if (story->Choices[choice].Type == Choice::Type::PAY_WITH)
@@ -10702,7 +10762,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
                 else if (!splash || (splash && splash_h < (text_bounds - 3 * boxh - 2 * infoh - box_space)))
                 {
-                    putHeader(renderer, "Money", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                    putHeader(renderer, "Money", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
 
                     putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
                 }

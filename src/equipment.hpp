@@ -37,7 +37,10 @@ namespace Equipment
         BRONZE_LOCKET,
         SEAL_OF_HOUSE_ROSS,
         VIAL_OF_POISON,
-        FINE_BOOTS2
+        FINE_BOOTS2,
+        REGISTRY_PAPERS,
+        GREY_TALISMAN,
+        BARBARIAN_BODY
     };
 
     class Base
@@ -54,9 +57,11 @@ namespace Equipment
         // Modifiers
         Attribute::Type Attribute = Attribute::Type::NONE;
 
+        int Modifier = 0;
+
         bool TwoHanded = false;
 
-        int Modifier = 0;
+        int AdditionalSlots = 0;
 
         Base()
         {
@@ -75,6 +80,25 @@ namespace Equipment
             Attribute = modifies;
 
             Modifier = modifier;
+
+            TwoHanded = twoHanded;
+        }
+
+        Base(const char *name, const char *description, Equipment::Class equipmentClass, Equipment::Type equipmentType, Attribute::Type modifies, int modifier, int additionalSlots, bool twoHanded)
+        {
+            Name = name;
+
+            Description = description;
+
+            Class = equipmentClass;
+
+            Type = equipmentType;
+
+            Attribute = modifies;
+
+            Modifier = modifier;
+
+            AdditionalSlots = additionalSlots;
 
             TwoHanded = twoHanded;
         }
@@ -101,6 +125,9 @@ namespace Equipment
     auto SEAL_OF_HOUSE_ROSS = Equipment::Base("SEAL OF HOUSE ROSS", "SEAL OF HOUSE ROSS", Equipment::Class::NORMAL, Equipment::Type::SEAL_OF_HOUSE_ROSS, Attribute::Type::NONE, 0, false);
     auto VIAL_OF_POISON = Equipment::Base("VIAL OF POISON", "VIAL OF POISON", Equipment::Class::NORMAL, Equipment::Type::VIAL_OF_POISON, Attribute::Type::NONE, 0, false);
     auto FINE_BOOTS2 = Equipment::Base("FINE BOOTS", "FINE BOOTS", Equipment::Class::NORMAL, Equipment::Type::FINE_BOOTS2, Attribute::Type::STEALTH, 2, false);
+    auto REGISTRY_PAPERS = Equipment::Base("REGISTRY PAPERS", "REGISTRY PAPERS", Equipment::Class::NORMAL, Equipment::Type::REGISTRY_PAPERS, Attribute::Type::NONE, 0, false);
+    auto GREY_TALISMAN = Equipment::Base("GREY TALISMAN", "GREY TALISMAN", Equipment::Class::NORMAL, Equipment::Type::GREY_TALISMAN, Attribute::Type::NONE, 0, false);
+    auto BARBARIAN_BODY = Equipment::Base("BARBARIAN BODY", "BARBARIAN BODY", Equipment::Class::NORMAL, Equipment::Type::BARBARIAN_BODY, Attribute::Type::NONE, 0, 4, false);
 }
 
 #endif

@@ -40,6 +40,7 @@ namespace Choice
         BARTER,
         SHIP,
         ADD_MAX_HEALTH,
+        GAIN_HEALTH,
         BRIBE_CODEWORD,
         ROLL_FOR_ATTRIBUTE_INCREASE,
         RAISE_ATTRIBUTE_SCORE,

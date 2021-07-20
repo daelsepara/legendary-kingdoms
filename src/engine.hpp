@@ -577,9 +577,21 @@ namespace Engine
         }
     }
 
+    int COUNT_INVENTORY(Character::Base &player)
+    {
+        auto size = player.Equipment.size();
+
+        for (auto i = 0; i < player.Equipment.size(); i++)
+        {
+            size += player.Equipment[i].AdditionalSlots;
+        }
+
+        return size;
+    }
+
     bool VERIFY_EQUIPMENT_LIMIT(Character::Base &player)
     {
-        return player.Equipment.size() <= player.MaximumEquipment;
+        return Engine::COUNT_INVENTORY(player) <= player.MaximumEquipment;
     }
 
     int COUNT_EQUIPMENT(Character::Base &character, Equipment::Type item)

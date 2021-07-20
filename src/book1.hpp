@@ -859,7 +859,7 @@ namespace Book1
             Bye = "Feeling more vigorous than ever, you return to the crossroads.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member and increase their maximum, unwounded Health score by 1 point.", {Book::Type::BOOK1, 566}, Choice::Type::ADD_MAX_HEALTH, 1));
+            Choices.push_back(Choice::Base("Choose a party member and increase their maximum, unwounded Health score by 1 point", {Book::Type::BOOK1, 566}, Choice::Type::ADD_MAX_HEALTH, 1));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -2261,6 +2261,313 @@ namespace Book1
         }
     };
 
+    class Story070 : public Story::Base
+    {
+    public:
+        Story070()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 70;
+
+            Text = "You track down Damned Suzanna through the dusty gulches in Clifftop. Eventually you find her, recovering from the wounds of her beating, sweltering in her open-doored shack. When she sees you her eyes light up, and she eagerly snatches the proffered REGISTRY PAPERS from your hands. She gazes with confusion as she reads.\n\n\"This can't be right!\" she exclaims. \"It says here that my grandfather legally sold his land to Unbraaki fifty years ago. But my father said...\"\n\n\"I'm afraid it was countersigned by the priests of Cursus,\" you say. \"I suppose it's possible that there was a conspiracy against your family, but it's rare for priests to conspire with sorcerers.\"\n\nSuzanna slumps upon her bed. \"Everything my father told me was a lie,\" she groans. \"I'm not the inheritor of a massive estate, I'm just... me.\"\n\n\"That should be good enough,\" you say. \"Wealth rarely comes to those who sit around for it. If you want to make something of yourself, get out there and do it. You're certainly tough enough.\"\n\nShe nods. \"You're right. It's time I stopped waiting for my life to get better; I've got nothing to lose going adventuring. I'll sign on with the next ship in port.\" She presses a GREY TALISMAN into your hand. \"It's not much, but I want you to have this. It was the last thing my father gave me. Time for a new life.\"\n\nYou gained the code A36.";
+
+            Bye = "Waving Damned Suzanna farewell, you make your way on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::REGISTRY_PAPERS});
+
+            Take = {Equipment::GREY_TALISMAN};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::A(36)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story071 : public Story::Base
+    {
+    public:
+        Story071()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 71;
+
+            Text = "With a final flourish, you slay your last opponent. Although there are other living slaves in the arena, the battle suddenly stops as the Iron King stands. In a thickly accented voice, the king declares you champions of the arena. The crowd go wild, cheering you heartily as you catch your breath from the intense battle.\n\nAny hopes you had that being made champion would grant you freedom are soon quashed. Instead you are disarmed and led back into the dungeons to nurse your wounds.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_ALL(party);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 608}; }
+    };
+
+    class Story072 : public Story::Base
+    {
+    public:
+        Story072()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 72;
+
+            Text = "You can take up to four SHIELDs (Armour +2) from the fallen snakemen if you wish. Their weapons have unusual grips and are not useable for humans.\n\nYou glance around the temple chamber. Despite the cracks and structural damage the room has been kept in good condition, regularly swept clean of dirt and filth. But why would inhuman monsters care for an old Cursus temple?\n\nYou try lifting the portcullis, but it will not shift an inch. You will have to find another way out. Glancing around the chamber you can see a door in the back wall, and an archway in which a ramp leads upwards into the ziggurat. Which direction would you like to investigate?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("The door", {Book::Type::BOOK1, 380}));
+            Choices.push_back(Choice::Base("The archway", {Book::Type::BOOK1, 806}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::SHIELD2, Equipment::SHIELD2, Equipment::SHIELD2, Equipment::SHIELD2};
+
+            Limit = 4;
+        }
+    };
+
+    class Story073 : public Story::Base
+    {
+    public:
+        Story073()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 73;
+
+            Text = "You come upon the Shaded Gate. You feel diminished, as if you were not real.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, -73}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event073 : public Story::Base
+    {
+    public:
+        Event073()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -73;
+
+            Text = "Where will you go?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go through the Shaded Gate", {Book::Type::BOOK1, 56}));
+            Choices.push_back(Choice::Base("West", {Book::Type::BOOK1, 273}));
+            Choices.push_back(Choice::Base("South", {Book::Type::BOOK1, 886}));
+            Choices.push_back(Choice::Base("East", {Book::Type::BOOK1, 537}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story074 : public Story::Base
+    {
+    public:
+        Story074()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 74;
+
+            Text = "You inform the guard that you wish to see Unbraaki again. You are escorted into his presence, though he seems surprised to see you. \"I have already given you my soldiers,\" he grumbles. \"What more could your queen possibly desire?\"\n\n\"What if we need reinforcements?\" you ask. \"Your soldiers may not be enough to complete the campaign.\"\n\n\"That is no concern of mine,\" snaps Unbraaki coldly. \"You'll get no more from me. I have spent a fortune replacing the soldiers I gave to the Everchild. Send her my regards -- but don't bother me again.\"";
+
+            Bye = "Realising that Unbraaki can be pushed no further, you bow and depart.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 265}; }
+    };
+
+    class Story075 : public Story::Base
+    {
+    public:
+        Story075()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 75;
+
+            Image = "images/book1/saltdad_city.png";
+
+            Text = "Saltdad is a city of tumbledown mud-brick houses clustered into claustrophobic alleyways. Above these ragtag structures stands a half-collapsed palace, a minareted masterpiece that has seen better days. Amidst the squalor there is wealth to be found, for Saltdad produces the major export of the valley -- rock salt, chiselled out of winding mines to the east of the city. The Great Westroad runs through the heart of the city, once a paved highway, now a poorly maintained tumble of stones which nonetheless allows wagons and carts to drag themselves above the desert sands. Where the road cuts through the city stand the marketplaces, inns, slave markets and other services the city is famed for. A constant chatter of voices is heard at all times, for Saltdad never closes its places of business, even in the dead of night.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Find an inn", {Book::Type::BOOK1, 172}));
+            Choices.push_back(Choice::Base("Go to the marketplace", {Book::Type::BOOK1, 798}));
+            Choices.push_back(Choice::Base("Go to the slave market", {Book::Type::BOOK1, 326}));
+            Choices.push_back(Choice::Base("Visit the palace", {Book::Type::BOOK1, 633}));
+            Choices.push_back(Choice::Base("Head to the barracks of the Bronzeguard", {Book::Type::BOOK1, 390}));
+            Choices.push_back(Choice::Base("Track down the local Thieves guild", {Book::Type::BOOK1, 179}));
+            Choices.push_back(Choice::Base("Visit the temple of Cursus", {Book::Type::BOOK1, 770}));
+            Choices.push_back(Choice::Base("Visit the temple of Kalu", {Book::Type::BOOK1, 382}));
+            Choices.push_back(Choice::Base("Explore the city", {Book::Type::BOOK1, 471}));
+            Choices.push_back(Choice::Base("Head west along the road", {Book::Type::BOOK1, 511}));
+            Choices.push_back(Choice::Base("Head east along the road", {Book::Type::BOOK1, 177}));
+            Choices.push_back(Choice::Base("Head south into the desert", {Book::Type::BOOK1, 858}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SET_LOCATION(party, Location::Type::SALTDAD);
+        }
+    };
+
+    class Story076 : public Story::Base
+    {
+    public:
+        Story076()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 76;
+
+            Text = "This must be Garon the Bloody-mouthed, whom you were sent to find. His father will no doubt grieve to know his fate, but at least it will solve the mystery of his disappearance. You were not asked to return the body, but if you wish to do so, you can take the BARBARIAN BODY. Unfortunately, it takes up five inventory slots and must be carried by a single character.\n\nWhat now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Take the BARBARIAN BODY", {Book::Type::BOOK1, -76}, Choice::Type::GET_EQUIPMENT, {Equipment::BARBARIAN_BODY}));
+            Choices.push_back(Choice::Base("Examine the missing south wall", {Book::Type::BOOK1, 645}));
+            Choices.push_back(Choice::Base("Leave the room and return to the crossroads", {Book::Type::BOOK1, 566}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event076 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Event076()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -76;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the missing south wall", {Book::Type::BOOK1, 645}));
+            Choices.push_back(Choice::Base("Leave the room and return to the crossroads", {Book::Type::BOOK1, 566}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::BARBARIAN_BODY}))
+            {
+                PreText = "You gained the code A86.\n\nWhat now?";
+
+                Engine::GET_CODES(party, {Codes::A(86)});
+            }
+            else
+            {
+                PreText = "What now?";
+            }
+
+            Text = PreText.c_str();
+        }
+    };
+
+    class Story077 : public Story::Base
+    {
+    public:
+        Story077()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 77;
+
+            Text = "About halfway up the ramp you come to an archway. Through the archway you can see nothing; your lanterns cannot penetrate the darkness. You try experimentally poking a weapon through the archway, but it seems to come out unharmed.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Enter the archway", {Book::Type::BOOK1, 497}));
+            Choices.push_back(Choice::Base("Keep going upwards", {Book::Type::BOOK1, 93}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story078 : public Story::Base
+    {
+    public:
+        Story078()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 78;
+
+            Text = "This cave appears to be empty, but for the heaps of sand piled into it. Suddenly one of your party members begins to abruptly sink into the sand.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose the party member sinking into the sand", {Book::Type::BOOK1, -78}, Choice::Type::CHOOSE_PARTY_MEMBER));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event078 : public Story::Base
+    {
+    public:
+        Event078()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -78;
+
+            Text = "This is no normal quicksand, as there is not a drop of moisture in the cave. Nonetheless the hungry earth is pulling them down quickly.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Save your teammate (Team: Survival 4+, Successes: 5)", {Book::Type::BOOK1, 586}, {Book::Type::BOOK1, 646}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 5));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story079 : public Story::Base
+    {
+    public:
+        Story079()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 79;
+
+            Text = "You wander the merchant sector of the city, expecting to find nothing but lonely stones and whistling wind. You are surprised, therefore, to discover signs of a recent excavation. Near the entrance you see the bodies of several decomposing humans... and the body of a single, diseased-looking orc. Strange. Orcs are not native to this part of the world and normally call the Savage Lands their home. What are they doing all the way out here?\n\nBeyond the bodies an ancient set of steps lead into the earth, the walls of the tunnel made of well-set brick, and the floors of large flagstones.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go down the stairs, into the excavated dungeon", {Book::Type::BOOK1, 350}));
+            Choices.push_back(Choice::Base("Go elsewhere in the city", {Book::Type::BOOK1, 515}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     class Story100 : public Story::Base
     {
     public:
@@ -2370,12 +2677,25 @@ namespace Book1
     auto event067 = Event067();
     auto story068 = Story068();
     auto story069 = Story069();
+    auto story070 = Story070();
+    auto story071 = Story071();
+    auto story072 = Story072();
+    auto story073 = Story073();
+    auto event073 = Event073();
+    auto story074 = Story074();
+    auto story075 = Story075();
+    auto story076 = Story076();
+    auto event076 = Event076();
+    auto story077 = Story077();
+    auto story078 = Story078();
+    auto event078 = Event078();
+    auto story079 = Story079();
     auto story100 = Story100();
 
     void InitializeStories()
     {
         Book1::Stories = {
-            &event018, &event027, &event028, &event044, &event067,
+            &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -2383,6 +2703,7 @@ namespace Book1
             &story040, &story041, &story042, &story043, &story044, &story045, &story046, &story047, &story048, &story049,
             &story050, &story051, &story052, &story053, &story054, &story055, &story056, &story057, &story058, &story059,
             &story060, &story061, &story062, &story063, &story064, &story065, &story066, &story067, &story068, &story069,
+            &story070, &story071, &story072, &story073, &story074, &story075, &story076, &story077, &story078, &story079,
             &story100};
     }
 }
