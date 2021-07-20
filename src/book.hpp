@@ -17,13 +17,13 @@ namespace Book
     };
 
     std::map<Book::Type, const char *> Title = {
-        {Book::Type::NONE, "LEGENDARY KINGDOMS"},
-        {Book::Type::BOOK1, "THE VALLEY OF BONES"},
-        {Book::Type::BOOK2, "CROWN AND TOWER"},
-        {Book::Type::BOOK3, "PIRATES OF THE SPLINTERED ISLES"},
-        {Book::Type::BOOK4, "THE GILDED THRONE"},
-        {Book::Type::BOOK5, "THE SAVAGE LANDS"},
-        {Book::Type::BOOK6, "DRAKEHALLOW"}};
+        {Book::Type::NONE, "The Game"},
+        {Book::Type::BOOK1, "The Valley of Bones"},
+        {Book::Type::BOOK2, "Crown and Tower"},
+        {Book::Type::BOOK3, "Pirates of the Splintered Isles"},
+        {Book::Type::BOOK4, "The Gilded Throne"},
+        {Book::Type::BOOK5, "The Savage Lands"},
+        {Book::Type::BOOK6, "Drakehallow"}};
 }
 
 #endif

@@ -16,7 +16,7 @@ namespace Engine
     typedef std::pair<Book::Type, int> Destination;
     typedef std::tuple<Ship::Base, int, int> ShipPrices;
     typedef std::tuple<Cargo::Type, int, int> CargoPrices;
-    typedef std::pair<Equipment::Base, int> EquipmentPrice;
+    typedef std::tuple<Equipment::Base, int, int> EquipmentPrice;
     typedef std::pair<Equipment::Base, std::vector<Equipment::Base>> BarterExchanges;
 
     enum class Combat
@@ -592,6 +592,18 @@ namespace Engine
     bool VERIFY_EQUIPMENT_LIMIT(Character::Base &player)
     {
         return Engine::COUNT_INVENTORY(player) <= player.MaximumEquipment;
+    }
+
+    bool VERIFY_EQUIPMENT_LIMIT(Party::Base &party)
+    {
+        auto result = true;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            result &= Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[i]);
+        }
+
+        return result;
     }
 
     int COUNT_EQUIPMENT(Character::Base &character, Equipment::Type item)
