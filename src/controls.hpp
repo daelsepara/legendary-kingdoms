@@ -66,7 +66,9 @@ namespace Control
         RAISE_ATTRIBUTE_SCORE,
         HEALTH,
         GAIN_HEALTH,
-        LOSE_HEALTH
+        LOSE_HEALTH,
+        TRANSFER,
+        VAULT
     };
 
     class Base
