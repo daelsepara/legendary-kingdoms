@@ -8203,6 +8203,8 @@ bool equipmentScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base
                     selected = false;
 
                     current = -1;
+
+                    selection = -1;
                 }
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
