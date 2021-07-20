@@ -1088,7 +1088,7 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
 
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
 {
-    auto *title = "Legendary Kingdoms 1 - The Valley of Bones: Party";
+    auto *title = "Legendary Kingdoms - The Valley of Bones: Party";
 
     auto font_size = 28;
 
@@ -1539,7 +1539,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
     SDL_Surface *adventurer = NULL;
     SDL_Surface *text = NULL;
 
-    auto *title = "Legendary Kingdoms 1 - The Valley of Bones: View Party";
+    auto *title = "Legendary Kingdoms - The Valley of Bones: View Party";
 
     auto font_size = 20;
     auto garamond_size = 24;
@@ -1966,7 +1966,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     SDL_Surface *adventurer = NULL;
     SDL_Surface *text = NULL;
 
-    auto *title = "Legendary Kingdoms 1 - The Valley of Bones: Select adventurers for your party";
+    auto *title = "Legendary Kingdoms - The Valley of Bones: Select adventurers for your party";
 
     auto font_size = 20;
     auto garamond_size = 24;
@@ -2967,7 +2967,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
             auto stage = Engine::ArmourSave::START;
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Armour Save");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms - The Valley of Bones: Armour Save");
 
             TTF_Init();
 
@@ -3221,7 +3221,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Assign Damage";
+    auto title = "Legendary Kingdoms - The Valley of Bones: Assign Damage";
 
     if (window && renderer)
     {
@@ -3510,7 +3510,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
             auto stage = Engine::Attack::START;
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Attack");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms - The Valley of Bones: Attack");
 
             TTF_Init();
 
@@ -3809,7 +3809,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Charact
 
             auto stage = Engine::Attack::START;
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Attack");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms - The Valley of Bones: Attack");
 
             TTF_Init();
 
@@ -4360,7 +4360,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             auto stage = Engine::Retreat::START;
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Retreat Army");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms - The Valley of Bones: Retreat Army");
 
             TTF_Init();
 
@@ -4665,7 +4665,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
 
             auto stage = Engine::RaiseAttribute::START;
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Increase Attribute");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms - The Valley of Bones: Increase Attribute");
 
             TTF_Init();
 
@@ -4947,7 +4947,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
 {
     auto select_result = std::vector<int>();
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Spell";
+    auto title = "Legendary Kingdoms - The Valley of Bones: Select Spell";
 
     if (window && renderer)
     {
@@ -5369,7 +5369,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Opponent";
+    auto title = "Legendary Kingdoms - The Valley of Bones: Select Opponent";
 
     if (window && renderer)
     {
@@ -5669,7 +5669,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
             auto stage = Attribute::Test::START;
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Skill Check");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms - The Valley of Bones: Skill Check");
 
             TTF_Init();
 
@@ -5965,7 +5965,7 @@ int selectCaster(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Caster";
+    auto title = "Legendary Kingdoms - The Valley of Bones: Select Caster";
 
     if (window && renderer)
     {
@@ -6405,7 +6405,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 {
     bool result = false;
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Skill Check";
+    auto title = "Legendary Kingdoms - The Valley of Bones: Skill Check";
 
     if (window && renderer)
     {
@@ -6687,7 +6687,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
 {
     auto result = Attribute::Type::NONE;
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Attribute";
+    auto title = "Legendary Kingdoms - The Valley of Bones: Select Attribute";
 
     if (window && renderer)
     {
@@ -6975,7 +6975,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Select Party Member";
+    auto title = "Legendary Kingdoms - The Valley of Bones: Select Party Member";
 
     if (window && renderer)
     {
@@ -7970,7 +7970,7 @@ bool equipmentScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base
             last = character.Equipment.size();
         }
 
-        SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Items");
+        SDL_SetWindowTitle(window, "Legendary Kingdoms - The Valley of Bones: Items");
 
         fillWindow(renderer, intWH);
 
@@ -8305,7 +8305,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base
                 last = Items.size();
             }
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Equipment");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms - The Valley of Bones: Equipment");
 
             fillWindow(renderer, intWH);
 
@@ -8657,7 +8657,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 last = army.size();
             }
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Add Army Units");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms - The Valley of Bones: Add Army Units");
 
             fillWindow(renderer, intWH);
 
@@ -8918,7 +8918,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 last = spells.size();
             }
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Learn Spells");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms - The Valley of Bones: Learn Spells");
 
             fillWindow(renderer, intWH);
 
@@ -9294,7 +9294,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 last = equipment.size();
             }
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms 1 - The Valley of Bones: Take Items");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms - The Valley of Bones: Take Items");
 
             fillWindow(renderer, intWH);
 
@@ -9686,7 +9686,7 @@ std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer)
 
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
-    auto *title = "Legendary Kingdoms 1 - The Valley of Bones: Harbour";
+    auto *title = "Legendary Kingdoms - The Valley of Bones: Harbour";
 
     auto font_size = 28;
 
@@ -10220,13 +10220,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         storyID = story->DisplayID;
                     }
 
-                    std::string title_string = "Legendary Kingdoms 1 - " + std::string(Book::Title[story->BookID]) + ": ";
+                    std::string title_string = "Legendary Kingdoms - " + std::string(Book::Title[story->BookID]) + ": ";
 
                     SDL_SetWindowTitle(window, (title_string + std::string(3 - std::to_string(std::abs(storyID)).length(), '0') + std::to_string(std::abs(storyID))).c_str());
                 }
                 else
                 {
-                    std::string title_string = "Legendary Kingdoms 1 - " + std::string(Book::Title[story->BookID]) + ": Not Implemented Yet";
+                    std::string title_string = "Legendary Kingdoms - " + std::string(Book::Title[story->BookID]) + ": Not Implemented Yet";
 
                     SDL_SetWindowTitle(window, title_string.c_str());
                 }
@@ -11116,13 +11116,13 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             storyID = story->DisplayID;
                         }
 
-                        std::string title_string = "Legendary Kingdoms 1 - " + std::string(Book::Title[story->BookID]) + ": ";
+                        std::string title_string = "Legendary Kingdoms - " + std::string(Book::Title[story->BookID]) + ": ";
 
                         SDL_SetWindowTitle(window, (title_string + std::string(3 - std::to_string(std::abs(storyID)).length(), '0') + std::to_string(std::abs(storyID))).c_str());
                     }
                     else
                     {
-                        std::string title_string = "Legendary Kingdoms 1 - " + std::string(Book::Title[story->BookID]) + ": Not Implemented Yet";
+                        std::string title_string = "Legendary Kingdoms - " + std::string(Book::Title[story->BookID]) + ": Not Implemented Yet";
 
                         SDL_SetWindowTitle(window, title_string.c_str());
                     }
@@ -11466,6 +11466,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 }
                             }
 
+                            // Remove dead party members
                             auto liveCharacters = std::vector<Character::Base>();
 
                             auto deadInventory = std::vector<Equipment::Base>();
@@ -11478,9 +11479,14 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 }
                                 else
                                 {
-                                    if (party.Current == i)
+                                    if (party.Current != -1)
                                     {
                                         party.Current = -1;
+                                    }
+
+                                    if (party.LastSelected != -1)
+                                    {
+                                        party.LastSelected = -1;
                                     }
 
                                     if (party.Party[i].Equipment.size() > 0)
@@ -11656,7 +11662,7 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, ((int)SCREEN_WIDTH * (1.0 - 3.0 * Margin) - splashw));
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones";
+    auto title = "Legendary Kingdoms - The Valley of Bones";
 
     Book1::InitializeStories();
 
@@ -11780,7 +11786,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, textwidth - 2 * text_space);
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones: Debug";
+    auto title = "Legendary Kingdoms - The Valley of Bones: Debug";
 
     auto splash = createImage("images/legendary-kingdoms-logo.png");
 
@@ -11912,7 +11918,7 @@ int main(int argc, char **argv)
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
 
-    auto title = "Legendary Kingdoms 1 - The Valley of Bones";
+    auto title = "Legendary Kingdoms - The Valley of Bones";
 
     createWindow(SDL_INIT_VIDEO, &window, &renderer, title, "icons/toxic.png");
 

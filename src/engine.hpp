@@ -905,8 +905,6 @@ namespace Engine
 
     void REJOIN(Party::Base &party)
     {
-        party.IsParty = true;
-
         if (party.Current >= 0 && party.Party.size())
         {
             party.Party[party.Current].Team = Team::Type::NONE;
@@ -980,8 +978,6 @@ namespace Engine
         if (result >= 0)
         {
             party.Current = result;
-
-            party.IsParty = false;
 
             party.Party[result].Team = Team::Type::SOLO;
         }

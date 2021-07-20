@@ -193,9 +193,7 @@ namespace Party
         // Romance histogram
         std::map<Character::Romance, int> Hearts = {};
 
-        // TODO: Ensure that IsParty and Current is consistent: When IsParty = false, Current != -1. When IsParty = true, -1.
-        bool IsParty = true;
-
+        // Only useful for keeping track of characters gone solo.
         int Current = -1;
 
         // Book reference
