@@ -8204,9 +8204,7 @@ bool equipmentScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     {
                         if (character.Equipment.size() > 0)
                         {
-                            character.Equipment.erase(Items.begin() + selection);
-
-                            Engine::LOSE_EQUIPMENT(character, {item.Type});
+                            character.Equipment.erase(character.Equipment.begin() + selection);
 
                             if (offset > 0)
                             {
@@ -8224,6 +8222,12 @@ bool equipmentScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                             controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
                         }
+
+                        selection = -1;
+
+                        current = -1;
+
+                        selected = false;
                     }
                 }
             }
