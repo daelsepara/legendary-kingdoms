@@ -45,7 +45,7 @@ namespace fs = std::filesystem;
 
 // Forward declarations
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army);
-bool equipmentScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, bool InCombat);
+bool equipmentScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, bool InCombat);
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
 bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Equipment::Base> &Items, Control::Type mode, int limit);
@@ -1889,7 +1889,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                 {
                     if (character >= 0 && character < party.Party.size())
                     {
-                        equipmentScreen(window, renderer, party.Party[character], inCombat);
+                        equipmentScreen(window, renderer, party, party.Party[character], inCombat);
                     }
 
                     done = false;
@@ -7892,7 +7892,7 @@ Story::Base *findStory(Engine::Destination destination)
     return next;
 }
 
-bool equipmentScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, bool InCombat)
+bool equipmentScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, bool InCombat)
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
@@ -8160,6 +8160,72 @@ bool equipmentScreen(SDL_Window *window, SDL_Renderer *renderer, Character::Base
                 }
 
                 selected = false;
+            }
+            else if (controls[current].Type == Control::Type::USE && !hold)
+            {
+                if (selection >= 0 && selection < character.Equipment.size())
+                {
+                    auto used_up = false;
+
+                    auto item = character.Equipment[selection];
+
+                    if (item.Type == Equipment::Type::SCROLL_OF_RAGE)
+                    {
+                        if (InCombat)
+                        {
+                            used_up = true;
+
+                            for (auto i = 0; i < party.Party.size(); i++)
+                            {
+                                Engine::GAIN_STATUS(party.Party[i], Character::Status::ENRAGED);
+                            }
+
+                            message = "Your party gains +1 Fighting score until end of combat!";
+
+                            flash_color = intLB;
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_message = true;
+                        }
+                        else
+                        {
+                            message = "You cannot use the " std::string(item.Name) + " when not in combat!";
+
+                            flash_color = intRD;
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_message = true;
+                        }
+                    }
+
+                    if (used_up)
+                    {
+                        if (character.Equipment.size() > 0)
+                        {
+                            character.Equipment.erase(Items.begin() + selection);
+
+                            Engine::LOSE_EQUIPMENT(character, {item.Type});
+
+                            if (offset > 0)
+                            {
+                                offset--;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > character.Equipment.size())
+                            {
+                                last = character.Equipment.size();
+                            }
+
+                            controls.clear();
+
+                            controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
+                        }
+                    }
+                }
             }
             else if (controls[current].Type == Control::Type::DROP && !hold)
             {
@@ -9493,7 +9559,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                                 while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[character]))
                                 {
-                                    equipmentScreen(window, renderer, party.Party[character], false);
+                                    equipmentScreen(window, renderer, party, party.Party[character], false);
                                 }
                             }
                         }
@@ -11509,7 +11575,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 {
                                     while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[i]))
                                     {
-                                        equipmentScreen(window, renderer, party.Party[i], false);
+                                        equipmentScreen(window, renderer, party, party.Party[i], false);
                                     }
                                 }
                             }
