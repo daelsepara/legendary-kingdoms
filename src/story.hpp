@@ -29,6 +29,7 @@ namespace Choice
         LIFE,
         LOSE_LIFE,
         ATTRIBUTES,
+        CHARACTER_ATTRIBUTES,
         TEAM_ATTRIBUTES,
         LOSE_ATTRIBUTES,
         LOSE_ALL,
@@ -50,7 +51,9 @@ namespace Choice
         RANDOM_EVENT,
         CHOOSE_PARTY_MEMBER,
         RETREAT,
-        DELIVER
+        DELIVER,
+        SET_STATUS,
+        HAS_STATUS
     };
 
     class Base
@@ -71,6 +74,8 @@ namespace Choice
         std::vector<Codes::Type> InvisibleCodes = std::vector<Codes::Type>();
 
         std::vector<std::tuple<int, const char *, Engine::Destination>> RandomDestinations = {};
+
+        std::vector<Character::Status> Status = {};
 
         int Value = 0;
 
@@ -318,6 +323,30 @@ namespace Choice
             Delivery = delivery;
 
             Location = location;
+
+            Value = value;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Character::Status> status)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Status = status;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Character::Status> status, int value)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Status = status;
 
             Value = value;
         }

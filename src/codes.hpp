@@ -26,7 +26,8 @@ namespace Codes
         WEAPON_AND_DISTRACTION,
         QUEEN_IN_SALTDAD,
         FIRST_TIME_SCROLL_OF_RAGE,
-        SPEAK_BANDO
+        SPEAK_BANDO,
+        WALL_CLIMBING_AND_DOOR
     };
 
     std::map<Book::Type, const char *> Prefix = {

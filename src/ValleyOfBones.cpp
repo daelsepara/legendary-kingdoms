@@ -10923,6 +10923,48 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 break;
                             }
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::CHARACTER_ATTRIBUTES)
+                        {
+                            auto selection = std::vector<int>();
+
+                            auto success = false;
+
+                            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+                            {
+                                if (party.Party[party.LastSelected].Health > 0)
+                                {
+                                    selection.push_back(party.LastSelected);
+
+                                    success = skillTestScreen(window, renderer, party, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
+                                }
+                                else
+                                {
+                                    success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
+                                }
+                            }
+                            else
+                            {
+                                success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
+                            }
+
+                            if (selection.size() == 1)
+                            {
+                                story->SkillCheck(party, success, selection);
+
+                                if (success)
+                                {
+                                    next = findStory(story->Choices[choice].Destination);
+                                }
+                                else
+                                {
+                                    next = findStory(story->Choices[choice].DestinationFailed);
+                                }
+
+                                done = true;
+
+                                break;
+                            }
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::TEAM_ATTRIBUTES)
                         {
                             auto selection = std::vector<int>();
@@ -11345,6 +11387,67 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
 
                                 error = true;
+
+                                start_ticks = SDL_GetTicks();
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::SET_STATUS)
+                        {
+                            auto selected = -1;
+
+                            while (selected < 0 || selected >= party.Party.size())
+                            {
+                                selected = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::PARTY);
+                            }
+
+                            for (auto i = 0; i < party.Party.size(); i++)
+                            {
+                                if (i != selected)
+                                {
+                                    Engine::REMOVE_STATUS(party.Party[i], story->Choices[choice].Status[story->Choices[choice].Value]);
+                                }
+                            }
+
+                            for (auto i = 0; i < story->Choices[choice].Status.size(); i++)
+                            {
+                                if (i == story->Choices[choice].Value)
+                                {
+                                    Engine::GAIN_STATUS(party.Party[selected], story->Choices[choice].Status[story->Choices[choice].Value]);
+                                }
+                                else
+                                {
+                                    Engine::REMOVE_STATUS(party.Party[selected], story->Choices[choice].Status[i]);
+                                }
+                            }
+
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::HAS_STATUS)
+                        {
+                            auto result = true;
+
+                            for (auto i = 0; i < story->Choices[choice].Status.size(); i++)
+                            {
+                                result &= Engine::HAS_STATUS(party.Party, story->Choices[choice].Status[i]);
+                            }
+
+                            if (result)
+                            {
+                                next = findStory(story->Choices[choice].Destination);
+
+                                done = true;
+
+                                break;
+                            }
+                            else
+                            {
+                                error = true;
+
+                                message = "Please complete your selection before proceeding!";
 
                                 start_ticks = SDL_GetTicks();
                             }

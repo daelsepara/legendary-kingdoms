@@ -25,7 +25,9 @@ namespace Team
         WEAPONS,
         DISTRACTION,
         MERCENARY,
-        CHASE
+        CHASE,
+        MAGICAL_DOOR,
+        WALL_CLIMBING
     };
 
     std::map<Team::Type, const char *> Descriptions = {
@@ -34,7 +36,9 @@ namespace Team
         {Team::Type::WEAPONS, "Weapons"},
         {Team::Type::DISTRACTION, "Distraction"},
         {Team::Type::MERCENARY, "Mercenary"},
-        {Team::Type::CHASE, "Chase"}};
+        {Team::Type::CHASE, "Chase"},
+        {Team::Type::CHASE, "Magical door"},
+        {Team::Type::CHASE, "Wall-climbing"}};
 }
 
 namespace Character
@@ -55,14 +59,19 @@ namespace Character
     {
         ARMOUR3,
         RITUAL_SCARRING,
-        ENRAGED
+        ENRAGED,
+        FRONT,
+        BACK
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;
 
     std::map<Character::Status, const char *> StatusDescriptions = {
         {Character::Status::ARMOUR3, "+3 Armour"},
-        {Character::Status::RITUAL_SCARRING, "Ritual Scarring"}};
+        {Character::Status::RITUAL_SCARRING, "Ritual Scarring"},
+        {Character::Status::ENRAGED, "Enraged"},
+        {Character::Status::FRONT, "in Front"},
+        {Character::Status::BACK, "at the Back"}};
 
     class Base
     {

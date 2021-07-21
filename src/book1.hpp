@@ -273,7 +273,14 @@ namespace Book1
             {
                 PreText = "The guards have been looking at you with hungry eyes recently. You sidle up to the gate-house guards, suggesting all sorts of pleasures could await them in exchange for a few paltry rations.";
 
-                Choices.push_back(Choice::Base("Seduce the Guards (Team: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, Team::Type::DISTRACTION, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
+                if (Engine::VERIFY_CODES(party, {Codes::Type::WEAPON_AND_DISTRACTION}))
+                {
+                    Choices.push_back(Choice::Base("Seduce the Guards (Team: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
+                }
+                else
+                {
+                    Choices.push_back(Choice::Base("Seduce the Guards (Team: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, Team::Type::DISTRACTION, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
+                }
             }
 
             Text = PreText.c_str();
@@ -1541,15 +1548,23 @@ namespace Book1
 
             Text = "Timing it just right, you begin to shove one another in the water queue. To make it convincing, you start to exchange a few hard blows, attempting to drag other slaves in the queue into your rumble.\n\nEach party member involved in the fight LOSES 1 Health point.\n\nNote: Only party members assigned to the DISTRACTION TEAM can contribute to the check.";
 
-            Choices.clear();
-            Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Team::Type::DISTRACTION, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3));
-
             Controls = Story::Controls::STANDARD;
         }
 
         void Event(Party::Base &party)
         {
             Engine::GAIN_HEALTH(party.Party, Team::Type::DISTRACTION, -1);
+
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::WEAPON_AND_DISTRACTION}))
+            {
+                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Team::Type::DISTRACTION, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3));
+            }
         }
     };
 
@@ -2968,6 +2983,267 @@ namespace Book1
         Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 89}; }
     };
 
+    class Story090 : public Story::Base
+    {
+    public:
+        Story090()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 90;
+
+            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nWhen Emlyn reports her findings, the news is rather disappointing. \"We have recovered many pretty blooms,\" she admits. \"Certainly, the fragrances are quite striking... however, there are no medicinal or culinary plants, as far as I can tell. Nothing sellable.\"\n\n\"Curses!\" grumbles Sir Lawrence. \"This expedition is turning into an expensive failure.\"\n\nStill, Sir Lawrence is good to his word and presents you with a purse of 150 silver coins. Offering your consolations over the failed mission, you depart into the city.\n\nAlthough the expedition did not go perfectly you have learned a lot.\n\nYou gained the code A85.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SET_LOCATION(party, Location::Type::LHASBREATH);
+
+            Engine::GAIN_MONEY(party, 150);
+
+            Engine::REST(party);
+
+            Engine::GET_CODES(party, {Codes::A(85)});
+        }
+    };
+
+    class Story091 : public Story::Base
+    {
+    public:
+        Story091()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 91;
+
+            Text = "Climbing through the window silently will take some skill.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Force open the door (Individual check: Stealth 5+, Successes: 3)", {Book::Type::BOOK1, 487}, {Book::Type::BOOK1, 724}, Choice::Type::CHARACTER_ATTRIBUTES, {Attribute::Type::STEALTH}, 5, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story092 : public Story::Base
+    {
+    public:
+        Story092()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 92;
+
+            Text = "You creep up the stairs and reach a long landing. Peering out of the windows you can see Brekken and the wall- climbing team struggling to pry open the windows. With a grin you undo the latch, allowing the wall climbers easy access to the house.\n\nNote: For the rest of the break-in, when you make team checks, you can use the skills and combat abilities of your entire team, not just the wall-climbing team.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::WALL_CLIMBING_AND_DOOR});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 116}; }
+    };
+
+    class Story093 : public Story::Base
+    {
+    public:
+        Story093()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 93;
+
+            Text = "The ramp continues to wind upwards until you reach a small room with statues of hideous snakemen in alcoves along the walls. Here your way divides.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Make your way left, down a tunnel with a good deal of hissing coming from it", {Book::Type::BOOK1, 538}));
+            Choices.push_back(Choice::Base("Go to the right, where the tunnel narrows alarmingly", {Book::Type::BOOK1, 98}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story094 : public Story::Base
+    {
+    public:
+        Story094()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 94;
+
+            Text = "You carefully lower yourself into the pit, being careful to avoid the spikes. Moving aside the timbers you check over the body. You find 15 silver coins spilling from a rotten pouch and a still intact DRAGONYAK HORN.\n\nYou gained the code A46.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Climb up the far side of the pit", {Book::Type::BOOK1, 303}));
+            Choices.push_back(Choice::Base("Climb back up the way you came", {Book::Type::BOOK1, 761}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(46)}))
+            {
+                return {Book::Type::BOOK1, 624};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::DRAGONYAK_HORN};
+
+            Limit = 1;
+
+            Engine::GAIN_MONEY(party, 15);
+
+            Engine::GET_CODES(party, {Codes::A(46)});
+        }
+    };
+
+    class Story095 : public Story::Base
+    {
+    public:
+        Story095()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 95;
+
+            Text = "The assassin falls, his dagger clattering to the ground. You quickly escort the Everchild to a safer location. \"I'm alright! I promise! I knew you would protect me,\" she smiles. \"You always have.\"\n\nThe Everchild looks unflustered and calm as the morning sun illuminates the horizon, and her presence on the field, astride a nomad steed, causes your army to cheer wildly. Confidence is high. Now it is time to see if your preparations for the coming battle have been enough.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 162}; }
+    };
+
+    class Story096 : public Story::Base
+    {
+    public:
+        Story096()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 96;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::COUNT(party.Party, Team::Type::MERCENARY) > 0)
+            {
+                return {Book::Type::BOOK1, 27};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 545};
+            }
+        }
+    };
+
+    class Story097 : public Story::Base
+    {
+    public:
+        Story097()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 97;
+
+            Text = "You do not trust idly displayed skeletons these days. You make a point of shattering their skulls and ribcages, casting their bones about and generally demolishing their mortal remains. You feel a little bad about it afterwards, wondering if you have committed some sort of sacrilege, but there is no going back now.\n\nYou gained the code A75.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the book", {Book::Type::BOOK1, 8}));
+            Choices.push_back(Choice::Base("Return to the crossroads", {Book::Type::BOOK1, 310}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(75)});
+        }
+    };
+
+    class Story098 : public Story::Base
+    {
+    public:
+        Story098()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 98;
+
+            Text = "The tunnel is extremely narrow, and you must proceed down it single file. Decide which party member is at the front of the group and which is at the back.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Select which party member is in FRONT", {Book::Type::BOOK1, -98}, Choice::Type::SET_STATUS, {Character::Status::FRONT, Character::Status::BACK}, 0));
+            Choices.push_back(Choice::Base("Select which party member is at the BACK", {Book::Type::BOOK1, -98}, Choice::Type::SET_STATUS, {Character::Status::FRONT, Character::Status::BACK}, 1));
+            Choices.push_back(Choice::Base("Proceed", {Book::Type::BOOK1, 849}, Choice::Type::HAS_STATUS, {Character::Status::FRONT, Character::Status::BACK}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event098 : public Story::Base
+    {
+    public:
+        Event098()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -98;
+
+            DisplayID = 98;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 98}; }
+    };
+
+    class Story099 : public Story::Base
+    {
+    public:
+        Story099()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 99;
+
+            Text = "The goblins chitter to each other in their native tongue, unsure of what to do. Such indecisive beasts!";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Keep waiting", {Book::Type::BOOK1, 389}));
+            Choices.push_back(Choice::Base("Leave the kitchen through the north door", {Book::Type::BOOK1, 366}));
+            Choices.push_back(Choice::Base("Leave the kitchen through the south door", {Book::Type::BOOK1, 736}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     class Story100 : public Story::Base
     {
     public:
@@ -3104,6 +3380,17 @@ namespace Book1
     auto story088 = Story088();
     auto story089 = Story089();
     auto event089 = Event089();
+    auto story090 = Story090();
+    auto story091 = Story091();
+    auto story092 = Story092();
+    auto story093 = Story093();
+    auto story094 = Story094();
+    auto story095 = Story095();
+    auto story096 = Story096();
+    auto story097 = Story097();
+    auto story098 = Story098();
+    auto event098 = Event098();
+    auto story099 = Story099();
     auto story100 = Story100();
 
     void InitializeStories()
@@ -3111,7 +3398,7 @@ namespace Book1
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078,
             &event087_001, &event087_002, &event087_003,
-            &event089,
+            &event089, &event098,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -3121,6 +3408,7 @@ namespace Book1
             &story060, &story061, &story062, &story063, &story064, &story065, &story066, &story067, &story068, &story069,
             &story070, &story071, &story072, &story073, &story074, &story075, &story076, &story077, &story078, &story079,
             &story080, &story081, &story082, &story083, &story084, &story085, &story086, &story087, &story088, &story089,
+            &story090, &story091, &story092, &story093, &story094, &story095, &story096, &story097, &story098, &story099,
             &story100};
     }
 }
