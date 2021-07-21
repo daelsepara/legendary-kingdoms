@@ -22,6 +22,7 @@ namespace Choice
         ANY_EQUIPMENT,
         GET_EQUIPMENT,
         LOSE_EQUIPMENT,
+        LIMIT_EQUIPMENT,
         MONEY,
         GAIN_MONEY,
         LOSE_MONEY,

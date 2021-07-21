@@ -45,7 +45,7 @@ namespace fs = std::filesystem;
 
 // Forward declarations
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army);
-bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, bool InCombat);
+bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int equipment_limit, bool InCombat);
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
@@ -1894,7 +1894,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                 {
                     if (character >= 0 && character < party.Party.size())
                     {
-                        inventoryScreen(window, renderer, party, party.Party[character], inCombat);
+                        inventoryScreen(window, renderer, party, party.Party[character], -1, inCombat);
                     }
 
                     done = false;
@@ -6590,7 +6590,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     }
                     else if (controls[current].Type == Control::Type::CONFIRM)
                     {
-                        if (selection.size() >= team_size && selection.size() <= party.Party.size())
+                        if ((selection.size() >= team_size && selection.size() <= party.Party.size()) || (selection.size() == Engine::COUNT(party.Party) && selection.size() < team_size))
                         {
                             done = true;
 
@@ -8345,7 +8345,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                             while (!Engine::VERIFY_EQUIPMENT_LIMIT(character))
                             {
-                                inventoryScreen(window, renderer, party, character, false);
+                                inventoryScreen(window, renderer, party, character, -1, false);
                             }
                         }
                         else
@@ -8455,7 +8455,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
             else if (controls[current].Type == Control::Type::EQUIPMENT && !hold)
             {
-                inventoryScreen(window, renderer, party, character, false);
+                inventoryScreen(window, renderer, party, character, -1, false);
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
             {
@@ -8499,7 +8499,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return false;
 }
 
-bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, bool InCombat)
+bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int equipment_limit, bool InCombat)
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
@@ -8559,9 +8559,30 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
     while (!done)
     {
-        if (!Engine::VERIFY_EQUIPMENT_LIMIT(character))
+        if (!Engine::VERIFY_EQUIPMENT_LIMIT(character) || (equipment_limit > -1 && !Engine::VERIFY_EQUIPMENT_LIMIT(character, equipment_limit)))
         {
-            message = "You are carrying too many items! Drop or transfer excess items.";
+            if (equipment_limit > -1)
+            {
+                if (equipment_limit > 0)
+                {
+                    message = "You are carrying more than " + std::to_string(equipment_limit) + " item";
+
+                    if (equipment_limit > 1)
+                    {
+                        message += "s";
+                    }
+
+                    message += ". Drop or transfer excess items.";
+                }
+                else
+                {
+                    message = "Drop all your items.";
+                }
+            }
+            else
+            {
+                message = "You are carrying too many items! Drop or transfer excess items.";
+            }
 
             flash_message = true;
 
@@ -9911,7 +9932,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                                 while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[character]))
                                 {
-                                    inventoryScreen(window, renderer, party, party.Party[character], false);
+                                    inventoryScreen(window, renderer, party, party.Party[character], -1, false);
                                 }
                             }
                         }
@@ -10562,7 +10583,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
     std::string message = "";
 
     Uint32 start_ticks = 0;
-    Uint32 duration = 5000;
+    Uint32 duration = 3000;
 
     SDL_Surface *background = NULL;
 
@@ -10703,7 +10724,14 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                 if (story->ID != -1)
                 {
-                    title_string += std::string(3 - std::to_string(std::abs(story->ID)).length(), '0') + std::to_string(std::abs(story->ID));
+                    auto storyID = story->ID;
+
+                    if (storyID < 0 && story->DisplayID >= 0)
+                    {
+                        storyID = story->DisplayID;
+                    }
+
+                    title_string += std::string(3 - std::to_string(std::abs(storyID)).length(), '0') + std::to_string(std::abs(storyID));
 
                     putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
@@ -11484,7 +11512,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         Uint32 start_ticks = 0;
 
-        Uint32 duration = 5000;
+        Uint32 duration = 3000;
 
         party.StoryID = story->ID;
 
@@ -11507,7 +11535,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             auto jumpID = jump.second;
 
-            if (jumpBook != Book::Type::NONE && jumpID >= 0)
+            if (jumpBook != Book::Type::NONE)
             {
                 story = findStory(jump);
 
@@ -11993,7 +12021,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 {
                                     while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[i]))
                                     {
-                                        inventoryScreen(window, renderer, party, party.Party[i], false);
+                                        inventoryScreen(window, renderer, party, party.Party[i], -1, false);
                                     }
                                 }
                             }

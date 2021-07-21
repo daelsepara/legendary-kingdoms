@@ -606,6 +606,23 @@ namespace Engine
         return result;
     }
 
+    bool VERIFY_EQUIPMENT_LIMIT(Character::Base &player, int limit)
+    {
+        return Engine::COUNT_INVENTORY(player) <= limit;
+    }
+
+    bool VERIFY_EQUIPMENT_LIMIT(Party::Base &party, int limit)
+    {
+        auto result = true;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            result &= Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[i], limit);
+        }
+
+        return result;
+    }
+
     int COUNT_EQUIPMENT(Character::Base &character, Equipment::Type item)
     {
         auto found = 0;
@@ -1237,6 +1254,31 @@ namespace Engine
         for (auto i = 0; i < party.Party.size(); i++)
         {
             party.Party[i].Equipment.clear();
+        }
+    }
+
+    void LOSE_ALL(Party::Base &party, Equipment::Class Class)
+    {
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            auto items = std::vector<Equipment::Base>();
+
+            for (auto j = 0; j < party.Party[i].Equipment.size(); j++)
+            {
+                if (party.Party[i].Equipment[j].Class != Class)
+                {
+                    items.push_back(party.Party[i].Equipment[j]);
+                }
+            }
+
+            if (items.size() > 0)
+            {
+                party.Party[i].Equipment = items;
+            }
+            else
+            {
+                party.Party[i].Equipment.clear();
+            }
         }
     }
 }

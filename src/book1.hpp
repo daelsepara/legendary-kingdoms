@@ -98,7 +98,7 @@ namespace Book1
 
             ID = 3;
 
-            Text = "The treasure chest contains 200 SILVER COINS and a BLUESTONE. Take what you wish.\n\nYou gained the code A45.";
+            Text = "The treasure chest contains 200 silver coins and a BLUESTONE. Take what you wish.\n\nYou gained the code A45.";
 
             Bye = "Not wishing to tarry longer, you depart the chamber and return to the crossroads.";
 
@@ -458,7 +458,7 @@ namespace Book1
 
             ID = 15;
 
-            Text = "There are few valuables amongst the goblins, though you manage to scavenge 15 SILVER COINS from the entire horde. Pleased to have survived you make your way onwards.";
+            Text = "There are few valuables amongst the goblins, though you manage to scavenge 15 silver coins from the entire horde. Pleased to have survived you make your way onwards.";
 
             Choices.clear();
 
@@ -1621,7 +1621,7 @@ namespace Book1
 
             ID = 49;
 
-            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are RESTORED to MAXIMUM Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive 600 SILVER COINS as a reward. In addition, he presents you with a SEAL OF HOUSE ROSS. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nYou gained the code A85.";
+            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are RESTORED to MAXIMUM Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive 600 silver coins as a reward. In addition, he presents you with a SEAL OF HOUSE ROSS. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nYou gained the code A85.";
 
             Bye = "Thanking Sir Lawrence and Emlyn for their generosity, you depart into the city.";
 
@@ -2050,7 +2050,7 @@ namespace Book1
 
             ID = 63;
 
-            Text = "The zealots had a few minor talismans and some gaudy jewellery you sell at a marketplace for 25 SILVER COINS. It seems a paltry reward for such a battle.\n\nWhere will you travel now?";
+            Text = "The zealots had a few minor talismans and some gaudy jewellery you sell at a marketplace for 25 silver coins. It seems a paltry reward for such a battle.\n\nWhere will you travel now?";
 
             Choices.clear();
             Choices.push_back(Choice::Base("North, towards the Temple of the Unbroken", {Book::Type::BOOK1, 535}));
@@ -2113,7 +2113,7 @@ namespace Book1
 
             ID = 66;
 
-            Text = "You spend several days in the handsomely appointed Cold River Inn.\n\nNote: For every 5 SILVER COINS you spend, each party member can RECOVER 1 Health point.\n\nSpell casters can also spend silver here to RECHARGE their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
+            Text = "You spend several days in the handsomely appointed Cold River Inn.\n\nNote: For every 5 silver coins you spend, each party member can RECOVER 1 Health point.\n\nSpell casters can also spend silver here to RECHARGE their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
 
             RestPrice = 5;
 
@@ -2675,7 +2675,7 @@ namespace Book1
 
             ID = 84;
 
-            Text = "It is all too obvious what has happened. Your companion is doomed for all time to read that cursed book -- but to disturb them would invoke such a terrible wrath you might not survive. You carefully remove the items and money your companions was carrying. After this you say your sorry farewells, hoping that some part of your friend is still aware deep down inside.\n\nThis party member is lost forever. Curiously, if you ever return to this room, the party member will have vanished.";
+            Text = "It is all too obvious what has happened. Your companion is doomed for all time to read that cursed book -- but to disturb them would invoke such a terrible wrath you might not survive. You carefully remove the items and money your companions was carrying. After this you say your sorry farewells, hoping that some part of your friend is still aware deep down inside.\n\nNote: This party member is lost forever. Curiously, if you ever return to this room, the party member will have vanished.";
 
             Choices.clear();
 
@@ -2734,8 +2734,6 @@ namespace Book1
     class Story086 : public Story::Base
     {
     public:
-        std::string temp_text = "";
-
         Story086()
         {
             BookID = Book::Type::BOOK1;
@@ -2764,6 +2762,161 @@ namespace Book1
         }
     };
 
+    class Story087 : public Story::Base
+    {
+    public:
+        Story087()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 87;
+
+            Text = "Water gushes in through the ripped hole in your ship. Your crew give a great cry and abandon ship, leaping into the frothing waves with a wail. You have scant seconds to prepare yourself to dive into the ocean. Any character wearing a suit of armour or robes discards it. You can carry no more than four items each before leaping into the sea -- any remaining items must be crossed off (there is no time to conjure a magic cabinet).";
+
+            Bye = "You swim the base of the cliff, exhausted and freezing -- but there is nowhere to go but up.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_ALL(party, Equipment::Class::ARMOUR);
+            Engine::LOSE_ALL(party, Equipment::Class::ROBE);
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_EQUIPMENT_LIMIT(party, 4))
+            {
+                Choices.push_back(Choice::Base("Drop number of items down to 4", {Book::Type::BOOK1, -87001}, Choice::Type::LIMIT_EQUIPMENT, 4));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, -87001}; }
+    };
+
+    class Event087_001 : public Story::Base
+    {
+    public:
+        Event087_001()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -87001;
+
+            DisplayID = 87;
+
+            Text = "You attempt to scale the cliffsides leading to the jungle.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Climb the cliffside (Team: Survival 5+, Successes: 4)", {Book::Type::BOOK1, 409}, {Book::Type::BOOK1, -87002}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 5, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event087_002 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Event087_002()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -87002;
+
+            DisplayID = 87;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose the party member lost in the climbing attempt", {Book::Type::BOOK1, -87003}, Choice::Type::CHOOSE_PARTY_MEMBER));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            if (Engine::COUNT(party.Party) > 1)
+            {
+                PreText = "One of your party members loses their grip halfway up and plunges into the sea. They are never seen again.";
+            }
+            else
+            {
+                PreText = "You lose your grip halfway up and plunge into the sea. You are never seen again.";
+
+                party.Party.clear();
+
+                party.Current = -1;
+
+                party.LastSelected = -1;
+            }
+
+            Text = PreText.c_str();
+        }
+    };
+
+    class Event087_003 : public Story::Base
+    {
+    public:
+        Event087_003()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -87003;
+
+            DisplayID = 87;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            {
+                party.Party[party.LastSelected].Equipment.clear();
+
+                party.Party.erase(party.Party.begin() + party.LastSelected);
+
+                party.Current = -1;
+
+                party.LastSelected = -1;
+            }
+
+            return {Book::Type::BOOK1, -87001};
+        }
+    };
+
+    class Story088 : public Story::Base
+    {
+    public:
+        Story088()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 88;
+
+            Text = "You dash after Yu Yan, the thief frantically attempting to negotiate the ledge, which you navigate with the skill of a mountain goat. She stumbles, and only just manages to catch the ledge before falling. You dash to her side.\n\n\"Need a hand?\" you ask.\n\n\"Let me guess... you want the damn SILVER IDOL, yes?\"\n\n\"I think I'll need all the treasure; it's only weighing you down,\" you respond smartly.\n\nYu Yan groans, but throws her loot bag up to you. It contains not only the SILVER IDOL, but 200 silver pieces as well. Grinning, you give her a hand up on to the ledge. She grasps the sides of the wall, breathing heavily as you lean casually against the hillside.\n\n\"Make yourself scarce, Yu Yan,\" you say to her. \"Up here, in the hills, this is my domain.\"\n\nShe thanks you for your mercy and shuffles away, dashing over the hillside as soon as she is on safer ground. You make your way back along the ledge, hoping to find the beautiful vista again, but you cannot find it. Perhaps it is the time of night, but the surroundings no longer look so beautiful and peaceful as they were before. You shrug, but you are pleased with your victory.";
+
+            Bye = "You make your way back to the temple in Chalice.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 200);
+
+            Take = {Equipment::SILVER_IDOL};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 856}; }
+    };
+
     class Story089 : public Story::Base
     {
     public:
@@ -2773,7 +2926,7 @@ namespace Book1
 
             ID = 89;
 
-            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful.\n\nIf you have a ship docked in Clifftop, you can also buy up to three cargo units of SALT from the merchants for 500 SILVER COINS each. They will deliver this cargo straight to your ship provided there is room for it.";
+            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful.\n\nIf you have a ship docked in Clifftop, you can also buy up to three cargo units of SALT from the merchants for 500 silver coins each. They will deliver this cargo straight to your ship provided there is room for it.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Buy one cargo unit of SALT", {Book::Type::BOOK1, -89}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 500));
@@ -2944,6 +3097,11 @@ namespace Book1
     auto story084 = Story084();
     auto story085 = Story085();
     auto story086 = Story086();
+    auto story087 = Story087();
+    auto event087_001 = Event087_001();
+    auto event087_002 = Event087_002();
+    auto event087_003 = Event087_003();
+    auto story088 = Story088();
     auto story089 = Story089();
     auto event089 = Event089();
     auto story100 = Story100();
@@ -2951,7 +3109,9 @@ namespace Book1
     void InitializeStories()
     {
         Book1::Stories = {
-            &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &event089,
+            &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078,
+            &event087_001, &event087_002, &event087_003,
+            &event089,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -2960,7 +3120,7 @@ namespace Book1
             &story050, &story051, &story052, &story053, &story054, &story055, &story056, &story057, &story058, &story059,
             &story060, &story061, &story062, &story063, &story064, &story065, &story066, &story067, &story068, &story069,
             &story070, &story071, &story072, &story073, &story074, &story075, &story076, &story077, &story078, &story079,
-            &story080, &story081, &story082, &story083, &story084, &story085, &story086, &story089,
+            &story080, &story081, &story082, &story083, &story084, &story085, &story086, &story087, &story088, &story089,
             &story100};
     }
 }
