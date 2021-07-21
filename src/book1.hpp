@@ -1193,7 +1193,7 @@ namespace Book1
 
             ID = 34;
 
-            Text = "You return to the large burial chamber. The ghouls are long gone, and there is no more treasure to be found here. If you wish you can scribe the spell on the bronze tablet into your spellbook, if you have had reason to remove it:\n\nWisdom (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.";
+            Text = "You return to the large burial chamber. The ghouls are long gone, and there is no more treasure to be found here. If you wish you can scribe the spell on the bronze tablet into your spellbook, if you have had reason to remove it:\n\nWisdom (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\nRecharge: 50 silver.";
 
             Bye = "You return to the crossroads.";
 
@@ -3279,6 +3279,279 @@ namespace Book1
         }
     };
 
+    class Story101 : public Story::Base
+    {
+    public:
+        Story101()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 101;
+
+            Text = "Spitting on the blood-stained sands, you stride into the central battle, back to back, swords in hand.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Lhasbreth Barbarians", 7, 5, 3, 17, 0),
+                Monster::Base("Chalice Swordsmen", 5, 4, 4, 10, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 71}; }
+    };
+
+    class Story102 : public Story::Base
+    {
+    public:
+        Story102()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 102;
+
+            Text = "This KEY has certainly travelled a long way from its lock -- but it fits! You hear a loud clang as you turn the KEY, its triple locks unbolting one by one. The KEY seems to be absorbed into the door mechanism itself and is pulled out of your hand. You step into a vast chamber beyond, filled with urns brimming with treasure. A stone sarcophagus of a mighty king dominates the middle of the enormous room, raised up on a high platform surmountable only by a long set of stairs.\n\nFrom the corners of the chamber you see something terrible. Two giant skeletons, clad in bronze armour, suddenly animate, blazing balefire in their eyes. They heft enormous swords, ten feet long each.\n\nIf you wish you can flee the chamber now -- but you can never return. The door will slam shut behind you.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Flee the chamber", {Book::Type::BOOK1, 46}));
+            Choices.push_back(Choice::Base("Fight for your treasure", {Book::Type::BOOK1, -102}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::PYRAMIDAL_KEY});
+        }
+    };
+
+    class Event102 : public Story::Base
+    {
+    public:
+        Event102()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -102;
+
+            DisplayID = 102;
+
+            Text = "You have chosen to fight for your treasure.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Giant Skeleton", 8, 3, 5, 30, 0),
+                Monster::Base("Giant Skeleton", 10, 3, 4, 25, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 178}; }
+    };
+
+    class Story103 : public Story::Base
+    {
+    public:
+        Story103()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 103;
+
+            Text = "You open the cage and the bird immediately flies onto a low branch. You are about to move on when the bird addresses you. \"I'm grateful,\" it says. \"Not many humans would do such a thing without promise of reward.\"\n\n\"Not many birds can talk,\" you say, surprised.\n\n\"All animals can talk -- but rarely in your language,\" admits the bird. \"I can teach you our tongue, if you have any skill in sorcery.\"\n\nIf you want to accept the bird's offer you can learn the spell below if you have any spellcasters in your party:\n\nAnimal Speech (Adventure)\n\nYou are able to communicate using the secret speech of animals.\n\nRecharge: 50 silver.";
+
+            Bye = "You thank the bird and watch as it flies off above the jungle canopy.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Spells = {Spells::ANIMAL_SPEECH};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 618}; }
+    };
+
+    class Story104 : public Story::Base
+    {
+    public:
+        Story104()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 104;
+
+            Text = "You cannot be certain, but the mural appears to be telling some sort of story. An image of a terrible demon, possibly Abraxas from legend, rises from the earth and demolishes a number of cities. From cracks in the ground come snakemen, slithering around the survivors and rounding them up. The humans are turned into slaves, building the snakemen a mighty temple, but soon even the slaves begin to worship at the altars of the temple as well. Here the mural ends abruptly. Make of it what you will.\n\nYou gained the code A41.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(41)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 77}; }
+    };
+
+    class Story105 : public Story::Base
+    {
+    public:
+        Story105()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 105;
+
+            Text = "You make your way down to the riverbank, and eventually find the raft with Emlyn's help, covered over with weeds and bushes. Two long poles can be used to pilot the craft, and soon you are punting down the river, the sun shimmering through the canopy of trees onto the glittering water.\n\nThe raft begins to pick up speed, and as you round a corner you can see why. There are rapids ahead, the water splashing with thick foam against scattered rocks that peek through the surface of the river. If you were in canoes it would be easily navigable. On your raft it will take all your skill to avoid danger.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Navigate the rapids (Team: Survival 5+, Successes: 3)", {Book::Type::BOOK1, 54}, {Book::Type::BOOK1, 337}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 5, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story106 : public Story::Base
+    {
+    public:
+        Story106()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 106;
+
+            Text = "You pretend to offer aid; anything to get out of sight of the Everchild's rebellious followers. At the first opportunity you inform the guards about the rebel's intentions. A few days later Che Long, Milagros and her followers have vanished from the arena. Word reaches you about a bloody struggle in the cells, but there are few details. Not long after, the arena master releases you under orders of the Iron King. \"His majesty is most pleased with your loyalty; the identity of the rebel leaders has been a well-kept secret. He offers you this reward and asks you to attend him at his palace if you seek further remunerating work.\"\n\nThe arena master presents you with 200 silver pieces.\n\nYou gained the code A4.";
+
+            Bye = "Weighing the price of treachery with a smile, you gleefully leave the arena.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 200);
+
+            Engine::GET_CODES(party, {Codes::A(4)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story107 : public Story::Base
+    {
+    public:
+        Story107()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 107;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::SAR_JESSICA_DAYNE))
+            {
+                return {Book::Type::BOOK1, 514};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 753};
+            }
+        }
+    };
+
+    class Story108 : public Story::Base
+    {
+    public:
+        Story108()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 108;
+
+            Text = "You hear hoofbeats in the distance. Glancing over the top of dune you spot a group of Lhasbreath barbarians, riding on horseback. There are six of them -- quite a formidable group!";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Attempt to hide from them by partially burying yourselves in the dunes", {Book::Type::BOOK1, 525}));
+            Choices.push_back(Choice::Base("Greet them cordially", {Book::Type::BOOK1, 199}));
+            Choices.push_back(Choice::Base("Attack them at long distance", {Book::Type::BOOK1, 297}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story109 : public Story::Base
+    {
+    public:
+        Story109()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 109;
+
+            Text = "There are no exceptions. With dozens of guards at their command the priests strip you of all your taxable items (items that provide a +2 or greater bonus, except for shields). For good measure you are scourged with the whip as well. Each party member must lose 1 Health point.";
+
+            Bye = "Appalled at this daylight robbery you make your way on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            for (auto i = 0; i < party.Party.size(); i++)
+            {
+                auto non_taxable = std::vector<Equipment::Base>();
+
+                for (auto j = 0; j < party.Party[i].Equipment.size(); j++)
+                {
+                    if (party.Party[i].Equipment[j].Class == Equipment::Class::SHIELD || party.Party[i].Equipment[j].Attribute == Attribute::Type::NONE || party.Party[i].Equipment[j].Modifier < 2)
+                    {
+                        non_taxable.push_back(party.Party[i].Equipment[j]);
+                    }
+                }
+
+                if (non_taxable.size() > 0)
+                {
+                    party.Party[i].Equipment = non_taxable;
+                }
+                else
+                {
+                    party.Party[i].Equipment.clear();
+                }
+            }
+
+            Engine::GAIN_HEALTH(party.Party, -1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 458}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -3392,13 +3665,23 @@ namespace Book1
     auto event098 = Event098();
     auto story099 = Story099();
     auto story100 = Story100();
+    auto story101 = Story101();
+    auto story102 = Story102();
+    auto event102 = Event102();
+    auto story103 = Story103();
+    auto story104 = Story104();
+    auto story105 = Story105();
+    auto story106 = Story106();
+    auto story107 = Story107();
+    auto story108 = Story108();
+    auto story109 = Story109();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078,
             &event087_001, &event087_002, &event087_003,
-            &event089, &event098,
+            &event089, &event098, &event102,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -3409,7 +3692,7 @@ namespace Book1
             &story070, &story071, &story072, &story073, &story074, &story075, &story076, &story077, &story078, &story079,
             &story080, &story081, &story082, &story083, &story084, &story085, &story086, &story087, &story088, &story089,
             &story090, &story091, &story092, &story093, &story094, &story095, &story096, &story097, &story098, &story099,
-            &story100};
+            &story100, &story101, &story102, &story103, &story104, &story105, &story106, &story107, &story108, &story109};
     }
 }
 #endif

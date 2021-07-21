@@ -46,7 +46,8 @@ namespace Equipment
         INCENSE,
         TALISMAN_OF_ST_ELIAS,
         ENGAGEMENT_RING,
-        DRAGONYAK_HORN
+        DRAGONYAK_HORN,
+        PYRAMIDAL_KEY
     };
 
     class Base
@@ -140,6 +141,7 @@ namespace Equipment
     auto TALISMAN_OF_ST_ELIAS = Equipment::Base("TALISMAN of St. Elias", "TALISMAN of St. Elias", Equipment::Class::NORMAL, Equipment::Type::TALISMAN_OF_ST_ELIAS, Attribute::Type::NONE, 0, false);
     auto ENGAGEMENT_RING = Equipment::Base("ENGAGEMENT RING", "ENGAGEMENT RING", Equipment::Class::NORMAL, Equipment::Type::ENGAGEMENT_RING, Attribute::Type::NONE, 0, false);
     auto DRAGONYAK_HORN = Equipment::Base("DRAGONYAK HORN", "DRAGONYAK HORN", Equipment::Class::NORMAL, Equipment::Type::DRAGONYAK_HORN, Attribute::Type::NONE, 0, false);
+    auto PYRAMIDAL_KEY = Equipment::Base("PYRAMIDAL KEY", "PYRAMIDAL KEY", Equipment::Class::NORMAL, Equipment::Type::PYRAMIDAL_KEY, Attribute::Type::NONE, 0, false);
 }
 
 #endif

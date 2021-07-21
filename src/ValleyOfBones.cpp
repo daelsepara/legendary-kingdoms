@@ -11447,7 +11447,24 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 error = true;
 
-                                message = "Please complete your selection before proceeding!";
+                                if (story->Choices[choice].Status.size() > 1)
+                                {
+                                    message = "Your party does not have all of the required status: ";
+                                }
+                                else
+                                {
+                                    message = "Your party does not have the required status: ";
+                                }
+
+                                for (auto i = 0; i < story->Choices[choice].Status.size(); i++)
+                                {
+                                    if (i > 0)
+                                    {
+                                        message += ", ";
+                                    }
+
+                                    message += std::string(Character::StatusDescriptions[story->Choices[choice].Status[i]]);
+                                }
 
                                 start_ticks = SDL_GetTicks();
                             }
