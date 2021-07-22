@@ -53,7 +53,8 @@ namespace Choice
         RETREAT,
         DELIVER,
         SET_STATUS,
-        HAS_STATUS
+        HAS_STATUS,
+        ASSIGN_TEAMS
     };
 
     class Base
@@ -76,6 +77,8 @@ namespace Choice
         std::vector<std::tuple<int, const char *, Engine::Destination>> RandomDestinations = {};
 
         std::vector<Character::Status> Status = {};
+
+        std::vector<Engine::TeamAssignment> Teams = {};
 
         int Value = 0;
 
@@ -360,6 +363,17 @@ namespace Choice
             Status = status;
 
             Value = value;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Engine::TeamAssignment> teams)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Teams = teams;
         }
     };
 } // namespace Choice

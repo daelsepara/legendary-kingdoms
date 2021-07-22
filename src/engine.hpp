@@ -18,6 +18,7 @@ namespace Engine
     typedef std::tuple<Cargo::Type, int, int> CargoPrices;
     typedef std::tuple<Equipment::Base, int, int> EquipmentPrice;
     typedef std::pair<Equipment::Base, std::vector<Equipment::Base>> BarterExchanges;
+    typedef std::tuple<Team::Type, int, int> TeamAssignment;
 
     enum class Combat
     {
