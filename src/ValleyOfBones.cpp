@@ -1699,7 +1699,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
             if (current != 0 && character >= 0 && character < party.Party.size() && !summary_view)
             {
-                if ((party.Party[character].Status.size() > 0) || (party.Party[character].Team != Team::Type::NONE))
+                if ((party.Party[character].Status.size() > 0) || (party.Party[character].Team != Team::Type::NONE && !Engine::IS_CHARACTER(party.Party[character].Team)))
                 {
                     putHeader(renderer, "Status", font_mason2, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
