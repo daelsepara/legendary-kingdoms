@@ -442,6 +442,43 @@ namespace Engine
         return result;
     }
 
+    int COUNT(std::vector<Character::Base> &adventurers, std::vector<int> list)
+    {
+        auto result = 0;
+
+        for (auto i = 0; i < adventurers.size(); i++)
+        {
+            if (adventurers[i].Health > 0 && Engine::FIND_LIST(list, i) < 0)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    int COUNT(std::vector<Character::Base> &adventurers, Team::Type team, std::vector<int> list)
+    {
+        auto result = 0;
+
+        if (team == Team::Type::NONE)
+        {
+            return Engine::COUNT(adventurers, list);
+        }
+        else
+        {
+            for (auto i = 0; i < adventurers.size(); i++)
+            {
+                if (adventurers[i].Health > 0 && adventurers[i].Team == team && Engine::FIND_LIST(list, i) < 0)
+                {
+                    result++;
+                }
+            }
+        }
+
+        return result;
+    }
+
     int TEAM_SIZE(std::vector<Character::Base> &adventurers, Team::Type team)
     {
         auto result = 0;
@@ -1280,6 +1317,159 @@ namespace Engine
                 party.Party[i].Equipment.clear();
             }
         }
+    }
+
+    bool IS_CHARACTER(Team::Type team)
+    {
+        auto result = false;
+
+        if (team != Team::Type::NONE && (int)(team) < Team::TEAMS)
+        {
+            result = true;
+        }
+
+        return result;
+    }
+
+    void SET_TEAM(Character::Base &character, Team::Type team)
+    {
+        character.Team = team;
+    }
+
+    int FIRST(Party::Base &party, std::vector<int> list)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Health > 0 && Engine::FIND_LIST(list, i) < 0)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIRST(Party::Base &party)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Health > 0)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIRST(Party::Base &party, Team::Type team, std::vector<int> list)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Health > 0 && party.Party[i].Team == team && Engine::FIND_LIST(list, i) < 0)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIRST(Party::Base &party, Team::Type team)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Health > 0 && party.Party[i].Team == team)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIRST_CASTER(Party::Base &party, Team::Type team, std::vector<int> list)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Health > 0 && party.Party[i].Team == team && party.Party[i].SpellCaster && Engine::FIND_LIST(list, i) < 0)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIRST_CASTER(Party::Base &party, Team::Type team)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Health > 0 && party.Party[i].Team == team && party.Party[i].SpellCaster)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIRST_CASTER(Party::Base &party)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Health > 0 && party.Party[i].SpellCaster)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIRST(std::vector<Monster::Base> &monsters)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < monsters.size(); i++)
+        {
+            if (monsters[i].Health > 0)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
     }
 }
 #endif

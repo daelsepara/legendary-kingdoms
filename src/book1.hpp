@@ -3552,6 +3552,123 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 458}; }
     };
 
+    // TODO: Characters with Ritual Scarring who entered the Ziggurat will be in Team Zigurrat until they return to town
+    class Story110 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story110()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 110;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(100)}))
+            {
+                return {Book::Type::BOOK1, 823};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The Grand Ziggurat is one of the largest buildings in the valley, dwarfed only by the colossal Saltdad palace. Guarding its steps are the fanatical Cursus Temple Guard, the elite soldiers of the patriarch. They halt you as you begin to climb the steps.\n\n\"Hold there, filthy heathens!\" they spit. \"Only true followers of Cursus are allowed within!\"";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::RING_OF_THE_PATRIARCH}))
+            {
+                PreText += "\n\nNote: Only party members who have Ritual Scarring (Cursus) are permitted to enter the ziggurat. Those without the scarring must wait outside, and you cannot use their equipment or abilities until you leave the ziggurat.";
+
+                Choices.push_back(Choice::Base("Enter the ziggurat (party members without Ritual Scarring must wait outside)", {Book::Type::BOOK1, 574}, Choice::Type::HAS_STATUS, {Character::Status::RITUAL_SCARRING}));
+                Choices.push_back(Choice::Base("Return to the town centre", {Book::Type::BOOK1, 340}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 387}; }
+    };
+
+    class Story111 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Team::Type previousTeam = Team::Type::NONE;
+
+        int character = -1;
+
+        Story111()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 111;
+
+            Text = "Sar Jessica is the first-born daughter of a baron of Royce. It is impossible for a nobleman such as Dulcimer to refuse the challenge and keep face in court. He emerges from the house, accompanied by his house guards, an Ozury rapier in his hand. His family, an endless procession of cousins, grandparents, brothers and sisters, gather in a circle to watch the duel.\n\nNote:: Only Sar Jessica may engage in this battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 68};
+
+            CanFlee = false;
+
+            Team = Team::Type::SAR_JESSICA_DAYNE;
+
+            character = Engine::FIND_CHARACTER(party, Character::Type::SAR_JESSICA_DAYNE);
+
+            if (character >= 0 && character < party.Party.size())
+            {
+                previousTeam = party.Party[character].Team;
+
+                Engine::SET_TEAM(party.Party[character], Team::Type::SAR_JESSICA_DAYNE);
+
+                Monsters = {Monster::Base("Dulcimer", 4, 4, 4, 8, 0)};
+            }
+            else
+            {
+
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                if (character >= 0 && character < party.Party.size())
+                {
+                    Engine::SET_TEAM(party.Party[character], previousTeam);
+                }
+
+                Bye = "The family reluctantly release Akini's aunt, bidding you never to darken their doorstep again";
+
+                destination = {Book::Type::BOOK1, 68};
+            }
+            else
+            {
+                Bye = "Sar Jessica is slain. You take her equipment before leaving the house in disgrace";
+
+                destination = {Book::Type::BOOK1, 468};
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -3675,6 +3792,8 @@ namespace Book1
     auto story107 = Story107();
     auto story108 = Story108();
     auto story109 = Story109();
+    auto story110 = Story110();
+    auto story111 = Story111();
 
     void InitializeStories()
     {
@@ -3692,7 +3811,8 @@ namespace Book1
             &story070, &story071, &story072, &story073, &story074, &story075, &story076, &story077, &story078, &story079,
             &story080, &story081, &story082, &story083, &story084, &story085, &story086, &story087, &story088, &story089,
             &story090, &story091, &story092, &story093, &story094, &story095, &story096, &story097, &story098, &story099,
-            &story100, &story101, &story102, &story103, &story104, &story105, &story106, &story107, &story108, &story109};
+            &story100, &story101, &story102, &story103, &story104, &story105, &story106, &story107, &story108, &story109,
+            &story110, &story111};
     }
 }
 #endif

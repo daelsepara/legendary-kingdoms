@@ -18,27 +18,43 @@
 
 namespace Team
 {
+    const int TEAMS = 100;
+
     enum class Type
     {
-        NONE,
-        SOLO,
+        NONE = 0,
+        SAR_JESSICA_DAYNE,
+        LORD_TIQUON,
+        TASHA,
+        AMELIA_PASS_DAYNE,
+        AKIHIRO_OF_CHALICE,
+        BRASH,
+        SOLO = Team::TEAMS,
         WEAPONS,
         DISTRACTION,
         MERCENARY,
         CHASE,
         MAGICAL_DOOR,
-        WALL_CLIMBING
+        WALL_CLIMBING,
+        ZIGGURAT
     };
 
     std::map<Team::Type, const char *> Descriptions = {
         {Team::Type::NONE, "None"},
-        {Team::Type::NONE, "Solo"},
+        {Team::Type::SAR_JESSICA_DAYNE, "Sar Jessica Dayne"},
+        {Team::Type::LORD_TIQUON, "Lord Ti'quon"},
+        {Team::Type::TASHA, "Tasha"},
+        {Team::Type::AMELIA_PASS_DAYNE, "Amelia Pass-Dayne"},
+        {Team::Type::AKIHIRO_OF_CHALICE, "Akihiro of Chalice"},
+        {Team::Type::BRASH, "Brash"},
+        {Team::Type::SOLO, "Solo"},
         {Team::Type::WEAPONS, "Weapons"},
         {Team::Type::DISTRACTION, "Distraction"},
         {Team::Type::MERCENARY, "Mercenary"},
         {Team::Type::CHASE, "Chase"},
-        {Team::Type::CHASE, "Magical door"},
-        {Team::Type::CHASE, "Wall-climbing"}};
+        {Team::Type::MAGICAL_DOOR, "Magical door"},
+        {Team::Type::WALL_CLIMBING, "Wall-climbing"},
+        {Team::Type::ZIGGURAT, "Wall-climbing"}};
 }
 
 namespace Character
