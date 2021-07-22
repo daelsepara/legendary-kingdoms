@@ -33,6 +33,8 @@ namespace Monster
 
         int Auto = 0;
 
+        int Round = 0;
+
         Monster::Type Type = Monster::Type::NORMAL;
 
         bool Damaged = false;
@@ -56,6 +58,25 @@ namespace Monster
             MaximumHealth = health;
 
             Auto = damage;
+        }
+
+        Base(const char *name, int attack, int difficulty, int defence, int health, int damage, int round)
+        {
+            Name = name;
+
+            Attack = attack;
+
+            Difficulty = difficulty;
+
+            Defence = defence;
+
+            Health = health;
+
+            MaximumHealth = health;
+
+            Auto = damage;
+
+            Round = round;
         }
 
         Base(const char *name, Monster::Type type, int attack, int difficulty, int defence, int health, int damage)

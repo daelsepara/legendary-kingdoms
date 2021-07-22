@@ -312,6 +312,17 @@ namespace Choice
             Value = value;
         }
 
+        Base(const char *text, Engine::Destination destination, Choice::Type type, Location::Type location)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Location = location;
+        }
+
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Cargo::Type> delivery, Location::Type location, int value)
         {
             Text = text;

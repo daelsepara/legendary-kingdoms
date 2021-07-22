@@ -2809,10 +2809,10 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, -87001}; }
     };
 
-    class Event087_001 : public Story::Base
+    class E087_001 : public Story::Base
     {
     public:
-        Event087_001()
+        E087_001()
         {
             BookID = Book::Type::BOOK1;
 
@@ -2829,12 +2829,12 @@ namespace Book1
         }
     };
 
-    class Event087_002 : public Story::Base
+    class E087_002 : public Story::Base
     {
     public:
         std::string PreText = "";
 
-        Event087_002()
+        E087_002()
         {
             BookID = Book::Type::BOOK1;
 
@@ -2869,10 +2869,10 @@ namespace Book1
         }
     };
 
-    class Event087_003 : public Story::Base
+    class E087_003 : public Story::Base
     {
     public:
-        Event087_003()
+        E087_003()
         {
             BookID = Book::Type::BOOK1;
 
@@ -3641,7 +3641,7 @@ namespace Book1
             }
             else
             {
-
+                Monsters.clear();
             }
         }
 
@@ -3666,6 +3666,251 @@ namespace Book1
 
                 destination = {Book::Type::BOOK1, 468};
             }
+        }
+    };
+
+    class Story112 : public Story::Base
+    {
+    public:
+        Story112()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 112;
+
+            Text = "Your new crew cheer as you come aboard. The ship is large and shabbily built -- but perhaps you can make something of it?\n\n[HULK] Fighting: 3, Health: 5, Cargo: 3 units\n\nNote: Your new ship is in Mordian harbour. What will you do now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Depart in your new ship", {Book::Type::BOOK1, 851}, Choice::Type::SHIP, Location::Type::MORDIAN));
+            Choices.push_back(Choice::Base("Enter the wide tunnel", {Book::Type::BOOK1, 593}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SET_LOCATION(party, Location::Type::MORDIAN);
+
+            party.Fleet.push_back(Ship::Base("HULK", Ship::Type::HULK, Location::Type::MORDIAN, 3, 5, 3));
+        }
+    };
+
+    class Story113 : public Story::Base
+    {
+    public:
+        Story113()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 113;
+
+            Text = "You are travelling along the Northroad that stretches between Cursus and Luutanesh. Armed convoys from the mystical city of Chalice roll by, along with scores of travellers. Watering stops dot the ragged highway, with merchants paying a few silver coins a time to feed their labouring dragonyaks.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Random Event", {{1, NULL, {Book::Type::BOOK1, 694}}, {6, NULL, {Book::Type::BOOK1, 477}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story114 : public Story::Base
+    {
+    public:
+        Story114()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 114;
+
+            Text = "You cautiously peek into the room. Before you are four enormous orcs, armed to the teeth. Fortunately all four are dead, victims of a poisoning. It is a coward's weapon; but very effective!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 669}; }
+    };
+
+    class Story115 : public Story::Base
+    {
+    public:
+        Story115()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 115;
+
+            Image = "images/book1/rocky_desert.png";
+
+            Text = "You are travelling across a stretch of rocky desert, that rolls and twists into great gulches and canyons. Paths have been worn into the stone from hundreds of years of travel by nomads and barbarians who avoid the well-guarded roads that link the cities. It is hot and dry, and getting lost is a distinct possibility.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Navigate the Withered Steppes (Team: Survival 4+, Successes: 3)", {Book::Type::BOOK1, -115001}, {Book::Type::BOOK1, -115002}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (!outcome)
+            {
+                Bye = "Each party member loses 1 Health point as your rations dwindle.";
+
+                Engine::GAIN_HEALTH(party.Party, -1);
+            }
+            else
+            {
+                Bye = NULL;
+            }
+        }
+    };
+
+    class E115_001 : public Story::Base
+    {
+    public:
+        E115_001()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -115001;
+
+            DisplayID = 115;
+
+            Image = "images/book1/rocky_desert.png";
+
+            Text = "You manage to get your bearings enough to explore your surroundings.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Look for a nomad camp", {Book::Type::BOOK1, 253}));
+            Choices.push_back(Choice::Base("Explore some of the canyons", {Book::Type::BOOK1, 884}));
+            Choices.push_back(Choice::Base("Go west to the Granite Hills", {Book::Type::BOOK1, 275}));
+            Choices.push_back(Choice::Base("Go southwest into the deep desert", {Book::Type::BOOK1, 202}));
+            Choices.push_back(Choice::Base("Go south to the Temple of the Unbroken", {Book::Type::BOOK1, 535}));
+            Choices.push_back(Choice::Base("Go east to the Northroad", {Book::Type::BOOK1, 113}));
+            Choices.push_back(Choice::Base("Go northeast to Luutanesh", {Book::Type::BOOK1, 614}));
+            Choices.push_back(Choice::Base("Go north to the Westroad", {Book::Type::BOOK1, 177}));
+            Choices.push_back(Choice::Base("Go northeast towards Saltdad", {Book::Type::BOOK1, 858}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class E115_002 : public Story::Base
+    {
+    public:
+        E115_002()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -115002;
+
+            DisplayID = 115;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 115}; }
+    };
+
+    class Story116 : public Story::Base
+    {
+    public:
+        Story116()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 116;
+
+            Text = "You creep across the landing, looting rooms as you go.\n\nNote: Only members of the Wall-climbing team may help with the check.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::WALL_CLIMBING_AND_DOOR}))
+            {
+                Choices.push_back(Choice::Base("Rob the upper floor (Team: Stealth 4+, Successes: 5)", {Book::Type::BOOK1, 22}, {Book::Type::BOOK1, 529}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 4, 5));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Rob the upper floor (Team: Stealth 4+, Successes: 5)", {Book::Type::BOOK1, 22}, {Book::Type::BOOK1, 529}, Team::Type::WALL_CLIMBING, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 4, 5));
+            }
+        }
+    };
+
+    class Story117 : public Story::Base
+    {
+    public:
+        Story117()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 117;
+
+            Text = "Battle is joined! The ogre lumbers to its feet and attacks. Unbeknownst to you, the ogre's mate, Daisy, is not far away.\n\nNote: After the second round of combat she will join in the fight.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Skullcracker", 8, 4, 4, 12, 0),
+                Monster::Base("Daisy", 9, 4, 4, 13, 0, 2)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 431}; }
+    };
+
+    class Story118 : public Story::Base
+    {
+    public:
+        Story118()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 118;
+
+            Text = "You try to elbow your way through the crowd, but by the time you have reached the carcass it has been almost stripped clean. You are forced to gnaw on empty bones, feeding on marrow and almost inedible ligaments. The lack of food begins to drain your spirits.\n\nEach Party Member must LOSES 1 Health point.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party.Party, -1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 865}; }
+    };
+
+    class Story119 : public Story::Base
+    {
+    public:
+        Story119()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 119;
+
+            Text = "Pick a party member to read the book.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Make your choice", {Book::Type::BOOK1, 839}, Choice::Type::CHOOSE_PARTY_MEMBER));
+
+            Controls = Story::Controls::STANDARD;
         }
     };
 
@@ -3764,9 +4009,9 @@ namespace Book1
     auto story085 = Story085();
     auto story086 = Story086();
     auto story087 = Story087();
-    auto event087_001 = Event087_001();
-    auto event087_002 = Event087_002();
-    auto event087_003 = Event087_003();
+    auto e087_001 = E087_001();
+    auto e087_002 = E087_002();
+    auto e087_003 = E087_003();
     auto story088 = Story088();
     auto story089 = Story089();
     auto event089 = Event089();
@@ -3794,13 +4039,22 @@ namespace Book1
     auto story109 = Story109();
     auto story110 = Story110();
     auto story111 = Story111();
+    auto story112 = Story112();
+    auto story113 = Story113();
+    auto story114 = Story114();
+    auto story115 = Story115();
+    auto e115_001 = E115_001();
+    auto e115_002 = E115_002();
+    auto story116 = Story116();
+    auto story117 = Story117();
+    auto story118 = Story118();
+    auto story119 = Story119();
 
     void InitializeStories()
     {
         Book1::Stories = {
-            &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078,
-            &event087_001, &event087_002, &event087_003,
-            &event089, &event098, &event102,
+            &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
+            &e087_003, &event089, &event098, &event102, &e115_001, &e115_002,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -3812,7 +4066,7 @@ namespace Book1
             &story080, &story081, &story082, &story083, &story084, &story085, &story086, &story087, &story088, &story089,
             &story090, &story091, &story092, &story093, &story094, &story095, &story096, &story097, &story098, &story099,
             &story100, &story101, &story102, &story103, &story104, &story105, &story106, &story107, &story108, &story109,
-            &story110, &story111};
+            &story110, &story111, &story112, &story113, &story114, &story115, &story116, &story117, &story118, &story119};
     }
 }
 #endif

@@ -14,7 +14,8 @@ namespace Ship
         COG,
         CURSITE_WAR_GALLEY,
         WAR_GALLEY,
-        CARRACK
+        CARRACK,
+        HULK
     };
 
     class Base

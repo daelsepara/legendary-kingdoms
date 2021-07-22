@@ -63,9 +63,9 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
 int assignDamage(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, Team::Type team);
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment);
-int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, Control::Type mode);
+int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, int combatRound, Control::Type mode);
 int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> &party, std::vector<Monster::Base> &monsters, Spells::Base &spell, int combatant, int opponent, int fighting_score);
-int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets);
+int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets, int combatRound);
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Equipment::Base equipment, Control::Type mode);
 
 Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
@@ -5409,7 +5409,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
     return select_result;
 }
 
-int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets)
+int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets, int combatRound)
 {
     auto result = -1;
 
@@ -5495,11 +5495,18 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                     {
                         if (selection == offset + i)
                         {
-                            thickRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intLB, 2);
+                            thickRect(renderer, controls[i].W - 8, controls[i].H - 8, controls[i].X + 4, controls[i].Y + 4, intLB, 2);
                         }
                         else if (monsters[offset + i].Health > 0)
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            if (combatRound >= monsters[offset + i].Round)
+                            {
+                                drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            }
+                            else
+                            {
+                                thickRect(renderer, controls[i].W - 8, controls[i].H - 8, controls[i].X + 4, controls[i].Y + 4, intGR, 2);
+                            }
                         }
                         else
                         {
@@ -5544,9 +5551,84 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
 
                 done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
-                if (selected && current >= 0 && current < controls.size())
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
                 {
-                    if (controls[current].Type == Control::Type::BACK)
+                    if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > monsters.size())
+                            {
+                                last = monsters.size();
+                            }
+
+                            controls.clear();
+
+                            controls = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, true, false);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                    {
+                        if (monsters.size() - last > 0)
+                        {
+                            if (offset < monsters.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > monsters.size() - limit)
+                            {
+                                offset = monsters.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > monsters.size())
+                            {
+                                last = monsters.size();
+                            }
+
+                            controls.clear();
+
+                            controls = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, true, false);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (monsters.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::BACK)
                     {
                         done = true;
 
@@ -5613,9 +5695,19 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                             }
                             else
                             {
-                                if (monsters[current + offset].Health > 0)
+                                if (monsters[current + offset].Health > 0 && combatRound >= monsters[current + offset].Round)
                                 {
                                     selection = current + offset;
+                                }
+                                else if (monsters[current + offset].Health > 0 && combatRound < monsters[current + offset].Round)
+                                {
+                                    flash_message = true;
+
+                                    message = std::string(monsters[current + offset].Name) + std::string(" has not joined the battle yet!");
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intRD;
                                 }
                                 else
                                 {
@@ -6005,7 +6097,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
     return test_result;
 }
 
-int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, Control::Type mode)
+int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, int combatRound, Control::Type mode)
 {
     auto result = -1;
 
@@ -6221,17 +6313,17 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                                                 }
                                                 else if (party.Party[selection].SpellBook[i].Type == Spells::Type::ICE_BOLT)
                                                 {
-                                                    if (Engine::COUNT(monsters) > 0)
+                                                    if (Engine::COUNT(monsters, combatRound) > 0)
                                                     {
                                                         auto target = -1;
 
-                                                        if (Engine::COUNT(monsters) == 1)
+                                                        if (Engine::COUNT(monsters, combatRound) == 1)
                                                         {
-                                                            target = Engine::FIRST(monsters);
+                                                            target = Engine::FIRST(monsters, combatRound);
                                                         }
                                                         else
                                                         {
-                                                            target = selectOpponent(window, renderer, monsters, {});
+                                                            target = selectOpponent(window, renderer, monsters, {}, combatRound);
                                                         }
 
                                                         if (target >= 0)
@@ -6257,17 +6349,17 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                                                 }
                                                 else if (party.Party[selection].SpellBook[i].Type == Spells::Type::UNFAILING_STRIKE)
                                                 {
-                                                    if (Engine::COUNT(monsters) > 0)
+                                                    if (Engine::COUNT(monsters, combatRound) > 0)
                                                     {
                                                         auto target = -1;
 
-                                                        if (Engine::COUNT(monsters) == -1)
+                                                        if (Engine::COUNT(monsters, combatRound) == 1)
                                                         {
-                                                            target = Engine::FIRST(monsters);
+                                                            target = Engine::FIRST(monsters, combatRound);
                                                         }
                                                         else
                                                         {
-                                                            target = selectOpponent(window, renderer, monsters, {});
+                                                            target = selectOpponent(window, renderer, monsters, {}, combatRound);
                                                         }
 
                                                         if (target >= 0)
@@ -6292,9 +6384,9 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                                                 }
                                                 else if (party.Party[selection].SpellBook[i].Type == Spells::Type::POSION_STREAM)
                                                 {
-                                                    if (Engine::COUNT(monsters) > 0)
+                                                    if (Engine::COUNT(monsters, combatRound) > 0)
                                                     {
-                                                        auto max_targets = std::min(2, Engine::COUNT(monsters));
+                                                        auto max_targets = std::min(2, Engine::COUNT(monsters, combatRound));
 
                                                         auto targets = std::vector<int>();
 
@@ -6302,13 +6394,13 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                                                         {
                                                             auto target = -1;
 
-                                                            if (Engine::COUNT(monsters) == 1)
+                                                            if (Engine::COUNT(monsters, combatRound) == 1)
                                                             {
-                                                                target = Engine::FIRST(monsters);
+                                                                target = Engine::FIRST(monsters, combatRound);
                                                             }
                                                             else
                                                             {
-                                                                target = selectOpponent(window, renderer, monsters, targets);
+                                                                target = selectOpponent(window, renderer, monsters, targets, combatRound);
                                                             }
 
                                                             if (target >= 0)
@@ -6592,7 +6684,21 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         }
                         else if (party.Party[index].Health > 0)
                         {
-                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                            if (team != Team::Type::NONE)
+                            {
+                                if (party.Party[index].Team == team)
+                                {
+                                    drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                                }
+                                else
+                                {
+                                    thickRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intGR, 2);
+                                }
+                            }
+                            else
+                            {
+                                drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                            }
                         }
                         else
                         {
@@ -7160,7 +7266,21 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         }
                         else if (party.Party[offset + i].Health > 0)
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            if (team != Team::Type::NONE)
+                            {
+                                if (party.Party[offset + i].Team == team)
+                                {
+                                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                }
+                                else
+                                {
+                                    thickRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intGR, 2);
+                                }
+                            }
+                            else
+                            {
+                                drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            }
                         }
                         else
                         {
@@ -7484,6 +7604,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         const char *choices_attack[4] = {"VIEW PARTY", "ATTACK", "CAST SPELL", "FLEE"};
         const char *choices_defend[4] = {"VIEW PARTY", "DEFEND", "CAST SPELL", "FLEE"};
+        const char *choices_next[4] = {"VIEW PARTY", "NEXT ROUND", "CAST SPELL", "FLEE"};
 
         std::vector<TextButton> controls;
 
@@ -7546,7 +7667,18 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             while (!done)
             {
-                if (hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team))
+                auto last = offset + limit;
+
+                if (last > monsters.size())
+                {
+                    last = monsters.size();
+                }
+
+                if (Engine::COUNT(monsters, combatRound) == 0)
+                {
+                    controls = createHTextButtons(choices_next, 4, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                }
+                else if (hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team))
                 {
                     controls = createHTextButtons(choices_attack, 4, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
                 }
@@ -7575,7 +7707,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 {
                     if (monsters[offset + i].Health > 0)
                     {
-                        drawRect(renderer, monster_list[i].W, monster_list[i].H, monster_list[i].X, monster_list[i].Y, intBK);
+                        if (combatRound < monsters[offset + i].Round)
+                        {
+                            thickRect(renderer, monster_list[i].W - 8, monster_list[i].H - 8, monster_list[i].X + 4, monster_list[i].Y + 4, intGR, 2);
+                        }
+                        else
+                        {
+                            drawRect(renderer, monster_list[i].W, monster_list[i].H, monster_list[i].X, monster_list[i].Y, intBK);
+                        }
                     }
                     else
                     {
@@ -7697,7 +7836,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::ATTACK)
                     {
-                        if (Engine::COUNT(party.Party, team) > 0 && hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team))
+                        if (Engine::COUNT(party.Party, team) > 0 && hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team) && Engine::COUNT(monsters, combatRound) > 0)
                         {
                             auto result = -1;
 
@@ -7737,17 +7876,17 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     if (adventurer.Health > 0)
                                     {
-                                        if (Engine::COUNT(monsters) > 0)
+                                        if (Engine::COUNT(monsters, combatRound) > 0)
                                         {
                                             auto attack = -1;
 
-                                            if (Engine::COUNT(monsters) == 1)
+                                            if (Engine::COUNT(monsters, combatRound) == 1)
                                             {
-                                                attack = Engine::FIRST(monsters);
+                                                attack = Engine::FIRST(monsters, combatRound);
                                             }
                                             else
                                             {
-                                                attack = selectOpponent(window, renderer, monsters, {});
+                                                attack = selectOpponent(window, renderer, monsters, {}, combatRound);
                                             }
 
                                             if (attack >= 0)
@@ -7797,19 +7936,19 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                         }
 
-                        if (hasAttacked.size() >= Engine::COUNT(party.Party, team))
+                        if (hasAttacked.size() >= Engine::COUNT(party.Party, team) || Engine::COUNT(monsters, combatRound) == 0)
                         {
-                            if (Engine::COUNT(monsters) > 0)
+                            if (Engine::COUNT(monsters, combatRound) > 0)
                             {
                                 for (auto i = 0; i < monsters.size(); i++)
                                 {
-                                    if (monsters[i].Health > 0 && Engine::COUNT(party.Party, team) > 0)
+                                    if (monsters[i].Health > 0 && Engine::COUNT(party.Party, team) > 0 && combatRound >= monsters[i].Round)
                                     {
-                                        if (monsters[i].Type == Monster::Type::ZEALOT_HEALER && Engine::COUNT(monsters) == 1)
+                                        if (monsters[i].Type != Monster::Type::ZEALOT_HEALER)
                                         {
                                             attackScreen(window, renderer, party, team, monsters, -1, i, 1, useEquipment);
                                         }
-                                        else
+                                        else if (Engine::COUNT(monsters) == 1)
                                         {
                                             attackScreen(window, renderer, party, team, monsters, -1, i, 1, useEquipment);
                                         }
@@ -7890,7 +8029,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                                 else
                                 {
-                                    auto result = castSpell(window, renderer, party, team, monsters, hasAttacked, Control::Type::COMBAT);
+                                    auto result = castSpell(window, renderer, party, team, monsters, hasAttacked, combatRound, Control::Type::COMBAT);
 
                                     if (result >= 0 && result < party.Party.size())
                                     {
@@ -11201,7 +11340,14 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::SHIP)
                         {
-                            if (Engine::HAS_SHIP(party, party.Location))
+                            auto location = story->Choices[choice].Location;
+
+                            if (location == Location::Type::NONE)
+                            {
+                                location = party.Location;
+                            }
+
+                            if (Engine::HAS_SHIP(party, location))
                             {
                                 next = findStory(story->Choices[choice].Destination);
 
@@ -11213,7 +11359,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 error = true;
 
-                                message = "You do not a ship at this location!";
+                                message = "You do not have a ship at this location!";
 
                                 start_ticks = SDL_GetTicks();
                             }

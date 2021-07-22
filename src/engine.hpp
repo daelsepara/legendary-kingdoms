@@ -405,6 +405,21 @@ namespace Engine
         return result;
     }
 
+    int COUNT(std::vector<Monster::Base> &monsters, int round)
+    {
+        auto result = 0;
+
+        for (auto i = 0; i < monsters.size(); i++)
+        {
+            if (monsters[i].Health > 0 && round >= monsters[i].Round)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
     int COUNT(std::vector<Character::Base> &adventurers)
     {
         auto result = 0;
@@ -1462,6 +1477,23 @@ namespace Engine
         for (auto i = 0; i < monsters.size(); i++)
         {
             if (monsters[i].Health > 0)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIRST(std::vector<Monster::Base> &monsters, int round)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < monsters.size(); i++)
+        {
+            if (monsters[i].Health > 0 && round >= monsters[i].Round)
             {
                 result = i;
 
