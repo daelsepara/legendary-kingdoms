@@ -577,6 +577,108 @@ void renderTextButtons(SDL_Renderer *renderer, std::vector<TextButton> controls,
     }
 }
 
+void renderTextButtons(SDL_Renderer *renderer, std::vector<TextButton> controls, const char *ttf, int selected, SDL_Color fg, Uint32 bg, Uint32 bgSelected, int fontsize, int offsetx, int scrolly, bool hide_scroll, int style = TTF_STYLE_NORMAL)
+{
+    if (controls.size() > 0)
+    {
+        for (auto i = 0; i < controls.size(); i++)
+        {
+            if (!hide_scroll && (controls[i].Type == Control::Type::SCROLL_UP || controls[i].Type == Control::Type::SCROLL_DOWN))
+            {
+                auto space = 8;
+                auto pts = 4;
+
+                SDL_Surface *button_surface = NULL;
+
+                if (controls[i].Type == Control::Type::SCROLL_UP)
+                {
+                    button_surface = createImage("icons/up-arrow.png");
+
+                    if (button_surface)
+                    {
+                        renderImage(renderer, button_surface, offsetx, texty + border_space);
+                    }
+                }
+                else
+                {
+                    button_surface = createImage("icons/down-arrow.png");
+
+                    if (button_surface)
+                    {
+                        renderImage(renderer, button_surface, offsetx, scrolly);
+                    }
+                }
+
+                if (i == selected)
+                {
+                    for (auto size = pts; size >= 0; size--)
+                    {
+                        auto Y = controls[i].Type == Control::Type::SCROLL_UP ? texty + border_space : scrolly;
+
+                        if (i == selected)
+                        {
+                            SDL_Rect rect;
+
+                            rect.w = controls[i].W + 2 * (space - size);
+                            rect.h = controls[i].H + 2 * (space - size);
+                            rect.x = controls[i].X - space + size;
+                            rect.y = controls[i].Y - space + size;
+
+                            SDL_SetRenderDrawColor(renderer, R(bgSelected), G(bgSelected), B(bgSelected), A(bgSelected));
+                            SDL_RenderDrawRect(renderer, &rect);
+                        }
+                    }
+                }
+
+                if (button_surface)
+                {
+                    SDL_FreeSurface(button_surface);
+
+                    button_surface = NULL;
+                }
+            }
+            else if (controls[i].Type != Control::Type::SCROLL_UP && controls[i].Type != Control::Type::SCROLL_DOWN)
+            {
+                auto text = createText(controls[i].Text, ttf, fontsize, fg, controls[i].W, style);
+
+                auto x = controls[i].X + (controls[i].W - text->w) / 2;
+                auto y = controls[i].Y + (controls[i].H - text->h) / 2;
+
+                SDL_Rect rect;
+
+                rect.w = controls[i].W;
+                rect.h = controls[i].H;
+                rect.x = controls[i].X;
+                rect.y = controls[i].Y;
+
+                if (i == selected)
+                {
+                    SDL_SetRenderDrawColor(renderer, R(bgSelected), G(bgSelected), B(bgSelected), A(bgSelected));
+                }
+                else
+                {
+                    SDL_SetRenderDrawColor(renderer, R(bg), G(bg), B(bg), A(bg));
+                }
+
+                SDL_RenderFillRect(renderer, &rect);
+
+                if (i == selected)
+                {
+                    renderText(renderer, text, bgSelected, x, y, 2 * fontsize, 0);
+                }
+                else
+                {
+                    renderText(renderer, text, bg, x, y, 2 * fontsize, 0);
+                }
+
+                SDL_FreeSurface(text);
+
+                text = NULL;
+            }
+        }
+    }
+}
+
 void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts)
 {
     if (controls.size() > 0)
@@ -585,21 +687,51 @@ void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int cur
         {
             SDL_Rect rect;
 
-            for (auto size = pts; size >= 0; size--)
+            if (i == current)
             {
-                rect.w = controls[i].W + 2 * (space - size);
-                rect.h = controls[i].H + 2 * (space - size);
-                rect.x = controls[i].X - space + size;
-                rect.y = controls[i].Y - space + size;
-
-                if (i == current)
+                for (auto size = pts; size >= 0; size--)
                 {
+                    rect.w = controls[i].W + 2 * (space - size);
+                    rect.h = controls[i].H + 2 * (space - size);
+                    rect.x = controls[i].X - space + size;
+                    rect.y = controls[i].Y - space + size;
+
                     SDL_SetRenderDrawColor(renderer, R(fg), G(fg), B(fg), A(fg));
                     SDL_RenderDrawRect(renderer, &rect);
                 }
             }
 
             renderImage(renderer, controls[i].Surface, controls[i].X, controls[i].Y);
+        }
+    }
+}
+
+void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts, bool hide_scroll)
+{
+    if (controls.size() > 0)
+    {
+        for (auto i = 0; i < controls.size(); i++)
+        {
+            if (!hide_scroll || (controls[i].Type != Control::Type::SCROLL_UP && controls[i].Type != Control::Type::SCROLL_DOWN))
+            {
+                SDL_Rect rect;
+
+                for (auto size = pts; size >= 0; size--)
+                {
+                    rect.w = controls[i].W + 2 * (space - size);
+                    rect.h = controls[i].H + 2 * (space - size);
+                    rect.x = controls[i].X - space + size;
+                    rect.y = controls[i].Y - space + size;
+
+                    if (i == current)
+                    {
+                        SDL_SetRenderDrawColor(renderer, R(fg), G(fg), B(fg), A(fg));
+                        SDL_RenderDrawRect(renderer, &rect);
+                    }
+                }
+
+                renderImage(renderer, controls[i].Surface, controls[i].X, controls[i].Y);
+            }
         }
     }
 }
@@ -630,6 +762,48 @@ std::vector<TextButton> createHTextButtons(const char **choices, int num, int te
             auto x = text_x + i * (text_buttonw + text_space * 2) + text_space;
 
             auto button = TextButton(i, choices[i], left, right, up, down, x, text_y, text_buttonw, text_buttonh);
+
+            controls.push_back(button);
+        }
+    }
+
+    return controls;
+}
+
+std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y, bool has_scrolls)
+{
+    if (!has_scrolls)
+    {
+        return createHTextButtons(choices, num, text_buttonh, text_x, text_y);
+    }
+
+    auto controls = std::vector<TextButton>();
+
+    if (num > 0)
+    {
+        auto margin2 = (2.0 * Margin);
+        auto marginleft = (1.0 - margin2);
+
+        auto pixels = (int)(SCREEN_WIDTH * Margin) / 2;
+        auto width = (int)(SCREEN_WIDTH * marginleft);
+
+        auto text_spacew = width / num;
+        auto text_buttonw = text_spacew - pixels;
+        auto text_space = pixels / 2;
+
+        controls.push_back(TextButton(0, "", 0, 0, 0, 1, -1, -1, 32, 32, Control::Type::SCROLL_UP));
+        controls.push_back(TextButton(1, "", 1, 1, 0, 2, -1, -1, 32, 32, Control::Type::SCROLL_DOWN));
+
+        for (auto i = 0; i < num; i++)
+        {
+            auto left = i > 0 ? i + 1 : i + 2;
+            auto right = i < num - 1 ? i + 3 : i + 2;
+            auto up = 1;
+            auto down = i + 2;
+
+            auto x = text_x + i * (text_buttonw + text_space * 2) + text_space;
+
+            auto button = TextButton(i + 2, choices[i], left, right, up, down, x, text_y, text_buttonw, text_buttonh);
 
             controls.push_back(button);
         }
@@ -1541,6 +1715,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 {
     SDL_Surface *adventurer = NULL;
     SDL_Surface *text = NULL;
+    SDL_Surface *code_text = NULL;
 
     auto *title = "Legendary Kingdoms: View Party";
 
@@ -1558,6 +1733,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
     auto box_space = 10;
     auto character_box = (int)(text_bounds * 2 / 3);
+    auto offset = 0;
 
     // Render window
     if (window && renderer)
@@ -1566,7 +1742,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
         const char *choices[6] = {"PARTY", "PREVIOUS", "NEXT", "EQUIPMENT", "SPELLBOOK", "BACK"};
 
-        auto current = 0;
+        auto current = 2;
 
         auto selected = false;
 
@@ -1576,14 +1752,21 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
 
-        auto controls = createHTextButtons(choices, 6, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+        auto controls = createHTextButtons(choices, 6, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh), true);
 
-        controls[0].Type = Control::Type::PARTY;
-        controls[1].Type = Control::Type::MINUS;
-        controls[2].Type = Control::Type::PLUS;
-        controls[3].Type = Control::Type::EQUIPMENT;
-        controls[4].Type = Control::Type::SPELLBOOK;
-        controls[5].Type = Control::Type::BACK;
+        auto scrolly = texty + text_bounds - arrow_size - border_space;
+        auto offsetx = (int)((1.0 - Margin) * SCREEN_WIDTH) - arrow_size;
+
+        controls[0].X = offsetx;
+        controls[0].Y = texty + border_space;
+        controls[1].X = offsetx;
+        controls[1].Y = scrolly;
+        controls[2].Type = Control::Type::PARTY;
+        controls[3].Type = Control::Type::MINUS;
+        controls[4].Type = Control::Type::PLUS;
+        controls[5].Type = Control::Type::EQUIPMENT;
+        controls[6].Type = Control::Type::SPELLBOOK;
+        controls[7].Type = Control::Type::BACK;
 
         auto done = false;
 
@@ -1591,9 +1774,9 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
         auto Party = Party::Base();
 
-        auto summary_view = true;
-
         auto character = 0;
+
+        auto current_mode = Control::Type::PARTY;
 
         if (character >= 0 && character < party.Party.size())
         {
@@ -1619,6 +1802,25 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
             text = createText(characterText(party.Party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
         }
 
+        if (party.Codes.size() > 0)
+        {
+            std::string code_string = "";
+
+            for (auto i = 0; i < party.Codes.size(); i++)
+            {
+                if (i > 0)
+                {
+                    code_string += ", ";
+                }
+
+                code_string += std::string(Codes::Prefix[party.Codes[i].Type]) + std::to_string(party.Codes[i].Code);
+            }
+
+            code_text = createText(code_string.c_str(), FONT_MASON, 24, clrBK, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+        }
+
+        auto compact = (code_text && code_text->h <= text_bounds - infoh - 2 * text_space) || code_text == NULL;
+
         while (!done)
         {
             // Fill the surface with background
@@ -1626,7 +1828,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
             auto adventurerh = splashw;
 
-            if (current != 0 && adventurer != NULL && !summary_view)
+            if (current_mode != Control::Type::PARTY && adventurer != NULL)
             {
                 adventurerh = fitImage(renderer, adventurer, startx, starty, splashw, text_bounds);
             }
@@ -1668,36 +1870,27 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
                 putHeader(renderer, "Codes", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                fillRect(renderer, textwidth, (character_box - infoh), textx, (texty + infoh), intBE);
+                fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
-                std::string code_string = "";
-
-                for (auto i = 0; i < party.Codes.size(); i++)
+                if (code_text)
                 {
-                    if (i > 0)
-                    {
-                        code_string += ", ";
-                    }
-
-                    code_string += std::string(Codes::Prefix[party.Codes[i].Type]) + std::to_string(party.Codes[i].Code);
+                    renderText(renderer, code_text, intBE, textx + text_space, texty + infoh + text_space, text_bounds - infoh - 2 * text_space, offset);
                 }
-
-                putText(renderer, code_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth - 2 * text_space, (character_box - infoh - 2 * text_space), textx, (texty + infoh));
             }
 
-            if (current != 0 && text != NULL && !summary_view)
+            if (current_mode != Control::Type::PARTY && text != NULL)
             {
                 fillRect(renderer, textwidth, character_box, textx, texty, intBE);
 
-                renderText(renderer, text, intBE, textx + text_space, texty + text_space, character_box, 0);
+                renderText(renderer, text, intBE, textx + text_space, texty + text_space, character_box - 2 * text_space, 0);
             }
 
-            if (current != 0 && character >= 0 && character < party.Party.size() && adventurer && !summary_view)
+            if (current_mode != Control::Type::PARTY && character >= 0 && character < party.Party.size() && adventurer)
             {
                 putText(renderer, party.Party[character].Name, font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
             }
 
-            if (current != 0 && character >= 0 && character < party.Party.size() && !summary_view)
+            if (current_mode != Control::Type::PARTY && character >= 0 && character < party.Party.size())
             {
                 if ((party.Party[character].Status.size() > 0) || (party.Party[character].Team != Team::Type::NONE && !Engine::IS_CHARACTER(party.Party[character].Team)))
                 {
@@ -1737,9 +1930,9 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                 }
             }
 
-            if (current >= 0 && current < controls.size() && !summary_view)
+            if (current_mode != Control::Type::PARTY)
             {
-                if (controls[current].Type == Control::Type::SPELLBOOK && party.Party[character].SpellCaster && party.Party[character].SpellBook.size() > 0)
+                if (current_mode == Control::Type::SPELLBOOK && party.Party[character].SpellCaster && party.Party[character].SpellBook.size() > 0)
                 {
                     putHeader(renderer, "SPELLBOOK", font_mason2, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
@@ -1757,7 +1950,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
                     putText(renderer, spellbook_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
-                else if (controls[current].Type == Control::Type::EQUIPMENT && party.Party[character].Equipment.size() > 0)
+                else if (current_mode == Control::Type::EQUIPMENT && party.Party[character].Equipment.size() > 0)
                 {
                     putHeader(renderer, "EQUIPMENT", font_mason2, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
@@ -1804,29 +1997,63 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                 }
             }
 
-            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, offsetx, scrolly, ((current_mode != Control::Type::PARTY || compact) ? true : false), TTF_STYLE_NORMAL);
 
             bool scrollUp = false;
             bool scrollDown = false;
             bool hold = false;
+            int scrollSpeed = 20;
 
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
-            if (current == 0)
+            if (current == 2)
             {
-                summary_view = true;
+                current_mode = Control::Type::PARTY;
             }
-            else if (current > 0)
+            else if (current > 2)
             {
-                if (current < controls.size() && controls[current].Type != Control::Type::BACK)
+                if (current > 2 && current < controls.size() && controls[current].Type != Control::Type::BACK)
                 {
-                    summary_view = false;
+                    current_mode = controls[current].Type;
                 }
             }
 
-            if (selected && current >= 0 && current < controls.size())
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
             {
-                if (controls[current].Type == Control::Type::PARTY)
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (code_text)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+                        }
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                {
+                    if (code_text)
+                    {
+                        if (code_text->h >= text_bounds - 2 * text_space - infoh)
+                        {
+                            if (offset < code_text->h - text_bounds + 2 * text_space + infoh)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > code_text->h - text_bounds + 2 * text_space + infoh)
+                            {
+                                offset = code_text->h - text_bounds + 2 * text_space + infoh;
+                            }
+                        }
+                    }
+                }
+                else if (controls[current].Type == Control::Type::PARTY && !hold)
                 {
                     partyDetails(window, renderer, party);
 
@@ -1834,7 +2061,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::MINUS)
+                else if (controls[current].Type == Control::Type::MINUS && !hold)
                 {
                     if (character > 0)
                     {
@@ -1865,7 +2092,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                         text = createText(characterText(party.Party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
                     }
                 }
-                else if (controls[current].Type == Control::Type::PLUS)
+                else if (controls[current].Type == Control::Type::PLUS && !hold)
                 {
                     if (character < party.Party.size() - 1)
                     {
@@ -1896,7 +2123,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                         text = createText(characterText(party.Party[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
                     }
                 }
-                else if (controls[current].Type == Control::Type::EQUIPMENT)
+                else if (controls[current].Type == Control::Type::EQUIPMENT && !hold)
                 {
                     if (character >= 0 && character < party.Party.size())
                     {
@@ -1907,13 +2134,13 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::SPELLBOOK)
+                else if (controls[current].Type == Control::Type::SPELLBOOK && !hold)
                 {
                     done = false;
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::BACK)
+                else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
                     done = true;
 
@@ -1935,6 +2162,13 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
         SDL_FreeSurface(text);
 
         text = NULL;
+    }
+
+    if (code_text != NULL)
+    {
+        SDL_FreeSurface(code_text);
+
+        code_text = NULL;
     }
 
     if (font_mason)
