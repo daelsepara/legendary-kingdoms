@@ -4217,6 +4217,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         selected = false;
 
+                        combat_damage = -1;
+
                         break;
                     }
                     else if (stage == Engine::Attack::START && controls[current].Type == Control::Type::CONFIRM)
@@ -5077,7 +5079,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                     {
                         if (Engine::FIND_LIST(selection, offset + i) >= 0)
                         {
-                            thickRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intLB, 2);
+                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else if (spells[offset + i].Charged)
                         {
@@ -5495,7 +5497,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                     {
                         if (selection == offset + i)
                         {
-                            thickRect(renderer, controls[i].W - 8, controls[i].H - 8, controls[i].X + 4, controls[i].Y + 4, intLB, 2);
+                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else if (monsters[offset + i].Health > 0)
                         {
@@ -5505,7 +5507,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                             }
                             else
                             {
-                                thickRect(renderer, controls[i].W - 8, controls[i].H - 8, controls[i].X + 4, controls[i].Y + 4, intGR, 2);
+                                thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
                             }
                         }
                         else
@@ -5630,6 +5632,8 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                     }
                     else if (controls[current].Type == Control::Type::BACK)
                     {
+                        result = -1;
+
                         done = true;
 
                         current = -1;
@@ -6183,7 +6187,7 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                     {
                         if (selection == offset + i)
                         {
-                            thickRect(renderer, controls[i].W, controls[i].H, controls[i].X, controls[i].Y, intLB, 2);
+                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else if (party.Party[offset + i].Health > 0)
                         {
@@ -6680,7 +6684,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     {
                         if (Engine::FIND_LIST(selection, index) >= 0)
                         {
-                            thickRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intLB, 2);
+                            thickRect(renderer, controls[index].W + 4, controls[index].H + 4, controls[index].X - 2, controls[index].Y - 2, intLB, 2);
                         }
                         else if (party.Party[index].Health > 0)
                         {
@@ -6692,7 +6696,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                 }
                                 else
                                 {
-                                    thickRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intGR, 2);
+                                    thickRect(renderer, controls[index].W + 4, controls[index].H + 4, controls[index].X - 2, controls[index].Y - 2, intGR, 2);
                                 }
                             }
                             else
@@ -6976,7 +6980,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
                     {
                         if (selection == offset + i)
                         {
-                            thickRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intLB, 2);
+                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else
                         {
@@ -7262,7 +7266,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     {
                         if (selection == offset + i)
                         {
-                            thickRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intLB, 2);
+                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else if (party.Party[offset + i].Health > 0)
                         {
@@ -7274,7 +7278,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                 }
                                 else
                                 {
-                                    thickRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intGR, 2);
+                                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
                                 }
                             }
                             else
@@ -7284,7 +7288,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X + 4, controls[i].Y + 4, intRD);
                         }
                     }
                 }
@@ -7709,16 +7713,16 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     {
                         if (combatRound < monsters[offset + i].Round)
                         {
-                            thickRect(renderer, monster_list[i].W - 8, monster_list[i].H - 8, monster_list[i].X + 4, monster_list[i].Y + 4, intGR, 2);
+                            thickRect(renderer, monster_list[i].W + 4, monster_list[i].H + 4, monster_list[i].X - 2, monster_list[i].Y - 2, intGR, 2);
                         }
                         else
                         {
-                            drawRect(renderer, monster_list[i].W, monster_list[i].H, monster_list[i].X, monster_list[i].Y, intBK);
+                            drawRect(renderer, monster_list[i].W + 8, monster_list[i].H + 8, monster_list[i].X - 4, monster_list[i].Y - 4, intBK);
                         }
                     }
                     else
                     {
-                        drawRect(renderer, monster_list[i].W, monster_list[i].H, monster_list[i].X, monster_list[i].Y, intRD);
+                        drawRect(renderer, monster_list[i].W + 8, monster_list[i].H + 8, monster_list[i].X - 4, monster_list[i].Y - 4, intRD);
                     }
                 }
 
@@ -7893,11 +7897,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                             {
                                                 auto damage = attackScreen(window, renderer, party, team, monsters, result, attack, 0, useEquipment);
 
-                                                hasAttacked.push_back(result);
-
-                                                if (canFlee)
+                                                if (damage >= 0)
                                                 {
-                                                    canFlee = false;
+                                                    hasAttacked.push_back(result);
+
+                                                    if (canFlee)
+                                                    {
+                                                        canFlee = false;
+                                                    }
                                                 }
                                             }
                                             else
@@ -8403,6 +8410,12 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                     putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
+                else if (controls[current].Type == Control::Type::EQUIPMENT)
+                {
+                    std::string view_string = "View " + std::string(character.Name) + "'s items";
+
+                    putHeader(renderer, view_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
                 else
                 {
                     putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -8442,11 +8455,11 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (Engine::FIND_LIST(selection, offset + i) >= 0)
                 {
-                    thickRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intLB, 2);
+                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                 }
                 else
                 {
-                    drawRect(renderer, controls[i].W + 16, controls[i].H + 16, controls[i].X - 8, controls[i].Y - 8, intBK);
+                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
                 }
             }
         }
@@ -9400,11 +9413,11 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     if (Engine::FIND_LIST(selection, offset + i) >= 0)
                     {
-                        thickRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intLB, 2);
+                        thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + 2 * text_space, controls[i].H + 2 * text_space, controls[i].X - text_space, controls[i].Y - text_space, intBK);
+                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
                     }
                 }
             }
@@ -9661,11 +9674,11 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (Engine::FIND_LIST(selection, offset + i) >= 0)
                     {
-                        thickRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intLB, 2);
+                        thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + 2 * text_space, controls[i].H + 2 * text_space, controls[i].X - text_space, controls[i].Y - text_space, intBK);
+                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
                     }
                 }
             }
