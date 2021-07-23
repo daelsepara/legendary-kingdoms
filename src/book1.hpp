@@ -3914,6 +3914,154 @@ namespace Book1
         }
     };
 
+    class Story120 : public Story::Base
+    {
+    public:
+        Story120()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 120;
+
+            Text = "After days of wandering you finally reach the banks of a wide and fast-running river. You plunge your faces into the freshwater, drinking your fill. Following the river downstream you come to a shabby city perched atop a massive cliff.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story121 : public Story::Base
+    {
+    public:
+        Story121()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 121;
+
+            Text = "Concentrating tightly, you unfurl a magical spell of pure fire and roll it towards your flammable enemies. They have no defence against such terrible magic and are instantly consumed with a pitched wail. The smoke and glowing sheets force you back to the stairs for a time, but by the time their cries have subsided there is nothing left of the paper golems but ash.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 168}; }
+    };
+
+    class Story122 : public Story::Base
+    {
+    public:
+        Story122()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 122;
+
+            Text = "After strenuous negotiations the mercenaries finally agree to be discreetly absent during the battle tomorrow. Changing sides altogether would be a step too far for their precious reputations. This will have an enormous impact on the forthcoming battle.\n\nYou gained the code A96.";
+
+            Bye = "Wishing them a speedy journey to their homelands you return triumphant.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(96)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 301}; }
+    };
+
+    class Story123 : public Story::Base
+    {
+    public:
+        Story123()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 123;
+
+            Text = "Gurgling with effort, air bubbles blasting through the water from your mouth and nostrils, you finally wrench the block up high enough to get out. You roll under the block and through the shadow door, the stone block slamming down shut as you do so. You are soaking wet... but alive.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 717}; }
+    };
+
+    class Story124 : public Story::Base
+    {
+    public:
+        Story124()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 124;
+
+            Text = "The command tent contains half a dozen agents; men and women from Lhasbreath and Chalice rub shoulders with freed slaves from Saltdad and Clifftop. You stand by the Everchild's side as she offers commissions.\n\n\"There are three tasks that must be done tonight,\" she says quietly. \"The assassination of Descantos, the hired wizard of Cursus. Convincing the mercenaries to abandon the patriarch's cause. And lastly, seeing to my personal security tonight. Each is important.\"\n\nShe turns to you. \"Which of these missions, my friends, will you undertake?\"\n\nYou must now decide how many missions your party will undertake, and who will go on each mission. Any missions you don't undertake will be performed by the Everchild's other agents -- although they have a slimmer chance of success. You can choose to undertake all three missions if you wish, or just one or two.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Decide who will undertake each mission", {Book::Type::BOOK1, 567}, Choice::Type::ASSIGN_TEAMS, {{Team::Type::ASSASSINATION_DESCANTOS, 0, 4}, {Team::Type::MERCENARY, 0, 4}, {Team::Type::EVERCHILD_SECURITY, 0, 4}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story125 : public Story::Base
+    {
+    public:
+        Story125()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 125;
+
+            Text = "Sand surrounds you in all directions, though you can make out some hills to the north.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go north", {Book::Type::BOOK1, 275}));
+            Choices.push_back(Choice::Base("Go west", {Book::Type::BOOK1, 590}));
+            Choices.push_back(Choice::Base("Go south", {Book::Type::BOOK1, 515}));
+            Choices.push_back(Choice::Base("Go east", {Book::Type::BOOK1, 535}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story126 : public Story::Base
+    {
+    public:
+        Story126()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 126;
+
+            Text = "Clifftop is currently under the governorship of Ayleta, one of the Everchild's generals. She welcomes you into the hall, and details to you her various plans for the improvement of the city. \"I want to create more permanent structures for the poor, and to reduce the amount of beatings the overseers issue to their farmworkers,\" she says. \"Progress is slow. The population is uneducated and tend to misbehave when they are not being brutalised. It may take many generations to change Clifftop for the better.\"\n\nIt seems a hard task, and not one suited to the abilities of adventurers.";
+
+            Bye = "Wishing her well, you depart the hall.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SET_LOCATION(party, Location::Type::CLIFFTOP);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -4049,6 +4197,9 @@ namespace Book1
     auto story117 = Story117();
     auto story118 = Story118();
     auto story119 = Story119();
+    auto story120 = Story120();
+    auto story121 = Story121();
+    auto story122 = Story122();
 
     void InitializeStories()
     {
@@ -4066,7 +4217,8 @@ namespace Book1
             &story080, &story081, &story082, &story083, &story084, &story085, &story086, &story087, &story088, &story089,
             &story090, &story091, &story092, &story093, &story094, &story095, &story096, &story097, &story098, &story099,
             &story100, &story101, &story102, &story103, &story104, &story105, &story106, &story107, &story108, &story109,
-            &story110, &story111, &story112, &story113, &story114, &story115, &story116, &story117, &story118, &story119};
+            &story110, &story111, &story112, &story113, &story114, &story115, &story116, &story117, &story118, &story119,
+            &story120, &story121, &story122};
     }
 }
 #endif

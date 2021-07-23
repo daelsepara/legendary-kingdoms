@@ -375,6 +375,19 @@ namespace Choice
 
             Teams = teams;
         }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Engine::TeamAssignment> teams, int value)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Teams = teams;
+
+            Value = value;
+        }
     };
 } // namespace Choice
 
