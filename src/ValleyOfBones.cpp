@@ -6330,6 +6330,11 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                 }
             }
         }
+
+        if (team.size() > 0)
+        {
+            party.LastSelection = team;
+        }
     }
 
     return test_result;
@@ -6521,8 +6526,6 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                                                         {
                                                             target = Engine::FIRST(party, team);
                                                         }
-
-                                                        party.LastSelected = target;
                                                     }
                                                     else
                                                     {
@@ -7805,7 +7808,10 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         }
     }
 
-    party.LastSelected = result;
+    if (result >= 0 && result < party.Party.size())
+    {
+        party.LastSelected = result;
+    }
 
     return result;
 }
@@ -8088,8 +8094,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     result = Engine::FIRST(party, hasAttacked);
                                 }
-
-                                party.LastSelected = result;
                             }
                             else
                             {
@@ -10058,8 +10062,6 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         if (Engine::SPELLCASTERS(party.Party) == 1)
                         {
                             character = Engine::FIRST_CASTER(party);
-
-                            party.LastSelected = character;
                         }
                         else
                         {
@@ -10455,8 +10457,6 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             if (Engine::COUNT(party.Party) == 1)
                             {
                                 character = Engine::FIRST(party);
-
-                                party.LastSelected = character;
                             }
                             else
                             {
@@ -11618,8 +11618,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             if (Engine::COUNT(party.Party) == 1)
                             {
                                 target = Engine::FIRST(party);
-
-                                party.LastSelected = target;
                             }
                             else
                             {
@@ -11643,8 +11641,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             if (Engine::COUNT(party.Party) == 1)
                             {
                                 target = Engine::FIRST(party);
-
-                                party.LastSelected = target;
                             }
                             else
                             {
@@ -11705,8 +11701,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             if (Engine::COUNT(party.Party) == 1)
                             {
                                 target = Engine::FIRST(party);
-
-                                party.LastSelected = target;
                             }
                             else
                             {
@@ -11734,8 +11728,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             if (Engine::COUNT(party.Party) == 1)
                             {
                                 target = Engine::FIRST(party);
-
-                                party.LastSelected = target;
                             }
                             else
                             {
@@ -11853,8 +11845,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     {
                                         selected = Engine::FIRST(party, story->Choices[choice].Team);
                                     }
-
-                                    party.LastSelected = selected;
                                 }
                                 else
                                 {
@@ -12004,8 +11994,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 if (Engine::COUNT(party.Party) == 1)
                                 {
                                     selected = Engine::FIRST(party);
-
-                                    party.LastSelected = selected;
                                 }
                                 else
                                 {
@@ -12640,8 +12628,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         if (Engine::COUNT(party.Party) == 1)
                         {
                             result = Engine::FIRST(party);
-
-                            party.LastSelected = selected;
                         }
                         else
                         {
@@ -12743,6 +12729,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                     if (party.LastSelected != -1)
                                     {
                                         party.LastSelected = -1;
+                                    }
+
+                                    if (party.LastSelection.size() > 0)
+                                    {
+                                        party.LastSelection.clear();
                                     }
 
                                     if (party.Party[i].Equipment.size() > 0)

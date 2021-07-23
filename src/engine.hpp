@@ -1366,6 +1366,11 @@ namespace Engine
             }
         }
 
+        if (result >= 0 && result < party.Party.size())
+        {
+            party.LastSelected = result;
+        }
+
         return result;
     }
 
@@ -1381,6 +1386,11 @@ namespace Engine
 
                 break;
             }
+        }
+
+        if (result >= 0 && result < party.Party.size())
+        {
+            party.LastSelected = result;
         }
 
         return result;
@@ -1400,6 +1410,11 @@ namespace Engine
             }
         }
 
+        if (result >= 0 && result < party.Party.size())
+        {
+            party.LastSelected = result;
+        }
+
         return result;
     }
 
@@ -1415,6 +1430,11 @@ namespace Engine
 
                 break;
             }
+        }
+
+        if (result >= 0 && result < party.Party.size())
+        {
+            party.LastSelected = result;
         }
 
         return result;
@@ -1434,6 +1454,11 @@ namespace Engine
             }
         }
 
+        if (result >= 0 && result < party.Party.size())
+        {
+            party.LastSelected = result;
+        }
+
         return result;
     }
 
@@ -1451,6 +1476,11 @@ namespace Engine
             }
         }
 
+        if (result >= 0 && result < party.Party.size())
+        {
+            party.LastSelected = result;
+        }
+
         return result;
     }
 
@@ -1466,6 +1496,11 @@ namespace Engine
 
                 break;
             }
+        }
+
+        if (result >= 0 && result < party.Party.size())
+        {
+            party.LastSelected = result;
         }
 
         return result;

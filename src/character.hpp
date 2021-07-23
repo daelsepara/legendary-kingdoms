@@ -215,6 +215,9 @@ namespace Party
         // Last Selected Party Member
         int LastSelected = -1;
 
+        // Last Selected Party Members for skill checks
+        std::vector<int> LastSelection = {};
+
         // Romance histogram
         std::map<Character::Romance, int> Hearts = {};
 
