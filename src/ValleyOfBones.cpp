@@ -9859,9 +9859,13 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
         {
             for (auto i = 0; i < last - offset; i++)
             {
-                if (selection == offset + i)
+                if (selection != offset + i)
                 {
-                    drawRect(renderer, controls[i].W + 16, controls[i].H + 16, controls[i].X - 8, controls[i].Y - 8, intBK);
+                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                }
+                else
+                {
+                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                 }
             }
         }
@@ -11020,7 +11024,11 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     if (Engine::FIND_LIST(selection, offset + i) >= 0)
                     {
-                        drawRect(renderer, controls[i].W + 2 * text_space, controls[i].H + 2 * text_space, controls[i].X - text_space, controls[i].Y - text_space, intBK);
+                        thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + text_space, controls[i].H + text_space, controls[i].X - text_space / 2, controls[i].Y - text_space / 2, intBK);
                     }
                 }
             }
@@ -11827,6 +11835,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
     if (renderer && story->Choices.size() > 0)
     {
         SDL_Surface *splash = NULL;
+        SDL_Texture *splashTexture = NULL;
 
         if (story->Image)
         {
@@ -11877,6 +11886,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             {
                 splash_h = (int)((double)splashw / splash->w * splash->h);
             }
+
+            splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
         }
 
         while (!done)
@@ -12035,6 +12046,60 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
             }
 
+            if (splash)
+            {
+                auto mousex = 0;
+                auto mousey = 0;
+
+                auto state = SDL_GetMouseState(&mousex, &mousey);
+
+                auto zoomw = (int)(0.80 * (double)textwidth);
+                auto zoomh = (int)(0.80 * (double)text_bounds);
+
+                clipValue(zoomw, 0, splash->w);
+                clipValue(zoomh, 0, splash->h);
+
+                auto boundx = splashw;
+
+                if (splash_h == text_bounds)
+                {
+                    boundx = (int)((double)splash_h / splash->h * (double)splash->w);
+                }
+
+                if (mousex >= startx && mousex <= (startx + boundx) && mousey >= starty && mousey <= (starty + splash_h))
+                {
+                    auto scalex = (double)(mousex - startx) / boundx;
+                    auto scaley = (double)(mousey - starty) / splash_h;
+
+                    int centerx = (int)(scalex * (double)splash->w);
+                    int centery = (int)(scaley * (double)splash->h);
+
+                    clipValue(centerx, zoomw / 2, splash->w - zoomw / 2);
+                    clipValue(centery, zoomh / 2, splash->h - zoomh / 2);
+
+                    if (splashTexture)
+                    {
+                        SDL_Rect src;
+
+                        src.w = zoomw;
+                        src.h = zoomh;
+                        src.x = centerx - zoomw / 2;
+                        src.y = centery - zoomh / 2;
+
+                        SDL_Rect dst;
+
+                        dst.w = zoomw;
+                        dst.h = zoomh;
+                        dst.x = (textx + (textwidth - zoomw) / 2);
+                        dst.y = (texty + (text_bounds - zoomh) / 2);
+
+                        fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
+                        SDL_RenderCopy(renderer, splashTexture, &src, &dst);
+                        drawRect(renderer, dst.w, dst.h, dst.x, dst.y, intBK);
+                    }
+                }
+            }
+            
             if (error)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
@@ -13007,6 +13072,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         TTF_Quit();
 
+        if (splashTexture)
+        {
+            SDL_DestroyTexture(splashTexture);
+
+            splashTexture = NULL;
+        }
+
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -13414,7 +13486,9 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             dst.x = (textx + (textwidth - zoomw) / 2);
                             dst.y = (texty + (text_bounds - zoomh) / 2);
 
+                            fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
                             SDL_RenderCopy(renderer, splashTexture, &src, &dst);
+                            drawRect(renderer, dst.w, dst.h, dst.x, dst.y, intBK);
                         }
                     }
                 }
