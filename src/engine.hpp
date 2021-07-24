@@ -1578,5 +1578,22 @@ namespace Engine
 
         return result;
     }
+
+    int FIRST(Party::Base &party, Attribute::Type type, int score)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (score == Engine::SCORE(party.Party[i], type))
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
 }
 #endif

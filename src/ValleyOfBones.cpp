@@ -12775,6 +12775,45 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 break;
                             }
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::RAISE_LOWEST_ATTRIBUTE)
+                        {
+                            auto attribute_min = Engine::MIN(party, story->Choices[choice].Attributes[0]);
+                            auto target = -1;
+
+                            if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
+                            {
+                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
+                            }
+                            else
+                            {
+                                target = Engine::FIRST(party, story->Choices[choice].Attributes[0], attribute_min);
+                            }
+
+                            if (target >= 0 && target < party.Party.size())
+                            {
+                                if (Engine::SCORE(party.Party[target], story->Choices[choice].Attributes[0]) == attribute_min)
+                                {
+                                    auto increase = gainAttributeScore(window, renderer, party.Party[target], story->Choices[current].Attributes[0], story->Choices[current].Value, 0);
+
+                                    if (increase >= 0)
+                                    {
+                                        next = findStory(story->Choices[choice].Destination);
+
+                                        done = true;
+
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    error = true;
+
+                                    message = std::string(party.Party[target].Name) + " does not have the lowest " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + " score!";
+
+                                    start_ticks = SDL_GetTicks();
+                                }
+                            }
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::PAY_WITH)
                         {
                         }
