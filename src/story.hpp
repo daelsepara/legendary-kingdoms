@@ -54,7 +54,10 @@ namespace Choice
         DELIVER,
         SET_STATUS,
         HAS_STATUS,
-        ASSIGN_TEAMS
+        ASSIGN_TEAMS,
+        RAISE_LOWEST_ATTRIBUTE,
+        LAST_INDIVIDUAL_CHECK,
+        LAST_PARTY_CHECK
     };
 
     class Base

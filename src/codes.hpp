@@ -27,7 +27,8 @@ namespace Codes
         QUEEN_IN_SALTDAD,
         FIRST_TIME_SCROLL_OF_RAGE,
         SPEAK_BANDO,
-        WALL_CLIMBING_AND_DOOR
+        WALL_CLIMBING_AND_DOOR,
+        REPAIR_CALENDAR_KALU
     };
 
     std::map<Book::Type, const char *> Prefix = {

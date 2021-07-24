@@ -4062,6 +4062,175 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
     };
 
+    class Story127 : public Story::Base
+    {
+    public:
+        Story127()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 127;
+
+            Text = "The door opens into a small room which contains a bookcase and a broken reading chair. Searching the shelves is an unpleasant experience, as the books are damp and fall to pieces on contact with your fingers. You do manage to find a magic scroll which seems undamaged. It is a SCROLL OF RAGE. You can use it in combat to increase the Fighting score of each of your party members by 1 point until the end of the combat. After one use it will vanish.";
+
+            Bye = "There is nothing else of value in the room, so you exit by the only door.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(59)}))
+            {
+                return {Book::Type::BOOK1, 42};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::SCROLL_OF_RAGE};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, -127}; }
+    };
+
+    class Event127 : public Story::Base
+    {
+    public:
+        Event127()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -127;
+
+            DisplayID = 127;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::SCROLL_OF_RAGE}))
+            {
+                Engine::GET_CODES(party, {Codes::A(59)});
+            }
+
+            return {Book::Type::BOOK1, 494};
+        }
+    };
+
+    class Story128 : public Story::Base
+    {
+    public:
+        Story128()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 128;
+
+            Text = "The Temple of Kalu is a squat tower of blue stone, built in a jumble-like pattern from the ruins of the old temple. The Everchild has decreed the temple should be rebuilt in defiance of the laws laid down by the patriarch of Cursus.\n\nWithin the temple tiny bells are softly chimed every minute, with parishioners and priests taking it in turns to strike the correct bell according to the time of day. The great calendar, a mosaic and guide to the planting dates of the year, is still incomplete, and requires more BLUESTONES to finish the work.\n\nIf you have any BLUESTONES you may exchange one for a blessing from the priests. If you are blessed, find the party member with the lowest Survival score in the team and increase their Survival by 1 point. You can assist with the repairs to the calendar.\n\nNote: You can only assist the priests with repairs to the calendar once.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            Choices.push_back(Choice::Base("Exchange a BLUESTONE for a blessing", {Book::Type::BOOK1, -128002}, {Equipment::BLUESTONE}));
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::REPAIR_CALENDAR_KALU}))
+            {
+                Choices.push_back(Choice::Base("Repair the calendar (Team: Lore 5+, Successes: 3)", {Book::Type::BOOK1, -128001}, {Book::Type::BOOK1, 75}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 5, 3));
+            }
+
+            Choices.push_back(Choice::Base("Your business here is complete", {Book::Type::BOOK1, 75}));
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            Engine::GET_CODES(party, {Codes::Type::REPAIR_CALENDAR_KALU});
+
+            if (!outcome)
+            {
+                Bye = "The calendar is damaged, and the angry priests bans you from ever visiting the temple again.";
+            }
+        }
+    };
+
+    class E128_001 : public Story::Base
+    {
+    public:
+        E128_001()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -128001;
+
+            DisplayID = 128;
+
+            Text = "The calendar is repaired. You receive the blessing of the priests.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a member among your party with the lowest SURVIVAL score", {Book::Type::BOOK1, 75}, Choice::Type::RAISE_LOWEST_ATTRIBUTE, {Attribute::Type::SURVIVAL}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class E128_002 : public Story::Base
+    {
+    public:
+        E128_002()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -128002;
+
+            DisplayID = 128;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::BLUESTONE});
+
+            return {Book::Type::BOOK1, -128001};
+        }
+    };
+
+    class Story129 : public Story::Base
+    {
+    public:
+        Story129()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 129;
+
+            Text = "You have found the great bronze cogwheel, lying almost buried in the wet sand. The wheel is quite heavy, and it will take many attempts to tie a strong knot around it, and in some dreadful currents.\n\nNote: Only the party member who made the last skill check can make the attempt.";
+
+            Choices.clear();
+
+            Choices.push_back(Choice::Base("Secure the cogwheel (Individual: Survival 4+, Successes: 3)", {Book::Type::BOOK1, 745}, {Book::Type::BOOK1, 549}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::SURVIVAL}, 4, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -4200,12 +4369,22 @@ namespace Book1
     auto story120 = Story120();
     auto story121 = Story121();
     auto story122 = Story122();
+    auto story123 = Story123();
+    auto story124 = Story124();
+    auto story125 = Story125();
+    auto story126 = Story126();
+    auto story127 = Story127();
+    auto event127 = Event127();
+    auto story128 = Story128();
+    auto e128_001 = E128_001();
+    auto e128_002 = E128_002();
+    auto story129 = Story129();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
-            &e087_003, &event089, &event098, &event102, &e115_001, &e115_002,
+            &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &event127, &e128_001, &e128_002,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -4218,7 +4397,7 @@ namespace Book1
             &story090, &story091, &story092, &story093, &story094, &story095, &story096, &story097, &story098, &story099,
             &story100, &story101, &story102, &story103, &story104, &story105, &story106, &story107, &story108, &story109,
             &story110, &story111, &story112, &story113, &story114, &story115, &story116, &story117, &story118, &story119,
-            &story120, &story121, &story122};
+            &story120, &story121, &story122, &story123, &story124, &story125, &story126, &story127, &story128, &story129};
     }
 }
 #endif

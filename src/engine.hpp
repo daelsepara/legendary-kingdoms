@@ -1539,5 +1539,44 @@ namespace Engine
 
         return result;
     }
+
+    int MIN(Party::Base &party, Attribute::Type type)
+    {
+        auto score = 100;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            score = std::min(score, Engine::SCORE(party.Party[i], type));
+        }
+
+        return score;
+    }
+
+    int MAX(Party::Base &party, Attribute::Type type)
+    {
+        auto score = 1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            score = std::max(score, Engine::SCORE(party.Party[i], type));
+        }
+
+        return score;
+    }
+
+    int COUNT(Party::Base &party, Attribute::Type type, int score)
+    {
+        auto result = 0;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (score == Engine::SCORE(party.Party[i], type))
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
 }
 #endif

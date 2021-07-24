@@ -45,6 +45,7 @@ namespace fs = std::filesystem;
 
 // Forward declarations
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army);
+bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::TeamAssignment> teams, int min_teams);
 bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int equipment_limit, bool InCombat);
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
@@ -1259,6 +1260,59 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
     controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, hearts.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::FLEET));
     controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, hearts.size() > 0 ? idx - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::ROMANCE));
     controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, hearts.size() > 0 ? idx - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::BACK));
+
+    return controls;
+}
+
+std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Team::Type> &teams, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (teams.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            std::string teams_string = std::string(Team::Descriptions[teams[index]]);
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 28, teams_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (teams.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (teams.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, "icons/yes.png", idx, idx, teams.size() > 0 ? idx - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+    controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, teams.size() > 0 ? idx - 1 : idx + 1, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -7417,6 +7471,598 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
     return result;
 }
 
+bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Engine::TeamAssignment> teams)
+{
+    auto result = false;
+
+    auto title = "Legendary Kingdoms: Select Team";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto main_buttonh = 48;
+
+        auto font_size = 20;
+        auto text_space = 8;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto last = offset + limit;
+
+        auto teams_list = std::vector<Team::Type>();
+
+        for (auto i = 0; i < teams.size(); i++)
+        {
+            teams_list.push_back(std::get<0>(teams[i]));
+        }
+
+        teams_list.push_back(Team::Type::NONE);
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = teamsList(window, renderer, teams_list, offset, last, limit, textx, texty + infoh + text_space);
+
+        auto done = false;
+
+        auto selection = -1;
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                if (last - offset > 0)
+                {
+                    for (auto i = 0; i < last - offset; i++)
+                    {
+                        if (selection == offset + i)
+                        {
+                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, space / 2);
+
+                putHeader(renderer, "Select Team", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (selection >= 0 && selection < teams_list.size())
+                {
+                    putText(renderer, Team::Descriptions[teams_list[selection]], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+                else
+                {
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+                {
+                    if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > teams_list.size())
+                            {
+                                last = teams_list.size();
+                            }
+
+                            controls.clear();
+
+                            controls = teamsList(window, renderer, teams_list, offset, last, limit, textx, texty + infoh + text_space);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                    {
+                        if (teams_list.size() - last > 0)
+                        {
+                            if (offset < teams_list.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > teams_list.size() - limit)
+                            {
+                                offset = teams_list.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > teams_list.size())
+                            {
+                                last = teams_list.size();
+                            }
+
+                            controls.clear();
+
+                            controls = teamsList(window, renderer, teams_list, offset, last, limit, textx, texty + infoh + text_space);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (teams_list.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                    {
+                        if (selection >= 0 && selection < teams_list.size())
+                        {
+                            character.Team = teams_list[selection];
+
+                            selected = false;
+
+                            current = -1;
+
+                            done = true;
+
+                            break;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION && !hold)
+                    {
+                        if (current + offset >= 0 && current + offset < teams_list.size())
+                        {
+                            if (selection == current + offset)
+                            {
+                                selection = -1;
+                            }
+                            else
+                            {
+                                selection = current + offset;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    return result;
+}
+
+bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::TeamAssignment> teams, int min_teams)
+{
+    auto result = false;
+
+    auto title = "Legendary Kingdoms: Assign Party Members to Teams";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto main_buttonh = 48;
+
+        auto font_size = 20;
+        auto text_space = 8;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - 2 * text_space - infoh) / (font_size * 2 + text_space * 4);
+        auto last = offset + limit;
+
+        if (last > party.Party.size())
+        {
+            last = party.Party.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, false);
+
+        auto done = false;
+
+        auto selection = -1;
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                if (last - offset > 0)
+                {
+                    for (auto i = 0; i < last - offset; i++)
+                    {
+                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, space / 2);
+
+                putHeader(renderer, "Assign Party Member to a Team", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                putHeader(renderer, "Teams", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (teams.size() > 0)
+                {
+                    std::string teams_string = "";
+
+                    for (auto i = 0; i < teams.size(); i++)
+                    {
+                        if (i > 0)
+                        {
+                            teams_string += ", ";
+                        }
+
+                        teams_string += std::string(Team::Descriptions[std::get<0>(teams[i])]);
+                    }
+
+                    putText(renderer, teams_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+                else
+                {
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+                {
+                    if (controls[current].Type == Control::Type::BACK)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Party.size())
+                            {
+                                last = party.Party.size();
+                            }
+
+                            controls.clear();
+
+                            controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, false);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                    {
+                        if (party.Party.size() - last > 0)
+                        {
+                            if (offset < party.Party.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > party.Party.size() - limit)
+                            {
+                                offset = party.Party.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Party.size())
+                            {
+                                last = party.Party.size();
+                            }
+
+                            controls.clear();
+
+                            controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, false);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (party.Party.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                    {
+                        auto assignment_error = false;
+
+                        for (auto i = 0; i < teams.size(); i++)
+                        {
+                            auto count = Engine::COUNT(party.Party, std::get<0>(teams[i]));
+
+                            if (!(count >= std::get<1>(teams[i]) && count <= std::get<2>(teams[i])))
+                            {
+                                assignment_error = true;
+                            }
+                        }
+
+                        selection = -1;
+
+                        current = -1;
+
+                        selected = false;
+
+                        if (assignment_error || Engine::COUNT_TEAMS(party) < min_teams)
+                        {
+                            flash_message = true;
+
+                            flash_color = intRD;
+
+                            start_ticks = SDL_GetTicks();
+
+                            message = "Plase complete team selection";
+
+                            done = false;
+                        }
+                        else
+                        {
+                            done = true;
+
+                            break;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION && !hold)
+                    {
+                        if (current + offset >= 0 && current + offset < party.Party.size())
+                        {
+                            selection = current + offset;
+
+                            if (selection >= 0 && selection < party.Party.size())
+                            {
+                                if (party.Party[selection].Health > 0)
+                                {
+                                    selectTeam(window, renderer, party.Party[selection], teams);
+
+                                    controls.clear();
+
+                                    controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, false);
+                                }
+                                else
+                                {
+                                    flash_message = true;
+
+                                    flash_color = intRD;
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    message = std::string(party.Party[selection].Name) + " is DEAD!";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    return result;
+}
+
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Equipment::Base equipment, Control::Type mode)
 {
     auto result = -1;
@@ -7648,7 +8294,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
                             controls.clear();
 
-                            auto controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, true);
+                            controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, true);
 
                             SDL_Delay(50);
                         }
@@ -7683,7 +8329,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
                             controls.clear();
 
-                            auto controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, true);
+                            controls = combatantList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh + text_space, true, true);
 
                             SDL_Delay(50);
 
@@ -11294,7 +11940,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     {
                         if (i > 0)
                         {
-                            teams_string += "\n";
+                            teams_string += ", ";
                         }
 
                         teams_string += Team::Descriptions[teams[i]];
@@ -12070,6 +12716,65 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 start_ticks = SDL_GetTicks();
                             }
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::ASSIGN_TEAMS)
+                        {
+                            assignTeams(window, renderer, party, story->Choices[choice].Teams, story->Choices[choice].Value);
+
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::LAST_INDIVIDUAL_CHECK)
+                        {
+                            auto selection = party.LastSelection;
+
+                            auto success = false;
+
+                            if (selection.size() == 1)
+                            {
+                                auto target = selection[0];
+
+                                if (target >= 0 && target < party.Party.size())
+                                {
+                                    if (party.Party[target].Health > 0)
+                                    {
+                                        success = skillTestScreen(window, renderer, party, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
+                                    }
+                                }
+                                else
+                                {
+                                    selection.clear();
+
+                                    success = skillCheck(window, renderer, party, story->Choices[choice].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
+                                }
+                            }
+                            else
+                            {
+                                selection.clear();
+
+                                success = skillCheck(window, renderer, party, story->Choices[choice].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
+                            }
+
+                            if (selection.size() == 1)
+                            {
+                                story->SkillCheck(party, success, selection);
+
+                                if (success)
+                                {
+                                    next = findStory(story->Choices[choice].Destination);
+                                }
+                                else
+                                {
+                                    next = findStory(story->Choices[choice].DestinationFailed);
+                                }
+
+                                done = true;
+
+                                break;
+                            }
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::PAY_WITH)
                         {
                         }
@@ -12445,7 +13150,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         {
                             if (i > 0)
                             {
-                                teams_string += "\n";
+                                teams_string += ", ";
                             }
 
                             teams_string += Team::Descriptions[teams[i]];
