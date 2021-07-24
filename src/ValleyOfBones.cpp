@@ -7985,7 +7985,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                             start_ticks = SDL_GetTicks();
 
-                            message = "Plase complete team selection";
+                            message = "Please complete team selection";
 
                             done = false;
                         }
