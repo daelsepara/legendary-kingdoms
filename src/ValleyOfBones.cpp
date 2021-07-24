@@ -12990,6 +12990,17 @@ Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Ba
     return next;
 }
 
+void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
+{
+    auto storyID = story->ID < 0 ? story->DisplayID : story->ID;
+    auto nextID = next->ID < 0 ? next->DisplayID : next->ID;
+
+    if ((story->BookID != next->BookID) || (story->BookID == next->BookID && storyID != nextID))
+    {
+
+    }
+}
+
 bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Book::Type book, Story::Base *story)
 {
     auto quit = false;
@@ -13599,6 +13610,9 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                         forward = NULL;
                                     }
                                 }
+
+                                // story transitions
+                                storyTransition(party, story, next);
 
                                 story = next;
 
