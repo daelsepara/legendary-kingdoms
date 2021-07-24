@@ -21,6 +21,7 @@ namespace Choice
         EQUIPMENT,
         ANY_EQUIPMENT,
         GET_EQUIPMENT,
+        GET_EQUIPMENT_CODE,
         LOSE_EQUIPMENT,
         LIMIT_EQUIPMENT,
         MONEY,
@@ -144,6 +145,21 @@ namespace Choice
             Type = type;
 
             Equipment = equipment;
+
+            Destination = destination;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, std::vector<Codes::Base> codes, std::vector<Codes::Type> invisibleCodes)
+        {
+            Text = text;
+
+            Type = type;
+
+            Equipment = equipment;
+
+            Codes = codes;
+
+            InvisibleCodes = invisibleCodes;
 
             Destination = destination;
         }
@@ -415,6 +431,7 @@ namespace Story
     class Base
     {
     public:
+
         Book::Type BookID = Book::Type::NONE;
 
         int ID = -1;
@@ -466,6 +483,9 @@ namespace Story
 
         // Inn
         int RestPrice = -1;
+
+        // temporary string
+        std::string temp_string = "";
 
         // Handle background events
         virtual Engine::Destination Background(Party::Base &party) { return {Book::Type::NONE, -1}; };

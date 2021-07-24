@@ -12562,6 +12562,56 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 break;
                             }
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::GET_EQUIPMENT_CODE)
+                        {
+                            done = takeScreen(window, renderer, party, story->Choices[choice].Equipment, story->Choices[choice].Equipment.size(), true);
+
+                            if (done)
+                            {
+                                if (Engine::VERIFY_EQUIPMENT(party.Party, {story->Choices[choice].Equipment[0].Type}))
+                                {
+                                    Engine::GET_CODES(party, story->Choices[choice].Codes);
+
+                                    Engine::GET_CODES(party, story->Choices[choice].InvisibleCodes);
+
+                                    if (story->Bye == NULL)
+                                    {
+                                        story->temp_string = "You gained the code";
+                                    }
+                                    else
+                                    {
+                                        story->temp_string = std::string(story->Bye) += "\n\nYou gained the code";
+                                    }
+
+                                    if (story->Choices[choice].Codes.size() > 1)
+                                    {
+                                        story->temp_string += "s: ";
+
+                                        for (auto i = 0; i < story->Choices[choice].Codes.size(); i++)
+                                        {
+                                            if (i > 0)
+                                            {
+                                                story->temp_string += ", ";
+                                            }
+
+                                            story->temp_string += std::string(Codes::Prefix[story->Choices[choice].Codes[i].Type]) += std::to_string(story->Choices[choice].Codes[i].Code);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        story->temp_string += " " + std::string(Codes::Prefix[story->Choices[choice].Codes[0].Type]) += std::to_string(story->Choices[choice].Codes[0].Code);
+                                    }
+
+                                    story->temp_string += ".";
+
+                                    story->Bye = story->temp_string.c_str();
+                                }
+
+                                next = findStory(story->Choices[choice].Destination);
+
+                                break;
+                            }
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::DELIVER)
                         {
                             auto result = Engine::FIND_SHIP(party, story->Choices[choice].Location, story->Choices[choice].Delivery.size());

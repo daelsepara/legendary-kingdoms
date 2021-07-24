@@ -547,8 +547,6 @@ namespace Book1
     class Story018 : public Story::Base
     {
     public:
-        std::string temp_text = "";
-
         Story018()
         {
             BookID = Book::Type::BOOK1;
@@ -576,7 +574,7 @@ namespace Book1
         {
             Bye = NULL;
 
-            temp_text = "";
+            temp_string = "";
 
             Choices.clear();
 
@@ -602,9 +600,9 @@ namespace Book1
             }
             else
             {
-                temp_text = std::string(party.Party[selection[0]].Name) + " LOSES 1 Health Point.";
+                temp_string = std::string(party.Party[selection[0]].Name) + " LOSES 1 Health Point.";
 
-                Bye = temp_text.c_str();
+                Bye = temp_string.c_str();
 
                 Engine::GAIN_HEALTH(party.Party[selection[0]], -1);
             }
@@ -1494,8 +1492,6 @@ namespace Book1
     class Event044 : public Story::Base
     {
     public:
-        std::string temp_string = "";
-
         Event044()
         {
             BookID = Book::Type::BOOK1;
@@ -2472,7 +2468,7 @@ namespace Book1
             Text = "This must be Garon the Bloody-mouthed, whom you were sent to find. His father will no doubt grieve to know his fate, but at least it will solve the mystery of his disappearance. You were not asked to return the body, but if you wish to do so, you can take the BARBARIAN BODY. Unfortunately, it takes up five inventory slots and must be carried by a single character.\n\nWhat now?";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Take the BARBARIAN BODY", {Book::Type::BOOK1, -76}, Choice::Type::GET_EQUIPMENT, {Equipment::BARBARIAN_BODY}));
+            Choices.push_back(Choice::Base("Take the BARBARIAN BODY", {Book::Type::BOOK1, -76}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::BARBARIAN_BODY}, {Codes::A(86)}, {}));
             Choices.push_back(Choice::Base("Examine the missing south wall", {Book::Type::BOOK1, 645}));
             Choices.push_back(Choice::Base("Leave the room and return to the crossroads", {Book::Type::BOOK1, 566}));
 
@@ -2483,8 +2479,6 @@ namespace Book1
     class Event076 : public Story::Base
     {
     public:
-        std::string PreText = "";
-
         Event076()
         {
             BookID = Book::Type::BOOK1;
@@ -2493,27 +2487,13 @@ namespace Book1
 
             DisplayID = 76;
 
+            Text = "What now?";
+
             Choices.clear();
             Choices.push_back(Choice::Base("Examine the missing south wall", {Book::Type::BOOK1, 645}));
             Choices.push_back(Choice::Base("Leave the room and return to the crossroads", {Book::Type::BOOK1, 566}));
 
             Controls = Story::Controls::STANDARD;
-        }
-
-        void Event(Party::Base &party)
-        {
-            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::BARBARIAN_BODY}))
-            {
-                PreText = "You gained the code A86.\n\nWhat now?";
-
-                Engine::GET_CODES(party, {Codes::A(86)});
-            }
-            else
-            {
-                PreText = "What now?";
-            }
-
-            Text = PreText.c_str();
         }
     };
 
@@ -4076,6 +4056,8 @@ namespace Book1
             Bye = "There is nothing else of value in the room, so you exit by the only door.";
 
             Choices.clear();
+            Choices.push_back(Choice::Base("Take the SCROLL OF RAGE", {Book::Type::BOOK1, 494}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::SCROLL_OF_RAGE}, {Codes::A(59)}, {Codes::Type::FIRST_TIME_SCROLL_OF_RAGE}));
+            Choices.push_back(Choice::Base("Leave it alone", {Book::Type::BOOK1, 494}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -4090,44 +4072,6 @@ namespace Book1
             {
                 return {Book::Type::NONE, -1};
             }
-        }
-
-        void Event(Party::Base &party)
-        {
-            Take = {Equipment::SCROLL_OF_RAGE};
-
-            Limit = 1;
-        }
-
-        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, -127}; }
-    };
-
-    class Event127 : public Story::Base
-    {
-    public:
-        Event127()
-        {
-            BookID = Book::Type::BOOK1;
-
-            ID = -127;
-
-            DisplayID = 127;
-
-            Choices.clear();
-
-            Controls = Story::Controls::NONE;
-        }
-
-        Engine::Destination Background(Party::Base &party)
-        {
-            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::SCROLL_OF_RAGE}))
-            {
-                Engine::GET_CODES(party, {Codes::Type::FIRST_TIME_SCROLL_OF_RAGE});
-
-                Engine::GET_CODES(party, {Codes::A(59)});
-            }
-
-            return {Book::Type::BOOK1, 494};
         }
     };
 
@@ -4376,7 +4320,6 @@ namespace Book1
     auto story125 = Story125();
     auto story126 = Story126();
     auto story127 = Story127();
-    auto event127 = Event127();
     auto story128 = Story128();
     auto e128_001 = E128_001();
     auto e128_002 = E128_002();
@@ -4386,7 +4329,7 @@ namespace Book1
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
-            &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &event127, &e128_001, &e128_002,
+            &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
