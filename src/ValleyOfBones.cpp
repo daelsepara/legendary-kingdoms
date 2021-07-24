@@ -12099,7 +12099,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                 }
             }
-            
+
             if (error)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
