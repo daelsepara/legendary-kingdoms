@@ -1419,7 +1419,7 @@ namespace Book1
                 }
                 else
                 {
-                    PreText += "\n\nYou find nothing of interest here.";
+                    PreText += "\n\nYou find nothing else of interest here.";
                 }
             }
 
@@ -4122,6 +4122,8 @@ namespace Book1
         {
             if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::SCROLL_OF_RAGE}))
             {
+                Engine::GET_CODES(party, {Codes::Type::FIRST_TIME_SCROLL_OF_RAGE});
+
                 Engine::GET_CODES(party, {Codes::A(59)});
             }
 
