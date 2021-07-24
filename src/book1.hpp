@@ -1833,7 +1833,6 @@ namespace Book1
     {
     public:
         std::string PreText = "";
-        std::string choice_string = "";
 
         Story057()
         {
@@ -1846,6 +1845,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Bye = NULL;
+
             PreText = "The goblin's grasp of your language is rather poor, but you endeavour to convince them that you are the enemies of their enslavers.";
 
             auto difficulty = 5;
@@ -1859,9 +1860,9 @@ namespace Book1
 
             Choices.clear();
 
-            choice_string = "Parlay with the goblin (Team: Charisma " + std::to_string(difficulty) + "+, Successes: 3)";
+            temp_string = "Parlay with the goblin (Team: Charisma " + std::to_string(difficulty) + "+, Successes: 3)";
 
-            Choices.push_back(Choice::Base(choice_string.c_str(), {Book::Type::BOOK1, 828}, {Book::Type::BOOK1, 389}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, difficulty, 3));
+            Choices.push_back(Choice::Base(temp_string.c_str(), {Book::Type::BOOK1, 828}, {Book::Type::BOOK1, 389}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, difficulty, 3));
 
             Text = PreText.c_str();
         }
@@ -4177,6 +4178,273 @@ namespace Book1
         }
     };
 
+    class Story130 : public Story::Base
+    {
+    public:
+        Story130()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 130;
+
+            Text = "The barbarians hail you as friends of Lhasbreath.\n\nAfter discussing the health of the queen you bid the barbarians farewell.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SET_LOCATION(party, Location::Type::LHASBREATH);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 219}; }
+    };
+
+    class Story131 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story131()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 131;
+
+            Bye = "You carry on down the tunnel.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The RUNESWORD (FIGHTING +3) is a powerful weapon, however it also has the dreadful side effect of slowly leaching the wielder's life. If you carry this sword, the character bearing it loses 1 Health point each time you turn to a new reference number. You can share the sword around the party in order to spread out the damage, if you wish. You can discard the sword at any time to end the curse, but you cannot sell it, since its curse is immediately apparent to anyone who holds it.";
+
+            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            {
+                if (party.Party[party.LastSelected].Health > 0)
+                {
+                    PreText += "\n\n" + std::string(party.Party[party.LastSelected].Name) + " LOSES 1 Health Point.";
+
+                    Engine::GAIN_HEALTH(party.Party[party.LastSelected], -1);
+                }
+            }
+
+            Take = {Equipment::RUNESWORD3};
+
+            Limit = 1;
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 647}; }
+    };
+
+    class Story132 : public Story::Base
+    {
+    public:
+        Story132()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 132;
+
+            Text = "The only item of interest in the tomb is the SILVER SKULL, which seems to have stopped chanting.\n\nThe sarcophagus itself is empty.";
+
+            Bye = "With nowhere else to go, you return to the crossroads.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Take the SILVER SKULL", {Book::Type::BOOK1, 46}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::SILVER_SKULL}, {Codes::A(47)}, {}));
+            Choices.push_back(Choice::Base("Leave it alone", {Book::Type::BOOK1, 46}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story133 : public Story::Base
+    {
+    public:
+        Story133()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 133;
+
+            Text = "In such a dangerous place battle appears inevitable. You confer with the Everchild, who agrees with your plan to strike first. She raises her hands and unleashes a terrible blast of power that jolts all the giant spiders clinging on the roof. They come tumbling down, but quickly regain their feet to rush to an attack.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Black Spider", 5, 5, 4, 6, 0),
+                Monster::Base("Grey Spider", 4, 5, 4, 6, 0),
+                Monster::Base("Green Spider", 5, 5, 4, 5, 0),
+                Monster::Base("Red Spider", 4, 5, 4, 4, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 790}; }
+    };
+
+    class Story134 : public Story::Base
+    {
+    public:
+        Story134()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 134;
+
+            Text = "You manage to find one fellow, a young and dynamic looking man, who claims he can arrange an appointment for you. However, it will cost 600 silver coins in administrative fees.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Pay the administrative fees (600 silver coins)", {Book::Type::BOOK1, 171}, Choice::Type::LOSE_MONEY, 600));
+            Choices.push_back(Choice::Base("You have little choice but to leave the hall", {Book::Type::BOOK1, 775}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story135 : public Story::Base
+    {
+    public:
+        Story135()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 135;
+
+            Text = "Which level of the mines will you explore now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Return to the surface", {Book::Type::BOOK1, 372}));
+            Choices.push_back(Choice::Base("The twelfth level", {Book::Type::BOOK1, 739}));
+            Choices.push_back(Choice::Base("The thirteenth level", {Book::Type::BOOK1, 388}));
+            Choices.push_back(Choice::Base("The fourteenth level", {Book::Type::BOOK1, 597}));
+            Choices.push_back(Choice::Base("The lowest level", {Book::Type::BOOK1, 222}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story136 : public Story::Base
+    {
+    public:
+        Story136()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 136;
+
+            Text = "You complete the finishing touches, grinding the components to the necessary fineness, and sprinkling them with confidence into the brew. Soon you have completed two POTIONS OF INVULNERABILITY. Pleased with your new finds, you store them in your pack.\n\nYou gained the code A73.\n\nNote: When a party member drinks this potion at the start of a combat round, they can ignore any amount of damage they take from the next attack that hits them. The potion wears off after absorbing the first hit, or if the combat ends.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Pass through the door in the western wall", {Book::Type::BOOK1, 256}));
+            Choices.push_back(Choice::Base("Return to the corridor through the east door", {Book::Type::BOOK1, 755}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::POTION_OF_INVULNERABILITY, Equipment::POTION_OF_INVULNERABILITY};
+
+            Limit = 2;
+
+            Engine::GET_CODES(party, {Codes::A(73)});
+        }
+    };
+
+    class Story137 : public Story::Base
+    {
+    public:
+        Story137()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 137;
+
+            Image = "images/book1/statue_wreck.png";
+
+            Text = "The sands whip against your face as you stagger through the desert. You seek shelter against the wreck of a once enormous statue, with only the sombre face of a long-forgotten king still visible in the lashing wind. Taking cover behind the hawkish nose of the stone face, you wait the storm out.\n\nWhen the wind dies down you examine the area. You realise where you are now. These are the Tumblestones, the remains of an ancient civilisation lost to the sands for all time. Historians from distant lands have attempted excavations here, but the heaped sands filled their trenches as fast as they could be dug, and the storms battered away their camps. Not much is left. A scattering of broken stones, perhaps once an enormous carved mural of some kind, lie revealed across the sands, the recent storms having unearthed them. Taking a casual look, you are surprised to see that they are fragments of a spell, carved in enormous letters.\n\nThe broken mural lies in pieces around you. It might be possible to fit the shattered mural together and decipher the spell if you are clever enough to puzzle it out.\n\nYou gained the code A17.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Rebuild the spell mural (Team: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 603}, {Book::Type::BOOK1, 368}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(17)}))
+            {
+                return {Book::Type::BOOK1, 14};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(17)});
+        }
+    };
+
+    class Story138 : public Story::Base
+    {
+    public:
+        Story138()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 138;
+
+            Text = "You make your way to the Expeditionary Guild but find the area empty. The blue tents of House Ross have been packed away and there is no sign of Sir Lawrence or Emlyn Pass-Ross. Shrugging, you return to the city centre.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story139 : public Story::Base
+    {
+    public:
+        Story139()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 139;
+
+            Text = "After washing yourselves you sit upon the bank. Amelia has washed her long hair and is beginning to re-braid it, gazing into her own reflection in the oasis. On a whim Tasha offers to help her, and soon she is twisting her hair into tight braids in a style reminiscent of a Splintered Isle buccaneer. It is a moment of tender kindness, which have been rare since you came to the savage Valley of Bones. Amelia accepts Tasha's help, occasionally checking her progress by glancing into the water.\n\n\"You're going to make me look like a pirate!\" Amelia laughs. \"I quite like it.\"\n\n\"We can take it out if you have to meet any fine lords or ladies,\" Tasha says idly, continuing to braid.\n\n\"If it makes me look more like you, I don't care if some noble doesn't like it,\" shrugs Amelia. \"I'm a bastard girl. No one in Royce see's past my name. Not even my own father.\"\n\n\"Strange customs in your land,\" Tasha muses. \n\n\"Perhaps we'll sail to the Splintered Isles, next. That's true freedom. There's no kings or queens there.\"\n\n\"Or laws,\" laughs Amelia. \"Maybe they're better off for it.\"\n\nThis has been a kindly encounter.\n\nTasha has gained a HEART for Amelia Pass-Dayne. Amelia Pass-Dayne also gains a HEART for Tasha.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEARTS(party, Character::Type::TASHA, Character::Type::AMELIA_PASS_DAYNE, 1);
+            Engine::GAIN_HEARTS(party, Character::Type::AMELIA_PASS_DAYNE, Character::Type::TASHA, 1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 51}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -4324,6 +4592,16 @@ namespace Book1
     auto e128_001 = E128_001();
     auto e128_002 = E128_002();
     auto story129 = Story129();
+    auto story130 = Story130();
+    auto story131 = Story131();
+    auto story132 = Story132();
+    auto story133 = Story133();
+    auto story134 = Story134();
+    auto story135 = Story135();
+    auto story136 = Story136();
+    auto story137 = Story137();
+    auto story138 = Story138();
+    auto story139 = Story139();
 
     void InitializeStories()
     {
@@ -4342,7 +4620,8 @@ namespace Book1
             &story090, &story091, &story092, &story093, &story094, &story095, &story096, &story097, &story098, &story099,
             &story100, &story101, &story102, &story103, &story104, &story105, &story106, &story107, &story108, &story109,
             &story110, &story111, &story112, &story113, &story114, &story115, &story116, &story117, &story118, &story119,
-            &story120, &story121, &story122, &story123, &story124, &story125, &story126, &story127, &story128, &story129};
+            &story120, &story121, &story122, &story123, &story124, &story125, &story126, &story127, &story128, &story129,
+            &story130, &story131, &story132, &story133, &story134, &story135, &story136, &story137, &story138, &story139};
     }
 }
 #endif

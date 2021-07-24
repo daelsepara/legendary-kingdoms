@@ -587,6 +587,25 @@ namespace Engine
         return found;
     }
 
+    int FIND_BEARER(Party::Base &party, Equipment::Type item)
+    {
+        auto found = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            auto result = Engine::FIND_EQUIPMENT(party.Party[i], item);
+
+            if (result >= 0 && result < party.Party[i].Equipment.size())
+            {
+                found = i;
+
+                break;
+            }
+        }
+
+        return found;
+    }
+
     void LOSE_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> items)
     {
         if (character.Equipment.size() > 0 && items.size() > 0)

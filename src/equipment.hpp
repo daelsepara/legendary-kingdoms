@@ -48,7 +48,10 @@ namespace Equipment
         ENGAGEMENT_RING,
         DRAGONYAK_HORN,
         PYRAMIDAL_KEY,
-        RING_OF_THE_PATRIARCH
+        RING_OF_THE_PATRIARCH,
+        RUNESWORD3,
+        SILVER_SKULL,
+        POTION_OF_INVULNERABILITY
     };
 
     class Base
@@ -144,6 +147,9 @@ namespace Equipment
     auto DRAGONYAK_HORN = Equipment::Base("DRAGONYAK HORN", "DRAGONYAK HORN", Equipment::Class::NORMAL, Equipment::Type::DRAGONYAK_HORN, Attribute::Type::NONE, 0, false);
     auto PYRAMIDAL_KEY = Equipment::Base("PYRAMIDAL KEY", "PYRAMIDAL KEY", Equipment::Class::NORMAL, Equipment::Type::PYRAMIDAL_KEY, Attribute::Type::NONE, 0, false);
     auto RING_OF_THE_PATRIARCH = Equipment::Base("RING OF THE PATRIARCH", "RING OF THE PATRIARCH", Equipment::Class::NORMAL, Equipment::Type::RING_OF_THE_PATRIARCH, Attribute::Type::NONE, 0, false);
+    auto RUNESWORD3 = Equipment::Base("RUNESWORD", "RUNESWORD", Equipment::Class::WEAPON, Equipment::Type::RUNESWORD3, Attribute::Type::FIGHTING, 3, false);
+    auto SILVER_SKULL = Equipment::Base("SILVER SKULL", "SILVER SKULL", Equipment::Class::NORMAL, Equipment::Type::SILVER_SKULL, Attribute::Type::NONE, 0, false);
+    auto POTION_OF_INVULNERABILITY = Equipment::Base("POTION OF INVULNERABILITY", "POTION OF INVULNERABILITY", Equipment::Class::NORMAL, Equipment::Type::POTION_OF_INVULNERABILITY, Attribute::Type::NONE, 0, false);
 }
 
 #endif

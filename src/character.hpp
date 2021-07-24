@@ -81,7 +81,8 @@ namespace Character
         RITUAL_SCARRING,
         ENRAGED,
         FRONT,
-        BACK
+        BACK,
+        POTION_OF_INVULNERABILITY
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;
@@ -91,7 +92,8 @@ namespace Character
         {Character::Status::RITUAL_SCARRING, "Ritual Scarring"},
         {Character::Status::ENRAGED, "Enraged"},
         {Character::Status::FRONT, "in Front"},
-        {Character::Status::BACK, "at the Back"}};
+        {Character::Status::BACK, "at the Back"},
+        {Character::Status::POTION_OF_INVULNERABILITY, "Invulnerable"}};
 
     class Base
     {
