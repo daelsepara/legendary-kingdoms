@@ -12995,9 +12995,11 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
     auto storyID = story->ID < 0 ? story->DisplayID : story->ID;
     auto nextID = next->ID < 0 ? next->DisplayID : next->ID;
 
-    if ((story->BookID != next->BookID) || (story->BookID == next->BookID && storyID != nextID))
+    if ((story->BookID != next->BookID))
     {
-
+    }
+    else if (story->BookID == next->BookID && storyID != nextID)
+    {
     }
 }
 
