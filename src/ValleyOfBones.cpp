@@ -12095,7 +12095,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                         fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
                         SDL_RenderCopy(renderer, splashTexture, &src, &dst);
-                        drawRect(renderer, dst.w, dst.h, dst.x, dst.y, intBK);
+                        drawRect(renderer, dst.w + 2, dst.h + 2, dst.x - 1, dst.y - 1, intBK);
                     }
                 }
             }
@@ -13488,7 +13488,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
                             SDL_RenderCopy(renderer, splashTexture, &src, &dst);
-                            drawRect(renderer, dst.w, dst.h, dst.x, dst.y, intBK);
+                            drawRect(renderer, dst.w + 2, dst.h + 2, dst.x - 1, dst.y - 1, intBK);
                         }
                     }
                 }
