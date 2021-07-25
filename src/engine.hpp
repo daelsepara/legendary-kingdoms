@@ -187,6 +187,40 @@ namespace Engine
         return found;
     }
 
+    int FIND_SOLO(Party::Base &party)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Team == Team::Type::SOLO)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIND_SOLO(std::vector<Character::Base> &party)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.size(); i++)
+        {
+            if (party[i].Team == Team::Type::SOLO)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
     std::vector<int> ROLL_DICE(int count)
     {
         Engine::Random.UniformIntDistribution(1, 6);
@@ -777,13 +811,22 @@ namespace Engine
     {
         auto found = false;
 
-        for (auto i = 0; i < party.size(); i++)
-        {
-            if (Engine::VERIFY_EQUIPMENT(party[i], equipment))
-            {
-                found = true;
+        auto result = Engine::FIND_SOLO(party);
 
-                break;
+        if (result >= 0 && result < party.size())
+        {
+            found = Engine::VERIFY_EQUIPMENT(party[result], equipment);
+        }
+        else
+        {
+            for (auto i = 0; i < party.size(); i++)
+            {
+                if (Engine::VERIFY_EQUIPMENT(party[i], equipment))
+                {
+                    found = true;
+
+                    break;
+                }
             }
         }
 
@@ -794,13 +837,22 @@ namespace Engine
     {
         auto found = false;
 
-        for (auto i = 0; i < party.size(); i++)
-        {
-            if (Engine::VERIFY_ANY_EQUIPMENT(party[i], equipment))
-            {
-                found = true;
+        auto result = Engine::FIND_SOLO(party);
 
-                break;
+        if (result >= 0 && result < party.size())
+        {
+            found = Engine::VERIFY_ANY_EQUIPMENT(party[result], equipment);
+        }
+        else
+        {
+            for (auto i = 0; i < party.size(); i++)
+            {
+                if (Engine::VERIFY_ANY_EQUIPMENT(party[i], equipment))
+                {
+                    found = true;
+
+                    break;
+                }
             }
         }
 
@@ -1080,23 +1132,6 @@ namespace Engine
 
             party.Party[result].Team = Team::Type::SOLO;
         }
-    }
-
-    int FIND_SOLO(Party::Base &party)
-    {
-        auto result = -1;
-
-        for (auto i = 0; i < party.Party.size(); i++)
-        {
-            if (party.Party[i].Team == Team::Type::SOLO)
-            {
-                result = i;
-
-                break;
-            }
-        }
-
-        return result;
     }
 
     bool HAS_MONSTER(std::vector<Monster::Base> &monsters, Monster::Type type)

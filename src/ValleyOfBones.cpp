@@ -12335,7 +12335,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             auto success = skillCheck(window, renderer, party, story->Choices[choice].Team, 2, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
 
-                            if (selection.size() == 2)
+                            if (selection.size() == 2 || selection.size() >= Engine::COUNT(party.Party, story->Choices[choice].Team))
                             {
                                 story->SkillCheck(party, success, selection);
 
