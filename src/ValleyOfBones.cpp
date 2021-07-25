@@ -4354,7 +4354,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                             Engine::GAIN_HEALTH(monsters[opponent], 4);
                         }
-                        else if (monsters[opponent].Type == Monster::Type::SNAKEMAN_PRIEST)
+                        else if (monsters[opponent].Type == Monster::Type::SNAKEMAN_PRIEST || monsters[opponent].Type == Monster::Type::SNAKEMAN)
                         {
                             if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::HYGLIPH_FLOWER}))
                             {
@@ -4391,11 +4391,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     else
                     {
                         score = Engine::SCORE(party.Party[combatant], Attribute::Type::FIGHTING);
-
-                        if (Engine::HAS_STATUS(party.Party[combatant], Character::Status::ENRAGED))
-                        {
-                            score++;
-                        }
                     }
 
                     attacker_string = "Fighting: " + std::to_string(score);
@@ -9031,11 +9026,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             splash = NULL;
         }
-    }
 
-    if (combatResult != Engine::Combat::FLEE && combatResult != Engine::Combat::NONE)
-    {
-        combatResult = Engine::COUNT(party.Party, team) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DEFEAT;
+        if (combatResult != Engine::Combat::FLEE)
+        {
+            combatResult = Engine::COUNT(party.Party, team) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DEFEAT;
+        }
     }
 
     // Clear temporary status, e.g. magic effects
@@ -9253,7 +9248,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
 
-        putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+        putHeader(renderer, (selection.size() > 0 ? (std::string("Selected (") + std::to_string(selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
         if (selection.size() > 0)
         {
@@ -9271,7 +9266,18 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 selection_string += std::string(item.Name);
             }
 
-            putText(renderer, selection_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+
+            auto text = createText(selection_string.c_str(), FONT_MASON, 24, clrBK, splashw - 2 * text_space, TTF_STYLE_NORMAL);
+
+            if (text)
+            {
+                renderText(renderer, text, intBE, startx + text_space, starty + text_bounds - 2 * boxh + text_space, 2 * (boxh - text_space), 0);
+
+                SDL_FreeSurface(text);
+
+                text = NULL;
+            }
         }
         else
         {
@@ -10450,7 +10456,20 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         {
                             if (selection.size() < army.size())
                             {
-                                selection.push_back(offset + current);
+                                if (army[offset + current].Unique && Engine::HAS_UNIT(party, army[offset + current].Type))
+                                {
+                                    flash_message = true;
+
+                                    flash_color = intRD;
+
+                                    message = "You already command the " + std::string(army[offset + current].Name) + "!";
+
+                                    start_ticks = SDL_GetTicks();
+                                }
+                                else
+                                {
+                                    selection.push_back(offset + current);
+                                }
                             }
                         }
                     }
@@ -10465,7 +10484,10 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     {
                         for (auto i = 0; i < selection.size(); i++)
                         {
-                            party.Army.push_back(army[selection[i]]);
+                            if ((!army[selection[i]].Unique) || (army[selection[i]].Unique && !Engine::HAS_UNIT(party, army[selection[i]].Type)))
+                            {
+                                party.Army.push_back(army[selection[i]]);
+                            }
                         }
                     }
 

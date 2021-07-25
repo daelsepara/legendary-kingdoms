@@ -51,7 +51,22 @@ namespace Equipment
         RING_OF_THE_PATRIARCH,
         RUNESWORD3,
         SILVER_SKULL,
-        POTION_OF_INVULNERABILITY
+        POTION_OF_INVULNERABILITY,
+        IRON_SHORTSWORD1,
+        IRON_GREATAXE2,
+        STEEL_LONGSWORD2,
+        STEEL_GREATSWORD3,
+        MASTERWORK_BLADE3,
+        MASTERWORK_GREATSWORD4,
+        HIDE_ARMOUR1,
+        BONE_ARMOUR2,
+        BRONZE_ARMOUR4,
+        SOFT_BOOTS1,
+        REFERENCE_BOOK1,
+        WARM_CLOAK1,
+        HANDSOME_BROOCH1,
+        GOLDWAX_CANDLE,
+        LIZARD_HIDE
     };
 
     class Base
@@ -150,6 +165,21 @@ namespace Equipment
     auto RUNESWORD3 = Equipment::Base("RUNESWORD", "RUNESWORD", Equipment::Class::WEAPON, Equipment::Type::RUNESWORD3, Attribute::Type::FIGHTING, 3, false);
     auto SILVER_SKULL = Equipment::Base("SILVER SKULL", "SILVER SKULL", Equipment::Class::NORMAL, Equipment::Type::SILVER_SKULL, Attribute::Type::NONE, 0, false);
     auto POTION_OF_INVULNERABILITY = Equipment::Base("POTION OF INVULNERABILITY", "POTION OF INVULNERABILITY", Equipment::Class::NORMAL, Equipment::Type::POTION_OF_INVULNERABILITY, Attribute::Type::NONE, 0, false);
+    auto IRON_SHORTSWORD1 = Equipment::Base("IRON SHORTSWORD", "IRON SHORTSWORD", Equipment::Class::WEAPON, Equipment::Type::IRON_SHORTSWORD1, Attribute::Type::FIGHTING, 1, false);
+    auto IRON_GREATAXE2 = Equipment::Base("IRON GREATAXE", "IRON GREATAXE", Equipment::Class::WEAPON, Equipment::Type::IRON_GREATAXE2, Attribute::Type::FIGHTING, 2, true);
+    auto STEEL_LONGSWORD2 = Equipment::Base("STEEL LONGSWORD", "STEEL LONGSWORD", Equipment::Class::WEAPON, Equipment::Type::STEEL_LONGSWORD2, Attribute::Type::FIGHTING, 2, false);
+    auto STEEL_GREATSWORD3 = Equipment::Base("STEEL GREATSWORD", "STEEL GREATSWORD", Equipment::Class::WEAPON, Equipment::Type::STEEL_GREATSWORD3, Attribute::Type::FIGHTING, 3, true);
+    auto MASTERWORK_BLADE3 = Equipment::Base("MASTERWORK BLADE", "MASTERWORK BLADE", Equipment::Class::WEAPON, Equipment::Type::MASTERWORK_BLADE3, Attribute::Type::FIGHTING, 3, false);
+    auto MASTERWORK_GREATSWORD4 = Equipment::Base("MASTERWORK GREATSWORD", "MASTERWORK GREATSWORD", Equipment::Class::WEAPON, Equipment::Type::MASTERWORK_GREATSWORD4, Attribute::Type::FIGHTING, 4, true);
+    auto HIDE_ARMOUR1 = Equipment::Base("HIDE ARMOUR", "HIDE ARMOUR", Equipment::Class::ARMOUR, Equipment::Type::HIDE_ARMOUR1, Attribute::Type::ARMOUR, 1, false);
+    auto BONE_ARMOUR2 = Equipment::Base("BONE ARMOUR", "BONE ARMOUR", Equipment::Class::ARMOUR, Equipment::Type::BONE_ARMOUR2, Attribute::Type::ARMOUR, 2, false);
+    auto BRONZE_ARMOUR4 = Equipment::Base("BRONZE ARMOUR", "BRONZE ARMOUR", Equipment::Class::ARMOUR, Equipment::Type::BRONZE_ARMOUR4, Attribute::Type::ARMOUR, 4, false);
+    auto SOFT_BOOTS1 = Equipment::Base("SOFT BOOTS", "SOFT BOOTS", Equipment::Class::NORMAL, Equipment::Type::SOFT_BOOTS1, Attribute::Type::STEALTH, 1, false);
+    auto REFERENCE_BOOK1 = Equipment::Base("REFERENCE BOOK", "REFERENCE BOOK", Equipment::Class::NORMAL, Equipment::Type::REFERENCE_BOOK1, Attribute::Type::LORE, 1, false);
+    auto WARM_CLOAK1 = Equipment::Base("WARM CLOAK", "WARM CLOAK", Equipment::Class::NORMAL, Equipment::Type::WARM_CLOAK1, Attribute::Type::SURVIVAL, 1, false);
+    auto HANDSOME_BROOCH1 = Equipment::Base("HANDSOME BROOCH", "HANDSOME BROOCH", Equipment::Class::NORMAL, Equipment::Type::HANDSOME_BROOCH1, Attribute::Type::CHARISMA, 1, false);
+    auto GOLDWAX_CANDLE = Equipment::Base("GOLDWAX CANDLE", "GOLDWAX CANDLE", Equipment::Class::NORMAL, Equipment::Type::GOLDWAX_CANDLE, Attribute::Type::NONE, 0, false);
+    auto LIZARD_HIDE = Equipment::Base("LIZARD HIDE", "LIZARD HIDE", Equipment::Class::NORMAL, Equipment::Type::LIZARD_HIDE, Attribute::Type::NONE, 0, false);
 }
 
 #endif

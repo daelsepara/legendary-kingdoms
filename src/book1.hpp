@@ -4445,6 +4445,267 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 51}; }
     };
 
+    class Story140 : public Story::Base
+    {
+    public:
+        Story140()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 140;
+
+            Text = "Although your trip into the shadow world was short, it was oddly disconcerting. You feel pleased to leave it behind. You head north, directly away from the Blackwall.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 858}; }
+    };
+
+    class Story141 : public Story::Base
+    {
+    public:
+        Story141()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 141;
+
+            Text = "\"All right, then,\" nods the ogre. \"I hate them orcies anyway.\" Cross off any money you bribed the ogre with.\n\n\"It's madshards. That's what they're after,\" he says simply.\n\n\"What are madshards?\" you ask.\n\n\"You know... madshards,\" says the ogre, performing some kind of indistinct mime. \"Little bits of metal. From that broken talisman, thing? You know. It's what the whole orc uprising is about.\"\n\n\"And what is the orc uprising about?\" you press.\n\n\"Don't ask me,\" shrugs the ogre. \"I was hoping you could tell me.\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Try to convince the ogre to change sides", {Book::Type::BOOK1, 576}));
+            Choices.push_back(Choice::Base("Kill the ogre", {Book::Type::BOOK1, 117}));
+            Choices.push_back(Choice::Base("Leave the ogre in peace", {Book::Type::BOOK1, 310}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story142 : public Story::Base
+    {
+    public:
+        Story142()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 142;
+
+            Text = "There is no central marketplace in Chalice, but rather the shops and stalls are spread out amongst the well-tended districts. Stern guards wearing fine longswords and ceremonial robes patrol the streets, watching you carefully as you go from shop to shop. The finest weapons in the valley are forged in this place, with techniques that rival those of Longport, although the very best swords are not available for foreigners.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::SHOP;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SET_LOCATION(party, Location::Type::CHALICE);
+
+            Shop = {
+                {Equipment::CRUDE_BLADE, 25, 10},
+                {Equipment::MAUL, -1, 25},
+                {Equipment::IRON_SHORTSWORD1, 200, 100},
+                {Equipment::IRON_GREATAXE2, -1, 150},
+                {Equipment::STEEL_LONGSWORD2, 800, 400},
+                {Equipment::STEEL_GREATSWORD3, -1, 450},
+                {Equipment::MASTERWORK_BLADE3, -1, 900},
+                {Equipment::MASTERWORK_GREATSWORD4, -1, 1250},
+                {Equipment::SHIELD2, 50, 25},
+                {Equipment::HIDE_ARMOUR1, -1, 30},
+                {Equipment::BONE_ARMOUR2, -1, 150},
+                {Equipment::BRONZE_ARMOUR4, -1, 2000},
+                {Equipment::SOFT_BOOTS1, 500, 250},
+                {Equipment::REFERENCE_BOOK1, 500, 250},
+                {Equipment::WARM_CLOAK1, -1, 250},
+                {Equipment::HANDSOME_BROOCH1, -1, 250},
+                {Equipment::PRYBAR, 100, 50},
+                {Equipment::INCENSE, -1, 90},
+                {Equipment::GOLDWAX_CANDLE, -1, 100},
+                {Equipment::ENGAGEMENT_RING, -1, 65},
+                {Equipment::VIAL_OF_POISON, -1, 50},
+                {Equipment::DRAGONYAK_HORN, -1, 35},
+                {Equipment::LIZARD_HIDE, -1, 50}};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story143 : public Story::Base
+    {
+    public:
+        Story143()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 143;
+
+            Text = "You spend a full month with Che Long training up the Bronzeguard. They are a formidable sight in their gleaming bronze armour and powerful steel weapons. Only the best recruits are permitted to stay in training, and soon you have a unit of the Everchild's fiercest supporters dressed in enchanted armour. The unit's morale is exceptional, and they are sure to make a powerful impression on the battlefield.\n\nYou may add the following unit to the Saltdad garrison:\n\n[Bronzeguard]: Strength 5, Morale 5\n\nYou cannot have more than one unit of [Bronzeguard] in existence at any given time as their equipment is irreplaceable. If the [Bronzeguard] are ever destroyed, you can train new recruits to use their equipment by spending another two GOLD BULLION bars. Feeling nigh indestructible, you return to the palace.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Army = {Army::Base("Bronzeguard", Army::Type::BRONZEGUARD, Location::Type::SALTDAD, 5, 5, true)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 620}; }
+    };
+
+    class Story144 : public Story::Base
+    {
+    public:
+        Story144()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 144;
+
+            Text = "You are mid-way along the south coast of the Valley of Bones. To the south is Viaan Island, occupied by the fierce Bando tribe.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Sail into the deep harbour of the Bando village", {Book::Type::BOOK1, 716}));
+            Choices.push_back(Choice::Base("Sail west", {Book::Type::BOOK1, 814}));
+            Choices.push_back(Choice::Base("Sail east", {Book::Type::BOOK1, 198}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story145 : public Story::Base
+    {
+    public:
+        Story145()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 145;
+
+            Text = "You manage to recall the correct incantations to dispel darkness of this kind, and suddenly your lanterns illuminate the room. Within you can see strange coffers, some of which have loose piles of coin scattered over them. Opening the coffers you find a good deal more, some 200 silver coins in total, and a set of ornate BONE ARMOUR (Armour +2).";
+
+            Bye = "Unsure if your reward was worth the dreadful battle to get it, you move on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::BONE_ARMOUR2};
+
+            Limit = 1;
+
+            Engine::GAIN_MONEY(party, 200);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 93}; }
+    };
+
+    class Story146 : public Story::Base
+    {
+    public:
+        Story146()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 146;
+
+            Text = "Somewhere, deep within your subconscious, you realise that something is wrong. The book is constantly building to point, but never satisfying you. For pages and pages you have been utterly unenlightened, nor can you seem break away from reading it. Slowly, painfully, as if in a dream, you grasp the edge of a page and tear it out. The curse is instantly broken, and you continue to rip out pages until your consciousness clears. Your companions are relieved to see you have woken from your reverie. You have been standing immobile for a full ten minutes!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 695}; }
+    };
+
+    class Story147 : public Story::Base
+    {
+    public:
+        Story147()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 147;
+
+            Text = "With perfect timing you slip into the room, jemmy open the overseer's table drawer and grab the key. You emerge just in time, ducking into a darkened corner as a pair of guards wander by. Once they have passed, you creep back to the gatehouse door, unlocking it and entering.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 611}; }
+    };
+
+    class Story148 : public Story::Base
+    {
+    public:
+        Story148()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 148;
+
+            Text = "Sir Lawrence pours you a bottle of fine Almskirk wine, and bids you sit upon velvet cushioned chairs in his plush marquee. \"We are here to find spices,\" admits Sir Lawrence. \"House Ross has always been more interested in trade than the petty wars of Longport Bay. Let the Dayne's and the Bailey's fight like dogs -- we are interested in the larger world. We have expeditions elsewhere, but this one is all about exploring the jungles that lie to the west of Lhasbreath. If we can find enough interesting herbs or spices it might be profitable enough to set up a trade post or colony.\"\n\nSir Lawrence frowns. \"Unfortunately, we've hit a snag,\" he admits. \"The knights who were going to escort our scholars into the jungle have perished. They engaged in an honour duel with several barbarian locals... and came out of the battle poorly. Until I can find guards I can trust, I cannot send our scholars in. You seem cultured and capable folk. Perhaps you would be willing to act as expedition leaders? There would be an ample reward on offer!\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Accept Sir Lawrence's offer", {Book::Type::BOOK1, 5}));
+            Choices.push_back(Choice::Base("You dot not feel ready to risk the jungle just yet", {Book::Type::BOOK1, 775}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story149 : public Story::Base
+    {
+    public:
+        Engine::Destination destination;
+
+        Story149()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 149;
+
+            Text = "The bull stands seven feet tall at the shoulder.\n\nThis will not be an easy battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take.clear();
+
+            Limit = 0;
+
+            CanFlee = false;
+
+            Monsters = {Monster::Base("Dragonyak Bull", 6, 3, 4, 15, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 115}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Take = {Equipment::DRAGONYAK_HORN};
+
+                Limit = 1;
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -4602,6 +4863,16 @@ namespace Book1
     auto story137 = Story137();
     auto story138 = Story138();
     auto story139 = Story139();
+    auto story140 = Story140();
+    auto story141 = Story141();
+    auto story142 = Story142();
+    auto story143 = Story143();
+    auto story144 = Story144();
+    auto story145 = Story145();
+    auto story146 = Story146();
+    auto story147 = Story147();
+    auto story148 = Story148();
+    auto story149 = Story149();
 
     void InitializeStories()
     {
@@ -4621,7 +4892,8 @@ namespace Book1
             &story100, &story101, &story102, &story103, &story104, &story105, &story106, &story107, &story108, &story109,
             &story110, &story111, &story112, &story113, &story114, &story115, &story116, &story117, &story118, &story119,
             &story120, &story121, &story122, &story123, &story124, &story125, &story126, &story127, &story128, &story129,
-            &story130, &story131, &story132, &story133, &story134, &story135, &story136, &story137, &story138, &story139};
+            &story130, &story131, &story132, &story133, &story134, &story135, &story136, &story137, &story138, &story139,
+            &story140, &story141, &story142, &story143, &story144, &story145, &story146, &story147, &story148, &story149};
     }
 }
 #endif

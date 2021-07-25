@@ -275,6 +275,11 @@ namespace Engine
             }
         }
 
+        if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::ENRAGED))
+        {
+            score++;
+        }
+
         return score;
     }
 
@@ -298,7 +303,8 @@ namespace Engine
 
     int FIGHTING_SCORE(Character::Base &character)
     {
-        auto max = 0;
+        auto max = -1;
+        auto score = 1;
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
@@ -311,12 +317,14 @@ namespace Engine
             }
         }
 
+        score = max >= 0 ? Engine::SCORE(character, Attribute::Type::FIGHTING) : score;
+
         if (Engine::HAS_STATUS(character, Character::Status::ENRAGED))
         {
-            max += 1;
+            score++;
         }
 
-        return max > 0 ? Engine::SCORE(character, Attribute::Type::FIGHTING) + max : 1;
+        return score;
     }
 
     bool TWO_HANDED(Character::Base &character)
@@ -1613,6 +1621,13 @@ namespace Engine
         }
 
         return result;
+    }
+
+    bool HAS_UNIT(Party::Base &party, Army::Type unit)
+    {
+        auto result = Engine::FIND_UNIT(party.Army, unit);
+
+        return (result >= 0 && result < party.Army.size());
     }
 }
 #endif

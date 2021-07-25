@@ -10,6 +10,7 @@ namespace Monster
     {
         NORMAL = 0,
         SKALLOS,
+        SNAKEMAN,
         SNAKEMAN_PRIEST,
         ZEALOT,
         ZEALOT_HEALER,

@@ -10,7 +10,8 @@ namespace Army
     enum class Type
     {
         NONE = -1,
-        LHASBREATH_BERSERKERS
+        LHASBREATH_BERSERKERS,
+        BRONZEGUARD
     };
 
     class Base
@@ -30,6 +31,8 @@ namespace Army
         int Morale = 0;
 
         int MaximumMorale = 0;
+
+        bool Unique = false;
 
         Location::BattleField Position = Location::BattleField::NONE;
 
@@ -53,6 +56,25 @@ namespace Army
             Morale = morale;
 
             MaximumMorale = morale;
+        }
+
+        Base(const char* name, Army::Type type, Location::Type garrison, int strength, int morale, bool unique)
+        {
+            Name = name;
+
+            Type = type;
+
+            Garrison = garrison;
+
+            Strength = strength;
+
+            MaximumStrength = strength;
+
+            Morale = morale;
+
+            MaximumMorale = morale;
+
+            Unique = unique;
         }
     };
 }
