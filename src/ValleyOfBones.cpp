@@ -13329,6 +13329,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         {
             controls = Story::InnControls(compact);
         }
+        else if (story->Controls == Story::Controls::RECRUIT)
+        {
+            controls = Story::RecruitmentConrols(compact);
+        }
         else
         {
             controls = Story::ExitControls(compact);

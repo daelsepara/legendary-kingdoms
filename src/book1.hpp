@@ -69,10 +69,7 @@ namespace Book1
                 Monster::Base("Orc", 4, 4, 3, 9, 0)};
         }
 
-        Engine::Destination Continue(Party::Base &party)
-        {
-            return destination;
-        }
+        Engine::Destination Continue(Party::Base &party) { return destination; }
 
         void AfterCombat(Party::Base &party, Engine::Combat result)
         {
@@ -275,11 +272,11 @@ namespace Book1
 
                 if (Engine::VERIFY_CODES(party, {Codes::Type::WEAPON_AND_DISTRACTION}))
                 {
-                    Choices.push_back(Choice::Base("Seduce the Guards (Team: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
+                    Choices.push_back(Choice::Base("Seduce the Guards (Team check: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
                 }
                 else
                 {
-                    Choices.push_back(Choice::Base("Seduce the Guards (Team: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, Team::Type::DISTRACTION, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
+                    Choices.push_back(Choice::Base("Seduce the Guards (Team check: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, Team::Type::DISTRACTION, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
                 }
             }
 
@@ -899,7 +896,7 @@ namespace Book1
             Choices.push_back(Choice::Base("Give the mercenaries a GOLD BULLION bar", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION1}, 1));
             Choices.push_back(Choice::Base("Give the mercenaries two GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 2));
             Choices.push_back(Choice::Base("Give the mercenaries three GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 3));
-            Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
+            Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
 
             Take = {Equipment::GOLD_BULLION};
 
@@ -929,19 +926,19 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION1}))
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 5+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 5+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 7));
             }
             else if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION2}))
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 4+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 4+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 7));
             }
             else if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION2}))
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 2+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 2, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 2+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 2, 7));
             }
             else
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
             }
         }
     };
@@ -972,7 +969,7 @@ namespace Book1
             {
                 PreText += "They bombard you with questions about the faith, to determine your worthiness.";
 
-                Choices.push_back(Choice::Base("Answer Cursite zealots (Team: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 657}, {Book::Type::BOOK1, -28}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 4));
+                Choices.push_back(Choice::Base("Answer Cursite zealots (Team check: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 657}, {Book::Type::BOOK1, -28}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 4));
             }
             else
             {
@@ -1312,7 +1309,7 @@ namespace Book1
             Text = "You join the disorganised caravan guards, barking orders at them to form a defensive line and protect their archers.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Order the caravan guards (Team: Charisma 5+, Successes: 3)", {Book::Type::BOOK1, 542}, {Book::Type::BOOK1, 451}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 3));
+            Choices.push_back(Choice::Base("Order the caravan guards (Team check: Charisma 5+, Successes: 3)", {Book::Type::BOOK1, 542}, {Book::Type::BOOK1, 451}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 3));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -1860,7 +1857,7 @@ namespace Book1
 
             Choices.clear();
 
-            temp_string = "Parlay with the goblin (Team: Charisma " + std::to_string(difficulty) + "+, Successes: 3)";
+            temp_string = "Parlay with the goblin (Team check: Charisma " + std::to_string(difficulty) + "+, Successes: 3)";
 
             Choices.push_back(Choice::Base(temp_string.c_str(), {Book::Type::BOOK1, 828}, {Book::Type::BOOK1, 389}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, difficulty, 3));
 
@@ -1919,7 +1916,7 @@ namespace Book1
             Text = "You knock the guards down into the dirt and surge forwards. There is nowhere to hide but in the city itself so you dash into the streets whilst the guards roar behind you.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Hide from the guards (Team: Stealth 4+, Successes: 4)", {Book::Type::BOOK1, 698}, {Book::Type::BOOK1, 758}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 4, 4));
+            Choices.push_back(Choice::Base("Hide from the guards (Team check: Stealth 4+, Successes: 4)", {Book::Type::BOOK1, 698}, {Book::Type::BOOK1, 758}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 4, 4));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -1956,10 +1953,7 @@ namespace Book1
             Monsters = {Monster::Base("Thief of Royce", 5, 4, 4, 14, 0)};
         }
 
-        Engine::Destination Continue(Party::Base &party)
-        {
-            return destination;
-        }
+        Engine::Destination Continue(Party::Base &party) { return destination; }
 
         void AfterCombat(Party::Base &party, Engine::Combat result)
         {
@@ -2549,7 +2543,7 @@ namespace Book1
             Text = "This is no normal quicksand, as there is not a drop of moisture in the cave. Nonetheless the hungry earth is pulling them down quickly.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Save your teammate (Team: Survival 4+, Successes: 5)", {Book::Type::BOOK1, 586}, {Book::Type::BOOK1, 646}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 5));
+            Choices.push_back(Choice::Base("Save your teammate (Team check: Survival 4+, Successes: 5)", {Book::Type::BOOK1, 586}, {Book::Type::BOOK1, 646}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 5));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -2586,7 +2580,7 @@ namespace Book1
             Text = "Holding your torches high you begin to make your way into the crevice, carefully watching your feet in the dancing firelight as they crunch near the eggs. A giant spider above you crawls along the ceiling, as if tracking your progress through her nursery.\n\n\"Step where we step,\" you advise the Everchild's followers as you move carefully forwards.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Navigate the spider's nest (Team: Survival 4+, Successes: 5)", {Book::Type::BOOK1, 461}, {Book::Type::BOOK1, 260}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 5));
+            Choices.push_back(Choice::Base("Navigate the spider's nest (Team check: Survival 4+, Successes: 5)", {Book::Type::BOOK1, 461}, {Book::Type::BOOK1, 260}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 5));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -2739,7 +2733,7 @@ namespace Book1
             Text = "You go amongst the king's councillors, trying to find one who might be able to arrange an appointment for you.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Arrange an audience (Team: Charisma 5+, Successes: 5)", {Book::Type::BOOK1, 134}, {Book::Type::BOOK1, 775}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 5));
+            Choices.push_back(Choice::Base("Arrange an audience (Team check: Charisma 5+, Successes: 5)", {Book::Type::BOOK1, 134}, {Book::Type::BOOK1, 775}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 5));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -2804,7 +2798,7 @@ namespace Book1
             Text = "You attempt to scale the cliffsides leading to the jungle.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Climb the cliffside (Team: Survival 5+, Successes: 4)", {Book::Type::BOOK1, 409}, {Book::Type::BOOK1, -87002}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 5, 4));
+            Choices.push_back(Choice::Base("Climb the cliffside (Team check: Survival 5+, Successes: 4)", {Book::Type::BOOK1, 409}, {Book::Type::BOOK1, -87002}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 5, 4));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -3404,7 +3398,7 @@ namespace Book1
             Text = "You make your way down to the riverbank, and eventually find the raft with Emlyn's help, covered over with weeds and bushes. Two long poles can be used to pilot the craft, and soon you are punting down the river, the sun shimmering through the canopy of trees onto the glittering water.\n\nThe raft begins to pick up speed, and as you round a corner you can see why. There are rapids ahead, the water splashing with thick foam against scattered rocks that peek through the surface of the river. If you were in canoes it would be easily navigable. On your raft it will take all your skill to avoid danger.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Navigate the rapids (Team: Survival 5+, Successes: 3)", {Book::Type::BOOK1, 54}, {Book::Type::BOOK1, 337}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 5, 3));
+            Choices.push_back(Choice::Base("Navigate the rapids (Team check: Survival 5+, Successes: 3)", {Book::Type::BOOK1, 54}, {Book::Type::BOOK1, 337}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 5, 3));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -3727,7 +3721,7 @@ namespace Book1
             Text = "You are travelling across a stretch of rocky desert, that rolls and twists into great gulches and canyons. Paths have been worn into the stone from hundreds of years of travel by nomads and barbarians who avoid the well-guarded roads that link the cities. It is hot and dry, and getting lost is a distinct possibility.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Navigate the Withered Steppes (Team: Survival 4+, Successes: 3)", {Book::Type::BOOK1, -115001}, {Book::Type::BOOK1, -115002}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 3));
+            Choices.push_back(Choice::Base("Navigate the Withered Steppes (Team check: Survival 4+, Successes: 3)", {Book::Type::BOOK1, -115001}, {Book::Type::BOOK1, -115002}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 3));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -3816,11 +3810,11 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::WALL_CLIMBING_AND_DOOR}))
             {
-                Choices.push_back(Choice::Base("Rob the upper floor (Team: Stealth 4+, Successes: 5)", {Book::Type::BOOK1, 22}, {Book::Type::BOOK1, 529}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 4, 5));
+                Choices.push_back(Choice::Base("Rob the upper floor (Team check: Stealth 4+, Successes: 5)", {Book::Type::BOOK1, 22}, {Book::Type::BOOK1, 529}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 4, 5));
             }
             else
             {
-                Choices.push_back(Choice::Base("Rob the upper floor (Team: Stealth 4+, Successes: 5)", {Book::Type::BOOK1, 22}, {Book::Type::BOOK1, 529}, Team::Type::WALL_CLIMBING, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 4, 5));
+                Choices.push_back(Choice::Base("Rob the upper floor (Team check: Stealth 4+, Successes: 5)", {Book::Type::BOOK1, 22}, {Book::Type::BOOK1, 529}, Team::Type::WALL_CLIMBING, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 4, 5));
             }
         }
     };
@@ -4098,7 +4092,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::REPAIR_CALENDAR_KALU}))
             {
-                Choices.push_back(Choice::Base("Repair the calendar (Team: Lore 5+, Successes: 3)", {Book::Type::BOOK1, -128001}, {Book::Type::BOOK1, 75}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 5, 3));
+                Choices.push_back(Choice::Base("Repair the calendar (Team check: Lore 5+, Successes: 3)", {Book::Type::BOOK1, -128001}, {Book::Type::BOOK1, 75}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 5, 3));
             }
 
             Choices.push_back(Choice::Base("Your business here is complete", {Book::Type::BOOK1, 75}));
@@ -4172,7 +4166,7 @@ namespace Book1
 
             Choices.clear();
 
-            Choices.push_back(Choice::Base("Secure the cogwheel (Individual: Survival 4+, Successes: 3)", {Book::Type::BOOK1, 745}, {Book::Type::BOOK1, 549}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::SURVIVAL}, 4, 3));
+            Choices.push_back(Choice::Base("Secure the cogwheel (Individual check: Survival 4+, Successes: 3)", {Book::Type::BOOK1, 745}, {Book::Type::BOOK1, 549}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::SURVIVAL}, 4, 3));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -4378,7 +4372,7 @@ namespace Book1
             Text = "The sands whip against your face as you stagger through the desert. You seek shelter against the wreck of a once enormous statue, with only the sombre face of a long-forgotten king still visible in the lashing wind. Taking cover behind the hawkish nose of the stone face, you wait the storm out.\n\nWhen the wind dies down you examine the area. You realise where you are now. These are the Tumblestones, the remains of an ancient civilisation lost to the sands for all time. Historians from distant lands have attempted excavations here, but the heaped sands filled their trenches as fast as they could be dug, and the storms battered away their camps. Not much is left. A scattering of broken stones, perhaps once an enormous carved mural of some kind, lie revealed across the sands, the recent storms having unearthed them. Taking a casual look, you are surprised to see that they are fragments of a spell, carved in enormous letters.\n\nThe broken mural lies in pieces around you. It might be possible to fit the shattered mural together and decipher the spell if you are clever enough to puzzle it out.\n\nYou gained the code A17.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Rebuild the spell mural (Team: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 603}, {Book::Type::BOOK1, 368}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 4));
+            Choices.push_back(Choice::Base("Rebuild the spell mural (Team check: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 603}, {Book::Type::BOOK1, 368}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 4));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -4706,6 +4700,307 @@ namespace Book1
         }
     };
 
+    class Story150 : public Story::Base
+    {
+    public:
+        Engine::Destination destination;
+
+        Story150()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 150;
+
+            Text = "You must fight!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 3, 4, 3, 7, 0),
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 4, 3, 7, 0),
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 4, 3, 5, 0),
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 3, 4, 3, 5, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 579}; }
+    };
+
+    class Story151 : public Story::Base
+    {
+    public:
+        Story151()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 151;
+
+            Text = "You open the door into a large chamber with a glowing floor. Strange circles and runes have been carved in the middle, but it is difficult to make out exactly what has been drawn as crawling over the mystic patterns are hundreds of beetles, their shiny black carapaces reflecting the light of your lanterns. Almost as one they stop and crawl round to look at you. The effect is rather eerie. Like a tiny phalanx they begin to advance upon you.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Cast a spell to disperse them", {Book::Type::BOOK1, 754}));
+            Choices.push_back(Choice::Base("Attempt to crush the beetles underfoot", {Book::Type::BOOK1, 518}));
+            Choices.push_back(Choice::Base("Slam the door shut to keep them out and return to the crossroads", {Book::Type::BOOK1, 566}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(61)}))
+            {
+                return {Book::Type::BOOK1, 685};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story152 : public Story::Base
+    {
+    public:
+        Story152()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 152;
+
+            Text = "The slaves of Clifftop are a lucky breed, compared to the citizens. Having paid money to acquire them, most masters are unwilling to whip their slaves to death, unlike the deathly ill peasants who toil in the fields.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. Remember that a party member without a weapon has their Fighting score reduced by 1 point in combat.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::RECRUIT;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SET_LOCATION(party, Location::Type::CLIFFTOP);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story153 : public Story::Base
+    {
+    public:
+        Story153()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 153;
+
+            Text = "You show Mannus, the keeper of the holy purse, the IRON SCEPTRE -- a symbol that you speak with the Iron King's authority. He takes it and welcomes you, commanding a slave to pour you some wine and close the door. You begin to discuss the Saltdad tithe and convey the Iron King's wishes that it should be modified downwards as a point of principal. You also add that, coincidentally, the Iron King understands that Mannus is poorly compensated for his time in the tax office and that good conscience compels him to see that changed.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Bribe the official (Team check: Charisma 4+, Successes: 4)", {Book::Type::BOOK1, 476}, {Book::Type::BOOK1, 560}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::IRON_SCEPTRE});
+        }
+    };
+
+    class Story154 : public Story::Base
+    {
+    public:
+        Story154()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 154;
+
+            Text = "You bid your companions farewell, assuring them you will be alright and that you must face the coming trial alone. Reluctantly they agree to leave you, saying that they will stay in Chalice until your exploration of the caves is complete.\n\nYou wander the hills for many hours, passing many small and empty caves, pondering where exactly you should be going. After a while you sit upon a rock and enter a deep meditation.\n\nNote: Until you return to Chalice you cannot call on any of your other party members to make skill checks, fight battles or carry or transfer equipment. Akihiro is completely alone.\n\nIf Akihiro dies, eventually the rest of the party will realise he isn't coming back and continue their adventure. Any items of equipment he was carrying at the time of his death will also be lost.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Meditate on your destiny (Individual check: Lore 4+, Successes: 2)", {Book::Type::BOOK1, 684}, {Book::Type::BOOK1, 510}, {Attribute::Type::LORE}, 4, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(77)}))
+            {
+                return {Book::Type::BOOK1, 6};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GO_SOLO(party, Character::Type::AKIHIRO_OF_CHALICE);
+        }
+    };
+
+    class Story155 : public Story::Base
+    {
+    public:
+        Story155()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 155;
+
+            Text = "Dulcimer cannot be swayed and throws you out of his house. Akini thanks you for your efforts but is resigned to a grisly death at the hands of her lover. You cannot stay to watch, and leave, shaking your head at the savagery of the Saltdad court.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story156 : public Story::Base
+    {
+    public:
+        Story156()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 156;
+
+            Text = "The CRIER BIRD should fetch a tidy sum in a big city. Pleased with your find, you make your way out of the jungle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::CRIER_BIRD};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 618}; }
+    };
+
+    class Story157 : public Story::Base
+    {
+    public:
+        Story157()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 157;
+
+            Text = "The sound of drums and crowds roaring echo in your ears as you are once again lined up in the gatehouse in preparation for your latest bout. Up to four CRUDE BLADES (Fighting +0) can be equipped by your characters. Again, one character may be armed with a SHIELD (Armour +2), and another with a two-handed MAUL* (Fighting +1).\n\nEquip your characters as you wish";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::SHIELD2, Equipment::MAUL};
+
+            Limit = 6;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 170}; }
+    };
+
+    class Story158 : public Story::Base
+    {
+    public:
+        Story158()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 158;
+
+            Text = "The market of Lhasbreath is a noisy and vibrant place, based around a stone amphitheatre and bedecked with brightly coloured tents. Monkeys and birds chitter in the cool shadows, darting away as people approach, only to return to steal a loose berry or fruit.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::SHOP;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SET_LOCATION(party, Location::Type::LHASBREATH);
+
+            Shop = {
+                {Equipment::CRUDE_BLADE, 25, 10},
+                {Equipment::MAUL, 50, 25},
+                {Equipment::IRON_SHORTSWORD1, 200, 100},
+                {Equipment::IRON_GREATAXE2, 300, 150},
+                {Equipment::STEEL_LONGSWORD2, -1, 400},
+                {Equipment::STEEL_GREATSWORD3, -1, 450},
+                {Equipment::SHIELD2, 50, 20},
+                {Equipment::HIDE_ARMOUR1, 70, 35},
+                {Equipment::BONE_ARMOUR2, 300, 150},
+                {Equipment::BRONZE_ARMOUR4, -1, 2000},
+                {Equipment::SOFT_BOOTS1, -1, 250},
+                {Equipment::REFERENCE_BOOK1, -1, 250},
+                {Equipment::WARM_CLOAK1, 500, 250},
+                {Equipment::HANDSOME_BROOCH1, -1, 250},
+                {Equipment::PRYBAR, 100, 50},
+                {Equipment::INCENSE, -1, 90},
+                {Equipment::BLUESTONE, -1, 45},
+                {Equipment::GREY_TALISMAN, -1, 100},
+                {Equipment::ENGAGEMENT_RING, -1, 65},
+                {Equipment::VIAL_OF_POISON, -1, 50},
+                {Equipment::DRAGONYAK_HORN, -1, 35},
+                {Equipment::LIZARD_HIDE, -1, 25}};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story159 : public Story::Base
+    {
+    public:
+        Story159()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 159;
+
+            Text = "As you cross a dune you come upon a strange sight. A monkey, just an arms-length tall, lies in the sand, breathing heavily, almost dehydrated. Such beasts are never seen outside the Lhasbreath jungles, and yet here is one apparently wandering the desert like a nomad. It is in a dreadful state.\n\nYou gained the code A42.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Give the monkey some water", {Book::Type::BOOK1, 552}));
+            Choices.push_back(Choice::Base("Give it a wide berth", {Book::Type::BOOK1, 125}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(42)}))
+            {
+                return {Book::Type::BOOK1, 257};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(42)});
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -4873,6 +5168,16 @@ namespace Book1
     auto story147 = Story147();
     auto story148 = Story148();
     auto story149 = Story149();
+    auto story150 = Story150();
+    auto story151 = Story151();
+    auto story152 = Story152();
+    auto story153 = Story153();
+    auto story154 = Story154();
+    auto story155 = Story155();
+    auto story156 = Story156();
+    auto story157 = Story157();
+    auto story158 = Story158();
+    auto story159 = Story159();
 
     void InitializeStories()
     {
@@ -4893,7 +5198,8 @@ namespace Book1
             &story110, &story111, &story112, &story113, &story114, &story115, &story116, &story117, &story118, &story119,
             &story120, &story121, &story122, &story123, &story124, &story125, &story126, &story127, &story128, &story129,
             &story130, &story131, &story132, &story133, &story134, &story135, &story136, &story137, &story138, &story139,
-            &story140, &story141, &story142, &story143, &story144, &story145, &story146, &story147, &story148, &story149};
+            &story140, &story141, &story142, &story143, &story144, &story145, &story146, &story147, &story148, &story149,
+            &story150, &story151, &story152, &story153, &story154, &story155, &story156, &story157, &story158, &story159};
     }
 }
 #endif

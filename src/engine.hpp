@@ -338,20 +338,23 @@ namespace Engine
     int FIGHTING_SCORE(Character::Base &character)
     {
         auto max = -1;
-        auto score = 1;
+
+        auto score = Engine::SCORE(character, Attribute::Type::FIGHTING);
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
             if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
             {
-                if (character.Equipment[i].Modifier >= max)
-                {
-                    max = character.Equipment[i].Modifier;
-                }
+                max = std::max(max, character.Equipment[i].Modifier);
             }
         }
 
-        score = max >= 0 ? Engine::SCORE(character, Attribute::Type::FIGHTING) : score;
+        score = max >= 0 ? (score + max) : (score - 1);
+
+        if (score < 1)
+        {
+            score = 1;
+        }
 
         if (Engine::HAS_STATUS(character, Character::Status::ENRAGED))
         {
@@ -1124,9 +1127,11 @@ namespace Engine
 
     void GO_SOLO(Party::Base &party, Character::Type character)
     {
+        Engine::CONSOLIDATE(party);
+        
         auto result = Engine::FIND_CHARACTER(party.Party, character);
 
-        if (result >= 0)
+        if (result >= 0 && result < party.Party.size())
         {
             party.Current = result;
 

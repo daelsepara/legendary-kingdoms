@@ -66,7 +66,9 @@ namespace Equipment
         WARM_CLOAK1,
         HANDSOME_BROOCH1,
         GOLDWAX_CANDLE,
-        LIZARD_HIDE
+        LIZARD_HIDE,
+        IRON_SCEPTRE,
+        CRIER_BIRD
     };
 
     class Base
@@ -180,6 +182,8 @@ namespace Equipment
     auto HANDSOME_BROOCH1 = Equipment::Base("HANDSOME BROOCH", "HANDSOME BROOCH", Equipment::Class::NORMAL, Equipment::Type::HANDSOME_BROOCH1, Attribute::Type::CHARISMA, 1, false);
     auto GOLDWAX_CANDLE = Equipment::Base("GOLDWAX CANDLE", "GOLDWAX CANDLE", Equipment::Class::NORMAL, Equipment::Type::GOLDWAX_CANDLE, Attribute::Type::NONE, 0, false);
     auto LIZARD_HIDE = Equipment::Base("LIZARD HIDE", "LIZARD HIDE", Equipment::Class::NORMAL, Equipment::Type::LIZARD_HIDE, Attribute::Type::NONE, 0, false);
+    auto IRON_SCEPTRE = Equipment::Base("IRON SCEPTRE", "IRON SCEPTRE", Equipment::Class::NORMAL, Equipment::Type::IRON_SCEPTRE, Attribute::Type::NONE, 0, false);
+    auto CRIER_BIRD = Equipment::Base("CRIER BIRD", "CRIER BIRD", Equipment::Class::NORMAL, Equipment::Type::CRIER_BIRD, Attribute::Type::NONE, 0, false);
 }
 
 #endif
