@@ -12291,8 +12291,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 party.LastSelected = party.Current;
                             }
 
-                            auto selection = std::vector<int>();
-
                             auto success = false;
 
                             if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
