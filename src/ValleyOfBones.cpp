@@ -10129,62 +10129,73 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                 {
                     if (Engine::COUNT(party.Party) > 1)
                     {
-                        auto item = character.Equipment[selection];
-
-                        auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, item, Control::Type::EQUIPMENT);
-
-                        if (target >= 0 && target < party.Party.size())
+                        if (character.Team != Team::Type::SOLO)
                         {
-                            if (party.Party[target].Type != character.Type)
+                            auto item = character.Equipment[selection];
+
+                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, item, Control::Type::EQUIPMENT);
+
+                            if (target >= 0 && target < party.Party.size())
                             {
-                                character.Equipment.erase(character.Equipment.begin() + selection);
-
-                                party.Party[target].Equipment.push_back(item);
-
-                                if (offset > 0)
+                                if (party.Party[target].Type != character.Type)
                                 {
-                                    offset--;
+                                    character.Equipment.erase(character.Equipment.begin() + selection);
+
+                                    party.Party[target].Equipment.push_back(item);
+
+                                    if (offset > 0)
+                                    {
+                                        offset--;
+                                    }
+
+                                    last = offset + limit;
+
+                                    if (last > character.Equipment.size())
+                                    {
+                                        last = character.Equipment.size();
+                                    }
+
+                                    controls.clear();
+
+                                    controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
+
+                                    message = item.Name;
+
+                                    if (item.TwoHanded)
+                                    {
+                                        message += "*";
+                                    }
+
+                                    if (item.Attribute != Attribute::Type::NONE)
+                                    {
+                                        message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                    }
+
+                                    message += " transferred to " + std::string(party.Party[target].Name) + "!";
+
+                                    flash_color = intLB;
+
+                                    flash_message = true;
+
+                                    selected = false;
+
+                                    current = -1;
+
+                                    selection = -1;
                                 }
-
-                                last = offset + limit;
-
-                                if (last > character.Equipment.size())
+                                else
                                 {
-                                    last = character.Equipment.size();
+                                    message = "You can only transfer to another party member!";
+
+                                    flash_color = intRD;
+
+                                    flash_message = true;
                                 }
-
-                                controls.clear();
-
-                                controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
-
-                                message = item.Name;
-
-                                if (item.TwoHanded)
-                                {
-                                    message += "*";
-                                }
-
-                                if (item.Attribute != Attribute::Type::NONE)
-                                {
-                                    message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                                }
-
-                                message += " transferred to " + std::string(party.Party[target].Name) + "!";
-
-                                flash_color = intLB;
-
-                                flash_message = true;
-
-                                selected = false;
-
-                                current = -1;
-
-                                selection = -1;
                             }
                         }
                         else
                         {
-                            message = "You can only transfer to another party member!";
+                            message = std::string(character.Name) + " is alone right now!";
 
                             flash_color = intRD;
 
@@ -11173,7 +11184,16 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             }
                             else
                             {
-                                character = selectPartyMember(window, renderer, party, Team::Type::NONE, equipment[selection[i]], Control::Type::EQUIPMENT);
+                                party.Current = Engine::FIND_SOLO(party);
+
+                                if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                                {
+                                    character = party.Current;
+                                }
+                                else
+                                {
+                                    character = selectPartyMember(window, renderer, party, Team::Type::NONE, equipment[selection[i]], Control::Type::EQUIPMENT);
+                                }
                             }
 
                             if (character >= 0 && character < party.Party.size())
@@ -12225,9 +12245,22 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::ATTRIBUTES)
                         {
+                            party.Current = Engine::FIND_SOLO(party);
+
                             auto selection = std::vector<int>();
 
-                            auto success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
+                            auto success = false;
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0 && party.Party[party.Current].Team == Team::Type::SOLO)
+                            {
+                                selection = {party.Current};
+
+                                success = skillTestScreen(window, renderer, party, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
+                            }
+                            else
+                            {
+                                success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection);
+                            }
 
                             if (selection.size() == 1)
                             {
@@ -12249,6 +12282,15 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::CHARACTER_ATTRIBUTES)
                         {
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            auto selection = std::vector<int>();
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                            {
+                                party.LastSelected = party.Current;
+                            }
+
                             auto selection = std::vector<int>();
 
                             auto success = false;
@@ -12884,6 +12926,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::ASSIGN_TEAMS)
                         {
+                            Engine::CONSOLIDATE(party);
+
                             assignTeams(window, renderer, party, story->Choices[choice].Teams, story->Choices[choice].Value);
 
                             next = findStory(story->Choices[choice].Destination);
@@ -12894,7 +12938,18 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::LAST_INDIVIDUAL_CHECK)
                         {
-                            auto selection = party.LastSelection;
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            auto selection = std::vector<int>();
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                            {
+                                selection.push_back(party.Current);
+                            }
+                            else
+                            {
+                                selection = party.LastSelection;
+                            }
 
                             auto success = false;
 
@@ -13623,9 +13678,20 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::NEXT && !hold)
                     {
+                        Engine::Destination final_destination = {Book::Type::NONE, -1};
+
                         if (Engine::COUNT(story->Monsters) > 0)
                         {
-                            auto result = combatScreen(window, renderer, party, story->Team, story->Monsters, story->CanFlee, story->FleeRound, true);
+                            Team::Type team = story->Team;
+
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                            {
+                                team = Team::Type::SOLO;
+                            }
+
+                            auto result = combatScreen(window, renderer, party, team, story->Monsters, story->CanFlee, story->FleeRound, true);
 
                             story->AfterCombat(party, result);
                         }
@@ -13687,6 +13753,19 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 }
                                 else
                                 {
+                                    if (party.Party[i].Team == Team::Type::SOLO && party.Current == i)
+                                    {
+                                        party.Party[i].Equipment.clear();
+                                    }
+
+                                    if (party.Party[i].Type == Character::Type::AKIHIRO_OF_CHALICE && party.Party[i].Team == Team::Type::SOLO && party.Current == i)
+                                    {
+                                        if (book == Book::Type::BOOK1)
+                                        {
+                                            final_destination = {Book::Type::BOOK1, 450};
+                                        }
+                                    }
+
                                     if (party.Current != -1)
                                     {
                                         party.Current = -1;
@@ -13731,7 +13810,17 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             selected = false;
 
-                            auto next = renderChoices(window, renderer, party, story);
+                            Story::Base *next;
+
+                            // handle special destinations for character deaths
+                            if (final_destination.first != Book::Type::NONE && final_destination.second != -1)
+                            {
+                                next = findStory(final_destination);
+                            }
+                            else
+                            {
+                                next = renderChoices(window, renderer, party, story);
+                            }
 
                             book = next->BookID;
 

@@ -1066,6 +1066,8 @@ namespace Engine
                 party.Party[i].Team = Team::Type::NONE;
             }
         }
+
+        party.Current = -1;
     }
 
     void GO_SOLO(Party::Base &party, Character::Type character)
@@ -1078,6 +1080,23 @@ namespace Engine
 
             party.Party[result].Team = Team::Type::SOLO;
         }
+    }
+
+    int FIND_SOLO(Party::Base &party)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (party.Party[i].Team == Team::Type::SOLO)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
     }
 
     bool HAS_MONSTER(std::vector<Monster::Base> &monsters, Monster::Type type)
