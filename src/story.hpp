@@ -425,7 +425,8 @@ namespace Story
         SHOP,
         BARTER,
         HARBOUR,
-        INN
+        INN,
+        RECRUIT
     };
 
     class Base
