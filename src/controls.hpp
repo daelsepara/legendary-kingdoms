@@ -70,7 +70,8 @@ namespace Control
         TRANSFER,
         VAULT,
         ENTER_SHOP,
-        RECRUIT
+        RECRUIT,
+        MASS_COMBAT
     };
 
     class Base
@@ -175,6 +176,11 @@ public:
     const char *File = NULL;
 
     SDL_Surface *Surface = NULL;
+
+    Button()
+    {
+        
+    }
 
     Button(int id, const char *file, int left, int right, int up, int down, int x, int y)
     {

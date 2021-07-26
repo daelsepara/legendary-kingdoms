@@ -11794,6 +11794,132 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
     return false;
 }
 
+Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus)
+{
+    auto combatResult = Engine::Combat::NONE;
+
+    if (window && renderer)
+    {
+        TTF_Init();
+
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto font_size = 32;
+
+        auto box_space = 10;
+
+        auto text_space = 8;
+
+        auto marginx = (int)(Margin * SCREEN_WIDTH);
+
+        auto fullwidth = SCREEN_WIDTH - 2 * marginx;
+
+        auto boxw = (int)((fullwidth - 2 * box_space) / 3);
+
+        auto infoh = (int)(font_size + 2 * text_space);
+
+        auto boxh = (int)((text_bounds - box_space - infoh) / 2);
+
+        auto done = false;
+
+        const char *choices[2] = {"Start", "Cancel"};
+
+        auto main_buttonw = 220;
+        auto main_buttonh = 48;
+
+        auto controls = std::vector<Button>();
+
+        for (auto y = 0; y < 2; y++)
+        {
+            for (auto x = 0; x < 3; x++)
+            {
+                SDL_Rect rect;
+
+                rect.w = boxw - 2 * 8;
+                rect.h = boxh - 2 * 8;
+                rect.x = 0;
+                rect.y = 0;
+
+                auto button = Button();
+
+                button.Surface = SDL_CreateRGBSurface(0, boxw - 2 * 8, boxh - 2 * 8, 32, 0, 0, 0, 0);
+
+                SDL_FillRect(button.Surface, &rect, intBE);
+
+                button.ID = y * 3 + x;
+                button.W = boxw - 2 * 8;
+                button.H = boxh - 2 * 8;
+                button.Left = x > 0 ? y * 3 + x - 1 : y * 3 + x;
+                button.Right = x < 2 ? y * 3 + x + 1 : y * 3 + x;
+                button.Up = y > 0 ? (y - 1) * 3 + x : y * 3 + x;
+                button.Down = y < 1 ? (y + 1) * 3 + x : y * 3 + x;
+                button.X = startx + x * (boxw + box_space) + 8;
+                button.Y = starty + infoh + y * (boxh + box_space) + 8 + text_space;
+                button.Type = Control::Type::ACTION;
+
+                controls.push_back(button);
+            }
+        }
+
+        auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
+
+        controls.push_back(Button(6, createHeaderButton(window, FONT_MASON, 22, "START", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::MASS_COMBAT));
+        controls.push_back(Button(7, createHeaderButton(window, FONT_MASON, 22, "CANCEL", clrWH, intDB, 220, 48, -1), 6, 7, 4, 7, startx + (main_buttonw + button_space), text_y, Control::Type::BACK));
+
+        auto current = -1;
+        auto selected = false;
+        auto hold = false;
+        auto scrollUp = false;
+        auto scrollDown = false;
+
+        while (!done)
+        {
+            SDL_SetWindowTitle(window, "Legendary Kingdoms: Mass Combat");
+
+            fillWindow(renderer, intWH);
+
+            for (auto y = 0; y < 2; y++)
+            {
+                for (auto x = 0; x < 3; x++)
+                {
+                    fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
+                }
+            }
+
+            putHeader(renderer, "Left Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx, starty);
+            putHeader(renderer, "Center", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + (boxw + box_space), starty);
+            putHeader(renderer, "Right Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + 2 * (boxw + box_space), starty);
+
+            renderButtons(renderer, controls, current, intLB, 8, 4);
+
+            Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()))
+            {
+                if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    done = true;
+
+                    break;
+                }
+            }
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        TTF_Quit();
+    }
+
+    return combatResult;
+}
+
 std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, std::vector<Choice::Base> choices, int start, int last, int limit, int offsetx, int offsety)
 {
     auto controls = std::vector<Button>();
@@ -14098,7 +14224,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
     auto font_size = 20;
     auto text_space = 8;
 
-    auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.\n\nTests:\n1 - Combat\n2 - Map\n3 - Team Skill check\n4 - Individual Skill check";
+    auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.\n\nTests:\n1 - Combat\n2 - Map\n3 - Team Skill check\n4 - Individual Skill check\n5 - Mass Combat";
 
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, textwidth - 2 * text_space);
 
@@ -14117,15 +14243,16 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
         auto main_buttonh = 48;
 
-        const char *choices[5] = {"1", "2", "3", "4", "Exit"};
+        const char *choices[6] = {"1", "2", "3", "4", "5", "Exit"};
 
-        auto controls = createHTextButtons(choices, 5, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+        auto controls = createHTextButtons(choices, 6, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
 
         controls[0].Type = Control::Type::COMBAT;
         controls[1].Type = Control::Type::MAP;
         controls[2].Type = Control::Type::TEAM_SKILL;
         controls[3].Type = Control::Type::SKILL;
-        controls[4].Type = Control::Type::QUIT;
+        controls[4].Type = Control::Type::MASS_COMBAT;
+        controls[5].Type = Control::Type::QUIT;
 
         auto done = false;
 
@@ -14203,6 +14330,24 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                     auto selection = std::vector<int>();
 
                     skillCheck(window, renderer, Party, Team::Type::NONE, 1, Attribute::Type::LORE, 4, 3, selection);
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::MASS_COMBAT)
+                {
+                    Party.Party.clear();
+                    Party.Party.push_back(Character::AMELIA_PASS_DAYNE);
+                    Party.Party.push_back(Character::TASHA);
+                    Party.Party.push_back(Character::AKIHIRO_OF_CHALICE);
+                    Party.Party.push_back(Character::BRASH);
+
+                    std::vector<Army::Base> EnemyArmy = {};
+                    std::vector<Engine::BattlefieldSpells> EnemySpells = {};
+                    std::vector<Engine::ArmyStatus> EnemyArmyStatus = {};
+
+                    massCombatScreen(window, renderer, Location::Type::SALTDAD, Party, EnemyArmy, EnemySpells, EnemyArmyStatus);
 
                     current = -1;
 
