@@ -62,6 +62,14 @@ namespace Engine
         END
     };
 
+    enum class MassCombat
+    {
+        START,
+        COMBAT,
+        MORALE,
+        END
+    };
+
     const char *CURRENCY = "silver";
 
     Party::Base Party = Party::Base();
