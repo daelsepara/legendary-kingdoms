@@ -14,13 +14,27 @@
 namespace Engine
 {
     typedef std::pair<Book::Type, int> Destination;
+
+    // ship, price, sell price
     typedef std::tuple<Ship::Base, int, int> ShipPrices;
+
+    // cargo, price, sell price
     typedef std::tuple<Cargo::Type, int, int> CargoPrices;
+
+    // equipment, price, sell price
     typedef std::tuple<Equipment::Base, int, int> EquipmentPrice;
+
+    // equipment needed, equipment that can be exchanged for it
     typedef std::tuple<Equipment::Base, std::vector<Equipment::Base>> BarterExchanges;
+    
+    // team, minimum, maximum
     typedef std::tuple<Team::Type, int, int> TeamAssignment;
+    
+    // spell type, combat round when cast
     typedef std::tuple<Spells::Type, int> BattlefieldSpells;
-    typedef std::tuple<Army::Status, int, int> ArmyStatus;
+
+    // status, unit number, start round, duration
+    typedef std::tuple<Army::Status, int, int, int> ArmyStatus;
 
     enum class Combat
     {
