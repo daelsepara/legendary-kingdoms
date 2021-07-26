@@ -38,6 +38,7 @@ const Uint32 intBR = 0xFF84553E;
 const Uint32 intBE = 0xFFF5F5DC;
 const Uint32 BE_50 = 0x7FF5F5DC;
 const Uint32 BE_80 = 0xBBF5F5DC;
+const Uint32 drkBE = 0xFFEBEBD2;
 
 // Light Blue in ARG format
 const Uint32 intLB = 0xFF0A64AD;

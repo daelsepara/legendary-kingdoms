@@ -11794,7 +11794,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
     return false;
 }
 
-void renderArmy(SDL_Renderer *renderer, TTF_Font *font, int text_space, std::vector<Army::Base> &army, int boxw, int boxh, int box_space, int offsety)
+void renderArmy(SDL_Renderer *renderer, TTF_Font *font, int text_space, std::vector<Army::Base> &army, int boxw, int boxh, int box_space, int offsety, SDL_Color fg, Uint32 bg)
 {
     if (army.size() > 0)
     {
@@ -11839,17 +11839,17 @@ void renderArmy(SDL_Renderer *renderer, TTF_Font *font, int text_space, std::vec
 
         if (left_flank.length() > 0)
         {
-            putText(renderer, left_flank.c_str(), font, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxw - 2 * text_space, boxh - 4 * text_space, startx + text_space, offsety + 2 * text_space);
+            putText(renderer, left_flank.c_str(), font, text_space, fg, bg, TTF_STYLE_NORMAL, boxw - 2 * text_space, boxh - 4 * text_space, startx + text_space, offsety + 2 * text_space);
         }
 
         if (center.length() > 0)
         {
-            putText(renderer, center.c_str(), font, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxw - 2 * text_space, boxh - 4 * text_space, startx + (boxw + box_space) + text_space, offsety + 2 * text_space);
+            putText(renderer, center.c_str(), font, text_space, fg, bg, TTF_STYLE_NORMAL, boxw - 2 * text_space, boxh - 4 * text_space, startx + (boxw + box_space) + text_space, offsety + 2 * text_space);
         }
 
         if (right_flank.length() > 0)
         {
-            putText(renderer, right_flank.c_str(), font, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxw - 2 * text_space, boxh - 4 * text_space, startx + 2 * (boxw + box_space) + text_space, offsety + 2 * text_space);
+            putText(renderer, right_flank.c_str(), font, text_space, fg, bg, TTF_STYLE_NORMAL, boxw - 2 * text_space, boxh - 4 * text_space, startx + 2 * (boxw + box_space) + text_space, offsety + 2 * text_space);
         }
     }
 }
@@ -11908,7 +11908,14 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                 button.Surface = SDL_CreateRGBSurface(0, boxw - 2 * 8, boxh - 2 * 8, 32, 0, 0, 0, 0);
 
-                SDL_FillRect(button.Surface, &rect, intBE);
+                if (y > 0)
+                {
+                    SDL_FillRect(button.Surface, &rect, drkBE);
+                }
+                else
+                {
+                    SDL_FillRect(button.Surface, &rect, intBE);
+                }
 
                 button.ID = y * 3 + x;
                 button.W = boxw - 2 * 8;
@@ -11946,7 +11953,16 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             {
                 for (auto x = 0; x < 3; x++)
                 {
-                    fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
+                    if (y > 0)
+                    {
+                        fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, drkBE);
+                        
+                        thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + 8, starty + infoh + y * (boxh + box_space) + text_space + 8, intDB, 4);
+                    }
+                    else
+                    {
+                        fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
+                    }
                 }
             }
 
@@ -11961,10 +11977,10 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             std::string enemy_right_flank = "";
 
             // Render Enemy army
-            renderArmy(renderer, font_garamond, text_space, enemyArmy, boxw, boxh, box_space, starty + infoh);
+            renderArmy(renderer, font_garamond, text_space, enemyArmy, boxw, boxh, box_space, starty + infoh, clrBK, intBE);
 
             // Render Party army
-            renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space);
+            renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space, clrBK, drkBE);
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
