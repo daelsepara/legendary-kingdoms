@@ -11794,6 +11794,66 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
     return false;
 }
 
+void renderArmy(SDL_Renderer *renderer, TTF_Font *font, int text_space, std::vector<Army::Base> &army, int boxw, int boxh, int box_space, int offsety)
+{
+    if (army.size() > 0)
+    {
+        std::string left_flank = "";
+        std::string center = "";
+        std::string right_flank = "";
+
+        // Render Enemy army
+        for (auto i = 0; i < army.size(); i++)
+        {
+            if (army[i].Position == Location::BattleField::LEFT_FLANK_FRONT || army[i].Position == Location::BattleField::CENTRE_FRONT || army[i].Position == Location::BattleField::RIGHT_FLANK_FRONT)
+            {
+                if (army[i].Position == Location::BattleField::LEFT_FLANK_FRONT)
+                {
+                    left_flank += "[" + std::string(army[i].Name) + "]\nStrength: " + std::to_string(army[i].Strength) + " Morale: " + std::to_string(army[i].Morale);
+                }
+                else if (army[i].Position == Location::BattleField::CENTRE_FRONT)
+                {
+                    center += "[" + std::string(army[i].Name) + "]\nStrength: " + std::to_string(army[i].Strength) + " Morale: " + std::to_string(army[i].Morale);
+                }
+                else if (army[i].Position == Location::BattleField::RIGHT_FLANK_FRONT)
+                {
+                    right_flank += "[" + std::string(army[i].Name) + "]\nStrength: " + std::to_string(army[i].Strength) + " Morale: " + std::to_string(army[i].Morale);
+                }
+            }
+            else if (army[i].Position == Location::BattleField::LEFT_FLANK_SUPPORT || army[i].Position == Location::BattleField::CENTRE_SUPPORT || army[i].Position == Location::BattleField::RIGHT_FLANK_SUPPORT)
+            {
+                if (army[i].Position == Location::BattleField::LEFT_FLANK_SUPPORT)
+                {
+                    left_flank += "\n\nSupport:\n[" + std::string(army[i].Name) + "]\nStrength: " + std::to_string(army[i].Strength) + " Morale: " + std::to_string(army[i].Morale);
+                }
+                else if (army[i].Position == Location::BattleField::CENTRE_SUPPORT)
+                {
+                    center += "\n\nSupport:\n[" + std::string(army[i].Name) + "]\nStrength: " + std::to_string(army[i].Strength) + " Morale: " + std::to_string(army[i].Morale);
+                }
+                else if (army[i].Position == Location::BattleField::RIGHT_FLANK_SUPPORT)
+                {
+                    right_flank += "\n\nSupport:\n[" + std::string(army[i].Name) + "]\nStrength: " + std::to_string(army[i].Strength) + " Morale: " + std::to_string(army[i].Morale);
+                }
+            }
+        }
+
+        if (left_flank.length() > 0)
+        {
+            putText(renderer, left_flank.c_str(), font, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxw - 2 * text_space, boxh - 4 * text_space, startx + text_space, offsety + 2 * text_space);
+        }
+
+        if (center.length() > 0)
+        {
+            putText(renderer, center.c_str(), font, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxw - 2 * text_space, boxh - 4 * text_space, startx + (boxw + box_space) + text_space, offsety + 2 * text_space);
+        }
+
+        if (right_flank.length() > 0)
+        {
+            putText(renderer, right_flank.c_str(), font, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxw - 2 * text_space, boxh - 4 * text_space, startx + 2 * (boxw + box_space) + text_space, offsety + 2 * text_space);
+        }
+    }
+}
+
 Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus)
 {
     auto combatResult = Engine::Combat::NONE;
@@ -11803,6 +11863,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         TTF_Init();
 
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
 
         TTF_SetFontKerning(font_dark11, 0);
 
@@ -11827,6 +11888,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         const char *choices[2] = {"Start", "Cancel"};
 
         auto main_buttonw = 220;
+
         auto main_buttonh = 48;
 
         auto controls = std::vector<Button>();
@@ -11894,6 +11956,16 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
             renderButtons(renderer, controls, current, intLB, 8, 4);
 
+            std::string enemy_left_flank = "";
+            std::string enemy_center = "";
+            std::string enemy_right_flank = "";
+
+            // Render Enemy army
+            renderArmy(renderer, font_garamond, text_space, enemyArmy, boxw, boxh, box_space, starty + infoh);
+
+            // Render Party army
+            renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space);
+
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
             if ((selected && current >= 0 && current < controls.size()))
@@ -11912,6 +11984,13 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             TTF_CloseFont(font_dark11);
 
             font_dark11 = NULL;
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
         }
 
         TTF_Quit();
@@ -14346,6 +14425,14 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                     std::vector<Army::Base> EnemyArmy = {};
                     std::vector<Engine::BattlefieldSpells> EnemySpells = {};
                     std::vector<Engine::ArmyStatus> EnemyArmyStatus = {};
+
+                    EnemyArmy = {
+                        Army::Base("Curzite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 5, false),
+                        Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_SUPPORT, 4, 4, false),
+                        Army::Base("Mercenary Knights", Army::Type::MERCENARY_KNIGHTS, Location::Type::SALTDAD, Location::BattleField::CENTRE_FRONT, 5, 3, false),
+                        Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::SALTDAD, Location::BattleField::CENTRE_SUPPORT, 2, 4, false),
+                        Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false),
+                        Army::Base("Mercenary Spears", Army::Type::MERCENARY_SPEARS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 3, 2, false)};
 
                     massCombatScreen(window, renderer, Location::Type::SALTDAD, Party, EnemyArmy, EnemySpells, EnemyArmyStatus);
 

@@ -1,6 +1,7 @@
 #ifndef __ARMY__HPP__
 #define __ARMY__HPP__
 
+#include <map>
 #include <vector>
 
 #include "location.hpp"
@@ -9,7 +10,13 @@ namespace Army
 {
     enum class Status
     {
-        STRENGTH1 = 0
+        NONE = 0,
+        STRENGTH1
+    };
+
+    std::map<Army::Status, const char*> Descriptions = {
+        {Army::Status::NONE, "None"},
+        {Army::Status::STRENGTH1, "+1 Strength"}
     };
 
     enum class Type
@@ -45,6 +52,11 @@ namespace Army
         bool Unique = false;
 
         Location::BattleField Position = Location::BattleField::NONE;
+
+        // Special effects and the combat round they went into effect
+        Army::Status Status = Army::Status::NONE;
+
+        int StatusRound = -1;
 
         Base()
         {
