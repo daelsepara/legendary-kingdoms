@@ -11910,7 +11910,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                 if (y > 0)
                 {
-                    SDL_FillRect(button.Surface, &rect, drkBE);
+                    SDL_FillRect(button.Surface, &rect, intBE);
                 }
                 else
                 {
@@ -11923,7 +11923,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 button.Left = x > 0 ? y * 3 + x - 1 : y * 3 + x;
                 button.Right = x < 2 ? y * 3 + x + 1 : y * 3 + x;
                 button.Up = y > 0 ? (y - 1) * 3 + x : y * 3 + x;
-                button.Down = y < 1 ? (y + 1) * 3 + x : y * 3 + x;
+                button.Down = y < 1 ? (y + 1) * 3 + x : (x < 2 ? (y + 1) * 3 + x : y * 3 + x);
                 button.X = startx + x * (boxw + box_space) + 8;
                 button.Y = starty + infoh + y * (boxh + box_space) + 8 + text_space;
                 button.Type = Control::Type::ACTION;
@@ -11955,9 +11955,9 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 {
                     if (y > 0)
                     {
-                        fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, drkBE);
+                        fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
                         
-                        thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + 8, starty + infoh + y * (boxh + box_space) + text_space + 8, intDB, 4);
+                        thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + 8, starty + infoh + y * (boxh + box_space) + text_space + 8, intBR, 4);
                     }
                     else
                     {
@@ -11980,7 +11980,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             renderArmy(renderer, font_garamond, text_space, enemyArmy, boxw, boxh, box_space, starty + infoh, clrBK, intBE);
 
             // Render Party army
-            renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space, clrBK, drkBE);
+            renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space, clrBK, intBE);
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
