@@ -164,6 +164,24 @@ namespace Engine
         }
     }
 
+    void GAIN_MORALE(Army::Base &unit, int morale)
+    {
+        if (unit.Morale > 0)
+        {
+            unit.Morale += morale;
+
+            if (unit.Morale < 0)
+            {
+                unit.Morale = 0;
+            }
+
+            if (unit.Morale > unit.MaximumMorale)
+            {
+                unit.Morale = unit.MaximumMorale;
+            }
+        }
+    }
+
     bool RECHARGE_SPELL(Party::Base &party, Spells::Base &spell)
     {
         auto result = false;
