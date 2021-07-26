@@ -12459,13 +12459,22 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            if (Engine::COUNT(party.Party) == 1)
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
                             {
-                                target = Engine::FIRST(party);
+                                target = party.Current;
                             }
                             else
                             {
-                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, (story->Choices[choice].Value > 0 ? Control::Type::GAIN_HEALTH : Control::Type::LOSE_HEALTH));
+                                if (Engine::COUNT(party.Party) == 1)
+                                {
+                                    target = Engine::FIRST(party);
+                                }
+                                else
+                                {
+                                    target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, (story->Choices[choice].Value > 0 ? Control::Type::GAIN_HEALTH : Control::Type::LOSE_HEALTH));
+                                }
                             }
 
                             Engine::GAIN_HEALTH(party.Party[target], story->Choices[choice].Value);

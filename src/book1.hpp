@@ -5001,6 +5001,68 @@ namespace Book1
         }
     };
 
+    class Story160 : public Story::Base
+    {
+    public:
+        Story160()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 160;
+
+            Text = "You rip the book from the orc's hands. With a speed and bloodthirsty ferocity you would have thought was impossible from the placid creature, the orc rears up and stabs you in the neck with a knife he pulls from his sleeve.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 4 Health", {Book::Type::BOOK1, -160}, Choice::Type::GAIN_HEALTH, -4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event160 : public Story::Base
+    {
+    public:
+        Event160()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -160;
+
+            DisplayID = 160;
+
+            Text = "The rest of your party manage to drag the orc away and stab him to death as he violently thrashes. The change over the orc seemed unbelievable. You didn't even realise orcs could read!\n\nYou gained the code A71.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the black book he was reading", {Book::Type::BOOK1, 119}));
+            Choices.push_back(Choice::Base("Close the door and go somewhere else", {Book::Type::BOOK1, 821}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(71)});
+        }
+    };
+
+    class Story161 : public Story::Base
+    {
+    public:
+        Story161()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 161;
+
+            Text = "You make good names for yourselves in the arena, but come to be feared and envied by the professional gladiators. They arrange with the arena master to have you sold on to less heroic duties.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("See where you end up", {{3, "You are sold to the taskmasters of Clifftop", {Book::Type::BOOK1, 866}}, {6, "You are sold to the priests of Cursus", {Book::Type::BOOK1, 531}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -5178,12 +5240,15 @@ namespace Book1
     auto story157 = Story157();
     auto story158 = Story158();
     auto story159 = Story159();
+    auto story160 = Story160();
+    auto event160 = Event160();
+    auto story161 = Story161();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
-            &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002,
+            &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -5199,7 +5264,8 @@ namespace Book1
             &story120, &story121, &story122, &story123, &story124, &story125, &story126, &story127, &story128, &story129,
             &story130, &story131, &story132, &story133, &story134, &story135, &story136, &story137, &story138, &story139,
             &story140, &story141, &story142, &story143, &story144, &story145, &story146, &story147, &story148, &story149,
-            &story150, &story151, &story152, &story153, &story154, &story155, &story156, &story157, &story158, &story159};
+            &story150, &story151, &story152, &story153, &story154, &story155, &story156, &story157, &story158, &story159,
+            &story160, &story161};
     }
 }
 #endif
