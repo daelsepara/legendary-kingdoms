@@ -485,6 +485,11 @@ namespace Story
         // Inn
         int RestPrice = -1;
 
+        // Mass Combat Enemy Troops
+        std::vector<Army::Base> EnemyArmy = {};
+        std::vector<Engine::BattlefieldSpells> EnemySpells = {};
+        std::vector<Engine::ArmyStatus> EnemyArmyStatus = {};
+
         // temporary string
         std::string temp_string = "";
 

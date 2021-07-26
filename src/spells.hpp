@@ -24,7 +24,10 @@ namespace Spells
         MAGIC_CABINET,
         WISDOM,
         ORB_OF_ANNIHILATION,
-        MAELSTROM
+        MAELSTROM,
+        ENFEEBLEMENT,   // Mass combat spell
+        CLINGING_DREAD, // Mass combat spell
+        ROUT            // Mass combat spell
     };
 
     enum class Scope
