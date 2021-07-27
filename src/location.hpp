@@ -42,6 +42,14 @@ namespace Location
         RIGHT_FLANK_SUPPORT
     };
 
+    enum class Zone
+    {
+        NONE = -1,
+        LEFT_FLANK,
+        CENTRE,
+        RIGHT_FLANK
+    };
+
     std::map<Location::BattleField, const char *> BattleFieldDescription = {
         {Location::BattleField::NONE, "(None)"},
         {Location::BattleField::LEFT_FLANK_FRONT, "Left Flank Front"},

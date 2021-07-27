@@ -11854,12 +11854,81 @@ void renderArmy(SDL_Renderer *renderer, TTF_Font *font, int text_space, std::vec
     }
 }
 
+std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (army.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto unit = army[index];
+
+            std::string army_string = "[" + std::string(unit.Name) + "] Strength: " + std::to_string(unit.Strength) + ", Morale: " + std::to_string(unit.Morale);
+
+            army_string += "\nPosition: " + std::string(Location::BattleFieldDescription[unit.Position]) + " Garrison: " + std::string(Location::Description[unit.Garrison]);
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, army_string.c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (army.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + infoh + border_space + button_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (army.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + (popuph - arrow_size - border_space - buttonh - button_space - infoh), Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, "icons/yes.png", army.size() > 0 ? idx - 1 : idx, idx + 1, army.size() > 0 ? idx - 1 : idx, idx, offsetx + button_space, offsety + popuph - button_space - buttonh, Control::Type::CONFIRM));
+    controls.push_back(Button(idx + 1, "icons/no.png", idx, idx + 1, army.size() > 0 ? idx - 1 : idx + 1, idx + 1, offsetx + popupw - buttonw - button_space, offsety + popuph - button_space - buttonh, Control::Type::BACK));
+
+    return controls;
+}
+
 Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus)
 {
     auto combatResult = Engine::Combat::NONE;
 
     if (window && renderer)
     {
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        auto messageh = (int)(0.125 * SCREEN_HEIGHT);
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
         TTF_Init();
 
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
@@ -11868,6 +11937,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         TTF_SetFontKerning(font_dark11, 0);
 
         auto font_size = 32;
+
+        auto size_garamond = 28;
 
         auto box_space = 10;
 
@@ -11883,6 +11954,20 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto boxh = (int)((text_bounds - box_space - infoh) / 2);
 
+        auto popupw = (int)(0.6 * SCREEN_WIDTH);
+        auto popuph = (int)(0.6 * SCREEN_HEIGHT);
+        auto popupx = (SCREEN_WIDTH - popupw) / 2;
+        auto popupy = (SCREEN_HEIGHT - popuph) / 2;
+
+        auto offset = 0;
+        auto limit = (popuph - infoh - buttonh - button_space) / (size_garamond * 2 + text_space * 4);
+        auto last = offset + limit;
+
+        if (last > party.Army.size())
+        {
+            last = party.Army.size();
+        }
+
         auto done = false;
 
         const char *choices[2] = {"Start", "Cancel"};
@@ -11892,6 +11977,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto main_buttonh = 48;
 
         auto controls = std::vector<Button>();
+
+        auto controls_battlefield = std::vector<Button>();
 
         for (auto y = 0; y < 2; y++)
         {
@@ -11928,23 +12015,40 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 button.Y = starty + infoh + y * (boxh + box_space) + 8 + text_space;
                 button.Type = Control::Type::ACTION;
 
-                controls.push_back(button);
+                controls_battlefield.push_back(button);
             }
         }
 
         auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
 
-        controls.push_back(Button(6, createHeaderButton(window, FONT_MASON, 22, "START", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::MASS_COMBAT));
-        controls.push_back(Button(7, createHeaderButton(window, FONT_MASON, 22, "CANCEL", clrWH, intDB, 220, 48, -1), 6, 7, 4, 7, startx + (main_buttonw + button_space), text_y, Control::Type::BACK));
+        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_MASON, 22, "START", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::MASS_COMBAT));
+        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_MASON, 22, "CANCEL", clrWH, intDB, 220, 48, -1), 6, 7, 4, 7, startx + (main_buttonw + button_space), text_y, Control::Type::BACK));
+
+        auto controls_deploy = popupArmy(window, renderer, party.Army, offset, last, limit, popupw, popuph, infoh, popupx, popupy);
 
         auto current = -1;
         auto selected = false;
         auto hold = false;
         auto scrollUp = false;
         auto scrollDown = false;
+        auto scrollSpeed = 1;
+
+        auto current_zone = Location::Zone::NONE;
+        auto current_mode = Engine::MassCombatMode::NORMAL;
+
+        auto left_flank = std::vector<int>();
+        auto centre = std::vector<int>();
+        auto right_flank = std::vector<int>();
+
+        Engine::CLEAR_POSITIONS(party.Army);
 
         while (!done)
         {
+            if (last > party.Army.size())
+            {
+                last = party.Army.size();
+            }
+
             SDL_SetWindowTitle(window, "Legendary Kingdoms: Mass Combat");
 
             fillWindow(renderer, intWH);
@@ -11956,7 +12060,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                     if (y > 0)
                     {
                         fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
-                        
+
                         thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + 8, starty + infoh + y * (boxh + box_space) + text_space + 8, intBR, 4);
                     }
                     else
@@ -11970,11 +12074,16 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             putHeader(renderer, "Center", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + (boxw + box_space), starty);
             putHeader(renderer, "Right Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + 2 * (boxw + box_space), starty);
 
-            renderButtons(renderer, controls, current, intLB, 8, 4);
+            if (current_mode == Engine::MassCombatMode::NORMAL)
+            {
+                renderButtons(renderer, controls_battlefield, current, intLB, 8, 4);
 
-            std::string enemy_left_flank = "";
-            std::string enemy_center = "";
-            std::string enemy_right_flank = "";
+                controls = controls_battlefield;
+            }
+            else
+            {
+                renderButtons(renderer, controls_battlefield, -1, intLB, 8, 4);
+            }
 
             // Render Enemy army
             renderArmy(renderer, font_garamond, text_space, enemyArmy, boxw, boxh, box_space, starty + infoh, clrBK, intBE);
@@ -11982,15 +12091,343 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             // Render Party army
             renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space, clrBK, intBE);
 
+            if (current_mode == Engine::MassCombatMode::DEPLOY)
+            {
+                fillRect(renderer, popupw, popuph, popupx, popupy, intBE);
+
+                drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
+
+                putHeader(renderer, "Select unit to deploy", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+
+                controls = controls_deploy;
+
+                if (last - offset > 0)
+                {
+                    for (auto i = 0; i < last - offset; i++)
+                    {
+                        auto selection = left_flank;
+
+                        if (current_zone == Location::Zone::LEFT_FLANK)
+                        {
+                            selection = left_flank;
+                        }
+                        else if (current_zone == Location::Zone::CENTRE)
+                        {
+                            selection = centre;
+                        }
+                        else if (current_zone == Location::Zone::RIGHT_FLANK)
+                        {
+                            selection = right_flank;
+                        }
+
+                        if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                        {
+                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls_deploy, current, intLB, 8, 4);
+            }
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, messageh, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
-            if ((selected && current >= 0 && current < controls.size()))
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
             {
-                if (controls[current].Type == Control::Type::BACK && !hold)
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
                 {
-                    done = true;
+                    if (current_mode == Engine::MassCombatMode::DEPLOY)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
 
-                    break;
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Army.size())
+                            {
+                                last = party.Army.size();
+                            }
+
+                            controls_deploy.clear();
+
+                            controls_deploy = popupArmy(window, renderer, party.Army, offset, last, limit, popupw, popuph, infoh, popupx, popupy);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                {
+                    if (current_mode == Engine::MassCombatMode::DEPLOY)
+                    {
+                        if (party.Army.size() - last > 0)
+                        {
+                            if (offset < party.Army.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > party.Army.size() - limit)
+                            {
+                                offset = party.Army.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Army.size())
+                            {
+                                last = party.Army.size();
+                            }
+
+                            controls_deploy.clear();
+
+                            controls_deploy = popupArmy(window, renderer, party.Army, offset, last, limit, popupw, popuph, infoh, popupx, popupy);
+
+                            if (offset > 0)
+                            {
+                                if (controls_deploy[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+
+                            SDL_Delay(50);
+                        }
+
+                        if (party.Army.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if (current_mode == Engine::MassCombatMode::NORMAL)
+                    {
+                        if (current >= 0 && current < 6)
+                        {
+                            if (current > 2 && current < 6)
+                            {
+                                if (current == 3)
+                                {
+                                    current_zone = Location::Zone::LEFT_FLANK;
+                                }
+                                else if (current == 4)
+                                {
+                                    current_zone = Location::Zone::CENTRE;
+                                }
+                                else if (current == 5)
+                                {
+                                    current_zone = Location::Zone::RIGHT_FLANK;
+                                }
+
+                                current_mode = Engine::MassCombatMode::DEPLOY;
+                            }
+                        }
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (current_mode == Engine::MassCombatMode::DEPLOY)
+                    {
+                        if (current_zone == Location::Zone::LEFT_FLANK)
+                        {
+                            if (current + offset >= 0 && current + offset < party.Army.size())
+                            {
+                                auto result = Engine::FIND_LIST(left_flank, current + offset);
+
+                                if (result >= 0)
+                                {
+                                    left_flank.erase(left_flank.begin() + result);
+                                }
+                                else if (left_flank.size() < 2)
+                                {
+                                    if (party.Army[current + offset].Garrison != location)
+                                    {
+                                        flash_message = true;
+
+                                        flash_color = intRD;
+
+                                        message = "You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!";
+
+                                        start_ticks = SDL_GetTicks();
+                                    }
+                                    else
+                                    {
+                                        left_flank.push_back(current + offset);
+                                    }
+                                }
+                            }
+                        }
+                        else if (current_zone == Location::Zone::CENTRE)
+                        {
+                            if (current + offset >= 0 && current + offset < party.Army.size())
+                            {
+                                auto result = Engine::FIND_LIST(centre, current + offset);
+
+                                if (result >= 0)
+                                {
+                                    centre.erase(centre.begin() + result);
+                                }
+                                else if (centre.size() < 2)
+                                {
+                                    if (party.Army[current + offset].Garrison != location)
+                                    {
+                                        flash_message = true;
+
+                                        flash_color = intRD;
+
+                                        message = "You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!";
+
+                                        start_ticks = SDL_GetTicks();
+                                    }
+                                    else
+                                    {
+                                        centre.push_back(current + offset);
+                                    }
+                                }
+                            }
+                        }
+                        else if (current_zone == Location::Zone::RIGHT_FLANK)
+                        {
+                            if (current + offset >= 0 && current + offset < party.Army.size())
+                            {
+                                auto result = Engine::FIND_LIST(right_flank, current + offset);
+
+                                if (result >= 0)
+                                {
+                                    right_flank.erase(right_flank.begin() + result);
+                                }
+                                else if (right_flank.size() < 2)
+                                {
+                                    if (party.Army[current + offset].Garrison != location)
+                                    {
+                                        flash_message = true;
+
+                                        flash_color = intRD;
+
+                                        message = "You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!";
+
+                                        start_ticks = SDL_GetTicks();
+                                    }
+                                    else
+                                    {
+                                        right_flank.push_back(current + offset);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                {
+                    if (current_mode == Engine::MassCombatMode::DEPLOY)
+                    {
+                        if (current_zone == Location::Zone::LEFT_FLANK)
+                        {
+                            Engine::SET_POSITION(party.Army, Location::BattleField::LEFT_FLANK_FRONT, Location::BattleField::NONE);
+                            Engine::SET_POSITION(party.Army, Location::BattleField::LEFT_FLANK_SUPPORT, Location::BattleField::NONE);
+
+                            if (left_flank.size() > 0)
+                            {
+                                party.Army[left_flank[0]].Position = Location::BattleField::LEFT_FLANK_FRONT;
+
+                                if (left_flank.size() > 1)
+                                {
+                                    party.Army[left_flank[1]].Position = Location::BattleField::LEFT_FLANK_SUPPORT;
+                                }
+                            }
+                        }
+                        else if (current_zone == Location::Zone::CENTRE)
+                        {
+                            Engine::SET_POSITION(party.Army, Location::BattleField::CENTRE_FRONT, Location::BattleField::NONE);
+                            Engine::SET_POSITION(party.Army, Location::BattleField::CENTRE_SUPPORT, Location::BattleField::NONE);
+
+                            if (centre.size() > 0)
+                            {
+                                party.Army[centre[0]].Position = Location::BattleField::CENTRE_FRONT;
+
+                                if (centre.size() > 1)
+                                {
+                                    party.Army[centre[1]].Position = Location::BattleField::CENTRE_SUPPORT;
+                                }
+                            }
+                        }
+                        else if (current_zone == Location::Zone::RIGHT_FLANK)
+                        {
+                            Engine::SET_POSITION(party.Army, Location::BattleField::RIGHT_FLANK_FRONT, Location::BattleField::NONE);
+                            Engine::SET_POSITION(party.Army, Location::BattleField::RIGHT_FLANK_SUPPORT, Location::BattleField::NONE);
+
+                            if (right_flank.size() > 0)
+                            {
+                                party.Army[right_flank[0]].Position = Location::BattleField::RIGHT_FLANK_FRONT;
+
+                                if (right_flank.size() > 1)
+                                {
+                                    party.Army[right_flank[1]].Position = Location::BattleField::RIGHT_FLANK_SUPPORT;
+                                }
+                            }
+                        }
+
+                        current_mode = Engine::MassCombatMode::NORMAL;
+
+                        current_zone = Location::Zone::NONE;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    if (current_mode == Engine::MassCombatMode::NORMAL)
+                    {
+                        done = true;
+
+                        break;
+                    }
+                    else if (current_mode == Engine::MassCombatMode::DEPLOY)
+                    {
+                        current_mode = Engine::MassCombatMode::NORMAL;
+
+                        current_zone = Location::Zone::NONE;
+
+                        current = -1;
+
+                        selected = false;
+                    }
                 }
             }
         }
@@ -12583,25 +13020,54 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 equipment.push_back(story->Choices[choice].Equipment[i].Type);
                             }
 
-                            if (Engine::VERIFY_EQUIPMENT(party.Party, equipment))
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
                             {
-                                next = findStory(story->Choices[choice].Destination);
-
-                                done = true;
-
-                                break;
-                            }
-                            else
-                            {
-                                error = true;
-
-                                if (story->Choices[choice].Equipment.size() > 1)
+                                if (Engine::VERIFY_EQUIPMENT(party.Party[party.Current], equipment))
                                 {
-                                    message = "You do not have the REQUIRED ITEMS!";
+                                    next = findStory(story->Choices[choice].Destination);
+
+                                    done = true;
+
+                                    break;
                                 }
                                 else
                                 {
-                                    message = "You do not have the REQUIRED ITEM!";
+                                    error = true;
+
+                                    if (story->Choices[choice].Equipment.size() > 1)
+                                    {
+                                        message = "You do not have the REQUIRED ITEMS!";
+                                    }
+                                    else
+                                    {
+                                        message = "You do not have the REQUIRED ITEM!";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (Engine::VERIFY_EQUIPMENT(party.Party, equipment))
+                                {
+                                    next = findStory(story->Choices[choice].Destination);
+
+                                    done = true;
+
+                                    break;
+                                }
+                                else
+                                {
+                                    error = true;
+
+                                    if (story->Choices[choice].Equipment.size() > 1)
+                                    {
+                                        message = "You do not have the REQUIRED ITEMS!";
+                                    }
+                                    else
+                                    {
+                                        message = "You do not have the REQUIRED ITEM!";
+                                    }
                                 }
                             }
                         }
@@ -12614,19 +13080,41 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 equipment.push_back(story->Choices[choice].Equipment[i].Type);
                             }
 
-                            if (Engine::VERIFY_ANY_EQUIPMENT(party.Party, equipment))
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
                             {
-                                next = findStory(story->Choices[choice].Destination);
+                                if (Engine::VERIFY_ANY_EQUIPMENT(party.Party[party.Current], equipment))
+                                {
+                                    next = findStory(story->Choices[choice].Destination);
 
-                                done = true;
+                                    done = true;
 
-                                break;
+                                    break;
+                                }
+                                else
+                                {
+                                    error = true;
+
+                                    message = "You do not have any of the REQUIRED ITEMS!";
+                                }
                             }
                             else
                             {
-                                error = true;
+                                if (Engine::VERIFY_ANY_EQUIPMENT(party.Party, equipment))
+                                {
+                                    next = findStory(story->Choices[choice].Destination);
 
-                                message = "You do not have any of the REQUIRED ITEMS!";
+                                    done = true;
+
+                                    break;
+                                }
+                                else
+                                {
+                                    error = true;
+
+                                    message = "You do not have any of the REQUIRED ITEMS!";
+                                }
                             }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::SHIP)
@@ -12657,7 +13145,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            if (Engine::COUNT(party.Party) == 1)
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                            {
+                                target = party.Current;
+                            }
+                            else if (Engine::COUNT(party.Party) == 1)
                             {
                                 target = Engine::FIRST(party);
                             }
@@ -12747,7 +13241,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            if (Engine::COUNT(party.Party) == 1)
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                            {
+                                target = party.Current;
+                            }
+                            else if (Engine::COUNT(party.Party) == 1)
                             {
                                 target = Engine::FIRST(party);
                             }
@@ -12774,7 +13274,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            if (Engine::COUNT(party.Party) == 1)
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                            {
+                                target = party.Current;
+                            }
+                            else if (Engine::COUNT(party.Party) == 1)
                             {
                                 target = Engine::FIRST(party);
                             }
@@ -13075,7 +13581,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             while (selected < 0 || selected >= party.Party.size())
                             {
-                                if (Engine::COUNT(party.Party) == 1)
+                                party.Current = Engine::FIND_SOLO(party);
+
+                                if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                                {
+                                    selected = party.Current;
+                                }
+                                else if (Engine::COUNT(party.Party) == 1)
                                 {
                                     selected = Engine::FIRST(party);
                                 }
@@ -13115,9 +13627,21 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto result = true;
 
-                            for (auto i = 0; i < story->Choices[choice].Status.size(); i++)
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
                             {
-                                result &= Engine::HAS_STATUS(party.Party, story->Choices[choice].Status[i]);
+                                for (auto i = 0; i < story->Choices[choice].Status.size(); i++)
+                                {
+                                    result &= Engine::HAS_STATUS(party.Party[party.Current], story->Choices[choice].Status[i]);
+                                }
+                            }
+                            else
+                            {
+                                for (auto i = 0; i < story->Choices[choice].Status.size(); i++)
+                                {
+                                    result &= Engine::HAS_STATUS(party.Party, story->Choices[choice].Status[i]);
+                                }
                             }
 
                             if (result)
@@ -13134,11 +13658,25 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 if (story->Choices[choice].Status.size() > 1)
                                 {
-                                    message = "Your party does not have all of the required status: ";
+                                    if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                                    {
+                                        message = "You do not have all of the required status: ";
+                                    }
+                                    else
+                                    {
+                                        message = "Your party does not have all of the required status: ";
+                                    }
                                 }
                                 else
                                 {
-                                    message = "Your party does not have the required status: ";
+                                    if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                                    {
+                                        message = "You do not have the required status: ";
+                                    }
+                                    else
+                                    {
+                                        message = "Your party does not have the required status: ";
+                                    }
                                 }
 
                                 for (auto i = 0; i < story->Choices[choice].Status.size(); i++)
@@ -13166,9 +13704,9 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::LAST_INDIVIDUAL_CHECK)
                         {
-                            party.Current = Engine::FIND_SOLO(party);
-
                             auto selection = std::vector<int>();
+
+                            party.Current = Engine::FIND_SOLO(party);
 
                             if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
                             {
@@ -13227,9 +13765,16 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         else if (story->Choices[choice].Type == Choice::Type::RAISE_LOWEST_ATTRIBUTE)
                         {
                             auto attribute_min = Engine::MIN(party, story->Choices[choice].Attributes[0]);
+
                             auto target = -1;
 
-                            if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                            {
+                                target = party.Current;
+                            }
+                            else if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
                             {
                                 target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
                             }
@@ -14450,6 +14995,14 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                         Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false),
                         Army::Base("Mercenary Spears", Army::Type::MERCENARY_SPEARS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 3, 2, false)};
 
+                    Party.Army = {
+                        Army::Base("Curzite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 5, false),
+                        Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::CHALICE, Location::BattleField::LEFT_FLANK_SUPPORT, 4, 4, false),
+                        Army::Base("Mercenary Knights", Army::Type::MERCENARY_KNIGHTS, Location::Type::SALTDAD, Location::BattleField::CENTRE_FRONT, 5, 3, false),
+                        Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CHALICE, Location::BattleField::CENTRE_SUPPORT, 2, 4, false),
+                        Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false),
+                        Army::Base("Mercenary Spears", Army::Type::MERCENARY_SPEARS, Location::Type::CHALICE, Location::BattleField::RIGHT_FLANK_SUPPORT, 3, 2, false)};
+                    
                     massCombatScreen(window, renderer, Location::Type::SALTDAD, Party, EnemyArmy, EnemySpells, EnemyArmyStatus);
 
                     current = -1;

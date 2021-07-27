@@ -84,6 +84,15 @@ namespace Engine
         END
     };
 
+    enum class MassCombatMode
+    {
+        NORMAL = 0,
+        DEPLOY,
+        VIEW,
+        STATUS,
+        SPELLS
+    };
+
     const char *CURRENCY = "silver";
 
     Party::Base Party = Party::Base();
@@ -1729,6 +1738,24 @@ namespace Engine
         auto result = Engine::FIND_UNIT(party.Army, unit);
 
         return (result >= 0 && result < party.Army.size());
+    }
+
+    void SET_POSITION(std::vector<Army::Base> &army, Location::BattleField from, Location::BattleField to)
+    {
+        auto result = Engine::FIND_UNIT(army, from);
+
+        if (result >= 0 && result < army.size())
+        {
+            army[result].Position = to;
+        }
+    }
+
+    void CLEAR_POSITIONS(std::vector<Army::Base> &army)
+    {
+        for (auto i = 0; i < army.size(); i++)
+        {
+            army[i].Position = Location::BattleField::NONE;
+        }
     }
 }
 #endif
