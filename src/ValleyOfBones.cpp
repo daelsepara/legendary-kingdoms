@@ -11890,14 +11890,14 @@ std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::v
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + infoh +  5 * border_space / 2, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + infoh +  7 * border_space / 2, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (army.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + (popuph - arrow_size - border_space - buttonh - button_space - infoh), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + (popuph - arrow_size - 2 * border_space - buttonh - infoh), Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -12353,7 +12353,53 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 }
                 else if (controls[current].Type == Control::Type::CONFIRM && !hold)
                 {
-                    if (current_mode == Engine::MassCombatMode::DEPLOY)
+                    if (current_mode == Engine::MassCombatMode::NORMAL)
+                    {
+                        if (Engine::ZONES(enemyArmy, party.Army) > 1)
+                        {
+                            flash_color = intRD;
+
+                            flash_message = true;
+
+                            message = "The enemy routs your army!";
+
+                            start_ticks = SDL_GetTicks();
+
+                            combatResult = Engine::Combat::DEFEAT;
+                        }
+                        else if (Engine::ZONES(party.Army, enemyArmy) > 1)
+                        {
+                            flash_color = intLB;
+
+                            flash_message = true;
+
+                            message = "You have defeated the enemy's armies!";
+
+                            start_ticks = SDL_GetTicks();
+
+                            combatResult = Engine::Combat::VICTORY;
+                        }
+                        else
+                        {
+                            flash_color = intRD;
+
+                            flash_message = true;
+
+                            message = "The enemy controls " + std::to_string(Engine::ZONES(enemyArmy, party.Army)) + " zone";
+
+                            if (Engine::ZONES(enemyArmy, party.Army) != 1)
+                            {
+                                message += "s";
+                            }
+
+                            message += ".";
+
+                            start_ticks = SDL_GetTicks();
+
+                            combatResult = Engine::Combat::NONE;
+                        }
+                    }
+                    else if (current_mode == Engine::MassCombatMode::DEPLOY)
                     {
                         if (current_zone == Location::Zone::LEFT_FLANK)
                         {

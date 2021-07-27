@@ -26,10 +26,10 @@ namespace Engine
 
     // equipment needed, equipment that can be exchanged for it
     typedef std::tuple<Equipment::Base, std::vector<Equipment::Base>> BarterExchanges;
-    
+
     // team, minimum, maximum
     typedef std::tuple<Team::Type, int, int> TeamAssignment;
-    
+
     // spell type, combat round when cast
     typedef std::tuple<Spells::Type, int> BattlefieldSpells;
 
@@ -1179,7 +1179,7 @@ namespace Engine
     void GO_SOLO(Party::Base &party, Character::Type character)
     {
         Engine::CONSOLIDATE(party);
-        
+
         auto result = Engine::FIND_CHARACTER(party.Party, character);
 
         if (result >= 0 && result < party.Party.size())
@@ -1756,6 +1756,69 @@ namespace Engine
         {
             army[i].Position = Location::BattleField::NONE;
         }
+    }
+
+    int ZONES(std::vector<Army::Base> &army, std::vector<Army::Base> &opposingArmy)
+    {
+        auto zones = 3;
+
+        auto left_flank1a = Engine::FIND_UNIT(army, Location::BattleField::LEFT_FLANK_FRONT);
+        auto left_flank1b = Engine::FIND_UNIT(army, Location::BattleField::LEFT_FLANK_SUPPORT);
+        auto left_flank2a = Engine::FIND_UNIT(opposingArmy, Location::BattleField::LEFT_FLANK_FRONT);
+        auto left_flank2b = Engine::FIND_UNIT(opposingArmy, Location::BattleField::LEFT_FLANK_SUPPORT);
+
+        auto centre1a = Engine::FIND_UNIT(army, Location::BattleField::CENTRE_FRONT);
+        auto centre1b = Engine::FIND_UNIT(army, Location::BattleField::CENTRE_SUPPORT);
+        auto centre2a = Engine::FIND_UNIT(opposingArmy, Location::BattleField::CENTRE_FRONT);
+        auto centre2b = Engine::FIND_UNIT(opposingArmy, Location::BattleField::CENTRE_SUPPORT);
+
+        auto right_flank1a = Engine::FIND_UNIT(army, Location::BattleField::RIGHT_FLANK_FRONT);
+        auto right_flank1b = Engine::FIND_UNIT(army, Location::BattleField::RIGHT_FLANK_SUPPORT);
+        auto right_flank2a = Engine::FIND_UNIT(opposingArmy, Location::BattleField::RIGHT_FLANK_FRONT);
+        auto right_flank2b = Engine::FIND_UNIT(opposingArmy, Location::BattleField::RIGHT_FLANK_SUPPORT);
+
+        if (((left_flank1a >= 0 && left_flank1a < army.size()) || (left_flank1b >= 0 && left_flank1b < army.size())))
+        {
+            if (((left_flank2a >= 0 && left_flank2a < army.size()) || (left_flank2b >= 0 && left_flank2b < army.size())))
+            {
+                zones--;
+            }
+        }
+        else
+        {
+            zones--;
+        }
+
+        if (((centre1a >= 0 && centre1a < army.size()) || (centre1b >= 0 && centre1b < army.size())))
+        {
+            if (((centre2a >= 0 && centre2a < army.size()) || (centre2b >= 0 && centre2b < army.size())))
+            {
+                zones--;
+            }
+        }
+        else
+        {
+            zones--;
+        }
+
+        if (((right_flank1a >= 0 && right_flank1a < army.size()) || (right_flank1b >= 0 && right_flank1b < army.size())))
+        {
+            if (((right_flank2a >= 0 && right_flank2a < army.size()) || (right_flank2b >= 0 && right_flank2b < army.size())))
+            {
+                zones--;
+            }
+        }
+        else
+        {
+            zones--;
+        }
+
+        if (zones < 0)
+        {
+            zones = 0;
+        }
+
+        return zones;
     }
 }
 #endif
