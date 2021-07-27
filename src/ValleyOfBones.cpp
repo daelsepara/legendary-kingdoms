@@ -11890,7 +11890,7 @@ std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::v
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + infoh +  7 * border_space / 2, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + infoh + 7 * border_space / 2, Control::Type::SCROLL_UP));
 
             idx++;
         }
@@ -15048,7 +15048,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                         Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CHALICE, Location::BattleField::CENTRE_SUPPORT, 2, 4, false),
                         Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false),
                         Army::Base("Mercenary Spears", Army::Type::MERCENARY_SPEARS, Location::Type::CHALICE, Location::BattleField::RIGHT_FLANK_SUPPORT, 3, 2, false)};
-                    
+
                     massCombatScreen(window, renderer, Location::Type::SALTDAD, Party, EnemyArmy, EnemySpells, EnemyArmyStatus);
 
                     current = -1;
