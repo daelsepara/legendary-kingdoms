@@ -12587,7 +12587,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
 
-        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_MASON, 22, "Start", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::CONFIRM));
+        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_MASON, 22, "Fight", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::CONFIRM));
         controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_MASON, 22, "Cast Spell", clrWH, intDB, 220, 48, -1), 6, 7, 4, 7, startx + (main_buttonw + button_space), text_y, Control::Type::SPELL));
 
         auto current = -1;
@@ -12778,7 +12778,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto done = false;
 
-        const char *choices[2] = {"Start", "Cancel"};
+        const char *choices[2] = {"Start Battle", "Cancel"};
 
         auto main_buttonw = 220;
 
