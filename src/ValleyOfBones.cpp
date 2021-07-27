@@ -11874,7 +11874,7 @@ std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             auto button = createHeaderButton(window, FONT_GARAMOND, 24, army_string.c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space);
 
-            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 2 * text_space);
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
 
             controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
@@ -11890,7 +11890,7 @@ std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::v
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + infoh +  3 * border_space / 2, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + infoh +  5 * border_space / 2, Control::Type::SCROLL_UP));
 
             idx++;
         }
@@ -12138,7 +12138,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, messageh, -1, -1);
+                    putHeader(renderer, message.c_str(), font_garamond, -1, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, messageh, -1, -1);
                 }
                 else
                 {
