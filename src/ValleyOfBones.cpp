@@ -80,6 +80,8 @@ Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Ba
 
 std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Character::Base &caster, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
 
+void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus, Location::Zone zone, int combatRound);
+
 SDL_Surface *createImage(const char *image)
 {
     // Load splash image
@@ -11965,7 +11967,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
         auto text_space = 8;
 
-        auto font_size = 24;
+        auto font_size = 32;
 
         const char *choices_combat[1] = {"Resolve Combat"};
         const char *choices_morale[1] = {"Check Morale"};
