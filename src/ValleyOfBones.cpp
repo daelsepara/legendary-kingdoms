@@ -12042,8 +12042,8 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
         auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
         auto offsetx = startx + box_space;
-        
-        std::string mass_combat = "Mass Combat Results: ";
+
+        std::string mass_combat = "Round " + std::to_string(combatRound + 1) + " - Mass Combat Results: ";
 
         if (zone == Location::Zone::LEFT_FLANK)
         {
