@@ -11805,13 +11805,13 @@ void renderArmy(SDL_Renderer *renderer, TTF_Font *font, int text_space, std::vec
         // Render Enemy army
         for (auto i = 0; i < army.size(); i++)
         {
-            if (army[i].Position == Location::BattleField::LEFT_FLANK_FRONT || army[i].Position == Location::BattleField::CENTRE_FRONT || army[i].Position == Location::BattleField::RIGHT_FLANK_FRONT)
+            if (army[i].Position == Location::BattleField::LEFT_FLANK_FRONT || army[i].Position == Location::BattleField::CENTER_FRONT || army[i].Position == Location::BattleField::RIGHT_FLANK_FRONT)
             {
                 if (army[i].Position == Location::BattleField::LEFT_FLANK_FRONT)
                 {
                     left_flank += "[" + std::string(army[i].Name) + "]\nStrength: " + std::to_string(army[i].Strength) + " Morale: " + std::to_string(army[i].Morale);
                 }
-                else if (army[i].Position == Location::BattleField::CENTRE_FRONT)
+                else if (army[i].Position == Location::BattleField::CENTER_FRONT)
                 {
                     center += "[" + std::string(army[i].Name) + "]\nStrength: " + std::to_string(army[i].Strength) + " Morale: " + std::to_string(army[i].Morale);
                 }
@@ -11820,13 +11820,13 @@ void renderArmy(SDL_Renderer *renderer, TTF_Font *font, int text_space, std::vec
                     right_flank += "[" + std::string(army[i].Name) + "]\nStrength: " + std::to_string(army[i].Strength) + " Morale: " + std::to_string(army[i].Morale);
                 }
             }
-            else if (army[i].Position == Location::BattleField::LEFT_FLANK_SUPPORT || army[i].Position == Location::BattleField::CENTRE_SUPPORT || army[i].Position == Location::BattleField::RIGHT_FLANK_SUPPORT)
+            else if (army[i].Position == Location::BattleField::LEFT_FLANK_SUPPORT || army[i].Position == Location::BattleField::CENTER_SUPPORT || army[i].Position == Location::BattleField::RIGHT_FLANK_SUPPORT)
             {
                 if (army[i].Position == Location::BattleField::LEFT_FLANK_SUPPORT)
                 {
                     left_flank += "\n\nSupport:\n[" + std::string(army[i].Name) + "]\nStrength: " + std::to_string(army[i].Strength) + " Morale: " + std::to_string(army[i].Morale);
                 }
-                else if (army[i].Position == Location::BattleField::CENTRE_SUPPORT)
+                else if (army[i].Position == Location::BattleField::CENTER_SUPPORT)
                 {
                     center += "\n\nSupport:\n[" + std::string(army[i].Name) + "]\nStrength: " + std::to_string(army[i].Strength) + " Morale: " + std::to_string(army[i].Morale);
                 }
@@ -12037,7 +12037,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto current_mode = Engine::MassCombatMode::NORMAL;
 
         auto left_flank = std::vector<int>();
-        auto centre = std::vector<int>();
+        auto center = std::vector<int>();
         auto right_flank = std::vector<int>();
 
         Engine::CLEAR_POSITIONS(party.Army);
@@ -12097,7 +12097,26 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                 drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
 
-                putHeader(renderer, "Select unit to deploy", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+                std::string deploy_string = "Select unit to deploy to the ";
+
+                if (current_zone == Location::Zone::LEFT_FLANK)
+                {
+                    deploy_string += " left flank";
+                }
+                else if (current_zone == Location::Zone::CENTER)
+                {
+                    deploy_string += " center";
+                }
+                else if (current_zone == Location::Zone::RIGHT_FLANK)
+                {
+                    deploy_string += " right flank";
+                }
+                else
+                {
+                    deploy_string += " battlefield";
+                }
+
+                putHeader(renderer, deploy_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
 
                 controls = controls_deploy;
 
@@ -12111,9 +12130,9 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                         {
                             selection = left_flank;
                         }
-                        else if (current_zone == Location::Zone::CENTRE)
+                        else if (current_zone == Location::Zone::CENTER)
                         {
-                            selection = centre;
+                            selection = center;
                         }
                         else if (current_zone == Location::Zone::RIGHT_FLANK)
                         {
@@ -12245,7 +12264,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                 }
                                 else if (current == 4)
                                 {
-                                    current_zone = Location::Zone::CENTRE;
+                                    current_zone = Location::Zone::CENTER;
                                 }
                                 else if (current == 5)
                                 {
@@ -12267,6 +12286,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                             if (current + offset >= 0 && current + offset < party.Army.size())
                             {
                                 auto result = Engine::FIND_LIST(left_flank, current + offset);
+                                auto center_result = Engine::FIND_LIST(center, current + offset);
+                                auto right_result = Engine::FIND_LIST(right_flank, current + offset);
 
                                 if (result >= 0)
                                 {
@@ -12287,21 +12308,33 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                     else
                                     {
                                         left_flank.push_back(current + offset);
+
+                                        if (center_result >= 0 && center_result < center.size())
+                                        {
+                                            center.erase(center.begin() + center_result);
+                                        }
+
+                                        if (right_result >= 0 && right_result < right_flank.size())
+                                        {
+                                            right_flank.erase(right_flank.begin() + right_result);
+                                        }
                                     }
                                 }
                             }
                         }
-                        else if (current_zone == Location::Zone::CENTRE)
+                        else if (current_zone == Location::Zone::CENTER)
                         {
                             if (current + offset >= 0 && current + offset < party.Army.size())
                             {
-                                auto result = Engine::FIND_LIST(centre, current + offset);
+                                auto result = Engine::FIND_LIST(center, current + offset);
+                                auto right_result = Engine::FIND_LIST(right_flank, current + offset);
+                                auto left_result = Engine::FIND_LIST(left_flank, current + offset);
 
                                 if (result >= 0)
                                 {
-                                    centre.erase(centre.begin() + result);
+                                    center.erase(center.begin() + result);
                                 }
-                                else if (centre.size() < 2)
+                                else if (center.size() < 2)
                                 {
                                     if (party.Army[current + offset].Garrison != location)
                                     {
@@ -12315,7 +12348,17 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                     }
                                     else
                                     {
-                                        centre.push_back(current + offset);
+                                        center.push_back(current + offset);
+
+                                        if (right_result >= 0 && right_result < right_flank.size())
+                                        {
+                                            right_flank.erase(right_flank.begin() + right_result);
+                                        }
+
+                                        if (left_result >= 0 && left_result < left_flank.size())
+                                        {
+                                            left_flank.erase(left_flank.begin() + left_result);
+                                        }
                                     }
                                 }
                             }
@@ -12325,6 +12368,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                             if (current + offset >= 0 && current + offset < party.Army.size())
                             {
                                 auto result = Engine::FIND_LIST(right_flank, current + offset);
+                                auto center_result = Engine::FIND_LIST(center, current + offset);
+                                auto left_result = Engine::FIND_LIST(left_flank, current + offset);
 
                                 if (result >= 0)
                                 {
@@ -12345,6 +12390,16 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                     else
                                     {
                                         right_flank.push_back(current + offset);
+
+                                        if (center_result >= 0 && center_result < center.size())
+                                        {
+                                            center.erase(center.begin() + center_result);
+                                        }
+
+                                        if (left_result >= 0 && left_result < left_flank.size())
+                                        {
+                                            left_flank.erase(left_flank.begin() + left_result);
+                                        }
                                     }
                                 }
                             }
@@ -12401,49 +12456,35 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                     }
                     else if (current_mode == Engine::MassCombatMode::DEPLOY)
                     {
-                        if (current_zone == Location::Zone::LEFT_FLANK)
+                        Engine::CLEAR_POSITIONS(party.Army);
+
+                        if (left_flank.size() > 0)
                         {
-                            Engine::SET_POSITION(party.Army, Location::BattleField::LEFT_FLANK_FRONT, Location::BattleField::NONE);
-                            Engine::SET_POSITION(party.Army, Location::BattleField::LEFT_FLANK_SUPPORT, Location::BattleField::NONE);
+                            party.Army[left_flank[0]].Position = Location::BattleField::LEFT_FLANK_FRONT;
 
-                            if (left_flank.size() > 0)
+                            if (left_flank.size() > 1)
                             {
-                                party.Army[left_flank[0]].Position = Location::BattleField::LEFT_FLANK_FRONT;
-
-                                if (left_flank.size() > 1)
-                                {
-                                    party.Army[left_flank[1]].Position = Location::BattleField::LEFT_FLANK_SUPPORT;
-                                }
+                                party.Army[left_flank[1]].Position = Location::BattleField::LEFT_FLANK_SUPPORT;
                             }
                         }
-                        else if (current_zone == Location::Zone::CENTRE)
+
+                        if (center.size() > 0)
                         {
-                            Engine::SET_POSITION(party.Army, Location::BattleField::CENTRE_FRONT, Location::BattleField::NONE);
-                            Engine::SET_POSITION(party.Army, Location::BattleField::CENTRE_SUPPORT, Location::BattleField::NONE);
+                            party.Army[center[0]].Position = Location::BattleField::CENTER_FRONT;
 
-                            if (centre.size() > 0)
+                            if (center.size() > 1)
                             {
-                                party.Army[centre[0]].Position = Location::BattleField::CENTRE_FRONT;
-
-                                if (centre.size() > 1)
-                                {
-                                    party.Army[centre[1]].Position = Location::BattleField::CENTRE_SUPPORT;
-                                }
+                                party.Army[center[1]].Position = Location::BattleField::CENTER_SUPPORT;
                             }
                         }
-                        else if (current_zone == Location::Zone::RIGHT_FLANK)
+
+                        if (right_flank.size() > 0)
                         {
-                            Engine::SET_POSITION(party.Army, Location::BattleField::RIGHT_FLANK_FRONT, Location::BattleField::NONE);
-                            Engine::SET_POSITION(party.Army, Location::BattleField::RIGHT_FLANK_SUPPORT, Location::BattleField::NONE);
+                            party.Army[right_flank[0]].Position = Location::BattleField::RIGHT_FLANK_FRONT;
 
-                            if (right_flank.size() > 0)
+                            if (right_flank.size() > 1)
                             {
-                                party.Army[right_flank[0]].Position = Location::BattleField::RIGHT_FLANK_FRONT;
-
-                                if (right_flank.size() > 1)
-                                {
-                                    party.Army[right_flank[1]].Position = Location::BattleField::RIGHT_FLANK_SUPPORT;
-                                }
+                                party.Army[right_flank[1]].Position = Location::BattleField::RIGHT_FLANK_SUPPORT;
                             }
                         }
 
@@ -13472,7 +13513,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (party.Army.size() > 0)
                             {
-                                std::vector<Location::BattleField> positions = {Location::BattleField::LEFT_FLANK_FRONT, Location::BattleField::LEFT_FLANK_SUPPORT, Location::BattleField::CENTRE_FRONT, Location::BattleField::CENTRE_SUPPORT, Location::BattleField::RIGHT_FLANK_FRONT, Location::BattleField::RIGHT_FLANK_SUPPORT};
+                                std::vector<Location::BattleField> positions = {Location::BattleField::LEFT_FLANK_FRONT, Location::BattleField::LEFT_FLANK_SUPPORT, Location::BattleField::CENTER_FRONT, Location::BattleField::CENTER_SUPPORT, Location::BattleField::RIGHT_FLANK_FRONT, Location::BattleField::RIGHT_FLANK_SUPPORT};
 
                                 for (auto i = 0; i < positions.size(); i++)
                                 {
@@ -15036,18 +15077,18 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                     EnemyArmy = {
                         Army::Base("Curzite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 5, false),
                         Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_SUPPORT, 4, 4, false),
-                        Army::Base("Mercenary Knights", Army::Type::MERCENARY_KNIGHTS, Location::Type::SALTDAD, Location::BattleField::CENTRE_FRONT, 5, 3, false),
-                        Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::SALTDAD, Location::BattleField::CENTRE_SUPPORT, 2, 4, false),
+                        Army::Base("Mercenary Knights", Army::Type::MERCENARY_KNIGHTS, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 5, 3, false),
+                        Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::SALTDAD, Location::BattleField::CENTER_SUPPORT, 2, 4, false),
                         Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false),
                         Army::Base("Mercenary Spears", Army::Type::MERCENARY_SPEARS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 3, 2, false)};
 
                     Party.Army = {
                         Army::Base("Curzite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 5, false),
-                        Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::CHALICE, Location::BattleField::LEFT_FLANK_SUPPORT, 4, 4, false),
-                        Army::Base("Mercenary Knights", Army::Type::MERCENARY_KNIGHTS, Location::Type::SALTDAD, Location::BattleField::CENTRE_FRONT, 5, 3, false),
-                        Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CHALICE, Location::BattleField::CENTRE_SUPPORT, 2, 4, false),
+                        Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_SUPPORT, 4, 4, false),
+                        Army::Base("Bronzeguard", Army::Type::BRONZEGUARD, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 5, 5, true),
+                        Army::Base("Lhasbreath Berserkers", Army::Type::LHASBREATH_BERSERKERS, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 5, 2, false),
                         Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false),
-                        Army::Base("Mercenary Spears", Army::Type::MERCENARY_SPEARS, Location::Type::CHALICE, Location::BattleField::RIGHT_FLANK_SUPPORT, 3, 2, false)};
+                        Army::Base("Lhasbreath Berserkers", Army::Type::LHASBREATH_BERSERKERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 5, 2, false)};
 
                     massCombatScreen(window, renderer, Location::Type::SALTDAD, Party, EnemyArmy, EnemySpells, EnemyArmyStatus);
 
