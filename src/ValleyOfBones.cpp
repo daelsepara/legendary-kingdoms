@@ -12143,13 +12143,13 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                             {
                                 if (army_combat_score < enemy_combat_score)
                                 {
-                                    message = "The " + std::string(enemyArmy[enemy_unit].Name) + " defeats the " + std::string(party.Army[army_unit].Name) + "!";
+                                    message = "The " + std::string(enemyArmy[enemy_unit].Name) + " defeats your " + std::string(party.Army[army_unit].Name) + "!";
 
                                     flash_color = intRD;
                                 }
                                 else if (enemy_combat_score < army_combat_score)
                                 {
-                                    message = "The " + std::string(party.Army[army_unit].Name) + " defeats the " + std::string(enemyArmy[enemy_unit].Name) + "!";
+                                    message = "Your " + std::string(party.Army[army_unit].Name) + " defeats the " + std::string(enemyArmy[enemy_unit].Name) + "!";
 
                                     flash_color = intLB;
                                 }
@@ -12220,11 +12220,11 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                                 {
                                     Engine::GAIN_MORALE(party.Army[army_unit], -1);
 
-                                    message = "The " + std::string(party.Army[army_unit].Name) + " loses 1 point of Morale!";
+                                    message = "Your " + std::string(party.Army[army_unit].Name) + " loses 1 point of Morale!";
                                 }
                                 else
                                 {
-                                    message = "The " + std::string(party.Army[army_unit].Name) + " is routed!";
+                                    message = "Your " + std::string(party.Army[army_unit].Name) + " is routed!";
 
                                     party.Army[army_unit].Position = Location::BattleField::NONE;
 
@@ -12321,8 +12321,6 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                 }
             }
 
-            fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
-
             if (army_unit >= 0 && army_unit < party.Army.size())
             {
                 std::string army_string = "";
@@ -12332,22 +12330,23 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                 army_string = "Strength: " + std::to_string(party.Army[army_unit].Strength);
                 army_string += "\nMorale: " + std::to_string(party.Army[army_unit].Morale);
 
+                putText(renderer, army_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+
                 if (army_combat_score > 0)
                 {
                     if (stage == Engine::MassCombat::COMBAT)
                     {
-                        army_string += "\nCombat Result: " + std::to_string(army_combat_score);
+                        std::string combat_string = "Combat Result: " + std::to_string(army_combat_score);
+
+                        putHeader(renderer, combat_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                     }
                     else if (stage == Engine::MassCombat::MORALE)
                     {
-                        if (army_combat_score < enemy_combat_score)
-                        {
-                            army_string += "\nMorale Check: " + std::to_string(morale_score);
-                        }
+                        std::string morale_string = "Morale Check: " + std::to_string(morale_score);
+                        
+                        putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                     }
                 }
-
-                putText(renderer, army_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
             }
             else
             {
@@ -12364,22 +12363,23 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                 enemy_string = "Strength: " + std::to_string(enemyArmy[enemy_unit].Strength);
                 enemy_string += "\nMorale: " + std::to_string(enemyArmy[enemy_unit].Morale);
 
+                putText(renderer, enemy_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+
                 if (enemy_combat_score > 0)
                 {
                     if (stage == Engine::MassCombat::COMBAT)
                     {
-                        enemy_string += "\nCombat Result: " + std::to_string(enemy_combat_score);
+                        std::string combat_string = "Combat Result: " + std::to_string(enemy_combat_score);
+
+                        putHeader(renderer, combat_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                     }
                     else if (stage == Engine::MassCombat::MORALE)
                     {
-                        if (enemy_combat_score < army_combat_score)
-                        {
-                            enemy_string += "\nMorale Check: " + std::to_string(morale_score);
-                        }
+                        std::string morale_string = "Morale Check: " + std::to_string(morale_score);
+                        
+                        putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                     }
                 }
-
-                putText(renderer, enemy_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
             }
             else
             {
@@ -12393,7 +12393,16 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             }
             else if (stage == Engine::MassCombat::COMBAT)
             {
-                controls = controls_morale;
+                if (army_combat_score != enemy_combat_score)
+                {
+                    controls = controls_morale;
+                }
+                else
+                {
+                    stage = Engine::MassCombat::MORALE;
+
+                    controls = controls_end;
+                }
             }
             else if (stage == Engine::MassCombat::MORALE)
             {
@@ -12593,100 +12602,99 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         while (Engine::ZONES(party.Army, enemyArmy) < 2 && Engine::ZONES(enemyArmy, party.Army) < 2)
         {
-            while (!done)
+            SDL_SetWindowTitle(window, "Legendary Kingdoms: Mass Combat");
+
+            fillWindow(renderer, intWH);
+
+            for (auto y = 0; y < 2; y++)
             {
-                SDL_SetWindowTitle(window, "Legendary Kingdoms: Mass Combat");
-
-                fillWindow(renderer, intWH);
-
-                for (auto y = 0; y < 2; y++)
+                for (auto x = 0; x < 3; x++)
                 {
-                    for (auto x = 0; x < 3; x++)
+                    if (y > 0)
                     {
-                        if (y > 0)
-                        {
-                            fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
+                        fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
 
-                            thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + 8, starty + infoh + y * (boxh + box_space) + text_space + 8, intBR, 4);
-                        }
-                        else
-                        {
-                            fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
-                        }
-                    }
-                }
-
-                putHeader(renderer, "Left Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx, starty);
-                putHeader(renderer, "Center", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + (boxw + box_space), starty);
-                putHeader(renderer, "Right Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + 2 * (boxw + box_space), starty);
-
-                if (current_mode == Engine::MassCombatMode::NORMAL)
-                {
-                    renderButtons(renderer, controls_battlefield, current, intLB, 8, 4);
-
-                    controls = controls_battlefield;
-                }
-                else
-                {
-                    renderButtons(renderer, controls_battlefield, -1, intLB, 8, 4);
-                }
-
-                // Render Enemy army
-                renderArmy(renderer, font_garamond, text_space, enemyArmy, boxw, boxh, box_space, starty + infoh, clrBK, intBE);
-
-                // Render Party army
-                renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space, clrBK, intBE);
-
-                if (flash_message)
-                {
-                    if ((SDL_GetTicks() - start_ticks) < duration)
-                    {
-                        putHeader(renderer, message.c_str(), font_garamond, -1, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, messageh, -1, -1);
+                        thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + 8, starty + infoh + y * (boxh + box_space) + text_space + 8, intBR, 4);
                     }
                     else
                     {
-                        flash_message = false;
+                        fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
                     }
                 }
+            }
 
-                Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+            putHeader(renderer, "Left Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx, starty);
+            putHeader(renderer, "Center", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + (boxw + box_space), starty);
+            putHeader(renderer, "Right Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + 2 * (boxw + box_space), starty);
 
-                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            if (current_mode == Engine::MassCombatMode::NORMAL)
+            {
+                renderButtons(renderer, controls_battlefield, current, intLB, 8, 4);
+
+                controls = controls_battlefield;
+            }
+            else
+            {
+                renderButtons(renderer, controls_battlefield, -1, intLB, 8, 4);
+            }
+
+            // Render Enemy army
+            renderArmy(renderer, font_garamond, text_space, enemyArmy, boxw, boxh, box_space, starty + infoh, clrBK, intBE);
+
+            // Render Party army
+            renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space, clrBK, intBE);
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    if (controls[current].Type == Control::Type::ACTION && !hold)
+                    putHeader(renderer, message.c_str(), font_garamond, -1, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, messageh, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if (current_mode == Engine::MassCombatMode::NORMAL)
                     {
-                        if (current_mode == Engine::MassCombatMode::NORMAL)
+                        if (current >= 0 && current < 6)
                         {
-                            if (current >= 0 && current < 6)
-                            {
-                            }
-
-                            selected = false;
                         }
+
+                        selected = false;
                     }
-                    else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                }
+                else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                {
+                    if (current_mode == Engine::MassCombatMode::NORMAL)
                     {
-                        if (current_mode == Engine::MassCombatMode::NORMAL)
+                        std::vector<Location::Zone> zones = {Location::Zone::LEFT_FLANK, Location::Zone::CENTER, Location::Zone::RIGHT_FLANK};
+
+                        for (auto i = 0; i < zones.size(); i++)
                         {
-                            std::vector<Location::Zone> zones = {Location::Zone::LEFT_FLANK, Location::Zone::CENTER, Location::Zone::RIGHT_FLANK};
-
-                            for (auto i = 0; i < zones.size(); i++)
+                            if (Engine::ACTIVE(party.Army, enemyArmy, zones[i]))
                             {
-                                if (Engine::ACTIVE(party.Army, enemyArmy, zones[i]))
-                                {
-                                    // resolve combat, spells, special status
-                                    resolveMassCombat(window, renderer, location, party, enemyArmy, enemySpells, enemyStatus, zones[i], combat_round);
-                                }
+                                // resolve combat, spells, special status
+                                resolveMassCombat(window, renderer, location, party, enemyArmy, enemySpells, enemyStatus, zones[i], combat_round);
                             }
-
-                            combat_round++;
-
-                            done = true;
                         }
+
+                        combat_round++;
                     }
-                    else if (controls[current].Type == Control::Type::SPELL && !hold)
-                    {
-                    }
+
+                    selected = false;
+
+                    current = -1;
+                }
+                else if (controls[current].Type == Control::Type::SPELL && !hold)
+                {
                 }
             }
         }
