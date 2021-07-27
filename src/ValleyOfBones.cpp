@@ -12035,87 +12035,97 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto combat_round = 0;
 
-        while (!done)
+        while (Engine::ZONES(party.Army, enemyArmy) < 2 && Engine::ZONES(enemyArmy, party.Army) < 2)
         {
-            SDL_SetWindowTitle(window, "Legendary Kingdoms: Mass Combat");
-
-            fillWindow(renderer, intWH);
-
-            for (auto y = 0; y < 2; y++)
+            while (!done)
             {
-                for (auto x = 0; x < 3; x++)
-                {
-                    if (y > 0)
-                    {
-                        fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
+                SDL_SetWindowTitle(window, "Legendary Kingdoms: Mass Combat");
 
-                        thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + 8, starty + infoh + y * (boxh + box_space) + text_space + 8, intBR, 4);
-                    }
-                    else
+                fillWindow(renderer, intWH);
+
+                for (auto y = 0; y < 2; y++)
+                {
+                    for (auto x = 0; x < 3; x++)
                     {
-                        fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
+                        if (y > 0)
+                        {
+                            fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
+
+                            thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + 8, starty + infoh + y * (boxh + box_space) + text_space + 8, intBR, 4);
+                        }
+                        else
+                        {
+                            fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
+                        }
                     }
                 }
-            }
 
-            putHeader(renderer, "Left Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx, starty);
-            putHeader(renderer, "Center", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + (boxw + box_space), starty);
-            putHeader(renderer, "Right Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + 2 * (boxw + box_space), starty);
+                putHeader(renderer, "Left Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx, starty);
+                putHeader(renderer, "Center", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + (boxw + box_space), starty);
+                putHeader(renderer, "Right Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + 2 * (boxw + box_space), starty);
 
-            if (current_mode == Engine::MassCombatMode::NORMAL)
-            {
-                renderButtons(renderer, controls_battlefield, current, intLB, 8, 4);
-
-                controls = controls_battlefield;
-            }
-            else
-            {
-                renderButtons(renderer, controls_battlefield, -1, intLB, 8, 4);
-            }
-
-            // Render Enemy army
-            renderArmy(renderer, font_garamond, text_space, enemyArmy, boxw, boxh, box_space, starty + infoh, clrBK, intBE);
-
-            // Render Party army
-            renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space, clrBK, intBE);
-
-            if (flash_message)
-            {
-                if ((SDL_GetTicks() - start_ticks) < duration)
+                if (current_mode == Engine::MassCombatMode::NORMAL)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, -1, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, messageh, -1, -1);
+                    renderButtons(renderer, controls_battlefield, current, intLB, 8, 4);
+
+                    controls = controls_battlefield;
                 }
                 else
                 {
-                    flash_message = false;
+                    renderButtons(renderer, controls_battlefield, -1, intLB, 8, 4);
                 }
-            }
 
-            Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+                // Render Enemy army
+                renderArmy(renderer, font_garamond, text_space, enemyArmy, boxw, boxh, box_space, starty + infoh, clrBK, intBE);
 
-            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
-            {
-                if (controls[current].Type == Control::Type::ACTION && !hold)
+                // Render Party army
+                renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space, clrBK, intBE);
+
+                if (flash_message)
                 {
-                    if (current_mode == Engine::MassCombatMode::NORMAL)
+                    if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        if (current >= 0 && current < 6)
+                        putHeader(renderer, message.c_str(), font_garamond, -1, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, messageh, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+                {
+                    if (controls[current].Type == Control::Type::ACTION && !hold)
+                    {
+                        if (current_mode == Engine::MassCombatMode::NORMAL)
                         {
-                            
-                        }
+                            if (current >= 0 && current < 6)
+                            {
+                            }
 
-                        selected = false;
+                            selected = false;
+                        }
                     }
-                }
-                else if (controls[current].Type == Control::Type::CONFIRM && !hold)
-                {
-                    if (current_mode == Engine::MassCombatMode::NORMAL)
+                    else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                    {
+                        if (current_mode == Engine::MassCombatMode::NORMAL)
+                        {
+                            std::vector<Location::Zone> zones = {Location::Zone::LEFT_FLANK, Location::Zone::CENTER, Location::Zone::RIGHT_FLANK};
+
+                            for (auto i = 0; i < zones.size(); i++)
+                            {
+                                if (Engine::ACTIVE(party.Army, enemyArmy, zones[i]))
+                                {
+                                    // resolve combat, spells, special status
+                                }
+                            }
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SPELL && !hold)
                     {
                     }
-                }
-                else if (controls[current].Type == Control::Type::SPELL && !hold)
-                {
-
                 }
             }
         }
@@ -12278,7 +12288,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 last = party.Army.size();
             }
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms: Mass Combat");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms: Army Deployment");
 
             fillWindow(renderer, intWH);
 

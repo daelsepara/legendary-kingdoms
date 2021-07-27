@@ -1820,5 +1820,65 @@ namespace Engine
 
         return zones;
     }
+
+    bool ACTIVE(std::vector<Army::Base> &army, std::vector<Army::Base> &opposingArmy, Location::Zone zone)
+    {
+        auto army1_active = false;
+        auto army2_active = false;
+
+        if (zone == Location::Zone::LEFT_FLANK)
+        {
+            auto left_flank1a = Engine::FIND_UNIT(army, Location::BattleField::LEFT_FLANK_FRONT);
+            auto left_flank1b = Engine::FIND_UNIT(army, Location::BattleField::LEFT_FLANK_SUPPORT);
+            auto left_flank2a = Engine::FIND_UNIT(opposingArmy, Location::BattleField::LEFT_FLANK_FRONT);
+            auto left_flank2b = Engine::FIND_UNIT(opposingArmy, Location::BattleField::LEFT_FLANK_SUPPORT);
+
+            if (((left_flank1a >= 0 && left_flank1a < army.size()) || (left_flank1b >= 0 && left_flank1b < army.size())))
+            {
+                army1_active = true;
+            }
+
+            if (((left_flank2a >= 0 && left_flank2a < army.size()) || (left_flank2b >= 0 && left_flank2b < army.size())))
+            {
+                army2_active = true;
+            }
+        }
+        else if (zone == Location::Zone::CENTER)
+        {
+            auto centre1a = Engine::FIND_UNIT(army, Location::BattleField::CENTER_FRONT);
+            auto centre1b = Engine::FIND_UNIT(army, Location::BattleField::CENTER_SUPPORT);
+            auto centre2a = Engine::FIND_UNIT(opposingArmy, Location::BattleField::CENTER_FRONT);
+            auto centre2b = Engine::FIND_UNIT(opposingArmy, Location::BattleField::CENTER_SUPPORT);
+
+            if (((centre1a >= 0 && centre1a < army.size()) || (centre1b >= 0 && centre1b < army.size())))
+            {
+                army1_active = true;
+            }
+
+            if (((centre2a >= 0 && centre2a < army.size()) || (centre2b >= 0 && centre2b < army.size())))
+            {
+                army2_active = true;
+            }
+        }
+        else if (zone == Location::Zone::RIGHT_FLANK)
+        {
+            auto right_flank1a = Engine::FIND_UNIT(army, Location::BattleField::RIGHT_FLANK_FRONT);
+            auto right_flank1b = Engine::FIND_UNIT(army, Location::BattleField::RIGHT_FLANK_SUPPORT);
+            auto right_flank2a = Engine::FIND_UNIT(opposingArmy, Location::BattleField::RIGHT_FLANK_FRONT);
+            auto right_flank2b = Engine::FIND_UNIT(opposingArmy, Location::BattleField::RIGHT_FLANK_SUPPORT);
+
+            if (((right_flank1a >= 0 && right_flank1a < army.size()) || (right_flank1b >= 0 && right_flank1b < army.size())))
+            {
+                army1_active = true;
+            }
+
+            if (((right_flank2a >= 0 && right_flank2a < army.size()) || (right_flank2b >= 0 && right_flank2b < army.size())))
+            {
+                army2_active = true;
+            }
+        }
+
+        return army1_active && army2_active;
+    }
 }
 #endif
