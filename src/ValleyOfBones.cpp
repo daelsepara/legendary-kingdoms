@@ -12042,12 +12042,27 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
         auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
         auto offsetx = startx + box_space;
+        
+        std::string mass_combat = "Mass Combat Results: ";
+
+        if (zone == Location::Zone::LEFT_FLANK)
+        {
+            mass_combat += "Left Flank";
+        }
+        else if (zone == Location::Zone::CENTER)
+        {
+            mass_combat += "Center";
+        }
+        else if (zone == Location::Zone::RIGHT_FLANK)
+        {
+            mass_combat += "Right Flank";
+        }
 
         while (!done)
         {
             fillWindow(renderer, intWH);
 
-            putHeader(renderer, "Mass Combat Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+            putHeader(renderer, mass_combat.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + infoh + boxh + box_space);
 
             fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
