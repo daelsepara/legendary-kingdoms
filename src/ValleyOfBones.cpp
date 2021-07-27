@@ -12120,7 +12120,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
                             enemy_combat_score += enemy_combat_results[i];
 
-                            fitImage(renderer, dice[result], startx + boxwidth + marginx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
+                            fitImage(renderer, dice[result], offsetx + boxwidth + marginx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
 
                             if (col < cols)
                             {
@@ -12188,11 +12188,11 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
                         if (army_combat_score > enemy_combat_score)
                         {
-                            fitImage(renderer, dice[result], startx + boxwidth + marginx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
+                            fitImage(renderer, dice[result], offsetx + boxwidth + marginx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
                         }
                         else if (enemy_combat_score > army_combat_score)
                         {
-                            fitImage(renderer, dice[result], startx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
+                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
                         }
 
                         if (col < cols)
@@ -12338,7 +12338,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     {
                         std::string combat_string = "Combat Result: " + std::to_string(army_combat_score);
 
-                        putHeader(renderer, combat_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                        putHeader(renderer, combat_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                     }
                     else if (stage == Engine::MassCombat::MORALE)
                     {
@@ -12346,7 +12346,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                         {
                             std::string morale_string = "Morale Check: " + std::to_string(morale_score);
 
-                            putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                            putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                         }
                     }
                 }
@@ -12374,7 +12374,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     {
                         std::string combat_string = "Combat Result: " + std::to_string(enemy_combat_score);
 
-                        putHeader(renderer, combat_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                        putHeader(renderer, combat_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                     }
                     else if (stage == Engine::MassCombat::MORALE)
                     {
@@ -12382,7 +12382,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                         {
                             std::string morale_string = "Morale Check: " + std::to_string(morale_score);
 
-                            putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                            putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                         }
                     }
                 }
