@@ -12641,46 +12641,27 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                     {
                         if (Engine::ZONES(enemyArmy, party.Army) > 1)
                         {
-                            flash_color = intRD;
-
-                            flash_message = true;
-
-                            message = "The enemy routs your army!";
-
-                            start_ticks = SDL_GetTicks();
-
                             combatResult = Engine::Combat::DEFEAT;
+
+                            done = true;
+
+                            break;
                         }
                         else if (Engine::ZONES(party.Army, enemyArmy) > 1)
                         {
-                            flash_color = intLB;
-
-                            flash_message = true;
-
-                            message = "You have defeated the enemy's armies!";
-
-                            start_ticks = SDL_GetTicks();
-
                             combatResult = Engine::Combat::VICTORY;
+
+                            done = true;
+
+                            break;
                         }
                         else
                         {
-                            flash_color = intRD;
+                            combatResult = massCombatScreen(window, renderer, location, party, enemyArmy, enemySpells, enemyStatus);
 
-                            flash_message = true;
+                            done = true;
 
-                            message = "The enemy controls " + std::to_string(Engine::ZONES(enemyArmy, party.Army)) + " zone";
-
-                            if (Engine::ZONES(enemyArmy, party.Army) != 1)
-                            {
-                                message += "s";
-                            }
-
-                            message += ".";
-
-                            start_ticks = SDL_GetTicks();
-
-                            combatResult = Engine::Combat::NONE;
+                            break;
                         }
                     }
                     else if (current_mode == Engine::MassCombatMode::DEPLOY)
