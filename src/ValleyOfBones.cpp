@@ -12110,19 +12110,19 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                 if (current_zone == Location::Zone::LEFT_FLANK)
                 {
-                    deploy_string += " left flank";
+                    deploy_string += "left flank";
                 }
                 else if (current_zone == Location::Zone::CENTER)
                 {
-                    deploy_string += " center";
+                    deploy_string += "center";
                 }
                 else if (current_zone == Location::Zone::RIGHT_FLANK)
                 {
-                    deploy_string += " right flank";
+                    deploy_string += "right flank";
                 }
                 else
                 {
-                    deploy_string += " battlefield";
+                    deploy_string += "battlefield";
                 }
 
                 putHeader(renderer, deploy_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
