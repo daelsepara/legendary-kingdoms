@@ -12125,7 +12125,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                     deploy_string += "battlefield";
                 }
 
-                putHeader(renderer, deploy_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+                putHeader(renderer, deploy_string.c_str(), font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
 
                 controls = controls_deploy;
 
