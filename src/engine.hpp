@@ -1880,5 +1880,40 @@ namespace Engine
 
         return army1_active && army2_active;
     }
+
+    int GET_STRENGTH(std::vector<Army::Base> &army, Location::Zone zone)
+    {
+        auto result = 0;
+
+        if (zone == Location::Zone::LEFT_FLANK)
+        {
+            auto unit = Engine::FIND_UNIT(army, Location::BattleField::LEFT_FLANK_FRONT);
+
+            if (unit >= 0 && unit < army.size())
+            {
+                result = army[unit].Strength;
+            }
+        }
+        else if (zone == Location::Zone::CENTER)
+        {
+            auto unit = Engine::FIND_UNIT(army, Location::BattleField::CENTER_FRONT);
+
+            if (unit >= 0 && unit < army.size())
+            {
+                result = army[unit].Strength;
+            }
+        }
+        else if (zone == Location::Zone::RIGHT_FLANK)
+        {
+            auto unit = Engine::FIND_UNIT(army, Location::BattleField::RIGHT_FLANK_FRONT);
+
+            if (unit >= 0 && unit < army.size())
+            {
+                result = army[unit].Strength;
+            }
+        }
+
+        return result;
+    }
 }
 #endif
