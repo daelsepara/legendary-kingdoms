@@ -11963,11 +11963,11 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
         auto font_mason = TTF_OpenFont(FONT_MASON, 32);
 
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
 
         auto text_space = 8;
 
-        auto font_size = 32;
+        auto font_size = 28;
 
         const char *choices_combat[1] = {"Resolve Combat"};
         const char *choices_morale[1] = {"Check Morale"};
@@ -12444,7 +12444,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                 }
             }
 
-            renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
 
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -12536,9 +12536,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto font_size = 32;
-
-        auto size_garamond = 28;
+        auto font_size = 28;
 
         auto box_space = 10;
 
@@ -12610,8 +12608,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
 
-        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_MASON, font_size, "Fight", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::CONFIRM));
-        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_MASON, font_size, "Cast Spell", clrWH, intDB, 220, 48, -1), 6, 7, 4, 7, startx + (main_buttonw + button_space), text_y, Control::Type::SPELL));
+        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_DARK11, 28, "Fight", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::CONFIRM));
+        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_DARK11, 28, "Cast Spell", clrWH, intDB, 220, 48, -1), 6, 7, 4, 7, startx + (main_buttonw + button_space), text_y, Control::Type::SPELL));
 
         auto current = -1;
         auto selected = false;
@@ -12767,9 +12765,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto font_size = 32;
-
-        auto size_garamond = 28;
+        auto font_size = 28;
 
         auto box_space = 10;
 
@@ -12791,7 +12787,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto popupy = (SCREEN_HEIGHT - popuph) / 2;
 
         auto offset = 0;
-        auto limit = (popuph - infoh - buttonh - button_space) / (size_garamond * 2 + text_space * 4);
+        auto limit = (popuph - infoh - buttonh - button_space) / (font_size * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -12850,8 +12846,8 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
 
-        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_MASON, font_size, "Start Battle", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::CONFIRM));
-        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_MASON, font_size, "Cancel", clrWH, intDB, 220, 48, -1), 6, 7, 4, 7, startx + (main_buttonw + button_space), text_y, Control::Type::BACK));
+        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_DARK11, font_size, "Start Battle", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::CONFIRM));
+        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_DARK11, font_size, "Cancel", clrWH, intDB, 220, 48, -1), 6, 7, 4, 7, startx + (main_buttonw + button_space), text_y, Control::Type::BACK));
 
         auto controls_deploy = popupArmy(window, renderer, party.Army, offset, last, limit, popupw, popuph, infoh, popupx, popupy);
 
