@@ -72,6 +72,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
 
 Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, bool canFlee, int fleeRound, bool useEquipment);
+Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus);
 
 Story::Base *findStory(Engine::Destination destination);
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
@@ -11968,6 +11969,225 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto popupx = (SCREEN_WIDTH - popupw) / 2;
         auto popupy = (SCREEN_HEIGHT - popuph) / 2;
 
+        auto done = false;
+
+        auto main_buttonw = 220;
+
+        auto main_buttonh = 48;
+
+        auto controls = std::vector<Button>();
+
+        auto controls_battlefield = std::vector<Button>();
+
+        for (auto y = 0; y < 2; y++)
+        {
+            for (auto x = 0; x < 3; x++)
+            {
+                SDL_Rect rect;
+
+                rect.w = boxw - 2 * 8;
+                rect.h = boxh - 2 * 8;
+                rect.x = 0;
+                rect.y = 0;
+
+                auto button = Button();
+
+                button.Surface = SDL_CreateRGBSurface(0, boxw - 2 * 8, boxh - 2 * 8, 32, 0, 0, 0, 0);
+
+                if (y > 0)
+                {
+                    SDL_FillRect(button.Surface, &rect, intBE);
+                }
+                else
+                {
+                    SDL_FillRect(button.Surface, &rect, intBE);
+                }
+
+                button.ID = y * 3 + x;
+                button.W = boxw - 2 * 8;
+                button.H = boxh - 2 * 8;
+                button.Left = x > 0 ? y * 3 + x - 1 : y * 3 + x;
+                button.Right = x < 2 ? y * 3 + x + 1 : y * 3 + x;
+                button.Up = y > 0 ? (y - 1) * 3 + x : y * 3 + x;
+                button.Down = y < 1 ? (y + 1) * 3 + x : (x < 2 ? (y + 1) * 3 + x : y * 3 + x);
+                button.X = startx + x * (boxw + box_space) + 8;
+                button.Y = starty + infoh + y * (boxh + box_space) + 8 + text_space;
+                button.Type = Control::Type::ACTION;
+
+                controls_battlefield.push_back(button);
+            }
+        }
+
+        auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
+
+        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_MASON, 22, "Start", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::CONFIRM));
+        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_MASON, 22, "Cast Spell", clrWH, intDB, 220, 48, -1), 6, 7, 4, 7, startx + (main_buttonw + button_space), text_y, Control::Type::SPELL));
+
+        auto current = -1;
+        auto selected = false;
+        auto hold = false;
+        auto scrollUp = false;
+        auto scrollDown = false;
+        auto scrollSpeed = 1;
+
+        auto current_zone = Location::Zone::NONE;
+        auto current_mode = Engine::MassCombatMode::NORMAL;
+
+        auto combat_round = 0;
+
+        while (!done)
+        {
+            SDL_SetWindowTitle(window, "Legendary Kingdoms: Mass Combat");
+
+            fillWindow(renderer, intWH);
+
+            for (auto y = 0; y < 2; y++)
+            {
+                for (auto x = 0; x < 3; x++)
+                {
+                    if (y > 0)
+                    {
+                        fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
+
+                        thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + 8, starty + infoh + y * (boxh + box_space) + text_space + 8, intBR, 4);
+                    }
+                    else
+                    {
+                        fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
+                    }
+                }
+            }
+
+            putHeader(renderer, "Left Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx, starty);
+            putHeader(renderer, "Center", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + (boxw + box_space), starty);
+            putHeader(renderer, "Right Flank", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxw, infoh, startx + 2 * (boxw + box_space), starty);
+
+            if (current_mode == Engine::MassCombatMode::NORMAL)
+            {
+                renderButtons(renderer, controls_battlefield, current, intLB, 8, 4);
+
+                controls = controls_battlefield;
+            }
+            else
+            {
+                renderButtons(renderer, controls_battlefield, -1, intLB, 8, 4);
+            }
+
+            // Render Enemy army
+            renderArmy(renderer, font_garamond, text_space, enemyArmy, boxw, boxh, box_space, starty + infoh, clrBK, intBE);
+
+            // Render Party army
+            renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space, clrBK, intBE);
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message.c_str(), font_garamond, -1, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, messageh, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if (current_mode == Engine::MassCombatMode::NORMAL)
+                    {
+                        if (current >= 0 && current < 6)
+                        {
+                            
+                        }
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                {
+                    if (current_mode == Engine::MassCombatMode::NORMAL)
+                    {
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SPELL && !hold)
+                {
+
+                }
+            }
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        TTF_Quit();
+    }
+
+    return combatResult;
+}
+
+Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus)
+{
+    auto combatResult = Engine::Combat::NONE;
+
+    if (window && renderer)
+    {
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        auto messageh = (int)(0.125 * SCREEN_HEIGHT);
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        TTF_Init();
+
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto font_size = 32;
+
+        auto size_garamond = 28;
+
+        auto box_space = 10;
+
+        auto text_space = 8;
+
+        auto marginx = (int)(Margin * SCREEN_WIDTH);
+
+        auto fullwidth = SCREEN_WIDTH - 2 * marginx;
+
+        auto boxw = (int)((fullwidth - 2 * box_space) / 3);
+
+        auto infoh = (int)(font_size + 2 * text_space);
+
+        auto boxh = (int)((text_bounds - box_space - infoh) / 2);
+
+        auto popupw = (int)(0.6 * SCREEN_WIDTH);
+        auto popuph = (int)(0.6 * SCREEN_HEIGHT);
+        auto popupx = (SCREEN_WIDTH - popupw) / 2;
+        auto popupy = (SCREEN_HEIGHT - popuph) / 2;
+
         auto offset = 0;
         auto limit = (popuph - infoh - buttonh - button_space) / (size_garamond * 2 + text_space * 4);
         auto last = offset + limit;
@@ -15099,7 +15319,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                         Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false),
                         Army::Base("Lhasbreath Berserkers", Army::Type::LHASBREATH_BERSERKERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 5, 2, false)};
 
-                    massCombatScreen(window, renderer, Location::Type::SALTDAD, Party, EnemyArmy, EnemySpells, EnemyArmyStatus);
+                    deploymentScreen(window, renderer, Location::Type::SALTDAD, Party, EnemyArmy, EnemySpells, EnemyArmyStatus);
 
                     current = -1;
 
