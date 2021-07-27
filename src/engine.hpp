@@ -1767,10 +1767,10 @@ namespace Engine
         auto left_flank2a = Engine::FIND_UNIT(opposingArmy, Location::BattleField::LEFT_FLANK_FRONT);
         auto left_flank2b = Engine::FIND_UNIT(opposingArmy, Location::BattleField::LEFT_FLANK_SUPPORT);
 
-        auto centre1a = Engine::FIND_UNIT(army, Location::BattleField::CENTRE_FRONT);
-        auto centre1b = Engine::FIND_UNIT(army, Location::BattleField::CENTRE_SUPPORT);
-        auto centre2a = Engine::FIND_UNIT(opposingArmy, Location::BattleField::CENTRE_FRONT);
-        auto centre2b = Engine::FIND_UNIT(opposingArmy, Location::BattleField::CENTRE_SUPPORT);
+        auto centre1a = Engine::FIND_UNIT(army, Location::BattleField::CENTER_FRONT);
+        auto centre1b = Engine::FIND_UNIT(army, Location::BattleField::CENTER_SUPPORT);
+        auto centre2a = Engine::FIND_UNIT(opposingArmy, Location::BattleField::CENTER_FRONT);
+        auto centre2b = Engine::FIND_UNIT(opposingArmy, Location::BattleField::CENTER_SUPPORT);
 
         auto right_flank1a = Engine::FIND_UNIT(army, Location::BattleField::RIGHT_FLANK_FRONT);
         auto right_flank1b = Engine::FIND_UNIT(army, Location::BattleField::RIGHT_FLANK_SUPPORT);
