@@ -12378,7 +12378,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     }
                     else if (stage == Engine::MassCombat::MORALE)
                     {
-                        if (enemy_combat_score)
+                        if (enemy_combat_score < army_combat_score)
                         {
                             std::string morale_string = "Morale Check: " + std::to_string(morale_score);
 
