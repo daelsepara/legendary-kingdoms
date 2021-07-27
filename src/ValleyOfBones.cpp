@@ -12254,9 +12254,9 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                                 current_mode = Engine::MassCombatMode::DEPLOY;
                             }
-                        }
 
-                        current = -1;
+                            current = -1;
+                        }
 
                         selected = false;
                     }
