@@ -12342,9 +12342,12 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     }
                     else if (stage == Engine::MassCombat::MORALE)
                     {
-                        std::string morale_string = "Morale Check: " + std::to_string(morale_score);
-                        
-                        putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                        if (army_combat_score < enemy_combat_score)
+                        {
+                            std::string morale_string = "Morale Check: " + std::to_string(morale_score);
+
+                            putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                        }
                     }
                 }
             }
@@ -12375,9 +12378,12 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     }
                     else if (stage == Engine::MassCombat::MORALE)
                     {
-                        std::string morale_string = "Morale Check: " + std::to_string(morale_score);
-                        
-                        putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                        if (enemy_combat_score)
+                        {
+                            std::string morale_string = "Morale Check: " + std::to_string(morale_score);
+
+                            putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                        }
                     }
                 }
             }
