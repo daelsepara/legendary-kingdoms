@@ -31,7 +31,7 @@ namespace Engine
     typedef std::tuple<Team::Type, int, int> TeamAssignment;
 
     // spell type, combat round when cast
-    typedef std::tuple<Spells::Type, int> BattlefieldSpells;
+    typedef std::tuple<Spells::MassCombat, int> BattlefieldSpells;
 
     // status, unit number, start round, duration
     typedef std::tuple<Army::Status, int, int, int> ArmyStatus;
@@ -90,7 +90,7 @@ namespace Engine
         DEPLOY,
         VIEW,
         STATUS,
-        SPELLS
+        SPELL
     };
 
     const char *CURRENCY = "silver";
@@ -201,6 +201,24 @@ namespace Engine
             if (unit.Morale > unit.MaximumMorale)
             {
                 unit.Morale = unit.MaximumMorale;
+            }
+        }
+    }
+
+    void GAIN_STRENGTH(Army::Base &unit, int strength)
+    {
+        if (unit.Strength > 0)
+        {
+            unit.Strength += strength;
+
+            if (unit.Strength < 0)
+            {
+                unit.Strength = 0;
+            }
+
+            if (unit.Strength > unit.MaximumStrength)
+            {
+                unit.Strength = unit.MaximumStrength;
             }
         }
     }
@@ -1910,6 +1928,23 @@ namespace Engine
             if (unit >= 0 && unit < army.size())
             {
                 result = army[unit].Strength;
+            }
+        }
+
+        return result;
+    }
+
+    Spells::MassCombat GET_SPELL(std::vector<Engine::BattlefieldSpells> spells, int round)
+    {
+        auto result = Spells::MassCombat::NONE;
+
+        for (auto i = 0; i < spells.size(); i++)
+        {
+            if (std::get<1>(spells[i]) == round)
+            {
+                result = std::get<0>(spells[i]);
+
+                break;
             }
         }
 

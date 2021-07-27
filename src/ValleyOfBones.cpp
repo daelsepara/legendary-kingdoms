@@ -12563,6 +12563,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto main_buttonh = 48;
 
+        std::vector<Button> controls_yes = {Button(0, "icons/yes.png", 0, 0, 0, 0, popupx + button_space, popupy + popuph - button_space - buttonh, Control::Type::CONFIRM)};
+
         auto controls = std::vector<Button>();
 
         auto controls_battlefield = std::vector<Button>();
@@ -12621,8 +12623,24 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto combat_round = 0;
 
+        auto party_has_cast = false;
+        auto enemy_has_cast = false;
+        auto enemy_spell = Spells::MassCombat::NONE;
+
         while (Engine::ZONES(party.Army, enemyArmy) < 2 && Engine::ZONES(enemyArmy, party.Army) < 2)
         {
+            if (!enemy_has_cast)
+            {
+                enemy_spell = Engine::GET_SPELL(enemySpells, combat_round);
+
+                if (enemy_spell != Spells::MassCombat::NONE)
+                {
+                    current_mode = Engine::MassCombatMode::SPELL;
+
+                    enemy_has_cast = true;
+                }
+            }
+
             SDL_SetWindowTitle(window, "Legendary Kingdoms: Mass Combat");
 
             fillWindow(renderer, intWH);
@@ -12664,6 +12682,25 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
             // Render Party army
             renderArmy(renderer, font_garamond, text_space, party.Army, boxw, boxh, box_space, starty + infoh + boxh + box_space, clrBK, intBE);
+
+            if (current_mode == Engine::MassCombatMode::SPELL)
+            {
+                fillRect(renderer, popupw, popuph, popupx, popupy, intBE);
+
+                drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
+
+                putText(renderer, Spells::MassCombatDescriptions[enemy_spell], font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popupy - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
+
+                std::string spell_string = "Your enemy has cast " + std::string(Spells::MassCombatNames[enemy_spell]);
+
+                putHeader(renderer, spell_string.c_str(), font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+
+                renderButtons(renderer, controls_yes, current, intLB, 8, 4);
+
+                controls = controls_yes;
+
+                enemy_has_cast = true;
+            }
 
             if (flash_message)
             {
@@ -12708,6 +12745,35 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                         }
 
                         combat_round++;
+
+                        party_has_cast = false;
+
+                        enemy_has_cast = false;
+
+                        enemy_spell = Spells::MassCombat::NONE;
+                    }
+                    else if (current_mode == Engine::MassCombatMode::SPELL)
+                    {
+                        if (enemy_spell == Spells::MassCombat::ENFEEBLEMENT_CENTER_FRONT)
+                        {
+                            auto party_unit = Engine::FIND_UNIT(party.Army, Location::BattleField::CENTER_FRONT);
+
+                            if (party_unit >= 0 && party_unit < party.Army.size())
+                            {
+                                Engine::GAIN_STRENGTH(party.Army[party_unit], -1);
+                            }
+                        }
+                        else if (enemy_spell == Spells::MassCombat::CLINGING_DREAD_LEFT_FRONT)
+                        {
+                            auto party_unit = Engine::FIND_UNIT(party.Army, Location::BattleField::LEFT_FLANK_FRONT);
+
+                            if (party_unit >= 0 && party_unit < party.Army.size())
+                            {
+                                Engine::GAIN_MORALE(party.Army[party_unit], -1);
+                            }
+                        }
+
+                        current_mode = Engine::MassCombatMode::NORMAL;
                     }
 
                     selected = false;
@@ -15876,11 +15942,14 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                     Party.Party.push_back(Character::AKIHIRO_OF_CHALICE);
                     Party.Party.push_back(Character::BRASH);
 
-                    std::vector<Army::Base> EnemyArmy = {};
-                    std::vector<Engine::BattlefieldSpells> EnemySpells = {};
+                    std::vector<Engine::BattlefieldSpells> EnemySpells = {
+                        {Spells::MassCombat::ENFEEBLEMENT_CENTER_FRONT, 0},
+                        {Spells::MassCombat::CLINGING_DREAD_LEFT_FRONT, 1},
+                        {Spells::MassCombat::ROUT_LEFT_FRONT, 2}};
+
                     std::vector<Engine::ArmyStatus> EnemyArmyStatus = {};
 
-                    EnemyArmy = {
+                    std::vector<Army::Base> EnemyArmy = {
                         Army::Base("Curzite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 5, false),
                         Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_SUPPORT, 4, 4, false),
                         Army::Base("Mercenary Knights", Army::Type::MERCENARY_KNIGHTS, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 5, 3, false),

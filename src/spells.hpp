@@ -25,10 +25,28 @@ namespace Spells
         WISDOM,
         ORB_OF_ANNIHILATION,
         MAELSTROM,
-        ENFEEBLEMENT,   // Mass combat spell
-        CLINGING_DREAD, // Mass combat spell
-        ROUT            // Mass combat spell
+
     };
+
+    enum class MassCombat
+    {
+        NONE = 0,
+        ENFEEBLEMENT_CENTER_FRONT, // Mass combat spell
+        CLINGING_DREAD_LEFT_FRONT, // Mass combat spell
+        ROUT_LEFT_FRONT            // Mass combat spell
+    };
+
+    std::map<Spells::MassCombat, const char *> MassCombatNames = {
+        {Spells::MassCombat::NONE, "None"},
+        {Spells::MassCombat::ENFEEBLEMENT_CENTER_FRONT, "Enfeeblement"},
+        {Spells::MassCombat::CLINGING_DREAD_LEFT_FRONT, "Clinging Dread"},
+        {Spells::MassCombat::ROUT_LEFT_FRONT, "Rout"}};
+
+    std::map<Spells::MassCombat, const char *> MassCombatDescriptions = {
+        {Spells::MassCombat::NONE, "None"},
+        {Spells::MassCombat::ENFEEBLEMENT_CENTER_FRONT, "Your front unit in the Centre zone loses 1 point of Strength"},
+        {Spells::MassCombat::CLINGING_DREAD_LEFT_FRONT, "Your front unit in the Left Flank zone loses 1 point of Morale"},
+        {Spells::MassCombat::ROUT_LEFT_FRONT, "Your front unit in the Left Flank must make an immediate Morale check or flee"}};
 
     enum class Scope
     {
