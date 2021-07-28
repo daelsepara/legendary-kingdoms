@@ -15336,6 +15336,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             story->Event(party);
         }
 
+        if (story->Location != Location::Type::NONE)
+        {
+            Engine::SET_LOCATION(party, story->Location);
+        }
+
         int splash_h = 250;
 
         if (story->Image)

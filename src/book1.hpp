@@ -635,6 +635,8 @@ namespace Book1
 
             ID = 19;
 
+            Location = Location::Type::CLIFFTOP;
+
             Image = "images/book1/dreadful_city.png";
 
             Text = "You are in a dreadful city of poor mud-brick and grass hovels, surrounded by weed-filled cropland. Even the most impressive buildings are little more than timber halls, sagging under the weight of their own roofs. The local peasants are care-worn and well whipped, scarcely better dressed than slaves. The wealthier members of the town dress less well than a Saltdad commoner. The dissonant bells of the church of Cursus clang across town, followed by dirge-like processions of rag-wearing choristers singing hymns of dull praise to their uncaring deity.\n\nThe whole rotten town is perched atop a cliff some fifty or so feet tall, and yet this is a port city. A gigantic cargo crane leers over a thin and precarious path to the wooden harbour below, where at least some signs of life and love can be heard from the cluster of taverns that serve the sailors.";
@@ -651,11 +653,6 @@ namespace Book1
             Choices.push_back(Choice::Base("Leave the city south, into the desert", {Book::Type::BOOK1, 725}));
 
             Controls = Story::Controls::STANDARD;
-        }
-
-        void Event(Party::Base &party)
-        {
-            Engine::SET_LOCATION(party, Location::Type::CLIFFTOP);
         }
     };
 
@@ -715,6 +712,8 @@ namespace Book1
 
             ID = 21;
 
+            Location = Location::Type::CAPE_PORTA;
+
             Text = "You are steering along the jungle peninsula, across waters known as Cape Porta. It is a famous lair of pirates and other ne'er-do-wells.";
 
             Controls = Story::Controls::STANDARD;
@@ -722,8 +721,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::SET_LOCATION(party, Location::Type::CAPE_PORTA);
-
             Engine::Random.UniformIntDistribution(1, 6);
 
             auto result = Engine::Random.NextInt();
@@ -822,6 +819,8 @@ namespace Book1
 
             ID = 25;
 
+            Location = Location::Type::SALTDAD;
+
             Image = "images/book1/salt_mines.png";
 
             Controls = Story::Controls::STANDARD;
@@ -844,8 +843,6 @@ namespace Book1
             }
 
             Text = PreText.c_str();
-
-            Engine::SET_LOCATION(party, Location::Type::SALTDAD);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 532}; }
@@ -1146,6 +1143,8 @@ namespace Book1
 
             ID = 33;
 
+            Location = Location::Type::CURSUS;
+
             Text = "The harbour of Cursus is long and shallow. The jetties reach far out beyond the coast, each wide enough for a pair of dragonyaks to drag the cargoes of ships to the warehouses on the beach.\n\nYou may buy a ship here, if you have enough money. The largest vessel for sale is the CURSITE WAR GALLEY, a coastal-hugging warship which carries little cargo, but is the only vessel that can even hope to compete with the more advanced vessels of Royce and Drakehallow. A smaller, but more efficient, single-masted COG is also available. The WAR GALLEY will cost 1500 silver coins, and the COG 800 silver coins. When you buy a ship note that it is currently docked in Cursus harbour.\n\nYou can repair any ship you have in Cursus harbour. Each Health point you restore costs 50 silver coins. You can restore your ship up to its starting Health value. You can sell a COG here for 250 silver coins, a CURSITE WAR GALLEY for 500 silver coins and a CARRACK for 1500 silver coins. You cannot sell other kinds of ship here.\n\nYou can buy cargo for your ship here, as well. These goods are too large for your characters to carry, but they can be loaded onto any ship you have in Cursus harbour. You cannot buy more cargo units than you can store in your ship (for instance, a Cog can carry 2 Cargo Units). You can also sell any goods you are carrying in your ships for the same price as well:\n\nSALT: 600 silver coins\nCROPS: 500 silver coins\nSTEEL: 3000 silver coins\nSPICES: 3300 silver coins\nWINE: 2100 silver coins\nSLAVES: 1000 silver coins";
 
             Choices.clear();
@@ -1157,8 +1156,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::SET_LOCATION(party, Location::Type::CURSUS);
-
             // TODO: Carrack Stats
             Ships = {
                 {Ship::Base("COG", Ship::Type::COG, Location::Type::CURSUS, 4, 7, 2), 800, 250},
@@ -2424,6 +2421,8 @@ namespace Book1
 
             ID = 75;
 
+            Location = Location::Type::SALTDAD;
+
             Image = "images/book1/saltdad_city.png";
 
             Text = "Saltdad is a city of tumbledown mud-brick houses clustered into claustrophobic alleyways. Above these ragtag structures stands a half-collapsed palace, a minareted masterpiece that has seen better days. Amidst the squalor there is wealth to be found, for Saltdad produces the major export of the valley -- rock salt, chiselled out of winding mines to the east of the city. The Great Westroad runs through the heart of the city, once a paved highway, now a poorly maintained tumble of stones which nonetheless allows wagons and carts to drag themselves above the desert sands. Where the road cuts through the city stand the marketplaces, inns, slave markets and other services the city is famed for. A constant chatter of voices is heard at all times, for Saltdad never closes its places of business, even in the dead of night.";
@@ -2443,11 +2442,6 @@ namespace Book1
             Choices.push_back(Choice::Base("Head south into the desert", {Book::Type::BOOK1, 858}));
 
             Controls = Story::Controls::STANDARD;
-        }
-
-        void Event(Party::Base &party)
-        {
-            Engine::SET_LOCATION(party, Location::Type::SALTDAD);
         }
     };
 
@@ -2595,16 +2589,13 @@ namespace Book1
 
             ID = 81;
 
+            Location = Location::Type::LONGPORT_BAY;
+
             Text = "Longport Bay is a county in the kingdom of Royce. It is famed for its steelwork, good agricultural land and the dreadful rivalry of its noble houses. The county is fiercely feudal, with commoners unable to travel freely without a lord's consent. It is also famous for its jousts and fairs, and in good years the locals can grow fat on the rich foodstuffs served at these frequent celebrations. According to the scroll, the county is currently ruled by House Bailey, who were once mere stewards of their rivals House Dayne. That house has seen something of a fall in fortunes lately, and now stand in lower esteem than the Baileys. However, the scroll warns you that all sorts could have changed since the time it was written, as the politics in Longport Bay is both bloody and unpredictable.";
 
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
-        }
-
-        void Event(Party::Base &party)
-        {
-            Engine::SET_LOCATION(party, Location::Type::LONGPORT_BAY);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 680}; }
@@ -2967,6 +2958,8 @@ namespace Book1
 
             ID = 90;
 
+            Location = Location::Type::LHASBREATH;
+
             Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nWhen Emlyn reports her findings, the news is rather disappointing. \"We have recovered many pretty blooms,\" she admits. \"Certainly, the fragrances are quite striking... however, there are no medicinal or culinary plants, as far as I can tell. Nothing sellable.\"\n\n\"Curses!\" grumbles Sir Lawrence. \"This expedition is turning into an expensive failure.\"\n\nStill, Sir Lawrence is good to his word and presents you with a purse of 150 silver coins. Offering your consolations over the failed mission, you depart into the city.\n\nAlthough the expedition did not go perfectly you have learned a lot.\n\nYou gained the code A85.";
 
             Choices.clear();
@@ -2977,8 +2970,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::SET_LOCATION(party, Location::Type::LHASBREATH);
-
             Engine::GAIN_MONEY(party, 150);
 
             Engine::REST(party);
@@ -3653,6 +3644,8 @@ namespace Book1
 
             ID = 112;
 
+            Location = Location::Type::MORDIAN;
+
             Text = "Your new crew cheer as you come aboard. The ship is large and shabbily built -- but perhaps you can make something of it?\n\n[HULK] Fighting: 3, Health: 5, Cargo: 3 units\n\nNote: Your new ship is in Mordian harbour. What will you do now?";
 
             Choices.clear();
@@ -3664,8 +3657,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::SET_LOCATION(party, Location::Type::MORDIAN);
-
             party.Fleet.push_back(Ship::Base("HULK", Ship::Type::HULK, Location::Type::MORDIAN, 3, 5, 3));
         }
     };
@@ -4020,6 +4011,8 @@ namespace Book1
 
             ID = 126;
 
+            Location = Location::Type::CLIFFTOP;
+
             Text = "Clifftop is currently under the governorship of Ayleta, one of the Everchild's generals. She welcomes you into the hall, and details to you her various plans for the improvement of the city. \"I want to create more permanent structures for the poor, and to reduce the amount of beatings the overseers issue to their farmworkers,\" she says. \"Progress is slow. The population is uneducated and tend to misbehave when they are not being brutalised. It may take many generations to change Clifftop for the better.\"\n\nIt seems a hard task, and not one suited to the abilities of adventurers.";
 
             Bye = "Wishing her well, you depart the hall.";
@@ -4027,11 +4020,6 @@ namespace Book1
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
-        }
-
-        void Event(Party::Base &party)
-        {
-            Engine::SET_LOCATION(party, Location::Type::CLIFFTOP);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
@@ -4181,16 +4169,13 @@ namespace Book1
 
             ID = 130;
 
+            Location = Location::Type::LHASBREATH;
+
             Text = "The barbarians hail you as friends of Lhasbreath.\n\nAfter discussing the health of the queen you bid the barbarians farewell.";
 
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
-        }
-
-        void Event(Party::Base &party)
-        {
-            Engine::SET_LOCATION(party, Location::Type::LHASBREATH);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 219}; }
@@ -4487,6 +4472,8 @@ namespace Book1
 
             ID = 142;
 
+            Location = Location::Type::CHALICE;
+
             Text = "There is no central marketplace in Chalice, but rather the shops and stalls are spread out amongst the well-tended districts. Stern guards wearing fine longswords and ceremonial robes patrol the streets, watching you carefully as you go from shop to shop. The finest weapons in the valley are forged in this place, with techniques that rival those of Longport, although the very best swords are not available for foreigners.";
 
             Choices.clear();
@@ -4496,8 +4483,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::SET_LOCATION(party, Location::Type::CHALICE);
-
             Shop = {
                 {Equipment::CRUDE_BLADE, 25, 10},
                 {Equipment::MAUL, -1, 25},
@@ -4773,16 +4758,13 @@ namespace Book1
 
             ID = 152;
 
+            Location = Location::Type::CLIFFTOP;
+
             Text = "The slaves of Clifftop are a lucky breed, compared to the citizens. Having paid money to acquire them, most masters are unwilling to whip their slaves to death, unlike the deathly ill peasants who toil in the fields.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. Remember that a party member without a weapon has their Fighting score reduced by 1 point in combat.";
 
             Choices.clear();
 
             Controls = Story::Controls::RECRUIT;
-        }
-
-        void Event(Party::Base &party)
-        {
-            Engine::SET_LOCATION(party, Location::Type::CLIFFTOP);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
@@ -4926,6 +4908,8 @@ namespace Book1
 
             ID = 158;
 
+            Location = Location::Type::LHASBREATH;
+
             Text = "The market of Lhasbreath is a noisy and vibrant place, based around a stone amphitheatre and bedecked with brightly coloured tents. Monkeys and birds chitter in the cool shadows, darting away as people approach, only to return to steal a loose berry or fruit.";
 
             Choices.clear();
@@ -4935,8 +4919,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::SET_LOCATION(party, Location::Type::LHASBREATH);
-
             Shop = {
                 {Equipment::CRUDE_BLADE, 25, 10},
                 {Equipment::MAUL, 50, 25},
