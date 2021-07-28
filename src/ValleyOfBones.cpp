@@ -12646,6 +12646,11 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                                     message = "Your " + std::string(party.Army[party_unit].Name) + " is routed!";
 
                                     party.Army[party_unit].Position = Location::BattleField::NONE;
+                                }
+
+                                if ((party.Army[party_unit].Morale <= 0) || (party.Army[party_unit].Position == Location::BattleField::NONE))
+                                {
+                                    party.Army[party_unit].Position = Location::BattleField::NONE;
 
                                     if (zone == Location::Zone::LEFT_FLANK)
                                     {
@@ -12690,6 +12695,11 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                                 {
                                     message = "The " + std::string(enemyArmy[enemy_unit].Name) + " is routed!";
 
+                                    enemyArmy[enemy_unit].Position = Location::BattleField::NONE;
+                                }
+
+                                if ((enemyArmy[enemy_unit].Morale <= 0) || (enemyArmy[enemy_unit].Position == Location::BattleField::NONE))
+                                {
                                     enemyArmy[enemy_unit].Position = Location::BattleField::NONE;
 
                                     if (zone == Location::Zone::LEFT_FLANK)
