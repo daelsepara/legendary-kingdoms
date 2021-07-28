@@ -5063,6 +5063,83 @@ namespace Book1
         }
     };
 
+    class Story162 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {Book::Type::BOOK1, 220};
+
+        Story162()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 162;
+
+            Text = "It is the morning of battle. About you the soldiers of the Everchild ready their weapons and armour, looking down the gentle incline towards the city. You doubt the soldiers of Cursus will oblige you by fighting you on the slopes -- you will have to go down to meet them.\n\nYou may choose a maximum of six units from the Saltdad barracks to commit to this battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 220};
+
+            EnemyArmy.clear();
+            EnemySpells.clear();
+            EnemyArmyStatus.clear();
+
+            BattleLocation = Location::Type::SALTDAD;
+
+            if (Engine::VERIFY_CODES(party, {Codes::A(40)}))
+            {
+                EnemyArmy.push_back(Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 4, false));
+            }
+            else
+            {
+                EnemyArmy.push_back(Army::Base("Curzite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 5, false));
+                EnemyArmy.push_back(Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_SUPPORT, 4, 4, false));
+            }
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(95)}))
+            {
+                EnemySpells = {
+                    {Spells::MassCombat::ENFEEBLEMENT_CENTER_FRONT, 0},
+                    {Spells::MassCombat::CLINGING_DREAD_LEFT_FRONT, 1},
+                    {Spells::MassCombat::ROUT_LEFT_FRONT, 2}};
+            }
+
+            if (Engine::VERIFY_CODES(party, {Codes::A(96)}))
+            {
+                EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 2, 4, false));
+                EnemyArmy.push_back(Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false));
+            }
+            else
+            {
+                EnemyArmyStatus.push_back({Army::Status::STRENGTH1, EnemyArmy.size(), 0, 1});
+
+                EnemyArmy.push_back(Army::Base("Mercenary Knights", Army::Type::MERCENARY_KNIGHTS, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 5, 3, false));
+                EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::SALTDAD, Location::BattleField::CENTER_SUPPORT, 2, 4, false));
+                EnemyArmy.push_back(Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false));
+                EnemyArmy.push_back(Army::Base("Mercenary Spears", Army::Type::MERCENARY_SPEARS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 3, 2, false));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                destination = {Book::Type::BOOK1, 316};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 220};
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -5243,6 +5320,7 @@ namespace Book1
     auto story160 = Story160();
     auto event160 = Event160();
     auto story161 = Story161();
+    auto story162 = Story162();
 
     void InitializeStories()
     {
@@ -5265,7 +5343,7 @@ namespace Book1
             &story130, &story131, &story132, &story133, &story134, &story135, &story136, &story137, &story138, &story139,
             &story140, &story141, &story142, &story143, &story144, &story145, &story146, &story147, &story148, &story149,
             &story150, &story151, &story152, &story153, &story154, &story155, &story156, &story157, &story158, &story159,
-            &story160, &story161};
+            &story160, &story161, &story162};
     }
 }
 #endif

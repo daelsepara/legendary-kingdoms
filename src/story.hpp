@@ -433,6 +433,8 @@ namespace Story
     {
     public:
 
+        Location::Type Location = Location::Type::NONE;
+
         Book::Type BookID = Book::Type::NONE;
 
         int ID = -1;
@@ -489,6 +491,7 @@ namespace Story
         std::vector<Army::Base> EnemyArmy = {};
         std::vector<Engine::BattlefieldSpells> EnemySpells = {};
         std::vector<Engine::ArmyStatus> EnemyArmyStatus = {};
+        Location::Type BattleLocation = Location::Type::NONE;
 
         // temporary string
         std::string temp_string = "";

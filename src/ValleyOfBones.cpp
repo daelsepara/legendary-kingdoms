@@ -13113,6 +13113,15 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         TTF_Quit();
     }
 
+    if (Engine::ZONES(party.Army, enemyArmy) > 1)
+    {
+        combatResult = Engine::Combat::VICTORY;
+    }
+    else if (Engine::ZONES(enemyArmy, party.Army) > 1)
+    {
+        combatResult = Engine::Combat::DEFEAT;
+    }
+
     return combatResult;
 }
 
@@ -15740,6 +15749,33 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             auto result = combatScreen(window, renderer, party, team, story->Monsters, story->CanFlee, story->FleeRound, true);
 
                             story->AfterCombat(party, result);
+                        }
+
+                        if (story->EnemyArmy.size() > 0)
+                        {
+                            auto result = deploymentScreen(window, renderer, story->BattleLocation, party, story->EnemyArmy, story->EnemySpells, story->EnemyArmyStatus);
+
+                            if (result != Engine::Combat::NONE)
+                            {
+                                story->AfterCombat(party, result);
+
+                                if (result == Engine::Combat::VICTORY)
+                                {
+                                    addBye(story, "Your forces were victorious in battle.");
+                                }
+                                else if (result == Engine::Combat::DEFEAT)
+                                {
+                                    addBye(story, "Your forces were defeated.");
+                                }
+
+                                story->EnemyArmy.clear();
+                                story->EnemySpells.clear();
+                                story->EnemyArmyStatus.clear();
+                            }
+                            else
+                            {
+                                continue;
+                            }
                         }
 
                         if (Engine::COUNT(party.Party) > 0)
