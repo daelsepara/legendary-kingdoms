@@ -1771,6 +1771,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, bool inCombat)
 {
     SDL_Surface *adventurer = NULL;
+    SDL_Texture *adventurerTexture = NULL;
     SDL_Surface *text = NULL;
     SDL_Surface *code_text = NULL;
 
@@ -1846,7 +1847,19 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                     adventurer = NULL;
                 }
 
+                if (adventurerTexture != NULL)
+                {
+                    SDL_DestroyTexture(adventurerTexture);
+
+                    adventurerTexture = NULL;
+                }
+
                 adventurer = createImage(party.Party[character].Image);
+
+                if (adventurer)
+                {
+                    adventurerTexture = SDL_CreateTextureFromSurface(renderer, adventurer);
+                }
             }
 
             if (text != NULL)
@@ -2061,6 +2074,60 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
             bool hold = false;
             int scrollSpeed = 20;
 
+            if (adventurer && current_mode != Control::Type::PARTY)
+            {
+                auto mousex = 0;
+                auto mousey = 0;
+
+                auto state = SDL_GetMouseState(&mousex, &mousey);
+
+                auto zoomw = (int)(0.80 * (double)textwidth);
+                auto zoomh = (int)(0.80 * (double)text_bounds);
+
+                clipValue(zoomw, 0, adventurer->w);
+                clipValue(zoomh, 0, adventurer->h);
+
+                auto boundx = splashw;
+
+                if (adventurerh == text_bounds)
+                {
+                    boundx = (int)((double)adventurerh / adventurer->h * (double)adventurer->w);
+                }
+
+                if (mousex >= startx && mousex <= (startx + boundx) && mousey >= starty && mousey <= (starty + adventurerh))
+                {
+                    auto scalex = (double)(mousex - startx) / boundx;
+                    auto scaley = (double)(mousey - starty) / adventurerh;
+
+                    int centerx = (int)(scalex * (double)adventurer->w);
+                    int centery = (int)(scaley * (double)adventurer->h);
+
+                    clipValue(centerx, zoomw / 2, adventurer->w - zoomw / 2);
+                    clipValue(centery, zoomh / 2, adventurer->h - zoomh / 2);
+
+                    if (adventurerTexture)
+                    {
+                        SDL_Rect src;
+
+                        src.w = zoomw;
+                        src.h = zoomh;
+                        src.x = centerx - zoomw / 2;
+                        src.y = centery - zoomh / 2;
+
+                        SDL_Rect dst;
+
+                        dst.w = zoomw;
+                        dst.h = zoomh;
+                        dst.x = (textx + (textwidth - zoomw) / 2);
+                        dst.y = (texty + (text_bounds - zoomh) / 2);
+
+                        fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
+                        SDL_RenderCopy(renderer, adventurerTexture, &src, &dst);
+                        drawRect(renderer, dst.w + 2, dst.h + 2, dst.x - 1, dst.y - 1, intBK);
+                    }
+                }
+            }
+
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
             if (current == 2)
@@ -2136,7 +2203,19 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                                 adventurer = NULL;
                             }
 
+                            if (adventurerTexture != NULL)
+                            {
+                                SDL_DestroyTexture(adventurerTexture);
+
+                                adventurerTexture = NULL;
+                            }
+
                             adventurer = createImage(party.Party[character].Image);
+
+                            if (adventurer)
+                            {
+                                adventurerTexture = SDL_CreateTextureFromSurface(renderer, adventurer);
+                            }
                         }
 
                         if (text != NULL)
@@ -2167,7 +2246,19 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                                 adventurer = NULL;
                             }
 
+                            if (adventurerTexture != NULL)
+                            {
+                                SDL_DestroyTexture(adventurerTexture);
+
+                                adventurerTexture = NULL;
+                            }
+
                             adventurer = createImage(party.Party[character].Image);
+
+                            if (adventurer)
+                            {
+                                adventurerTexture = SDL_CreateTextureFromSurface(renderer, adventurer);
+                            }
                         }
 
                         if (text != NULL)
@@ -2212,6 +2303,13 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
         SDL_FreeSurface(adventurer);
 
         adventurer = NULL;
+    }
+
+    if (adventurerTexture != NULL)
+    {
+        SDL_DestroyTexture(adventurerTexture);
+
+        adventurerTexture = NULL;
     }
 
     if (text != NULL)
@@ -7536,7 +7634,6 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
         auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
-        auto last = offset + limit;
 
         auto teams_list = std::vector<Team::Type>();
 
@@ -7546,6 +7643,13 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
         }
 
         teams_list.push_back(Team::Type::NONE);
+
+        auto last = offset + limit;
+
+        if (last > teams_list.size())
+        {
+            last = teams_list.size();
+        }
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 

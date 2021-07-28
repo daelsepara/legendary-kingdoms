@@ -5956,9 +5956,9 @@ namespace Book1
         void Event(Party::Base &party)
         {
             temp_string = "";
-            
+
             Bye = NULL;
-            
+
             Choices.clear();
 
             if (Engine::COUNT(party.Party) > 1)
@@ -6017,6 +6017,247 @@ namespace Book1
             else
             {
                 return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story190 : public Story::Base
+    {
+    public:
+        Story190()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 190;
+
+            Text = "At first you are unsure if the rumours are true. Can there really be an Expeditionary Guild in a city as raucous and illiterate as Lhasbreath? You find the 'guild' in the tent city, a collection of gloriously decorated marquees embroidered with the heraldic crest of House Ross (a stag's head on a field of blue and gold). This noble house of Royce is based in the county of Longport Bay, which means they are a long way from home.\n\nYou are soon spotted by the leader of the guild, Sir Lawrence Ross, uncle to Baroness Carissa, the head of the house. He is overjoyed to see some cultured travellers in Lhasbreath and immediately invites you into his tent for a drink.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Accept his offer", {Book::Type::BOOK1, 148}));
+            Choices.push_back(Choice::Base("Politely decline and return to the city centre", {Book::Type::BOOK1, 775}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(85)}))
+            {
+                return {Book::Type::BOOK1, 138};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story191 : public Story::Base
+    {
+    public:
+        Story191()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 191;
+
+            Text = "In order to get the weapons, you will need to split up your party. Choose up to three party members to perform a distraction, and up to two party members to steal the weapons. You must have at least one party member performing each mission.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Decide who will undertake each task", {Book::Type::BOOK1, 169}, Choice::Type::ASSIGN_TEAMS, {{Team::Type::WEAPONS, 1, 4}, {Team::Type::DISTRACTION, 1, 4}}, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story192 : public Story::Base
+    {
+    public:
+        Story192()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 192;
+
+            Text = "You believe you have deciphered the clever code in the writing. You find a narrow knothole in the rock and plunge your arm inside. You pull out a magnificent silver chalice, which you can sell in town for 100 silver coins.";
+
+            Bye = "Pleased with your find, you depart.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 100);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 395}; }
+    };
+
+    class Story193 : public Story::Base
+    {
+    public:
+        Story193()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 193;
+
+            Text = "You twist sharply and slip from Tommul's grasp. He crashes to the floor, his companion clumsily tripping over him. With a laugh you quickly dash away, back to the safety of your companions.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 157}; }
+    };
+
+    class Story194 : public Story::Base
+    {
+    public:
+        Story194()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 194;
+
+            Text = "You stroll away from Luutanesh, the sun climbing the sky as you make your way back to the great road.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("West, towards Saltdad", {Book::Type::BOOK1, 177}));
+            Choices.push_back(Choice::Base("North, to the salt mines", {Book::Type::BOOK1, 25}));
+            Choices.push_back(Choice::Base("East, towards Chalice", {Book::Type::BOOK1, 442}));
+            Choices.push_back(Choice::Base("South, to the Withered Steppes", {Book::Type::BOOK1, 115}));
+            Choices.push_back(Choice::Base("Southeast, along the Northroad to Cursus", {Book::Type::BOOK1, 113}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story195 : public Story::Base
+    {
+    public:
+        Story195()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 195;
+
+            Text = "You point out that the definition of a religious ceremony and a funeral observance are quite different things in Chalice law. Simply passing by a temple is not a ceremony in itself, and therefore no law is broken. The kensai pause a moment to consult a monk in a nearby temple, but soon realise that you are correct in the most literal sense. In deference to the dead man's life of selfless service to the state they allow the casket to pass.\n\nThe mourners give a most impious cheer before continuing their wake. The monk who advised the kensai congratulates you. \"Young men are good at war, but poor in wisdom,\" he says. \"With the exception of the young people I see before me. Thank you for avoiding bloodshed. Perhaps this gift will aid you in gaining even greater wisdom?\"\n\nThe monk presents you with a block of INCENSE.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::INCENSE};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story196 : public Story::Base
+    {
+    public:
+        Story196()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 196;
+
+            Text = "The tunnel ends in a door with a black triangle painted on it. Blood leaks from the gap under the door.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Open the door carefully", {Book::Type::BOOK1, 578}));
+            Choices.push_back(Choice::Base("Return to the crossroads", {Book::Type::BOOK1, 310}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story197 : public Story::Base
+    {
+    public:
+        Story197()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 197;
+
+            Text = "You stagger from the chasm, pulling the Everchild from the pit as you do so. You have all suffered wounds, and one of the Everchild's followers lies dead in the crevice. \"Saint Elias watch over his spirit,\" mutters the Everchild, as she glances back into the bloody pit. \"We must go on, or all was for naught.\"\n\nYou stagger, wounded, through the only exit.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 347}; }
+    };
+
+    class Story198 : public Story::Base
+    {
+    public:
+        Story198()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 198;
+
+            Text = "Your ship is crashing through the rolling waves of the Azure Deep, the near-boundless ocean that covers the valley's southern coast. To the north are high cliffs, from which blasts of gritty sand, blown from the strong coastal breezes, pour from the cliffsides. It has the appearance of sulphur-yellow rivers, dashing down into the oblivion of the sea.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Random Event", {{2, NULL, {Book::Type::BOOK1, 721}}, {6, NULL, {Book::Type::BOOK1, 851}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story199 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story199()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 199;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(16)}))
+            {
+                PreText = "The barbarians treat you as friends. After exchanging pleasantries they ride on.";
+            }
+            else
+            {
+                PreText = "The barbarians have only looting on their minds, not fine words.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(16)}))
+            {
+                return {Book::Type::BOOK1, 840};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 238};
             }
         }
     };
@@ -6232,6 +6473,16 @@ namespace Book1
     auto story188 = Story188();
     auto event188 = Event188();
     auto story189 = Story189();
+    auto story190 = Story190();
+    auto story191 = Story191();
+    auto story192 = Story192();
+    auto story193 = Story193();
+    auto story194 = Story194();
+    auto story195 = Story195();
+    auto story196 = Story196();
+    auto story197 = Story197();
+    auto story198 = Story198();
+    auto story199 = Story199();
 
     void InitializeStories()
     {
@@ -6257,7 +6508,8 @@ namespace Book1
             &story150, &story151, &story152, &story153, &story154, &story155, &story156, &story157, &story158, &story159,
             &story160, &story161, &story162, &story163, &story164, &story165, &story166, &story167, &story168, &story169,
             &story170, &story171, &story172, &story173, &story174, &story175, &story176, &story177, &story178, &story179,
-            &story180, &story181, &story182, &story183, &story184, &story185, &story186, &story187, &story188, &story189};
+            &story180, &story181, &story182, &story183, &story184, &story185, &story186, &story187, &story188, &story189,
+            &story190, &story191, &story192, &story193, &story194, &story195, &story196, &story197, &story198, &story199};
     }
 }
 #endif
