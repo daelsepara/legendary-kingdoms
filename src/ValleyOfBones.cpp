@@ -5511,17 +5511,20 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                     }
                 }
 
-                if (current >= 0 && current < limit)
+                if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::ACTION)
                 {
-                    fillRect(renderer, textwidth, text_bounds / 3 - box_space, textx, texty + infoh + booksize + box_space, intLB);
+                    if ((current + offset) >= 0 && (current + offset) < spells.size())
+                    {
+                        fillRect(renderer, textwidth, text_bounds / 3 - box_space, textx, texty + infoh + booksize + box_space, intLB);
 
-                    auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
-                    renderText(renderer, text, intLB, textx + text_space, texty + infoh + booksize + box_space + text_space, text_bounds / 3 - texty, 0);
+                        renderText(renderer, text, intLB, textx + text_space, texty + infoh + booksize + box_space + text_space, text_bounds / 3 - texty, 0);
 
-                    SDL_FreeSurface(text);
+                        SDL_FreeSurface(text);
 
-                    text = NULL;
+                        text = NULL;
+                    }
                 }
 
                 renderButtons(renderer, controls, current, intLB, space, 4);
