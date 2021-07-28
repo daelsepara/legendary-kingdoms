@@ -8708,11 +8708,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 if (combatRound < fleeRound)
                                 {
-                                    message = "You CANNOT FLEE at this time.";
+                                    message = "You cannot flee at this time.";
                                 }
                                 else
                                 {
-                                    message = "You CAN NO LONGER FLEE from this combat.";
+                                    message = "You can no longer flee from this battle.";
                                 }
 
                                 start_ticks = SDL_GetTicks();
@@ -8724,7 +8724,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             flash_message = true;
 
-                            message = "You CANNOT FLEE from this combat.";
+                            message = "You cannot flee from this battle.";
 
                             start_ticks = SDL_GetTicks();
 
@@ -8765,7 +8765,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 flash_message = true;
 
-                                message = std::string(party.Party[result].Name) + " ALREADY ATTACKED this round.";
+                                message = std::string(party.Party[result].Name) + " already attacked this round.";
 
                                 start_ticks = SDL_GetTicks();
 
@@ -8832,7 +8832,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     {
                                         flash_message = true;
 
-                                        message = std::string(party.Party[result].Name) + " is DEAD.";
+                                        message = std::string(party.Party[result].Name) + " is dead.";
 
                                         start_ticks = SDL_GetTicks();
 
@@ -8883,7 +8883,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 flash_color = intRD;
 
-                                message = "The zealot healer HEALS each ZEALOT for 2 Health Points!";
+                                message = "The Zealot Healer heals each Zealot for 2 Health Points!";
 
                                 Engine::GAIN_HEALTH(monsters, 2);
 
@@ -8907,59 +8907,79 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::SPELL)
                     {
-                        if (Engine::COUNT(party.Party, team) > 0 && hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team))
+                        if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_COMBAT_SPELLS}))
                         {
-                            if (Engine::SPELLCASTERS(party.Party) > 0)
+                            if (Engine::COUNT(party.Party, team) > 0 && hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team))
                             {
-                                auto combat_spells = 0;
-
-                                for (auto i = 0; i < party.Party.size(); i++)
+                                if (Engine::SPELLCASTERS(party.Party) > 0)
                                 {
-                                    if (party.Party[i].Health > 0 && party.Party[i].SpellCaster && (team == Team::Type::NONE || party.Party[i].Team == team))
-                                    {
-                                        auto spells = Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::COMBAT) + Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::ADVENTURE_COMBAT);
+                                    auto combat_spells = 0;
 
-                                        combat_spells += spells;
+                                    for (auto i = 0; i < party.Party.size(); i++)
+                                    {
+                                        if (party.Party[i].Health > 0 && party.Party[i].SpellCaster && (team == Team::Type::NONE || party.Party[i].Team == team))
+                                        {
+                                            auto spells = Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::COMBAT) + Engine::COUNT(party.Party[i].SpellBook, Spells::Scope::ADVENTURE_COMBAT);
+
+                                            combat_spells += spells;
+                                        }
+                                    }
+
+                                    if (combat_spells <= 0)
+                                    {
+                                        flash_message = true;
+
+                                        message = "Your party does not have any usable combat spells.";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_color = intRD;
+                                    }
+                                    else
+                                    {
+                                        auto result = castSpell(window, renderer, party, team, monsters, hasAttacked, combatRound, Control::Type::COMBAT);
+
+                                        if (result >= 0 && result < party.Party.size())
+                                        {
+                                            flash_message = true;
+
+                                            message = std::string(party.Party[result].Name) + " casts a spell!";
+
+                                            start_ticks = SDL_GetTicks();
+
+                                            flash_color = intLB;
+
+                                            hasAttacked.push_back(result);
+                                        }
+
+                                        selected = false;
+
+                                        current = -1;
                                     }
                                 }
-
-                                if (combat_spells <= 0)
+                                else
                                 {
                                     flash_message = true;
 
-                                    message = "Your PARTY does not have any usable COMBAT spells.";
+                                    message = "There are no spell casters in your party!";
 
                                     start_ticks = SDL_GetTicks();
 
                                     flash_color = intRD;
-                                }
-                                else
-                                {
-                                    auto result = castSpell(window, renderer, party, team, monsters, hasAttacked, combatRound, Control::Type::COMBAT);
-
-                                    if (result >= 0 && result < party.Party.size())
-                                    {
-                                        flash_message = true;
-
-                                        message = std::string(party.Party[result].Name) + " CASTS a spell!";
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_color = intLB;
-
-                                        hasAttacked.push_back(result);
-                                    }
-
-                                    selected = false;
-
-                                    current = -1;
                                 }
                             }
                             else
                             {
                                 flash_message = true;
 
-                                message = "There are NO SPELLCASTERS in your PARTY!";
+                                if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}) && combatRound == 0)
+                                {
+                                    message = "Your party does not get to attack first nor cast spells this round!";
+                                }
+                                else
+                                {
+                                    message = "Your entire party has already attacked this round.";
+                                }
 
                                 start_ticks = SDL_GetTicks();
 
@@ -8970,14 +8990,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             flash_message = true;
 
-                            if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}) && combatRound == 0)
-                            {
-                                message = "Your PARTY does not get to ATTACK First nor CAST SPELLs this round!";
-                            }
-                            else
-                            {
-                                message = "Your PARTY has already ATTACKED this round.";
-                            }
+                            message = "You cannot cast spells in this battle!";
 
                             start_ticks = SDL_GetTicks();
 
@@ -9050,6 +9063,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
             Engine::REMOVE_STATUS(party.Party[i], Character::Status::ENRAGED);
             Engine::REMOVE_STATUS(party.Party[i], Character::Status::POTION_OF_INVULNERABILITY);
         }
+    }
+
+    if (combatResult != Engine::Combat::NONE)
+    {
+        Engine::LOSE_CODES(party, {Codes::Type::NO_COMBAT_SPELLS});
     }
 
     return combatResult;

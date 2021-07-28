@@ -28,7 +28,8 @@ namespace Codes
         FIRST_TIME_SCROLL_OF_RAGE,
         SPEAK_BANDO,
         WALL_CLIMBING_AND_DOOR,
-        REPAIR_CALENDAR_KALU
+        REPAIR_CALENDAR_KALU,
+        NO_COMBAT_SPELLS
     };
 
     std::map<Book::Type, const char *> Prefix = {

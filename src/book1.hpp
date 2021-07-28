@@ -3644,12 +3644,12 @@ namespace Book1
 
             ID = 112;
 
-            Location = Location::Type::MORDIAN;
+            Location = Location::Type::MORDAIN;
 
-            Text = "Your new crew cheer as you come aboard. The ship is large and shabbily built -- but perhaps you can make something of it?\n\n[HULK] Fighting: 3, Health: 5, Cargo: 3 units\n\nNote: Your new ship is in Mordian harbour. What will you do now?";
+            Text = "Your new crew cheer as you come aboard. The ship is large and shabbily built -- but perhaps you can make something of it?\n\n[HULK] Fighting: 3, Health: 5, Cargo: 3 units\n\nNote: Your new ship is in Mordain harbour. What will you do now?";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Depart in your new ship", {Book::Type::BOOK1, 851}, Choice::Type::SHIP, Location::Type::MORDIAN));
+            Choices.push_back(Choice::Base("Depart in your new ship", {Book::Type::BOOK1, 851}, Choice::Type::SHIP, Location::Type::MORDAIN));
             Choices.push_back(Choice::Base("Enter the wide tunnel", {Book::Type::BOOK1, 593}));
 
             Controls = Story::Controls::STANDARD;
@@ -3657,7 +3657,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            party.Fleet.push_back(Ship::Base("HULK", Ship::Type::HULK, Location::Type::MORDIAN, 3, 5, 3));
+            party.Fleet.push_back(Ship::Base("HULK", Ship::Type::HULK, Location::Type::MORDAIN, 3, 5, 3));
         }
     };
 
@@ -5188,8 +5188,6 @@ namespace Book1
     class Story166 : public Story::Base
     {
     public:
-        Engine::Destination destination;
-
         Story166()
         {
             BookID = Book::Type::BOOK1;
@@ -5311,6 +5309,258 @@ namespace Book1
 
             Choices.push_back(Choice::Base("Attempt to seduce the guards", {Book::Type::BOOK1, 7}));
             Choices.push_back(Choice::Base("Pretend to be a messenger, and say that their captain needs them urgently", {Book::Type::BOOK1, 875}));
+        }
+    };
+
+    class Story170 : public Story::Base
+    {
+    public:
+        Story170()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 170;
+
+            Image = "images/book1/malronac_the_deathengine.png";
+
+            Text = "You step out into broiling heat, the sun scorching the sands under your bare feet. You are the first competitors into the arena and receive a roaring cheer from the crowd as you appear. High above you the Iron King gazes down impassively, Malronac the Deathengine standing unflinching by his side. You look across the heat-swept arena as the far gate is opened. You cannot help but swallow as a pair of shaggy-haired desert lions come snarling out of the gate. Their manes are stained red with the blood of other victims, and they roar at you with filthy yellow teeth. You must fight for your lives.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::NO_COMBAT_SPELLS});
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Lion", 4, 4, 4, 9, 0),
+                Monster::Base("Lion", 3, 4, 4, 10, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 236}; }
+    };
+
+    class Story171 : public Story::Base
+    {
+    public:
+        Story171()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 171;
+
+            Text = "The young man takes you to a small side room and asks you to wait while he organises introductions. You take a seat anxiously, hoping the young man is not some devious con artist who has just run off with your money.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Random Event", {{4, NULL, {Book::Type::BOOK1, 234}}, {6, NULL, {Book::Type::BOOK1, 308}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story172 : public Story::Base
+    {
+    public:
+        Story172()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 172;
+
+            Text = "You find lodging at a large inn, The Iron Crown, which serves coffee and warm beer in a courtyard surrounded by rentable rooms. For every 5 silver coins you spend, each party member can recover 1 Health point. Spellcasters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nDuring your stay you ask about the nearby landmarks. \"The Blackwall is a place of ill reputation,\" confides a serving wench. \"No one knows why it was built, or what it is walling off, since it is easy to go around it. Still, those who become obsessed with it tend to disappear, never to be seen again!\" Frightening stuff!";
+
+            RestPrice = 5;
+
+            Choices.clear();
+
+            Controls = Story::Controls::INN;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story173 : public Story::Base
+    {
+    public:
+        Story173()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 173;
+
+            Text = "You frown. This book is nothing but a pack of well-written lies. The truth in the world can only be found from within, not from the idle rantings of some long-dead scholar. You tear out a number of offending pages, the world coming back into focus again. Your companions are relieved to see you have woken from your reverie. You have been standing immobile for a full ten minutes!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 695}; }
+    };
+
+    class Story174 : public Story::Base
+    {
+    public:
+        Story174()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 174;
+
+            Text = "The spiders above you merely watch as you carefully shuffle along the thin, crumbling ledge. Midway a part of the ledge flakes away, but you manage to keep your footing until you reach the far end. Soon, you have all crossed, the spiders wary of approaching such large, flame carrying prey. Another chamber beckons on the other side.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 347}; }
+    };
+
+    class Story175 : public Story::Base
+    {
+    public:
+        Story175()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 175;
+
+            Text = "It will take skill and judgement to navigate the deadly shoals around Mordain. The city doesn't have a dire reputation for nothing!";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Navigate the shoals (Team check: Survival 4+, Successes: 5)", {Book::Type::BOOK1, 662}, {Book::Type::BOOK1, 836}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 5));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "You manage to steer past the rocks and into the harbour.";
+
+                Engine::SET_LOCATION(party, Location::Type::MORDAIN);
+            }
+            else
+            {
+                Bye = NULL;
+            }
+        }
+    };
+
+    class Story176 : public Story::Base
+    {
+    public:
+        Story176()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 176;
+
+            Text = "\"We are emissaries sent by the Everchild,\" you say confidently. \"She wishes to discuss an important matter with the God King.\"\n\n\"The Everchild died a thousand summers ago,\" says the sister firmly. \"The God King does not deal with the emissaries of ghosts.\"\n\nThis will take some persuasion.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Convince the sister (Team check: Charisma 4+, Successes: 5)", {Book::Type::BOOK1, 709}, {Book::Type::BOOK1, 744}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 5));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story177 : public Story::Base
+    {
+    public:
+        Story177()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 177;
+
+            Text = "You are travelling on the Great Westroad, the western branch of a magnificent highway made in the elder times. The entire road is raised on a bank of earth some twenty feet high, and great sand dunes have piled up over the years on either side. It is busy with traffic, and with flatulent dragonyaks hauling many tons of goods in massive wagons between the great cities of the valley. To the north the Stonewalls act as a barrier between the consuming deserts of the south and the mysterious and powerful nation of Drakehallow.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go west to Saltdad", {Book::Type::BOOK1, 75}));
+            Choices.push_back(Choice::Base("Go east to Luutanesh", {Book::Type::BOOK1, 614}));
+            Choices.push_back(Choice::Base("Go north to the salt mines", {Book::Type::BOOK1, 25}));
+            Choices.push_back(Choice::Base("Go south to the Withered Steppes", {Book::Type::BOOK1, 115}));
+            Choices.push_back(Choice::Base("Talk to the caravan drivers", {Book::Type::BOOK1, 781}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story178 : public Story::Base
+    {
+    public:
+        Story178()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 178;
+
+            Text = "The final giant skeleton topples with a mighty crash. The treasures of the ancients are now yours to seize! There are 2250 silver coins to take. You also find a GOLDWAX CANDLE, a bar of GOLD BULLION and a CLOAK OF PROTECTION (Survival +3). In the coffin of the king, you prise a MAGICAL SHORTSWORD (Fighting +4) from his grasp.";
+
+            Bye = "Pleased with your finds you stride out of the chamber with your treasures, the curious door slamming shut behind you as you leave.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::GOLD_BULLION, Equipment::GOLDWAX_CANDLE, Equipment::CLOAK_OF_PROTECTION3, Equipment::MAGICAL_SHORTSWORD4};
+
+            Limit = 4;
+
+            Engine::GAIN_MONEY(party, 2250);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 46}; }
+    };
+
+    class Story179 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story179()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 179;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "It will be difficult indeed to track down the local thieves' guild without a contact.";
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(5)}))
+            {
+                PreText += " Your enquiries are met with nothing but blank stares and snarls.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(5)}))
+            {
+                return {Book::Type::BOOK1, 216};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 75};
+            }
         }
     };
 
@@ -5502,6 +5752,16 @@ namespace Book1
     auto story167 = Story167();
     auto story168 = Story168();
     auto story169 = Story169();
+    auto story170 = Story170();
+    auto story171 = Story171();
+    auto story172 = Story172();
+    auto story173 = Story173();
+    auto story174 = Story174();
+    auto story175 = Story175();
+    auto story176 = Story176();
+    auto story177 = Story177();
+    auto story178 = Story178();
+    auto story179 = Story179();
 
     void InitializeStories()
     {
@@ -5524,7 +5784,8 @@ namespace Book1
             &story130, &story131, &story132, &story133, &story134, &story135, &story136, &story137, &story138, &story139,
             &story140, &story141, &story142, &story143, &story144, &story145, &story146, &story147, &story148, &story149,
             &story150, &story151, &story152, &story153, &story154, &story155, &story156, &story157, &story158, &story159,
-            &story160, &story161, &story162, &story163, &story164, &story165, &story166, &story167, &story168, &story169};
+            &story160, &story161, &story162, &story163, &story164, &story165, &story166, &story167, &story168, &story169,
+            &story170, &story171, &story172, &story173, &story174, &story175, &story176, &story177, &story178, &story179};
     }
 }
 #endif
