@@ -4284,17 +4284,29 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             if (direction == 0)
                             {
-                                Engine::GAIN_HEALTH(monsters[opponent], -damage);
+                                auto damage_scale = 1;
 
-                                combat_damage = damage;
+                                auto weapon_used = Engine::FIND_EQUIPMENT(party.Party[combatant], Equipment::Class::WEAPON, Attribute::Type::FIGHTING);
+
+                                if (weapon_used >= 0 && weapon_used < party.Party[combatant].Equipment.size() && party.Party[combatant].Equipment[weapon_used].Type == Equipment::Type::STONECUTTER_SWORD2)
+                                {
+                                    if (monsters[opponent].Type == Monster::Type::ROCK || monsters[opponent].Type == Monster::Type::STONE)
+                                    {
+                                        damage_scale = 2;
+                                    }
+                                }
+
+                                Engine::GAIN_HEALTH(monsters[opponent], -(damage_scale * damage));
+
+                                combat_damage = damage_scale * damage;
 
                                 flash_message = true;
 
-                                if (damage > 0)
+                                if (damage_scale * damage > 0)
                                 {
                                     monsters[opponent].Damaged = true;
 
-                                    message = std::string(party.Party[combatant].Name) + " DEALS " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!";
+                                    message = std::string(party.Party[combatant].Name) + " DEALS " + std::to_string(damage_scale * damage) + " to the " + std::string(monsters[opponent].Name) + "!";
 
                                     flash_color = intLB;
                                 }
@@ -14488,7 +14500,32 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                             }
 
-                            Engine::GAIN_HEALTH(party.Party[target], story->Choices[choice].Value);
+                            if (target >= 0 && target < party.Party.size())
+                            {
+                                story->temp_string = std::string(party.Party[target].Name) + " ";
+
+                                if (story->Choices[choice].Value > 0)
+                                {
+                                    story->temp_string += "gains " + std::to_string(story->Choices[choice].Value);
+                                }
+                                else
+                                {
+                                    story->temp_string += "loses " + std::to_string(-story->Choices[choice].Value);
+                                }
+
+                                story->temp_string += " Health Point";
+
+                                if (std::abs(story->Choices[choice].Value) > 1)
+                                {
+                                    story->temp_string += "s";
+                                }
+
+                                story->temp_string += ".";
+
+                                addBye(story, story->temp_string.c_str());
+
+                                Engine::GAIN_HEALTH(party.Party[target], story->Choices[choice].Value);
+                            }
 
                             next = findStory(story->Choices[choice].Destination);
 

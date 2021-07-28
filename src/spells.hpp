@@ -25,7 +25,7 @@ namespace Spells
         WISDOM,
         ORB_OF_ANNIHILATION,
         MAELSTROM,
-
+        NATURE_WARD
     };
 
     enum class MassCombat

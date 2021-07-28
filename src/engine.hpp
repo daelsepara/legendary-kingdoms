@@ -146,6 +146,24 @@ namespace Engine
         }
     }
 
+    void GAIN_HEALTH(Ship::Base &ship, int health)
+    {
+        if (ship.Health > 0)
+        {
+            ship.Health += health;
+        }
+
+        if (ship.Health < 0)
+        {
+            ship.Health = 0;
+        }
+
+        if (ship.Health > ship.MaximumHealth)
+        {
+            ship.Health = ship.MaximumHealth; 
+        }
+    }
+
     void REST(Party::Base &party)
     {
         for (auto i = 0; i < party.Party.size(); i++)
@@ -471,6 +489,28 @@ namespace Engine
         }
 
         return max;
+    }
+
+    int FIND_EQUIPMENT(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
+    {
+        auto result = -1;
+
+        auto max = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class == type && character.Equipment[i].Attribute == attribute)
+            {
+                if (character.Equipment[i].Modifier > max)
+                {
+                    max = character.Equipment[i].Modifier;
+
+                    result = i;
+                }
+            }
+        }
+
+        return result;
     }
 
     int MODIFIER(Character::Base &character, Equipment::Class type, Attribute::Type attribute)

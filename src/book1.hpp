@@ -5564,6 +5564,463 @@ namespace Book1
         }
     };
 
+    class Story180 : public Story::Base
+    {
+    public:
+        Story180()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 180;
+
+            Text = "You are in a long corridor, the remains of the barricade you dismantled spread thinly along its length. To the west, stone steps descend further into the complex. To the east is a simple wooden door.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go west, down the steps", {Book::Type::BOOK1, 747}));
+            Choices.push_back(Choice::Base("Go east, through the door", {Book::Type::BOOK1, 821}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story181 : public Story::Base
+    {
+    public:
+        Story181()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 181;
+
+            Text = "The normally straight-laced Amelia has enjoyed rather too much wine this evening. She is visibly tottering over to the wine barrel for more, to the raucous laughter of nearby soldiers.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Send a party member to escort her to bed", {Book::Type::BOOK1, 61}, Choice::Type::CHOOSE_PARTY_MEMBER));
+            Choices.push_back(Choice::Base("Let the woman enjoy herself for once", {Book::Type::BOOK1, 594}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story182 : public Story::Base
+    {
+    public:
+        Story182()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 182;
+
+            Location = Location::Type::LHASBREATH;
+
+            Text = "Lhasbreath is a bustling town, full of energy and life. Therefore, it is strange to encounter an older looking man looking glum upon his doorstep. \"My son, Garon the Bloody Mouthed is missing,\" he admits. \"He was adventuring near the cursed ruins of Mordain, but alas I have not seen him since. You are clearly travellers yourselves. If you should find my son, bring him home. You shall know him by his great beard which he paints red in honour of his grandfather.\"";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::BARBARIAN_BODY}))
+            {
+                return {Book::Type::BOOK1, 249};
+            }
+            else if (Engine::VERIFY_CODES_ANY(party, {Codes::A(67), Codes::A(86)}))
+            {
+                return {Book::Type::BOOK1, 331};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(66)}))
+            {
+                Bye = NULL;
+
+                return {Book::Type::BOOK1, 286};
+            }
+            else
+            {
+                Bye = "You promise the old man that you will keep an eye out for him, and leave him to his misery.\n\nYou gained the code A67.";
+
+                Engine::GET_CODES(party, {Codes::A(67)});
+
+                return {Book::Type::BOOK1, 775};
+            }
+        }
+    };
+
+    class Story183 : public Story::Base
+    {
+    public:
+        Story183()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 183;
+
+            Image = "images/book1/vault_door.png";
+
+            Text = "Dashing from one pillar to the next as each guard turns their back, you manage to creep as stealthily as mice until you are out of sight of the guards. Eventually you reach the back of the hallway and come to vault door itself. It is a colossal slab of black marble. It has no lock, nor handle, and needs none. Its weight alone is designed to ensure it stays closed. It would take half a dozen men to open this door in normal times. Can you manage it yourselves?";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            Choices.clear();
+
+            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::PRYBAR}))
+            {
+                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 5+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 4));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 6+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 6, 4));
+            }
+
+            Choices.push_back(Choice::Base("Give up and return to the main floor", {Book::Type::BOOK1, 574}));
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (!outcome)
+            {
+                Bye = "Each party member loses 1 Health point from the strain.";
+
+                Engine::GAIN_HEALTH(party.Party, -1);
+            }
+            else
+            {
+                Bye = NULL;
+            }
+        }
+    };
+
+    // Dummy event to trigger Bye message in BOOK1:0183
+    class Event183 : public Story::Base
+    {
+    public:
+        Event183()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -183;
+
+            DisplayID = 183;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 183}; }
+    };
+
+    class Story184 : public Story::Base
+    {
+    public:
+        Story184()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 184;
+
+            Text = "You are almost sad as Yu Yan sprawls to the ground. The woman fought well, and it was a shame such talent should go to waste. You search her, her STONECUTTER SWORD (Fighting +2) is the most interesting possession she has. This weapon inflicts two points of Health damage for each success you score against rocky or stony opponents.\n\nShe also carries 135 silver pieces and, to your delight, a SILVER IDOL. You shake your head in amazement. You almost let the object of your quest slip through your fingers!";
+
+            Bye = "Pleased to have completed your quest so promptly, you make your way out of the cave, and back to the temple in Chalice.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::STONECUTTER_SWORD2, Equipment::SILVER_IDOL};
+
+            Limit = 2;
+
+            Engine::GAIN_MONEY(party, 135);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 856}; }
+    };
+
+    class Story185 : public Story::Base
+    {
+    public:
+        Story185()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 185;
+
+            Text = "You get into a conversation with an old man named Janus about his adventurous wife, Alidale. Apparently Alidale was a great explorer of the Valley in the times before the rise of the Iron King. She had heard of the Temple of the Unbroken, the birthplace of the Cursus religion, and wanted to explore the ruins. Sadly, she never returned. It has been forty years since then, and Janus has never taken another wife. He asks for you to keep an eye out for a bronze locket if you should ever chance to venture into the temple yourself. It was a gift Janus bought his wife when they were courting, and he would like it back to member her by.\n\nYou assure him you will keep your eyes peeled before moving on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::BRONZE_LOCKET}))
+            {
+                return {Book::Type::BOOK1, 43};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(29)}))
+            {
+                return {Book::Type::BOOK1, 893};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 614}; }
+    };
+
+    class Story186 : public Story::Base
+    {
+    public:
+        Story186()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 186;
+
+            Text = "A howling storm whips up from the cape to the west. The powerful gusts are blowing you closer and closer to the rocks!";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            Choices.clear();
+
+            if (!Engine::HAS_SPELL(party, {Spells::Type::NATURE_WARD}))
+            {
+                Choices.push_back(Choice::Base("Navigate the storm (Individual check: Survival 6+, Successes: Special)", {Book::Type::BOOK1, -186}, {Book::Type::BOOK1, -186}, {Attribute::Type::SURVIVAL}, 6, 0));
+            }
+        }
+    };
+
+    class Event186 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        int damage = 0;
+
+        Event186()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -186;
+
+            DisplayID = 186;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (party.CurrentShip != -1 && party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
+            {
+                damage = 8 - party.RecentSuccesses;
+
+                Engine::GAIN_HEALTH(party.Fleet[party.CurrentShip], -damage);
+
+                if (party.Fleet[party.CurrentShip].Health > 0)
+                {
+                    return {Book::Type::NONE, -1};
+                }
+                else
+                {
+                    return {Book::Type::BOOK1, 484};
+                }
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 484};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "Your ship suffers " + std::to_string(damage) + " damage.\n\nYou manage to avoid the worst of the dreadful weather, despite some damage to the ship. Relieved at your good fortune you resolutely sail on.";
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 240}; }
+    };
+
+    class Story187 : public Story::Base
+    {
+    public:
+        Story187()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 187;
+
+            Text = "The rogues react with surprise and alarm as you stand up and make your way down the ladder that links the balcony to the ground floor. Evidently they have never received visitors before. You attempt to calm them, letting them know that you mean them no harm.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Calm the thieves (Team check: Charisma 4+, Successes: 3)", {Book::Type::BOOK1, 430}, {Book::Type::BOOK1, 266}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story188 : public Story::Base
+    {
+    public:
+        int attempts = 0;
+
+        Story188()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 188;
+
+            Text = "You tie a few ropes together and bind them strongly to the most intact parts of the remaining wall, and then begin to abseil down the cliffside.";
+
+            Choices.clear();
+
+            Choices.push_back(Choice::Base("Climb down the cliff side (Team check: Survival 3+, Successes: 4)", {Book::Type::BOOK1, 662}, {Book::Type::BOOK1, -188}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 3, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            temp_string = "";
+
+            attempts++;
+
+            if (!outcome)
+            {
+                if (attempts >= 4)
+                {
+                    attempts = 0;
+
+                    Bye = "After several attempts, your entire party has made it down, one way or another!";
+
+                    Choices[0].DestinationFailed = {Book::Type::BOOK1, 662};
+                }
+                else
+                {
+                    Choices[0].DestinationFailed = {Book::Type::BOOK1, -188};
+                }
+            }
+            else
+            {
+                attempts = 0;
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 662}; }
+    };
+
+    class Event188 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Event188()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -188;
+
+            DisplayID = 188;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            temp_string = "";
+            
+            Bye = NULL;
+            
+            Choices.clear();
+
+            if (Engine::COUNT(party.Party) > 1)
+            {
+                PreText = "One of your party members falls about halfway down.";
+
+                Choices.push_back(Choice::Base("Choose the party member who falls halfway down", {Book::Type::BOOK1, 188}, Choice::Type::GAIN_HEALTH, -3));
+            }
+            else
+            {
+                PreText = "You fall about halfway down.";
+
+                auto character = Engine::FIRST(party);
+
+                if (character >= 0 && character < party.Party.size())
+                {
+                    Engine::GAIN_HEALTH(party.Party[character], -3);
+                }
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 188}; }
+    };
+
+    class Story189 : public Story::Base
+    {
+    public:
+        Story189()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 189;
+
+            Text = "You meet with the Everchild in the war room at the palace. She and her generals are pouring over a huge map of the valley, with a particular focus on the city of Clifftop. \"Welcome back, my friends,\" she smiles. \"As you can see, we are planning our attack on Clifftop. Due to the relative fertility of the land, and reinforcements from Cursus, Clifftop possesses a large, if undisciplined army. I would feel confident going into battle against them with six units from the Saltdad garrison. Any less than that would be... risky. However, you've been stalwart commanders of my forces, and you got me this city. So tell me.\n\nAre we ready to launch an attack on Clifftop?\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Order the attack", {Book::Type::BOOK1, 610}));
+            Choices.push_back(Choice::Base("Wait until you have more soldiers", {Book::Type::BOOK1, 620}));
+            Choices.push_back(Choice::Base("Have a private word with the Everchild", {Book::Type::BOOK1, 488}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(100)}))
+            {
+                return {Book::Type::BOOK1, 421};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(33)}))
+            {
+                return {Book::Type::BOOK1, 540};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -5762,12 +6219,26 @@ namespace Book1
     auto story177 = Story177();
     auto story178 = Story178();
     auto story179 = Story179();
+    auto story180 = Story180();
+    auto story181 = Story181();
+    auto story182 = Story182();
+    auto story183 = Story183();
+    auto event183 = Event183();
+    auto story184 = Story184();
+    auto story185 = Story185();
+    auto story186 = Story186();
+    auto event186 = Event186();
+    auto story187 = Story187();
+    auto story188 = Story188();
+    auto event188 = Event188();
+    auto story189 = Story189();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
-            &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160,
+            &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
+            &event186, &event188,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -5785,7 +6256,8 @@ namespace Book1
             &story140, &story141, &story142, &story143, &story144, &story145, &story146, &story147, &story148, &story149,
             &story150, &story151, &story152, &story153, &story154, &story155, &story156, &story157, &story158, &story159,
             &story160, &story161, &story162, &story163, &story164, &story165, &story166, &story167, &story168, &story169,
-            &story170, &story171, &story172, &story173, &story174, &story175, &story176, &story177, &story178, &story179};
+            &story170, &story171, &story172, &story173, &story174, &story175, &story176, &story177, &story178, &story179,
+            &story180, &story181, &story182, &story183, &story184, &story185, &story186, &story187, &story188, &story189};
     }
 }
 #endif

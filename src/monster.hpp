@@ -14,7 +14,9 @@ namespace Monster
         SNAKEMAN_PRIEST,
         ZEALOT,
         ZEALOT_HEALER,
-        PAPER
+        PAPER,
+        STONE,
+        ROCK
     };
 
     class Base
