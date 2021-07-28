@@ -12005,11 +12005,11 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
         auto focus = 0;
 
-        std::vector<int> army_combat_results = {};
+        std::vector<int> party_combat_results = {};
         std::vector<int> enemy_combat_results = {};
         std::vector<int> morale = {};
 
-        int army_combat_score = 0;
+        int party_combat_score = 0;
         int enemy_combat_score = 0;
         int morale_score = 0;
 
@@ -12023,24 +12023,8 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
         auto combat_resolved = false;
         auto morale_checked = false;
 
-        auto army_unit = -1;
-        auto enemy_unit = -1;
-
-        if (zone == Location::Zone::LEFT_FLANK)
-        {
-            army_unit = Engine::FIND_UNIT(party.Army, Location::BattleField::LEFT_FLANK_FRONT);
-            enemy_unit = Engine::FIND_UNIT(enemyArmy, Location::BattleField::LEFT_FLANK_FRONT);
-        }
-        else if (zone == Location::Zone::CENTER)
-        {
-            army_unit = Engine::FIND_UNIT(party.Army, Location::BattleField::CENTER_FRONT);
-            enemy_unit = Engine::FIND_UNIT(enemyArmy, Location::BattleField::CENTER_FRONT);
-        }
-        else if (zone == Location::Zone::RIGHT_FLANK)
-        {
-            army_unit = Engine::FIND_UNIT(party.Army, Location::BattleField::RIGHT_FLANK_FRONT);
-            enemy_unit = Engine::FIND_UNIT(enemyArmy, Location::BattleField::RIGHT_FLANK_FRONT);
-        }
+        auto party_unit = Engine::FIND_UNIT(party.Army, zone);
+        auto enemy_unit = Engine::FIND_UNIT(enemyArmy, zone);
 
         auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
         auto offsetx = startx + box_space;
@@ -12072,9 +12056,9 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             {
                 if (stage == Engine::MassCombat::COMBAT)
                 {
-                    if (army_combat_results.size() == 0)
+                    if (party_combat_results.size() == 0)
                     {
-                        army_combat_results = Engine::ROLL_DICE(1);
+                        party_combat_results = Engine::ROLL_DICE(1);
                     }
 
                     if (enemy_combat_results.size() == 0)
@@ -12085,7 +12069,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
                 if (stage == Engine::MassCombat::MORALE)
                 {
-                    if (army_combat_score != enemy_combat_score)
+                    if (party_combat_score != enemy_combat_score)
                     {
                         if (morale.size() == 0)
                         {
@@ -12099,15 +12083,15 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     auto row = 0;
                     auto col = 0;
 
-                    army_combat_score = Engine::GET_STRENGTH(party.Army, zone);
+                    party_combat_score = party.Army[party_unit].Strength;
 
-                    for (auto i = 0; i < army_combat_results.size(); i++)
+                    for (auto i = 0; i < party_combat_results.size(); i++)
                     {
-                        if (army_combat_results[i] >= 1 && army_combat_results[i] <= 6)
+                        if (party_combat_results[i] >= 1 && party_combat_results[i] <= 6)
                         {
-                            auto result = army_combat_results[i] - 1;
+                            auto result = party_combat_results[i] - 1;
 
-                            army_combat_score += army_combat_results[i];
+                            party_combat_score += party_combat_results[i];
 
                             fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
 
@@ -12127,7 +12111,15 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     row = 0;
                     col = 0;
 
-                    enemy_combat_score = Engine::GET_STRENGTH(enemyArmy, zone);
+                    enemy_combat_score = enemyArmy[enemy_unit].Strength;
+
+                    if (enemyArmy[enemy_unit].Status != Army::Status::NONE && enemyArmy[enemy_unit].StatusRound >= 0 && enemyArmy[enemy_unit].StatusDuration >= 0 && ((combatRound - enemyArmy[enemy_unit].StatusRound) < enemyArmy[enemy_unit].StatusDuration))
+                    {
+                        if (enemyArmy[enemy_unit].Status == Army::Status::STRENGTH1)
+                        {
+                            enemy_combat_score += 1;
+                        }
+                    }
 
                     for (auto i = 0; i < enemy_combat_results.size(); i++)
                     {
@@ -12154,19 +12146,19 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
                     if (!combat_resolved)
                     {
-                        if (army_combat_score != enemy_combat_score)
+                        if (party_combat_score != enemy_combat_score)
                         {
-                            if ((army_unit >= 0 && army_unit < party.Army.size()) && (enemy_unit >= 0 && enemy_unit < enemyArmy.size()))
+                            if ((party_unit >= 0 && party_unit < party.Army.size()) && (enemy_unit >= 0 && enemy_unit < enemyArmy.size()))
                             {
-                                if (army_combat_score < enemy_combat_score)
+                                if (party_combat_score < enemy_combat_score)
                                 {
-                                    message = "The " + std::string(enemyArmy[enemy_unit].Name) + " defeats your " + std::string(party.Army[army_unit].Name) + "!";
+                                    message = "The " + std::string(enemyArmy[enemy_unit].Name) + " defeats your " + std::string(party.Army[party_unit].Name) + "!";
 
                                     flash_color = intRD;
                                 }
-                                else if (enemy_combat_score < army_combat_score)
+                                else if (enemy_combat_score < party_combat_score)
                                 {
-                                    message = "Your " + std::string(party.Army[army_unit].Name) + " defeats the " + std::string(enemyArmy[enemy_unit].Name) + "!";
+                                    message = "Your " + std::string(party.Army[party_unit].Name) + " defeats the " + std::string(enemyArmy[enemy_unit].Name) + "!";
 
                                     flash_color = intLB;
                                 }
@@ -12203,11 +12195,11 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
                         morale_score += morale[i];
 
-                        if (army_combat_score > enemy_combat_score)
+                        if (party_combat_score > enemy_combat_score)
                         {
                             fitImage(renderer, dice[result], offsetx + boxwidth + marginx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
                         }
-                        else if (enemy_combat_score > army_combat_score)
+                        else if (enemy_combat_score > party_combat_score)
                         {
                             fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
                         }
@@ -12227,23 +12219,23 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
                 if (!morale_checked)
                 {
-                    if (army_combat_score != enemy_combat_score)
+                    if (party_combat_score != enemy_combat_score)
                     {
-                        if ((army_unit >= 0 && army_unit < party.Army.size()) && (enemy_unit >= 0 && enemy_unit < enemyArmy.size()))
+                        if ((party_unit >= 0 && party_unit < party.Army.size()) && (enemy_unit >= 0 && enemy_unit < enemyArmy.size()))
                         {
-                            if (army_combat_score < enemy_combat_score)
+                            if (party_combat_score < enemy_combat_score)
                             {
-                                if (morale_score <= party.Army[army_unit].Morale)
+                                if (morale_score <= party.Army[party_unit].Morale)
                                 {
-                                    Engine::GAIN_MORALE(party.Army[army_unit], -1);
+                                    Engine::GAIN_MORALE(party.Army[party_unit], -1);
 
-                                    message = "Your " + std::string(party.Army[army_unit].Name) + " loses 1 point of Morale!";
+                                    message = "Your " + std::string(party.Army[party_unit].Name) + " loses 1 point of Morale!";
                                 }
                                 else
                                 {
-                                    message = "Your " + std::string(party.Army[army_unit].Name) + " is routed!";
+                                    message = "Your " + std::string(party.Army[party_unit].Name) + " is routed!";
 
-                                    party.Army[army_unit].Position = Location::BattleField::NONE;
+                                    party.Army[party_unit].Position = Location::BattleField::NONE;
 
                                     if (zone == Location::Zone::LEFT_FLANK)
                                     {
@@ -12276,7 +12268,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
                                 flash_color = intRD;
                             }
-                            else if (enemy_combat_score < army_combat_score)
+                            else if (enemy_combat_score < party_combat_score)
                             {
                                 if (morale_score <= enemyArmy[enemy_unit].Morale)
                                 {
@@ -12338,28 +12330,28 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                 }
             }
 
-            if (army_unit >= 0 && army_unit < party.Army.size())
+            if (party_unit >= 0 && party_unit < party.Army.size())
             {
                 std::string army_string = "";
 
-                putHeader(renderer, party.Army[army_unit].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Army[party_unit].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
-                army_string = "Strength: " + std::to_string(party.Army[army_unit].Strength);
-                army_string += "\nMorale: " + std::to_string(party.Army[army_unit].Morale);
+                army_string = "Strength: " + std::to_string(party.Army[party_unit].Strength);
+                army_string += "\nMorale: " + std::to_string(party.Army[party_unit].Morale);
 
                 putText(renderer, army_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
-                if (army_combat_score > 0)
+                if (party_combat_score > 0)
                 {
                     if (stage == Engine::MassCombat::COMBAT)
                     {
-                        std::string combat_string = "Combat Result: " + std::to_string(army_combat_score);
+                        std::string combat_string = "Combat Result: " + std::to_string(party_combat_score);
 
                         putHeader(renderer, combat_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                     }
                     else if (stage == Engine::MassCombat::MORALE)
                     {
-                        if (army_combat_score < enemy_combat_score)
+                        if (party_combat_score < enemy_combat_score)
                         {
                             std::string morale_string = "Morale Check: " + std::to_string(morale_score);
 
@@ -12380,7 +12372,17 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
                 putHeader(renderer, enemyArmy[enemy_unit].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
 
-                enemy_string = "Strength: " + std::to_string(enemyArmy[enemy_unit].Strength);
+                auto score = enemyArmy[enemy_unit].Strength;
+
+                if (enemyArmy[enemy_unit].Status != Army::Status::NONE && enemyArmy[enemy_unit].StatusRound >= 0 && enemyArmy[enemy_unit].StatusDuration > 0 && ((combatRound - enemyArmy[enemy_unit].StatusRound) < enemyArmy[enemy_unit].StatusDuration))
+                {
+                    if (enemyArmy[enemy_unit].Status == Army::Status::STRENGTH1)
+                    {
+                        score += 1;
+                    }
+                }
+
+                enemy_string = "Strength: " + std::to_string(score);
                 enemy_string += "\nMorale: " + std::to_string(enemyArmy[enemy_unit].Morale);
 
                 putText(renderer, enemy_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
@@ -12395,7 +12397,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     }
                     else if (stage == Engine::MassCombat::MORALE)
                     {
-                        if (enemy_combat_score < army_combat_score)
+                        if (enemy_combat_score < party_combat_score)
                         {
                             std::string morale_string = "Morale Check: " + std::to_string(morale_score);
 
@@ -12416,7 +12418,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             }
             else if (stage == Engine::MassCombat::COMBAT)
             {
-                if (army_combat_score != enemy_combat_score)
+                if (party_combat_score != enemy_combat_score)
                 {
                     controls = controls_morale;
                 }
@@ -12629,6 +12631,23 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         while (Engine::ZONES(party.Army, enemyArmy) < 2 && Engine::ZONES(enemyArmy, party.Army) < 2)
         {
+            for (auto i = 0; i < enemyStatus.size(); i++)
+            {
+                if (std::get<2>(enemyStatus[i]) == combat_round)
+                {
+                    auto enemy_unit = std::get<1>(enemyStatus[i]);
+
+                    if (enemy_unit >= 0 && enemy_unit < enemyArmy.size())
+                    {
+                        enemyArmy[enemy_unit].Status = std::get<0>(enemyStatus[i]);
+
+                        enemyArmy[enemy_unit].StatusRound = combat_round;
+
+                        enemyArmy[enemy_unit].StatusDuration = std::get<3>(enemyStatus[i]);
+                    }
+                }
+            }
+
             if (!enemy_has_cast)
             {
                 enemy_spell = Engine::GET_SPELL(enemySpells, combat_round);
@@ -15947,7 +15966,8 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                         {Spells::MassCombat::CLINGING_DREAD_LEFT_FRONT, 1},
                         {Spells::MassCombat::ROUT_LEFT_FRONT, 2}};
 
-                    std::vector<Engine::ArmyStatus> EnemyArmyStatus = {};
+                    std::vector<Engine::ArmyStatus> EnemyArmyStatus = {
+                        {Army::Status::STRENGTH1, 2, 0, 1}};
 
                     std::vector<Army::Base> EnemyArmy = {
                         Army::Base("Curzite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 5, false),

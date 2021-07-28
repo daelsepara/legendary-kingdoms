@@ -1447,6 +1447,26 @@ namespace Engine
         return result;
     }
 
+    int FIND_UNIT(std::vector<Army::Base> &army, Location::Zone zone)
+    {
+        auto result = -1;
+
+        if (zone == Location::Zone::LEFT_FLANK)
+        {
+            result = Engine::FIND_UNIT(army, Location::BattleField::LEFT_FLANK_FRONT);
+        }
+        else if (zone == Location::Zone::CENTER)
+        {
+            result = Engine::FIND_UNIT(army, Location::BattleField::CENTER_FRONT);
+        }
+        else if (zone == Location::Zone::RIGHT_FLANK)
+        {
+            result = Engine::FIND_UNIT(army, Location::BattleField::RIGHT_FLANK_FRONT);
+        }
+
+        return result;
+    }
+
     void SINK_SHIP(Party::Base &party)
     {
         if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())

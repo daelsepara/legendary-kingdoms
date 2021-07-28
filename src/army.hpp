@@ -58,6 +58,8 @@ namespace Army
 
         int StatusRound = -1;
 
+        int StatusDuration = 0;
+
         Base()
         {
         }
