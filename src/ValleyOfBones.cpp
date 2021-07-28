@@ -1325,6 +1325,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     auto *title = "Legendary Kingdoms: Party";
 
     auto font_size = 28;
+    auto text_space = 8;
 
     TTF_Init();
 
@@ -1347,13 +1348,13 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         auto selected = false;
 
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto text_space = 8;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (font_size * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -1778,6 +1779,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
     auto *title = "Legendary Kingdoms: View Party";
 
     auto font_size = 20;
+    auto text_space = 8;
     auto garamond_size = 24;
 
     TTF_Init();
@@ -1804,9 +1806,9 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
         auto selected = false;
 
-        auto main_buttonh = (int)(0.06 * SCREEN_HEIGHT);
+        auto main_buttonh = 48;
 
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
 
@@ -2369,6 +2371,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     auto *title = "Legendary Kingdoms: Select adventurers for your party";
 
     auto font_size = 20;
+    auto text_space = 8;
     auto garamond_size = 24;
 
     TTF_Init();
@@ -2402,9 +2405,9 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
         auto selected = false;
 
-        auto main_buttonh = (int)(0.06 * SCREEN_HEIGHT);
+        auto main_buttonh = 48;
 
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
 
         auto controls_add = createHTextButtons(choices_add, 5, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
         auto controls_del = createHTextButtons(choices_del, 5, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
@@ -3152,7 +3155,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             spell_string += "\nType: " + std::string(Spells::ScopeDescriptions[spell.Scope]) + ", Charged: " + std::string(spell.Charged ? "Yes" : "No") + ", Recharge: " + std::to_string(spell.Recharge);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, ((int)(0.125 * SCREEN_HEIGHT)), text_space);
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
@@ -3227,7 +3230,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             monster_string += ", Defense: " + std::to_string(monster.Defence) + "+, Health: " + std::to_string(monster.Health);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, ((int)(0.125 * SCREEN_HEIGHT)), text_space);
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
@@ -3291,7 +3294,7 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
 
             std::string adventurer_string = characterText(adventurer, true);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, ((int)(0.125 * SCREEN_HEIGHT)), text_space);
+            auto button = createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
@@ -3343,6 +3346,8 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 {
     auto combat_damage = damage;
     auto final_damage = damage;
+    auto font_size = 32;
+    auto text_space = 8;
 
     if (character.Health > 0 && Engine::ARMOUR(character) > 0)
     {
@@ -3366,7 +3371,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
             auto headerw = (int)(boxwidth * 0.75);
 
-            auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+            auto infoh = 48;
 
             auto boxh = (int)(0.125 * SCREEN_HEIGHT);
 
@@ -3659,12 +3664,13 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto main_buttonh = 48;
 
         auto text_space = 8;
+        auto font_size = 32;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > party.Party.size())
@@ -3916,7 +3922,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ch
 
             auto headerw = (int)(boxwidth * 0.75);
 
-            auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+            auto infoh = 48;
 
             auto boxh = (int)(0.125 * SCREEN_HEIGHT);
 
@@ -4215,7 +4221,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             auto headerw = (int)(boxwidth * 0.75);
 
-            auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+            auto infoh = 48;
 
             auto boxh = (int)(0.125 * SCREEN_HEIGHT);
 
@@ -4807,7 +4813,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             auto headerw = (int)(boxwidth * 0.75);
 
-            auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+            auto infoh = 48;
 
             auto boxh = (int)(0.125 * SCREEN_HEIGHT);
 
@@ -5112,7 +5118,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
 
             auto headerw = (int)(boxwidth * 0.75);
 
-            auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+            auto infoh = 48;
 
             auto boxh = (int)(0.125 * SCREEN_HEIGHT);
 
@@ -5436,12 +5442,12 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
         auto font_size = 24;
         auto text_space = 8;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto booksize = (int)(2 * (text_bounds) / 3);
-        auto limit = (int)((booksize - text_space) / ((boxh) + 3 * text_space));
+        auto booksize = (int)(2 * (text_bounds) / 3 - infoh - box_space);
+        auto limit = (int)((booksize - 2 * text_space - infoh) / (28 * 2 + 3 * text_space));
         auto last = offset + limit;
 
         if (last > spells.size())
@@ -5451,7 +5457,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-        auto scrolly = startx + infoh + booksize - buttonh - text_space + 1;
+        auto scrolly = starty + infoh + booksize - arrow_size - border_space;
 
         auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, scrolly, true, (mode == Spells::Select::CAST_SPELL ? true : false));
 
@@ -5507,7 +5513,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
 
                 if (current >= 0 && current < limit)
                 {
-                    fillRect(renderer, textwidth, text_bounds / 3 - box_space - infoh, textx, texty + infoh + booksize + box_space, intLB);
+                    fillRect(renderer, textwidth, text_bounds / 3 - box_space, textx, texty + infoh + booksize + box_space, intLB);
 
                     auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
@@ -5857,11 +5863,11 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
         auto font_size = 20;
         auto text_space = 8;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -6210,7 +6216,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
             auto headerw = (int)(boxwidth * 0.75);
 
-            auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+            auto infoh = 48;
 
             auto boxh = (int)(0.125 * SCREEN_HEIGHT);
 
@@ -6552,11 +6558,11 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
         auto font_size = 20;
         auto text_space = 8;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > party.Party.size())
@@ -7045,11 +7051,11 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto font_size = 20;
         auto text_space = 8;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > party.Party.size())
@@ -7341,11 +7347,11 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
         auto font_size = 20;
         auto text_space = 8;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         std::vector<Attribute::Type> attributes = {Attribute::Type::FIGHTING, Attribute::Type::STEALTH, Attribute::Type::LORE, Attribute::Type::SURVIVAL, Attribute::Type::CHARISMA};
@@ -7629,11 +7635,11 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
         auto font_size = 20;
         auto text_space = 8;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
 
         auto teams_list = std::vector<Team::Type>();
 
@@ -7907,11 +7913,11 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto font_size = 20;
         auto text_space = 8;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (font_size * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > party.Party.size())
@@ -8227,11 +8233,11 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         auto font_size = 20;
         auto text_space = 8;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto limit = (text_bounds - 2 * text_space) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > party.Party.size())
@@ -8632,11 +8638,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto font_size = 20;
         auto text_space = 8;
         auto messageh = (int)(0.25 * SCREEN_HEIGHT);
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - text_space) / ((boxh) + 3 * text_space);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -9303,14 +9309,14 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-    auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+    auto infoh = 48;
     auto boxh = (int)(0.150 * SCREEN_HEIGHT);
     auto box_space = 10;
 
     auto font_size = 28;
     auto text_space = 8;
     auto scrollSpeed = 1;
-    auto limit = (text_bounds - 2 * text_space - infoh) / (font_size * 2 + text_space * 4);
+    auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
 
     auto offset = 0;
 
@@ -9818,7 +9824,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-    auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+    auto infoh = 48;
     auto boxh = (int)(0.150 * SCREEN_HEIGHT);
     auto box_space = 10;
 
@@ -10409,9 +10415,9 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto text_space = 8;
         auto scrollSpeed = 1;
         auto offset = 0;
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto limit = (text_bounds - 2 * text_space - infoh) / (font_size * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > army.size())
@@ -10682,7 +10688,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto text_space = 8;
         auto scrollSpeed = 1;
         auto offset = 0;
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto booksize = (int)(2 * (text_bounds) / 3);
         auto box_space = 10;
@@ -11106,7 +11112,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto scrollDown = false;
         auto hold = false;
 
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
 
         auto selection = std::vector<int>();
@@ -11558,13 +11564,13 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
         auto selected = false;
 
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto text_space = 8;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (font_size * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > harbour->Ships.size())
@@ -12081,7 +12087,7 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, i
 
         auto headerw = (int)(boxwidth * 0.75);
 
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
 
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
 
@@ -12349,7 +12355,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
         auto headerw = (int)(boxwidth * 0.75);
 
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
 
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
 
@@ -12954,7 +12960,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto boxw = (int)((fullwidth - 2 * box_space) / 3);
 
-        auto infoh = (int)(font_size + 2 * text_space);
+        auto infoh = 48;
 
         auto boxh = (int)((text_bounds - box_space - infoh) / 2);
 
@@ -13296,7 +13302,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto boxw = (int)((fullwidth - 2 * box_space) / 3);
 
-        auto infoh = (int)(font_size + 2 * text_space);
+        auto infoh = 48;
 
         auto boxh = (int)((text_bounds - box_space - infoh) / 2);
 
@@ -13306,7 +13312,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto popupy = (SCREEN_HEIGHT - popuph) / 2;
 
         auto offset = 0;
-        auto limit = (popuph - infoh - buttonh - button_space) / (font_size * 2 + text_space * 4);
+        auto limit = (popuph - infoh - buttonh - button_space) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -13968,10 +13974,10 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto text_space = 8;
         auto textwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+        auto infoh = 48;
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (font_size * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space) / (28 * 2 + text_space * 4);
         auto last = offset + limit;
 
         if (last > choices.size())
@@ -15012,7 +15018,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 error = true;
                             }
                         }
-                        else if (story->Choices[choice].Type == Choice::Type::SET_STATUS)
+                        else if (story->Choices[choice].Type == Choice::Type::SET_STATUS_FROM_LIST)
                         {
                             auto selected = -1;
 
@@ -15124,6 +15130,47 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     }
 
                                     message += std::string(Character::StatusDescriptions[story->Choices[choice].Status[i]]);
+                                }
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::PAYFORSTATUS_WITH_HEALTH)
+                        {
+                            auto target = -1;
+
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                            {
+                                target = party.Current;
+                            }
+                            else
+                            {
+                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::PARTY);
+                            }
+
+                            if (target >= 0 && target < party.Party.size())
+                            {
+                                if (!Engine::HAS_STATUS(party.Party[target], story->Choices[choice].Status[0]))
+                                {
+                                    story->temp_string = std::string(party.Party[target].Name) + " gains " + std::string(Character::StatusDescriptions[story->Choices[choice].Status[0]]);
+
+                                    Engine::GAIN_HEALTH(party.Party[target], story->Choices[choice].Value);
+
+                                    Engine::GAIN_STATUS(party.Party[target], story->Choices[choice].Status[0]);
+
+                                    addBye(story, story->temp_string.c_str());
+
+                                    next = findStory(story->Choices[choice].Destination);
+
+                                    done = true;
+
+                                    break;
+                                }
+                                else
+                                {
+                                    error = true;
+
+                                    message = std::string(party.Party[target].Name) + " already has " + std::string(Character::StatusDescriptions[story->Choices[choice].Status[0]]) + "!";
                                 }
                             }
                         }
@@ -15241,6 +15288,68 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     message = std::string(party.Party[target].Name) + " does not have the lowest " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + " score!";
                                 }
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::RAISEATTRIBUTE_WITH_BLESSING)
+                        {
+                            if (party.Money >= story->Choices[choice].Value)
+                            {
+                                auto attribute_min = Engine::MIN(party, story->Choices[choice].Attributes[0]);
+
+                                auto target = -1;
+
+                                party.Current = Engine::FIND_SOLO(party);
+
+                                if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                                {
+                                    target = party.Current;
+                                }
+                                else if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
+                                {
+                                    target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
+                                }
+                                else
+                                {
+                                    target = Engine::FIRST(party, story->Choices[choice].Attributes[0], attribute_min);
+                                }
+
+                                if (target >= 0 && target < party.Party.size())
+                                {
+                                    if (Engine::SCORE(party.Party[target], story->Choices[choice].Attributes[0]) == attribute_min)
+                                    {
+                                        if (Engine::SCORE(party.Party[target], story->Choices[choice].Attributes[0]) < story->Choices[choice].Difficulty)
+                                        {
+                                            auto increase = gainAttributeScore(window, renderer, party.Party[target], story->Choices[current].Attributes[0], story->Choices[current].Success, 0);
+
+                                            if (increase >= 0)
+                                            {
+                                                next = findStory(story->Choices[choice].Destination);
+
+                                                done = true;
+
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            error = true;
+
+                                            message = "This blessing will have no effect on " + std::string(party.Party[target].Name) + "'s " + std::string(Attribute::Descriptions[story->Choices[current].Attributes[0]]) + "!";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        error = true;
+
+                                        message = std::string(party.Party[target].Name) + " does not have the lowest " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + " score!";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                error = true;
+
+                                message = "You do not have enough money for the blessing!";
                             }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::LOSE_MONEY)
@@ -15442,7 +15551,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
     TTF_SetFontKerning(font_dark11, 0);
 
-    auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+    auto infoh = 48;
     auto boxh = (int)(0.125 * SCREEN_HEIGHT);
     auto box_space = 10;
 

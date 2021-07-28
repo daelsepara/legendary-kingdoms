@@ -72,7 +72,8 @@ namespace Equipment
         RUSTY_KEY,
         CLOAK_OF_PROTECTION3,
         MAGICAL_SHORTSWORD4,
-        STONECUTTER_SWORD2
+        STONECUTTER_SWORD2,
+        SPEAR
     };
 
     class Base
@@ -192,6 +193,7 @@ namespace Equipment
     auto CLOAK_OF_PROTECTION3 = Equipment::Base("CLOAK OF PROTECTION", "CLOAK OF PROTECTION", Equipment::Class::ROBE, Equipment::Type::CLOAK_OF_PROTECTION3, Attribute::Type::SURVIVAL, 3, false);
     auto MAGICAL_SHORTSWORD4 = Equipment::Base("MAGICAL SHORTSWORD", "MAGICAL SHORTSWORD", Equipment::Class::WEAPON, Equipment::Type::MAGICAL_SHORTSWORD4, Attribute::Type::FIGHTING, 4, false);
     auto STONECUTTER_SWORD2 = Equipment::Base("STONECUTTER SWORD", "STONECUTTER SWORD", Equipment::Class::WEAPON, Equipment::Type::STONECUTTER_SWORD2, Attribute::Type::FIGHTING, 2, false);
+    auto SPEAR = Equipment::Base("SPEAR", "SPEAR", Equipment::Class::WEAPON, Equipment::Type::SPEAR, Attribute::Type::FIGHTING, 0, false);
 }
 
 #endif

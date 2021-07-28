@@ -53,12 +53,14 @@ namespace Choice
         CHOOSE_PARTY_MEMBER,
         RETREAT,
         DELIVER,
-        SET_STATUS,
+        SET_STATUS_FROM_LIST,
         HAS_STATUS,
         ASSIGN_TEAMS,
         RAISE_LOWEST_ATTRIBUTE,
         LAST_INDIVIDUAL_CHECK,
-        LAST_PARTY_CHECK
+        LAST_PARTY_CHECK,
+        RAISEATTRIBUTE_WITH_BLESSING,
+        PAYFORSTATUS_WITH_HEALTH
     };
 
     class Base
@@ -407,6 +409,23 @@ namespace Choice
 
             Value = value;
         }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Attribute::Type> attributes, int value, int difficulty, int success)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Attributes = attributes;
+
+            Value = value;
+
+            Difficulty = difficulty;
+
+            Success = success;
+        }
     };
 } // namespace Choice
 
@@ -432,7 +451,6 @@ namespace Story
     class Base
     {
     public:
-
         Location::Type Location = Location::Type::NONE;
 
         Book::Type BookID = Book::Type::NONE;

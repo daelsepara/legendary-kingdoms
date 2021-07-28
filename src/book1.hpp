@@ -3163,8 +3163,8 @@ namespace Book1
             Text = "The tunnel is extremely narrow, and you must proceed down it single file. Decide which party member is at the front of the group and which is at the back.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Select which party member is in FRONT", {Book::Type::BOOK1, -98}, Choice::Type::SET_STATUS, {Character::Status::FRONT, Character::Status::BACK}, 0));
-            Choices.push_back(Choice::Base("Select which party member is at the BACK", {Book::Type::BOOK1, -98}, Choice::Type::SET_STATUS, {Character::Status::FRONT, Character::Status::BACK}, 1));
+            Choices.push_back(Choice::Base("Select which party member is in FRONT", {Book::Type::BOOK1, -98}, Choice::Type::SET_STATUS_FROM_LIST, {Character::Status::FRONT, Character::Status::BACK}, 0));
+            Choices.push_back(Choice::Base("Select which party member is at the BACK", {Book::Type::BOOK1, -98}, Choice::Type::SET_STATUS_FROM_LIST, {Character::Status::FRONT, Character::Status::BACK}, 1));
             Choices.push_back(Choice::Base("Proceed", {Book::Type::BOOK1, 849}, Choice::Type::HAS_STATUS, {Character::Status::FRONT, Character::Status::BACK}));
 
             Controls = Story::Controls::STANDARD;
@@ -6262,6 +6262,297 @@ namespace Book1
         }
     };
 
+    class Story200 : public Story::Base
+    {
+    public:
+        Story200()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 200;
+
+            Text = "Battles at sea are very similar to personal combat. Your ship makes the first attack, unless the text tells you otherwise. Make a Fighting check using the Fighting score of your ship. The Defence of ships is always 4+ in ship combat. For every success you score you can reduce the Health of the enemy ship by 1 point. The enemy ship then attacks you in the same way.\n\nIf you have a spellcaster with any Sea Combat spells, they can cast one spell before each attack you make. Only spells marked 'Sea Combat' can be used when ships fight.\n\nThe combat ends when either your ship or the enemy are reduced to 0 or fewer Health points.\n\nGood luck, captain!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+    };
+
+    class Story201 : public Story::Base
+    {
+    public:
+        Story201()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 201;
+
+            Text = "At first you fear you will have to stay in one of the religious hostelries that dot the city. A nightly whipping does not appeal, so fortunately you discover a single inn that caters to foreigners; The Sign of the Sand, built in the harbour district. Though it is built of stone, it reminds you of the kind of traditional inn you might find in Royce, with warm beer and comfortable rooms aplenty. It was built with the permission of the priests a hundred years ago, to encourage sea trade to the city. Its future is constantly in doubt, as hard-line priests detest its presence in the city, but so far economics has trumped religious politics.\n\nFor every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nYou get into a discussion with some travellers from Drakehallow, who seem set on exploring the ruins of Mordain. \"There are vast tunnels and dungeons located beneath the surface,\" says one, a wizard from the magical school Animus Mast. \"No one has mapped them all, but a wise explorer will try. It's easy to get turned around in those deathly arcades.\"";
+
+            RestPrice = 5;
+
+            Choices.clear();
+
+            Controls = Story::Controls::INN;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
+    };
+
+    class Story202 : public Story::Base
+    {
+    public:
+        Story202()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 202;
+
+            Text = "You are deep in the central deserts of the valley, where it is sometimes years between rainfall and civilisation is all but unknown.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Manage your water (Team check: Survival 4+, Successes: 4)", {Book::Type::BOOK1, -202}, {Book::Type::BOOK1, -202}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "You manage to conserve water by travelling mostly at night and sheltering from the worst of the sun.";
+            }
+            else
+            {
+                Bye = "Each party member loses 1 Health from heatstroke.";
+
+                Engine::GAIN_HEALTH(party.Party, -1);
+            }
+        }
+    };
+
+    class Event202 : public Story::Base
+    {
+    public:
+        Event202()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -202;
+
+            DisplayID = 202;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            auto result = Engine::ROLL_DICE(1);
+
+            if (result[0] < 3)
+            {
+                return {Book::Type::BOOK1, 159};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 125};
+            }
+        }
+    };
+
+    class Story203 : public Story::Base
+    {
+    public:
+        Story203()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 203;
+
+            Text = "Hacking your way through the library you at last manage to break through the swarm of bashing, flapping books. When the last party member has escaped you slam the door shut, the thud of books impacting on the door shuddering through your body. Eventually the noise stops, and you presume the books have returned to their shelves. Hoping you will have no more book-related perils you make your way onwards.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 69}; }
+    };
+
+    class Story204 : public Story::Base
+    {
+    public:
+        Story204()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 204;
+
+            Text = "\"This is a poor show, my lord, for a noble house to exert such effort against a common one,\" you say sadly. \"Has the house of Dulcimer dropped so low that it can only feud with peasants and serving girls? Are they your equals that you summon such a show of force and indignity? Such rustics should be ignored, not dignified with vengeance. Release the girl's aunt before you are made a laughingstock before the king!\" Panicked by your words, Dulcimer quickly agrees to release Akini's aunt, on your agreement that you will never mention this awkwardness in court. You agree and are soon escorting Akini's aunt back home.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 68}; }
+    };
+
+    class Story205 : public Story::Base
+    {
+    public:
+        Story205()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 205;
+
+            Text = "Your decent is relatively straightforward, though you are compelled to light your lanterns to see anything more than the entry shaft. Tunnels lead off in four directions, carved out of the antique sandstone.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go northwest", {Book::Type::BOOK1, 761}));
+            Choices.push_back(Choice::Base("Go northeast", {Book::Type::BOOK1, 801}));
+            Choices.push_back(Choice::Base("Go southeast", {Book::Type::BOOK1, 869}));
+            Choices.push_back(Choice::Base("Go southwest", {Book::Type::BOOK1, 217}));
+            Choices.push_back(Choice::Base("Climb back up to the surface", {Book::Type::BOOK1, 426}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story206 : public Story::Base
+    {
+    public:
+        Story206()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 206;
+
+            Text = "You greet the Bando tribesmen like old friends, and soon there is singing and cheering across the village. As a good will offering you present the Bando with a few surplus tools and ropes from the ship, and you are presented in turn with sweet, intoxicating fruit drinks and a well-crafted SPEAR (Fighting +0).";
+
+            Bye = "Soon you are escorted to see the shaman.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::SPEAR};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 381}; }
+    };
+
+    class Story207 : public Story::Base
+    {
+    public:
+        Story207()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 207;
+
+            Text = "The Church of Cursus in Clifftop is unique in the valley, in that it is made of jungle timbers rather than stone. The city is poor, and not even the faithful have the means to pay for the impressive black stone ziggurats more common to Cursus temples. Within the hall you can see flagellated parishioners begging for forgiveness from their distant god, whilst poor priests while away the endless hours with chants they must recite from memory for lack of expensive books to refer to.\n\nThe high priest is eager for donations. If you pay him 1,000 silver coins he will clumsily bless you. Find the party member with the lowest Stealth score in the team, and if their Stealth score is less than 3, increase their Stealth by 1 point. If all your party member's Stealth scores are already 3 or above, the blessing will have no effect.\n\nYou may also receive some RITUAL SCARRING, which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some RITUAL SCARRING, they must lose 1 point of Health permanently.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Select party member with lowest Stealth score", {Book::Type::BOOK1, -207}, Choice::Type::RAISEATTRIBUTE_WITH_BLESSING, {Attribute::Type::STEALTH}, 1000, 3, 1));
+            Choices.push_back(Choice::Base("Receive some ritual scarring", {Book::Type::BOOK1, -207}, Choice::Type::PAYFORSTATUS_WITH_HEALTH, {Character::Status::RITUAL_SCARRING}, -1));
+            Choices.push_back(Choice::Base("You are finished here", {Book::Type::BOOK1, 19}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event207 : public Story::Base
+    {
+    public:
+        Event207()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -207;
+
+            DisplayID = 207;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 207}; }
+    };
+
+    class Story208 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story208()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 208;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You are about halfway across the plank when it suddenly breaks in two. You plunge down into the pit and onto the spikes.";
+
+            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size() && party.Party[party.LastSelected].Health > 0)
+            {
+                auto result = Engine::ROLL_DICE(1);
+
+                Engine::GAIN_HEALTH(party.Party[party.LastSelected], -result[0]);
+
+                PreText += "\n\n" + std::string(party.Party[party.LastSelected].Name) + " loses " + std::to_string(result[0]) + " Health Point";
+
+                if (result[0] > 1)
+                {
+                    PreText += "s";
+                }
+
+                PreText += ".";
+            }
+
+            PreText += "\n\nYou watch as the timber plank which 'broke' above you suddenly snaps back into place. Only now, from this position, can you see that the plank is hinged on either side, and is designed to separate when someone puts their weight on it and then reset immediately afterwards. You curse the ingenuity of the trap maker as your companions quickly come to your rescue, bending down to offer you their hands. You scrabble out of the pit.";
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 761}; }
+    };
+
+    class Story209 : public Story::Base
+    {
+    public:
+        Story209()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 209;
+
+            Text = "You return to the excavated cavern dug out by the invading orcs. The short tunnels lead to nothing but dead ends. After giving the chamber one last look, you make your way back up the stairs.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 634}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -6483,13 +6774,25 @@ namespace Book1
     auto story197 = Story197();
     auto story198 = Story198();
     auto story199 = Story199();
+    auto story200 = Story200();
+    auto story201 = Story201();
+    auto story202 = Story202();
+    auto event202 = Event202();
+    auto story203 = Story203();
+    auto story204 = Story204();
+    auto story205 = Story205();
+    auto story206 = Story206();
+    auto story207 = Story207();
+    auto event207 = Event207();
+    auto story208 = Story208();
+    auto story209 = Story209();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
-            &event186, &event188,
+            &event186, &event188, &event202, &event207,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -6509,7 +6812,8 @@ namespace Book1
             &story160, &story161, &story162, &story163, &story164, &story165, &story166, &story167, &story168, &story169,
             &story170, &story171, &story172, &story173, &story174, &story175, &story176, &story177, &story178, &story179,
             &story180, &story181, &story182, &story183, &story184, &story185, &story186, &story187, &story188, &story189,
-            &story190, &story191, &story192, &story193, &story194, &story195, &story196, &story197, &story198, &story199};
+            &story190, &story191, &story192, &story193, &story194, &story195, &story196, &story197, &story198, &story199,
+            &story200, &story201, &story202, &story203, &story204, &story205, &story206, &story207, &story208, &story209};
     }
 }
 #endif
