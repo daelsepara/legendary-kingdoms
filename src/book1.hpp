@@ -5122,6 +5122,198 @@ namespace Book1
         }
     };
 
+    class Story163 : public Story::Base
+    {
+    public:
+        Story163()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 163;
+
+            Text = "Swallowing your fear you crawl out of the tent and approach the strange light. You see it coalesce into a familiar figure. \"Mother...\" you say sadly.\n\n\"Aye, Amelia, it is I,\" responds your mother, her ghostly form wavering before you. \"I have travelled far from the Savage Lands to give you this warning. Beware Ashdain, lord of the third circle. He has fallen under the power of the dark one and is not your friend. Accept no quest or task he might give you.\"\n\n\"But... I have never heard of this man...\" you whisper. \"And who is this dark one you speak of...?\"\n\n\"I have said more than I should,\" responds the ghostly figure. \"Even your father, Baldwin, never treated me as wickedly as Ashdain. Find my bones... then you shall find the answers you seek.\"\n\n\"Where shall I find them?\" you ask desperately. \"Mother! Mother!\"\n\nBut it is too late. Your mother's image fades like moonlight and vanishes into the black sky. You are sobbing as you return to the tent, and your companions comfort you as best they can. If your mother is indeed dead, you will swear a vengeance upon her killer... if the ghost can be trusted.\n\nYou gained the code A49";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(49)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 840}; }
+    };
+
+    class Story164 : public Story::Base
+    {
+    public:
+        Story164()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 164;
+
+            Text = "You are creeping through the shadowy compound, hardly daring to breathe as you tiptoe from one piece of cover to the next. Guards are everywhere!";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Sneak into the kitchen", {Book::Type::BOOK1, 424}));
+            Choices.push_back(Choice::Base("Prowl into the armoury", {Book::Type::BOOK1, 353}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story165 : public Story::Base
+    {
+    public:
+        Story165()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 165;
+
+            Text = "You are in a short corridor that twists to the west. A locked door is set in the nearby western wall. Around the bend the corridor terminates in another door with a large red 'x' painted across it. You try the nearby door but find it securely locked.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Unlock the nearby door using a RUSTY KEY", {Book::Type::BOOK1, 896}, {Equipment::RUSTY_KEY}));
+            Choices.push_back(Choice::Base("Go through the door with red 'x' on it", {Book::Type::BOOK1, 793}));
+            Choices.push_back(Choice::Base("Go back to the long corridor", {Book::Type::BOOK1, 634}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story166 : public Story::Base
+    {
+    public:
+        Engine::Destination destination;
+
+        Story166()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 166;
+
+            Text = "The sand shifts beneath your feet. Bursting from the desert come three giant desert scorpions, each as large as a war hound. The scuttle forwards, their stingers tensing and claws open to catch you.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(1)}) && !Engine::VERIFY_CODES(party, {Codes::A(22)}))
+            {
+                return {Book::Type::BOOK1, 636};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take.clear();
+
+            Limit = 0;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Scorpion", 5, 4, 4, 5, 0),
+                Monster::Base("Scorpion", 4, 4, 4, 4, 0),
+                Monster::Base("Scorpion", 4, 4, 4, 3, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 804}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Take = {Equipment::VIAL_OF_POISON};
+
+                Limit = 1;
+            }
+        }
+    };
+
+    class Story167 : public Story::Base
+    {
+    public:
+        Story167()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 167;
+
+            Text = "You have returned to the funeral chamber of Imopposh the Mad. However, you have already defeated this vile shade and taken his treasures. There is nothing more to be done here.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 115}; }
+    };
+
+    class Story168 : public Story::Base
+    {
+    public:
+        Story168()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 168;
+
+            Text = "With the golems defeated you must decide what to do next.\n\nGain the code A92.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the vault door", {Book::Type::BOOK1, 215}));
+            Choices.push_back(Choice::Base("Check out the room to the south", {Book::Type::BOOK1, 484}));
+            Choices.push_back(Choice::Base("Leave the palace", {Book::Type::BOOK1, 265}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(92)});
+        }
+    };
+
+    class Story169 : public Story::Base
+    {
+    public:
+        Story169()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 169;
+
+            Text = "Your distraction team must divert the guard's attention from their posts at the gatehouses. What tactic do you think is best?";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::COUNT(party.Party, Team::Type::DISTRACTION) > 1)
+            {
+                Choices.push_back(Choice::Base("Start a fight amongst yourselves", {Book::Type::BOOK1, 45}));
+            }
+
+            Choices.push_back(Choice::Base("Attempt to seduce the guards", {Book::Type::BOOK1, 7}));
+            Choices.push_back(Choice::Base("Pretend to be a messenger, and say that their captain needs them urgently", {Book::Type::BOOK1, 875}));
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -5303,6 +5495,13 @@ namespace Book1
     auto event160 = Event160();
     auto story161 = Story161();
     auto story162 = Story162();
+    auto story163 = Story163();
+    auto story164 = Story164();
+    auto story165 = Story165();
+    auto story166 = Story166();
+    auto story167 = Story167();
+    auto story168 = Story168();
+    auto story169 = Story169();
 
     void InitializeStories()
     {
@@ -5325,7 +5524,7 @@ namespace Book1
             &story130, &story131, &story132, &story133, &story134, &story135, &story136, &story137, &story138, &story139,
             &story140, &story141, &story142, &story143, &story144, &story145, &story146, &story147, &story148, &story149,
             &story150, &story151, &story152, &story153, &story154, &story155, &story156, &story157, &story158, &story159,
-            &story160, &story161, &story162};
+            &story160, &story161, &story162, &story163, &story164, &story165, &story166, &story167, &story168, &story169};
     }
 }
 #endif

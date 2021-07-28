@@ -68,7 +68,8 @@ namespace Equipment
         GOLDWAX_CANDLE,
         LIZARD_HIDE,
         IRON_SCEPTRE,
-        CRIER_BIRD
+        CRIER_BIRD,
+        RUSTY_KEY
     };
 
     class Base
@@ -184,6 +185,7 @@ namespace Equipment
     auto LIZARD_HIDE = Equipment::Base("LIZARD HIDE", "LIZARD HIDE", Equipment::Class::NORMAL, Equipment::Type::LIZARD_HIDE, Attribute::Type::NONE, 0, false);
     auto IRON_SCEPTRE = Equipment::Base("IRON SCEPTRE", "IRON SCEPTRE", Equipment::Class::NORMAL, Equipment::Type::IRON_SCEPTRE, Attribute::Type::NONE, 0, false);
     auto CRIER_BIRD = Equipment::Base("CRIER BIRD", "CRIER BIRD", Equipment::Class::NORMAL, Equipment::Type::CRIER_BIRD, Attribute::Type::NONE, 0, false);
+    auto RUSTY_KEY = Equipment::Base("RUSTY KEY", "RUSTY KEY", Equipment::Class::NORMAL, Equipment::Type::RUSTY_KEY, Attribute::Type::NONE, 0, false);
 }
 
 #endif
