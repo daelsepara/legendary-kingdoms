@@ -11923,6 +11923,276 @@ std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::v
     return controls;
 }
 
+bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, int combatRound)
+{
+    bool morale_result = false;
+
+    if (window && renderer)
+    {
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        auto marginx = (int)(Margin * SCREEN_WIDTH);
+
+        auto fullwidth = SCREEN_WIDTH - 2 * marginx;
+
+        auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
+
+        auto headerw = (int)(boxwidth * 0.75);
+
+        auto infoh = (int)(0.07 * SCREEN_HEIGHT);
+
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+
+        auto box_space = 10;
+
+        auto main_buttonh = 48;
+
+        auto done = false;
+
+        auto stage = Engine::MassCombat::START;
+
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Morale Check");
+
+        TTF_Init();
+
+        auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+
+        auto text_space = 8;
+
+        auto font_size = 28;
+
+        const char *choices_morale[1] = {"Check Morale"};
+        const char *choices_end[1] = {"Done"};
+
+        SDL_Surface *dice[6];
+
+        dice[0] = createImage("images/dice/dice1.png");
+        dice[1] = createImage("images/dice/dice2.png");
+        dice[2] = createImage("images/dice/dice3.png");
+        dice[3] = createImage("images/dice/dice4.png");
+        dice[4] = createImage("images/dice/dice5.png");
+        dice[5] = createImage("images/dice/dice6.png");
+
+        auto main_buttonw = 220;
+
+        auto controls_morale = createFixedTextButtons(choices_morale, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+        controls_morale[0].Type = Control::Type::CONFIRM;
+
+        auto controls_end = createFixedTextButtons(choices_end, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+        controls_end[0].Type = Control::Type::BACK;
+
+        auto current = -1;
+
+        auto selected = false;
+
+        auto scrollUp = false;
+
+        auto scrollDown = false;
+
+        auto hold = false;
+
+        auto focus = 0;
+
+        std::vector<int> morale = {};
+
+        int morale_score = 0;
+
+        auto size_dice = 64;
+
+        auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+        auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
+
+        auto controls = std::vector<TextButton>();
+
+        auto morale_checked = false;
+
+        auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
+        auto offsetx = startx + box_space;
+
+        std::string mass_combat = "Round " + std::to_string(combatRound + 1) + " - Morale Check Results ";
+
+        while (!done)
+        {
+            fillWindow(renderer, intWH);
+
+            putHeader(renderer, mass_combat.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + infoh + boxh + box_space);
+
+            fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
+
+            if (stage == Engine::MassCombat::MORALE)
+            {
+                if (morale.size() == 0)
+                {
+                    morale = Engine::ROLL_DICE(1);
+                }
+
+                auto row = 0;
+                auto col = 0;
+
+                morale_score = 0;
+
+                for (auto i = 0; i < morale.size(); i++)
+                {
+                    if (morale[i] >= 1 && morale[i] <= 6)
+                    {
+                        auto result = morale[i] - 1;
+
+                        morale_score += morale[i];
+
+                        fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
+
+                        if (col < cols)
+                        {
+                            col++;
+                        }
+                        else
+                        {
+                            col = 0;
+
+                            row++;
+                        }
+                    }
+                }
+
+                if (!morale_checked)
+                {
+                    if (morale_score <= unit.Morale)
+                    {
+                        Engine::GAIN_MORALE(unit, -1);
+
+                        message = "The " + std::string(unit.Name) + " loses 1 point of Morale!";
+
+                        morale_result = true;
+                    }
+                    else
+                    {
+                        message = "The " + std::string(unit.Name) + " flee!";
+
+                        unit.Position = Location::BattleField::NONE;
+
+                        morale_result = false;
+                    }
+
+                    flash_color = intRD;
+
+                    flash_message = true;
+
+                    start_ticks = SDL_GetTicks();
+
+                    morale_checked = true;
+                }
+            }
+
+            putHeader(renderer, unit.Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+
+            std::string unit_string = "Strength: " + std::to_string(unit.Strength);
+            unit_string += "\nMorale: " + std::to_string(unit.Morale);
+
+            putText(renderer, unit_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+
+            if (stage == Engine::MassCombat::MORALE)
+            {
+                std::string morale_string = "Morale Check: " + std::to_string(morale_score);
+
+                putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+            }
+
+            if (stage == Engine::MassCombat::START)
+            {
+                controls = controls_morale;
+            }
+            else if (stage == Engine::MassCombat::MORALE)
+            {
+                controls = controls_end;
+            }
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+
+            done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if (selected && current >= 0 && current < controls.size())
+            {
+                if (stage == Engine::MassCombat::START && controls[current].Type == Control::Type::BACK)
+                {
+                    done = true;
+
+                    current = -1;
+
+                    selected = false;
+
+                    break;
+                }
+                else if (stage == Engine::MassCombat::START && controls[current].Type == Control::Type::CONFIRM)
+                {
+                    stage = Engine::MassCombat::MORALE;
+                }
+                else if (stage == Engine::MassCombat::MORALE && controls[current].Type == Control::Type::BACK)
+                {
+                    stage = Engine::MassCombat::END;
+
+                    done = true;
+
+                    current = -1;
+
+                    selected = false;
+
+                    break;
+                }
+            }
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        TTF_Quit();
+
+        for (auto i = 0; i < 6; i++)
+        {
+            if (dice[i])
+            {
+                SDL_FreeSurface(dice[i]);
+
+                dice[i] = NULL;
+            }
+        }
+    }
+
+    return morale_result;
+}
+
 void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus, Location::Zone zone, int combatRound)
 {
     if (window && renderer)
@@ -12789,6 +13059,27 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                             if (party_unit >= 0 && party_unit < party.Army.size())
                             {
                                 Engine::GAIN_MORALE(party.Army[party_unit], -1);
+                            }
+                        }
+                        else if (enemy_spell == Spells::MassCombat::ROUT_LEFT_FRONT)
+                        {
+                            auto party_unit = Engine::FIND_UNIT(party.Army, Location::BattleField::LEFT_FLANK_FRONT);
+
+                            if (party_unit >= 0 && party_unit < party.Army.size())
+                            {
+                                auto result = moraleCheck(window, renderer, party.Army[party_unit], combat_round);
+
+                                if (!result)
+                                {
+                                    party.Army[party_unit].Position = Location::BattleField::NONE;
+
+                                    auto next_unit = Engine::FIND_UNIT(party.Army, Location::BattleField::LEFT_FLANK_SUPPORT);
+
+                                    if (next_unit >= 0 && next_unit < party.Army.size())
+                                    {
+                                        party.Army[next_unit].Position = Location::BattleField::LEFT_FLANK_FRONT;
+                                    }
+                                }
                             }
                         }
 
