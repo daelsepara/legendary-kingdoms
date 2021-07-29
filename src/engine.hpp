@@ -1792,7 +1792,10 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            score = std::min(score, Engine::SCORE(party.Party[i], type) && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED));
+            if (!Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            {
+                score = std::min(score, Engine::SCORE(party.Party[i], type));
+            }
         }
 
         return score;
@@ -1804,7 +1807,10 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            score = std::max(score, Engine::SCORE(party.Party[i], type) && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED));
+            if (!Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            {
+                score = std::max(score, Engine::SCORE(party.Party[i], type));
+            }
         }
 
         return score;

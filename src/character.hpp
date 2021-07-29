@@ -94,7 +94,8 @@ namespace Character
         {Character::Status::ENRAGED, "Enraged"},
         {Character::Status::FRONT, "in Front"},
         {Character::Status::BACK, "at the Back"},
-        {Character::Status::POTION_OF_INVULNERABILITY, "Invulnerable"}};
+        {Character::Status::POTION_OF_INVULNERABILITY, "Invulnerable"},
+        {Character::Status::CAPTURED, "Captured"}};
 
     class Base
     {
