@@ -4,6 +4,15 @@
 #include <vector>
 #include <string>
 
+namespace Allies
+{
+    enum class Type
+    {
+        NONE = -1,
+        SLAVES
+    };
+}
+
 namespace Monster
 {
     enum class Type
@@ -16,7 +25,9 @@ namespace Monster
         ZEALOT_HEALER,
         PAPER,
         STONE,
-        ROCK
+        ROCK,
+        ORC,
+        ORC_LEADER
     };
 
     class Base
@@ -37,6 +48,8 @@ namespace Monster
         int Auto = 0;
 
         int Round = 0;
+
+        int Attacks = 1; // default number of attacks
 
         Monster::Type Type = Monster::Type::NORMAL;
 
@@ -80,6 +93,27 @@ namespace Monster
             Auto = damage;
 
             Round = round;
+        }
+
+        Base(const char *name, int attack, int difficulty, int defence, int health, int damage, int round, int attacks)
+        {
+            Name = name;
+
+            Attack = attack;
+
+            Difficulty = difficulty;
+
+            Defence = defence;
+
+            Health = health;
+
+            MaximumHealth = health;
+
+            Auto = damage;
+
+            Round = round;
+
+            Attacks = attacks;
         }
 
         Base(const char *name, Monster::Type type, int attack, int difficulty, int defence, int health, int damage)

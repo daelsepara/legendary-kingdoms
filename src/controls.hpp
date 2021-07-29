@@ -50,6 +50,7 @@ namespace Control
         SKILL,
         TEAM_SKILL,
         ATTACK,
+        DEFEND,
         SPELL,
         SPELL_TARGET,
         SPELLBOOK,

@@ -6553,6 +6553,334 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 634}; }
     };
 
+    class Story210 : public Story::Base
+    {
+    public:
+        Story210()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 210;
+
+            Image = "images/book1/attic_bunkbeds.png";
+
+            Text = "You are standing in a comfortable attic room which contains dozens of bunkbeds. Monkeys sleep in the beds, blankets tucked tight around themselves. A few monkeys are still up, sitting in small chairs, reading books by candlelight. Tiny wardrobes contain robes, turbans and hats. What kind of madhouse is this? The monkeys resolutely ignore you as you make your way across the floor. It seems as if you are free to explore the house. Where will you go?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("To Unbraaki's study", {Book::Type::BOOK1, 659}));
+            Choices.push_back(Choice::Base("To the library", {Book::Type::BOOK1, 459}));
+            Choices.push_back(Choice::Base("To the basement", {Book::Type::BOOK1, 67}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story211 : public Story::Base
+    {
+    public:
+        Story211()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 211;
+
+            Text = "You are in the room with the open coffin. Shattered skeletons surround you.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go through the north door", {Book::Type::BOOK1, 717}));
+            Choices.push_back(Choice::Base("Go through the south door", {Book::Type::BOOK1, 18}));
+            Choices.push_back(Choice::Base("Go through the south-west door", {Book::Type::BOOK1, 127}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story212 : public Story::Base
+    {
+    public:
+        Story212()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 212;
+
+            Text = "Puffing yourselves up, you and your companions put on a brave show before the slaves, shoving them hard and roaring bold threats. This will require a good deal of bravery and force.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Threaten greedy slaves (Team check: Fighting 4+, Successes: 4)", {Book::Type::BOOK1, 526}, {Book::Type::BOOK1, 572}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story213 : public Story::Base
+    {
+    public:
+        Story213()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 213;
+
+            Text = "You draw your weapons and prepare for a mighty battle. You are pleased to see the slaves, who realise that this is their best chance of escape, turn on their masters with their picks and shovels.\n\nNote: The slaves will assist you in this battle. After all your party members have attacked, the slaves will inflict 1 point of Health damage on each orc, except the orc leader -- they are too terrified to strike him!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Orc", Monster::Type::ORC, 4, 4, 4, 9, 0),
+                Monster::Base("Orc", Monster::Type::ORC, 5, 4, 4, 11, 0),
+                Monster::Base("Orc", Monster::Type::ORC, 4, 4, 4, 10, 0),
+                Monster::Base("Orc", Monster::Type::ORC, 3, 4, 4, 10, 0),
+                Monster::Base("Orc", Monster::Type::ORC, 4, 4, 4, 6, 0),
+                Monster::Base("Orc Leader", Monster::Type::ORC_LEADER, 7, 4, 4, 14, 0)};
+
+            Allies = {Allies::Type::SLAVES};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 707}; }
+    };
+
+    class Story214 : public Story::Base
+    {
+    public:
+        Story214()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 214;
+
+            Text = "The Iron King's armies cannot hold off against you. They break and run, scattering into the desert. The Everchild commands the army forward into the city of Saltdad itself. A number of guards and priests of Cursus attempt to stand in your army's way, and the battle dissolves into furious street fight between your forces. Incredibly, despite your overwhelming victory on the field, it looks like the Iron King might be able to hold you off until the desert night freezes your troops away.\n\nThe deadlock has to be broken! Leaving the Everchild in charge of the army you break through the lines to storm the palace itself. Kicking open the door to the throne room you can see the Iron King in his full battle regalia, waiting with his elite guards.\n\n\"Foreign devils!\" he spits, still proudly wearing his jagged crown. \"This city is mine! I'll not hand over the reins of power to a child!\"\n\nHe grimly advances. The final battle for Saltdad has begun!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters.clear();
+
+            Monsters.push_back(Monster::Base("The Iron King", 6, 4, 4, 15, 0));
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(13)}))
+            {
+                Monsters.push_back(Monster::Base("Malronac the Deathengine", 6, 3, 4, 30, 0, 0, 2));
+            }
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(8)}))
+            {
+                Monsters.push_back(Monster::Base("Bronzeguard", 9, 4, 5, 12, 0));
+            }
+
+            Monsters.push_back(Monster::Base("Sgt. Kheller", 5, 4, 4, 7, 0));
+            Monsters.push_back(Monster::Base("Sgt. Tacitus", 5, 4, 4, 6, 0));
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 309}; }
+    };
+
+    class Story215 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story215()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 215;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You look over the vault door. As you surmised there appears to be no way to open it. Without a key or a handle, the vault seems inaccessible.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(43)}))
+            {
+                PreText += " Perhaps you can find an expert to help you with the vault door?\n\nYou gained the code A11.";
+
+                Engine::GET_CODES(party, {Codes::A(11)});
+
+                Choices.push_back(Choice::Base("Check out the room to the south", {Book::Type::BOOK1, 484}));
+                Choices.push_back(Choice::Base("Leave the palace", {Book::Type::BOOK1, 265}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(93)}))
+            {
+                return {Book::Type::BOOK1, 348};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(12)}))
+            {
+                return {Book::Type::BOOK1, 258};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 293}; }
+    };
+
+    class Story216 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story216()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 216;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You make your way under the city to see Brekken, the leader of the thieves' gang you encountered in the tunnels beneath the arena. He is pleased to see you again and celebrates the occasion by opening a bottle of wine.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(10)}))
+            {
+                PreText += "\n\n\"It was quite a feat, you sneaking out of the Saltdad Arena like that,\" muses Brekken over a glass of white wine. \"It's a shame to waste such talents merely on matters of survival. Perhaps you'd be willing to do a little wealth redistribution? Namely, from the silver stores of a rich man into the pockets of the poor -- in other words, us?\"\n\n\"What's the job?\" you ask neutrally.\n\n\"The city jeweller, Chellar, a former chancellor of the Iron King,\" says Brekken. \"He's as rich as a king himself. We go in, grab everything we can, and get out. Of course, his brother is a sorcerer, so they say the whole place is protected by magical defences. That's where you come in. You help us deal with the magic, and we'll help get through the more mundane protections, like locks and stubborn guards. We split the rewards fifty-fifty. Deal?\"";
+
+                Engine::GET_CODES(party, {Codes::A(11)});
+
+                Choices.push_back(Choice::Base("Agree to the heist", {Book::Type::BOOK1, 617}));
+                Choices.push_back(Choice::Base("Politely decline", {Book::Type::BOOK1, 75}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 663}; }
+    };
+
+    class Story217 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story217()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 217;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You continue down the tunnel for a while before it ends at a rather grand door with a strange, three-pronged lock set in its centre. The door is solidly constructed and will not budge an inch, nor is the lock something that can be easily picked.";
+
+            Bye = NULL;
+
+            if (!Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::PYRAMIDAL_KEY}))
+            {
+                Bye = "There is nothing else for you to do here, so you return to the crossroads.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::PYRAMIDAL_KEY}))
+            {
+                return {Book::Type::BOOK1, 102};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 46};
+            }
+        }
+    };
+
+    class Story218 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story218()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 218;
+
+            Bye = "Sadly, there is now no chance of recovering the idol. Accepting your failure lightly, you decide to return to the Chalice temple and face your fate.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You sit upon the ledge side, on a small outcropping of rock, crossing your legs and calming your breathing. In the distance Yu Yan looks at you with amazement, before slipping away into the dusk.\n\nYou gaze out into the beautiful landscape, considering the perfect arrangement of the world before you. Sky, water, rock and sand lay in harmony with each other. All is still, with the setting sun casting the sky into scarlet. Soon the stars emerge, one by one, until a celestial sea revolves around your head, adding the heavens into a mix of perfect symmetry. As you gaze upon the sight, abandoning your quest for the idol, the weight of failure seems to lift from you. Your thoughts enter balance, and suddenly your ambitions seem as weightless as the air.";
+
+            if (!Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::PYRAMIDAL_KEY}))
+            {
+                auto result = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
+
+                if (result >= 0 && result < party.Party.size() && party.Party[result].Health > 0)
+                {
+                    PreText += "\n\nAkihiro has achieved Enlightenment. Akihiro can gains 1 point of Lore.";
+
+                    Engine::GAIN_SCORE(party.Party[result], Attribute::Type::LORE, 1);
+                }
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 856}; }
+    };
+
+    class Story219 : public Story::Base
+    {
+    public:
+        Story219()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 219;
+
+            Text = "Where do you wish to go from here?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Continue west along the road", {Book::Type::BOOK1, 12}));
+            Choices.push_back(Choice::Base("South, towards the Blackwall", {Book::Type::BOOK1, 691}));
+            Choices.push_back(Choice::Base("North-west into The Salt Plains", {Book::Type::BOOK1, 460}));
+            Choices.push_back(Choice::Base("East, to Saltdad", {Book::Type::BOOK1, 75}));
+            Choices.push_back(Choice::Base("South-west, to the Tumblestones", {Book::Type::BOOK1, 137}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -6786,6 +7114,16 @@ namespace Book1
     auto event207 = Event207();
     auto story208 = Story208();
     auto story209 = Story209();
+    auto story210 = Story210();
+    auto story211 = Story211();
+    auto story212 = Story212();
+    auto story213 = Story213();
+    auto story214 = Story214();
+    auto story215 = Story215();
+    auto story216 = Story216();
+    auto story217 = Story217();
+    auto story218 = Story218();
+    auto story219 = Story219();
 
     void InitializeStories()
     {
@@ -6813,7 +7151,8 @@ namespace Book1
             &story170, &story171, &story172, &story173, &story174, &story175, &story176, &story177, &story178, &story179,
             &story180, &story181, &story182, &story183, &story184, &story185, &story186, &story187, &story188, &story189,
             &story190, &story191, &story192, &story193, &story194, &story195, &story196, &story197, &story198, &story199,
-            &story200, &story201, &story202, &story203, &story204, &story205, &story206, &story207, &story208, &story209};
+            &story200, &story201, &story202, &story203, &story204, &story205, &story206, &story207, &story208, &story209,
+            &story210, &story211, &story212, &story213, &story214, &story215, &story216, &story217, &story218, &story219};
     }
 }
 #endif

@@ -71,7 +71,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
 Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
 
-Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, bool canFlee, int fleeRound, bool useEquipment);
+Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool canFlee, int fleeRound, bool useEquipment);
 Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus);
 
 Story::Base *findStory(Engine::Destination destination);
@@ -1354,7 +1354,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         auto text_space = 8;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -3278,6 +3278,87 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
     return controls;
 }
 
+std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> monsters, int start, int last, int limit, int offsetx, int offsety, Control::Type mode)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (monsters.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto monster = monsters[index];
+
+            std::string monster_string = "";
+
+            monster_string += monster.Name;
+
+            monster_string += "\nAttack: " + std::to_string(monster.Attack) + " (" + std::to_string(monster.Difficulty) + "+)";
+
+            if (monster.Auto > 0)
+            {
+                monster_string += " +" + std::to_string(monster.Auto) + " Auto";
+            }
+
+            monster_string += ", Defense: " + std::to_string(monster.Defence) + "+, Health: " + std::to_string(monster.Health);
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (monsters.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (monsters.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
+
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "VIEW PARTY", clrWH, intDB, 220, 48, -1), idx, idx + 1, monsters.size() > 0 ? idx - 1 : idx, idx, startx, text_y, Control::Type::PARTY));
+
+    if (mode == Control::Type::ATTACK)
+    {
+        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "ATTACK", clrWH, intDB, 220, 48, -1), idx, idx + 2, monsters.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::ATTACK));
+    }
+    else if (mode == Control::Type::DEFEND)
+    {
+        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "DEFEND", clrWH, intDB, 220, 48, -1), idx, idx + 2, monsters.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::ATTACK));
+    }
+    else if (mode == Control::Type::NEXT)
+    {
+        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "NEXT ROUND", clrWH, intDB, 220, 48, -1), idx, idx + 2, monsters.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::ATTACK));
+    }
+
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, monsters.size() > 0 ? idx - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::SPELL));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, monsters.size() > 0 ? idx - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::FLEE));
+
+    return controls;
+}
+
 std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> party, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button)
 {
     auto controls = std::vector<Button>();
@@ -3670,7 +3751,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Party.size())
@@ -4199,527 +4280,243 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 {
     auto combat_damage = 0;
 
-    if (Engine::COUNT(party.Party) > 0 && Engine::COUNT(monsters) > 0)
+    auto attacks = direction == 0 ? 1 : monsters[opponent].Attacks;
+
+    std::vector<int> target_damage = {};
+
+    for (auto num_attacks = 0; num_attacks < attacks; num_attacks++)
     {
-        if (window && renderer)
+        if (Engine::COUNT(party.Party) > 0 && Engine::COUNT(monsters) > 0)
         {
-            auto flash_message = false;
-
-            auto flash_color = intRD;
-
-            std::string message = "";
-
-            Uint32 start_ticks = 0;
-
-            Uint32 duration = 3000;
-
-            auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-            auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
-            auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
-
-            auto headerw = (int)(boxwidth * 0.75);
-
-            auto infoh = 48;
-
-            auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-
-            auto box_space = 10;
-
-            auto main_buttonh = 48;
-
-            auto done = false;
-
-            auto stage = Engine::Attack::START;
-
-            SDL_SetWindowTitle(window, "Legendary Kingdoms: Attack");
-
-            TTF_Init();
-
-            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
-
-            auto text_space = 8;
-
-            auto font_size = 24;
-
-            const char *choices_attack[4] = {"Attack", "Add Focus", "Remove Focus", "Cancel"};
-            const char *choices_defend[1] = {"Attack"};
-            const char *choices_damage[1] = {"Deal Damage"};
-            const char *choices_end[1] = {"Done"};
-            const char *choices_assign[1] = {"Assign"};
-
-            SDL_Surface *dice[6];
-
-            dice[0] = createImage("images/dice/dice1.png");
-            dice[1] = createImage("images/dice/dice2.png");
-            dice[2] = createImage("images/dice/dice3.png");
-            dice[3] = createImage("images/dice/dice4.png");
-            dice[4] = createImage("images/dice/dice5.png");
-            dice[5] = createImage("images/dice/dice6.png");
-
-            auto main_buttonw = 220;
-
-            auto controls_attack = createFixedTextButtons(choices_attack, 4, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
-            controls_attack[0].Type = Control::Type::CONFIRM;
-            controls_attack[1].Type = Control::Type::PLUS;
-            controls_attack[2].Type = Control::Type::MINUS;
-            controls_attack[3].Type = Control::Type::BACK;
-
-            auto controls_defend = createFixedTextButtons(choices_defend, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
-            controls_defend[0].Type = Control::Type::CONFIRM;
-
-            auto controls_damage = createFixedTextButtons(choices_damage, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
-            controls_damage[0].Type = Control::Type::CONFIRM;
-
-            auto controls_end = createFixedTextButtons(choices_end, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
-            controls_end[0].Type = Control::Type::BACK;
-
-            auto controls_assign = createFixedTextButtons(choices_assign, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
-            controls_assign[0].Type = Control::Type::CONFIRM;
-
-            auto current = -1;
-
-            auto selected = false;
-
-            auto scrollUp = false;
-
-            auto scrollDown = false;
-
-            auto hold = false;
-
-            auto focus = 0;
-
-            std::vector<int> results = {};
-
-            auto attack_score = 1;
-
-            auto size_dice = 64;
-
-            auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
-            auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
-
-            auto controls = std::vector<TextButton>();
-
-            auto damaged = false;
-            auto assigned = false;
-
-            auto special_event_trigger = true;
-
-            while (!done)
+            if (window && renderer)
             {
-                fillWindow(renderer, intWH);
+                auto flash_message = false;
 
-                putHeader(renderer, "Attack Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                auto flash_color = intRD;
 
-                fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
+                std::string message = "";
 
-                if (stage != Engine::Attack::START)
+                Uint32 start_ticks = 0;
+
+                Uint32 duration = 3000;
+
+                auto marginx = (int)(Margin * SCREEN_WIDTH);
+
+                auto fullwidth = SCREEN_WIDTH - 2 * marginx;
+
+                auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
+
+                auto headerw = (int)(boxwidth * 0.75);
+
+                auto infoh = 48;
+
+                auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+
+                auto box_space = 10;
+
+                auto main_buttonh = 48;
+
+                auto done = false;
+
+                auto stage = Engine::Attack::START;
+
+                SDL_SetWindowTitle(window, "Legendary Kingdoms: Attack");
+
+                TTF_Init();
+
+                auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+
+                auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
+
+                auto text_space = 8;
+
+                auto font_size = 24;
+
+                const char *choices_attack[4] = {"Attack", "Add Focus", "Remove Focus", "Cancel"};
+                const char *choices_defend[1] = {"Attack"};
+                const char *choices_damage[1] = {"Deal Damage"};
+                const char *choices_end[1] = {"Done"};
+                const char *choices_assign[1] = {"Assign"};
+
+                SDL_Surface *dice[6];
+
+                dice[0] = createImage("images/dice/dice1.png");
+                dice[1] = createImage("images/dice/dice2.png");
+                dice[2] = createImage("images/dice/dice3.png");
+                dice[3] = createImage("images/dice/dice4.png");
+                dice[4] = createImage("images/dice/dice5.png");
+                dice[5] = createImage("images/dice/dice6.png");
+
+                auto main_buttonw = 220;
+
+                auto controls_attack = createFixedTextButtons(choices_attack, 4, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                controls_attack[0].Type = Control::Type::CONFIRM;
+                controls_attack[1].Type = Control::Type::PLUS;
+                controls_attack[2].Type = Control::Type::MINUS;
+                controls_attack[3].Type = Control::Type::BACK;
+
+                auto controls_defend = createFixedTextButtons(choices_defend, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                controls_defend[0].Type = Control::Type::CONFIRM;
+
+                auto controls_damage = createFixedTextButtons(choices_damage, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                controls_damage[0].Type = Control::Type::CONFIRM;
+
+                auto controls_end = createFixedTextButtons(choices_end, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                controls_end[0].Type = Control::Type::BACK;
+
+                auto controls_assign = createFixedTextButtons(choices_assign, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                controls_assign[0].Type = Control::Type::CONFIRM;
+
+                auto current = -1;
+
+                auto selected = false;
+
+                auto scrollUp = false;
+
+                auto scrollDown = false;
+
+                auto hold = false;
+
+                auto focus = 0;
+
+                std::vector<int> results = {};
+
+                auto attack_score = 1;
+
+                auto size_dice = 64;
+
+                auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+                auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
+
+                auto controls = std::vector<TextButton>();
+
+                auto damaged = false;
+                auto assigned = false;
+
+                auto special_event_trigger = true;
+
+                while (!done)
                 {
-                    if (stage == Engine::Attack::ATTACK)
+                    fillWindow(renderer, intWH);
+
+                    putHeader(renderer, "Attack Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+
+                    fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
+
+                    if (stage != Engine::Attack::START)
                     {
-                        if (results.size() == 0)
+                        if (stage == Engine::Attack::ATTACK)
                         {
-                            results = Engine::ROLL_DICE(attack_score);
+                            if (results.size() == 0)
+                            {
+                                results = Engine::ROLL_DICE(attack_score);
+                            }
                         }
-                    }
 
-                    auto row = 0;
-                    auto col = 0;
+                        auto row = 0;
+                        auto col = 0;
 
-                    auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
-                    auto offsetx = startx + box_space;
+                        auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
+                        auto offsetx = startx + box_space;
 
-                    int damage = 0;
+                        int damage = 0;
 
-                    for (auto i = 0; i < results.size(); i++)
-                    {
-                        if (results[i] >= 1 && results[i] <= 6)
+                        for (auto i = 0; i < results.size(); i++)
                         {
-                            auto result = results[i] - 1;
+                            if (results[i] >= 1 && results[i] <= 6)
+                            {
+                                auto result = results[i] - 1;
 
-                            fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
+                                fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
 
-                            if (stage == Engine::Attack::DAMAGE)
+                                if (stage == Engine::Attack::DAMAGE)
+                                {
+                                    if (direction == 0)
+                                    {
+                                        if (results[i] >= monsters[opponent].Defence)
+                                        {
+                                            thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
+
+                                            damage++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (results[i] >= monsters[opponent].Difficulty)
+                                        {
+                                            thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intRD, 2);
+
+                                            damage++;
+                                        }
+                                    }
+                                }
+
+                                if (col < cols)
+                                {
+                                    col++;
+                                }
+                                else
+                                {
+                                    col = 0;
+
+                                    row++;
+                                }
+                            }
+                        }
+
+                        if (direction == 1)
+                        {
+                            damage += monsters[opponent].Auto;
+                        }
+
+                        if (stage == Engine::Attack::DAMAGE)
+                        {
+                            if (!damaged)
                             {
                                 if (direction == 0)
                                 {
-                                    if (results[i] >= monsters[opponent].Defence)
+                                    auto damage_scale = 1;
+
+                                    auto weapon_used = Engine::FIND_EQUIPMENT(party.Party[combatant], Equipment::Class::WEAPON, Attribute::Type::FIGHTING);
+
+                                    if (weapon_used >= 0 && weapon_used < party.Party[combatant].Equipment.size() && party.Party[combatant].Equipment[weapon_used].Type == Equipment::Type::STONECUTTER_SWORD2)
                                     {
-                                        thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
-
-                                        damage++;
+                                        if (monsters[opponent].Type == Monster::Type::ROCK || monsters[opponent].Type == Monster::Type::STONE)
+                                        {
+                                            damage_scale = 2;
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    if (results[i] >= monsters[opponent].Difficulty)
-                                    {
-                                        thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intRD, 2);
 
-                                        damage++;
-                                    }
-                                }
-                            }
+                                    Engine::GAIN_HEALTH(monsters[opponent], -(damage_scale * damage));
 
-                            if (col < cols)
-                            {
-                                col++;
-                            }
-                            else
-                            {
-                                col = 0;
-
-                                row++;
-                            }
-                        }
-                    }
-
-                    if (direction == 1)
-                    {
-                        damage += monsters[opponent].Auto;
-                    }
-
-                    if (stage == Engine::Attack::DAMAGE)
-                    {
-                        if (!damaged)
-                        {
-                            if (direction == 0)
-                            {
-                                auto damage_scale = 1;
-
-                                auto weapon_used = Engine::FIND_EQUIPMENT(party.Party[combatant], Equipment::Class::WEAPON, Attribute::Type::FIGHTING);
-
-                                if (weapon_used >= 0 && weapon_used < party.Party[combatant].Equipment.size() && party.Party[combatant].Equipment[weapon_used].Type == Equipment::Type::STONECUTTER_SWORD2)
-                                {
-                                    if (monsters[opponent].Type == Monster::Type::ROCK || monsters[opponent].Type == Monster::Type::STONE)
-                                    {
-                                        damage_scale = 2;
-                                    }
-                                }
-
-                                Engine::GAIN_HEALTH(monsters[opponent], -(damage_scale * damage));
-
-                                combat_damage = damage_scale * damage;
-
-                                flash_message = true;
-
-                                if (damage_scale * damage > 0)
-                                {
-                                    monsters[opponent].Damaged = true;
-
-                                    message = std::string(party.Party[combatant].Name) + " DEALS " + std::to_string(damage_scale * damage) + " to the " + std::string(monsters[opponent].Name) + "!";
-
-                                    flash_color = intLB;
-                                }
-                                else
-                                {
-                                    message = std::string(party.Party[combatant].Name) + "'s ATTACK was INEFFECTIVE!";
-
-                                    flash_color = intRD;
-                                }
-
-                                start_ticks = SDL_GetTicks();
-                            }
-                            else
-                            {
-                                combat_damage = damage;
-
-                                if (combat_damage > 0)
-                                {
-                                    message = std::string(monsters[opponent].Name) + " DEALS " + std::to_string(damage) + " to the party!";
-
-                                    start_ticks = SDL_GetTicks();
+                                    combat_damage = damage_scale * damage;
 
                                     flash_message = true;
 
-                                    flash_color = intRD;
-                                }
-                                else
-                                {
-                                    message = "The " + std::string(monsters[opponent].Name) + "'s attack was INEFFECTIVE!";
+                                    if (damage_scale * damage > 0)
+                                    {
+                                        monsters[opponent].Damaged = true;
+
+                                        message = std::string(party.Party[combatant].Name) + " DEALS " + std::to_string(damage_scale * damage) + " to the " + std::string(monsters[opponent].Name) + "!";
+
+                                        flash_color = intLB;
+                                    }
+                                    else
+                                    {
+                                        message = std::string(party.Party[combatant].Name) + "'s ATTACK was INEFFECTIVE!";
+
+                                        flash_color = intRD;
+                                    }
 
                                     start_ticks = SDL_GetTicks();
-
-                                    flash_message = true;
-
-                                    flash_color = intRD;
-
-                                    assigned = true;
-                                }
-                            }
-
-                            damaged = true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (direction == 1 && special_event_trigger)
-                    {
-                        if (monsters[opponent].Type == Monster::Type::SKALLOS && !monsters[opponent].Damaged)
-                        {
-                            flash_message = true;
-
-                            flash_color = intRD;
-
-                            message = "Skallos unleashes a roar of black magic! Each party member LOSES 1 Health. Skallos RECOVERS 4 Health Points!";
-
-                            start_ticks = SDL_GetTicks();
-
-                            Engine::GAIN_HEALTH(party.Party, -1);
-
-                            Engine::GAIN_HEALTH(monsters[opponent], 4);
-                        }
-                        else if (monsters[opponent].Type == Monster::Type::SNAKEMAN_PRIEST || monsters[opponent].Type == Monster::Type::SNAKEMAN)
-                        {
-                            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::HYGLIPH_FLOWER}))
-                            {
-                                flash_message = true;
-
-                                flash_color = intRD;
-
-                                message = "The priest is put off by the pungent odour of the HYGLIPH FLOWER and requires a 5+ to his attack rolls to inflict damage during this battle.";
-
-                                start_ticks = SDL_GetTicks();
-
-                                monsters[opponent].Difficulty = 5;
-                            }
-                        }
-
-                        special_event_trigger = false;
-                    }
-                }
-
-                std::string attacker_string = "";
-
-                fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
-
-                if (direction == 0)
-                {
-                    putHeader(renderer, party.Party[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
-
-                    auto score = 1;
-
-                    if (useEquipment)
-                    {
-                        score = Engine::FIGHTING_SCORE(party.Party[combatant]);
-                    }
-                    else
-                    {
-                        score = Engine::SCORE(party.Party[combatant], Attribute::Type::FIGHTING);
-                    }
-
-                    attacker_string = "Fighting: " + std::to_string(score);
-                    attacker_string += "\nHealth: " + std::to_string(party.Party[combatant].Health);
-
-                    attack_score = score;
-                }
-                else
-                {
-                    putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
-
-                    attacker_string = "Attack: " + std::to_string(monsters[opponent].Attack) + " (" + std::to_string(monsters[opponent].Difficulty) + "+)";
-
-                    if (monsters[opponent].Auto > 0)
-                    {
-                        attacker_string += " +" + std::to_string(monsters[opponent].Auto) + " Auto";
-                    }
-
-                    attacker_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
-
-                    attack_score = monsters[opponent].Attack;
-                }
-
-                putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
-
-                std::string defender_string = "";
-
-                if (direction == 0)
-                {
-                    putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
-                    defender_string = "Defence: " + std::to_string(monsters[opponent].Defence) + "+";
-                    defender_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
-                }
-                else
-                {
-                    if (combatant == -1)
-                    {
-                        putHeader(renderer, "To be determined", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
-                    }
-                    else
-                    {
-                        putHeader(renderer, party.Party[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
-                        defender_string = "Health: " + std::to_string(party.Party[combatant].Health);
-                    }
-                }
-
-                fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
-
-                putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
-
-                if (stage == Engine::Attack::START)
-                {
-                    if (direction == 0)
-                    {
-                        controls = controls_attack;
-                    }
-                    else
-                    {
-                        controls = controls_defend;
-                    }
-                }
-                else if (stage == Engine::Attack::ATTACK)
-                {
-                    controls = controls_damage;
-                }
-                else if (stage == Engine::Attack::DAMAGE)
-                {
-                    if (direction == 0)
-                    {
-                        controls = controls_end;
-                    }
-                    else
-                    {
-                        if (!assigned)
-                        {
-                            controls = controls_assign;
-                        }
-                        else
-                        {
-                            controls = controls_end;
-                        }
-                    }
-                }
-
-                if (flash_message)
-                {
-                    if ((SDL_GetTicks() - start_ticks) < duration)
-                    {
-                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
-                    }
-                    else
-                    {
-                        flash_message = false;
-                    }
-                }
-
-                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
-
-                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
-
-                if (selected && current >= 0 && current < controls.size())
-                {
-                    if (stage == Engine::Attack::START && controls[current].Type == Control::Type::BACK)
-                    {
-                        done = true;
-
-                        current = -1;
-
-                        selected = false;
-
-                        combat_damage = -1;
-
-                        break;
-                    }
-                    else if (stage == Engine::Attack::START && controls[current].Type == Control::Type::CONFIRM)
-                    {
-                        stage = Engine::Attack::ATTACK;
-                    }
-                    else if (stage == Engine::Attack::ATTACK && controls[current].Type == Control::Type::CONFIRM)
-                    {
-                        stage = Engine::Attack::DAMAGE;
-                    }
-                    else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::BACK)
-                    {
-                        stage = Engine::Attack::END;
-
-                        done = true;
-
-                        current = -1;
-
-                        selected = false;
-
-                        break;
-                    }
-                    else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::CONFIRM)
-                    {
-                        if (Engine::COUNT(party.Party, team) > 0)
-                        {
-                            if (combat_damage > 0)
-                            {
-                                auto result = -1;
-
-                                if (Engine::COUNT(party.Party, team) == 1)
-                                {
-                                    if (team != Team::Type::NONE)
-                                    {
-                                        result = Engine::FIRST(party, team);
-                                    }
-                                    else
-                                    {
-                                        result = Engine::FIRST(party);
-                                    }
                                 }
                                 else
                                 {
-                                    result = assignDamage(window, renderer, party, team);
-                                }
+                                    combat_damage = damage;
 
-                                if (result >= 0 && result < party.Party.size())
-                                {
-                                    if (party.Party[result].Health > 0)
+                                    if (combat_damage > 0)
                                     {
-                                        assigned = true;
-
-                                        if (Engine::HAS_STATUS(party.Party[result], Character::Status::POTION_OF_INVULNERABILITY))
-                                        {
-                                            message = std::string(party.Party[result].Name) + "'s Invulnerability cancels the damage!";
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_message = true;
-
-                                            flash_color = intLB;
-
-                                            Engine::REMOVE_STATUS(party.Party[result], Character::Status::POTION_OF_INVULNERABILITY);
-
-                                            combat_damage = 0;
-                                        }
-                                        else if (Engine::ARMOUR(party.Party[result]) > 0 && monsters[opponent].Type != Monster::Type::PAPER)
-                                        {
-                                            auto reduced_damage = armourSave(window, renderer, party.Party[result], combat_damage);
-
-                                            combat_damage = std::max(0, reduced_damage);
-
-                                            done = true;
-
-                                            selected = false;
-
-                                            current = -1;
-
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            message = std::string(party.Party[result].Name) + " DEALT " + std::to_string(combat_damage) + " DAMAGE!";
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_message = true;
-
-                                            flash_color = intRD;
-
-                                            Engine::GAIN_HEALTH(party.Party[result], -combat_damage);
-
-                                            combat_damage = result;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        message = std::string(party.Party[result].Name) + " is already DEAD!";
+                                        message = std::string(monsters[opponent].Name) + " DEALS " + std::to_string(damage) + " to the party!";
 
                                         start_ticks = SDL_GetTicks();
 
@@ -4727,63 +4524,371 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                         flash_color = intRD;
                                     }
+                                    else
+                                    {
+                                        message = "The " + std::string(monsters[opponent].Name) + "'s attack was INEFFECTIVE!";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_message = true;
+
+                                        flash_color = intRD;
+
+                                        assigned = true;
+                                    }
+                                }
+
+                                damaged = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (direction == 1 && special_event_trigger)
+                        {
+                            if (monsters[opponent].Type == Monster::Type::SKALLOS && !monsters[opponent].Damaged)
+                            {
+                                flash_message = true;
+
+                                flash_color = intRD;
+
+                                message = "Skallos unleashes a roar of black magic! Each party member LOSES 1 Health. Skallos RECOVERS 4 Health Points!";
+
+                                start_ticks = SDL_GetTicks();
+
+                                Engine::GAIN_HEALTH(party.Party, -1);
+
+                                Engine::GAIN_HEALTH(monsters[opponent], 4);
+                            }
+                            else if (monsters[opponent].Type == Monster::Type::SNAKEMAN_PRIEST || monsters[opponent].Type == Monster::Type::SNAKEMAN)
+                            {
+                                if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::HYGLIPH_FLOWER}))
+                                {
+                                    flash_message = true;
+
+                                    flash_color = intRD;
+
+                                    message = "The priest is put off by the pungent odour of the HYGLIPH FLOWER and requires a 5+ to his attack rolls to inflict damage during this battle.";
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    monsters[opponent].Difficulty = 5;
+                                }
+                            }
+
+                            special_event_trigger = false;
+                        }
+                    }
+
+                    std::string attacker_string = "";
+
+                    fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
+
+                    if (direction == 0)
+                    {
+                        putHeader(renderer, party.Party[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+
+                        auto score = 1;
+
+                        if (useEquipment)
+                        {
+                            score = Engine::FIGHTING_SCORE(party.Party[combatant]);
+                        }
+                        else
+                        {
+                            score = Engine::SCORE(party.Party[combatant], Attribute::Type::FIGHTING);
+                        }
+
+                        attacker_string = "Fighting: " + std::to_string(score);
+                        attacker_string += "\nHealth: " + std::to_string(party.Party[combatant].Health);
+
+                        attack_score = score;
+                    }
+                    else
+                    {
+                        putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+
+                        attacker_string = "Attack: " + std::to_string(monsters[opponent].Attack) + " (" + std::to_string(monsters[opponent].Difficulty) + "+)";
+
+                        if (monsters[opponent].Auto > 0)
+                        {
+                            attacker_string += " +" + std::to_string(monsters[opponent].Auto) + " Auto";
+                        }
+
+                        attacker_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
+
+                        attack_score = monsters[opponent].Attack;
+                    }
+
+                    putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+
+                    std::string defender_string = "";
+
+                    if (direction == 0)
+                    {
+                        putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        defender_string = "Defence: " + std::to_string(monsters[opponent].Defence) + "+";
+                        defender_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
+                    }
+                    else
+                    {
+                        if (combatant == -1)
+                        {
+                            putHeader(renderer, "To be determined", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        }
+                        else
+                        {
+                            putHeader(renderer, party.Party[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                            defender_string = "Health: " + std::to_string(party.Party[combatant].Health);
+                        }
+                    }
+
+                    fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
+
+                    putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+
+                    if (stage == Engine::Attack::START)
+                    {
+                        if (direction == 0)
+                        {
+                            controls = controls_attack;
+                        }
+                        else
+                        {
+                            controls = controls_defend;
+                        }
+                    }
+                    else if (stage == Engine::Attack::ATTACK)
+                    {
+                        controls = controls_damage;
+                    }
+                    else if (stage == Engine::Attack::DAMAGE)
+                    {
+                        if (direction == 0)
+                        {
+                            controls = controls_end;
+                        }
+                        else
+                        {
+                            if (!assigned)
+                            {
+                                controls = controls_assign;
+                            }
+                            else
+                            {
+                                controls = controls_end;
+                            }
+                        }
+                    }
+
+                    if (flash_message)
+                    {
+                        if ((SDL_GetTicks() - start_ticks) < duration)
+                        {
+                            putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        }
+                        else
+                        {
+                            flash_message = false;
+                        }
+                    }
+
+                    renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+
+                    done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                    if (selected && current >= 0 && current < controls.size())
+                    {
+                        if (stage == Engine::Attack::START && controls[current].Type == Control::Type::BACK)
+                        {
+                            done = true;
+
+                            current = -1;
+
+                            selected = false;
+
+                            combat_damage = -1;
+
+                            break;
+                        }
+                        else if (stage == Engine::Attack::START && controls[current].Type == Control::Type::CONFIRM)
+                        {
+                            stage = Engine::Attack::ATTACK;
+                        }
+                        else if (stage == Engine::Attack::ATTACK && controls[current].Type == Control::Type::CONFIRM)
+                        {
+                            stage = Engine::Attack::DAMAGE;
+                        }
+                        else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::BACK)
+                        {
+                            stage = Engine::Attack::END;
+
+                            done = true;
+
+                            current = -1;
+
+                            selected = false;
+
+                            break;
+                        }
+                        else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::CONFIRM)
+                        {
+                            if (Engine::COUNT(party.Party, team) > 0)
+                            {
+                                if (combat_damage > 0)
+                                {
+                                    auto result = -1;
+
+                                    if (Engine::COUNT(party.Party, team) == 1)
+                                    {
+                                        if (team != Team::Type::NONE)
+                                        {
+                                            result = Engine::FIRST(party, team);
+                                        }
+                                        else
+                                        {
+                                            result = Engine::FIRST(party);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        result = assignDamage(window, renderer, party, team);
+                                    }
+
+                                    if (result >= 0 && result < party.Party.size())
+                                    {
+                                        if (party.Party[result].Health > 0)
+                                        {
+                                            if (Engine::FIND_LIST(target_damage, result) < 0)
+                                            {
+                                                assigned = true;
+
+                                                target_damage.push_back(result);
+
+                                                if (Engine::HAS_STATUS(party.Party[result], Character::Status::POTION_OF_INVULNERABILITY))
+                                                {
+                                                    message = std::string(party.Party[result].Name) + "'s Invulnerability cancels the damage!";
+
+                                                    start_ticks = SDL_GetTicks();
+
+                                                    flash_message = true;
+
+                                                    flash_color = intLB;
+
+                                                    Engine::REMOVE_STATUS(party.Party[result], Character::Status::POTION_OF_INVULNERABILITY);
+
+                                                    combat_damage = 0;
+                                                }
+                                                else if (Engine::ARMOUR(party.Party[result]) > 0 && monsters[opponent].Type != Monster::Type::PAPER)
+                                                {
+                                                    auto reduced_damage = armourSave(window, renderer, party.Party[result], combat_damage);
+
+                                                    combat_damage = std::max(0, reduced_damage);
+
+                                                    done = true;
+
+                                                    selected = false;
+
+                                                    current = -1;
+
+                                                    break;
+                                                }
+                                                else
+                                                {
+                                                    message = std::string(party.Party[result].Name) + " DEALT " + std::to_string(combat_damage) + " DAMAGE!";
+
+                                                    start_ticks = SDL_GetTicks();
+
+                                                    flash_message = true;
+
+                                                    flash_color = intRD;
+
+                                                    Engine::GAIN_HEALTH(party.Party[result], -combat_damage);
+
+                                                    combat_damage = result;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (attacks < Engine::COUNT(party.Party, team))
+                                                {
+                                                    message = std::string(party.Party[result].Name) + " was already assigned damage. Please choose another target.";
+
+                                                    start_ticks = SDL_GetTicks();
+
+                                                    flash_message = true;
+
+                                                    flash_color = intRD;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            message = std::string(party.Party[result].Name) + " is already DEAD!";
+
+                                            start_ticks = SDL_GetTicks();
+
+                                            flash_message = true;
+
+                                            flash_color = intRD;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    assigned = true;
+
+                                    message = "The " + std::string(monsters[opponent].Name) + "'s attack was INEFFECTIVE!";
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_message = true;
+
+                                    flash_color = intRD;
                                 }
                             }
                             else
                             {
-                                assigned = true;
+                                done = true;
 
-                                message = "The " + std::string(monsters[opponent].Name) + "'s attack was INEFFECTIVE!";
+                                selected = false;
 
-                                start_ticks = SDL_GetTicks();
+                                current = -1;
 
-                                flash_message = true;
-
-                                flash_color = intRD;
+                                break;
                             }
-                        }
-                        else
-                        {
-                            done = true;
-
-                            selected = false;
-
-                            current = -1;
-
-                            break;
                         }
                     }
                 }
-            }
 
-            if (font_mason)
-            {
-                TTF_CloseFont(font_mason);
-
-                font_mason = NULL;
-            }
-
-            if (font_garamond)
-            {
-                TTF_CloseFont(font_garamond);
-
-                font_garamond = NULL;
-            }
-
-            TTF_Quit();
-
-            for (auto i = 0; i < 6; i++)
-            {
-                if (dice[i])
+                if (font_mason)
                 {
-                    SDL_FreeSurface(dice[i]);
+                    TTF_CloseFont(font_mason);
 
-                    dice[i] = NULL;
+                    font_mason = NULL;
+                }
+
+                if (font_garamond)
+                {
+                    TTF_CloseFont(font_garamond);
+
+                    font_garamond = NULL;
+                }
+
+                TTF_Quit();
+
+                for (auto i = 0; i < 6; i++)
+                {
+                    if (dice[i])
+                    {
+                        SDL_FreeSurface(dice[i]);
+
+                        dice[i] = NULL;
+                    }
                 }
             }
         }
     }
-
     return std::max(0, combat_damage);
 }
 
@@ -5447,7 +5552,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
         auto box_space = 10;
         auto offset = 0;
         auto booksize = (int)(2 * (text_bounds) / 3 - infoh - box_space);
-        auto limit = (int)((booksize - 2 * text_space - infoh) / (28 * 2 + 3 * text_space));
+        auto limit = (int)((booksize - 2 * text_space - infoh) / (80));
         auto last = offset + limit;
 
         if (last > spells.size())
@@ -5870,7 +5975,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -6565,7 +6670,7 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Party.size())
@@ -7058,7 +7163,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Party.size())
@@ -7354,7 +7459,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         std::vector<Attribute::Type> attributes = {Attribute::Type::FIGHTING, Attribute::Type::STEALTH, Attribute::Type::LORE, Attribute::Type::SURVIVAL, Attribute::Type::CHARISMA};
@@ -7642,7 +7747,7 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
 
         auto teams_list = std::vector<Team::Type>();
 
@@ -7920,7 +8025,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Party.size())
@@ -8240,7 +8345,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space) / (88);
         auto last = offset + limit;
 
         if (last > party.Party.size())
@@ -8602,7 +8707,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
     return result;
 }
 
-Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, bool canFlee, int fleeRound, bool useEquipment)
+Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool canFlee, int fleeRound, bool useEquipment)
 {
     auto combatResult = Engine::Combat::NONE;
 
@@ -8636,7 +8741,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         const char *choices_defend[4] = {"VIEW PARTY", "DEFEND", "CAST SPELL", "FLEE"};
         const char *choices_next[4] = {"VIEW PARTY", "NEXT ROUND", "CAST SPELL", "FLEE"};
 
-        std::vector<TextButton> controls;
+        std::vector<Button> controls;
 
         auto font_size = 20;
         auto text_space = 8;
@@ -8645,7 +8750,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -8654,8 +8759,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         }
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
-
-        auto monster_list = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, false, false);
 
         auto hasAttacked = std::vector<int>();
 
@@ -8676,6 +8779,10 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         }
 
         int combatRound = 0;
+        auto allies_attack = false;
+        auto allyAttack = std::vector<Allies::Type>();
+
+        auto current_mode = Control::Type::ATTACK;
 
         while (Engine::COUNT(monsters) > 0 && Engine::COUNT(party.Party, team) > 0)
         {
@@ -8706,21 +8813,18 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                 if (Engine::COUNT(monsters, combatRound) == 0)
                 {
-                    controls = createHTextButtons(choices_next, 4, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                    current_mode = Control::Type::NEXT;
                 }
                 else if (hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team))
                 {
-                    controls = createHTextButtons(choices_attack, 4, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                    current_mode = Control::Type::ATTACK;
                 }
                 else
                 {
-                    controls = createHTextButtons(choices_defend, 4, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                    current_mode = Control::Type::DEFEND;
                 }
 
-                controls[0].Type = Control::Type::PARTY;
-                controls[1].Type = Control::Type::ATTACK;
-                controls[2].Type = Control::Type::SPELL;
-                controls[3].Type = Control::Type::FLEE;
+                controls = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, current_mode);
 
                 fillWindow(renderer, intWH);
 
@@ -8731,24 +8835,34 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                 fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
 
-                renderButtons(renderer, monster_list, -1, intBK, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, 4);
 
-                for (auto i = 0; i < monster_list.size(); i++)
+                if (last - offset > 0)
                 {
-                    if (monsters[offset + i].Health > 0)
+                    for (auto i = 0; i < last - offset; i++)
                     {
-                        if (combatRound < monsters[offset + i].Round)
+                        if (monsters[offset + i].Health > 0)
                         {
-                            thickRect(renderer, monster_list[i].W + 4, monster_list[i].H + 4, monster_list[i].X - 2, monster_list[i].Y - 2, intGR, 2);
+                            if (combatRound >= monsters[offset + i].Round)
+                            {
+                                if (current + offset == offset + i)
+                                {
+                                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                                }
+                                else
+                                {
+                                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                }
+                            }
+                            else
+                            {
+                                thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
+                            }
                         }
                         else
                         {
-                            drawRect(renderer, monster_list[i].W + 8, monster_list[i].H + 8, monster_list[i].X - 4, monster_list[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
-                    }
-                    else
-                    {
-                        drawRect(renderer, monster_list[i].W + 8, monster_list[i].H + 8, monster_list[i].X - 4, monster_list[i].Y - 4, intRD);
                     }
                 }
 
@@ -8793,8 +8907,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
                 }
 
-                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
-
                 if (flash_message)
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
@@ -8807,11 +8919,94 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                 }
 
-                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
-
-                if (selected && current >= 0 && current < controls.size())
+                if (allies_attack)
                 {
-                    if (controls[current].Type == Control::Type::FLEE)
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        allies_attack = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold, 200);
+
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+                {
+                    if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > monsters.size())
+                            {
+                                last = monsters.size();
+                            }
+
+                            controls.clear();
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                    {
+                        if (monsters.size() - last > 0)
+                        {
+                            if (offset < monsters.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > monsters.size() - limit)
+                            {
+                                offset = monsters.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > monsters.size())
+                            {
+                                last = monsters.size();
+                            }
+
+                            controls.clear();
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (monsters.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::FLEE)
                     {
                         if (canFlee)
                         {
@@ -8866,6 +9061,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::ATTACK)
                     {
+                        if (allies_attack)
+                        {
+                            allies_attack = false;
+                        }
+
                         if (Engine::COUNT(party.Party, team) > 0 && hasAttacked.size() < Engine::TEAM_SIZE(party.Party, team) && Engine::COUNT(monsters, combatRound) > 0)
                         {
                             auto result = -1;
@@ -8969,7 +9169,25 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                         if (hasAttacked.size() >= Engine::COUNT(party.Party, team) || Engine::COUNT(monsters, combatRound) == 0)
                         {
-                            if (Engine::COUNT(monsters, combatRound) > 0)
+                            if (Engine::HAS_ALLY(allies, Allies::Type::SLAVES) && !Engine::HAS_ALLY(allyAttack, Allies::Type::SLAVES))
+                            {
+                                if (Engine::HAS_MONSTER(monsters, Monster::Type::ORC))
+                                {
+                                    message = "The slaves attack the orcs! All orcs lose 1 Health Point!";
+
+                                    Engine::GAIN_HEALTH(monsters, Monster::Type::ORC, -1);
+
+                                    allies_attack = true;
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intLB;
+
+                                    allyAttack.push_back(Allies::Type::SLAVES);
+                                }
+                            }
+
+                            if (Engine::COUNT(monsters, combatRound) > 0 && !allies_attack)
                             {
                                 for (auto i = 0; i < monsters.size(); i++)
                                 {
@@ -8987,42 +9205,47 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                             }
 
-                            // After combat round trigger
-                            if (Engine::HAS_MONSTER(monsters, Monster::Type::SNAKEMAN_PRIEST))
+                            if (!allies_attack)
                             {
-                                flash_message = true;
+                                // After combat round trigger
+                                if (Engine::HAS_MONSTER(monsters, Monster::Type::SNAKEMAN_PRIEST))
+                                {
+                                    flash_message = true;
 
-                                flash_color = intRD;
+                                    flash_color = intRD;
 
-                                message = "Blocks of stone come raining down from the walls! The priest and each party member LOSES 1 Health!";
+                                    message = "Blocks of stone come raining down from the walls! The priest and each party member LOSES 1 Health!";
 
-                                Engine::GAIN_HEALTH(party.Party, -1);
+                                    Engine::GAIN_HEALTH(party.Party, -1);
 
-                                Engine::GAIN_HEALTH(monsters, -1);
+                                    Engine::GAIN_HEALTH(monsters, -1);
 
-                                start_ticks = SDL_GetTicks();
-                            }
-                            else if (Engine::HAS_MONSTER(monsters, Monster::Type::ZEALOT_HEALER) && Engine::COUNT(monsters) > 1)
-                            {
-                                flash_message = true;
+                                    start_ticks = SDL_GetTicks();
+                                }
+                                else if (Engine::HAS_MONSTER(monsters, Monster::Type::ZEALOT_HEALER) && Engine::COUNT(monsters) > 1)
+                                {
+                                    flash_message = true;
 
-                                flash_color = intRD;
+                                    flash_color = intRD;
 
-                                message = "The Zealot Healer heals each Zealot for 2 Health Points!";
+                                    message = "The Zealot Healer heals each Zealot for 2 Health Points!";
 
-                                Engine::GAIN_HEALTH(monsters, 2);
+                                    Engine::GAIN_HEALTH(monsters, 2);
 
-                                start_ticks = SDL_GetTicks();
-                            }
+                                    start_ticks = SDL_GetTicks();
+                                }
 
-                            hasAttacked.clear();
+                                allyAttack.clear();
 
-                            combatRound++;
+                                hasAttacked.clear();
 
-                            // clear damaged flag for next round
-                            for (auto i = 0; i < monsters.size(); i++)
-                            {
-                                monsters[i].Damaged = false;
+                                combatRound++;
+
+                                // clear damaged flag for next round
+                                for (auto i = 0; i < monsters.size(); i++)
+                                {
+                                    monsters[i].Damaged = false;
+                                }
                             }
                         }
 
@@ -9122,8 +9345,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             flash_color = intRD;
                         }
                     }
-
-                    monster_list = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, false, false);
                 }
 
                 if (Engine::COUNT(party.Party, team) == 0 || Engine::COUNT(monsters) == 0)
@@ -9319,7 +9540,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     auto font_size = 28;
     auto text_space = 8;
     auto scrollSpeed = 1;
-    auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+    auto limit = (text_bounds - 2 * text_space - infoh) / (88);
 
     auto offset = 0;
 
@@ -10420,7 +10641,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto offset = 0;
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > army.size())
@@ -11573,7 +11794,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
         auto text_space = 8;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > harbour->Ships.size())
@@ -13325,7 +13546,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto popupy = (SCREEN_HEIGHT - popuph) / 2;
 
         auto offset = 0;
-        auto limit = (popuph - infoh - buttonh - button_space) / (28 * 2 + text_space * 4);
+        auto limit = (popuph - infoh - buttonh - button_space) / (88);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -13990,7 +14211,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto infoh = 48;
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (28 * 2 + text_space * 4);
+        auto limit = (text_bounds - 2 * text_space) / (88);
         auto last = offset + limit;
 
         if (last > choices.size())
@@ -16032,7 +16253,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 team = Team::Type::SOLO;
                             }
 
-                            auto result = combatScreen(window, renderer, party, team, story->Monsters, story->CanFlee, story->FleeRound, true);
+                            auto result = combatScreen(window, renderer, party, team, story->Monsters, story->Allies, story->CanFlee, story->FleeRound, true);
 
                             story->AfterCombat(party, result);
                         }
@@ -16524,7 +16745,9 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                         Monster::Base("Goblin", 4, 5, 4, 6, 0),
                         Monster::Base("Orc Bodyguard", 6, 4, 4, 10, 0)};
 
-                    combat = combatScreen(window, renderer, Party, Team::Type::NONE, monsters, true, -1, false);
+                    std::vector<Allies::Type> allies = {};
+
+                    combat = combatScreen(window, renderer, Party, Team::Type::NONE, monsters, allies, true, -1, false);
 
                     done = false;
 

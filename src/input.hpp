@@ -51,7 +51,7 @@ namespace Input
     }
 
     template <typename T>
-    bool GetInput(SDL_Renderer *renderer, std::vector<T> choices, int &current, bool &selected, bool &scrollUp, bool &scrollDown, bool &hold)
+    bool GetInput(SDL_Renderer *renderer, std::vector<T> choices, int &current, bool &selected, bool &scrollUp, bool &scrollDown, bool &hold, int delay)
     {
         // Update the renderer
         SDL_RenderPresent(renderer);
@@ -326,13 +326,19 @@ namespace Input
                 }
             }
 
-            if (SDL_GetTicks() - start_ticks > 1000)
+            if (SDL_GetTicks() - start_ticks > delay)
             {
                 break;
             }
         }
 
         return quit;
+    }
+
+    template <typename T>
+    bool GetInput(SDL_Renderer *renderer, std::vector<T> choices, int &current, bool &selected, bool &scrollUp, bool &scrollDown, bool &hold)
+    {
+        return Input::GetInput(renderer, choices, current, selected, scrollUp, scrollDown, hold, 1000);
     }
 
     void WaitForNext(SDL_Renderer *renderer)

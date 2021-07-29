@@ -160,7 +160,7 @@ namespace Engine
 
         if (ship.Health > ship.MaximumHealth)
         {
-            ship.Health = ship.MaximumHealth; 
+            ship.Health = ship.MaximumHealth;
         }
     }
 
@@ -202,6 +202,17 @@ namespace Engine
         for (auto i = 0; i < monsters.size(); i++)
         {
             Engine::GAIN_HEALTH(monsters[i], health);
+        }
+    }
+
+    void GAIN_HEALTH(std::vector<Monster::Base> &monsters, Monster::Type type, int health)
+    {
+        for (auto i = 0; i < monsters.size(); i++)
+        {
+            if (monsters[i].Type == type)
+            {
+                Engine::GAIN_HEALTH(monsters[i], health);
+            }
         }
     }
 
@@ -1255,6 +1266,23 @@ namespace Engine
         for (auto i = 0; i < monsters.size(); i++)
         {
             if (monsters[i].Type == type && monsters[i].Health > 0)
+            {
+                result = true;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    bool HAS_ALLY(std::vector<Allies::Type> allies, Allies::Type type)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < allies.size(); i++)
+        {
+            if (allies[i] == type)
             {
                 result = true;
 

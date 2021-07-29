@@ -494,6 +494,8 @@ namespace Story
         int FleeRound = -1;
         bool CanFlee = false;
 
+        std::vector<Allies::Type> Allies = {};
+
         // Limits
         int Limit = 0;
 
