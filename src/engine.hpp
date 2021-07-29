@@ -592,7 +592,7 @@ namespace Engine
 
         for (auto i = 0; i < adventurers.size(); i++)
         {
-            if (adventurers[i].Health > 0)
+            if (adventurers[i].Health > 0 && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
             {
                 result++;
             }
@@ -613,7 +613,7 @@ namespace Engine
         {
             for (auto i = 0; i < adventurers.size(); i++)
             {
-                if (adventurers[i].Health > 0 && (adventurers[i].Team == team))
+                if (adventurers[i].Health > 0 && (adventurers[i].Team == team) && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
                 {
                     result++;
                 }
@@ -629,7 +629,7 @@ namespace Engine
 
         for (auto i = 0; i < adventurers.size(); i++)
         {
-            if (adventurers[i].Health > 0 && Engine::FIND_LIST(list, i) < 0)
+            if (adventurers[i].Health > 0 && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
             {
                 result++;
             }
@@ -650,7 +650,7 @@ namespace Engine
         {
             for (auto i = 0; i < adventurers.size(); i++)
             {
-                if (adventurers[i].Health > 0 && adventurers[i].Team == team && Engine::FIND_LIST(list, i) < 0)
+                if (adventurers[i].Health > 0 && adventurers[i].Team == team && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
                 {
                     result++;
                 }
@@ -672,7 +672,7 @@ namespace Engine
         {
             for (auto i = 0; i < adventurers.size(); i++)
             {
-                if (adventurers[i].Team == team)
+                if (adventurers[i].Team == team && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
                 {
                     result++;
                 }
@@ -718,7 +718,7 @@ namespace Engine
 
         for (auto i = 0; i < adventurers.size(); i++)
         {
-            if (adventurers[i].SpellCaster)
+            if (adventurers[i].SpellCaster && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
             {
                 result++;
             }
@@ -729,7 +729,10 @@ namespace Engine
 
     void GET_EQUIPMENT(Character::Base &player, std::vector<Equipment::Base> equipment)
     {
-        player.Equipment.insert(player.Equipment.end(), equipment.begin(), equipment.end());
+        if (!Engine::HAS_STATUS(player, Character::Status::CAPTURED))
+        {
+            player.Equipment.insert(player.Equipment.end(), equipment.begin(), equipment.end());
+        }
     }
 
     int FIND_EQUIPMENT(Character::Base &character, Equipment::Type item)
@@ -773,7 +776,7 @@ namespace Engine
 
     void LOSE_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> items)
     {
-        if (character.Equipment.size() > 0 && items.size() > 0)
+        if (character.Equipment.size() > 0 && items.size() > 0 && !Engine::HAS_STATUS(character, Character::Status::CAPTURED))
         {
             for (auto i = 0; i < items.size(); i++)
             {
@@ -795,7 +798,7 @@ namespace Engine
             {
                 auto result = Engine::FIND_EQUIPMENT(party.Party[j], items[i]);
 
-                if (result >= 0)
+                if (result >= 0 && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
                 {
                     party.Party[j].Equipment.erase(party.Party[j].Equipment.begin() + result);
 
@@ -1601,7 +1604,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            if (party.Party[i].Health > 0 && Engine::FIND_LIST(list, i) < 0)
+            if (party.Party[i].Health > 0 && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1623,7 +1626,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            if (party.Party[i].Health > 0)
+            if (party.Party[i].Health > 0 && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1645,7 +1648,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].Team == team && Engine::FIND_LIST(list, i) < 0)
+            if (party.Party[i].Health > 0 && party.Party[i].Team == team && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1667,7 +1670,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].Team == team)
+            if (party.Party[i].Health > 0 && party.Party[i].Team == team && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1689,7 +1692,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].Team == team && party.Party[i].SpellCaster && Engine::FIND_LIST(list, i) < 0)
+            if (party.Party[i].Health > 0 && party.Party[i].Team == team && party.Party[i].SpellCaster && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1711,7 +1714,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].Team == team && party.Party[i].SpellCaster)
+            if (party.Party[i].Health > 0 && party.Party[i].Team == team && party.Party[i].SpellCaster && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1733,7 +1736,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].SpellCaster)
+            if (party.Party[i].Health > 0 && party.Party[i].SpellCaster && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1789,7 +1792,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            score = std::min(score, Engine::SCORE(party.Party[i], type));
+            score = std::min(score, Engine::SCORE(party.Party[i], type) && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED));
         }
 
         return score;
@@ -1801,7 +1804,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            score = std::max(score, Engine::SCORE(party.Party[i], type));
+            score = std::max(score, Engine::SCORE(party.Party[i], type) && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED));
         }
 
         return score;
@@ -1813,7 +1816,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            if (score == Engine::SCORE(party.Party[i], type))
+            if (score == Engine::SCORE(party.Party[i], type) && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
             {
                 result++;
             }
@@ -1828,7 +1831,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Party.size(); i++)
         {
-            if (score == Engine::SCORE(party.Party[i], type))
+            if (score == Engine::SCORE(party.Party[i], type) && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
             {
                 result = i;
 

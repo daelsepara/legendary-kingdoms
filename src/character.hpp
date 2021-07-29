@@ -82,7 +82,8 @@ namespace Character
         ENRAGED,
         FRONT,
         BACK,
-        POTION_OF_INVULNERABILITY
+        POTION_OF_INVULNERABILITY,
+        CAPTURED
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;

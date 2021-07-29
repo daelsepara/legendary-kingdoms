@@ -8631,7 +8631,20 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                 {
                                     if (team == Team::Type::NONE || party.Party[current + offset].Team == team)
                                     {
-                                        selection = current + offset;
+                                        if (Engine::HAS_STATUS(party.Party[current + offset], Character::Status::CAPTURED))
+                                        {
+                                            message = std::string(party.Party[current + offset].Name) + " has been captured!";
+
+                                            flash_message = true;
+
+                                            start_ticks = SDL_GetTicks();
+
+                                            flash_color = intRD;
+                                        }
+                                        else
+                                        {
+                                            selection = current + offset;
+                                        }
                                     }
                                     else
                                     {
