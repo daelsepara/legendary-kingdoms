@@ -10834,11 +10834,11 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             {
                 if (controls[current].Type == Control::Type::SPELL)
                 {
-                    putHeader(renderer, (std::string("Cast the ") + std::string(spell.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Cast ") + std::string(spell.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::UNLEARN)
                 {
-                    putHeader(renderer, (std::string("Unlearn the ") + std::string(spell.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Unlearn ") + std::string(spell.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
@@ -10901,7 +10901,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
         {
             if (((current + offset) >= 0) && ((current + offset) < character.SpellBook.size()))
             {
-                fillRect(renderer, textwidth, text_bounds / 3 - box_space, textx, texty + infoh + booksize + box_space, intLB);
+                fillRect(renderer, textwidth, text_bounds / 3, textx, texty + infoh + booksize + box_space, intLB);
 
                 auto text = createText(character.SpellBook[current + offset].Description, FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
