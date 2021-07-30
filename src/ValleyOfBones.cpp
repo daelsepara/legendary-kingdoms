@@ -5756,7 +5756,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
         auto box_space = 10;
         auto offset = 0;
         auto booksize = (int)(2 * (text_bounds) / 3 - infoh - box_space);
-        auto limit = (int)((booksize - 2 * text_space) / (80));
+        auto limit = (int)((booksize - 2 * text_space) / (88));
         auto last = offset + limit;
 
         if (last > spells.size())
@@ -10337,7 +10337,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                 {
                     for (auto i = 0; i < selection.size(); i++)
                     {
-                        if (selection[i] >= 0 && selection[i] < party.Party.size())
+                        if (selection[i] >= 0 && selection[i] < party.Party.size() && RestPrice >= 0)
                         {
                             if (controls[current].Type != Control::Type::FULL_RECOVERY)
                             {
@@ -10350,7 +10350,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                         }
                     }
 
-                    if (cost > 0)
+                    if (cost > 0 && RestPrice >= 0)
                     {
                         std::string heal_string = "";
 
@@ -10402,8 +10402,11 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
             putHeader(renderer, "Money", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
             putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + infoh);
 
-            putHeader(renderer, "Healing Costs", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
-            putText(renderer, (std::to_string(RestPrice) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+            if (RestPrice >= 0)
+            {
+                putHeader(renderer, "Healing Costs", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+                putText(renderer, (RestPrice > 0 ? std::to_string(RestPrice) + std::string(" silver coins") : std::string("Free")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+            }
 
             fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
             putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -10541,7 +10544,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                 }
                 else if (controls[current].Type == Control::Type::HEAL1 && !hold)
                 {
-                    if (selection.size() > 0)
+                    if (selection.size() > 0 && RestPrice >= 0)
                     {
                         auto cost = 0;
 
@@ -10574,7 +10577,14 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
                             flash_message = true;
 
-                            message = "The party was healed for " + std::to_string(cost) + " silver coins.";
+                            if (cost > 0)
+                            {
+                                message = "Your party was healed for " + std::to_string(cost) + " silver coins.";
+                            }
+                            else
+                            {
+                                message = "Your party was healed for free.";
+                            }
 
                             flash_color = intLB;
 
@@ -10601,7 +10611,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                 }
                 else if (controls[current].Type == Control::Type::FULL_RECOVERY && !hold)
                 {
-                    if (selection.size() > 0)
+                    if (selection.size() > 0 && RestPrice >= 0)
                     {
                         auto cost = 0;
 
@@ -10634,7 +10644,14 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
                             flash_message = true;
 
-                            message = "The party was healed for " + std::to_string(cost) + " silver coins.";
+                            if (cost > 0)
+                            {
+                                message = "Your party was healed for " + std::to_string(cost) + " silver coins.";
+                            }
+                            else
+                            {
+                                message = "Your party was healed for free.";
+                            }
 
                             flash_color = intLB;
 
@@ -11895,7 +11912,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
     auto text_space = 8;
     auto scrollSpeed = 1;
     auto booksize = (int)(2 * (text_bounds) / 3 - infoh - box_space);
-    auto limit = (int)((booksize - 2 * text_space) / (80));
+    auto limit = (int)((booksize - 2 * text_space) / (88));
 
     auto offset = 0;
 
@@ -12637,9 +12654,9 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto offset = 0;
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto booksize = (int)(2 * (text_bounds) / 3);
         auto box_space = 10;
-        auto limit = (int)((booksize - text_space - infoh) / (80));
+        auto booksize = (int)(2 * (text_bounds) / 3 - infoh - box_space);
+        auto limit = (int)((booksize - 2 * text_space) / (88));
         auto last = offset + limit;
 
         if (last > spells.size())
@@ -16592,6 +16609,74 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 addBye(story, story->temp_string.c_str());
 
                                 Engine::GAIN_HEALTH(party.Party[target], story->Choices[choice].Value);
+                            }
+
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::GAIN_HEALTH_ATTRIBUTE)
+                        {
+                            auto target = -1;
+
+                            party.Current = Engine::FIND_SOLO(party);
+
+                            if (party.Current >= 0 && party.Current < party.Party.size() && party.Party[party.Current].Health > 0)
+                            {
+                                target = party.Current;
+                            }
+                            else
+                            {
+                                if (Engine::COUNT(party.Party) == 1)
+                                {
+                                    target = Engine::FIRST(party);
+                                }
+                                else
+                                {
+                                    target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, (story->Choices[choice].Value > 0 ? Control::Type::GAIN_HEALTH : Control::Type::LOSE_HEALTH));
+                                }
+                            }
+
+                            if (target >= 0 && target < party.Party.size())
+                            {
+                                story->temp_string = std::string(party.Party[target].Name) + " ";
+
+                                if (story->Choices[choice].Value > 0)
+                                {
+                                    story->temp_string += "gains " + std::to_string(story->Choices[choice].Value);
+                                }
+                                else
+                                {
+                                    story->temp_string += "loses " + std::to_string(-story->Choices[choice].Value);
+                                }
+
+                                story->temp_string += " Health Point";
+
+                                if (std::abs(story->Choices[choice].Value) > 1)
+                                {
+                                    story->temp_string += "s";
+                                }
+
+                                story->temp_string += " and ";
+
+                                if (story->Choices[choice].Difficulty > 0)
+                                {
+                                    story->temp_string += "gains " + std::to_string(story->Choices[choice].Difficulty);
+                                }
+                                else
+                                {
+                                    story->temp_string += "loses " + std::to_string(-story->Choices[choice].Difficulty);
+                                }
+
+                                story->temp_string += " " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + ".";
+
+                                addBye(story, story->temp_string.c_str());
+
+                                Engine::GAIN_HEALTH(party.Party[target], story->Choices[choice].Value);
+                                
+                                Engine::GAIN_SCORE(party.Party[target], story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty);
                             }
 
                             next = findStory(story->Choices[choice].Destination);

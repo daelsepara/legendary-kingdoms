@@ -6297,7 +6297,7 @@ namespace Book1
 
             Controls = Story::Controls::INN;
         }
- 
+
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
     };
 
@@ -6882,6 +6882,315 @@ namespace Book1
         }
     };
 
+    class Story220 : public Story::Base
+    {
+    public:
+        Story220()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 220;
+
+            Text = "The odds are impossible! Your forces are overwhelmed. You watch in despair as the Everchild's encampment is overridden by a hundred horsemen. You share her fate, the merciless army of Cursus chasing you down and cutting your throats. The dream of freedom in the valley, and your adventure, is over.";
+
+            Type = Story::Type::DOOM;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story221 : public Story::Base
+    {
+    public:
+        Story221()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 221;
+
+            Text = "The whole family have gathered outside onto the terrace as you approach, their neighbours craning their necks to see you. Janu, your brother-in-law, bows deeply as you approach. \"You honour us with your visit, kensai,\" he says honestly. \"My house is yours. It would please me if you and your companions would stay with us during your visit to the city.\"\n\n\"Thank you, Janu,\" you say. \"Your offer is most kind.\" That night the children sit at your feet as you recount tales of your adventures. Your mother and sister glow with pride to see you in your fine robes, your confidence returned.\n\nYou may stay in the house as long as you like. All party members can restore their Health scores to maximum. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
+
+            RestPrice = 0;
+
+            Choices.clear();
+
+            Controls = Story::Controls::INN;
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::SAR_JESSICA_DAYNE) && Engine::HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::Type::AKIHIRO_OF_CHALICE) > 0)
+            {
+                return {Book::Type::BOOK1, 607};
+            }
+            else if (Engine::IN_PARTY(party, Character::Type::BRASH) && Engine::HEARTS(party, Character::Type::BRASH, Character::Type::AKIHIRO_OF_CHALICE) > 0)
+            {
+                return {Book::Type::BOOK1, 62};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 450};
+            }
+        }
+    };
+
+    class Story222 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story222()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 222;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The lift slams onto the surface of the fifteenth level. This is the deepest portion of the mine, long since abandoned by the workers.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(27)}))
+            {
+                PreText += "\n\nYou creep carefully down the tunnels until they open into a sizable cavern. Curled up into a tight ball, you see the fish-white scales of a terrible salt dragon, sleeping on a pile of human bones and scattered treasure. Its eyes flick open, and it puffs sharply, trying to scare you off.";
+
+                Engine::GET_CODES(party, {Codes::A(11)});
+
+                Choices.push_back(Choice::Base("Fight the dragon", {Book::Type::BOOK1, 787}));
+                Choices.push_back(Choice::Base("Carefully back away to the lift", {Book::Type::BOOK1, 135}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 344}; }
+    };
+
+    class Story223 : public Story::Base
+    {
+    public:
+        Story223()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 223;
+
+            Text = "Soon it is time for another bloody battle in the arena. Each character is given a CRUDE BLADE (Fighting +0) and pushed out to face the current arena champions.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take.clear();
+
+            for (auto i = 0; i < Engine::COUNT(party.Party); i++)
+            {
+                Take.push_back(Equipment::CRUDE_BLADE);
+            }
+
+            Limit = Take.size();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, -223}; }
+    };
+
+    class Event223 : public Story::Base
+    {
+    public:
+        Event223()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -223;
+
+            DisplayID = 223;
+
+            Text = "The crowd roar -- they recognise you from your previous battles and know that this should prove an entertaining fight.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Grim Gladiator", 8, 4, 4, 12, 0),
+                Monster::Base("Mighty Gladiator", 5, 3, 4, 10, 0),
+                Monster::Base("Agile Gladiator", 6, 3, 5, 6, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 161}; }
+    };
+
+    class Story224 : public Story::Base
+    {
+    public:
+        Story224()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 224;
+
+            Text = "Perhaps it would be wiser if only a few people entered the room? Decide who is passing through the shadow door and who is staying behind. You can send your whole party in if you wish, or change your mind and close off the shadow door.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Select the party members who will pass through the shadow door", {Book::Type::BOOK1, -224}, Choice::Type::ASSIGN_TEAMS, {{Team::Type::SHADOW_ROOM, 0, 4}}, 0));
+            Choices.push_back(Choice::Base("Close the shadow door", {Book::Type::BOOK1, 717}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event224 : public Story::Base
+    {
+    public:
+        Event224()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -224;
+
+            DisplayID = 224;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::COUNT(party.Party, Team::Type::SHADOW_ROOM) > 0)
+            {
+                return {Book::Type::BOOK1, 903};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 717};
+            }
+        }
+    };
+
+    class Story225 : public Story::Base
+    {
+    public:
+        Story225()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 225;
+
+            Location = Location::Type::CHALICE;
+
+            Text = "You have a most pleasant stroll through the centre of Chalice. The streets are peaceful and the people orderly. You have a cup of rice wine by the river to relax and watch as a graceful dune-swan and its chicks paddle down waterway.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story226 : public Story::Base
+    {
+    public:
+        Story226()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 226;
+
+            Text = "Security is much too tight around the archwizard. All the party members assigned to the assassination have been captured. What happens to them now is down to you. If you capture the city of Cursus you can free them from prison. If your army is defeated, the party members will be executed. Either way, the captured party members can take no further part in the battle until rescued.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            for (auto i = 0; i < party.Party.size(); i++)
+            {
+                if (party.Party[i].Health > 0 && party.Party[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
+                {
+                    Engine::GAIN_STATUS(party.Party[i], Character::Status::CAPTURED);
+                }
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 96}; }
+    };
+
+    class Story227 : public Story::Base
+    {
+    public:
+        Story227()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 227;
+
+            Text = "The salt mine is only moderately populated. Many of the ex-slaves have deserted mine work for more pleasant pursuits above ground. Those who remain are better dressed and equipped than they were before but look just as unhealthy.\n\nWhich level of the mines will you explore?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("The twelfth level", {Book::Type::BOOK1, 739}));
+            Choices.push_back(Choice::Base("The thirteenth level", {Book::Type::BOOK1, 388}));
+            Choices.push_back(Choice::Base("The fourteenth level", {Book::Type::BOOK1, 597}));
+            Choices.push_back(Choice::Base("The lowest level", {Book::Type::BOOK1, 222}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story228 : public Story::Base
+    {
+    public:
+        Story228()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 228;
+
+            Text = "You believe you have deciphered the clever code in the writing. You find a narrow knothole in the rock and plunge your arm inside. You cry out in shock as a savage blade slices into your hand. Pulling it out you are astonished you did not lose the whole thing.";
+
+            Choices.clear();
+
+            Choices.push_back(Choice::Base("Choose a party member to lose 5 Health points and 1 point of Fighting.", {Book::Type::BOOK1, 395}, Choice::Type::GAIN_HEALTH_ATTRIBUTE, {Attribute::Type::FIGHTING}, -5, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story229 : public Story::Base
+    {
+    public:
+        Story229()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 229;
+
+            Text = "You furrow your brow as you attempt to mar the runes on the window frame.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Dispel the runes (Team check: Lore 4+, Successes: 5)", {Book::Type::BOOK1, 791}, {Book::Type::BOOK1, 831}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 5));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -7125,13 +7434,25 @@ namespace Book1
     auto story217 = Story217();
     auto story218 = Story218();
     auto story219 = Story219();
+    auto story220 = Story220();
+    auto story221 = Story221();
+    auto story222 = Story222();
+    auto story223 = Story223();
+    auto event223 = Event223();
+    auto story224 = Story224();
+    auto event224 = Event224();
+    auto story225 = Story225();
+    auto story226 = Story226();
+    auto story227 = Story227();
+    auto story228 = Story228();
+    auto story229 = Story229();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
-            &event186, &event188, &event202, &event207,
+            &event186, &event188, &event202, &event207, &event223, &event224,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -7153,7 +7474,8 @@ namespace Book1
             &story180, &story181, &story182, &story183, &story184, &story185, &story186, &story187, &story188, &story189,
             &story190, &story191, &story192, &story193, &story194, &story195, &story196, &story197, &story198, &story199,
             &story200, &story201, &story202, &story203, &story204, &story205, &story206, &story207, &story208, &story209,
-            &story210, &story211, &story212, &story213, &story214, &story215, &story216, &story217, &story218, &story219};
+            &story210, &story211, &story212, &story213, &story214, &story215, &story216, &story217, &story218, &story219,
+            &story220, &story221, &story222, &story223, &story224, &story225, &story226, &story227, &story228, &story229};
     }
 }
 #endif

@@ -38,7 +38,8 @@ namespace Team
         WALL_CLIMBING,
         ZIGGURAT,
         ASSASSINATION_DESCANTOS,
-        EVERCHILD_SECURITY
+        EVERCHILD_SECURITY,
+        SHADOW_ROOM
     };
 
     std::map<Team::Type, const char *> Descriptions = {
@@ -58,7 +59,8 @@ namespace Team
         {Team::Type::WALL_CLIMBING, "Wall-climbing"},
         {Team::Type::ZIGGURAT, "Wall-climbing"},
         {Team::Type::ASSASSINATION_DESCANTOS, "Assassination of Descantos"},
-        {Team::Type::EVERCHILD_SECURITY, "Everchild's Personal Security"}};
+        {Team::Type::EVERCHILD_SECURITY, "Everchild's Personal Security"},
+        {Team::Type::SHADOW_ROOM, "Shadow Room"}};
 }
 
 namespace Character

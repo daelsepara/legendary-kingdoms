@@ -60,7 +60,8 @@ namespace Choice
         LAST_INDIVIDUAL_CHECK,
         LAST_PARTY_CHECK,
         RAISEATTRIBUTE_WITH_BLESSING,
-        PAYFORSTATUS_WITH_HEALTH
+        PAYFORSTATUS_WITH_HEALTH,
+        GAIN_HEALTH_ATTRIBUTE
     };
 
     class Base
@@ -425,6 +426,21 @@ namespace Choice
             Difficulty = difficulty;
 
             Success = success;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Attribute::Type> attributes, int value, int difficulty)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Attributes = attributes;
+
+            Value = value;
+
+            Difficulty = difficulty;
         }
     };
 } // namespace Choice

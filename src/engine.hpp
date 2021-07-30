@@ -1178,6 +1178,20 @@ namespace Engine
         }
     }
 
+    int HEARTS(Party::Base &party, Character::Type from, Character::Type to)
+    {
+        auto result = 0;
+
+        Character::Romance romance = {from, to};
+
+        if (party.Hearts.count(romance) > 0)
+        {
+            result = party.Hearts[romance];
+        }
+
+        return result;
+    }
+
     void REJOIN(Party::Base &party)
     {
         if (party.Current >= 0 && party.Party.size())
