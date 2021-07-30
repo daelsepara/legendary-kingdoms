@@ -73,7 +73,10 @@ namespace Control
         VAULT,
         ENTER_SHOP,
         RECRUIT,
-        MASS_COMBAT
+        MASS_COMBAT,
+        HEAL1,
+        FULL_RECOVERY,
+        RECHARGE
     };
 
     class Base

@@ -6297,7 +6297,7 @@ namespace Book1
 
             Controls = Story::Controls::INN;
         }
-
+ 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
     };
 

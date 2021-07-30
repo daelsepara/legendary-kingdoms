@@ -48,6 +48,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::TeamAssignment> teams, int min_teams);
 bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int equipment_limit, bool InCombat);
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
+bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice);
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
@@ -1834,8 +1835,6 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
         auto text_space = 8;
 
-        auto Party = Party::Base();
-
         auto character = 0;
 
         auto current_mode = Control::Type::PARTY;
@@ -3567,6 +3566,63 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
 
         controls.push_back(Button(idx, "icons/back-button.png", confirm_button ? idx - 1 : idx, idx, party.size() > 0 ? (last - start) - 1 : idx, idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
     }
+
+    return controls;
+}
+
+std::vector<Button> innList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> party, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (party.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto adventurer = party[index];
+
+            std::string adventurer_string = characterText(adventurer, true);
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (party.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (party.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
+
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "HEAL 1", clrWH, intDB, 220, 48, -1), idx, idx + 1, party.size() > 0 ? idx - 1 : idx, idx, startx, text_y, Control::Type::HEAL1));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FULLY RECOVER", clrWH, intDB, 220, 48, -1), idx, idx + 2, party.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::FULL_RECOVERY));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "RECHARGE SPELLS", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, party.size() > 0 ? idx - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::RECHARGE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, party.size() > 0 ? idx - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::BACK));
 
     return controls;
 }
@@ -10201,6 +10257,446 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         splash = NULL;
     }
+
+    return false;
+}
+
+bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice)
+{
+    auto *title = "Legendary Kingdoms: Inn";
+
+    auto text_space = 8;
+
+    TTF_Init();
+
+    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+    TTF_SetFontKerning(font_dark11, 0);
+
+    // Render window
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto current = -1;
+
+        auto selection = std::vector<int>();
+
+        auto main_buttonh = 48;
+
+        auto infoh = 48;
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
+
+        auto scrolly = texty + text_bounds - arrow_size - border_space;
+        auto offsetx = (int)((1.0 - Margin) * SCREEN_WIDTH) - arrow_size;
+
+        int offset = 0;
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto last = offset + limit;
+
+        if (last > party.Party.size())
+        {
+            last = party.Party.size();
+        }
+
+        auto controls = innList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh);
+
+        auto done = false;
+
+        auto text_space = 8;
+
+        bool scrollUp = false;
+        bool selected = false;
+        bool scrollDown = false;
+        bool hold = false;
+        int scrollSpeed = 1;
+
+        std::string message = "";
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        while (!done)
+        {
+            // Fill the surface with background
+            fillWindow(renderer, intWH);
+
+            if (current >= 0 && current < controls.size())
+            {
+                auto cost = 0;
+
+                if (selection.size() > 0)
+                {
+                    for (auto i = 0; i < selection.size(); i++)
+                    {
+                        if (selection[i] >= 0 && selection[i] < party.Party.size())
+                        {
+                            if (controls[current].Type != Control::Type::FULL_RECOVERY)
+                            {
+                                cost += (party.Party[selection[i]].Health < party.Party[selection[i]].MaximumHealth) ? RestPrice : 0;
+                            }
+                            else
+                            {
+                                cost += (party.Party[selection[i]].Health < party.Party[selection[i]].MaximumHealth) ? RestPrice * (party.Party[selection[i]].MaximumHealth - party.Party[selection[i]].Health) : 0;
+                            }
+                        }
+                    }
+
+                    if (cost > 0)
+                    {
+                        std::string heal_string = "";
+
+                        if (controls[current].Type != Control::Type::FULL_RECOVERY)
+                        {
+                            heal_string = "Heal (" + std::to_string(cost);
+                        }
+                        else
+                        {
+                            heal_string = "Fully Recover (" + std::to_string(cost);
+                        }
+
+                        heal_string += ")";
+
+                        putText(renderer, heal_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                    }
+                    else
+                    {
+                        putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                    }
+                }
+                else
+                {
+                    putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                }
+            }
+            else
+            {
+                putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+            }
+
+            std::string party_string = "";
+
+            if (selection.size() > 0)
+            {
+                for (auto i = 0; i < selection.size(); i++)
+                {
+                    if (i > 0)
+                    {
+                        party_string += "\n";
+                    }
+
+                    party_string += party.Party[selection[i]].Name;
+                }
+            }
+
+            putText(renderer, selection.size() > 0 ? party_string.c_str() : "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+
+            putHeader(renderer, "Money", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + infoh);
+
+            putHeader(renderer, "Healing Costs", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+            putText(renderer, (std::to_string(RestPrice) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+
+            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+            putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+            if (last - offset > 0)
+            {
+                for (auto i = 0; i < last - offset; i++)
+                {
+                    if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                    {
+                        thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    }
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (offset > 0)
+                    {
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > party.Party.size())
+                        {
+                            last = party.Party.size();
+                        }
+
+                        controls.clear();
+
+                        controls = innList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh);
+
+                        SDL_Delay(50);
+                    }
+
+                    if (offset <= 0)
+                    {
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                {
+                    if (party.Party.size() - last > 0)
+                    {
+                        if (offset < party.Party.size() - limit)
+                        {
+                            offset += scrollSpeed;
+                        }
+
+                        if (offset > party.Party.size() - limit)
+                        {
+                            offset = party.Party.size() - limit;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > party.Party.size())
+                        {
+                            last = party.Party.size();
+                        }
+
+                        controls.clear();
+
+                        controls = innList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh);
+
+                        SDL_Delay(50);
+
+                        if (offset > 0)
+                        {
+                            if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                            {
+                                current++;
+                            }
+                        }
+                    }
+
+                    if (party.Party.size() - last <= 0)
+                    {
+                        selected = false;
+
+                        current = -1;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if (current >= 0 && current < controls.size())
+                    {
+                        auto result = Engine::FIND_LIST(selection, offset + current);
+
+                        if (result >= 0)
+                        {
+                            selection.erase(selection.begin() + result);
+                        }
+                        else
+                        {
+                            if (selection.size() < party.Party.size())
+                            {
+                                selection.push_back(offset + current);
+                            }
+                        }
+                    }
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::HEAL1 && !hold)
+                {
+                    if (selection.size() > 0)
+                    {
+                        auto cost = 0;
+
+                        for (auto i = 0; i < selection.size(); i++)
+                        {
+                            cost += (party.Party[selection[i]].Health < party.Party[selection[i]].MaximumHealth) ? RestPrice : 0;
+                        }
+
+                        if (party.Money < cost)
+                        {
+                            flash_message = true;
+
+                            message = "You do not have enough silver coins!";
+
+                            flash_color = intRD;
+
+                            start_ticks = SDL_GetTicks();
+                        }
+                        else
+                        {
+                            for (auto i = 0; i < selection.size(); i++)
+                            {
+                                if (party.Party[selection[i]].Health < party.Party[selection[i]].MaximumHealth)
+                                {
+                                    Engine::GAIN_HEALTH(party.Party[selection[i]], 1);
+                                }
+                            }
+
+                            Engine::GAIN_MONEY(party, -cost);
+
+                            flash_message = true;
+
+                            message = "The party was healed for " + std::to_string(cost) + " silver coins.";
+
+                            flash_color = intLB;
+
+                            start_ticks = SDL_GetTicks();
+
+                            offset = 0;
+
+                            last = offset + limit;
+
+                            if (last > party.Party.size())
+                            {
+                                last = party.Party.size();
+                            }
+
+                            controls.clear();
+
+                            controls = innList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh);
+                        }
+                    }
+
+                    done = false;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::FULL_RECOVERY && !hold)
+                {
+                    if (selection.size() > 0)
+                    {
+                        auto cost = 0;
+
+                        for (auto i = 0; i < selection.size(); i++)
+                        {
+                            cost += (party.Party[selection[i]].Health < party.Party[selection[i]].MaximumHealth) ? RestPrice * (party.Party[selection[i]].MaximumHealth - party.Party[selection[i]].Health) : 0;
+                        }
+
+                        if (party.Money < cost)
+                        {
+                            flash_message = true;
+
+                            message = "You do not have enough silver coins!";
+
+                            flash_color = intRD;
+
+                            start_ticks = SDL_GetTicks();
+                        }
+                        else
+                        {
+                            for (auto i = 0; i < selection.size(); i++)
+                            {
+                                if (party.Party[selection[i]].Health < party.Party[selection[i]].MaximumHealth)
+                                {
+                                    Engine::GAIN_HEALTH(party.Party[selection[i]], party.Party[selection[i]].MaximumHealth - party.Party[selection[i]].Health);
+                                }
+                            }
+
+                            Engine::GAIN_MONEY(party, -cost);
+
+                            flash_message = true;
+
+                            message = "The party was healed for " + std::to_string(cost) + " silver coins.";
+
+                            flash_color = intLB;
+
+                            start_ticks = SDL_GetTicks();
+
+                            offset = 0;
+
+                            last = offset + limit;
+
+                            if (last > party.Party.size())
+                            {
+                                last = party.Party.size();
+                            }
+
+                            controls.clear();
+
+                            controls = innList(window, renderer, party.Party, offset, last, limit, textx, texty + infoh);
+                        }
+                    }
+
+                    done = false;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::RECHARGE && !hold)
+                {
+                    done = false;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    done = true;
+
+                    break;
+                }
+            }
+        }
+    }
+
+    if (font_mason)
+    {
+        TTF_CloseFont(font_mason);
+
+        font_mason = NULL;
+    }
+
+    if (font_dark11)
+    {
+        TTF_CloseFont(font_dark11);
+
+        font_dark11 = NULL;
+    }
+
+    if (font_garamond)
+    {
+        TTF_CloseFont(font_garamond);
+
+        font_garamond = NULL;
+    }
+
+    TTF_Quit();
 
     return false;
 }
@@ -17455,8 +17951,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         selected = false;
                     }
-                    else if (controls[current].Type == Control::Type::BARTER && !hold)
+                    else if (controls[current].Type == Control::Type::INN && !hold)
                     {
+                        innScreen(window, renderer, party, story->RestPrice);
+
                         current = -1;
 
                         selected = false;
