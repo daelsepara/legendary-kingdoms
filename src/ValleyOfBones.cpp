@@ -10881,7 +10881,14 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             {
                 if (selection != offset + i)
                 {
-                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    if (character.SpellBook[offset + i].Charged)
+                    {
+                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                    }
                 }
                 else
                 {
@@ -11021,30 +11028,9 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 {
                     auto used_up = false;
 
-                    auto spell = character.SpellBook[selection];
-
                     if (used_up)
                     {
-                        if (character.SpellBook.size() > 0)
-                        {
-                            character.SpellBook.erase(character.SpellBook.begin() + selection);
-
-                            if (offset > 0)
-                            {
-                                offset--;
-                            }
-
-                            last = offset + limit;
-
-                            if (last > character.SpellBook.size())
-                            {
-                                last = character.SpellBook.size();
-                            }
-
-                            controls.clear();
-
-                            controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
-                        }
+                        character.SpellBook[selection].Charged = false;
 
                         selection = -1;
 
