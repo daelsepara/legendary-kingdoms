@@ -57,6 +57,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::EquipmentPrice> shop, Character::Base &character);
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection);
 bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
+bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int spells_limit, bool InCombat);
 bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, bool inCombat);
@@ -2286,6 +2287,11 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                 }
                 else if (controls[current].Type == Control::Type::SPELLBOOK && !hold)
                 {
+                    if (party.Party[character].SpellCaster && party.Party[character].SpellBook.size() > 0)
+                    {
+                        spellBook(window, renderer, party, party.Party[character], party.Party[character].SpellBookLimit, inCombat);
+                    }
+
                     done = false;
 
                     selected = false;
@@ -3199,6 +3205,64 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
         controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, spells.size() > 0 ? (last - start) - 1 : idx, idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
     }
+
+    return controls;
+}
+
+std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int start, int last, int limit, int offsetx, int offsety, int scrolly)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (spells.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto spell = spells[index];
+
+            std::string spell_string = "";
+
+            spell_string += spell.Name;
+
+            spell_string += "\nType: " + std::string(Spells::ScopeDescriptions[spell.Scope]) + ", Charged: " + std::string(spell.Charged ? "Yes" : "No") + ", Recharge: " + std::to_string(spell.Recharge);
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (spells.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (spells.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), scrolly, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (spells.size() > 0 ? idx - 1 : idx), idx, startx, buttony, Control::Type::SPELL));
+    controls.push_back(Button(idx + 1, "icons/no.png", idx, idx + 2, (spells.size() > 0 ? (last - start) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::UNLEARN));
+    controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, (spells.size() > 0 ? (last - start) : idx + 2), idx + 2, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -5552,7 +5616,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
         auto box_space = 10;
         auto offset = 0;
         auto booksize = (int)(2 * (text_bounds) / 3 - infoh - box_space);
-        auto limit = (int)((booksize - 2 * text_space - infoh) / (80));
+        auto limit = (int)((booksize - 2 * text_space) / (80));
         auto last = offset + limit;
 
         if (last > spells.size())
@@ -10642,6 +10706,443 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
     return false;
 }
 
+bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int spells_limit, bool InCombat)
+{
+    auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+    auto infoh = 48;
+    auto boxh = (int)(0.150 * SCREEN_HEIGHT);
+    auto box_space = 10;
+
+    auto font_size = 28;
+    auto text_space = 8;
+    auto scrollSpeed = 1;
+    auto booksize = (int)(2 * (text_bounds) / 3 - infoh - box_space);
+    auto limit = (int)((booksize - 2 * text_space) / (80));
+
+    auto offset = 0;
+
+    auto last = offset + limit;
+
+    if (last > character.SpellBook.size())
+    {
+        last = character.SpellBook.size();
+    }
+
+    std::string message = "";
+
+    auto flash_message = false;
+
+    auto flash_color = intRD;
+
+    Uint32 start_ticks = 0;
+
+    Uint32 duration = 3000;
+
+    auto done = false;
+
+    auto textwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+
+    auto scrolly = startx + infoh + booksize - buttonh - text_space + 1;
+    auto offsety = (texty + infoh);
+
+    auto controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+
+    TTF_Init();
+
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+
+    TTF_SetFontKerning(font_dark11, 0);
+
+    auto selected = false;
+    auto current = -1;
+    auto quit = false;
+    auto scrollUp = false;
+    auto scrollDown = false;
+    auto hold = false;
+
+    auto selection = -1;
+
+    while (!done)
+    {
+        if (!Engine::VERIFY_SPELL_LIMIT(character) || (spells_limit > -1 && !Engine::VERIFY_SPELL_LIMIT(character, spells_limit)))
+        {
+            if (spells_limit > -1)
+            {
+                if (spells_limit > 0)
+                {
+                    message = "Your spellbook is holding more than " + std::to_string(spells_limit) + " spell";
+
+                    if (spells_limit > 1)
+                    {
+                        message += "s";
+                    }
+
+                    message += ". Unlearn some spells from your spellbook.";
+                }
+                else
+                {
+                    message = "Unlearn all of your spells.";
+                }
+            }
+            else
+            {
+                message = "Your spellbook is holding too many spells! You must unlearn spells from your spellbook.";
+            }
+
+            flash_message = true;
+
+            flash_color = intRD;
+
+            start_ticks = SDL_GetTicks();
+        }
+
+        last = offset + limit;
+
+        if (last > character.SpellBook.size())
+        {
+            last = character.SpellBook.size();
+        }
+
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Spellbook");
+
+        fillWindow(renderer, intWH);
+
+        if (splash)
+        {
+            fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+        }
+
+        putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+        if (selection >= 0 && selection < character.SpellBook.size())
+        {
+            putText(renderer, character.SpellBook[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+        }
+        else
+        {
+            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+        }
+
+        if (selection >= 0 && selection < character.SpellBook.size())
+        {
+            auto spell = character.SpellBook[selection];
+
+            if (current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::SPELL)
+                {
+                    putHeader(renderer, (std::string("Cast the ") + std::string(spell.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (controls[current].Type == Control::Type::UNLEARN)
+                {
+                    putHeader(renderer, (std::string("Unlearn the ") + std::string(spell.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else
+                {
+                    putHeader(renderer, (std::string(character.Name) + "'s items").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+            }
+            else
+            {
+                putHeader(renderer, (std::string(character.Name) + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+        }
+        else
+        {
+            if (current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::SPELL)
+                {
+                    putHeader(renderer, "Cast spell", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (controls[current].Type == Control::Type::UNLEARN)
+                {
+                    putHeader(renderer, "Unlearn Spell", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else
+                {
+                    putHeader(renderer, (std::string(character.Name) + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+            }
+            else
+            {
+                putHeader(renderer, (std::string(character.Name) + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+        }
+
+        fillRect(renderer, textwidth, booksize, textx, texty + infoh, intBE);
+
+        if (last - offset > 0)
+        {
+            for (auto i = 0; i < last - offset; i++)
+            {
+                if (selection != offset + i)
+                {
+                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                }
+                else
+                {
+                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                }
+            }
+        }
+
+        if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::ACTION)
+        {
+            if (((current + offset) >= 0) && ((current + offset) < character.SpellBook.size()))
+            {
+                fillRect(renderer, textwidth, text_bounds / 3 - box_space, textx, texty + infoh + booksize + box_space, intLB);
+
+                auto text = createText(character.SpellBook[current + offset].Description, FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+
+                renderText(renderer, text, intLB, textx + text_space, texty + infoh + booksize + box_space + text_space, text_bounds / 3 - texty, 0);
+
+                SDL_FreeSurface(text);
+
+                text = NULL;
+            }
+        }
+
+        renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+
+        if (flash_message)
+        {
+            if ((SDL_GetTicks() - start_ticks) < duration)
+            {
+                putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+            }
+            else
+            {
+                flash_message = false;
+            }
+        }
+
+        done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+        if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+        {
+            if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+            {
+                if (offset > 0)
+                {
+                    offset -= scrollSpeed;
+
+                    if (offset < 0)
+                    {
+                        offset = 0;
+                    }
+
+                    last = offset + limit;
+
+                    if (last > character.SpellBook.size())
+                    {
+                        last = character.SpellBook.size();
+                    }
+
+                    controls.clear();
+
+                    controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+
+                    SDL_Delay(50);
+                }
+
+                if (offset <= 0)
+                {
+                    current = -1;
+
+                    selected = false;
+                }
+            }
+            else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+            {
+                if (character.SpellBook.size() - last > 0)
+                {
+                    if (offset < character.SpellBook.size() - limit)
+                    {
+                        offset += scrollSpeed;
+                    }
+
+                    if (offset > character.SpellBook.size() - limit)
+                    {
+                        offset = character.SpellBook.size() - limit;
+                    }
+
+                    last = offset + limit;
+
+                    if (last > character.SpellBook.size())
+                    {
+                        last = character.SpellBook.size();
+                    }
+
+                    controls.clear();
+
+                    controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+
+                    SDL_Delay(50);
+
+                    if (offset > 0)
+                    {
+                        if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                        {
+                            current++;
+                        }
+                    }
+                }
+
+                if (character.SpellBook.size() - last <= 0)
+                {
+                    selected = false;
+
+                    current = -1;
+                }
+            }
+            else if (controls[current].Type == Control::Type::ACTION && !hold)
+            {
+                if ((current + offset >= 0) && (current + offset) < character.SpellBook.size())
+                {
+                    if (selection == current + offset)
+                    {
+                        selection = -1;
+                    }
+                    else
+                    {
+                        selection = current + offset;
+                    }
+                }
+
+                selected = false;
+            }
+            else if (controls[current].Type == Control::Type::SPELL && !hold)
+            {
+                if (selection >= 0 && selection < character.SpellBook.size())
+                {
+                    auto used_up = false;
+
+                    auto spell = character.SpellBook[selection];
+
+                    if (used_up)
+                    {
+                        if (character.SpellBook.size() > 0)
+                        {
+                            character.SpellBook.erase(character.SpellBook.begin() + selection);
+
+                            if (offset > 0)
+                            {
+                                offset--;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > character.SpellBook.size())
+                            {
+                                last = character.SpellBook.size();
+                            }
+
+                            controls.clear();
+
+                            controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+                        }
+
+                        selection = -1;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+            }
+            else if (controls[current].Type == Control::Type::UNLEARN && !hold)
+            {
+                if (selection >= 0 && selection < character.SpellBook.size())
+                {
+                    auto spell = character.SpellBook[selection];
+
+                    character.SpellBook.erase(character.SpellBook.begin() + selection);
+
+                    if (offset > 0)
+                    {
+                        offset--;
+                    }
+
+                    last = offset + limit;
+
+                    if (last > character.SpellBook.size())
+                    {
+                        last = character.SpellBook.size();
+                    }
+
+                    controls.clear();
+
+                    controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+
+                    message = spell.Name;
+
+                    message += " erased from spellbook!";
+
+                    flash_color = intRD;
+
+                    flash_message = true;
+
+                    selected = false;
+
+                    current = -1;
+
+                    selection = -1;
+                }
+            }
+            else if (controls[current].Type == Control::Type::BACK && !hold)
+            {
+                done = true;
+
+                break;
+            }
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) > duration)
+                {
+                    start_ticks = SDL_GetTicks();
+                }
+            }
+        }
+    }
+
+    if (font_garamond)
+    {
+        TTF_CloseFont(font_garamond);
+
+        font_garamond = NULL;
+    }
+
+    if (font_dark11)
+    {
+        TTF_CloseFont(font_dark11);
+
+        font_dark11 = NULL;
+    }
+
+    if (font_mason)
+    {
+        TTF_CloseFont(font_mason);
+
+        font_mason = NULL;
+    }
+
+    TTF_Quit();
+
+    if (splash)
+    {
+        SDL_FreeSurface(splash);
+
+        splash = NULL;
+    }
+
+    return false;
+}
+
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army)
 {
     auto done = false;
@@ -10929,7 +11430,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto booksize = (int)(2 * (text_bounds) / 3);
         auto box_space = 10;
-        auto limit = (int)((booksize - text_space) / ((boxh) + 3 * text_space));
+        auto limit = (int)((booksize - text_space - infoh) / (80));
         auto last = offset + limit;
 
         if (last > spells.size())

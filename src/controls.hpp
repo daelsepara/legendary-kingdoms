@@ -54,6 +54,7 @@ namespace Control
         SPELL,
         SPELL_TARGET,
         SPELLBOOK,
+        UNLEARN,
         FLEE,
         HARBOUR,
         ARMY,

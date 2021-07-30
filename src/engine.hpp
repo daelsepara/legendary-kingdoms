@@ -1402,6 +1402,18 @@ namespace Engine
         }
     }
 
+    bool VERIFY_SPELL_LIMIT(Character::Base &player, int spell_limit)
+    {
+        if (player.SpellCaster)
+        {
+            return player.SpellBook.size() <= spell_limit;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     int FIND_SHIP(Party::Base &party, Location::Type location, int needed_space)
     {
         auto result = -1;
