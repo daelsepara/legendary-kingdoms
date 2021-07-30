@@ -60,6 +60,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int spells_limit, bool InCombat);
 bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
+bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character);
 bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, bool inCombat);
 
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
@@ -3137,6 +3138,89 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
     controls.push_back(Button(idx + 2, "icons/interaction.png", idx + 1, idx + 3, (list.size() > 0 ? (last - start) : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::TRANSFER));
     controls.push_back(Button(idx + 3, "icons/vault.png", idx + 2, idx + 4, (list.size() > 0 ? (last - start) : idx + 3), idx + 3, startx + 3 * gridsize, buttony, Control::Type::VAULT));
     controls.push_back(Button(idx + 4, "icons/back-button.png", idx + 3, idx + 4, (list.size() > 0 ? (last - start) : idx + 4), idx + 4, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+
+    return controls;
+}
+
+std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, int offsety, int scrolly)
+{
+    auto font_size = 28;
+    auto text_space = 8;
+    auto textwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+
+    auto controls = std::vector<Button>();
+
+    if (list.size() > 0)
+    {
+        for (int i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            std::string item_string = list[index].Name;
+
+            if (list[index].TwoHanded)
+            {
+                item_string += "*";
+            }
+
+            if (list[index].Attribute != Attribute::Type::NONE || list[index].AdditionalSlots > 0)
+            {
+                item_string += " (";
+
+                if (list[index].Attribute != Attribute::Type::NONE)
+                {
+                    item_string += "+" + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]);
+                }
+
+                if (list[index].AdditionalSlots > 0)
+                {
+                    if (list[index].Attribute != Attribute::Type::NONE)
+                    {
+                        item_string += ", ";
+                    }
+
+                    item_string += std::to_string(list[index].AdditionalSlots + 1) + " slots";
+                }
+
+                item_string += ")";
+            }
+
+            auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, textwidth - 4 * text_space, TTF_STYLE_NORMAL);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, text, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), textx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = textwidth - 4 * text_space;
+
+            controls[i].H = text->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (list.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (list.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), scrolly, Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (list.size() > 0 ? idx - 1 : idx), idx, startx, buttony, Control::Type::USE));
+    controls.push_back(Button(idx + 1, "icons/interaction.png", idx, idx + 2, (list.size() > 0 ? (last - start) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::TRANSFER));
+    controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, (list.size() > 0 ? (last - start) : idx + 2), idx + 2, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -9478,18 +9562,18 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         Engine::LOSE_CODES(party, {Codes::Type::LAST_IN_COMBAT});
     }
 
-    for (auto i = 0; i < party.Party.size(); i++)
-    {
-        if (team == Team::Type::NONE || party.Party[i].Team == team)
-        {
-            Engine::REMOVE_STATUS(party.Party[i], Character::Status::ARMOUR3);
-            Engine::REMOVE_STATUS(party.Party[i], Character::Status::ENRAGED);
-            Engine::REMOVE_STATUS(party.Party[i], Character::Status::POTION_OF_INVULNERABILITY);
-        }
-    }
-
     if (combatResult != Engine::Combat::NONE)
     {
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            if (team == Team::Type::NONE || party.Party[i].Team == team || party.Party[i].Team == Team::Type::SOLO)
+            {
+                Engine::REMOVE_STATUS(party.Party[i], Character::Status::ARMOUR3);
+                Engine::REMOVE_STATUS(party.Party[i], Character::Status::ENRAGED);
+                Engine::REMOVE_STATUS(party.Party[i], Character::Status::POTION_OF_INVULNERABILITY);
+            }
+        }
+
         Engine::LOSE_CODES(party, {Codes::Type::NO_COMBAT_SPELLS});
     }
 
@@ -10121,6 +10205,509 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return false;
 }
 
+bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character)
+{
+    auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+    auto infoh = 48;
+    auto boxh = (int)(0.150 * SCREEN_HEIGHT);
+    auto box_space = 10;
+
+    auto font_size = 28;
+    auto text_space = 8;
+    auto scrollSpeed = 1;
+    auto limit = (text_bounds - 2 * text_space - infoh) / (font_size + 7 * text_space / 2);
+
+    auto offset = 0;
+
+    auto last = offset + limit;
+
+    if (last > party.Vault.size())
+    {
+        last = party.Vault.size();
+    }
+
+    std::string message = "";
+
+    auto flash_message = false;
+
+    auto flash_color = intRD;
+
+    Uint32 start_ticks = 0;
+
+    Uint32 duration = 3000;
+
+    auto done = false;
+
+    auto textwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+
+    auto scrolly = (texty + text_bounds - arrow_size - border_space);
+    auto offsety = (texty + infoh);
+
+    auto controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+
+    TTF_Init();
+
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+
+    TTF_SetFontKerning(font_dark11, 0);
+
+    auto selected = false;
+    auto current = -1;
+    auto quit = false;
+    auto scrollUp = false;
+    auto scrollDown = false;
+    auto hold = false;
+
+    auto selection = -1;
+
+    while (!done)
+    {
+        last = offset + limit;
+
+        if (last > party.Vault.size())
+        {
+            last = party.Vault.size();
+        }
+
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: The Vault");
+
+        fillWindow(renderer, intWH);
+
+        if (splash)
+        {
+            fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+        }
+
+        putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+        if (selection >= 0 && selection < party.Vault.size())
+        {
+            putText(renderer, party.Vault[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+        }
+        else
+        {
+            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+        }
+
+        if (selection >= 0 && selection < party.Vault.size())
+        {
+            auto item = party.Vault[selection];
+
+            if (current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::USE)
+                {
+                    putHeader(renderer, (std::string("Use the ") + std::string(item.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (controls[current].Type == Control::Type::TRANSFER)
+                {
+                    putHeader(renderer, (std::string("Transfer the ") + std::string(item.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else
+                {
+                    putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+            }
+            else
+            {
+                putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+        }
+        else
+        {
+            if (current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::USE)
+                {
+                    putHeader(renderer, "Use item", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (controls[current].Type == Control::Type::TRANSFER)
+                {
+                    putHeader(renderer, "Transfer item to another party member", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else
+                {
+                    putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+            }
+            else
+            {
+                putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+        }
+
+        fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+
+        if (last - offset > 0)
+        {
+            for (auto i = 0; i < last - offset; i++)
+            {
+                if (selection != offset + i)
+                {
+                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                }
+                else
+                {
+                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                }
+            }
+        }
+
+        renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+
+        if (flash_message)
+        {
+            if ((SDL_GetTicks() - start_ticks) < duration)
+            {
+                putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+            }
+            else
+            {
+                flash_message = false;
+            }
+        }
+
+        done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+        if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+        {
+            if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+            {
+                if (offset > 0)
+                {
+                    offset -= scrollSpeed;
+
+                    if (offset < 0)
+                    {
+                        offset = 0;
+                    }
+
+                    last = offset + limit;
+
+                    if (last > party.Vault.size())
+                    {
+                        last = party.Vault.size();
+                    }
+
+                    controls.clear();
+
+                    controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+
+                    SDL_Delay(50);
+                }
+
+                if (offset <= 0)
+                {
+                    current = -1;
+
+                    selected = false;
+                }
+            }
+            else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+            {
+                if (party.Vault.size() - last > 0)
+                {
+                    if (offset < party.Vault.size() - limit)
+                    {
+                        offset += scrollSpeed;
+                    }
+
+                    if (offset > party.Vault.size() - limit)
+                    {
+                        offset = party.Vault.size() - limit;
+                    }
+
+                    last = offset + limit;
+
+                    if (last > party.Vault.size())
+                    {
+                        last = party.Vault.size();
+                    }
+
+                    controls.clear();
+
+                    controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+
+                    SDL_Delay(50);
+
+                    if (offset > 0)
+                    {
+                        if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                        {
+                            current++;
+                        }
+                    }
+                }
+
+                if (party.Vault.size() - last <= 0)
+                {
+                    selected = false;
+
+                    current = -1;
+                }
+            }
+            else if (controls[current].Type == Control::Type::ACTION && !hold)
+            {
+                if ((current + offset >= 0) && (current + offset) < party.Vault.size())
+                {
+                    if (selection == current + offset)
+                    {
+                        selection = -1;
+                    }
+                    else
+                    {
+                        selection = current + offset;
+                    }
+                }
+
+                selected = false;
+            }
+            else if (controls[current].Type == Control::Type::USE && !hold)
+            {
+                if (selection >= 0 && selection < party.Vault.size())
+                {
+                    auto used_up = false;
+
+                    auto item = party.Vault[selection];
+
+                    if (used_up)
+                    {
+                        if (party.Vault.size() > 0)
+                        {
+                            party.Vault.erase(party.Vault.begin() + selection);
+
+                            if (offset > 0)
+                            {
+                                offset--;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Vault.size())
+                            {
+                                last = party.Vault.size();
+                            }
+
+                            controls.clear();
+
+                            controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+                        }
+
+                        selection = -1;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+            }
+            else if (controls[current].Type == Control::Type::TRANSFER && !hold)
+            {
+                if (selection >= 0 && selection < party.Vault.size())
+                {
+                    auto item = party.Vault[selection];
+
+                    if (Engine::COUNT(party.Party) > 1)
+                    {
+                        if (character.Team != Team::Type::SOLO)
+                        {
+                            auto target = selectPartyMember(window, renderer, party, character.Team, item, Control::Type::EQUIPMENT);
+
+                            if (target >= 0 && target < party.Party.size())
+                            {
+                                party.Vault.erase(party.Vault.begin() + selection);
+
+                                party.Party[target].Equipment.push_back(item);
+
+                                if (offset > 0)
+                                {
+                                    offset--;
+                                }
+
+                                last = offset + limit;
+
+                                if (last > party.Vault.size())
+                                {
+                                    last = party.Vault.size();
+                                }
+
+                                controls.clear();
+
+                                controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+
+                                message = item.Name;
+
+                                if (item.TwoHanded)
+                                {
+                                    message += "*";
+                                }
+
+                                if (item.Attribute != Attribute::Type::NONE)
+                                {
+                                    message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                }
+
+                                message += " transferred to " + std::string(party.Party[target].Name) + "!";
+
+                                flash_color = intLB;
+
+                                flash_message = true;
+
+                                selected = false;
+
+                                current = -1;
+
+                                selection = -1;
+                            }
+                        }
+                        else
+                        {
+                            party.Vault.erase(party.Vault.begin() + selection);
+
+                            character.Equipment.push_back(item);
+
+                            if (offset > 0)
+                            {
+                                offset--;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Vault.size())
+                            {
+                                last = party.Vault.size();
+                            }
+
+                            controls.clear();
+
+                            controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+
+                            message = item.Name;
+
+                            if (item.TwoHanded)
+                            {
+                                message += "*";
+                            }
+
+                            if (item.Attribute != Attribute::Type::NONE)
+                            {
+                                message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                            }
+
+                            message += " transferred to " + std::string(character.Name) + "!";
+
+                            flash_color = intLB;
+
+                            flash_message = true;
+
+                            selected = false;
+
+                            current = -1;
+
+                            selection = -1;
+                        }
+                    }
+                    else
+                    {
+                        party.Vault.erase(party.Vault.begin() + selection);
+
+                        character.Equipment.push_back(item);
+
+                        if (offset > 0)
+                        {
+                            offset--;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > party.Vault.size())
+                        {
+                            last = party.Vault.size();
+                        }
+
+                        controls.clear();
+
+                        controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+
+                        message = item.Name;
+
+                        if (item.TwoHanded)
+                        {
+                            message += "*";
+                        }
+
+                        if (item.Attribute != Attribute::Type::NONE)
+                        {
+                            message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                        }
+
+                        message += " transferred to " + std::string(character.Name) + "!";
+
+                        flash_color = intLB;
+
+                        flash_message = true;
+
+                        selected = false;
+
+                        current = -1;
+
+                        selection = -1;
+                    }
+                }
+            }
+            else if (controls[current].Type == Control::Type::BACK && !hold)
+            {
+                done = true;
+
+                break;
+            }
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) > duration)
+                {
+                    start_ticks = SDL_GetTicks();
+                }
+            }
+        }
+    }
+
+    if (font_garamond)
+    {
+        TTF_CloseFont(font_garamond);
+
+        font_garamond = NULL;
+    }
+
+    if (font_dark11)
+    {
+        TTF_CloseFont(font_dark11);
+
+        font_dark11 = NULL;
+    }
+
+    if (font_mason)
+    {
+        TTF_CloseFont(font_mason);
+
+        font_mason = NULL;
+    }
+
+    TTF_Quit();
+
+    if (splash)
+    {
+        SDL_FreeSurface(splash);
+
+        splash = NULL;
+    }
+
+    return false;
+}
+
 bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int equipment_limit, bool InCombat)
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
@@ -10577,7 +11164,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         {
                             auto item = character.Equipment[selection];
 
-                            auto target = selectPartyMember(window, renderer, party, Team::Type::NONE, item, Control::Type::EQUIPMENT);
+                            auto target = selectPartyMember(window, renderer, party, character.Team, item, Control::Type::EQUIPMENT);
 
                             if (target >= 0 && target < party.Party.size())
                             {
@@ -10654,6 +11241,100 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                         flash_message = true;
                     }
+                }
+            }
+            else if (controls[current].Type == Control::Type::VAULT && !hold)
+            {
+                if (Engine::VERIFY_CODES(party, {Codes::Type::MAGIC_VAULT}))
+                {
+                    if (!InCombat)
+                    {
+                        if (selection >= 0 && selection < character.Equipment.size())
+                        {
+                            auto item = character.Equipment[selection];
+
+                            character.Equipment.erase(character.Equipment.begin() + selection);
+
+                            party.Vault.push_back(item);
+
+                            if (offset > 0)
+                            {
+                                offset--;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > character.Equipment.size())
+                            {
+                                last = character.Equipment.size();
+                            }
+
+                            controls.clear();
+
+                            controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
+
+                            message = item.Name;
+
+                            if (item.TwoHanded)
+                            {
+                                message += "*";
+                            }
+
+                            if (item.Attribute != Attribute::Type::NONE)
+                            {
+                                message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                            }
+
+                            message += " transferred to the Vault!";
+
+                            flash_color = intLB;
+
+                            flash_message = true;
+
+                            selected = false;
+
+                            current = -1;
+
+                            selection = -1;
+                        }
+                        else
+                        {
+                            vaultScreen(window, renderer, party, character);
+
+                            offset = 0;
+
+                            last = offset + limit;
+
+                            if (last > character.Equipment.size())
+                            {
+                                last = character.Equipment.size();
+                            }
+
+                            controls.clear();
+
+                            controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
+
+                            current = -1;
+
+                            selection = -1;
+                        }
+                    }
+                    else
+                    {
+                        message = "You cannot access this while in combat!";
+
+                        flash_color = intRD;
+
+                        flash_message = true;
+                    }
+                }
+                else
+                {
+                    message = "The Vault is not accessible at this time!";
+
+                    flash_color = intRD;
+
+                    flash_message = true;
                 }
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
@@ -11028,8 +11709,54 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 {
                     auto used_up = false;
 
+                    if (character.SpellBook[selection].Charged)
+                    {
+                        if (character.SpellBook[selection].Type == Spells::Type::MAGIC_CABINET)
+                        {
+                            if (!Engine::VERIFY_CODES(party, {Codes::Type::MAGIC_VAULT}))
+                            {
+                                if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_VAULT_ACCESS}))
+                                {
+                                    used_up = true;
+
+                                    Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
+                                }
+                                else
+                                {
+                                    message = "The vault is not accessible at this time!";
+
+                                    flash_color = intRD;
+
+                                    flash_message = true;
+                                }
+                            }
+                            else
+                            {
+                                message = "The magic vault is already accessible!";
+
+                                flash_color = intRD;
+
+                                flash_message = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        message = "You cannot cast " + std::string(character.SpellBook[selection].Name) + " at this time!";
+
+                        flash_color = intRD;
+
+                        flash_message = true;
+                    }
+
                     if (used_up)
                     {
+                        flash_message = true;
+
+                        message = std::string(character.Name) + " casts " + character.SpellBook[selection].Name;
+
+                        flash_color = intLB;
+
                         character.SpellBook[selection].Charged = false;
 
                         selection = -1;
@@ -16252,6 +16979,8 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
 
     if ((story->BookID != next->BookID) || (story->BookID == next->BookID && storyID != nextID))
     {
+        Engine::LOSE_CODES(party, {Codes::Type::NO_VAULT_ACCESS, Codes::Type::MAGIC_VAULT});
+
         if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::RUNESWORD3}))
         {
             auto result = Engine::FIND_BEARER(party, Equipment::Type::RUNESWORD3);

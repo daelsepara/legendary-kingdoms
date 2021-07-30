@@ -395,7 +395,7 @@ namespace Engine
 
     int SCORE(Character::Base &character, Attribute::Type type)
     {
-        auto score = 1;
+        auto score = 0;
 
         for (auto i = 0; i < character.Attributes.size(); i++)
         {
@@ -423,9 +423,9 @@ namespace Engine
             {
                 character.Attributes[i].Value += score;
 
-                if (character.Attributes[i].Value < 1)
+                if (character.Attributes[i].Value < 0)
                 {
-                    character.Attributes[i].Value = 1;
+                    character.Attributes[i].Value = 0;
                 }
 
                 break;

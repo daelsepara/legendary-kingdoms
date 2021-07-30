@@ -2761,6 +2761,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::GET_CODES(party, {Codes::Type::NO_VAULT_ACCESS});
             Engine::LOSE_ALL(party, Equipment::Class::ARMOUR);
             Engine::LOSE_ALL(party, Equipment::Class::ROBE);
 

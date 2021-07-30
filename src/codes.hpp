@@ -10,6 +10,8 @@ namespace Codes
     // Invisible (Party level) codes to handle situations not explicitly stated in the rules section. Can also be used to handle temporary effects
     enum class Type
     {
+        MAGIC_VAULT,
+        NO_VAULT_ACCESS,
         STARTED_IN_BOOK1,
         STARTED_IN_BOOK2,
         STARTED_IN_BOOK3,
@@ -29,7 +31,7 @@ namespace Codes
         SPEAK_BANDO,
         WALL_CLIMBING_AND_DOOR,
         REPAIR_CALENDAR_KALU,
-        NO_COMBAT_SPELLS
+        NO_COMBAT_SPELLS        
     };
 
     std::map<Book::Type, const char *> Prefix = {
