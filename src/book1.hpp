@@ -2685,7 +2685,7 @@ namespace Book1
 
                 party.Members.erase(party.Members.begin() + party.LastSelected);
 
-                party.Current = -1;
+                party.CurrentCharacter = -1;
 
                 party.LastSelected = -1;
             }
@@ -2827,7 +2827,7 @@ namespace Book1
 
                 party.Members.clear();
 
-                party.Current = -1;
+                party.CurrentCharacter = -1;
 
                 party.LastSelected = -1;
             }
@@ -2862,7 +2862,7 @@ namespace Book1
 
                 party.Members.erase(party.Members.begin() + party.LastSelected);
 
-                party.Current = -1;
+                party.CurrentCharacter = -1;
 
                 party.LastSelected = -1;
             }
@@ -7472,7 +7472,17 @@ namespace Book1
                 Monster::Base("Tommul", Monster::Type::TOMMUL, 3, 5, 4, 7, 0),
                 Monster::Base("Brute", 2, 5, 3, 6, 0)};
 
-            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
+            party.CurrentCharacter = Engine::FIND_SOLO(party);
+
+            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size())
+            {
+                previousTeam = party.Members[party.CurrentCharacter].Team;
+
+                Engine::SET_TEAM(party.Members[party.CurrentCharacter]);
+
+                Team = party.Members[party.CurrentCharacter].Team;
+            }
+            else if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
             {
                 previousTeam = party.Members[party.LastSelected].Team;
 
@@ -7486,11 +7496,22 @@ namespace Book1
 
         void AfterCombat(Party::Base &party, Engine::Combat result)
         {
-            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
+            auto target = -1;
+
+            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size())
             {
-                party.Members[party.LastSelected].Team = previousTeam;
+                target = party.CurrentCharacter;
+            }
+            else if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
+            {
+                target = party.LastSelected;
             }
 
+            if (target >= 0 && target < party.Members.size())
+            {
+                party.Members[target].Team = previousTeam;
+            }
+            
             if (result == Engine::Combat::EXCEED_LIMIT)
             {
                 temp_string = "The guards arrive and pull you away to your cell.";
@@ -7499,15 +7520,15 @@ namespace Book1
                 {
                     temp_string += " You have defeated Tommul.";
 
-                    if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
+                    if (target >= 0 && target < party.Members.size())
                     {
                         auto result = Engine::ROLL_DICE(1);
 
-                        if (result[0] > Engine::SCORE(party.Members[party.LastSelected], Attribute::Type::FIGHTING))
+                        if (result[0] > Engine::SCORE(party.Members[target], Attribute::Type::FIGHTING))
                         {
-                            Engine::GAIN_SCORE(party.Members[party.LastSelected], Attribute::Type::FIGHTING, 1);
+                            Engine::GAIN_SCORE(party.Members[target], Attribute::Type::FIGHTING, 1);
 
-                            temp_string += "\n\n" + std::string(party.Members[party.LastSelected].Name) + "'s Fighting skill improved by 1.";
+                            temp_string += "\n\n" + std::string(party.Members[target].Name) + "'s Fighting skill improved by 1.";
                         }
                     }
                 }

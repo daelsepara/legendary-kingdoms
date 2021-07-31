@@ -13364,11 +13364,11 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             }
                             else
                             {
-                                party.Current = Engine::FIND_SOLO(party);
+                                party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                                if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                                 {
-                                    character = party.Current;
+                                    character = party.CurrentCharacter;
                                 }
                                 else
                                 {
@@ -16368,15 +16368,15 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::ATTRIBUTES)
                         {
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
                             auto selection = std::vector<int>();
 
                             auto success = false;
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0 && party.Members[party.Current].Team == Team::Type::SOLO)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0 && party.Members[party.CurrentCharacter].Team == Team::Type::SOLO)
                             {
-                                selection = {party.Current};
+                                selection = {party.CurrentCharacter};
 
                                 success = skillTestScreen(window, renderer, party, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
                             }
@@ -16405,13 +16405,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::LAST_CHARACTER)
                         {
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
                             auto selection = std::vector<int>();
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
-                                party.LastSelected = party.Current;
+                                party.LastSelected = party.CurrentCharacter;
                             }
 
                             auto success = false;
@@ -16485,11 +16485,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 equipment.push_back(story->Choices[choice].Equipment[i].Type);
                             }
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
-                                if (Engine::VERIFY_EQUIPMENT(party.Members[party.Current], equipment))
+                                if (Engine::VERIFY_EQUIPMENT(party.Members[party.CurrentCharacter], equipment))
                                 {
                                     next = findStory(story->Choices[choice].Destination);
 
@@ -16545,11 +16545,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 equipment.push_back(story->Choices[choice].Equipment[i].Type);
                             }
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
-                                if (Engine::VERIFY_ANY_EQUIPMENT(party.Members[party.Current], equipment))
+                                if (Engine::VERIFY_ANY_EQUIPMENT(party.Members[party.CurrentCharacter], equipment))
                                 {
                                     next = findStory(story->Choices[choice].Destination);
 
@@ -16610,11 +16610,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
-                                target = party.Current;
+                                target = party.CurrentCharacter;
                             }
                             else if (Engine::COUNT(party.Members) == 1)
                             {
@@ -16639,11 +16639,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
-                                target = party.Current;
+                                target = party.CurrentCharacter;
                             }
                             else
                             {
@@ -16694,11 +16694,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
-                                target = party.Current;
+                                target = party.CurrentCharacter;
                             }
                             else
                             {
@@ -16799,11 +16799,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
-                                target = party.Current;
+                                target = party.CurrentCharacter;
                             }
                             else if (Engine::COUNT(party.Members) == 1)
                             {
@@ -16832,11 +16832,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
-                                target = party.Current;
+                                target = party.CurrentCharacter;
                             }
                             else if (Engine::COUNT(party.Members) == 1)
                             {
@@ -17139,11 +17139,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             while (selected < 0 || selected >= party.Members.size())
                             {
-                                party.Current = Engine::FIND_SOLO(party);
+                                party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                                if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                                 {
-                                    selected = party.Current;
+                                    selected = party.CurrentCharacter;
                                 }
                                 else if (Engine::COUNT(party.Members) == 1)
                                 {
@@ -17185,13 +17185,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto result = true;
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
                                 for (auto i = 0; i < story->Choices[choice].Status.size(); i++)
                                 {
-                                    result &= Engine::HAS_STATUS(party.Members[party.Current], story->Choices[choice].Status[i]);
+                                    result &= Engine::HAS_STATUS(party.Members[party.CurrentCharacter], story->Choices[choice].Status[i]);
                                 }
                             }
                             else
@@ -17216,7 +17216,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 if (story->Choices[choice].Status.size() > 1)
                                 {
-                                    if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                                    if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                                     {
                                         message = "You do not have all of the required status: ";
                                     }
@@ -17227,7 +17227,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                                 else
                                 {
-                                    if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                                    if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                                     {
                                         message = "You do not have the required status: ";
                                     }
@@ -17252,11 +17252,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
-                                target = party.Current;
+                                target = party.CurrentCharacter;
                             }
                             else
                             {
@@ -17305,11 +17305,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto selection = std::vector<int>();
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
-                                selection.push_back(party.Current);
+                                selection.push_back(party.CurrentCharacter);
                             }
                             else
                             {
@@ -17367,11 +17367,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             auto target = -1;
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
-                                target = party.Current;
+                                target = party.CurrentCharacter;
                             }
                             else if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
                             {
@@ -17413,11 +17413,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 auto target = -1;
 
-                                party.Current = Engine::FIND_SOLO(party);
+                                party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                                if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                                 {
-                                    target = party.Current;
+                                    target = party.CurrentCharacter;
                                 }
                                 else if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
                                 {
@@ -18141,9 +18141,9 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         {
                             Team::Type team = story->Team;
 
-                            party.Current = Engine::FIND_SOLO(party);
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.Current >= 0 && party.Current < party.Members.size() && party.Members[party.Current].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
                             {
                                 team = Team::Type::SOLO;
                             }
@@ -18239,12 +18239,12 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 {
                                     party.Dead.push_back(party.Members[i].Type);
                                     
-                                    if (party.Members[i].Team == Team::Type::SOLO && party.Current == i)
+                                    if (party.Members[i].Team == Team::Type::SOLO && party.CurrentCharacter == i)
                                     {
                                         party.Members[i].Equipment.clear();
                                     }
 
-                                    if (party.Members[i].Type == Character::Type::AKIHIRO_OF_CHALICE && party.Members[i].Team == Team::Type::SOLO && party.Current == i)
+                                    if (party.Members[i].Type == Character::Type::AKIHIRO_OF_CHALICE && party.Members[i].Team == Team::Type::SOLO && party.CurrentCharacter == i)
                                     {
                                         if (book == Book::Type::BOOK1)
                                         {
@@ -18252,9 +18252,9 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                         }
                                     }
 
-                                    if (party.Current != -1)
+                                    if (party.CurrentCharacter != -1)
                                     {
-                                        party.Current = -1;
+                                        party.CurrentCharacter = -1;
                                     }
 
                                     if (party.LastSelected != -1)

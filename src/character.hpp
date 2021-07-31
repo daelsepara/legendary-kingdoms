@@ -268,7 +268,7 @@ namespace Party
         std::map<Character::Romance, int> Hearts = {};
 
         // Only useful for keeping track of characters gone solo.
-        int Current = -1;
+        int CurrentCharacter = -1;
 
         // Book reference
         Book::Type Book = Book::Type::BOOK1;

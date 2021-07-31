@@ -286,23 +286,6 @@ namespace Engine
         return found;
     }
 
-    int FIND_SOLO(Party::Base &party)
-    {
-        auto result = -1;
-
-        for (auto i = 0; i < party.Members.size(); i++)
-        {
-            if (party.Members[i].Team == Team::Type::SOLO)
-            {
-                result = i;
-
-                break;
-            }
-        }
-
-        return result;
-    }
-
     int FIND_SOLO(std::vector<Character::Base> &party)
     {
         auto result = -1;
@@ -318,6 +301,11 @@ namespace Engine
         }
 
         return result;
+    }
+
+    int FIND_SOLO(Party::Base &party)
+    {
+        return Engine::FIND_SOLO(party.Members);
     }
 
     std::vector<int> ROLL_DICE(int count)
@@ -1281,12 +1269,12 @@ namespace Engine
 
     void REJOIN(Party::Base &party)
     {
-        if (party.Current >= 0 && party.Members.size())
+        if (party.CurrentCharacter >= 0 && party.Members.size())
         {
-            party.Members[party.Current].Team = Team::Type::NONE;
+            party.Members[party.CurrentCharacter].Team = Team::Type::NONE;
         }
 
-        party.Current = -1;
+        party.CurrentCharacter = -1;
     }
 
     int FIND_LIST(std::vector<Team::Type> selection, Team::Type team)
@@ -1346,7 +1334,7 @@ namespace Engine
             }
         }
 
-        party.Current = -1;
+        party.CurrentCharacter = -1;
     }
 
     void GO_SOLO(Party::Base &party, Character::Type character)
@@ -1357,7 +1345,7 @@ namespace Engine
 
         if (result >= 0 && result < party.Members.size())
         {
-            party.Current = result;
+            party.CurrentCharacter = result;
 
             party.Members[result].Team = Team::Type::SOLO;
         }
