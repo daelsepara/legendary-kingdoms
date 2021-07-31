@@ -27,7 +27,9 @@ namespace Monster
         STONE,
         ROCK,
         ORC,
-        ORC_LEADER
+        ORC_LEADER,
+        SPIDER_WITH_SWARM,
+        TOMMUL
     };
 
     class Base

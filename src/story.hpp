@@ -30,7 +30,7 @@ namespace Choice
         LIFE,
         LOSE_LIFE,
         ATTRIBUTES,
-        CHARACTER_ATTRIBUTES,
+        LAST_CHARACTER,
         TEAM_ATTRIBUTES,
         LOSE_ATTRIBUTES,
         LOSE_ALL,
@@ -508,6 +508,7 @@ namespace Story
         // Combat encounters
         std::vector<Monster::Base> Monsters = {};
         int FleeRound = -1;
+        int RoundLimit = -1;
         bool CanFlee = false;
 
         std::vector<Allies::Type> Allies = {};

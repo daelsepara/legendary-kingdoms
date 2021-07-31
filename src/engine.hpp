@@ -41,7 +41,8 @@ namespace Engine
         NONE,
         VICTORY,
         DEFEAT,
-        FLEE
+        FLEE,
+        EXCEED_LIMIT
     };
 
     enum class Attack
@@ -393,6 +394,82 @@ namespace Engine
         character.Status.clear();
     }
 
+    int FIND_FOLLOWER(Character::Base &character, Follower::Type type)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < character.Followers.size(); i++)
+        {
+            if (character.Followers[i].Type == type)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    void GAIN_FOLLOWERS(Character::Base &character, std::vector<Follower::Base> followers)
+    {
+        if (character.Health > 0 && followers.size() > 0)
+        {
+            for (auto i = 0; i < followers.size(); i++)
+            {
+                auto result = Engine::FIND_FOLLOWER(character, followers[i].Type);
+
+                if (result < 0)
+                {
+                    character.Followers.push_back(followers[i]);
+                }
+            }
+        }
+    }
+
+    void LOSE_FOLLOWERS(Character::Base &character, std::vector<Follower::Type> followers)
+    {
+        if (character.Health > 0 && followers.size() > 0)
+        {
+            for (auto i = 0; i < followers.size(); i++)
+            {
+                auto result = Engine::FIND_FOLLOWER(character, followers[i]);
+
+                if (result >= 0 && result < character.Followers.size())
+                {
+                    character.Followers.erase(character.Followers.begin() + result);
+                }
+            }
+        }
+    }
+
+    void LOSE_FOLLOWERS(Party::Base &party, std::vector<Follower::Type> followers)
+    {
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            Engine::LOSE_FOLLOWERS(party.Party[i], followers);
+        }
+    }
+
+    bool HAS_FOLLOWER(Character::Base &character, Follower::Type follower)
+    {
+        auto result = Engine::FIND_FOLLOWER(character, follower);
+
+        return (result >= 0 && result < character.Followers.size() && character.Followers[result].Health > 0);
+    }
+
+    bool HAS_FOLLOWER(Party::Base &party, Follower::Type follower)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < party.Party.size(); i++)
+        {
+            result |= Engine::HAS_FOLLOWER(party.Party[i], follower);
+        }
+
+        return result;
+    }
+
     int SCORE(Character::Base &character, Attribute::Type type)
     {
         auto score = 0;
@@ -410,6 +487,11 @@ namespace Engine
         if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::ENRAGED))
         {
             score++;
+        }
+
+        if (type == Attribute::Type::FIGHTING && Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
+        {
+            score += 2;
         }
 
         return score;
@@ -457,6 +539,11 @@ namespace Engine
         if (Engine::HAS_STATUS(character, Character::Status::ENRAGED))
         {
             score++;
+        }
+
+        if (Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
+        {
+            score += 2;
         }
 
         return score;
@@ -887,7 +974,7 @@ namespace Engine
 
         for (auto i = 0; i < equipment.size(); i++)
         {
-            if (Engine::COUNT_EQUIPMENT(player, equipment[i]) >= 0)
+            if (Engine::COUNT_EQUIPMENT(player, equipment[i]) > 0)
             {
                 found++;
             }
@@ -1624,6 +1711,34 @@ namespace Engine
         character.Team = team;
     }
 
+    void SET_TEAM(Character::Base &character)
+    {
+        if (character.Type == Character::Type::SAR_JESSICA_DAYNE)
+        {
+            Engine::SET_TEAM(character, Team::Type::SAR_JESSICA_DAYNE);
+        }
+        else if (character.Type == Character::Type::LORD_TIQUON)
+        {
+            Engine::SET_TEAM(character, Team::Type::LORD_TIQUON);
+        }
+        else if (character.Type == Character::Type::TASHA)
+        {
+            Engine::SET_TEAM(character, Team::Type::TASHA);
+        }
+        else if (character.Type == Character::Type::AMELIA_PASS_DAYNE)
+        {
+            Engine::SET_TEAM(character, Team::Type::AMELIA_PASS_DAYNE);
+        }
+        else if (character.Type == Character::Type::AKIHIRO_OF_CHALICE)
+        {
+            Engine::SET_TEAM(character, Team::Type::AKIHIRO_OF_CHALICE);
+        }
+        else if (character.Type == Character::Type::BRASH)
+        {
+            Engine::SET_TEAM(character, Team::Type::BRASH);
+        }
+    }
+
     int FIRST(Party::Base &party, std::vector<int> list)
     {
         auto result = -1;
@@ -2072,6 +2187,16 @@ namespace Engine
         }
 
         return result;
+    }
+
+    void GAIN_HEALTH(Follower::Base &follower, int health)
+    {
+        follower.Health += health;
+
+        if (follower.Health < 0)
+        {
+            follower.Health = 0;
+        }
     }
 }
 #endif

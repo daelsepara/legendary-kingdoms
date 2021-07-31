@@ -73,7 +73,8 @@ namespace Equipment
         CLOAK_OF_PROTECTION3,
         MAGICAL_SHORTSWORD4,
         STONECUTTER_SWORD2,
-        SPEAR
+        SPEAR,
+        PRECIOUS_TOMES
     };
 
     class Base
@@ -194,6 +195,7 @@ namespace Equipment
     auto MAGICAL_SHORTSWORD4 = Equipment::Base("MAGICAL SHORTSWORD", "MAGICAL SHORTSWORD", Equipment::Class::WEAPON, Equipment::Type::MAGICAL_SHORTSWORD4, Attribute::Type::FIGHTING, 4, false);
     auto STONECUTTER_SWORD2 = Equipment::Base("STONECUTTER SWORD", "STONECUTTER SWORD", Equipment::Class::WEAPON, Equipment::Type::STONECUTTER_SWORD2, Attribute::Type::FIGHTING, 2, false);
     auto SPEAR = Equipment::Base("SPEAR", "SPEAR", Equipment::Class::WEAPON, Equipment::Type::SPEAR, Attribute::Type::FIGHTING, 0, false);
+    auto PRECIOUS_TOMES = Equipment::Base("PRECIOUS TOMES", "PRECIOUS TOMES", Equipment::Class::NORMAL, Equipment::Type::PRECIOUS_TOMES, Attribute::Type::NONE, 0, false);
 }
 
 #endif

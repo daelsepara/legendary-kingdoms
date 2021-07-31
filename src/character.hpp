@@ -63,6 +63,37 @@ namespace Team
         {Team::Type::SHADOW_ROOM, "Shadow Room"}};
 }
 
+namespace Follower
+{
+    enum class Type
+    {
+        NONE = -1,
+        MORDAIN_SKELETONS
+    };
+
+    class Base
+    {
+    public:
+        const char *Name = NULL;
+        Follower::Type Type = Follower::Type::NONE;
+        int Health = 0;
+
+        Base()
+        {
+
+        }
+
+        Base(const char *name, Follower::Type type, int health)
+        {
+            Name = name;
+
+            Type = type;
+
+            Health = health;
+        }
+    };
+}
+
 namespace Character
 {
     // Handle unique characters
@@ -110,14 +141,17 @@ namespace Character
 
         Character::Type Type = Character::Type::NONE;
 
-        std::vector<Attribute::Base> Attributes = std::vector<Attribute::Base>();
+        std::vector<Attribute::Base> Attributes = {};
 
-        std::vector<Equipment::Base> Equipment = std::vector<Equipment::Base>();
+        std::vector<Equipment::Base> Equipment = {};
 
-        std::vector<Spells::Base> SpellBook = std::vector<Spells::Base>();
+        std::vector<Spells::Base> SpellBook = {};
 
         // Temporary Status Codes
-        std::vector<Character::Status> Status = std::vector<Character::Status>();
+        std::vector<Character::Status> Status = {};
+
+        // Followers
+        std::vector<Follower::Base> Followers = {};
 
         Team::Type Team = Team::Type::NONE;
 
@@ -197,13 +231,13 @@ namespace Party
     class Base
     {
     public:
-        std::vector<Character::Base> Party = std::vector<Character::Base>();
+        std::vector<Character::Base> Party = {};
 
-        std::vector<Codes::Base> Codes = std::vector<Codes::Base>();
+        std::vector<Codes::Base> Codes = {};
 
-        std::vector<Codes::Type> InvisibleCodes = std::vector<Codes::Type>();
+        std::vector<Codes::Type> InvisibleCodes = {};
 
-        std::vector<Equipment::Base> Vault = std::vector<Equipment::Base>();
+        std::vector<Equipment::Base> Vault = {};
 
         int VaultMoney = 0;
 
@@ -213,11 +247,11 @@ namespace Party
 
         Location::Type Location = Location::Type::NONE;
 
-        std::vector<Ship::Base> Fleet = std::vector<Ship::Base>();
+        std::vector<Ship::Base> Fleet = {};
 
         int CurrentShip = -1;
 
-        std::vector<Army::Base> Army = std::vector<Army::Base>();
+        std::vector<Army::Base> Army = {};
 
         // For tracking recent success (team checks, individual checks)
         int RecentSuccesses = 0;

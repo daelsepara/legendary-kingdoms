@@ -74,7 +74,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
 Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
 
-Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool canFlee, int fleeRound, bool useEquipment);
+Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool canFlee, int fleeRound, int roundLimit, bool useEquipment);
 Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus);
 
 Story::Base *findStory(Engine::Destination destination);
@@ -970,7 +970,7 @@ std::string characterText(Character::Base &character, bool compact)
             character_text += ", ";
         }
 
-        character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": " + std::to_string(character.Attributes[i].Value);
+        character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": " + std::to_string(Engine::SCORE(character, character.Attributes[i].Type));
     }
 
     character_text += ", Health: " + std::to_string(character.Health);
@@ -1803,7 +1803,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
     {
         SDL_SetWindowTitle(window, title);
 
-        const char *choices[6] = {"PARTY", "PREVIOUS", "NEXT", "EQUIPMENT", "SPELLBOOK", "BACK"};
+        const char *choices[7] = {"PARTY", "PREVIOUS", "NEXT", "EQUIPMENT", "SPELLBOOK", "FOLLOWERS", "BACK"};
 
         auto current = 2;
 
@@ -1815,7 +1815,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
 
-        auto controls = createHTextButtons(choices, 6, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh), true);
+        auto controls = createHTextButtons(choices, 7, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh), true);
 
         auto scrolly = texty + text_bounds - arrow_size - border_space;
         auto offsetx = (int)((1.0 - Margin) * SCREEN_WIDTH) - arrow_size;
@@ -1829,7 +1829,8 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
         controls[4].Type = Control::Type::PLUS;
         controls[5].Type = Control::Type::EQUIPMENT;
         controls[6].Type = Control::Type::SPELLBOOK;
-        controls[7].Type = Control::Type::BACK;
+        controls[7].Type = Control::Type::FOLLOWERS;
+        controls[8].Type = Control::Type::BACK;
 
         auto done = false;
 
@@ -2067,6 +2068,24 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                     }
 
                     putText(renderer, equipment_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                }
+                else if (current_mode == Control::Type::FOLLOWERS && party.Party[character].Followers.size() > 0)
+                {
+                    putHeader(renderer, "FOLLOWERS", font_mason2, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+
+                    std::string followers_string = "";
+
+                    for (auto i = 0; i < party.Party[character].Followers.size(); i++)
+                    {
+                        if (i > 0)
+                        {
+                            followers_string += ", ";
+                        }
+
+                        followers_string += std::string(party.Party[character].Followers[i].Name) + " (Health: " + std::to_string(party.Party[character].Followers[i].Health) + ")";
+                    }
+
+                    putText(renderer, followers_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
             }
 
@@ -4772,7 +4791,15 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     flash_color = intRD;
 
-                                    message = "The priest is put off by the pungent odour of the HYGLIPH FLOWER and requires a 5+ to his attack rolls to inflict damage during this battle.";
+                                    if (monsters[opponent].Type == Monster::Type::SNAKEMAN_PRIEST)
+                                    {
+                                        message = "The priest is put off by the pungent odour of the HYGLIPH FLOWER and requires a 5+ to his attack rolls to inflict damage during this battle.";
+                                    }
+                                    else if (monsters[opponent].Type == Monster::Type::SNAKEMAN)
+                                    {
+
+                                        message = "The snakeman is put off by the pungent odour of the HYGLIPH FLOWER and requires a 5+ to his attack rolls to inflict damage during this battle.";
+                                    }
 
                                     start_ticks = SDL_GetTicks();
 
@@ -4980,6 +5007,32 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                                     flash_color = intLB;
 
                                                     Engine::REMOVE_STATUS(party.Party[result], Character::Status::POTION_OF_INVULNERABILITY);
+
+                                                    combat_damage = 0;
+                                                }
+                                                else if (Engine::HAS_FOLLOWER(party.Party[result], Follower::Type::MORDAIN_SKELETONS))
+                                                {
+                                                    message = std::string(party.Party[result].Name) + "'s [SKELETON] steps in the way and takes " + std::to_string(combat_damage) + " damage!";
+
+                                                    auto follower = Engine::FIND_FOLLOWER(party.Party[result], Follower::Type::MORDAIN_SKELETONS);
+
+                                                    if (follower >= 0 && follower < party.Party[result].Followers.size())
+                                                    {
+                                                        Engine::GAIN_HEALTH(party.Party[result].Followers[follower], -combat_damage);
+
+                                                        if (party.Party[result].Followers[follower].Health <= 0)
+                                                        {
+                                                            party.Party[result].Followers.erase(party.Party[result].Followers.begin() + follower);
+
+                                                            message += " The [SKELETON] is destroyed!";
+                                                        }
+                                                    }
+
+                                                    start_ticks = SDL_GetTicks();
+
+                                                    flash_message = true;
+
+                                                    flash_color = intLB;
 
                                                     combat_damage = 0;
                                                 }
@@ -8924,7 +8977,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
     return result;
 }
 
-Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool canFlee, int fleeRound, bool useEquipment)
+Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool canFlee, int fleeRound, int roundLimit, bool useEquipment)
 {
     auto combatResult = Engine::Combat::NONE;
 
@@ -9001,7 +9054,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         auto current_mode = Control::Type::ATTACK;
 
-        while (Engine::COUNT(monsters) > 0 && Engine::COUNT(party.Party, team) > 0)
+        while (Engine::COUNT(monsters) > 0 && Engine::COUNT(party.Party, team) > 0 && (roundLimit == -1 || (roundLimit > 0 && combatRound < roundLimit)))
         {
             auto done = false;
 
@@ -9439,6 +9492,18 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     start_ticks = SDL_GetTicks();
                                 }
+                                else if (Engine::HAS_MONSTER(monsters, Monster::Type::SPIDER_WITH_SWARM))
+                                {
+                                    flash_message = true;
+
+                                    flash_color = intRD;
+
+                                    message = "Swarms of tiny spiders attack the party!";
+
+                                    Engine::GAIN_HEALTH(party.Party, -1);
+
+                                    start_ticks = SDL_GetTicks();
+                                }
                                 else if (Engine::HAS_MONSTER(monsters, Monster::Type::ZEALOT_HEALER) && Engine::COUNT(monsters) > 1)
                                 {
                                     flash_message = true;
@@ -9608,7 +9673,15 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         if (combatResult != Engine::Combat::FLEE)
         {
-            combatResult = Engine::COUNT(party.Party, team) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DEFEAT;
+            if (roundLimit > 0 && combatRound >= roundLimit)
+            {
+                combatResult = Engine::Combat::EXCEED_LIMIT;
+            }
+            else
+            {
+
+                combatResult = Engine::COUNT(party.Party, team) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DEFEAT;
+            }
         }
     }
 
@@ -16330,7 +16403,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 break;
                             }
                         }
-                        else if (story->Choices[choice].Type == Choice::Type::CHARACTER_ATTRIBUTES)
+                        else if (story->Choices[choice].Type == Choice::Type::LAST_CHARACTER)
                         {
                             party.Current = Engine::FIND_SOLO(party);
 
@@ -16675,7 +16748,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 addBye(story, story->temp_string.c_str());
 
                                 Engine::GAIN_HEALTH(party.Party[target], story->Choices[choice].Value);
-                                
+
                                 Engine::GAIN_SCORE(party.Party[target], story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty);
                             }
 
@@ -17576,6 +17649,16 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
             }
         }
     }
+
+    if (next->Location != Location::Type::NONE)
+    {
+        if (Engine::HAS_FOLLOWER(party, Follower::Type::MORDAIN_SKELETONS) && next->Location != Location::Type::MORDAIN)
+        {
+            Engine::LOSE_FOLLOWERS(party, {Follower::Type::MORDAIN_SKELETONS});
+
+            addBye(story, "The [SKELETONS] crumble to dust!");
+        }
+    }
 }
 
 bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Book::Type book, Story::Base *story)
@@ -18065,7 +18148,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 team = Team::Type::SOLO;
                             }
 
-                            auto result = combatScreen(window, renderer, party, team, story->Monsters, story->Allies, story->CanFlee, story->FleeRound, true);
+                            auto result = combatScreen(window, renderer, party, team, story->Monsters, story->Allies, story->CanFlee, story->FleeRound, story->RoundLimit, true);
 
                             story->AfterCombat(party, result);
                         }
@@ -18559,7 +18642,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     std::vector<Allies::Type> allies = {};
 
-                    combat = combatScreen(window, renderer, Party, Team::Type::NONE, monsters, allies, true, -1, false);
+                    combat = combatScreen(window, renderer, Party, Team::Type::NONE, monsters, allies, true, -1, -1, false);
 
                     done = false;
 

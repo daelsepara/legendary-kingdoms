@@ -76,7 +76,8 @@ namespace Control
         MASS_COMBAT,
         HEAL1,
         FULL_RECOVERY,
-        RECHARGE
+        RECHARGE,
+        FOLLOWERS
     };
 
     class Base

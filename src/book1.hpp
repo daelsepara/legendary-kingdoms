@@ -2991,7 +2991,7 @@ namespace Book1
             Text = "Climbing through the window silently will take some skill.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Force open the door (Individual check: Stealth 5+, Successes: 3)", {Book::Type::BOOK1, 487}, {Book::Type::BOOK1, 724}, Choice::Type::CHARACTER_ATTRIBUTES, {Attribute::Type::STEALTH}, 5, 3));
+            Choices.push_back(Choice::Base("Force open the door (Individual check: Stealth 5+, Successes: 3)", {Book::Type::BOOK1, 487}, {Book::Type::BOOK1, 724}, Choice::Type::LAST_CHARACTER, {Attribute::Type::STEALTH}, 5, 3));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -3602,7 +3602,7 @@ namespace Book1
             {
                 previousTeam = party.Party[character].Team;
 
-                Engine::SET_TEAM(party.Party[character], Team::Type::SAR_JESSICA_DAYNE);
+                Engine::SET_TEAM(party.Party[character]);
 
                 Monsters = {Monster::Base("Dulcimer", 4, 4, 4, 8, 0)};
             }
@@ -7191,6 +7191,330 @@ namespace Book1
         }
     };
 
+    class Story230 : public Story::Base
+    {
+    public:
+        Story230()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 230;
+
+            Text = "The bookcase contains a number of valuable tomes, including a REFERENCE BOOK (LORE +1). There is also an interesting tome on herb lore. You flick through it briefly, and come upon a reference to the Lhasbreath Jungles, here in the Valley of Bones. \"...it is a well-known fact that the yellow Hygliph Flower is proof against all snakes, even the wicked snakemen in the Temple of the Unbroken, who react poorly to its pungent perfume.\" Interesting.\n\nYou may take the REFERENCE BOOK. You grab a few of the more PRECIOUS TOMES AS well.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Snatch the golden candlestick, if you haven't already", {Book::Type::BOOK1, 644}));
+            Choices.push_back(Choice::Base("Head upstairs to help the climbing team", {Book::Type::BOOK1, 92}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::REFERENCE_BOOK1, Equipment::PRECIOUS_TOMES};
+
+            Limit = 2;
+        }
+    };
+
+    class Story231 : public Story::Base
+    {
+    public:
+        Story231()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 231;
+
+            Text = "Choose a party member to sneak into the chamber.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Sneak into the chamber (Individual check: Stealth 5+, Successes: 2)", {Book::Type::BOOK1, 428}, {Book::Type::BOOK1, 799}, {Attribute::Type::STEALTH}, 5, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story232 : public Story::Base
+    {
+    public:
+        Story232()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 232;
+
+            Text = "To your mixed delight and horror, the [SKELETONS] rise from the dead, their bones clicking and clacking as they stand up straight before you. The [SKELETONS] will be useful allies.\n\nYou gained the code A75.\n\nNote: There are [SKELETONS] for each party member to control. While a party member has a [SKELETON] following them, they gain an additional 2 points to their Fighting skill, which combines with any other bonuses from weapons or other items. Additionally, your [SKELETONS] will bravely take damage for you. Each skeleton has 6 Health points. When a party member takes damage in combat (not from any other source) the skeleton will step in the way and take the damage for that character. They have no armour, and are destroyed when they are reduced to 0 Health. Skeletons cannot regain Health points. Your [SKELETONS] can only exist whilst you are in the Mordain ruins. As soon as you step outside they will crumble to dust.";
+
+            Bye = "Pleased with your new companions, you make your way back to the crossroads.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            for (auto i = 0; i < party.Party.size(); i++)
+            {
+                if (party.Party[i].Health > 0)
+                {
+                    Engine::GAIN_FOLLOWERS(party.Party[i], {Follower::Base("Skeleton", Follower::Type::MORDAIN_SKELETONS, 6)});
+                }
+            }
+
+            Engine::GET_CODES(party, {Codes::A(75)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 310}; }
+    };
+
+    class Story233 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story233()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 233;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Return to the mine to hunt more troglodytes", {Book::Type::BOOK1, 644}));
+            Choices.push_back(Choice::Base("Make your excuses and leave the mine", {Book::Type::BOOK1, 722}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            auto count = Engine::COUNT_EQUIPMENT(party.Party, {Equipment::Type::TROGLODYTE_HEAD});
+
+            Engine::GAIN_MONEY(party, count * 25);
+
+            PreText = "You received " + std::to_string(count * 25) + " silver coins for the TROGLODYTE HEADs.\n\n\"Keep up the good work,\" he enthuses. \"I'm sure the slaves appreciate your valiant efforts.\"";
+
+            Text = PreText.c_str();
+        }
+    };
+
+    class Story234 : public Story::Base
+    {
+    public:
+        Story234()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 234;
+
+            Text = "The man is a devious con artist who has just run off with your money. Eventually a surprised looking servant enters the room and sadly tells you that the king has retired to his chambers, and that all foreigners must now leave the hall until morning. Upon interrogation the servant reveals that the man you gave money to had never been seen in the hall until today. Cursing your naivety, you storm out of the hall.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story235 : public Story::Base
+    {
+    public:
+        Story235()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 235;
+
+            Text = "You invoke your spell, concentrating on hard on your destination. You can feel the portal links that connect to this location. Where will you travel?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("The Palace of Unbraaki", {Book::Type::BOOK1, 484}));
+            Choices.push_back(Choice::Base("(Crown and Tower) The city of Longport", {Book::Type::BOOK2, 321}));
+            Choices.push_back(Choice::Base("(Pirates of the Splintered) Thalsia", {Book::Type::BOOK3, 108}));
+            Choices.push_back(Choice::Base("(The Gilded Throne) Ozury", {Book::Type::BOOK4, 500}));
+            Choices.push_back(Choice::Base("(The Savage Lands) The Hallowed Grove", {Book::Type::BOOK5, 45}));
+            Choices.push_back(Choice::Base("(Drakehallow) Dagon", {Book::Type::BOOK6, 230}));
+            Choices.push_back(Choice::Base("(Drakehallow) Animus Mast", {Book::Type::BOOK6, 600}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story236 : public Story::Base
+    {
+    public:
+        Story236()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 236;
+
+            Text = "The cheers from the crowd resound across the arena as the final lion falls dead. You cannot help but stifle a tear at the death of the noble beasts, cruelly plucked from the wild to fight for the entertainment of the savage crowd.\n\nFeeling more bestial than even a lion, you are taken from the arena and disarmed again, eager for another bowl of water to slake your aching thirst. You come upon a sight of even greater cruelty. Poor Milagros is being shouted at and struck by an angry guard, enraged at receiving a splash of soup across his armour. The poor girl is on the ground, in his shadow, nursing a bruise on her cheek as the guard pulls out his whip to punish her further.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Dash to her defence", {Book::Type::BOOK1, 812}));
+            Choices.push_back(Choice::Base("Keep well out of it", {Book::Type::BOOK1, 319}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_ALL(party, Equipment::Class::ARMOUR);
+            Engine::LOSE_ALL(party, Equipment::Class::WEAPON);
+        }
+    };
+
+    class Story237 : public Story::Base
+    {
+    public:
+        Story237()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 237;
+
+            Image = "images/book1/spiders_attack.png";
+
+            Text = "A terrible battle begins!\n\nNote: At the end of each combat round, after the spiders have made their attacks, each party member loses 1 Health from being bitten by the swarms of tiny spiders at their feet.";
+
+            Bye = "You manage to survive.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Black Spider", Monster::Type::SPIDER_WITH_SWARM, 5, 5, 4, 7, 0),
+                Monster::Base("Grey Spider", Monster::Type::SPIDER_WITH_SWARM, 4, 5, 4, 7, 0),
+                Monster::Base("Green Spider", Monster::Type::SPIDER_WITH_SWARM, 5, 5, 4, 6, 0),
+                Monster::Base("Red Spider", Monster::Type::SPIDER_WITH_SWARM, 4, 4, 4, 5, 0),
+            };
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 197}; }
+    };
+
+    class Story238 : public Story::Base
+    {
+    public:
+        Story238()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 238;
+
+            Text = "You must fend them off!";
+
+            Bye = "You loot 20 silver coins from their bodies before moving on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Lhasbreath Barbarians", 9, 5, 3, 16, 0),
+                Monster::Base("Barbarian Leader", 4, 4, 4, 7, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 840}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Engine::GAIN_MONEY(party, 20);
+            }
+        }
+    };
+
+    class Story239 : public Story::Base
+    {
+    public:
+        Team::Type previousTeam = Team::Type::NONE;
+
+        Story239()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 239;
+
+            Text = "You'll not back down in front of a knave like Tommul. You must fight this battle alone.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            previousTeam = Team::Type::NONE;
+
+            CanFlee = false;
+
+            RoundLimit = 3;
+
+            Monsters = {
+                Monster::Base("Tommul", Monster::Type::TOMMUL, 3, 5, 4, 7, 0),
+                Monster::Base("Brute", 2, 5, 3, 6, 0)};
+
+            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            {
+                previousTeam = party.Party[party.LastSelected].Team;
+
+                Engine::SET_TEAM(party.Party[party.LastSelected]);
+                
+                Team = party.Party[party.LastSelected].Team;
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 157}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            {
+                party.Party[party.LastSelected].Team = previousTeam;
+            }
+
+            if (result == Engine::Combat::EXCEED_LIMIT)
+            {
+                temp_string = "The guards arrive and pull you away to your cell.";
+
+                if (!Engine::HAS_MONSTER(Monsters, Monster::Type::TOMMUL))
+                {
+                    temp_string += " You have defeated Tommul.";
+
+                    if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+                    {
+                        auto result = Engine::ROLL_DICE(1);
+
+                        if (result[0] > Engine::SCORE(party.Party[party.LastSelected], Attribute::Type::FIGHTING))
+                        {
+                            Engine::GAIN_SCORE(party.Party[party.LastSelected], Attribute::Type::FIGHTING, 1);
+
+                            temp_string += "\n\n" + std::string(party.Party[party.LastSelected].Name) + "'s Fighting skill improved by 1.";
+                        }
+                    }
+                }
+
+                Bye = temp_string.c_str();
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -7446,6 +7770,16 @@ namespace Book1
     auto story227 = Story227();
     auto story228 = Story228();
     auto story229 = Story229();
+    auto story230 = Story230();
+    auto story231 = Story231();
+    auto story232 = Story232();
+    auto story233 = Story233();
+    auto story234 = Story234();
+    auto story235 = Story235();
+    auto story236 = Story236();
+    auto story237 = Story237();
+    auto story238 = Story238();
+    auto story239 = Story239();
 
     void InitializeStories()
     {
@@ -7475,7 +7809,8 @@ namespace Book1
             &story190, &story191, &story192, &story193, &story194, &story195, &story196, &story197, &story198, &story199,
             &story200, &story201, &story202, &story203, &story204, &story205, &story206, &story207, &story208, &story209,
             &story210, &story211, &story212, &story213, &story214, &story215, &story216, &story217, &story218, &story219,
-            &story220, &story221, &story222, &story223, &story224, &story225, &story226, &story227, &story228, &story229};
+            &story220, &story221, &story222, &story223, &story224, &story225, &story226, &story227, &story228, &story229,
+            &story230, &story231, &story232, &story233, &story234, &story235, &story236, &story237, &story238, &story239};
     }
 }
 #endif
