@@ -523,7 +523,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::TITHE_REPORT}))
+            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::TITHE_REPORT}))
             {
                 return {Book::Type::BOOK1, 246};
             }
@@ -535,7 +535,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::GAIN_HEALTH(party.Party, -4);
+            Engine::GAIN_HEALTH(party.Members, -4);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 55}; }
@@ -575,7 +575,7 @@ namespace Book1
 
             Choices.clear();
 
-            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::PRYBAR}))
+            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::PRYBAR}))
             {
                 Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 4, 3));
             }
@@ -597,11 +597,11 @@ namespace Book1
             }
             else
             {
-                temp_string = std::string(party.Party[selection[0]].Name) + " LOSES 1 Health Point.";
+                temp_string = std::string(party.Members[selection[0]].Name) + " LOSES 1 Health Point.";
 
                 Bye = temp_string.c_str();
 
-                Engine::GAIN_HEALTH(party.Party[selection[0]], -1);
+                Engine::GAIN_HEALTH(party.Members[selection[0]], -1);
             }
         }
     };
@@ -962,7 +962,7 @@ namespace Book1
 
             Choices.clear();
 
-            if (!Engine::HAS_STATUS(party.Party, Character::Status::RITUAL_SCARRING))
+            if (!Engine::HAS_STATUS(party.Members, Character::Status::RITUAL_SCARRING))
             {
                 PreText += "They bombard you with questions about the faith, to determine your worthiness.";
 
@@ -1405,7 +1405,7 @@ namespace Book1
             }
             else
             {
-                if (!Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::SCROLL_OF_RAGE}))
+                if (!Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::SCROLL_OF_RAGE}))
                 {
                     PreText += "\n\nYou are surprised to see the SCROLL OF RAGE back on the shelf, in the same place you found it last time. It seems that the scroll teleports back here each time it is used.";
                 }
@@ -1415,7 +1415,7 @@ namespace Book1
                 }
             }
 
-            if (!Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::SCROLL_OF_RAGE}))
+            if (!Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::SCROLL_OF_RAGE}))
             {
                 Take = {Equipment::SCROLL_OF_RAGE};
 
@@ -1543,7 +1543,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::GAIN_HEALTH(party.Party, Team::Type::DISTRACTION, -1);
+            Engine::GAIN_HEALTH(party.Members, Team::Type::DISTRACTION, -1);
 
             Choices.clear();
 
@@ -1958,13 +1958,13 @@ namespace Book1
             {
                 destination = {Book::Type::BOOK1, 391};
             }
-            else if (Engine::COUNT(party.Party) > 0)
+            else if (Engine::COUNT(party.Members) > 0)
             {
-                for (auto i = 0; i < party.Party.size(); i++)
+                for (auto i = 0; i < party.Members.size(); i++)
                 {
-                    if (party.Party[i].Team == Team::Type::CHASE)
+                    if (party.Members[i].Team == Team::Type::CHASE)
                     {
-                        party.Party[i].Equipment.clear();
+                        party.Members[i].Equipment.clear();
                     }
                 }
 
@@ -1993,13 +1993,13 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
             {
-                if (party.Party[party.LastSelected].Type == Character::Type::BRASH)
+                if (party.Members[party.LastSelected].Type == Character::Type::BRASH)
                 {
                     return {Book::Type::BOOK1, 4};
                 }
-                else if (party.Party[party.LastSelected].Type == Character::Type::TASHA)
+                else if (party.Members[party.LastSelected].Type == Character::Type::TASHA)
                 {
                     return {Book::Type::BOOK1, 870};
                 }
@@ -2669,11 +2669,11 @@ namespace Book1
 
             Limit = 0;
 
-            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
             {
-                for (auto i = 0; i < party.Party[party.LastSelected].Equipment.size(); i++)
+                for (auto i = 0; i < party.Members[party.LastSelected].Equipment.size(); i++)
                 {
-                    auto item = party.Party[party.LastSelected].Equipment[i];
+                    auto item = party.Members[party.LastSelected].Equipment[i];
 
                     if (item.Class != Equipment::Class::WEAPON && item.Class != Equipment::Class::ARMOUR)
                     {
@@ -2683,7 +2683,7 @@ namespace Book1
 
                 Limit = Take.size();
 
-                party.Party.erase(party.Party.begin() + party.LastSelected);
+                party.Members.erase(party.Members.begin() + party.LastSelected);
 
                 party.Current = -1;
 
@@ -2817,7 +2817,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            if (Engine::COUNT(party.Party) > 1)
+            if (Engine::COUNT(party.Members) > 1)
             {
                 PreText = "One of your party members loses their grip halfway up and plunges into the sea. They are never seen again.";
             }
@@ -2825,7 +2825,7 @@ namespace Book1
             {
                 PreText = "You lose your grip halfway up and plunge into the sea. You are never seen again.";
 
-                party.Party.clear();
+                party.Members.clear();
 
                 party.Current = -1;
 
@@ -2854,13 +2854,13 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
             {
-                party.Dead.push_back(party.Party[party.LastSelected].Type);
+                party.Dead.push_back(party.Members[party.LastSelected].Type);
 
-                party.Party[party.LastSelected].Equipment.clear();
+                party.Members[party.LastSelected].Equipment.clear();
 
-                party.Party.erase(party.Party.begin() + party.LastSelected);
+                party.Members.erase(party.Members.begin() + party.LastSelected);
 
                 party.Current = -1;
 
@@ -3119,7 +3119,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (Engine::COUNT(party.Party, Team::Type::MERCENARY) > 0)
+            if (Engine::COUNT(party.Members, Team::Type::MERCENARY) > 0)
             {
                 return {Book::Type::BOOK1, 27};
             }
@@ -3493,29 +3493,29 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            for (auto i = 0; i < party.Party.size(); i++)
+            for (auto i = 0; i < party.Members.size(); i++)
             {
                 auto non_taxable = std::vector<Equipment::Base>();
 
-                for (auto j = 0; j < party.Party[i].Equipment.size(); j++)
+                for (auto j = 0; j < party.Members[i].Equipment.size(); j++)
                 {
-                    if (party.Party[i].Equipment[j].Class == Equipment::Class::SHIELD || party.Party[i].Equipment[j].Attribute == Attribute::Type::NONE || party.Party[i].Equipment[j].Modifier < 2)
+                    if (party.Members[i].Equipment[j].Class == Equipment::Class::SHIELD || party.Members[i].Equipment[j].Attribute == Attribute::Type::NONE || party.Members[i].Equipment[j].Modifier < 2)
                     {
-                        non_taxable.push_back(party.Party[i].Equipment[j]);
+                        non_taxable.push_back(party.Members[i].Equipment[j]);
                     }
                 }
 
                 if (non_taxable.size() > 0)
                 {
-                    party.Party[i].Equipment = non_taxable;
+                    party.Members[i].Equipment = non_taxable;
                 }
                 else
                 {
-                    party.Party[i].Equipment.clear();
+                    party.Members[i].Equipment.clear();
                 }
             }
 
-            Engine::GAIN_HEALTH(party.Party, -1);
+            Engine::GAIN_HEALTH(party.Members, -1);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 458}; }
@@ -3554,7 +3554,7 @@ namespace Book1
 
             Choices.clear();
 
-            if (!Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::RING_OF_THE_PATRIARCH}))
+            if (!Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::RING_OF_THE_PATRIARCH}))
             {
                 PreText += "\n\nNote: Only party members who have Ritual Scarring (Cursus) are permitted to enter the ziggurat. Those without the scarring must wait outside, and you cannot use their equipment or abilities until you leave the ziggurat.";
 
@@ -3600,11 +3600,11 @@ namespace Book1
 
             character = Engine::FIND_CHARACTER(party, Character::Type::SAR_JESSICA_DAYNE);
 
-            if (character >= 0 && character < party.Party.size())
+            if (character >= 0 && character < party.Members.size())
             {
-                previousTeam = party.Party[character].Team;
+                previousTeam = party.Members[character].Team;
 
-                Engine::SET_TEAM(party.Party[character]);
+                Engine::SET_TEAM(party.Members[character]);
 
                 Monsters = {Monster::Base("Dulcimer", 4, 4, 4, 8, 0)};
             }
@@ -3620,9 +3620,9 @@ namespace Book1
         {
             if (result == Engine::Combat::VICTORY)
             {
-                if (character >= 0 && character < party.Party.size())
+                if (character >= 0 && character < party.Members.size())
                 {
-                    Engine::SET_TEAM(party.Party[character], previousTeam);
+                    Engine::SET_TEAM(party.Members[character], previousTeam);
                 }
 
                 Bye = "The family reluctantly release Akini's aunt, bidding you never to darken their doorstep again";
@@ -3726,7 +3726,7 @@ namespace Book1
             {
                 Bye = "Each party member loses 1 Health point as your rations dwindle.";
 
-                Engine::GAIN_HEALTH(party.Party, -1);
+                Engine::GAIN_HEALTH(party.Members, -1);
             }
             else
             {
@@ -3859,7 +3859,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::GAIN_HEALTH(party.Party, -1);
+            Engine::GAIN_HEALTH(party.Members, -1);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 865}; }
@@ -4206,13 +4206,13 @@ namespace Book1
         {
             PreText = "The RUNESWORD (FIGHTING +3) is a powerful weapon, however it also has the dreadful side effect of slowly leaching the wielder's life. If you carry this sword, the character bearing it loses 1 Health point each time you turn to a new reference number. You can share the sword around the party in order to spread out the damage, if you wish. You can discard the sword at any time to end the curse, but you cannot sell it, since its curse is immediately apparent to anyone who holds it.";
 
-            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
             {
-                if (party.Party[party.LastSelected].Health > 0)
+                if (party.Members[party.LastSelected].Health > 0)
                 {
-                    PreText += "\n\n" + std::string(party.Party[party.LastSelected].Name) + " LOSES 1 Health Point.";
+                    PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " LOSES 1 Health Point.";
 
-                    Engine::GAIN_HEALTH(party.Party[party.LastSelected], -1);
+                    Engine::GAIN_HEALTH(party.Members[party.LastSelected], -1);
                 }
             }
 
@@ -5305,7 +5305,7 @@ namespace Book1
         {
             Choices.clear();
 
-            if (Engine::COUNT(party.Party, Team::Type::DISTRACTION) > 1)
+            if (Engine::COUNT(party.Members, Team::Type::DISTRACTION) > 1)
             {
                 Choices.push_back(Choice::Base("Start a fight amongst yourselves", {Book::Type::BOOK1, 45}));
             }
@@ -5625,7 +5625,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::BARBARIAN_BODY}))
+            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::BARBARIAN_BODY}))
             {
                 return {Book::Type::BOOK1, 249};
             }
@@ -5680,7 +5680,7 @@ namespace Book1
 
             Choices.clear();
 
-            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::PRYBAR}))
+            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::PRYBAR}))
             {
                 Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 5+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 4));
             }
@@ -5698,7 +5698,7 @@ namespace Book1
             {
                 Bye = "Each party member loses 1 Health point from the strain.";
 
-                Engine::GAIN_HEALTH(party.Party, -1);
+                Engine::GAIN_HEALTH(party.Members, -1);
             }
             else
             {
@@ -5775,7 +5775,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::BRONZE_LOCKET}))
+            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::BRONZE_LOCKET}))
             {
                 return {Book::Type::BOOK1, 43};
             }
@@ -5964,7 +5964,7 @@ namespace Book1
 
             Choices.clear();
 
-            if (Engine::COUNT(party.Party) > 1)
+            if (Engine::COUNT(party.Members) > 1)
             {
                 PreText = "One of your party members falls about halfway down.";
 
@@ -5976,9 +5976,9 @@ namespace Book1
 
                 auto character = Engine::FIRST(party);
 
-                if (character >= 0 && character < party.Party.size())
+                if (character >= 0 && character < party.Members.size())
                 {
-                    Engine::GAIN_HEALTH(party.Party[character], -3);
+                    Engine::GAIN_HEALTH(party.Members[character], -3);
                 }
             }
 
@@ -6330,7 +6330,7 @@ namespace Book1
             {
                 Bye = "Each party member loses 1 Health from heatstroke.";
 
-                Engine::GAIN_HEALTH(party.Party, -1);
+                Engine::GAIN_HEALTH(party.Members, -1);
             }
         }
     };
@@ -6513,13 +6513,13 @@ namespace Book1
         {
             PreText = "You are about halfway across the plank when it suddenly breaks in two. You plunge down into the pit and onto the spikes.";
 
-            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size() && party.Party[party.LastSelected].Health > 0)
+            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size() && party.Members[party.LastSelected].Health > 0)
             {
                 auto result = Engine::ROLL_DICE(1);
 
-                Engine::GAIN_HEALTH(party.Party[party.LastSelected], -result[0]);
+                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -result[0]);
 
-                PreText += "\n\n" + std::string(party.Party[party.LastSelected].Name) + " loses " + std::to_string(result[0]) + " Health Point";
+                PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses " + std::to_string(result[0]) + " Health Point";
 
                 if (result[0] > 1)
                 {
@@ -6801,7 +6801,7 @@ namespace Book1
 
             Bye = NULL;
 
-            if (!Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::PYRAMIDAL_KEY}))
+            if (!Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::PYRAMIDAL_KEY}))
             {
                 Bye = "There is nothing else for you to do here, so you return to the crossroads.";
             }
@@ -6811,7 +6811,7 @@ namespace Book1
 
         Engine::Destination Continue(Party::Base &party)
         {
-            if (Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::PYRAMIDAL_KEY}))
+            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::PYRAMIDAL_KEY}))
             {
                 return {Book::Type::BOOK1, 102};
             }
@@ -6844,15 +6844,15 @@ namespace Book1
         {
             PreText = "You sit upon the ledge side, on a small outcropping of rock, crossing your legs and calming your breathing. In the distance Yu Yan looks at you with amazement, before slipping away into the dusk.\n\nYou gaze out into the beautiful landscape, considering the perfect arrangement of the world before you. Sky, water, rock and sand lay in harmony with each other. All is still, with the setting sun casting the sky into scarlet. Soon the stars emerge, one by one, until a celestial sea revolves around your head, adding the heavens into a mix of perfect symmetry. As you gaze upon the sight, abandoning your quest for the idol, the weight of failure seems to lift from you. Your thoughts enter balance, and suddenly your ambitions seem as weightless as the air.";
 
-            if (!Engine::VERIFY_EQUIPMENT(party.Party, {Equipment::Type::PYRAMIDAL_KEY}))
+            if (!Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::PYRAMIDAL_KEY}))
             {
                 auto result = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
 
-                if (result >= 0 && result < party.Party.size() && party.Party[result].Health > 0)
+                if (result >= 0 && result < party.Members.size() && party.Members[result].Health > 0)
                 {
                     PreText += "\n\nAkihiro has achieved Enlightenment. Akihiro can gains 1 point of Lore.";
 
-                    Engine::GAIN_SCORE(party.Party[result], Attribute::Type::LORE, 1);
+                    Engine::GAIN_SCORE(party.Members[result], Attribute::Type::LORE, 1);
                 }
             }
 
@@ -6994,7 +6994,7 @@ namespace Book1
         {
             Take.clear();
 
-            for (auto i = 0; i < Engine::COUNT(party.Party); i++)
+            for (auto i = 0; i < Engine::COUNT(party.Members); i++)
             {
                 Take.push_back(Equipment::CRUDE_BLADE);
             }
@@ -7073,7 +7073,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (Engine::COUNT(party.Party, Team::Type::SHADOW_ROOM) > 0)
+            if (Engine::COUNT(party.Members, Team::Type::SHADOW_ROOM) > 0)
             {
                 return {Book::Type::BOOK1, 903};
             }
@@ -7123,11 +7123,11 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            for (auto i = 0; i < party.Party.size(); i++)
+            for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (party.Party[i].Health > 0 && party.Party[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
+                if (party.Members[i].Health > 0 && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
                 {
-                    Engine::GAIN_STATUS(party.Party[i], Character::Status::CAPTURED);
+                    Engine::GAIN_STATUS(party.Members[i], Character::Status::CAPTURED);
                 }
             }
         }
@@ -7257,11 +7257,11 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            for (auto i = 0; i < party.Party.size(); i++)
+            for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (party.Party[i].Health > 0)
+                if (party.Members[i].Health > 0)
                 {
-                    Engine::GAIN_FOLLOWERS(party.Party[i], {Follower::Base("Skeleton", Follower::Type::MORDAIN_SKELETONS, 6)});
+                    Engine::GAIN_FOLLOWERS(party.Members[i], {Follower::Base("Skeleton", Follower::Type::MORDAIN_SKELETONS, 6)});
                 }
             }
 
@@ -7291,7 +7291,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            auto count = Engine::COUNT_EQUIPMENT(party.Party, {Equipment::Type::TROGLODYTE_HEAD});
+            auto count = Engine::COUNT_EQUIPMENT(party.Members, {Equipment::Type::TROGLODYTE_HEAD});
 
             Engine::GAIN_MONEY(party, count * 25);
 
@@ -7472,13 +7472,13 @@ namespace Book1
                 Monster::Base("Tommul", Monster::Type::TOMMUL, 3, 5, 4, 7, 0),
                 Monster::Base("Brute", 2, 5, 3, 6, 0)};
 
-            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
             {
-                previousTeam = party.Party[party.LastSelected].Team;
+                previousTeam = party.Members[party.LastSelected].Team;
 
-                Engine::SET_TEAM(party.Party[party.LastSelected]);
+                Engine::SET_TEAM(party.Members[party.LastSelected]);
 
-                Team = party.Party[party.LastSelected].Team;
+                Team = party.Members[party.LastSelected].Team;
             }
         }
 
@@ -7486,9 +7486,9 @@ namespace Book1
 
         void AfterCombat(Party::Base &party, Engine::Combat result)
         {
-            if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
             {
-                party.Party[party.LastSelected].Team = previousTeam;
+                party.Members[party.LastSelected].Team = previousTeam;
             }
 
             if (result == Engine::Combat::EXCEED_LIMIT)
@@ -7499,15 +7499,15 @@ namespace Book1
                 {
                     temp_string += " You have defeated Tommul.";
 
-                    if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
+                    if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
                     {
                         auto result = Engine::ROLL_DICE(1);
 
-                        if (result[0] > Engine::SCORE(party.Party[party.LastSelected], Attribute::Type::FIGHTING))
+                        if (result[0] > Engine::SCORE(party.Members[party.LastSelected], Attribute::Type::FIGHTING))
                         {
-                            Engine::GAIN_SCORE(party.Party[party.LastSelected], Attribute::Type::FIGHTING, 1);
+                            Engine::GAIN_SCORE(party.Members[party.LastSelected], Attribute::Type::FIGHTING, 1);
 
-                            temp_string += "\n\n" + std::string(party.Party[party.LastSelected].Name) + "'s Fighting skill improved by 1.";
+                            temp_string += "\n\n" + std::string(party.Members[party.LastSelected].Name) + "'s Fighting skill improved by 1.";
                         }
                     }
                 }

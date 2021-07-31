@@ -231,7 +231,7 @@ namespace Party
     class Base
     {
     public:
-        std::vector<Character::Base> Party = {};
+        std::vector<Character::Base> Members = {};
 
         std::vector<Character::Type> Dead = {};
 
@@ -281,7 +281,7 @@ namespace Party
 
         Base(std::vector<Character::Base> party)
         {
-            Party = party;
+            Members = party;
         }
     };
 }

@@ -167,9 +167,9 @@ namespace Engine
 
     void REST(Party::Base &party)
     {
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            party.Party[i].Health = party.Party[i].MaximumHealth;
+            party.Members[i].Health = party.Members[i].MaximumHealth;
         }
     }
 
@@ -290,9 +290,9 @@ namespace Engine
     {
         auto result = -1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Party[i].Team == Team::Type::SOLO)
+            if (party.Members[i].Team == Team::Type::SOLO)
             {
                 result = i;
 
@@ -445,9 +445,9 @@ namespace Engine
 
     void LOSE_FOLLOWERS(Party::Base &party, std::vector<Follower::Type> followers)
     {
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            Engine::LOSE_FOLLOWERS(party.Party[i], followers);
+            Engine::LOSE_FOLLOWERS(party.Members[i], followers);
         }
     }
 
@@ -462,9 +462,9 @@ namespace Engine
     {
         auto result = false;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            result |= Engine::HAS_FOLLOWER(party.Party[i], follower);
+            result |= Engine::HAS_FOLLOWER(party.Members[i], follower);
         }
 
         return result;
@@ -846,11 +846,11 @@ namespace Engine
     {
         auto found = -1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            auto result = Engine::FIND_EQUIPMENT(party.Party[i], item);
+            auto result = Engine::FIND_EQUIPMENT(party.Members[i], item);
 
-            if (result >= 0 && result < party.Party[i].Equipment.size())
+            if (result >= 0 && result < party.Members[i].Equipment.size())
             {
                 found = i;
 
@@ -881,13 +881,13 @@ namespace Engine
     {
         for (auto i = 0; i < items.size(); i++)
         {
-            for (auto j = 0; j < party.Party.size(); j++)
+            for (auto j = 0; j < party.Members.size(); j++)
             {
-                auto result = Engine::FIND_EQUIPMENT(party.Party[j], items[i]);
+                auto result = Engine::FIND_EQUIPMENT(party.Members[j], items[i]);
 
-                if (result >= 0 && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+                if (result >= 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
                 {
-                    party.Party[j].Equipment.erase(party.Party[j].Equipment.begin() + result);
+                    party.Members[j].Equipment.erase(party.Members[j].Equipment.begin() + result);
 
                     // break out of party loop
                     break;
@@ -925,9 +925,9 @@ namespace Engine
     {
         auto result = true;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            result &= Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[i]);
+            result &= Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[i]);
         }
 
         return result;
@@ -942,9 +942,9 @@ namespace Engine
     {
         auto result = true;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            result &= Engine::VERIFY_EQUIPMENT_LIMIT(party.Party[i], limit);
+            result &= Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[i], limit);
         }
 
         return result;
@@ -1221,9 +1221,9 @@ namespace Engine
     {
         auto result = -1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Party[i].Type == type)
+            if (party.Members[i].Type == type)
             {
                 result = i;
 
@@ -1281,9 +1281,9 @@ namespace Engine
 
     void REJOIN(Party::Base &party)
     {
-        if (party.Current >= 0 && party.Party.size())
+        if (party.Current >= 0 && party.Members.size())
         {
-            party.Party[party.Current].Team = Team::Type::NONE;
+            party.Members[party.Current].Team = Team::Type::NONE;
         }
 
         party.Current = -1;
@@ -1310,11 +1310,11 @@ namespace Engine
     {
         auto teams = std::vector<Team::Type>();
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::FIND_LIST(teams, party.Party[i].Team) < 0 && party.Party[i].Team != Team::Type::NONE)
+            if (Engine::FIND_LIST(teams, party.Members[i].Team) < 0 && party.Members[i].Team != Team::Type::NONE)
             {
-                teams.push_back(party.Party[i].Team);
+                teams.push_back(party.Members[i].Team);
             }
         }
 
@@ -1325,11 +1325,11 @@ namespace Engine
     {
         auto teams = std::vector<Team::Type>();
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::FIND_LIST(teams, party.Party[i].Team) < 0 && party.Party[i].Team != Team::Type::NONE)
+            if (Engine::FIND_LIST(teams, party.Members[i].Team) < 0 && party.Members[i].Team != Team::Type::NONE)
             {
-                teams.push_back(party.Party[i].Team);
+                teams.push_back(party.Members[i].Team);
             }
         }
 
@@ -1340,9 +1340,9 @@ namespace Engine
     {
         if (Engine::COUNT_TEAMS(party) > 0)
         {
-            for (auto i = 0; i < party.Party.size(); i++)
+            for (auto i = 0; i < party.Members.size(); i++)
             {
-                party.Party[i].Team = Team::Type::NONE;
+                party.Members[i].Team = Team::Type::NONE;
             }
         }
 
@@ -1353,13 +1353,13 @@ namespace Engine
     {
         Engine::CONSOLIDATE(party);
 
-        auto result = Engine::FIND_CHARACTER(party.Party, character);
+        auto result = Engine::FIND_CHARACTER(party.Members, character);
 
-        if (result >= 0 && result < party.Party.size())
+        if (result >= 0 && result < party.Members.size())
         {
             party.Current = result;
 
-            party.Party[result].Team = Team::Type::SOLO;
+            party.Members[result].Team = Team::Type::SOLO;
         }
     }
 
@@ -1455,11 +1455,11 @@ namespace Engine
     {
         auto result = false;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].SpellCaster && party.Party[i].SpellBook.size() > 0)
+            if (party.Members[i].Health > 0 && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0)
             {
-                result = Engine::VERIFY_SPELL(party.Party[i], spells);
+                result = Engine::VERIFY_SPELL(party.Members[i], spells);
 
                 if (result)
                 {
@@ -1475,11 +1475,11 @@ namespace Engine
     {
         auto result = false;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].SpellCaster && party.Party[i].SpellBook.size() > 0)
+            if (party.Members[i].Health > 0 && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0)
             {
-                result = Engine::VERIFY_SPELL_ANY(party.Party[i], spells);
+                result = Engine::VERIFY_SPELL_ANY(party.Members[i], spells);
 
                 if (result)
                 {
@@ -1579,11 +1579,11 @@ namespace Engine
     {
         auto found = false;
 
-        auto result = Engine::FIND_CHARACTER(party.Party, character);
+        auto result = Engine::FIND_CHARACTER(party.Members, character);
 
-        if (result >= 0 && result < party.Party.size())
+        if (result >= 0 && result < party.Members.size())
         {
-            if (party.Party[result].Team == team || team == Team::Type::NONE)
+            if (party.Members[result].Team == team || team == Team::Type::NONE)
             {
                 found = true;
             }
@@ -1663,33 +1663,33 @@ namespace Engine
 
     void LOSE_ALL(Party::Base &party)
     {
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            party.Party[i].Equipment.clear();
+            party.Members[i].Equipment.clear();
         }
     }
 
     void LOSE_ALL(Party::Base &party, Equipment::Class Class)
     {
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
             auto items = std::vector<Equipment::Base>();
 
-            for (auto j = 0; j < party.Party[i].Equipment.size(); j++)
+            for (auto j = 0; j < party.Members[i].Equipment.size(); j++)
             {
-                if (party.Party[i].Equipment[j].Class != Class)
+                if (party.Members[i].Equipment[j].Class != Class)
                 {
-                    items.push_back(party.Party[i].Equipment[j]);
+                    items.push_back(party.Members[i].Equipment[j]);
                 }
             }
 
             if (items.size() > 0)
             {
-                party.Party[i].Equipment = items;
+                party.Members[i].Equipment = items;
             }
             else
             {
-                party.Party[i].Equipment.clear();
+                party.Members[i].Equipment.clear();
             }
         }
     }
@@ -1743,9 +1743,9 @@ namespace Engine
     {
         auto result = -1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Party[i].Health > 0 && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            if (party.Members[i].Health > 0 && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1753,7 +1753,7 @@ namespace Engine
             }
         }
 
-        if (result >= 0 && result < party.Party.size())
+        if (result >= 0 && result < party.Members.size())
         {
             party.LastSelected = result;
         }
@@ -1765,9 +1765,9 @@ namespace Engine
     {
         auto result = -1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Party[i].Health > 0 && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            if (party.Members[i].Health > 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1775,7 +1775,7 @@ namespace Engine
             }
         }
 
-        if (result >= 0 && result < party.Party.size())
+        if (result >= 0 && result < party.Members.size())
         {
             party.LastSelected = result;
         }
@@ -1787,9 +1787,9 @@ namespace Engine
     {
         auto result = -1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].Team == team && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            if (party.Members[i].Health > 0 && party.Members[i].Team == team && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1797,7 +1797,7 @@ namespace Engine
             }
         }
 
-        if (result >= 0 && result < party.Party.size())
+        if (result >= 0 && result < party.Members.size())
         {
             party.LastSelected = result;
         }
@@ -1809,9 +1809,9 @@ namespace Engine
     {
         auto result = -1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].Team == team && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            if (party.Members[i].Health > 0 && party.Members[i].Team == team && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1819,7 +1819,7 @@ namespace Engine
             }
         }
 
-        if (result >= 0 && result < party.Party.size())
+        if (result >= 0 && result < party.Members.size())
         {
             party.LastSelected = result;
         }
@@ -1831,9 +1831,9 @@ namespace Engine
     {
         auto result = -1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].Team == team && party.Party[i].SpellCaster && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            if (party.Members[i].Health > 0 && party.Members[i].Team == team && party.Members[i].SpellCaster && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1841,7 +1841,7 @@ namespace Engine
             }
         }
 
-        if (result >= 0 && result < party.Party.size())
+        if (result >= 0 && result < party.Members.size())
         {
             party.LastSelected = result;
         }
@@ -1853,9 +1853,9 @@ namespace Engine
     {
         auto result = -1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].Team == team && party.Party[i].SpellCaster && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            if (party.Members[i].Health > 0 && party.Members[i].Team == team && party.Members[i].SpellCaster && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1863,7 +1863,7 @@ namespace Engine
             }
         }
 
-        if (result >= 0 && result < party.Party.size())
+        if (result >= 0 && result < party.Members.size())
         {
             party.LastSelected = result;
         }
@@ -1875,9 +1875,9 @@ namespace Engine
     {
         auto result = -1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Party[i].Health > 0 && party.Party[i].SpellCaster && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            if (party.Members[i].Health > 0 && party.Members[i].SpellCaster && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1885,7 +1885,7 @@ namespace Engine
             }
         }
 
-        if (result >= 0 && result < party.Party.size())
+        if (result >= 0 && result < party.Members.size())
         {
             party.LastSelected = result;
         }
@@ -1931,11 +1931,11 @@ namespace Engine
     {
         auto score = 100;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (!Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            if (!Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
-                score = std::min(score, Engine::SCORE(party.Party[i], type));
+                score = std::min(score, Engine::SCORE(party.Members[i], type));
             }
         }
 
@@ -1946,11 +1946,11 @@ namespace Engine
     {
         auto score = 1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (!Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            if (!Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
-                score = std::max(score, Engine::SCORE(party.Party[i], type));
+                score = std::max(score, Engine::SCORE(party.Members[i], type));
             }
         }
 
@@ -1961,9 +1961,9 @@ namespace Engine
     {
         auto result = 0;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (score == Engine::SCORE(party.Party[i], type) && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            if (score == Engine::SCORE(party.Members[i], type) && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result++;
             }
@@ -1976,9 +1976,9 @@ namespace Engine
     {
         auto result = -1;
 
-        for (auto i = 0; i < party.Party.size(); i++)
+        for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (score == Engine::SCORE(party.Party[i], type) && !Engine::HAS_STATUS(party.Party[i], Character::Status::CAPTURED))
+            if (score == Engine::SCORE(party.Members[i], type) && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
