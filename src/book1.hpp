@@ -2856,6 +2856,8 @@ namespace Book1
         {
             if (party.LastSelected >= 0 && party.LastSelected < party.Party.size())
             {
+                party.Dead.push_back(party.Party[party.LastSelected].Type);
+
                 party.Party[party.LastSelected].Equipment.clear();
 
                 party.Party.erase(party.Party.begin() + party.LastSelected);
@@ -7475,7 +7477,7 @@ namespace Book1
                 previousTeam = party.Party[party.LastSelected].Team;
 
                 Engine::SET_TEAM(party.Party[party.LastSelected]);
-                
+
                 Team = party.Party[party.LastSelected].Team;
             }
         }

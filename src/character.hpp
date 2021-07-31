@@ -233,6 +233,8 @@ namespace Party
     public:
         std::vector<Character::Base> Party = {};
 
+        std::vector<Character::Type> Dead = {};
+
         std::vector<Codes::Base> Codes = {};
 
         std::vector<Codes::Type> InvisibleCodes = {};

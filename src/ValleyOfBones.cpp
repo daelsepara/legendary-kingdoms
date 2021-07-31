@@ -18237,6 +18237,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 }
                                 else
                                 {
+                                    party.Dead.push_back(party.Party[i].Type);
+                                    
                                     if (party.Party[i].Team == Team::Type::SOLO && party.Current == i)
                                     {
                                         party.Party[i].Equipment.clear();
