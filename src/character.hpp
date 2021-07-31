@@ -226,8 +226,6 @@ namespace Character
 
 namespace Party
 {
-    auto Empty = std::vector<Character::Base>();
-
     class Base
     {
     public:
