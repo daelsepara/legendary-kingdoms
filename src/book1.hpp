@@ -523,7 +523,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::TITHE_REPORT}))
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::TITHE_REPORT}))
             {
                 return {Book::Type::BOOK1, 246};
             }
@@ -535,7 +535,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::GAIN_HEALTH(party.Members, -4);
+            Engine::GAIN_HEALTH(party, -4);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 55}; }
@@ -575,7 +575,7 @@ namespace Book1
 
             Choices.clear();
 
-            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::PRYBAR}))
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PRYBAR}))
             {
                 Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 4, 3));
             }
@@ -962,7 +962,7 @@ namespace Book1
 
             Choices.clear();
 
-            if (!Engine::HAS_STATUS(party.Members, Character::Status::RITUAL_SCARRING))
+            if (!Engine::HAS_STATUS(party, Character::Status::RITUAL_SCARRING))
             {
                 PreText += "They bombard you with questions about the faith, to determine your worthiness.";
 
@@ -1405,7 +1405,7 @@ namespace Book1
             }
             else
             {
-                if (!Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::SCROLL_OF_RAGE}))
+                if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::SCROLL_OF_RAGE}))
                 {
                     PreText += "\n\nYou are surprised to see the SCROLL OF RAGE back on the shelf, in the same place you found it last time. It seems that the scroll teleports back here each time it is used.";
                 }
@@ -1415,7 +1415,7 @@ namespace Book1
                 }
             }
 
-            if (!Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::SCROLL_OF_RAGE}))
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::SCROLL_OF_RAGE}))
             {
                 Take = {Equipment::SCROLL_OF_RAGE};
 
@@ -1543,7 +1543,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::GAIN_HEALTH(party.Members, Team::Type::DISTRACTION, -1);
+            Engine::GAIN_HEALTH(party, Team::Type::DISTRACTION, -1);
 
             Choices.clear();
 
@@ -1958,7 +1958,7 @@ namespace Book1
             {
                 destination = {Book::Type::BOOK1, 391};
             }
-            else if (Engine::COUNT(party.Members) > 0)
+            else if (Engine::COUNT(party) > 0)
             {
                 for (auto i = 0; i < party.Members.size(); i++)
                 {
@@ -2817,7 +2817,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            if (Engine::COUNT(party.Members) > 1)
+            if (Engine::COUNT(party) > 1)
             {
                 PreText = "One of your party members loses their grip halfway up and plunges into the sea. They are never seen again.";
             }
@@ -3119,7 +3119,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (Engine::COUNT(party.Members, Team::Type::MERCENARY) > 0)
+            if (Engine::COUNT(party, Team::Type::MERCENARY) > 0)
             {
                 return {Book::Type::BOOK1, 27};
             }
@@ -3515,7 +3515,7 @@ namespace Book1
                 }
             }
 
-            Engine::GAIN_HEALTH(party.Members, -1);
+            Engine::GAIN_HEALTH(party, -1);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 458}; }
@@ -3554,7 +3554,7 @@ namespace Book1
 
             Choices.clear();
 
-            if (!Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::RING_OF_THE_PATRIARCH}))
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::RING_OF_THE_PATRIARCH}))
             {
                 PreText += "\n\nNote: Only party members who have Ritual Scarring (Cursus) are permitted to enter the ziggurat. Those without the scarring must wait outside, and you cannot use their equipment or abilities until you leave the ziggurat.";
 
@@ -3726,7 +3726,7 @@ namespace Book1
             {
                 Bye = "Each party member loses 1 Health point as your rations dwindle.";
 
-                Engine::GAIN_HEALTH(party.Members, -1);
+                Engine::GAIN_HEALTH(party, -1);
             }
             else
             {
@@ -3859,7 +3859,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::GAIN_HEALTH(party.Members, -1);
+            Engine::GAIN_HEALTH(party, -1);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 865}; }
@@ -5305,7 +5305,7 @@ namespace Book1
         {
             Choices.clear();
 
-            if (Engine::COUNT(party.Members, Team::Type::DISTRACTION) > 1)
+            if (Engine::COUNT(party, Team::Type::DISTRACTION) > 1)
             {
                 Choices.push_back(Choice::Base("Start a fight amongst yourselves", {Book::Type::BOOK1, 45}));
             }
@@ -5625,7 +5625,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::BARBARIAN_BODY}))
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::BARBARIAN_BODY}))
             {
                 return {Book::Type::BOOK1, 249};
             }
@@ -5680,7 +5680,7 @@ namespace Book1
 
             Choices.clear();
 
-            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::PRYBAR}))
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PRYBAR}))
             {
                 Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 5+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 4));
             }
@@ -5698,7 +5698,7 @@ namespace Book1
             {
                 Bye = "Each party member loses 1 Health point from the strain.";
 
-                Engine::GAIN_HEALTH(party.Members, -1);
+                Engine::GAIN_HEALTH(party, -1);
             }
             else
             {
@@ -5775,7 +5775,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::BRONZE_LOCKET}))
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::BRONZE_LOCKET}))
             {
                 return {Book::Type::BOOK1, 43};
             }
@@ -5964,7 +5964,7 @@ namespace Book1
 
             Choices.clear();
 
-            if (Engine::COUNT(party.Members) > 1)
+            if (Engine::COUNT(party) > 1)
             {
                 PreText = "One of your party members falls about halfway down.";
 
@@ -6330,7 +6330,7 @@ namespace Book1
             {
                 Bye = "Each party member loses 1 Health from heatstroke.";
 
-                Engine::GAIN_HEALTH(party.Members, -1);
+                Engine::GAIN_HEALTH(party, -1);
             }
         }
     };
@@ -6801,7 +6801,7 @@ namespace Book1
 
             Bye = NULL;
 
-            if (!Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::PYRAMIDAL_KEY}))
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PYRAMIDAL_KEY}))
             {
                 Bye = "There is nothing else for you to do here, so you return to the crossroads.";
             }
@@ -6811,7 +6811,7 @@ namespace Book1
 
         Engine::Destination Continue(Party::Base &party)
         {
-            if (Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::PYRAMIDAL_KEY}))
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PYRAMIDAL_KEY}))
             {
                 return {Book::Type::BOOK1, 102};
             }
@@ -6844,7 +6844,7 @@ namespace Book1
         {
             PreText = "You sit upon the ledge side, on a small outcropping of rock, crossing your legs and calming your breathing. In the distance Yu Yan looks at you with amazement, before slipping away into the dusk.\n\nYou gaze out into the beautiful landscape, considering the perfect arrangement of the world before you. Sky, water, rock and sand lay in harmony with each other. All is still, with the setting sun casting the sky into scarlet. Soon the stars emerge, one by one, until a celestial sea revolves around your head, adding the heavens into a mix of perfect symmetry. As you gaze upon the sight, abandoning your quest for the idol, the weight of failure seems to lift from you. Your thoughts enter balance, and suddenly your ambitions seem as weightless as the air.";
 
-            if (!Engine::VERIFY_EQUIPMENT(party.Members, {Equipment::Type::PYRAMIDAL_KEY}))
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PYRAMIDAL_KEY}))
             {
                 auto result = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
 
@@ -6994,7 +6994,7 @@ namespace Book1
         {
             Take.clear();
 
-            for (auto i = 0; i < Engine::COUNT(party.Members); i++)
+            for (auto i = 0; i < Engine::COUNT(party); i++)
             {
                 Take.push_back(Equipment::CRUDE_BLADE);
             }
@@ -7073,7 +7073,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (Engine::COUNT(party.Members, Team::Type::SHADOW_ROOM) > 0)
+            if (Engine::COUNT(party, Team::Type::SHADOW_ROOM) > 0)
             {
                 return {Book::Type::BOOK1, 903};
             }
@@ -7291,7 +7291,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            auto count = Engine::COUNT_EQUIPMENT(party.Members, {Equipment::Type::TROGLODYTE_HEAD});
+            auto count = Engine::COUNT_EQUIPMENT(party, {Equipment::Type::TROGLODYTE_HEAD});
 
             Engine::GAIN_MONEY(party, count * 25);
 

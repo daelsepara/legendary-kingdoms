@@ -469,6 +469,8 @@ namespace Story
     public:
         Location::Type Location = Location::Type::NONE;
 
+        bool IsCity = false;
+
         Book::Type BookID = Book::Type::NONE;
 
         int ID = -1;

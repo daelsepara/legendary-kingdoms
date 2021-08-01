@@ -167,6 +167,8 @@ namespace Character
 
         bool SpellCaster = false;
 
+        bool IsCivilized = true;
+
         Base()
         {
         }
@@ -211,7 +213,7 @@ namespace Character
             SpellCaster = spellCaster;
         }
 
-        Base(const char *name, Character::Type type, const char *background, std::vector<Attribute::Base> attributes, std::vector<Equipment::Base> equipment, int health, bool spellCaster)
+        Base(const char *name, Character::Type type, const char *background, std::vector<Attribute::Base> attributes, std::vector<Equipment::Base> equipment, int health, bool spellCaster, bool isCivilized)
         {
             Name = name;
 
@@ -228,6 +230,8 @@ namespace Character
             MaximumHealth = health;
 
             SpellCaster = spellCaster;
+
+            IsCivilized = isCivilized;
         }
     };
 
@@ -237,7 +241,7 @@ namespace Character
     auto AMELIA_PASS_DAYNE = Character::Base("Amelia Pass-Dayne", Character::Type::AMELIA_PASS_DAYNE, "images/characters/amelia-pass-dayne.png", "Amelia is the half-sister of Jessica and grew up with her in Fosterly Castle. Her mother was a forester who took Amelia away from the castle when it became obvious that Baron Baldwin, her father, would take no interest in the girl. Since maturity Amelia has lived in the wild forests of the Savage Lands, learning earth magic from the druids of that isolated place. Though slender, she has become a rugged survivor, who can live off the land and fight off wild beasts. Her magic is instinctive, and much mocked by more scholarly wizards, but it is no less potent for all that. Amelia dreams of becoming a full-circle druid, but knows that she must learn much before returning home to the Savage Lands.", {Attribute::Base(Attribute::Type::FIGHTING, 3), Attribute::Base(Attribute::Type::STEALTH, 2), Attribute::Base(Attribute::Type::LORE, 2), Attribute::Base(Attribute::Type::SURVIVAL, 3), Attribute::Base(Attribute::Type::CHARISMA, 1)}, {}, 6, true);
     auto AKIHIRO_OF_CHALICE = Character::Base("Akihiro of Chalice", Character::Type::AKIHIRO_OF_CHALICE, "images/characters/akihiro-of-chalice.png", "Akihiro is a brooding young man from the Valley of Bones, who was banished from his city when he failed in his training to become a Kensai, a sword-saint of Chalice. A superb swordsman, Akihiro is his own worst enemy. He tortures himself over his failure to balance his mind and body. Since that time Akihiro has become an adept survivor, able to find water in the driest desert, and food in an empty wilderness. Though he tells himself he has given up, he longs in his heart to return to Chalice to attempt the tests again. Perhaps it is time for Akihiro to emerge from the wilderness and restore his own and his family's honour?", {Attribute::Base(Attribute::Type::FIGHTING, 4), Attribute::Base(Attribute::Type::STEALTH, 3), Attribute::Base(Attribute::Type::LORE, 2), Attribute::Base(Attribute::Type::SURVIVAL, 5), Attribute::Base(Attribute::Type::CHARISMA, 1)}, {}, 8, false);
     auto BRASH = Character::Base("Brash", Character::Type::BRASH, "images/characters/brash.png", "Brash was born in Royce, in the duchy of Pendrilor. He was a pot washer in Vasthall, the stately home of Duchess Elenor Mauntell, but unwisely engaged in a love triangle with her and King Frances Goldwell. Fleeing before he could be hung, Brash has since lived on his wits, travelling the world to escape the King's agents. He can talk his way out of almost anything, and his ability to escape danger is second-to-none. One day, Brash will need to sort out the mess he left behind in Vasthall, but not until he has gained a little worldly experience.", {Attribute::Base(Attribute::Type::FIGHTING, 2), Attribute::Base(Attribute::Type::STEALTH, 4), Attribute::Base(Attribute::Type::LORE, 3), Attribute::Base(Attribute::Type::SURVIVAL, 1), Attribute::Base(Attribute::Type::CHARISMA, 5)}, {}, 8, false);
-    auto SKULLCRACKER = Character::Base("Skullcracker", Character::Type::SKULLCRACKER, "He is lazy and will not carry any equipment except his CLUB. Skullcracker is never disarmed. He won't enter a city: Skullcracker will wait outside. Ogres aren't very popular in civilised places. Skullcracker will recover Health at the same rate as other party members when you pay to stay at an inn. He won't board a ship. If you insist, he will leave the party. His contract with you ends when you travel to another land. At this point, Skullcracker will leave and wander into the desert.", {Attribute::Base(Attribute::Type::FIGHTING, 8), Attribute::Base(Attribute::Type::STEALTH, 1), Attribute::Base(Attribute::Type::LORE, 1), Attribute::Base(Attribute::Type::SURVIVAL, 3), Attribute::Base(Attribute::Type::CHARISMA, 2)}, {Equipment::CLUB}, 12, false);
+    auto SKULLCRACKER = Character::Base("Skullcracker", Character::Type::SKULLCRACKER, "He is lazy and will not carry any equipment except his CLUB. Skullcracker is never disarmed. He won't enter a city: Skullcracker will wait outside. Ogres aren't very popular in civilised places. Skullcracker will recover Health at the same rate as other party members when you pay to stay at an inn. He won't board a ship. If you insist, he will leave the party. His contract with you ends when you travel to another land. At this point, Skullcracker will leave and wander into the desert.", {Attribute::Base(Attribute::Type::FIGHTING, 8), Attribute::Base(Attribute::Type::STEALTH, 1), Attribute::Base(Attribute::Type::LORE, 1), Attribute::Base(Attribute::Type::SURVIVAL, 3), Attribute::Base(Attribute::Type::CHARISMA, 2)}, {Equipment::CLUB}, 12, false, false);
 
     std::vector<Character::Base> BOOK1 = {Character::SAR_JESSICA_DAYNE, Character::LORD_TIQUON, Character::TASHA, Character::AMELIA_PASS_DAYNE, Character::AKIHIRO_OF_CHALICE, Character::BRASH};
 
@@ -268,6 +272,8 @@ namespace Party
         int Limit = 4;
 
         Location::Type Location = Location::Type::NONE;
+
+        bool InCity = false;
 
         std::vector<Ship::Base> Fleet = {};
 
