@@ -17821,7 +17821,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             controls = Story::ExitControls(compact);
         }
 
-        if (story->Type != Story::Type::NORMAL || Engine::COUNT(party) <= 0)
+        if (story->Type != Story::Type::NORMAL || (Engine::COUNT(party) + Engine::OUTSIDE(party)) <= 0)
         {
             controls = Story::ExitControls(compact);
         }
@@ -18059,7 +18059,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 {
                     putText(renderer, "This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
-                else if (Engine::COUNT(party) <= 0)
+                else if ((Engine::COUNT(party) + Engine::OUTSIDE(party)) <= 0)
                 {
                     putText(renderer, "Your party has died. This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }

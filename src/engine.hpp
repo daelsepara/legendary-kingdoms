@@ -699,6 +699,21 @@ namespace Engine
         return result;
     }
 
+    int OUTSIDE(Party::Base &party)
+    {
+        auto result = 0;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (party.InCity && !party.Members[i].IsCivilized)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
     int COUNT(Party::Base &party, Team::Type team)
     {
         auto result = 0;
