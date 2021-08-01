@@ -1910,7 +1910,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                 }
                 else
                 {
-                    adventurerh = text_bounds;
+                    adventurerh = starty - infoh + text_space;
                 }
             }
             else
