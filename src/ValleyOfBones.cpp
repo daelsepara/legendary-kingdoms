@@ -8863,13 +8863,39 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     {
                         if (selection >= 0 && selection < party.Members.size())
                         {
-                            done = true;
+                            if (mode == Control::Type::EQUIPMENT)
+                            {
+                                if (party.Members[selection].Type == Character::Type::SKULLCRACKER)
+                                {
+                                    flash_message = true;
 
-                            result = selection;
+                                    message = "Skullcracker refuses!";
 
-                            current = -1;
+                                    start_ticks = SDL_GetTicks();
 
-                            selected = false;
+                                    flash_color = intRD;
+                                }
+                                else
+                                {
+                                    done = true;
+
+                                    result = selection;
+
+                                    current = -1;
+
+                                    selected = false;
+                                }
+                            }
+                            else
+                            {
+                                done = true;
+
+                                result = selection;
+
+                                current = -1;
+
+                                selected = false;
+                            }
                         }
                         else
                         {
@@ -11120,7 +11146,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             auto target = selectPartyMember(window, renderer, party, character.Team, item, Control::Type::EQUIPMENT);
 
-                            if (target >= 0 && target < party.Members.size())
+                            if (target >= 0 && target < party.Members.size() && party.Members[target].Type != Character::Type::SKULLCRACKER)
                             {
                                 party.Vault.erase(party.Vault.begin() + selection);
 
@@ -11157,6 +11183,20 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 message += " transferred to " + std::string(party.Members[target].Name) + "!";
 
                                 flash_color = intLB;
+
+                                flash_message = true;
+
+                                selected = false;
+
+                                current = -1;
+
+                                selection = -1;
+                            }
+                            else if (target >= 0 && target < party.Members.size() && party.Members[target].Type == Character::Type::SKULLCRACKER)
+                            {
+                                message += std::string(party.Members[target].Name) + " refuses to accept it!";
+
+                                flash_color = intRD;
 
                                 flash_message = true;
 
@@ -11713,43 +11753,54 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 if (selection >= 0 && selection < character.Equipment.size())
                 {
-                    auto item = character.Equipment[selection];
-
-                    character.Equipment.erase(character.Equipment.begin() + selection);
-
-                    if (offset > 0)
+                    if (character.Type != Character::Type::SKULLCRACKER)
                     {
-                        offset--;
+                        auto item = character.Equipment[selection];
+
+                        character.Equipment.erase(character.Equipment.begin() + selection);
+
+                        if (offset > 0)
+                        {
+                            offset--;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > character.Equipment.size())
+                        {
+                            last = character.Equipment.size();
+                        }
+
+                        controls.clear();
+
+                        controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
+
+                        message = item.Name;
+
+                        if (item.TwoHanded)
+                        {
+                            message += "*";
+                        }
+
+                        if (item.Attribute != Attribute::Type::NONE)
+                        {
+                            message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                        }
+
+                        message += " dropped!";
+
+                        flash_color = intRD;
+
+                        flash_message = true;
                     }
-
-                    last = offset + limit;
-
-                    if (last > character.Equipment.size())
+                    else
                     {
-                        last = character.Equipment.size();
+                        message = "Skullcracker refuses!";
+
+                        flash_color = intRD;
+
+                        flash_message = true;
                     }
-
-                    controls.clear();
-
-                    controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
-
-                    message = item.Name;
-
-                    if (item.TwoHanded)
-                    {
-                        message += "*";
-                    }
-
-                    if (item.Attribute != Attribute::Type::NONE)
-                    {
-                        message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                    }
-
-                    message += " dropped!";
-
-                    flash_color = intRD;
-
-                    flash_message = true;
 
                     selected = false;
 
@@ -11768,64 +11819,82 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         {
                             auto item = character.Equipment[selection];
 
-                            auto target = selectPartyMember(window, renderer, party, character.Team, item, Control::Type::EQUIPMENT);
-
-                            if (target >= 0 && target < party.Members.size())
+                            if (character.Type != Character::Type::SKULLCRACKER)
                             {
-                                if (party.Members[target].Type != character.Type)
+                                auto target = selectPartyMember(window, renderer, party, character.Team, item, Control::Type::EQUIPMENT);
+
+                                if (target >= 0 && target < party.Members.size())
                                 {
-                                    character.Equipment.erase(character.Equipment.begin() + selection);
-
-                                    party.Members[target].Equipment.push_back(item);
-
-                                    if (offset > 0)
+                                    if (party.Members[target].Type != character.Type && party.Members[target].Type != Character::Type::SKULLCRACKER)
                                     {
-                                        offset--;
+                                        character.Equipment.erase(character.Equipment.begin() + selection);
+
+                                        party.Members[target].Equipment.push_back(item);
+
+                                        if (offset > 0)
+                                        {
+                                            offset--;
+                                        }
+
+                                        last = offset + limit;
+
+                                        if (last > character.Equipment.size())
+                                        {
+                                            last = character.Equipment.size();
+                                        }
+
+                                        controls.clear();
+
+                                        controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
+
+                                        message = item.Name;
+
+                                        if (item.TwoHanded)
+                                        {
+                                            message += "*";
+                                        }
+
+                                        if (item.Attribute != Attribute::Type::NONE)
+                                        {
+                                            message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                        }
+
+                                        message += " transferred to " + std::string(party.Members[target].Name) + "!";
+
+                                        flash_color = intLB;
+
+                                        flash_message = true;
+
+                                        selected = false;
+
+                                        current = -1;
+
+                                        selection = -1;
                                     }
-
-                                    last = offset + limit;
-
-                                    if (last > character.Equipment.size())
+                                    else
                                     {
-                                        last = character.Equipment.size();
+                                        if (party.Members[target].Type != Character::Type::SKULLCRACKER)
+                                        {
+                                            message = "You can only transfer to another party member!";
+                                        }
+                                        else
+                                        {
+                                            message = "Skullcrdacker refuses!";
+                                        }
+
+                                        flash_color = intRD;
+
+                                        flash_message = true;
                                     }
-
-                                    controls.clear();
-
-                                    controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
-
-                                    message = item.Name;
-
-                                    if (item.TwoHanded)
-                                    {
-                                        message += "*";
-                                    }
-
-                                    if (item.Attribute != Attribute::Type::NONE)
-                                    {
-                                        message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                                    }
-
-                                    message += " transferred to " + std::string(party.Members[target].Name) + "!";
-
-                                    flash_color = intLB;
-
-                                    flash_message = true;
-
-                                    selected = false;
-
-                                    current = -1;
-
-                                    selection = -1;
                                 }
-                                else
-                                {
-                                    message = "You can only transfer to another party member!";
+                            }
+                            else
+                            {
+                                message = "Skullcrdacker refuses!";
 
-                                    flash_color = intRD;
+                                flash_color = intRD;
 
-                                    flash_message = true;
-                                }
+                                flash_message = true;
                             }
                         }
                         else
@@ -13394,7 +13463,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                 }
                             }
 
-                            if (character >= 0 && character < party.Members.size())
+                            if (character >= 0 && character < party.Members.size() && party.Members[character].Type != Character::Type::SKULLCRACKER)
                             {
                                 Engine::GET_EQUIPMENT(party.Members[character], {equipment[selection[i]]});
 

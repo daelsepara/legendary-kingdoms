@@ -840,11 +840,11 @@ namespace Engine
         return result;
     }
 
-    void GET_EQUIPMENT(Character::Base &player, std::vector<Equipment::Base> equipment)
+    void GET_EQUIPMENT(Character::Base &character, std::vector<Equipment::Base> equipment)
     {
-        if (!Engine::HAS_STATUS(player, Character::Status::CAPTURED))
+        if (!Engine::HAS_STATUS(character, Character::Status::CAPTURED) && character.Type != Character::Type::SKULLCRACKER)
         {
-            player.Equipment.insert(player.Equipment.end(), equipment.begin(), equipment.end());
+            character.Equipment.insert(character.Equipment.end(), equipment.begin(), equipment.end());
         }
     }
 
@@ -889,7 +889,7 @@ namespace Engine
 
     void LOSE_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> items)
     {
-        if (character.Equipment.size() > 0 && items.size() > 0 && !Engine::HAS_STATUS(character, Character::Status::CAPTURED))
+        if (character.Equipment.size() > 0 && items.size() > 0 && !Engine::HAS_STATUS(character, Character::Status::CAPTURED) && character.Type != Character::Type::SKULLCRACKER)
         {
             for (auto i = 0; i < items.size(); i++)
             {
@@ -911,7 +911,7 @@ namespace Engine
             {
                 auto result = Engine::FIND_EQUIPMENT(party.Members[j], items[i]);
 
-                if (result >= 0 && !Engine::HAS_STATUS(party.Members[j], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[j].IsCivilized)))
+                if (result >= 0 && !Engine::HAS_STATUS(party.Members[j], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[j].IsCivilized)) && party.Members[i].Type != Character::Type::SKULLCRACKER)
                 {
                     party.Members[j].Equipment.erase(party.Members[j].Equipment.begin() + result);
 
@@ -930,21 +930,21 @@ namespace Engine
         }
     }
 
-    int COUNT_INVENTORY(Character::Base &player)
+    int COUNT_INVENTORY(Character::Base &character)
     {
-        auto size = player.Equipment.size();
+        auto size = character.Equipment.size();
 
-        for (auto i = 0; i < player.Equipment.size(); i++)
+        for (auto i = 0; i < character.Equipment.size(); i++)
         {
-            size += player.Equipment[i].AdditionalSlots;
+            size += character.Equipment[i].AdditionalSlots;
         }
 
         return size;
     }
 
-    bool VERIFY_EQUIPMENT_LIMIT(Character::Base &player)
+    bool VERIFY_EQUIPMENT_LIMIT(Character::Base &character)
     {
-        return Engine::COUNT_INVENTORY(player) <= player.MaximumEquipment;
+        return Engine::COUNT_INVENTORY(character) <= character.MaximumEquipment;
     }
 
     bool VERIFY_EQUIPMENT_LIMIT(Party::Base &party)
@@ -959,9 +959,9 @@ namespace Engine
         return result;
     }
 
-    bool VERIFY_EQUIPMENT_LIMIT(Character::Base &player, int limit)
+    bool VERIFY_EQUIPMENT_LIMIT(Character::Base &character, int limit)
     {
-        return Engine::COUNT_INVENTORY(player) <= limit;
+        return Engine::COUNT_INVENTORY(character) <= limit;
     }
 
     bool VERIFY_EQUIPMENT_LIMIT(Party::Base &party, int limit)
@@ -994,13 +994,13 @@ namespace Engine
         return found;
     }
 
-    int COUNT_EQUIPMENT(Character::Base &player, std::vector<Equipment::Type> equipment)
+    int COUNT_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> equipment)
     {
         auto found = 0;
 
         for (auto i = 0; i < equipment.size(); i++)
         {
-            if (Engine::COUNT_EQUIPMENT(player, equipment[i]) > 0)
+            if (Engine::COUNT_EQUIPMENT(character, equipment[i]) > 0)
             {
                 found++;
             }
@@ -1024,7 +1024,7 @@ namespace Engine
         return found;
     }
 
-    bool VERIFY_EQUIPMENT(Character::Base &player, std::vector<Equipment::Type> equipment)
+    bool VERIFY_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> equipment)
     {
         auto found = 0;
 
@@ -1032,7 +1032,7 @@ namespace Engine
         {
             for (auto i = 0; i < equipment.size(); i++)
             {
-                auto result = Engine::FIND_EQUIPMENT(player, equipment[i]);
+                auto result = Engine::FIND_EQUIPMENT(character, equipment[i]);
 
                 if (result >= 0)
                 {
@@ -1044,9 +1044,9 @@ namespace Engine
         return found >= equipment.size();
     }
 
-    bool VERIFY_ANY_EQUIPMENT(Character::Base &player, std::vector<Equipment::Type> equpment)
+    bool VERIFY_ANY_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> equpment)
     {
-        return Engine::COUNT_EQUIPMENT(player, equpment) > 0;
+        return Engine::COUNT_EQUIPMENT(character, equpment) > 0;
     }
 
     bool VERIFY_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> equipment)
@@ -1520,11 +1520,11 @@ namespace Engine
         return result;
     }
 
-    bool VERIFY_SPELL_LIMIT(Character::Base &player)
+    bool VERIFY_SPELL_LIMIT(Character::Base &character)
     {
-        if (player.SpellCaster)
+        if (character.SpellCaster)
         {
-            return player.SpellBook.size() <= player.SpellBookLimit;
+            return character.SpellBook.size() <= character.SpellBookLimit;
         }
         else
         {
@@ -1532,11 +1532,11 @@ namespace Engine
         }
     }
 
-    bool VERIFY_SPELL_LIMIT(Character::Base &player, int spell_limit)
+    bool VERIFY_SPELL_LIMIT(Character::Base &character, int spell_limit)
     {
-        if (player.SpellCaster)
+        if (character.SpellCaster)
         {
-            return player.SpellBook.size() <= spell_limit;
+            return character.SpellBook.size() <= spell_limit;
         }
         else
         {
@@ -1700,7 +1700,10 @@ namespace Engine
     {
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            party.Members[i].Equipment.clear();
+            if (party.Members[i].Type != Character::Type::SKULLCRACKER)
+            {
+                party.Members[i].Equipment.clear();
+            }
         }
     }
 
@@ -1708,23 +1711,26 @@ namespace Engine
     {
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            auto items = std::vector<Equipment::Base>();
-
-            for (auto j = 0; j < party.Members[i].Equipment.size(); j++)
+            if (party.Members[i].Type != Character::Type::SKULLCRACKER)
             {
-                if (party.Members[i].Equipment[j].Class != Class)
+                auto items = std::vector<Equipment::Base>();
+
+                for (auto j = 0; j < party.Members[i].Equipment.size(); j++)
                 {
-                    items.push_back(party.Members[i].Equipment[j]);
+                    if (party.Members[i].Equipment[j].Class != Class)
+                    {
+                        items.push_back(party.Members[i].Equipment[j]);
+                    }
                 }
-            }
 
-            if (items.size() > 0)
-            {
-                party.Members[i].Equipment = items;
-            }
-            else
-            {
-                party.Members[i].Equipment.clear();
+                if (items.size() > 0)
+                {
+                    party.Members[i].Equipment = items;
+                }
+                else
+                {
+                    party.Members[i].Equipment.clear();
+                }
             }
         }
     }
