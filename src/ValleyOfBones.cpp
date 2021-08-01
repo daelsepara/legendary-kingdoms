@@ -6892,6 +6892,11 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
         if (team.size() > 0)
         {
             party.LastSelection = team;
+
+            if (team.size() == 1)
+            {
+                party.LastSelected = team[0];
+            }
         }
     }
 
