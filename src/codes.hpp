@@ -31,7 +31,8 @@ namespace Codes
         SPEAK_BANDO,
         WALL_CLIMBING_AND_DOOR,
         REPAIR_CALENDAR_KALU,
-        NO_COMBAT_SPELLS        
+        NO_COMBAT_SPELLS,
+        EVERCHILD_POISONED
     };
 
     std::map<Book::Type, const char *> Prefix = {

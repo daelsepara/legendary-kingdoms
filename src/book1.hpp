@@ -7812,6 +7812,242 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
     };
 
+    class Story250 : public Story::Base
+    {
+    public:
+        Story250()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 250;
+
+            Text = "It's not your city. You shoulder the loot bag and slide back down the rope. Once you are a few neighbourhoods away you stroll along as if nothing had happened.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::HANDSOME_BROOCH1};
+
+            Limit = 1;
+
+            Engine::GAIN_MONEY(party, 200);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story251 : public Story::Base
+    {
+    public:
+        Story251()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 251;
+
+            Text = "You gained the code A61.\n\nWith the beetles destroyed you brush them away from the mystic circle and examine it. It appears to be some kind of health boosting magic circle with a small indentation in the middle, not unlike an ink well. Indeed, the instructions for its use have been usefully painted upon the walls of the chamber. It appears that if you pour some QUICKSILVER into the central well the circle will activate and imbue you with power.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("You have some QUICKSILVER and want to try it out", {Book::Type::BOOK1, 26}, {Equipment::QUICKSILVER}));
+            Choices.push_back(Choice::Base("There is nothing more to do here: Return to the crossroads", {Book::Type::BOOK1, 566}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(61)});
+        }
+    };
+
+    class Story252 : public Story::Base
+    {
+    public:
+        Story252()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 252;
+
+            Text = "You are greeted by Honnu and the other monks, and go into meditation with them for a few days. There is nothing more Honnu can teach a fully trained kensai, so after a few days of peace you make your way onwards.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story253 : public Story::Base
+    {
+    public:
+        Story253()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 253;
+
+            Text = "Although you know that the nomads make their home in the Withered Steppes, their territory covers hundreds of square miles of desert. Finding them will not be easy.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Locate the nomads (Team check: Survival 5+, Successes: 3)", {Book::Type::BOOK1, 473}, {Book::Type::BOOK1, 422}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 5, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story254 : public Story::Base
+    {
+    public:
+        Story254()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 254;
+
+            Text = "You cannot ward the assassin away. He ducks under your blade and stabs the Everchild in the leg. She squeals and kicks him away, and you impale the knave through the back. Casting his body aside you rush to the Everchild. \"It's not bad!\" she assures you, gripping her bleeding thigh. A quick examination of the assassin's dagger tells you otherwise... it has been poisoned.\n\nSoon she in a critical condition, unable to stand, her flesh looking as grey as stone. In her fevered delirium she insists on leading the troops into battle, but this is clearly impossible. You command her to concentrate on getting better, and to focus all her healing energies on herself.\n\nWord soon gets around about the Everchild's condition. Each army unit in the Saltdad barracks must lose 1 point of Morale. You dread the coming of the dawn, but you realise you cannot escape now. You must face what comes with as much courage as you can muster.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::EVERCHILD_POISONED});
+
+            Engine::GAIN_MORALE(party, Location::Type::SALTDAD, -1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 162}; }
+    };
+
+    class Story255 : public Story::Base
+    {
+    public:
+        Story255()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 255;
+
+            Image = "images/book1/roughly_dressed_man.png";
+
+            Text = "You clamber up to the open window and peek inside. A roughly dressed man is standing in a finely appointed room, hurriedly searching through cupboards and trunks, casting clothes and knick-knacks over his shoulders. A large bag is thrown on the bed, glittering treasures peeking out of the top.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Try and sneak up on the man", {Book::Type::BOOK1, 91}));
+            Choices.push_back(Choice::Base("Demand the man tell you what he is doing", {Book::Type::BOOK1, 724}));
+            Choices.push_back(Choice::Base("Quickly depart before the man sees you", {Book::Type::BOOK1, 450}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story256 : public Story::Base
+    {
+    public:
+        Story256()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 256;
+
+            Text = "You have entered a small, cramped library, with bookstacks lining the walls and standing in rows before you. Several books are on the floor, apparently hacked apart with swords. Besides this crude vandalism, the books seem in good condition.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine some of the tomes", {Book::Type::BOOK1, 558}));
+            Choices.push_back(Choice::Base("Shut the door and return to the alchemical chamber", {Book::Type::BOOK1, 69}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story257 : public Story::Base
+    {
+    public:
+        Story257()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 257;
+
+            Text = "Skittering across the desert sands at unbelievable speed come a pair of giant sand lizards. These beasts alternate between lazily sitting in the sun or hunting prey with energetic intensity. These ones are obviously hungry, and scuttle forwards, their mouths as wide as crocodiles.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take.clear();
+
+            Limit = 0;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Sand Lizard", 4, 3, 4, 7, 0),
+                Monster::Base("Sand Lizard", 4, 3, 4, 9, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 840}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Take = {Equipment::LIZARD_HIDE};
+
+                Limit = 1;
+            }
+        }
+    };
+
+    class Story258 : public Story::Base
+    {
+    public:
+        Story258()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 258;
+
+            Text = "There is a strange sound in the room to the south, and you instinctively draw your weapons. Fortunately, it is just Brekken and the rest of his thieves. You wondered when they would get here!\n\n\"An old friend of ours in Chalice offered us an easy route into the palace,\" explains Brekken. \"We thought it might be easier than sneaking past all those guards.\"\n\n\"Yes... but how did you know when to arrive,\" you ask, mystified.\n\n\"Well... he's quite knowledgeable, is our friend,\" winks Brekken. \"Shall we get on with it?\"\n\nYou nod, and soon Brekken and his gang are surrounding the vault, their hands pouring over it, scratching their beards and muttering to each other. You catch Brekken producing a scroll, which he reads from. Suddenly the door begins to swing open.\n\n\"I suppose your friend gave you that as well!\" you say, indicating the magic scroll which even now is disintegrating into ash.\n\n\"Well -- he moves in mysterious ways, doesn't he?\" grins Brekken.\n\nNote: You may now loot the vault. However, you must give three items from the treasure list to Brekken and his gang. The silver coins count as one item.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 416}; }
+    };
+
+    class Story259 : public Story::Base
+    {
+    public:
+        Story259()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 259;
+
+            Text = "After days of monotony, you finally come upon an arch in the wall. It is the Shaded Gate, though how you knew its name is a mystery to you. Beyond the arch the desert continues... except the land is a shadowy haze, a dark reflection of the real world.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Will you enter the Shaded Gate", {Book::Type::BOOK1, 410}));
+            Choices.push_back(Choice::Base("Break off from the wall and head north", {Book::Type::BOOK1, 858}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -8087,6 +8323,16 @@ namespace Book1
     auto story247 = Story247();
     auto story248 = Story248();
     auto story249 = Story249();
+    auto story250 = Story250();
+    auto story251 = Story251();
+    auto story252 = Story252();
+    auto story253 = Story253();
+    auto story254 = Story254();
+    auto story255 = Story255();
+    auto story256 = Story256();
+    auto story257 = Story257();
+    auto story258 = Story258();
+    auto story259 = Story259();
 
     void InitializeStories()
     {
@@ -8118,7 +8364,8 @@ namespace Book1
             &story210, &story211, &story212, &story213, &story214, &story215, &story216, &story217, &story218, &story219,
             &story220, &story221, &story222, &story223, &story224, &story225, &story226, &story227, &story228, &story229,
             &story230, &story231, &story232, &story233, &story234, &story235, &story236, &story237, &story238, &story239,
-            &story240, &story241, &story242, &story243, &story244, &story245, &story246, &story247, &story248, &story249};
+            &story240, &story241, &story242, &story243, &story244, &story245, &story246, &story247, &story248, &story249,
+            &story250, &story251, &story252, &story253, &story254, &story255, &story256, &story257, &story258, &story259};
     }
 }
 #endif

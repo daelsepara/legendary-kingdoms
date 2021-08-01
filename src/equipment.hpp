@@ -18,6 +18,7 @@ namespace Equipment
     enum class Type
     {
         NONE = 0,
+        SILVER_COINS,
         LEATHER_ARMOUR1,
         SHIELD2,
         BLUESTONE,
@@ -99,6 +100,8 @@ namespace Equipment
         bool TwoHanded = false;
 
         int AdditionalSlots = 0;
+
+        int Value = 0;
 
         Base()
         {

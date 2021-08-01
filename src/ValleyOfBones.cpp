@@ -13441,35 +13441,42 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     for (auto i = 0; i < selection.size(); i++)
                     {
-                        auto character = -1;
-
-                        while (character < 0 || character > party.Members.size())
+                        if (equipment[selection[i]].Type == Equipment::Type::SILVER_COINS)
                         {
-                            if (Engine::COUNT(party) == 1)
-                            {
-                                character = Engine::FIRST(party);
-                            }
-                            else
-                            {
-                                party.CurrentCharacter = Engine::FIND_SOLO(party);
+                            Engine::GAIN_MONEY(party, equipment[selection[i]].Value);
+                        }
+                        else
+                        {
+                            auto character = -1;
 
-                                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
+                            while (character < 0 || character > party.Members.size())
+                            {
+                                if (Engine::COUNT(party) == 1)
                                 {
-                                    character = party.CurrentCharacter;
+                                    character = Engine::FIRST(party);
                                 }
                                 else
                                 {
-                                    character = selectPartyMember(window, renderer, party, Team::Type::NONE, equipment[selection[i]], Control::Type::EQUIPMENT);
+                                    party.CurrentCharacter = Engine::FIND_SOLO(party);
+
+                                    if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
+                                    {
+                                        character = party.CurrentCharacter;
+                                    }
+                                    else
+                                    {
+                                        character = selectPartyMember(window, renderer, party, Team::Type::NONE, equipment[selection[i]], Control::Type::EQUIPMENT);
+                                    }
                                 }
-                            }
 
-                            if (character >= 0 && character < party.Members.size() && party.Members[character].Type != Character::Type::SKULLCRACKER)
-                            {
-                                Engine::GET_EQUIPMENT(party.Members[character], {equipment[selection[i]]});
-
-                                while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[character]))
+                                if (character >= 0 && character < party.Members.size() && party.Members[character].Type != Character::Type::SKULLCRACKER)
                                 {
-                                    inventoryScreen(window, renderer, party, party.Members[character], -1, false);
+                                    Engine::GET_EQUIPMENT(party.Members[character], {equipment[selection[i]]});
+
+                                    while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[character]))
+                                    {
+                                        inventoryScreen(window, renderer, party, party.Members[character], -1, false);
+                                    }
                                 }
                             }
                         }

@@ -331,6 +331,32 @@ namespace Engine
         }
     }
 
+    void GAIN_MORALE(Party::Base &party, int morale)
+    {
+        for (auto i = 0; i < party.Army.size(); i++)
+        {
+            Engine::GAIN_MORALE(party.Army[i], morale);
+        }
+    }
+
+    void GAIN_MORALE(Party::Base &party, Location::Type garrison, int morale)
+    {
+        if (garrison == Location::Type::NONE)
+        {
+            Engine::GAIN_MORALE(party, morale);
+        }
+        else
+        {
+            for (auto i = 0; i < party.Army.size(); i++)
+            {
+                if (party.Army[i].Garrison == garrison)
+                {
+                    Engine::GAIN_MORALE(party.Army[i], morale);
+                }
+            }
+        }
+    }
+
     void GAIN_STRENGTH(Army::Base &unit, int strength)
     {
         if (unit.Strength > 0)
