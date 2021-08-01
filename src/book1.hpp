@@ -4208,7 +4208,7 @@ namespace Book1
 
             if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
             {
-                if (party.Members[party.LastSelected].Health > 0)
+                if (Engine::SCORE(party.Members[party.LastSelected], Attribute::Type::HEALTH) > 0)
                 {
                     PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " LOSES 1 Health Point.";
 
@@ -6513,7 +6513,7 @@ namespace Book1
         {
             PreText = "You are about halfway across the plank when it suddenly breaks in two. You plunge down into the pit and onto the spikes.";
 
-            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size() && party.Members[party.LastSelected].Health > 0)
+            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size() && Engine::SCORE(party.Members[party.LastSelected], Attribute::Type::HEALTH) > 0)
             {
                 auto result = Engine::ROLL_DICE(1);
 
@@ -6848,7 +6848,7 @@ namespace Book1
             {
                 auto result = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
 
-                if (result >= 0 && result < party.Members.size() && party.Members[result].Health > 0)
+                if (result >= 0 && result < party.Members.size() && Engine::SCORE(party.Members[result], Attribute::Type::HEALTH) > 0)
                 {
                     PreText += "\n\nAkihiro has achieved Enlightenment. Akihiro can gains 1 point of Lore.";
 
@@ -7125,7 +7125,7 @@ namespace Book1
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (party.Members[i].Health > 0 && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
+                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
                 {
                     Engine::GAIN_STATUS(party.Members[i], Character::Status::CAPTURED);
                 }
@@ -7259,7 +7259,7 @@ namespace Book1
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (party.Members[i].Health > 0)
+                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
                 {
                     Engine::GAIN_FOLLOWERS(party.Members[i], {Follower::Base("Skeleton", Follower::Type::MORDAIN_SKELETONS, 6)});
                 }
@@ -7511,7 +7511,7 @@ namespace Book1
             {
                 party.Members[target].Team = previousTeam;
             }
-            
+
             if (result == Engine::Combat::EXCEED_LIMIT)
             {
                 temp_string = "The guards arrive and pull you away to your cell.";
@@ -7536,6 +7536,256 @@ namespace Book1
                 Bye = temp_string.c_str();
             }
         }
+    };
+
+    class Story240 : public Story::Base
+    {
+    public:
+        Story240()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 240;
+
+            Text = "You are sailing just south of the Lhasbreath Jungle.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Sail west", {Book::Type::BOOK1, 21}));
+            Choices.push_back(Choice::Base("Sail east", {Book::Type::BOOK1, 516}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story241 : public Story::Base
+    {
+    public:
+        Story241()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 241;
+
+            Text = "You report your failure to retrieve the silver idol but speak instead of the revelation you had on the hilltop. \"Excellent!\" claps Honnu. \"Well, I think we can skip he bit about you bringing me the silver idol.\"\n\nYou flinch. \"But surely if I am to pass the test...?\" \"What do I need of a silver idol, anyway?\" snaps Honnu. \"You will not find your kensai spirit stamped on the base of an idol. Let the thief be pleased with herself. Your spiritual reward will last longer than her reward in coin, I promise you that.\"\n\nYou smile at the cunning old man. Clearly there is more to these tests than meets the eye.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 530}; }
+    };
+
+    class Story242 : public Story::Base
+    {
+    public:
+        Story242()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 242;
+
+            Text = "After a short journey the tunnel leads to an old door, long since smashed to pieces. Beyond lie empty racks and armour stands, the chamber having been looted long ago, and a tunnel continues into the darkness beyond. Only one weapon remains, clutched in the hand of a dusty skeleton. The sword is carved of dark blue metal, with spidery runes engraved across its blade.\n\n\"I sense some enchantments, but also a strong curse,\" notes the Everchild. \"I would advise you to leave the blade and continue.\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to pick up the blade", {Book::Type::BOOK1, 131}, Choice::Type::CHOOSE_PARTY_MEMBER));
+            Choices.push_back(Choice::Base("Leave the sword where it is and continue onwards", {Book::Type::BOOK1, 647}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story243 : public Story::Base
+    {
+    public:
+        Story243()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 243;
+
+            Text = "You attempt to make your way to the historic harbour of the city, but the way is blocked with piles of rubble. Mordain, like many coastal cities in the Valley of Bones, was raised on a clifftop in order to deter coastal raiders. However, with the curtain wall of the city in ruins, it is impossible now to even approach the cliffside, let alone get a view down the cliffs. Perhaps it would be easier to get there by sea?";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 515}; }
+    };
+
+    class Story244 : public Story::Base
+    {
+    public:
+        Story244()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 244;
+
+            Text = "Once again you leave the labyrinth that is the shadow land. Feeling weak and drained you head north towards civilisation.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 858}; }
+    };
+
+    class Story245 : public Story::Base
+    {
+    public:
+        Story245()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 245;
+
+            Text = "The ogre seems stunned that such thin and puny creatures could possess so much money. \"Beats me why you wander 'round dungeons when you have that kind of dosh lining your pockets, but well'a'day.\"\n\nThe ogre rises to his feet. \"Skullcracker's the name,\" he says. \"I don't do cities, and I don't do boats. Other than that, I'll hang around with you for a bit.\n\nSkullcracker hands you a RUSTY KEY. \"This is the key to the room I'm supposed to be guarding,\" he says. \"Why don't we loot it, instead? Just go north, then east a bit, and you'll find it.\"\n\nYou gained the code A76.\n\nNote: Skullcracker can be treated just like an ordinary party member. He possesses the following skills:\n\nFighting: 8, Stealth: 1, Lore: 1, Survival: 3, Charisma: 2, Health: 12\n\nSkullcracker has a number of special rules as a party member:\n\n* He is lazy and he will not carry any equipment for you, even items that boost his skills. Skullcracker wields a CLUB, but it is nothing special. Should the party ever lose their equipment he will be able to replace the CLUB instantly with a bit of large bone, table leg or other such item. Effectively, Skullcracker is never disarmed.\n\n* He won't enter a city, which includes the following locations: Chalice, Clifftop, Cursus, Lhasbreath, Luutanesh or Saltdad. If you go to these places, Skullcracker will wait outside until you leave. Ogres aren't very popular in civilised places.\n\n* Even though he can't stay in human inns, Skullcracker will recover Health points at the same rate as your other party members when you pay to stay at an inn.\n\n* He won't board a ship. He had a queasy tummy on the orc boat and won't tolerate going aboard another. If you insist on going sailing, he will leave the party.\n\n* His contract with you ends when you travel to another land -- i.e. you begin to explore another book.\n\nAt this point, Skullcracker with take his leave and wander into the desert.";
+
+            Bye = "Thanking your new companion, you return to the crossroads.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            if (!Engine::IN_PARTY(party, Character::Type::SKULLCRACKER))
+            {
+                party.Members.push_back(Character::SKULLCRACKER);
+            }
+
+            Engine::GET_CODES(party, {Codes::A(76)});
+
+            Take = {Equipment::RUSTY_KEY};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 310}; }
+    };
+
+    class Story246 : public Story::Base
+    {
+    public:
+        Story246()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 246;
+
+            Text = "The king nods as he scans over the document with his eyes. \"A good reduction, and a modest bribe, this is well,\" he concedes. \"Though it pains me to sully our court with the intrigues of foreigners. Take your reward and never come in our presence again.\"\n\nThe Iron King waves to one of his councillors, who reluctantly places 350 silver pieces and an IRON GREATAXE* (Fighting +2) into your hands.";
+
+            Bye = "Not wishing to tarry longer, you depart the chamber and return to the crossroads.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::TITHE_REPORT});
+
+            Take = {Equipment::IRON_GREATAXE2};
+
+            Limit = 1;
+
+            Engine::GAIN_MONEY(party, 350);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story247 : public Story::Base
+    {
+    public:
+        Story247()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 247;
+
+            Text = "This small room contains a very large ogre. In fact, there is actually bedding down for two of these enormous creatures, but currently only one is here, chewing on the leg bone of a sand lizard. He eyes you lazily.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Attempt to speak with the ogre", {Book::Type::BOOK1, 693}));
+            Choices.push_back(Choice::Base("Rush to an attack", {Book::Type::BOOK1, 117}));
+            Choices.push_back(Choice::Base("Politely excuse yourself and return to the crossroads", {Book::Type::BOOK1, 310}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(76)}))
+            {
+                return {Book::Type::BOOK1, 36};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story248 : public Story::Base
+    {
+    public:
+        Story248()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 248;
+
+            Text = "The dragonyak bull bows to you as you speak in the ancient tongue of beasts. \"You are an animal friend,\" he intones. \"Our legends say that it has been an eon since any dragonyak was so addressed. You honour us.\" The dragonyak unleashes a bellowing roar, which is repeated by his herd. One dragonyak immerses herself in the water of the oasis and emerges sometime later with a CLOAK, sodden with water, but miraculously unharmed by the passage of years. The bull insists you take the cloak, for he is aware that man-apes such as yourself favour them.\n\nYou take THE RUGGED CLOAK (Survival +2) so as not to offend the mighty bull and make your way onwards.\n\nYou gained the code A38.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::RUGGED_CLOAK2};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::A(38)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 115}; }
+    };
+
+    class Story249 : public Story::Base
+    {
+    public:
+        Story249()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 249;
+
+            Text = "You seek out the father of Garon the Bloody Mouthed. He is still sitting sadly upon his doorstep when you return, bearing his son's body in your arms. The father gives a great howl and clasps his son's body.\n\n\"It is as I feared,\" he weeps. \"I thank you for returning his body so it may be buried with honour. I was to present my son with his grandfather's magical amulet upon his successful return -- but now I have no sons left to inherit. I wish you to have it. It is what Garon would have wanted.\"\n\nThe old man presents you with an AMULET OF HEALTH (Health +1). It would be churlish to refuse it. You leave the old man to his sorrows.\n\nYou gain the code A86.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::AMULET_OF_HEALTH1};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::A(86)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
     };
 
     auto story001 = Story001();
@@ -7803,6 +8053,16 @@ namespace Book1
     auto story237 = Story237();
     auto story238 = Story238();
     auto story239 = Story239();
+    auto story240 = Story240();
+    auto story241 = Story241();
+    auto story242 = Story242();
+    auto story243 = Story243();
+    auto story244 = Story244();
+    auto story245 = Story245();
+    auto story246 = Story246();
+    auto story247 = Story247();
+    auto story248 = Story248();
+    auto story249 = Story249();
 
     void InitializeStories()
     {
@@ -7833,7 +8093,8 @@ namespace Book1
             &story200, &story201, &story202, &story203, &story204, &story205, &story206, &story207, &story208, &story209,
             &story210, &story211, &story212, &story213, &story214, &story215, &story216, &story217, &story218, &story219,
             &story220, &story221, &story222, &story223, &story224, &story225, &story226, &story227, &story228, &story229,
-            &story230, &story231, &story232, &story233, &story234, &story235, &story236, &story237, &story238, &story239};
+            &story230, &story231, &story232, &story233, &story234, &story235, &story236, &story237, &story238, &story239,
+            &story240, &story241, &story242, &story243, &story244, &story245, &story246, &story247, &story248, &story249};
     }
 }
 #endif

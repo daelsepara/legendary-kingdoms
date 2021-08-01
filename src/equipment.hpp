@@ -74,7 +74,10 @@ namespace Equipment
         MAGICAL_SHORTSWORD4,
         STONECUTTER_SWORD2,
         SPEAR,
-        PRECIOUS_TOMES
+        PRECIOUS_TOMES,
+        CLUB,
+        RUGGED_CLOAK2,
+        AMULET_OF_HEALTH1
     };
 
     class Base
@@ -196,6 +199,9 @@ namespace Equipment
     auto STONECUTTER_SWORD2 = Equipment::Base("STONECUTTER SWORD", "STONECUTTER SWORD", Equipment::Class::WEAPON, Equipment::Type::STONECUTTER_SWORD2, Attribute::Type::FIGHTING, 2, false);
     auto SPEAR = Equipment::Base("SPEAR", "SPEAR", Equipment::Class::WEAPON, Equipment::Type::SPEAR, Attribute::Type::FIGHTING, 0, false);
     auto PRECIOUS_TOMES = Equipment::Base("PRECIOUS TOMES", "PRECIOUS TOMES", Equipment::Class::NORMAL, Equipment::Type::PRECIOUS_TOMES, Attribute::Type::NONE, 0, false);
+    auto CLUB = Equipment::Base("CLUB", "CLUB", Equipment::Class::WEAPON, Equipment::Type::CLUB, Attribute::Type::FIGHTING, 0, false);
+    auto RUGGED_CLOAK2 = Equipment::Base("RUGGED CLOAK", "RUGGED CLOAK", Equipment::Class::ROBE, Equipment::Type::RUGGED_CLOAK2, Attribute::Type::SURVIVAL, 2, false);
+    auto AMULET_OF_HEALTH1 = Equipment::Base("RUGGED CLOAK", "RUGGED CLOAK", Equipment::Class::NORMAL, Equipment::Type::AMULET_OF_HEALTH1, Attribute::Type::HEALTH, 1, false);
 }
 
 #endif

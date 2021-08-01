@@ -100,6 +100,95 @@ namespace Engine
 
     auto Random = Random::Base();
 
+    int FIND_FOLLOWER(Character::Base &character, Follower::Type type)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < character.Followers.size(); i++)
+        {
+            if (character.Followers[i].Type == type)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    bool HAS_FOLLOWER(Character::Base &character, Follower::Type follower)
+    {
+        auto result = Engine::FIND_FOLLOWER(character, follower);
+
+        return (result >= 0 && result < character.Followers.size() && character.Followers[result].Health > 0);
+    }
+
+    bool HAS_STATUS(Character::Base &character, Character::Status status)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < character.Status.size(); i++)
+        {
+            if (character.Status[i] == status)
+            {
+                result = true;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int SCORE(Character::Base &character, Attribute::Type type)
+    {
+        auto score = 0;
+
+        if (type == Attribute::Type::HEALTH)
+        {
+            score = character.Health;
+        }
+
+        for (auto i = 0; i < character.Attributes.size(); i++)
+        {
+            if (character.Attributes[i].Type == type)
+            {
+                score = character.Attributes[i].Value;
+
+                break;
+            }
+        }
+
+        if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::ENRAGED))
+        {
+            score++;
+        }
+
+        if (type == Attribute::Type::FIGHTING && Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
+        {
+            score += 2;
+        }
+
+        if (character.Health > 0)
+        {
+            for (auto i = 0; i < character.Equipment.size(); i++)
+            {
+                if (character.Equipment[i].Class == Equipment::Class::NORMAL && character.Equipment[i].Attribute == type)
+                {
+                    score += character.Equipment[i].Modifier;
+                }
+            }
+        }
+
+        if (score < 0)
+        {
+            score = 0;
+        }
+
+        return score;
+    }
+
     void GAIN_MONEY(Party::Base &party, int money)
     {
         party.Money += money;
@@ -112,10 +201,14 @@ namespace Engine
 
     void GAIN_HEALTH(Character::Base &character, int health)
     {
-        if (character.Health > 0)
+        auto score = Engine::SCORE(character, Attribute::Type::HEALTH);
+
+        if (score > 0)
         {
-            character.Health += health;
+            score += health;
         }
+
+        character.Health += (score - Engine::SCORE(character, Attribute::Type::HEALTH));
 
         if (character.Health < 0)
         {
@@ -322,23 +415,6 @@ namespace Engine
         return results;
     }
 
-    bool HAS_STATUS(Character::Base &character, Character::Status status)
-    {
-        auto result = false;
-
-        for (auto i = 0; i < character.Status.size(); i++)
-        {
-            if (character.Status[i] == status)
-            {
-                result = true;
-
-                break;
-            }
-        }
-
-        return result;
-    }
-
     bool HAS_STATUS(std::vector<Character::Base> &party, Character::Status status)
     {
         auto result = false;
@@ -382,26 +458,9 @@ namespace Engine
         character.Status.clear();
     }
 
-    int FIND_FOLLOWER(Character::Base &character, Follower::Type type)
-    {
-        auto result = -1;
-
-        for (auto i = 0; i < character.Followers.size(); i++)
-        {
-            if (character.Followers[i].Type == type)
-            {
-                result = i;
-
-                break;
-            }
-        }
-
-        return result;
-    }
-
     void GAIN_FOLLOWERS(Character::Base &character, std::vector<Follower::Base> followers)
     {
-        if (character.Health > 0 && followers.size() > 0)
+        if (Engine::SCORE(character, Attribute::Type::HEALTH) > 0 && followers.size() > 0)
         {
             for (auto i = 0; i < followers.size(); i++)
             {
@@ -417,7 +476,7 @@ namespace Engine
 
     void LOSE_FOLLOWERS(Character::Base &character, std::vector<Follower::Type> followers)
     {
-        if (character.Health > 0 && followers.size() > 0)
+        if (Engine::SCORE(character, Attribute::Type::HEALTH) > 0 && followers.size() > 0)
         {
             for (auto i = 0; i < followers.size(); i++)
             {
@@ -439,13 +498,6 @@ namespace Engine
         }
     }
 
-    bool HAS_FOLLOWER(Character::Base &character, Follower::Type follower)
-    {
-        auto result = Engine::FIND_FOLLOWER(character, follower);
-
-        return (result >= 0 && result < character.Followers.size() && character.Followers[result].Health > 0);
-    }
-
     bool HAS_FOLLOWER(Party::Base &party, Follower::Type follower)
     {
         auto result = false;
@@ -456,33 +508,6 @@ namespace Engine
         }
 
         return result;
-    }
-
-    int SCORE(Character::Base &character, Attribute::Type type)
-    {
-        auto score = 0;
-
-        for (auto i = 0; i < character.Attributes.size(); i++)
-        {
-            if (character.Attributes[i].Type == type)
-            {
-                score = character.Attributes[i].Value;
-
-                break;
-            }
-        }
-
-        if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::ENRAGED))
-        {
-            score++;
-        }
-
-        if (type == Attribute::Type::FIGHTING && Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
-        {
-            score += 2;
-        }
-
-        return score;
     }
 
     void GAIN_SCORE(Character::Base &character, Attribute::Type type, int score)
@@ -667,7 +692,7 @@ namespace Engine
 
         for (auto i = 0; i < adventurers.size(); i++)
         {
-            if (adventurers[i].Health > 0 && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
+            if (Engine::SCORE(adventurers[i], Attribute::Type::HEALTH) > 0 && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
             {
                 result++;
             }
@@ -688,7 +713,7 @@ namespace Engine
         {
             for (auto i = 0; i < adventurers.size(); i++)
             {
-                if (adventurers[i].Health > 0 && (adventurers[i].Team == team) && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
+                if (Engine::SCORE(adventurers[i], Attribute::Type::HEALTH) > 0 && (adventurers[i].Team == team) && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
                 {
                     result++;
                 }
@@ -704,7 +729,7 @@ namespace Engine
 
         for (auto i = 0; i < adventurers.size(); i++)
         {
-            if (adventurers[i].Health > 0 && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
+            if (Engine::SCORE(adventurers[i], Attribute::Type::HEALTH) > 0 && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
             {
                 result++;
             }
@@ -725,7 +750,7 @@ namespace Engine
         {
             for (auto i = 0; i < adventurers.size(); i++)
             {
-                if (adventurers[i].Health > 0 && adventurers[i].Team == team && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
+                if (Engine::SCORE(adventurers[i], Attribute::Type::HEALTH) > 0 && adventurers[i].Team == team && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(adventurers[i], Character::Status::CAPTURED))
                 {
                     result++;
                 }
@@ -1445,7 +1470,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Health > 0 && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0)
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0)
             {
                 result = Engine::VERIFY_SPELL(party.Members[i], spells);
 
@@ -1465,7 +1490,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Health > 0 && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0)
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0)
             {
                 result = Engine::VERIFY_SPELL_ANY(party.Members[i], spells);
 
@@ -1733,7 +1758,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Health > 0 && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1755,7 +1780,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Health > 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1777,7 +1802,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Health > 0 && party.Members[i].Team == team && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1799,7 +1824,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Health > 0 && party.Members[i].Team == team && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1821,7 +1846,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Health > 0 && party.Members[i].Team == team && party.Members[i].SpellCaster && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && party.Members[i].SpellCaster && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1843,7 +1868,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Health > 0 && party.Members[i].Team == team && party.Members[i].SpellCaster && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && party.Members[i].SpellCaster && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 
@@ -1865,7 +1890,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Health > 0 && party.Members[i].SpellCaster && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].SpellCaster && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
             {
                 result = i;
 

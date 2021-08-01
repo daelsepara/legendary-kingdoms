@@ -973,7 +973,7 @@ std::string characterText(Character::Base &character, bool compact)
         character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": " + std::to_string(Engine::SCORE(character, character.Attributes[i].Type));
     }
 
-    character_text += ", Health: " + std::to_string(character.Health);
+    character_text += ", Health: " + std::to_string(Engine::SCORE(character, Attribute::Type::HEALTH));
 
     if (!compact)
     {
@@ -1408,7 +1408,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                     party_string += party.Members[i].Name;
 
-                    if (party.Members[i].Health <= 0)
+                    if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) <= 0)
                     {
                         party_string += " (D)";
                     }
@@ -1902,9 +1902,16 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
             auto adventurerh = splashw;
 
-            if (current_mode != Control::Type::PARTY && adventurer != NULL)
+            if (current_mode != Control::Type::PARTY)
             {
-                adventurerh = fitImage(renderer, adventurer, startx, starty, splashw, text_bounds);
+                if (adventurer)
+                {
+                    adventurerh = fitImage(renderer, adventurer, startx, starty, splashw, text_bounds);
+                }
+                else
+                {
+                    adventurerh = text_bounds;
+                }
             }
             else
             {
@@ -1931,7 +1938,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
                         party_string += party.Members[i].Name;
 
-                        if (party.Members[i].Health <= 0)
+                        if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) <= 0)
                         {
                             party_string += " (D)";
                         }
@@ -1959,7 +1966,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                 renderText(renderer, text, intBE, textx + text_space, texty + text_space, character_box - 2 * text_space, 0);
             }
 
-            if (current_mode != Control::Type::PARTY && character >= 0 && character < party.Members.size() && adventurer)
+            if (current_mode != Control::Type::PARTY && character >= 0 && character < party.Members.size())
             {
                 putText(renderer, party.Members[character].Name, font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
             }
@@ -2216,28 +2223,18 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
                     if (character >= 0 && character < party.Members.size())
                     {
-                        if (party.Members[character].Image != NULL)
+                        if (adventurer != NULL)
                         {
-                            if (adventurer != NULL)
-                            {
-                                SDL_FreeSurface(adventurer);
+                            SDL_FreeSurface(adventurer);
 
-                                adventurer = NULL;
-                            }
+                            adventurer = NULL;
+                        }
 
-                            if (adventurerTexture != NULL)
-                            {
-                                SDL_DestroyTexture(adventurerTexture);
+                        if (adventurerTexture != NULL)
+                        {
+                            SDL_DestroyTexture(adventurerTexture);
 
-                                adventurerTexture = NULL;
-                            }
-
-                            adventurer = createImage(party.Members[character].Image);
-
-                            if (adventurer)
-                            {
-                                adventurerTexture = SDL_CreateTextureFromSurface(renderer, adventurer);
-                            }
+                            adventurerTexture = NULL;
                         }
 
                         if (text != NULL)
@@ -2245,6 +2242,16 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                             SDL_FreeSurface(text);
 
                             text = NULL;
+                        }
+
+                        if (party.Members[character].Image != NULL)
+                        {
+                            adventurer = createImage(party.Members[character].Image);
+
+                            if (adventurer)
+                            {
+                                adventurerTexture = SDL_CreateTextureFromSurface(renderer, adventurer);
+                            }
                         }
 
                         text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
@@ -2259,28 +2266,18 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
                     if (character >= 0 && character < party.Members.size())
                     {
-                        if (party.Members[character].Image != NULL)
+                        if (adventurer != NULL)
                         {
-                            if (adventurer != NULL)
-                            {
-                                SDL_FreeSurface(adventurer);
+                            SDL_FreeSurface(adventurer);
 
-                                adventurer = NULL;
-                            }
+                            adventurer = NULL;
+                        }
 
-                            if (adventurerTexture != NULL)
-                            {
-                                SDL_DestroyTexture(adventurerTexture);
+                        if (adventurerTexture != NULL)
+                        {
+                            SDL_DestroyTexture(adventurerTexture);
 
-                                adventurerTexture = NULL;
-                            }
-
-                            adventurer = createImage(party.Members[character].Image);
-
-                            if (adventurer)
-                            {
-                                adventurerTexture = SDL_CreateTextureFromSurface(renderer, adventurer);
-                            }
+                            adventurerTexture = NULL;
                         }
 
                         if (text != NULL)
@@ -2288,6 +2285,17 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                             SDL_FreeSurface(text);
 
                             text = NULL;
+                        }
+
+                        if (party.Members[character].Image != NULL)
+                        {
+
+                            adventurer = createImage(party.Members[character].Image);
+
+                            if (adventurer)
+                            {
+                                adventurerTexture = SDL_CreateTextureFromSurface(renderer, adventurer);
+                            }
                         }
 
                         text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
@@ -3653,7 +3661,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
     auto font_size = 32;
     auto text_space = 8;
 
-    if (character.Health > 0 && Engine::ARMOUR(character) > 0)
+    if (Engine::SCORE(character, Attribute::Type::HEALTH) > 0 && Engine::ARMOUR(character) > 0)
     {
         if (window && renderer)
         {
@@ -3848,7 +3856,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                 putHeader(renderer, character.Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 defender_string = "Armour Save: +" + std::to_string(save_score);
-                defender_string += "\nHealth: " + std::to_string(character.Health);
+                defender_string += "\nHealth: " + std::to_string(Engine::SCORE(character, Attribute::Type::HEALTH));
 
                 putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
@@ -4035,7 +4043,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 drawRect(renderer, w, h, x, y, intLB);
                             }
                         }
-                        else if (party.Members[index].Health > 0)
+                        else if (Engine::SCORE(party.Members[index], Attribute::Type::HEALTH) > 0)
                         {
                             drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
                         }
@@ -4054,7 +4062,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                 if (selection >= 0 && selection < party.Members.size())
                 {
-                    if (party.Members[selection].Health > 0)
+                    if (Engine::SCORE(party.Members[selection], Attribute::Type::HEALTH) > 0)
                     {
                         putText(renderer, party.Members[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                     }
@@ -4125,7 +4133,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             }
                             else
                             {
-                                if (party.Members[current + offset].Health > 0)
+                                if (Engine::SCORE(party.Members[current + offset], Attribute::Type::HEALTH) > 0)
                                 {
                                     if (team == Team::Type::NONE || party.Members[current + offset].Team == team)
                                     {
@@ -4831,7 +4839,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
 
                         attacker_string = "Fighting: " + std::to_string(score);
-                        attacker_string += "\nHealth: " + std::to_string(party.Members[combatant].Health);
+                        attacker_string += "\nHealth: " + std::to_string(Engine::SCORE(party.Members[combatant], Attribute::Type::HEALTH));
 
                         attack_score = score;
                     }
@@ -4870,7 +4878,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         else
                         {
                             putHeader(renderer, party.Members[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
-                            defender_string = "Health: " + std::to_string(party.Members[combatant].Health);
+                            defender_string = "Health: " + std::to_string(Engine::SCORE(party.Members[combatant], Attribute::Type::HEALTH));
                         }
                     }
 
@@ -4988,7 +4996,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     if (result >= 0 && result < party.Members.size())
                                     {
-                                        if (party.Members[result].Health > 0)
+                                        if (Engine::SCORE(party.Members[result], Attribute::Type::HEALTH) > 0)
                                         {
                                             if (Engine::FIND_LIST(target_damage, result) < 0)
                                             {
@@ -5458,7 +5466,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
 {
     auto increase = 0;
 
-    if (character.Health > 0)
+    if (Engine::SCORE(character, Attribute::Type::HEALTH) > 0)
     {
         if (window && renderer)
         {
@@ -6978,7 +6986,7 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                         {
                             thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
-                        else if (party.Members[offset + i].Health > 0)
+                        else if (Engine::SCORE(party.Members[offset + i], Attribute::Type::HEALTH) > 0)
                         {
                             drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
                         }
@@ -7308,7 +7316,7 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                             }
                             else
                             {
-                                if (party.Members[current + offset].Health > 0)
+                                if (Engine::SCORE(party.Members[current + offset], Attribute::Type::HEALTH) > 0)
                                 {
                                     if (team == Team::Type::NONE || party.Members[current + offset].Team == team)
                                     {
@@ -7473,7 +7481,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         {
                             thickRect(renderer, controls[index].W + 4, controls[index].H + 4, controls[index].X - 2, controls[index].Y - 2, intLB, 2);
                         }
-                        else if (party.Members[index].Health > 0)
+                        else if (Engine::SCORE(party.Members[index], Attribute::Type::HEALTH) > 0)
                         {
                             if (team != Team::Type::NONE)
                             {
@@ -7519,7 +7527,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     {
                         if (selection[i] >= 0 && selection[i] < party.Members.size())
                         {
-                            if (party.Members[selection[i]].Health > 0)
+                            if (Engine::SCORE(party.Members[selection[i]], Attribute::Type::HEALTH) > 0)
                             {
                                 if (adventurers.length() > 0)
                                 {
@@ -7606,7 +7614,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             {
                                 if (selection.size() < team_size)
                                 {
-                                    if (party.Members[current + offset].Health > 0)
+                                    if (Engine::SCORE(party.Members[current + offset], Attribute::Type::HEALTH) > 0)
                                     {
                                         if (team == Team::Type::NONE)
                                         {
@@ -8506,7 +8514,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                             if (selection >= 0 && selection < party.Members.size())
                             {
-                                if (party.Members[selection].Health > 0)
+                                if (Engine::SCORE(party.Members[selection], Attribute::Type::HEALTH) > 0)
                                 {
                                     selectTeam(window, renderer, party.Members[selection], teams);
 
@@ -8653,7 +8661,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         {
                             thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
-                        else if (party.Members[offset + i].Health > 0)
+                        else if (Engine::SCORE(party.Members[offset + i], Attribute::Type::HEALTH) > 0)
                         {
                             if (team != Team::Type::NONE)
                             {
@@ -8738,7 +8746,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
                 if (selection >= 0 && selection < party.Members.size())
                 {
-                    if (party.Members[selection].Health > 0)
+                    if (Engine::SCORE(party.Members[selection], Attribute::Type::HEALTH) > 0)
                     {
                         putText(renderer, party.Members[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                     }
@@ -8884,7 +8892,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                             }
                             else
                             {
-                                if (party.Members[current + offset].Health > 0)
+                                if (Engine::SCORE(party.Members[current + offset], Attribute::Type::HEALTH) > 0)
                                 {
                                     if (team == Team::Type::NONE || party.Members[current + offset].Team == team)
                                     {
@@ -9036,7 +9044,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (party.Members[i].Health > 0)
+                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
                 {
                     hasAttacked.push_back(i);
                 }
@@ -9155,7 +9163,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                         party_string += party.Members[i].Name;
 
-                        if (party.Members[i].Health <= 0)
+                        if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) <= 0)
                         {
                             party_string += " (D)";
                         }
@@ -9372,7 +9380,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     auto adventurer = party.Members[result];
 
-                                    if (adventurer.Health > 0)
+                                    if (Engine::SCORE(adventurer, Attribute::Type::HEALTH) > 0)
                                     {
                                         if (Engine::COUNT(monsters, combatRound) > 0)
                                         {
@@ -9547,7 +9555,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     for (auto i = 0; i < party.Members.size(); i++)
                                     {
-                                        if (party.Members[i].Health > 0 && party.Members[i].SpellCaster && (team == Team::Type::NONE || party.Members[i].Team == team))
+                                        if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].SpellCaster && (team == Team::Type::NONE || party.Members[i].Team == team))
                                         {
                                             auto spells = Engine::COUNT(party.Members[i].SpellBook, Spells::Scope::COMBAT) + Engine::COUNT(party.Members[i].SpellBook, Spells::Scope::ADVENTURE_COMBAT);
 
@@ -10414,11 +10422,11 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                         {
                             if (controls[current].Type != Control::Type::FULL_RECOVERY)
                             {
-                                cost += (party.Members[selection[i]].Health < party.Members[selection[i]].MaximumHealth) ? RestPrice : 0;
+                                cost += (Engine::SCORE(party.Members[selection[i]], Attribute::Type::HEALTH) < party.Members[selection[i]].MaximumHealth) ? RestPrice : 0;
                             }
                             else
                             {
-                                cost += (party.Members[selection[i]].Health < party.Members[selection[i]].MaximumHealth) ? RestPrice * (party.Members[selection[i]].MaximumHealth - party.Members[selection[i]].Health) : 0;
+                                cost += (Engine::SCORE(party.Members[selection[i]], Attribute::Type::HEALTH) < party.Members[selection[i]].MaximumHealth) ? RestPrice * (party.Members[selection[i]].MaximumHealth - Engine::SCORE(party.Members[selection[i]], Attribute::Type::HEALTH)) : 0;
                             }
                         }
                     }
@@ -10623,7 +10631,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
                         for (auto i = 0; i < selection.size(); i++)
                         {
-                            cost += (party.Members[selection[i]].Health < party.Members[selection[i]].MaximumHealth) ? RestPrice : 0;
+                            cost += (Engine::SCORE(party.Members[selection[i]], Attribute::Type::HEALTH) < party.Members[selection[i]].MaximumHealth) ? RestPrice : 0;
                         }
 
                         if (party.Money < cost)
@@ -10640,7 +10648,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                         {
                             for (auto i = 0; i < selection.size(); i++)
                             {
-                                if (party.Members[selection[i]].Health < party.Members[selection[i]].MaximumHealth)
+                                if (Engine::SCORE(party.Members[selection[i]], Attribute::Type::HEALTH) < party.Members[selection[i]].MaximumHealth)
                                 {
                                     Engine::GAIN_HEALTH(party.Members[selection[i]], 1);
                                 }
@@ -10690,7 +10698,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
                         for (auto i = 0; i < selection.size(); i++)
                         {
-                            cost += (party.Members[selection[i]].Health < party.Members[selection[i]].MaximumHealth) ? RestPrice * (party.Members[selection[i]].MaximumHealth - party.Members[selection[i]].Health) : 0;
+                            cost += (Engine::SCORE(party.Members[selection[i]], Attribute::Type::HEALTH) < party.Members[selection[i]].MaximumHealth) ? RestPrice * (party.Members[selection[i]].MaximumHealth - Engine::SCORE(party.Members[selection[i]], Attribute::Type::HEALTH)) : 0;
                         }
 
                         if (party.Money < cost)
@@ -10707,9 +10715,9 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                         {
                             for (auto i = 0; i < selection.size(); i++)
                             {
-                                if (party.Members[selection[i]].Health < party.Members[selection[i]].MaximumHealth)
+                                if (Engine::SCORE(party.Members[selection[i]], Attribute::Type::HEALTH) < party.Members[selection[i]].MaximumHealth)
                                 {
-                                    Engine::GAIN_HEALTH(party.Members[selection[i]], party.Members[selection[i]].MaximumHealth - party.Members[selection[i]].Health);
+                                    Engine::GAIN_HEALTH(party.Members[selection[i]], party.Members[selection[i]].MaximumHealth - Engine::SCORE(party.Members[selection[i]], Attribute::Type::HEALTH));
                                 }
                             }
 
@@ -13366,7 +13374,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             {
                                 party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                                 {
                                     character = party.CurrentCharacter;
                                 }
@@ -13658,7 +13666,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
                     party_string += party.Members[i].Name;
 
-                    if (party.Members[i].Health <= 0)
+                    if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) <= 0)
                     {
                         party_string += " (D)";
                     }
@@ -16115,7 +16123,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                         party_string += party.Members[i].Name;
 
-                        if (party.Members[i].Health <= 0)
+                        if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) <= 0)
                         {
                             party_string += " (D)";
                         }
@@ -16374,7 +16382,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             auto success = false;
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0 && party.Members[party.CurrentCharacter].Team == Team::Type::SOLO)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0 && party.Members[party.CurrentCharacter].Team == Team::Type::SOLO)
                             {
                                 selection = {party.CurrentCharacter};
 
@@ -16409,7 +16417,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             auto selection = std::vector<int>();
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 party.LastSelected = party.CurrentCharacter;
                             }
@@ -16418,7 +16426,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
                             {
-                                if (party.Members[party.LastSelected].Health > 0)
+                                if (Engine::SCORE(party.Members[party.LastSelected], Attribute::Type::HEALTH) > 0)
                                 {
                                     selection.push_back(party.LastSelected);
 
@@ -16487,7 +16495,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 if (Engine::VERIFY_EQUIPMENT(party.Members[party.CurrentCharacter], equipment))
                                 {
@@ -16547,7 +16555,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 if (Engine::VERIFY_ANY_EQUIPMENT(party.Members[party.CurrentCharacter], equipment))
                                 {
@@ -16612,7 +16620,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 target = party.CurrentCharacter;
                             }
@@ -16641,7 +16649,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 target = party.CurrentCharacter;
                             }
@@ -16696,7 +16704,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 target = party.CurrentCharacter;
                             }
@@ -16801,7 +16809,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 target = party.CurrentCharacter;
                             }
@@ -16834,7 +16842,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 target = party.CurrentCharacter;
                             }
@@ -16865,7 +16873,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             for (auto i = 0; i < party.Members.size(); i++)
                             {
-                                if (party.Members[i].Health > 0)
+                                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
                                 {
                                     auto increase = -1;
 
@@ -16893,7 +16901,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             for (auto i = 0; i < party.Members.size(); i++)
                             {
-                                if (party.Members[i].Health > 0)
+                                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
                                 {
                                     party.Members[i].MaximumHealth += story->Choices[choice].Value;
 
@@ -17141,7 +17149,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                                 {
                                     selected = party.CurrentCharacter;
                                 }
@@ -17187,7 +17195,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 for (auto i = 0; i < story->Choices[choice].Status.size(); i++)
                                 {
@@ -17216,7 +17224,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 if (story->Choices[choice].Status.size() > 1)
                                 {
-                                    if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                                    if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                                     {
                                         message = "You do not have all of the required status: ";
                                     }
@@ -17227,7 +17235,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                                 else
                                 {
-                                    if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                                    if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                                     {
                                         message = "You do not have the required status: ";
                                     }
@@ -17254,7 +17262,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 target = party.CurrentCharacter;
                             }
@@ -17307,7 +17315,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 selection.push_back(party.CurrentCharacter);
                             }
@@ -17324,7 +17332,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 if (target >= 0 && target < party.Members.size())
                                 {
-                                    if (party.Members[target].Health > 0)
+                                    if (Engine::SCORE(party.Members[target], Attribute::Type::HEALTH) > 0)
                                     {
                                         success = skillTestScreen(window, renderer, party, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
                                     }
@@ -17369,7 +17377,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 target = party.CurrentCharacter;
                             }
@@ -17415,7 +17423,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                                 {
                                     target = party.CurrentCharacter;
                                 }
@@ -17889,7 +17897,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             party_string += party.Members[i].Name;
 
-                            if (party.Members[i].Health <= 0)
+                            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) <= 0)
                             {
                                 party_string += " (D)";
                             }
@@ -18143,7 +18151,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
-                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && party.Members[party.CurrentCharacter].Health > 0)
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
                             {
                                 team = Team::Type::SOLO;
                             }
@@ -18231,14 +18239,14 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             for (auto i = 0; i < party.Members.size(); i++)
                             {
-                                if (party.Members[i].Health > 0)
+                                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
                                 {
                                     liveCharacters.push_back(party.Members[i]);
                                 }
                                 else
                                 {
                                     party.Dead.push_back(party.Members[i].Type);
-                                    
+
                                     if (party.Members[i].Team == Team::Type::SOLO && party.CurrentCharacter == i)
                                     {
                                         party.Members[i].Equipment.clear();

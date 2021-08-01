@@ -13,7 +13,8 @@ namespace Attribute
         LORE,
         SURVIVAL,
         CHARISMA,
-        ARMOUR
+        ARMOUR,
+        HEALTH
     };
 
     enum class Test
@@ -31,6 +32,7 @@ namespace Attribute
         {Attribute::Type::SURVIVAL, "Survival"},
         {Attribute::Type::CHARISMA, "Charisma"},
         {Attribute::Type::ARMOUR, "Armour"},
+        {Attribute::Type::HEALTH, "Health"},
     };
 
     class Base
