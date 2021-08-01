@@ -1418,21 +1418,28 @@ namespace Engine
         }
     }
 
-    bool HAS_MONSTER(std::vector<Monster::Base> &monsters, Monster::Type type)
+    int FIND_MONSTER(std::vector<Monster::Base> &monsters, Monster::Type type)
     {
-        auto result = false;
+        auto result = -1;
 
         for (auto i = 0; i < monsters.size(); i++)
         {
             if (monsters[i].Type == type && monsters[i].Health > 0)
             {
-                result = true;
+                result = i;
 
                 break;
             }
         }
 
         return result;
+    }
+
+    bool HAS_MONSTER(std::vector<Monster::Base> &monsters, Monster::Type type)
+    {
+        auto result = Engine::FIND_MONSTER(monsters, type);
+
+        return (result >= 0 && result < monsters.size());
     }
 
     bool HAS_ALLY(std::vector<Allies::Type> allies, Allies::Type type)
