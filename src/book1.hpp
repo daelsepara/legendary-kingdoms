@@ -30,10 +30,7 @@ namespace Book1
             Engine::GET_CODES(party, {Codes::Type::STARTED_IN_BOOK1});
         }
 
-        Engine::Destination Continue(Party::Base &party)
-        {
-            return {Book::Type::BOOK1, 641};
-        }
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 641}; }
     };
 
     class Story002 : public Story::Base
@@ -180,9 +177,9 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            PreText = "You have already attempted to find a silver idol in the Caves of Uranu.";
+            PreText = "You have already attempted to find a SILVER IDOL in the Caves of Uranu.";
 
-            if (Engine::VERIFY_CODES(party, {Codes::Type::SILVER_IDOL}))
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::SILVER_IDOL}))
             {
                 PreText += " You were successful and you do not need to look again.";
             }
@@ -196,10 +193,7 @@ namespace Book1
             Text = PreText.c_str();
         }
 
-        Engine::Destination Continue(Party::Base &party)
-        {
-            return {Book::Type::BOOK1, 346};
-        }
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 346}; }
     };
 
     class Story007 : public Story::Base
@@ -283,10 +277,7 @@ namespace Book1
             Text = PreText.c_str();
         }
 
-        Engine::Destination Continue(Party::Base &party)
-        {
-            return {Book::Type::BOOK1, 169};
-        }
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 169}; }
     };
 
     class Story008 : public Story::Base
@@ -320,10 +311,7 @@ namespace Book1
             Text = PreText.c_str();
         }
 
-        Engine::Destination Continue(Party::Base &party)
-        {
-            return {Book::Type::BOOK1, 419};
-        }
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 419}; }
     };
 
     class Story009 : public Story::Base
@@ -4900,7 +4888,7 @@ namespace Book1
 
             ID = 157;
 
-            Text = "The sound of drums and crowds roaring echo in your ears as you are once again lined up in the gatehouse in preparation for your latest bout. Up to four CRUDE BLADES (Fighting +0) can be equipped by your characters. Again, one character may be armed with a SHIELD (Armour +2), and another with a two-handed MAUL* (Fighting +1).\n\nEquip your characters as you wish";
+            Text = "The sound of drums and crowds roaring echo in your ears as you are once again lined up in the gatehouse in preparation for your latest bout. Up to four CRUDE BLADES (Fighting +0) can be equipped by your characters. Again, one character may be armed with a SHIELD (Armour +2), and another with a two-handed MAUL* (Fighting +1).\n\nEquip your characters as you wish.";
 
             Choices.clear();
 
@@ -6886,6 +6874,8 @@ namespace Book1
                     PreText += "\n\nAkihiro has achieved Enlightenment. Akihiro can gains 1 point of Lore.";
 
                     Engine::GAIN_SCORE(party.Members[result], Attribute::Type::LORE, 1);
+
+                    Engine::GAIN_STATUS(party.Members[result], Character::Status::ENLIGHTENED);
                 }
             }
 
@@ -7602,7 +7592,7 @@ namespace Book1
 
             ID = 241;
 
-            Text = "You report your failure to retrieve the silver idol but speak instead of the revelation you had on the hilltop. \"Excellent!\" claps Honnu. \"Well, I think we can skip he bit about you bringing me the silver idol.\"\n\nYou flinch. \"But surely if I am to pass the test...?\" \"What do I need of a silver idol, anyway?\" snaps Honnu. \"You will not find your kensai spirit stamped on the base of an idol. Let the thief be pleased with herself. Your spiritual reward will last longer than her reward in coin, I promise you that.\"\n\nYou smile at the cunning old man. Clearly there is more to these tests than meets the eye.";
+            Text = "You report your failure to retrieve the SILVER IDOL but speak instead of the revelation you had on the hilltop. \"Excellent!\" claps Honnu. \"Well, I think we can skip he bit about you bringing me the SILVER IDOL.\"\n\nYou flinch. \"But surely if I am to pass the test...?\" \"What do I need of a silver idol, anyway?\" snaps Honnu. \"You will not find your kensai spirit stamped on the base of an idol. Let the thief be pleased with herself. Your spiritual reward will last longer than her reward in coin, I promise you that.\"\n\nYou smile at the cunning old man. Clearly there is more to these tests than meets the eye.";
 
             Choices.clear();
 
@@ -8647,6 +8637,281 @@ namespace Book1
         }
     };
 
+    class Story280 : public Story::Base
+    {
+    public:
+        Story280()
+        {
+            BookID = Book::Type::BOOK1;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            ID = 280;
+
+            Text = "Over the next few days the Everchild consolidates her rule. All your soldiers in the Luutanesh barracks are transferred to the Saltdad barracks. The morale of all your soldiers is restored to maximum. The Everchild presents you with 1250 silver coins for your labours to gain her the throne.\n\n\"Our next target is Clifftop,\" says the Everchild as you attend her war council. \"I need access to a good port if I am to take full control of the valley. Their King, Lothor the Ugly, is a zealous follower of Cursus so he cannot be swayed. Lothor has more troops than the Iron King, so I am reluctant to attack straight away.\"\n\n\"Is there anyone else who can reinforce us?\" you ask.\n\n\"It's possible that Unbraaki might,\" she says. \"He is a sorcerer of some power who lives in a palace just south of Clifftop. He would never have considered sending soldiers to me whilst I was a revolutionary, but he might be willing to do so now I am a queen. Ask him what he wants in exchange for support and see if he can be accommodated. You might also have some luck with the nomads of the desert. I have some connection with these people so they might be swayed. Good fortune to you, friends.\"";
+
+            Bye = "You bow and leave the palace.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 1250);
+
+            Engine::TRANSFER(party, Location::Type::LUUTANESH, Location::Type::SALTDAD);
+
+            Engine::RESTORE_MORALE(party, Location::Type::SALTDAD);
+
+            Engine::GET_CODES(party, {Codes::Type::QUEEN_IN_SALTDAD});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story281 : public Story::Base
+    {
+    public:
+        Story281()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 281;
+
+            Text = "Acting casually, you take a flight of steps down into the bowels of the pyramid. You hear the sounds of guards ahead, and cautiously peek around a corner. A long, wide hallway held aloft by pillars, leads into the darkness. A guard post, occupied by the Temple Guard, has been set up here. A dozen guards whisper and game by torchlight. To sneak past so many will require great skill.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Sneak past the Temple Guard (Team check: Stealth 5+, Successes: 4)", {Book::Type::BOOK1, 183}, {Book::Type::BOOK1, 55}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 5, 4));
+            Choices.push_back(Choice::Base("Return to the main floor", {Book::Type::BOOK1, 574}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(83)}))
+            {
+                return {Book::Type::BOOK1, 327};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story282 : public Story::Base
+    {
+    public:
+        Story282()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 282;
+
+            Text = "You attempt to get the violent-looking slaves on side, offering to join their gang and share the spoils of the goat evenly.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Join Slave Gang (Team check: Charisma 4+, Successes: 4)", {Book::Type::BOOK1, 838}, {Book::Type::BOOK1, 374}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story283 : public Story::Base
+    {
+    public:
+        Story283()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 283;
+
+            Text = "You have returned to the torture chamber with the massive hole in the south wall.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the missing south wall", {Book::Type::BOOK1, 645}));
+            Choices.push_back(Choice::Base("Return to the crossroads", {Book::Type::BOOK1, 566}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story284 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story284()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 284;
+
+            Image = "images/book1/cold_river_inn.png";
+
+            Choices.clear();
+        }
+
+        void Event(Party::Base &party)
+        {
+            RestPrice = -1;
+            CanRecharge = false;
+            Controls = Story::Controls::STANDARD;
+
+            PreText = "The Cold River Inn is a large building built on sticks to protect it from flooding. The rooms are separated by stretched fabrics of many different colours, and the tavern is a virtual maze of woven corridors, from which the low voices of residents and drinkers alike can be heard behind the frescos and tapestries that separate you from them.";
+
+            if (!Engine::VERIFY_CODES_ANY(party, {Codes::A(6), Codes::C(6)}))
+            {
+                RestPrice = 5;
+                CanRecharge = true;
+                Controls = Story::Controls::INN;
+
+                PreText += "\n\nYou may stay at the inn and recover your strength. For every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nDuring your stay meet a frustrated archaeologist, fresh from his digs at the Tumblestones just north of Lhasbreath. \"First we were constantly exploited by barbarians from the south, and then our trenches are refilled from the blasted sandstorms as quickly as we could dig them,\" he grumbles. \"I'm certain there are amazing discoveries to be made, but I'll be blown if it's worth all the hassle of finding them!\"";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES_ANY(party, {Codes::A(6), Codes::C(6)}))
+            {
+                return {Book::Type::BOOK1, 562};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 614};
+            }
+        }
+    };
+
+    class Story285 : public Story::Base
+    {
+    public:
+        Story285()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 285;
+
+            Text = "You turn a corner to see Tommul, one of the thugs you bullied in the dungeon on your very first day. He is accompanied by another muscular man, armed with a club. \"I told you I would get even with you, scum!\" he snarls, advancing menacingly towards you.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Run for it", {Book::Type::BOOK1, 544}));
+            Choices.push_back(Choice::Base("Try to talk Tommul down", {Book::Type::BOOK1, 649}));
+            Choices.push_back(Choice::Base("Raise your fists", {Book::Type::BOOK1, 239}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+    
+    class Story286 : public Story::Base
+    {
+    public:
+        Story286()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 286;
+
+            Text = "You believe you have already found this man... stretched out on a rack in an orcish prison. Tears form in the old man's eyes. \"Oh! Return his body -- I beg you!\" he pleads. \"My son's spirit cannot rest unless he is buried with his ancestors.\" The thought of dragging a six-foot barbarian across the desert does not exactly appeal, but you say you will do what you can.\n\nYou gained the code A67.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(67)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story287 : public Story::Base
+    {
+    public:
+        Story287()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 287;
+
+            Text = "Honnu has nothing more to say to you.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::SILVER_IDOL}))
+            {
+                return {Book::Type::BOOK1, 675};
+            }
+            else if (Engine::HAS_STATUS(party, Character::Status::ENLIGHTENED))
+            {
+                return {Book::Type::BOOK1, 241};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story288 : public Story::Base
+    {
+    public:
+        Story288()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 288;
+
+            Text = "The symbols on the calendar are rather representational. Perhaps you can infer their meaning?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Translate the calendar (Team check: Lore 5+, Successes: 4)", {Book::Type::BOOK1, 50}, {Book::Type::BOOK1, 585}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 5, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            Bye = NULL;
+
+            if (!outcome)
+            {
+                Bye = "You are unable to work out the meaning. Apologising, you get some sleep whilst you wait out the storm.";
+            }
+        }
+    };
+
+    class Story289 : public Story::Base
+    {
+    public:
+        Story289()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 289;
+
+            Text = "You return to the treasure chamber in the hopes of finding some more treasure. Alas, a full search reveals nothing more. Disappointed, you return to the corridor.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 165}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -8954,6 +9219,16 @@ namespace Book1
     auto story277 = Story277();
     auto story278 = Story278();
     auto story279 = Story279();
+    auto story280 = Story280();
+    auto story281 = Story281();
+    auto story282 = Story282();
+    auto story283 = Story283();
+    auto story284 = Story284();
+    auto story285 = Story285();
+    auto story286 = Story286();
+    auto story287 = Story287();
+    auto story288 = Story288();
+    auto story289 = Story289();
 
     void InitializeStories()
     {
@@ -8988,7 +9263,8 @@ namespace Book1
             &story240, &story241, &story242, &story243, &story244, &story245, &story246, &story247, &story248, &story249,
             &story250, &story251, &story252, &story253, &story254, &story255, &story256, &story257, &story258, &story259,
             &story260, &story261, &story262, &story263, &story264, &story265, &story266, &story267, &story268, &story269,
-            &story270, &story271, &story272, &story273, &story274, &story275, &story276, &story277, &story278, &story279};
+            &story270, &story271, &story272, &story273, &story274, &story275, &story276, &story277, &story278, &story279,
+            &story280, &story281, &story282, &story283, &story284, &story285, &story286, &story287, &story288, &story289};
     }
 }
 #endif

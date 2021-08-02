@@ -118,7 +118,8 @@ namespace Character
         FRONT,
         BACK,
         POTION_OF_INVULNERABILITY,
-        CAPTURED
+        CAPTURED,
+        ENLIGHTENED
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;
@@ -130,7 +131,8 @@ namespace Character
         {Character::Status::FRONT, "in Front"},
         {Character::Status::BACK, "at the Back"},
         {Character::Status::POTION_OF_INVULNERABILITY, "Invulnerable"},
-        {Character::Status::CAPTURED, "Captured"}};
+        {Character::Status::CAPTURED, "Captured"},
+        {Character::Status::ENLIGHTENED, "Enlightened"}};
 
     class Base
     {

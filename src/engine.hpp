@@ -364,6 +364,43 @@ namespace Engine
         }
     }
 
+    void RESTORE_MORALE(Party::Base &party)
+    {
+        for (auto i = 0; i < party.Army.size(); i++)
+        {
+            party.Army[i].Morale = party.Army[i].MaximumMorale;
+        }
+    }
+
+    void RESTORE_MORALE(Party::Base &party, Location::Type garrison)
+    {
+        if (garrison == Location::Type::NONE)
+        {
+            Engine::RESTORE_MORALE(party);
+        }
+        else
+        {
+            for (auto i = 0; i < party.Army.size(); i++)
+            {
+                if (party.Army[i].Garrison == garrison)
+                {
+                    party.Army[i].Morale = party.Army[i].MaximumMorale;
+                }
+            }
+        }
+    }
+
+    void TRANSFER(Party::Base &party, Location::Type from, Location::Type to)
+    {
+        for (auto i = 0; i < party.Army.size(); i++)
+        {
+            if (party.Army[i].Garrison == from)
+            {
+                party.Army[i].Garrison = to;
+            }
+        }
+    }
+
     void GAIN_STRENGTH(Army::Base &unit, int strength)
     {
         if (unit.Strength > 0)
