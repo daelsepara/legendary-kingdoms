@@ -14,10 +14,9 @@ namespace Army
         STRENGTH1
     };
 
-    std::map<Army::Status, const char*> Descriptions = {
+    std::map<Army::Status, const char *> Descriptions = {
         {Army::Status::NONE, "None"},
-        {Army::Status::STRENGTH1, "+1 Strength"}
-    };
+        {Army::Status::STRENGTH1, "+1 Strength"}};
 
     enum class Type
     {
@@ -29,7 +28,9 @@ namespace Army
         CURSITE_ZEALOTS,
         CITIZEN_ARCHERS,
         MERCENARY_KNIGHTS,
-        MERCENARY_SPEARS
+        MERCENARY_SPEARS,
+        KENSAI_WARRIORS,
+        CHALICE_ARCHERS
     };
 
     class Base

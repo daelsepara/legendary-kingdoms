@@ -1332,8 +1332,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
     TTF_Init();
 
-    auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-    auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
+    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
@@ -1744,13 +1743,6 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         TTF_CloseFont(font_mason);
 
         font_mason = NULL;
-    }
-
-    if (font_mason2)
-    {
-        TTF_CloseFont(font_mason2);
-
-        font_mason2 = NULL;
     }
 
     if (font_dark11)
@@ -7066,7 +7058,7 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                         {
                             if (party.Members[selection].SpellCaster)
                             {
-                                if (hasAttacked.size() > 0 && Engine::FIND_LIST(hasAttacked, selection) >= 0)
+                                if (hasAttacked.size() > 0 && Engine::FIND_LIST(hasAttacked, selection) >= 0 && (!Engine::HAS_STATUS(party.Members[selection], Character::Status::EXTRA_MAGIC_ROUND0) || (Engine::HAS_STATUS(party.Members[selection], Character::Status::EXTRA_MAGIC_ROUND0) && combatRound != 0)))
                                 {
                                     flash_message = true;
 
@@ -10093,6 +10085,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 combatRound++;
 
+                                for (auto i = 0; i < party.Members.size(); i++)
+                                {
+                                    Engine::REMOVE_STATUS(party.Members[i], Character::Status::EXTRA_MAGIC_ROUND0);
+                                }
+
                                 // clear damaged flag for next round
                                 for (auto i = 0; i < monsters.size(); i++)
                                 {
@@ -10149,7 +10146,17 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                             flash_color = intLB;
 
-                                            hasAttacked.push_back(result);
+                                            if (Engine::FIND_LIST(hasAttacked, result) < 0)
+                                            {
+                                                hasAttacked.push_back(result);
+                                            }
+                                            else
+                                            {
+                                                if (Engine::HAS_STATUS(party.Members[result], Character::Status::EXTRA_MAGIC_ROUND0))
+                                                {
+                                                    Engine::REMOVE_STATUS(party.Members[result], Character::Status::EXTRA_MAGIC_ROUND0);
+                                                }
+                                            }
                                         }
 
                                         selected = false;

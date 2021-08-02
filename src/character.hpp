@@ -119,7 +119,8 @@ namespace Character
         BACK,
         POTION_OF_INVULNERABILITY,
         CAPTURED,
-        ENLIGHTENED
+        ENLIGHTENED,
+        EXTRA_MAGIC_ROUND0
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;
@@ -132,7 +133,8 @@ namespace Character
         {Character::Status::BACK, "at the Back"},
         {Character::Status::POTION_OF_INVULNERABILITY, "Invulnerable"},
         {Character::Status::CAPTURED, "Captured"},
-        {Character::Status::ENLIGHTENED, "Enlightened"}};
+        {Character::Status::ENLIGHTENED, "Enlightened"},
+        {Character::Status::EXTRA_MAGIC_ROUND0, "Extra Magic Attack on Round 1"}};
 
     class Base
     {

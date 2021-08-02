@@ -32,7 +32,9 @@ namespace Codes
         REPAIR_CALENDAR_KALU,
         NO_COMBAT_SPELLS,
         EVERCHILD_POISONED,
-        DAZING_LIGHTS
+        DAZING_LIGHTS,
+        BANDITS_GET3,
+        LOST_SCHOLAR
     };
 
     std::map<Book::Type, const char *> Prefix = {

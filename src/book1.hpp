@@ -8012,7 +8012,6 @@ namespace Book1
         }
     };
 
-    // TODO: ensure that the bandits get at least 3 of the treasures
     class Story258 : public Story::Base
     {
     public:
@@ -8027,6 +8026,11 @@ namespace Book1
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::BANDITS_GET3});
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 416}; }
@@ -8807,7 +8811,7 @@ namespace Book1
             Controls = Story::Controls::STANDARD;
         }
     };
-    
+
     class Story286 : public Story::Base
     {
     public:
@@ -8910,6 +8914,404 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 165}; }
+    };
+
+    class Story290 : public Story::Base
+    {
+    public:
+        Story290()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 290;
+
+            Text = "he sister bows as you present her with the letter, and immediately escorts you into the chamber of the God King. The king takes the letter, glancing over it with a casual eye. Long before he could have finished reading it, he stands.\n\n\"Yes, this is the Everchild as I remember her,\" nods the God King. \"I officially place the armies of Chalice at her disposal. My kensai warriors shall attend her, a full five hundred men. An additional six hundred archers shall provide her with support. Once she is queen, we shall defer our city to her policies as they relate to all international affairs.\"\n\nYou are dumbstruck. Could the God King really have changed his mind from a quick glance at a letter? Or has he received council since your last meeting and was going to back the Everchild no matter what? You suppose you shall never know.\n\nYou thank the God King for his support, leaving the chamber in amazement at your success.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Kensai Warriors]: Strength 4, Morale 4\n[Chalice Archers]: Strength 2, Morale 3\n\nGaining the God King's support has been quite an endeavour.\n\nYou gained the code A20.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of CHARISMA", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::BEAUTIFUL_LETTER});
+
+            auto location = Location::Type::LUUTANESH;
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::QUEEN_IN_SALTDAD}))
+            {
+                location = Location::Type::SALTDAD;
+            }
+
+            Army = {
+                Army::Base("Kensai Warriors", Army::Type::KENSAI_WARRIORS, location, 4, 4),
+                Army::Base("Chalice Archers", Army::Type::CHALICE_ARCHERS, location, 2, 3)};
+
+            Engine::GET_CODES(party, {Codes::A(20)});
+        }
+    };
+
+    class Story291 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story291()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 291;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            party.CurrentCharacter = Engine::FIND_SOLO(party);
+
+            auto target = -1;
+
+            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size())
+            {
+                target = party.CurrentCharacter;
+            }
+            else if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
+            {
+                target = party.LastSelected;
+            }
+
+            PreText = "Tommul replies with a punch to your jaw, which sends you crashing to the ground. This is followed by savage kicks from his companion.\n\n";
+
+            if (target >= 0 && target < party.Members.size())
+            {
+                PreText += std::string(party.Members[target].Name) + " loses 3 Health Points.";
+
+                Engine::GAIN_HEALTH(party.Members[target], -3);
+
+                if (Engine::SCORE(party.Members[target], Attribute::Type::HEALTH) > 0)
+                {
+                    Bye = "You nurse your wounds grudgingly, muttering words of revenge under your breath.";
+                }
+            }
+            else
+            {
+                PreText += "You lose 3 Health Points.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 157}; }
+    };
+
+    class Story292 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story292()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 292;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Type = Story::Type::NORMAL;
+
+            PreText = "The remaining members of your party are in grief at the loss of their comrades.";
+
+            if (Engine::COUNT(party) > 1)
+            {
+                PreText += " You must make another attempt to get the weapons.";
+            }
+            else
+            {
+                Type = Story::Type::DOOM;
+
+                PreText += " They shall die a slave in this foul arena.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 191}; }
+    };
+
+    class Story293 : public Story::Base
+    {
+    public:
+        Story293()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 293;
+
+            Text = "You utter the word 'amora' and there is a great clunk from the vault. Suddenly it swings smoothly open. You elate -- the treasures of Unbraaki are all yours!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 416}; }
+    };
+
+    class Story294 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story294()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 294;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            party.CurrentCharacter = Engine::FIND_SOLO(party);
+
+            auto target = -1;
+
+            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size())
+            {
+                target = party.CurrentCharacter;
+            }
+            else if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
+            {
+                target = party.LastSelected;
+            }
+
+            PreText = "The rest of the party think you mad, but you are resolved that this peasant should not suffer because of you. The man is released, desperately pleading his thanks, before fleeing from the hall.\n\nLothor is a sadistic man and makes you suffer. ";
+
+            if (target >= 0 && target < party.Members.size())
+            {
+                PreText += std::string(party.Members[target].Name) + " loses";
+
+                Engine::GAIN_HEALTH(party.Members[target], -2);
+
+                Engine::GAIN_SCORE(party.Members[target], Attribute::Type::FIGHTING, -1);
+            }
+            else
+            {
+                PreText += "You lose";
+            }
+
+            PreText += " 2 points of Health and 1 point of Fighting skill, as wielding a weapon without fingernails is agony. After removing five nails Lothor seems pleased with himself, and graciously lets you keep the nails on the other hand.\n\nYou stagger, wincing from the hall, your companions holding you up. The peasant you saved is nowhere to be found. Perhaps you will get your reward in paradise?\n\nYou gained the code A34.";
+
+            Engine::GET_CODES(party, {Codes::A(34)});
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story295 : public Story::Base
+    {
+    public:
+        Story295()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 295;
+
+            Text = "\"Nah, I won't tell you nothin',\" says the ogre. \"In fact -- I think I'll bash your heads in, just to be on the safe side.\" It seems diplomacy is over ...";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 117}; }
+    };
+
+    class Story296 : public Story::Base
+    {
+    public:
+        Story296()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 296;
+
+            Text = "Long before you reach their lair the troglodytes intercept you. There are five of them... fierce odds, given the accuracy of their snatching claws. You gird yourselves for battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            Take.clear();
+
+            Limit = 0;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Troglodyte", 4, 3, 4, 8, 0),
+                Monster::Base("Troglodyte", 2, 3, 4, 4, 0),
+                Monster::Base("Troglodyte", 3, 3, 4, 3, 0),
+                Monster::Base("Troglodyte", 3, 3, 4, 3, 0),
+                Monster::Base("Troglodyte", 2, 3, 4, 5, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 135}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Take = {Equipment::TROGLODYTE_HEAD, Equipment::TROGLODYTE_HEAD, Equipment::TROGLODYTE_HEAD, Equipment::TROGLODYTE_HEAD, Equipment::TROGLODYTE_HEAD, Equipment::SHIELD2, Equipment::INCENSE};
+
+                Limit = 7;
+
+                Engine::GAIN_MONEY(party, 40);
+
+                Engine::GET_CODES(party, {Codes::A(26)});
+
+                Bye = "Pleased with yourselves you leave the fourteenth level.\n\nYou gained the code A26.";
+            }
+        }
+    };
+
+    class Story297 : public Story::Base
+    {
+    public:
+        Story297()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 297;
+
+            Text = "You are attacking at a distance and the barbarians have no bows.\n\nNote: Your spellcasters can make an extra attack in the first round of combat, as long as that attack is used to cast some sort of spell. After the extra attacks, resolve the battle as normal.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            Take.clear();
+
+            Limit = 0;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Lhasbreath Barbarians", 9, 5, 3, 16, 0),
+                Monster::Base("Barbarian Leader", 4, 4, 4, 7, 0)};
+
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (party.Members[i].SpellCaster && Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
+                {
+                    Engine::GAIN_STATUS(party.Members[i], Character::Status::EXTRA_MAGIC_ROUND0);
+                }
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 135}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Engine::GAIN_MONEY(party, 20);
+            }
+        }
+    };
+
+    class Story298 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story298()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 298;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "It is only several minutes after the last blow is struck that you can be sure that the battle has finally ended. Finally, you sheathe your weapons and attempt to claim as much treasure from the magically darkened chamber as you can.";
+
+            if (Engine::SPELLCASTERS(party) < 1)
+            {
+                PreText += "\n\nYou manage to grasp 15 silver coins before groping your way to the chamber exit and making your way further into the temple.";
+
+                Engine::GAIN_MONEY(party, 15);
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::SPELLCASTERS(party) > 0)
+            {
+                return {Book::Type::BOOK1, 810};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 93};
+            }
+        }
+    };
+
+    class Story299 : public Story::Base
+    {
+    public:
+        Story299()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 299;
+
+            Text = "You follow the scholars and Emlyn Pass-Ross up the steps of the pyramid. They are astonished by their discovery, chattering to themselves excitedly about the interesting blooms and fragrances. It all happens so fast... secret doors in the sides of the pyramids open, and terrible snakemen come slithering through. Most your party manage to intercept them, but one scholar has her head cut clean off before you can leap to her defence.";
+
+            Bye = "Pushing the remaining scholars behind you, you draw your weapons and prepare to hold off the attack.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 150}; }
     };
 
     auto story001 = Story001();
@@ -9229,6 +9631,16 @@ namespace Book1
     auto story287 = Story287();
     auto story288 = Story288();
     auto story289 = Story289();
+    auto story290 = Story290();
+    auto story291 = Story291();
+    auto story292 = Story292();
+    auto story293 = Story293();
+    auto story294 = Story294();
+    auto story295 = Story295();
+    auto story296 = Story296();
+    auto story297 = Story297();
+    auto story298 = Story298();
+    auto story299 = Story299();
 
     void InitializeStories()
     {
@@ -9264,7 +9676,8 @@ namespace Book1
             &story250, &story251, &story252, &story253, &story254, &story255, &story256, &story257, &story258, &story259,
             &story260, &story261, &story262, &story263, &story264, &story265, &story266, &story267, &story268, &story269,
             &story270, &story271, &story272, &story273, &story274, &story275, &story276, &story277, &story278, &story279,
-            &story280, &story281, &story282, &story283, &story284, &story285, &story286, &story287, &story288, &story289};
+            &story280, &story281, &story282, &story283, &story284, &story285, &story286, &story287, &story288, &story289,
+            &story290, &story291, &story292, &story293, &story294, &story295, &story296, &story297, &story298, &story299};
     }
 }
 #endif
