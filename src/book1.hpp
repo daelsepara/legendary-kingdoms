@@ -8117,7 +8117,7 @@ namespace Book1
         {
             BookID = Book::Type::BOOK1;
 
-            Location::Type::LUUTANESH;
+            Location = Location::Type::LUUTANESH;
 
             ID = 263;
 
