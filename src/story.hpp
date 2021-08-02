@@ -60,6 +60,7 @@ namespace Choice
         LAST_INDIVIDUAL_CHECK,
         LAST_PARTY_CHECK,
         RAISEATTRIBUTE_WITH_BLESSING,
+        PAYFORBLESSING_WITH_ITEM,
         PAYFORSTATUS_WITH_HEALTH,
         GAIN_HEALTH_ATTRIBUTE
     };
@@ -442,6 +443,21 @@ namespace Choice
 
             Difficulty = difficulty;
         }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, std::vector<Attribute::Type> attributes, int value)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Equipment = equipment;
+
+            Attributes = attributes;
+
+            Value = value;
+        }
     };
 } // namespace Choice
 
@@ -523,8 +539,9 @@ namespace Story
         std::vector<Engine::CargoPrices> Cargo = {};
         int ShipRepairPrice = -1;
 
-        // Inn
+        // Inn Defaults
         int RestPrice = -1;
+        int CanRecharge = false;
 
         // Mass Combat Enemy Troops
         std::vector<Army::Base> EnemyArmy = {};

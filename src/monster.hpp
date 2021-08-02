@@ -9,7 +9,8 @@ namespace Allies
     enum class Type
     {
         NONE = -1,
-        SLAVES
+        SLAVES,
+        YU_YUAN
     };
 }
 

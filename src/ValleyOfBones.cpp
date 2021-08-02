@@ -48,7 +48,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::TeamAssignment> teams, int min_teams);
 bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int equipment_limit, bool InCombat);
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
-bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice);
+bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge);
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
@@ -4377,8 +4377,6 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
                             if (damage > 0)
                             {
-                                monsters[opponent].Damaged = true;
-
                                 message = std::string(party.Members[combatant].Name) + "'s " + std::string(spell.Name) + " deals " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!";
 
                                 flash_color = intLB;
@@ -4512,6 +4510,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     auto combat_damage = 0;
 
     auto attacks = direction == 0 ? 1 : monsters[opponent].Attacks;
+
+    auto Difficulty = monsters[opponent].Difficulty;
 
     std::vector<int> target_damage = {};
 
@@ -4673,7 +4673,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     }
                                     else
                                     {
-                                        if (results[i] >= monsters[opponent].Difficulty)
+                                        if (results[i] >= Difficulty)
                                         {
                                             thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intRD, 2);
 
@@ -4726,8 +4726,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     if (damage_scale * damage > 0)
                                     {
-                                        monsters[opponent].Damaged = true;
-
                                         message = std::string(party.Members[combatant].Name) + " deals " + std::to_string(damage_scale * damage) + " to the " + std::string(monsters[opponent].Name) + "!";
 
                                         flash_color = intLB;
@@ -4777,6 +4775,17 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if (direction == 1 && special_event_trigger)
                         {
+                            if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
+                            {
+                                flash_message = true;
+
+                                flash_color = intLB;
+
+                                message = "Dazing Lights reduces " + std::string(monsters[opponent].Name) + "'s Attack score by 1.";
+
+                                start_ticks = SDL_GetTicks();
+                            }
+
                             if (monsters[opponent].Type == Monster::Type::SKALLOS && !monsters[opponent].Damaged)
                             {
                                 flash_message = true;
@@ -4811,7 +4820,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     start_ticks = SDL_GetTicks();
 
-                                    monsters[opponent].Difficulty = 5;
+                                    Difficulty = 5;
                                 }
                             }
 
@@ -4827,27 +4836,35 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         putHeader(renderer, party.Members[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
-                        auto score = 1;
-
                         if (useEquipment)
                         {
-                            score = Engine::FIGHTING_SCORE(party.Members[combatant]);
+                            attack_score = Engine::FIGHTING_SCORE(party.Members[combatant]);
                         }
                         else
                         {
-                            score = Engine::SCORE(party.Members[combatant], Attribute::Type::FIGHTING);
+                            attack_score = Engine::SCORE(party.Members[combatant], Attribute::Type::FIGHTING);
                         }
 
-                        attacker_string = "Fighting: " + std::to_string(score);
+                        attacker_string = "Fighting: " + std::to_string(attack_score);
                         attacker_string += "\nHealth: " + std::to_string(Engine::SCORE(party.Members[combatant], Attribute::Type::HEALTH));
-
-                        attack_score = score;
                     }
                     else
                     {
                         putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
-                        attacker_string = "Attack: " + std::to_string(monsters[opponent].Attack) + " (" + std::to_string(monsters[opponent].Difficulty) + "+)";
+                        attack_score = monsters[opponent].Attack;
+
+                        if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
+                        {
+                            attack_score -= 1;
+                        }
+
+                        if (attack_score < 0)
+                        {
+                            attack_score = 0;
+                        }
+
+                        attacker_string = "Attack: " + std::to_string(attack_score) + " (" + std::to_string(Difficulty) + "+)";
 
                         if (monsters[opponent].Auto > 0)
                         {
@@ -4855,8 +4872,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
 
                         attacker_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
-
-                        attack_score = monsters[opponent].Attack;
                     }
 
                     putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
@@ -7115,6 +7130,27 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                                                         }
                                                     }
                                                 }
+                                                else if (party.Members[selection].SpellBook[i].Type == Spells::Type::DAZING_LIGHTS)
+                                                {
+                                                    auto target = -1;
+
+                                                    if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
+                                                    {
+                                                        flash_message = true;
+
+                                                        message = "Dazing Lights has already been cast!";
+
+                                                        start_ticks = SDL_GetTicks();
+
+                                                        flash_color = intRD;
+                                                    }
+                                                    else
+                                                    {
+                                                        Engine::GET_CODES(party, {Codes::Type::DAZING_LIGHTS});
+
+                                                        cast = true;
+                                                    }
+                                                }
                                                 else if (party.Members[selection].SpellBook[i].Type == Spells::Type::ICE_BOLT)
                                                 {
                                                     if (Engine::COUNT(monsters, combatRound) > 0)
@@ -7168,8 +7204,6 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
 
                                                         if (target >= 0)
                                                         {
-                                                            monsters[target].Damaged = true;
-
                                                             Engine::GAIN_HEALTH(monsters[target], -3);
 
                                                             cast = true;
@@ -9906,6 +9940,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (Engine::HAS_MONSTER(monsters, Monster::Type::ORC))
                                 {
+                                    flash_message = true;
+
                                     message = "The slaves attack the orcs! All orcs lose 1 Health Point!";
 
                                     Engine::GAIN_HEALTH(monsters, Monster::Type::ORC, -1);
@@ -9917,6 +9953,44 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     flash_color = intLB;
 
                                     allyAttack.push_back(Allies::Type::SLAVES);
+                                }
+                            }
+
+                            if (Engine::HAS_ALLY(allies, Allies::Type::YU_YUAN) && !Engine::HAS_ALLY(allyAttack, Allies::Type::YU_YUAN))
+                            {
+                                if (Engine::COUNT(monsters, combatRound) > 0)
+                                {
+                                    auto target = Engine::FIRST(monsters);
+
+                                    if (target >= 0 && target < monsters.size())
+                                    {
+                                        flash_message = true;
+
+                                        auto attack_result = Engine::COUNT(5, monsters[target].Defence);
+
+                                        if (attack_result > 0)
+                                        {
+                                            message = "Yu Yuan deals " + std::to_string(attack_result) + " to the " + std::string(monsters[target].Name) + "!";
+
+                                            flash_color = intLB;
+
+                                            Engine::GAIN_HEALTH(monsters[target], -attack_result);
+                                        }
+                                        else
+                                        {
+                                            message = "Yu Yuan's attack was ineffective!";
+
+                                            flash_color = intRD;
+                                        }
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_message = true;
+                                    }
+
+                                    allies_attack = true;
+
+                                    allyAttack.push_back(Allies::Type::YU_YUAN);
                                 }
                             }
 
@@ -10001,7 +10075,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                                 Engine::GAIN_HEALTH(party.Members[selection[i]], -2);
                                             }
-                                            
+
                                             flash_message = true;
 
                                             flash_color = intRD;
@@ -10010,6 +10084,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                         }
                                     }
                                 }
+
+                                Engine::LOSE_CODES(party, {Codes::Type::DAZING_LIGHTS});
 
                                 allyAttack.clear();
 
@@ -10828,7 +10904,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return false;
 }
 
-bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice)
+bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge)
 {
     auto *title = "Legendary Kingdoms: Inn";
 
@@ -11150,7 +11226,14 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                             }
                             else
                             {
-                                message = "Your party was healed for free.";
+                                if (RestPrice > 0)
+                                {
+                                    message = "None of your party members are injured.";
+                                }
+                                else
+                                {
+                                    message = "Your party was healed for free.";
+                                }
                             }
 
                             flash_color = intLB;
@@ -11217,7 +11300,14 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                             }
                             else
                             {
-                                message = "Your party was healed for free.";
+                                if (RestPrice > 0)
+                                {
+                                    message = "None of your party members are injured.";
+                                }
+                                else
+                                {
+                                    message = "Your party was healed for free.";
+                                }
                             }
 
                             flash_color = intLB;
@@ -13339,7 +13429,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? spell_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "You can COPY the following spells", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "You can copy the following spells", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, booksize, textx, texty + infoh, intBE);
 
@@ -13360,7 +13450,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::ACTION)
             {
-                fillRect(renderer, textwidth, text_bounds / 3 - box_space - infoh, textx, texty + infoh + booksize + box_space, intLB);
+                fillRect(renderer, textwidth, text_bounds / 3 - box_space, textx, texty + infoh + booksize + box_space, intLB);
 
                 auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
@@ -17813,6 +17903,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     story->temp_string = std::string(party.Members[target].Name) + " gains " + std::string(Character::StatusDescriptions[story->Choices[choice].Status[0]]);
 
+                                    party.Members[target].MaximumHealth += story->Choices[choice].Value;
+
                                     Engine::GAIN_HEALTH(party.Members[target], story->Choices[choice].Value);
 
                                     Engine::GAIN_STATUS(party.Members[target], story->Choices[choice].Status[0]);
@@ -17982,6 +18074,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                             if (increase >= 0)
                                             {
+                                                Engine::GAIN_MONEY(party, -story->Choices[choice].Value);
+
                                                 next = findStory(story->Choices[choice].Destination);
 
                                                 done = true;
@@ -18009,6 +18103,72 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 error = true;
 
                                 message = "You do not have enough money for the blessing!";
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::PAYFORBLESSING_WITH_ITEM)
+                        {
+                            auto equipment = std::vector<Equipment::Type>();
+
+                            for (auto i = 0; i < story->Choices[choice].Equipment.size(); i++)
+                            {
+                                equipment.push_back(story->Choices[choice].Equipment[i].Type);
+                            }
+
+                            if (equipment.size() > 0 && Engine::VERIFY_EQUIPMENT(party, equipment))
+                            {
+                                auto attribute_min = Engine::MIN(party, story->Choices[choice].Attributes[0]);
+
+                                auto target = -1;
+
+                                party.CurrentCharacter = Engine::FIND_SOLO(party);
+
+                                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
+                                {
+                                    target = party.CurrentCharacter;
+                                }
+                                else if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
+                                {
+                                    target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
+                                }
+                                else
+                                {
+                                    target = Engine::FIRST(party, story->Choices[choice].Attributes[0], attribute_min);
+                                }
+
+                                if (target >= 0 && target < party.Members.size())
+                                {
+                                    if (Engine::SCORE(party.Members[target], story->Choices[choice].Attributes[0]) == attribute_min)
+                                    {
+                                        Engine::GAIN_SCORE(party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Value);
+
+                                        Engine::LOSE_EQUIPMENT(party, equipment);
+
+                                        next = findStory(story->Choices[choice].Destination);
+
+                                        done = true;
+
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        error = true;
+
+                                        message = std::string(party.Members[target].Name) + " does not have the lowest " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + " score!";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                error = true;
+
+                                message = "You do not have the required item";
+
+                                if (story->Choices[choice].Equipment.size() > 1)
+                                {
+                                    message += "s";
+                                }
+
+                                message += " for the blessing!";
                             }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::LOSE_MONEY)
@@ -18677,7 +18837,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::INN && !hold)
                     {
-                        innScreen(window, renderer, party, story->RestPrice);
+                        innScreen(window, renderer, party, story->RestPrice, story->CanRecharge);
 
                         current = -1;
 

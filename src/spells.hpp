@@ -25,7 +25,8 @@ namespace Spells
         WISDOM,
         ORB_OF_ANNIHILATION,
         MAELSTROM,
-        NATURE_WARD
+        NATURE_WARD,
+        DAZING_LIGHTS
     };
 
     enum class MassCombat
@@ -106,6 +107,7 @@ namespace Spells
     auto WOLF_SPIRIT = Spells::Base("Wolf Spirit", "You summon the spirit of the wolf to help guide you from danger in the natural world. Cast this spell when you fail a Survival check. You gain an additional 3 automatic successes for this check only.", Spells::Scope::EXPLORATION, Spells::Type::WOLF_SPIRIT, 75);
     auto MAGIC_CABINET = Spells::Base("Magic Cabinet", "You summon a magic cabinet made of purple wood. You can use this cabinet to access The Vault, storing and/or taking out as many items as you wish. When you have done this, the cabinet will vanish, until summoned again.", Spells::Scope::ADVENTURE, Spells::Type::MAGIC_CABINET, 100);
     auto WISDOM = Spells::Base("Wisdom", "Your mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.", Spells::Scope::EXPLORATION, Spells::Type::WISDOM, 75);
+    auto DAZING_LIGHTS = Spells::Base("Dazing Lights", "Swirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.", Spells::Scope::COMBAT, Spells::Type::DAZING_LIGHTS, 50);
 
     std::vector<Spells::Base> BOOK1_SPELLS = {Spells::ANIMAL_SPEECH, Spells::ARMOUR_OF_HEAVEN, Spells::ICE_BOLT, Spells::POISON_STREAM, Spells::UNFAILING_STRIKE, Spells::WOLF_SPIRIT, Spells::MAGIC_CABINET};
 }

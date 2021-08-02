@@ -2121,6 +2121,7 @@ namespace Book1
             Text = "You spend several days in the handsomely appointed Cold River Inn.\n\nNote: For every 5 silver coins you spend, each party member can RECOVER 1 Health point.\n\nSpell casters can also spend silver here to RECHARGE their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
 
             RestPrice = 5;
+            CanRecharge = true;
 
             Choices.clear();
             Choices.push_back(Choice::Base("Return to the Everchild's hideout", {Book::Type::BOOK1, 263}));
@@ -3711,6 +3712,8 @@ namespace Book1
         Story115()
         {
             BookID = Book::Type::BOOK1;
+
+            Location = Location::Type::WITHERED_STEPPES;
 
             ID = 115;
 
@@ -5391,6 +5394,7 @@ namespace Book1
             Text = "You find lodging at a large inn, The Iron Crown, which serves coffee and warm beer in a courtyard surrounded by rentable rooms. For every 5 silver coins you spend, each party member can recover 1 Health point. Spellcasters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nDuring your stay you ask about the nearby landmarks. \"The Blackwall is a place of ill reputation,\" confides a serving wench. \"No one knows why it was built, or what it is walling off, since it is easy to go around it. Still, those who become obsessed with it tend to disappear, never to be seen again!\" Frightening stuff!";
 
             RestPrice = 5;
+            CanRecharge = true;
 
             Choices.clear();
 
@@ -6312,6 +6316,7 @@ namespace Book1
             Text = "At first you fear you will have to stay in one of the religious hostelries that dot the city. A nightly whipping does not appeal, so fortunately you discover a single inn that caters to foreigners; The Sign of the Sand, built in the harbour district. Though it is built of stone, it reminds you of the kind of traditional inn you might find in Royce, with warm beer and comfortable rooms aplenty. It was built with the permission of the priests a hundred years ago, to encourage sea trade to the city. Its future is constantly in doubt, as hard-line priests detest its presence in the city, but so far economics has trumped religious politics.\n\nFor every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nYou get into a discussion with some travellers from Drakehallow, who seem set on exploring the ruins of Mordain. \"There are vast tunnels and dungeons located beneath the surface,\" says one, a wizard from the magical school Animus Mast. \"No one has mapped them all, but a wise explorer will try. It's easy to get turned around in those deathly arcades.\"";
 
             RestPrice = 5;
+            CanRecharge = true;
 
             Choices.clear();
 
@@ -6329,6 +6334,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 202;
+
+            Location = Location::Type::DESERT;
 
             Text = "You are deep in the central deserts of the valley, where it is sometimes years between rainfall and civilisation is all but unknown.";
 
@@ -6941,6 +6948,7 @@ namespace Book1
             Text = "The whole family have gathered outside onto the terrace as you approach, their neighbours craning their necks to see you. Janu, your brother-in-law, bows deeply as you approach. \"You honour us with your visit, kensai,\" he says honestly. \"My house is yours. It would please me if you and your companions would stay with us during your visit to the city.\"\n\n\"Thank you, Janu,\" you say. \"Your offer is most kind.\" That night the children sit at your feet as you recount tales of your adventures. Your mother and sister glow with pride to see you in your fine robes, your confidence returned.\n\nYou may stay in the house as long as you like. All party members can restore their Health scores to maximum. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
 
             RestPrice = 0;
+            CanRecharge = true;
 
             Choices.clear();
 
@@ -8151,10 +8159,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Take.clear();
-
-            Limit = 0;
-
             CanFlee = false;
 
             Monsters = {
@@ -8234,7 +8238,7 @@ namespace Book1
             ID = 268;
 
             Text = "Through the desert haze, the legions of the Everchild go on the march. Dust rises on the Northroad as the combined forces of the valley descend upon the defiant city of Cursus. The Everchild calls a halt on a raised perch of land where the city and its harbour can be clearly seen. In the blood-red light of the setting sun you can see that the harbour of Cursus is packed with cogs, hulks and carracks of many nations and heraldry. The patriarch has emptied his treasury to gain followers for his last stand. Spies loyal to the Everchild report that the high priest of Cursus might have access to as many as six thousand fighting men.\n\n\"They do not have space for such a large deployment in the field,\" observes Che Long. \"Or, if they did, such numbers would be unmanageable.\"\n\n\"Are those knights? Has the patriarch brought foreign knights here?\" asks the Everchild, peering into the gloom.\n\n\"They will not be able to wear their heavy armour in the desert,\" says Che Long. \"Unlike the Bronzeguard, their armour is not enchanted and does not keep them cool in the sun.\"\n\nLady Ayleta approaches the Everchild and bows. \"My lady, your agents are assembled in the command tent.\"\n\nThe Everchild bids you follow her as she approaches the tent. \"I have many agents who follow me now, but none are as experienced as you. I shall give you priority over which missions you wish to undertake. All are hazardous, so do not stretch yourselves too thinly.\"";
-            
+
             Bye = "Nodding, you enter the tent with the queen.";
 
             Choices.clear();
@@ -8255,13 +8259,392 @@ namespace Book1
             ID = 269;
 
             Text = "As you round the corner of the corridor you come face to face with a hideous female ogre. She hefts her club to attack, when she suddenly sees Skullcracker lollop into view.\n\n\"Oi! What's going on 'ere then?\" she asks, confused.\n\n\"I've ganged up with this lot,\" growls Skullcracker. \"Can't be bothered to work for the orcs anymore.\"\n\n\"What am I supposed to do, then?\" snaps the female ogre.\n\n\"What 'yer like,\" shrugs Skullcracker. \"It would be impertinent of me to suggest a course of action that influences your sense of agency one way or the other. And you smell.\"\n\n\"Git,\" snaps the lady ogre. \"I suppose I'll sod off myself then.\"\n\n\"Good idea,\" grumbles Skullcracker.\n\nYou are almost teary at this sad parting, but eventually Daisy the ogre shambles away.";
-            
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 165}; }
+    };
+
+    class Story270 : public Story::Base
+    {
+    public:
+        Story270()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 270;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "You stroll around the city, getting a closer look at the spiralling towers that Chalice is famous for. The streets are almost empty as you walk through the neighbourhoods. Unlike in many cities almost everyone in Chalice works, if not in the fields than in the temples or guard towers of the kensai. As a consequence, the streets are relatively quiet except around the well-ordered shops and market stalls. As you pass through a pleasant borough you spot something curious. A rope is dangling from the window of a tall house with a curved red roof. It reaches all the way to the ground. Strangely there seems to be no one around.\n\nYou gained the code A54.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Climb up the rope and investigate", {Book::Type::BOOK1, 358}));
+            Choices.push_back(Choice::Base("Stroll past and don't get involved", {Book::Type::BOOK1, 450}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(54)}))
+            {
+                return {Book::Type::BOOK1, 696};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(54)});
+        }
+    };
+
+    class Story271 : public Story::Base
+    {
+    public:
+        Story271()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 271;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "The Saltdad Arena is the second largest complex in the city, with only the ancient palace looming larger. Its dungeons go deep into the earth, where prisoners, slaves and monstrous animals are kept in large vaults, with only the feeblest light pouring through barred arches set high in the ceilings.\n\nYour quarters are a large and ancient hall, whose walls bear the sigils and faded murals of a more civilised age. Within this chamber are crammed nearly a hundred hungry captives, sleeping rough upon the gravel floor and relieving themselves in stinking buckets stacked in a far corner. You ask about feeding arrangements from one of your fellow prisoners, who give you hollow looks. \"You'll know it when it happens,\" he warns.\n\nSuddenly a hatch at the top of the hall is swung open, and the barely-cooked carcass of a mountain goat is dropped carelessly into the middle of the hall. There is a great crush as the prisoners surge as one to tear off strips of flesh from the animal. A group of strong men from Lhasbreath, slaves like you, batter the crowd away with threats, claiming first rights over the animal. You are starving.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Challenge the men to first rights over the meat", {Book::Type::BOOK1, 212}));
+            Choices.push_back(Choice::Base("Attempt to side with the men, to ensure you get something", {Book::Type::BOOK1, 282}));
+            Choices.push_back(Choice::Base("Wait your turn to get something to eat", {Book::Type::BOOK1, 118}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story272 : public Story::Base
+    {
+    public:
+        Story272()
+        {
+            BookID = Book::Type::BOOK1;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            ID = 272;
+
+            Text = "Even the smaller temples to Cursus are fantastic in their ornamentation. Gold ornaments lustre against the deep black stone, and haunting choral odes echo through the square chamber, as if the singers were surrounding you.\n\nIf you have any INCENSE, you may exchange some for a blessing from the priests. Find the party member with the lowest Stealth score in the team and increase their Stealth by 1 point.\n\nYou may also receive some ritual scarring, which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some ritual scarring, they must lose 1 point of Health permanently.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("(INCENSE) Select party member with lowest Stealth score", {Book::Type::BOOK1, -272}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::INCENSE}, {Attribute::Type::STEALTH}, 1));
+            Choices.push_back(Choice::Base("Receive some ritual scarring", {Book::Type::BOOK1, -272}, Choice::Type::PAYFORSTATUS_WITH_HEALTH, {Character::Status::RITUAL_SCARRING}, -1));
+            Choices.push_back(Choice::Base("You are finished here", {Book::Type::BOOK1, 340}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event272 : public Story::Base
+    {
+    public:
+        Event272()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -272;
+
+            DisplayID = 272;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 272}; }
+    };
+
+    class Story273 : public Story::Base
+    {
+    public:
+        Story273()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 273;
+
+            Text = "The only sound is your boots as you crunch across a gravel-strewn plain. You feel so lonely you fear you might die.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, -273}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event273 : public Story::Base
+    {
+    public:
+        Event273()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -273;
+
+            DisplayID = 273;
+
+            Text = "Where will you go?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North", {Book::Type::BOOK1, 886}));
+            Choices.push_back(Choice::Base("West", {Book::Type::BOOK1, 676}));
+            Choices.push_back(Choice::Base("South", {Book::Type::BOOK1, 537}));
+            Choices.push_back(Choice::Base("East", {Book::Type::BOOK1, 589}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story274 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story274()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 274;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You examine the body. The man was strongly built, with a great beard with flecks of red paint in it.\n\nYou gained the code A66.";
+
+            Engine::GET_CODES(party, {Codes::A(66)});
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(67)}))
+            {
+                PreText += "\n\nThere is nothing more you can do here.";
+
+                Choices.push_back(Choice::Base("Examine the missing south wall", {Book::Type::BOOK1, 645}));
+                Choices.push_back(Choice::Base("Return to the crossroads", {Book::Type::BOOK1, 566}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 76}; }
+    };
+
+    class Story275 : public Story::Base
+    {
+    public:
+        Story275()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 275;
+
+            Location = Location::Type::WILDERNESS;
+
+            Image = "images/book1/wilderness.png";
+
+            Text = "You are strolling through a rolling wilderness of dry hills, whose ancient, crumbling sides show plenty of evidence of ancient stone quarries and other industries. Although it is hot, you are able to make good progress by walking along shady parts of the hillsides and checking your location by climbing the taller hills. The rough terrain makes this place unpopular with nomads and barbarians, so your time here is relatively safe.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Explore the hills", {Book::Type::BOOK1, 688}));
+            Choices.push_back(Choice::Base("Go northwest, to the Blackwall", {Book::Type::BOOK1, 691}));
+            Choices.push_back(Choice::Base("Go north, towards Saltdad", {Book::Type::BOOK1, 858}));
+            Choices.push_back(Choice::Base("Go northeast into the Withered Steppes", {Book::Type::BOOK1, 115}));
+            Choices.push_back(Choice::Base("Go southeast, into desert", {Book::Type::BOOK1, 202}));
+            Choices.push_back(Choice::Base("Go south towards Lhasbreath Oasis", {Book::Type::BOOK1, 590}));
+            Choices.push_back(Choice::Base("Go southwest towards Lhasbreath", {Book::Type::BOOK1, 752}));
+            Choices.push_back(Choice::Base("Go west to the Tumblestones", {Book::Type::BOOK1, 137}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story276 : public Story::Base
+    {
+    public:
+        Story276()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 276;
+
+            Location = Location::Type::LHASBREATH;
+
+            Text = "The inns are a little unusual in Lhasbreath. Rather than being solid structures, inns are vast canvas tents without separate rooms. Here you rub shoulders with many young and old barbarians who are not successful enough to own their own houses. They are known as 'doss tents', and great casks and tables occupy the centre of the tent where ale and food is served. Loud music and singing make sleep difficult, and you must stay constantly vigilant for thieves. For every 3 silver coins you spend, each party member can recover 1 Health point. However, spellcasters cannot recharge their spells here, as there is not enough privacy to attain the necessary meditative state. You are warned by a hairy barbarian not to venture into the Salt Plains. \"The lack of moisture there will suck the water right from your bones and leave you as dry as a husk,\" he roars, spittle drooling from his chin. \"Only the most experienced ranger stands a chance of survival.\"";
+
+            RestPrice = 3;
+
+            Choices.clear();
+
+            Controls = Story::Controls::INN;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story277 : public Story::Base
+    {
+    public:
+        Story277()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 277;
+
+            Text = "You examine the coffer carefully, but it does not seem to be trapped. Inside are 125 silver coins and a BRONZE LOCKET.";
+
+            Bye = "You continue down the tunnel.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::BRONZE_LOCKET};
+
+            Limit = 1;
+
+            Engine::GAIN_MONEY(party, 125);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 20}; }
+    };
+
+    class Story278 : public Story::Base
+    {
+    public:
+        Story278()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 278;
+
+            Text = "Clearly your allegiance to the Everchild has not gone unnoticed. You search the zealots, finding three CRUDE BLADES (Fighting +0), 60 silver coins and the Sorcerer's spell book! Sadly, the book has been badly damaged in the battle, but at least one interesting spell has survived:\n\nDazing Lights (Combat)\n\nSwirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.\n\nRecharge: 50 silver\n\nAny of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time.\n\nYou gained the code A22.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 60);
+
+            Take = {Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE};
+
+            Limit = 3;
+
+            Spells = {Spells::DAZING_LIGHTS};
+
+            Engine::GET_CODES(party, {Codes::A(22)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 804}; }
+    };
+
+    class Story279 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {Book::Type::NONE, -1};
+
+        Team::Type previousTeam = Team::Type::NONE;
+
+        int character = -1;
+
+        Story279()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 279;
+
+            Text = "You make your way up the stairs, Yu Yan eying the route cautiously. She suddenly puts an arm in front of you and tells you to stop. She draws her green-bladed sword and presses down on a step before you. A blade flashes across the higher step, at what would have been head height, with enough force to ensure decapitation. Instead, it sails harmlessly over your head.\n\nYou smile and nod at Yu Yan, before continuing onwards. You emerge into a stale smelling chamber, roughly oval in shape, with more stairs leading upwards ahead. Within the room you can see an impressive pile of treasure, but also something more troublesome. Rising from his crude mattress comes a Dragonyakman, a scaly, bull headed man, some nine feet tall, hefting a great iron axe.\n\nYou nod to Yu Yan to flank, as you go in for the kill.\n\nNote: After you attack, Yu Yan will also make an attack using 5 attack dice. She is very agile, so the dragonyakman will focus all his attacks just on you.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            destination = {Book::Type::NONE, -1};
+
+            CanFlee = false;
+
+            Team = Team::Type::AKIHIRO_OF_CHALICE;
+
+            party.CurrentCharacter = Engine::FIND_SOLO(party);
+
+            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0 && party.Members[party.CurrentCharacter].Type == Character::Type::AKIHIRO_OF_CHALICE)
+            {
+                character = party.CurrentCharacter;
+            }
+            else
+            {
+                character = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
+            }
+
+            if (character >= 0 && character < party.Members.size())
+            {
+                previousTeam = party.Members[character].Team;
+
+                Engine::SET_TEAM(party.Members[character]);
+
+                Monsters = {Monster::Base("Dragonyakman", 6, 5, 3, 15, 0)};
+
+                Allies = {Allies::Type::YU_YUAN};
+            }
+            else
+            {
+                Monsters.clear();
+
+                Allies.clear();
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                if (character >= 0 && character < party.Members.size())
+                {
+                    Engine::SET_TEAM(party.Members[character], previousTeam);
+                }
+
+                destination = {Book::Type::BOOK1, 635};
+            }
+            else
+            {
+                Bye = "Akihiro is slain.";
+
+                destination = {Book::Type::BOOK1, 450};
+            }
+        }
     };
 
     auto story001 = Story001();
@@ -8559,13 +8942,25 @@ namespace Book1
     auto story267 = Story267();
     auto story268 = Story268();
     auto story269 = Story269();
+    auto story270 = Story270();
+    auto story271 = Story271();
+    auto story272 = Story272();
+    auto event272 = Event272();
+    auto story273 = Story273();
+    auto event273 = Event273();
+    auto story274 = Story274();
+    auto story275 = Story275();
+    auto story276 = Story276();
+    auto story277 = Story277();
+    auto story278 = Story278();
+    auto story279 = Story279();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
-            &event186, &event188, &event202, &event207, &event223, &event224,
+            &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -8592,7 +8987,8 @@ namespace Book1
             &story230, &story231, &story232, &story233, &story234, &story235, &story236, &story237, &story238, &story239,
             &story240, &story241, &story242, &story243, &story244, &story245, &story246, &story247, &story248, &story249,
             &story250, &story251, &story252, &story253, &story254, &story255, &story256, &story257, &story258, &story259,
-            &story260, &story261, &story262, &story263, &story264, &story265, &story266, &story267, &story268, &story269};
+            &story260, &story261, &story262, &story263, &story264, &story265, &story266, &story267, &story268, &story269,
+            &story270, &story271, &story272, &story273, &story274, &story275, &story276, &story277, &story278, &story279};
     }
 }
 #endif

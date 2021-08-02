@@ -8,6 +8,8 @@ namespace Location
     enum class Type
     {
         NONE = -1,
+        DESERT,
+        WILDERNESS,
         CLIFFTOP,
         SALTDAD,
         CURSUS,
@@ -17,11 +19,14 @@ namespace Location
         LHASBREATH,
         MORDAIN,
         CHALICE,
-        TUMBLESTONES
+        TUMBLESTONES,
+        WITHERED_STEPPES
     };
 
     std::map<Location::Type, const char *> Description = {
         {Location::Type::NONE, "Unknown"},
+        {Location::Type::DESERT, "Desert"},
+        {Location::Type::WILDERNESS, "Wilderness"},
         {Location::Type::CLIFFTOP, "Clifftop"},
         {Location::Type::SALTDAD, "Saltdad"},
         {Location::Type::CURSUS, "Cursus"},
@@ -31,7 +36,8 @@ namespace Location
         {Location::Type::LHASBREATH, "Lhasbreath"},
         {Location::Type::MORDAIN, "Mordain"},
         {Location::Type::CHALICE, "Chalice"},
-        {Location::Type::TUMBLESTONES, "Tumblestones"}};
+        {Location::Type::TUMBLESTONES, "Tumblestones"},
+        {Location::Type::WITHERED_STEPPES, "Withered Steppes"}};
 
     enum class BattleField
     {

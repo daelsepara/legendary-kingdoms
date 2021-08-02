@@ -32,7 +32,8 @@ namespace Codes
         WALL_CLIMBING_AND_DOOR,
         REPAIR_CALENDAR_KALU,
         NO_COMBAT_SPELLS,
-        EVERCHILD_POISONED
+        EVERCHILD_POISONED,
+        DAZING_LIGHTS
     };
 
     std::map<Book::Type, const char *> Prefix = {

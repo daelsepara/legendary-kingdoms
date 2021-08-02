@@ -271,6 +271,8 @@ namespace Engine
 
     void GAIN_HEALTH(Monster::Base &monster, int health)
     {
+        auto initial = monster.Health;
+
         if (monster.Health > 0)
         {
             monster.Health += health;
@@ -291,6 +293,11 @@ namespace Engine
         if (monster.Health < 0)
         {
             monster.Health = 0;
+        }
+
+        if (monster.Health < initial)
+        {
+            monster.Damaged = true;
         }
     }
 
@@ -437,6 +444,23 @@ namespace Engine
         }
 
         return results;
+    }
+
+    int COUNT(int rolls, int difficulty)
+    {
+        auto count = 0;
+
+        auto results = Engine::ROLL_DICE(rolls);
+
+        for (auto i = 0; i < results.size(); i++)
+        {
+            if (results[i] >= difficulty)
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     bool HAS_STATUS(Party::Base &party, Character::Status status)
@@ -752,7 +776,7 @@ namespace Engine
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
                 {
                     result++;
                 }
@@ -1239,9 +1263,22 @@ namespace Engine
         {
             auto result = Engine::FIND_CODE(party, codes[i]);
 
-            if (result >= 0)
+            if (result >= 0 && result < party.InvisibleCodes.size())
             {
                 party.InvisibleCodes.erase(party.InvisibleCodes.begin() + result);
+            }
+        }
+    }
+
+    void LOSE_CODES(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        for (auto i = 0; i < codes.size(); i++)
+        {
+            auto result = Engine::FIND_CODE(party, codes[i]);
+
+            if (result >= 0 && result < party.Codes.size())
+            {
+                party.Codes.erase(party.Codes.begin() + result);
             }
         }
     }
