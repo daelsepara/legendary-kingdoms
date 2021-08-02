@@ -3630,7 +3630,7 @@ namespace Book1
                     Engine::SET_TEAM(party.Members[character], previousTeam);
                 }
 
-                Bye = "The family reluctantly release Akini's aunt, bidding you never to darken their doorstep again";
+                Bye = "The family reluctantly release Akini's aunt, bidding you never to darken their doorstep again.";
 
                 destination = {Book::Type::BOOK1, 68};
             }
