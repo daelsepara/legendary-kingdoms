@@ -4359,6 +4359,8 @@ namespace Book1
         {
             BookID = Book::Type::BOOK1;
 
+            Location = Location::Type::TUMBLESTONES;
+
             ID = 137;
 
             Image = "images/book1/statue_wreck.png";
@@ -6138,6 +6140,8 @@ namespace Book1
         Story194()
         {
             BookID = Book::Type::BOOK1;
+
+            Location = Location::Type::LUUTANESH;
 
             ID = 194;
 
@@ -8010,6 +8014,7 @@ namespace Book1
         }
     };
 
+    // TODO: ensure that the bandits get at least 3 of the treasures
     class Story258 : public Story::Base
     {
     public:
@@ -8046,6 +8051,217 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+    };
+
+    class Story260 : public Story::Base
+    {
+    public:
+        Story260()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 260;
+
+            Text = "The flickering torch deceives your eyes, shadows from your companions making it look like your foot is in a safe place. There is an audible crunch as you step upon a juicy egg. Tiny spiderlings emerge in their hundreds. Suddenly the giant spiders move as one, descending upon your companions and the Everchild's followers. Eggs crack open as careless feet release more baby spiders.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 237}; }
+    };
+
+    class Story261 : public Story::Base
+    {
+    public:
+        Story261()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 261;
+
+            Text = "\"I'm glad I found you. I must tell you some sad news,\" you say gravely. \"I met one of your kind in the desert. An apprentice of Unbraaki. Alas, he perished. He did not return to you because he feared Unbraaki would harm you if he found him hiding here. I am sorry to bring you such sad news.\"\n\nThe chattering in the treetops instantly stops, to be replaced by mournful howls. \"Curse you for bringing such dreadful tidings!\" cries one of the monkeys. \"For you speak of my own son! Oh! Misery! Misery!\"\n\nThe monkeys depart solemnly above you, their howls rending your ears. Emlyn looks on in wonder as the monkeys vanish. \"What did you say to them?\" she asks, astonished.\n\n\"I haven't the heart to tell you,\" you say sadly, wiping a tear from your eye.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 740}; }
+    };
+
+    class Story262 : public Story::Base
+    {
+    public:
+        Story262()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 262;
+
+            Text = "Saint Elias is considered the holiest man in the world, a spokesman from the celestial court who has lived on the world for two thousand years. He is a silver elf, a faerie given human form, who rejected his fey heritage to study the majesty of the gods. He resides in a mighty tower called Tier Mundus, the last of the great towers of the elder time (all the rest were destroyed by Abraxas during the desolation). It is believed that he is personally responsible for the banishment of Abraxas into the centre of the earth at the climax of the desolation, and that he is therefore not merely the vicar of the gods, but also a powerful sorcerer in his own right. He still lives today, and grants blessings to pilgrims. Sometimes he advises the world's mightiest rulers, if they will hear his wisdom, but he has always remained neutral in all political affairs.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 680}; }
+    };
+
+    class Story263 : public Story::Base
+    {
+    public:
+        Story263()
+        {
+            BookID = Book::Type::BOOK1;
+
+            Location::Type::LUUTANESH;
+
+            ID = 263;
+
+            Text = "You are in the Everchild's hideout in Luutanesh. Around you generals and captains of her armies swirl in great preparation for the forthcoming battle.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Take the opportunity to rest at the inn", {Book::Type::BOOK1, 66}));
+            Choices.push_back(Choice::Base("Speak with the Everchild", {Book::Type::BOOK1, 898}));
+            Choices.push_back(Choice::Base("Order the attack on Saltdad to begin", {Book::Type::BOOK1, 376}));
+            Choices.push_back(Choice::Base("Leave Luutanesh", {Book::Type::BOOK1, 194}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story264 : public Story::Base
+    {
+    public:
+        Story264()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 264;
+
+            Text = "This will be a fraught battle.\n\nNote: The skeleton archers do not attack in hand-to-hand combat, but will try and shoot party members if they are not kept busy. If, at the end of the combat turn, the skeleton archers have not taken any damage, they unleash their arrows. Choose two party members to lose 2 Health points -- armour cannot reduce this damage.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take.clear();
+
+            Limit = 0;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Skeleton Warriros", 9, 4, 4, 12, 0),
+                Monster::Base("Skeleton Archers", Monster::Type::SKELETON_ARCHERS, 0, 0, 4, 13, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 555}; }
+    };
+
+    class Story265 : public Story::Base
+    {
+    public:
+        Story265()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 265;
+
+            Text = "You are leaving the Palace of Unbraaki. Where will you venture now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go north, towards Clifftop", {Book::Type::BOOK1, 725}));
+            Choices.push_back(Choice::Base("Go east, to the Tumblestones", {Book::Type::BOOK1, 137}));
+            Choices.push_back(Choice::Base("Go southeast, to Lhasbreath", {Book::Type::BOOK1, 775}));
+            Choices.push_back(Choice::Base("Head south, into the jungle", {Book::Type::BOOK1, 370}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story266 : public Story::Base
+    {
+    public:
+        Story266()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 266;
+
+            Text = "You have only just begun your negotiations when one of the thieves shouts out, \"They're agents of the Iron King! Slay them before they get away!\" The thieves draw their weapons, the Everchild rising with her allies to lend you aid.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 889}; }
+    };
+
+    class Story267 : public Story::Base
+    {
+    public:
+        Story267()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 267;
+
+            Text = "You cannot help but shed a tear as your bloodied companion sprawls to the ground, dead by your hand. They were too dangerous to be left alive, but that doesn't mean your actions will not haunt your dreams for weeks to come. You may take any possessions from the dead party member that you wish. Kicking away the black book, you exit the chamber.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 821}; }
+    };
+
+    class Story268 : public Story::Base
+    {
+    public:
+        Story268()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 268;
+
+            Text = "Through the desert haze, the legions of the Everchild go on the march. Dust rises on the Northroad as the combined forces of the valley descend upon the defiant city of Cursus. The Everchild calls a halt on a raised perch of land where the city and its harbour can be clearly seen. In the blood-red light of the setting sun you can see that the harbour of Cursus is packed with cogs, hulks and carracks of many nations and heraldry. The patriarch has emptied his treasury to gain followers for his last stand. Spies loyal to the Everchild report that the high priest of Cursus might have access to as many as six thousand fighting men.\n\n\"They do not have space for such a large deployment in the field,\" observes Che Long. \"Or, if they did, such numbers would be unmanageable.\"\n\n\"Are those knights? Has the patriarch brought foreign knights here?\" asks the Everchild, peering into the gloom.\n\n\"They will not be able to wear their heavy armour in the desert,\" says Che Long. \"Unlike the Bronzeguard, their armour is not enchanted and does not keep them cool in the sun.\"\n\nLady Ayleta approaches the Everchild and bows. \"My lady, your agents are assembled in the command tent.\"\n\nThe Everchild bids you follow her as she approaches the tent. \"I have many agents who follow me now, but none are as experienced as you. I shall give you priority over which missions you wish to undertake. All are hazardous, so do not stretch yourselves too thinly.\"";
+            
+            Bye = "Nodding, you enter the tent with the queen.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 124}; }
+    };
+
+    class Story269 : public Story::Base
+    {
+    public:
+        Story269()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 269;
+
+            Text = "As you round the corner of the corridor you come face to face with a hideous female ogre. She hefts her club to attack, when she suddenly sees Skullcracker lollop into view.\n\n\"Oi! What's going on 'ere then?\" she asks, confused.\n\n\"I've ganged up with this lot,\" growls Skullcracker. \"Can't be bothered to work for the orcs anymore.\"\n\n\"What am I supposed to do, then?\" snaps the female ogre.\n\n\"What 'yer like,\" shrugs Skullcracker. \"It would be impertinent of me to suggest a course of action that influences your sense of agency one way or the other. And you smell.\"\n\n\"Git,\" snaps the lady ogre. \"I suppose I'll sod off myself then.\"\n\n\"Good idea,\" grumbles Skullcracker.\n\nYou are almost teary at this sad parting, but eventually Daisy the ogre shambles away.";
+            
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 165}; }
     };
 
     auto story001 = Story001();
@@ -8333,6 +8549,16 @@ namespace Book1
     auto story257 = Story257();
     auto story258 = Story258();
     auto story259 = Story259();
+    auto story260 = Story260();
+    auto story261 = Story261();
+    auto story262 = Story262();
+    auto story263 = Story263();
+    auto story264 = Story264();
+    auto story265 = Story265();
+    auto story266 = Story266();
+    auto story267 = Story267();
+    auto story268 = Story268();
+    auto story269 = Story269();
 
     void InitializeStories()
     {
@@ -8365,7 +8591,8 @@ namespace Book1
             &story220, &story221, &story222, &story223, &story224, &story225, &story226, &story227, &story228, &story229,
             &story230, &story231, &story232, &story233, &story234, &story235, &story236, &story237, &story238, &story239,
             &story240, &story241, &story242, &story243, &story244, &story245, &story246, &story247, &story248, &story249,
-            &story250, &story251, &story252, &story253, &story254, &story255, &story256, &story257, &story258, &story259};
+            &story250, &story251, &story252, &story253, &story254, &story255, &story256, &story257, &story258, &story259,
+            &story260, &story261, &story262, &story263, &story264, &story265, &story266, &story267, &story268, &story269};
     }
 }
 #endif

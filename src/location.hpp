@@ -16,7 +16,8 @@ namespace Location
         LONGPORT_BAY,
         LHASBREATH,
         MORDAIN,
-        CHALICE
+        CHALICE,
+        TUMBLESTONES
     };
 
     std::map<Location::Type, const char *> Description = {
@@ -29,7 +30,8 @@ namespace Location
         {Location::Type::LONGPORT_BAY, "Longport Bay"},
         {Location::Type::LHASBREATH, "Lhasbreath"},
         {Location::Type::MORDAIN, "Mordain"},
-        {Location::Type::CHALICE, "Chalice"}};
+        {Location::Type::CHALICE, "Chalice"},
+        {Location::Type::TUMBLESTONES, "Tumblestones"}};
 
     enum class BattleField
     {

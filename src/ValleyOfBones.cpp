@@ -3395,7 +3395,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             monster_string += monster.Name;
 
-            monster_string += "\nAttack: " + std::to_string(monster.Attack) + " (" + std::to_string(monster.Difficulty) + "+)";
+            monster_string += "\nAttack: " + (monster.Attack > 0 ? std::to_string(monster.Attack) : std::string("Special")) + " (" + std::to_string(monster.Difficulty) + "+)";
 
             if (monster.Auto > 0)
             {
@@ -3470,7 +3470,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             monster_string += monster.Name;
 
-            monster_string += "\nAttack: " + std::to_string(monster.Attack) + " (" + std::to_string(monster.Difficulty) + "+)";
+            monster_string += "\nAttack: " + (monster.Attack > 0 ? std::to_string(monster.Attack) : std::string("Special")) + " (" + std::to_string(monster.Difficulty) + "+)";
 
             if (monster.Auto > 0)
             {
@@ -3832,7 +3832,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                         {
                             Engine::GAIN_HEALTH(character, -final_damage);
 
-                            message = std::string(character.Name) + " DEALT " + std::to_string(final_damage) + " damage!";
+                            message = std::string(character.Name) + " dealt " + std::to_string(final_damage) + " damage!";
 
                             flash_color = intRD;
                         }
@@ -4116,7 +4116,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             flash_message = true;
 
-                            message = "You must SELECT an adventurer DAMAGED by the attack.";
+                            message = "You must select an adventurer damaged by the attack.";
 
                             start_ticks = SDL_GetTicks();
 
@@ -4161,7 +4161,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     flash_message = true;
 
-                                    message = std::string(party.Members[current + offset].Name) + std::string(" is DEAD!");
+                                    message = std::string(party.Members[current + offset].Name) + std::string(" is dead!");
 
                                     start_ticks = SDL_GetTicks();
 
@@ -4379,13 +4379,13 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                             {
                                 monsters[opponent].Damaged = true;
 
-                                message = std::string(party.Members[combatant].Name) + "'s " + std::string(spell.Name) + " DEALS " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!";
+                                message = std::string(party.Members[combatant].Name) + "'s " + std::string(spell.Name) + " deals " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!";
 
                                 flash_color = intLB;
                             }
                             else
                             {
-                                message = std::string(party.Members[combatant].Name) + "'s " + std::string(spell.Name) + " was INEFFECTIVE!";
+                                message = std::string(party.Members[combatant].Name) + "'s " + std::string(spell.Name) + " was ineffective!";
 
                                 flash_color = intRD;
                             }
@@ -4728,13 +4728,13 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     {
                                         monsters[opponent].Damaged = true;
 
-                                        message = std::string(party.Members[combatant].Name) + " DEALS " + std::to_string(damage_scale * damage) + " to the " + std::string(monsters[opponent].Name) + "!";
+                                        message = std::string(party.Members[combatant].Name) + " deals " + std::to_string(damage_scale * damage) + " to the " + std::string(monsters[opponent].Name) + "!";
 
                                         flash_color = intLB;
                                     }
                                     else
                                     {
-                                        message = std::string(party.Members[combatant].Name) + "'s ATTACK was INEFFECTIVE!";
+                                        message = std::string(party.Members[combatant].Name) + "'s attack was ineffective!";
 
                                         flash_color = intRD;
                                     }
@@ -4747,7 +4747,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     if (combat_damage > 0)
                                     {
-                                        message = std::string(monsters[opponent].Name) + " DEALS " + std::to_string(damage) + " to the party!";
+                                        message = std::string(monsters[opponent].Name) + " deals " + std::to_string(damage) + " to the party!";
 
                                         start_ticks = SDL_GetTicks();
 
@@ -4757,7 +4757,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     }
                                     else
                                     {
-                                        message = "The " + std::string(monsters[opponent].Name) + "'s attack was INEFFECTIVE!";
+                                        message = "The " + std::string(monsters[opponent].Name) + "'s attack was ineffective!";
 
                                         start_ticks = SDL_GetTicks();
 
@@ -4783,7 +4783,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                 flash_color = intRD;
 
-                                message = "Skallos unleashes a roar of black magic! Each party member LOSES 1 Health. Skallos RECOVERS 4 Health Points!";
+                                message = "Skallos unleashes a roar of black magic! Each party member loses 1 Health. Skallos RECOVERS 4 Health Points!";
 
                                 start_ticks = SDL_GetTicks();
 
@@ -5060,7 +5060,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                                 }
                                                 else
                                                 {
-                                                    message = std::string(party.Members[result].Name) + " DEALT " + std::to_string(combat_damage) + " DAMAGE!";
+                                                    message = std::string(party.Members[result].Name) + " dealt " + std::to_string(combat_damage) + " DAMAGE!";
 
                                                     start_ticks = SDL_GetTicks();
 
@@ -5089,7 +5089,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                         }
                                         else
                                         {
-                                            message = std::string(party.Members[result].Name) + " is already DEAD!";
+                                            message = std::string(party.Members[result].Name) + " is already dead!";
 
                                             start_ticks = SDL_GetTicks();
 
@@ -5103,7 +5103,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     assigned = true;
 
-                                    message = "The " + std::string(monsters[opponent].Name) + "'s attack was INEFFECTIVE!";
+                                    message = "The " + std::string(monsters[opponent].Name) + "'s attack was ineffective!";
 
                                     start_ticks = SDL_GetTicks();
 
@@ -6442,7 +6442,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                                 {
                                     flash_message = true;
 
-                                    message = "That opponent has been ATTACKED before! Choose another target!";
+                                    message = "That opponent has been attacked before! Choose another target!";
 
                                     start_ticks = SDL_GetTicks();
 
@@ -6474,7 +6474,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                         {
                             flash_message = true;
 
-                            message = "You must SELECT an opponent to ATTACK this round.";
+                            message = "You must select an opponent to attack this round.";
 
                             start_ticks = SDL_GetTicks();
 
@@ -6509,7 +6509,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                                 {
                                     flash_message = true;
 
-                                    message = std::string(monsters[current + offset].Name) + std::string(" is DEAD!");
+                                    message = std::string(monsters[current + offset].Name) + std::string(" is dead!");
 
                                     start_ticks = SDL_GetTicks();
 
@@ -7349,7 +7349,7 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                                 {
                                     flash_message = true;
 
-                                    message = std::string(party.Members[current + offset].Name) + std::string(" is DEAD!");
+                                    message = std::string(party.Members[current + offset].Name) + std::string(" is dead!");
 
                                     start_ticks = SDL_GetTicks();
 
@@ -7644,7 +7644,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                     {
                                         flash_message = true;
 
-                                        message = std::string(party.Members[current + offset].Name) + std::string(" is DEAD!");
+                                        message = std::string(party.Members[current + offset].Name) + std::string(" is dead!");
 
                                         start_ticks = SDL_GetTicks();
 
@@ -7921,7 +7921,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
                         {
                             flash_message = true;
 
-                            message = "You must SELECT an ATTRIBUTE!";
+                            message = "You must select an ATTRIBUTE!";
 
                             start_ticks = SDL_GetTicks();
 
@@ -8535,7 +8535,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     start_ticks = SDL_GetTicks();
 
-                                    message = std::string(party.Members[selection].Name) + " is DEAD!";
+                                    message = std::string(party.Members[selection].Name) + " is dead!";
                                 }
                             }
                         }
@@ -8906,7 +8906,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         {
                             flash_message = true;
 
-                            message = "You must SELECT a party member!";
+                            message = "You must select a party member!";
 
                             start_ticks = SDL_GetTicks();
 
@@ -8974,7 +8974,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                 {
                                     flash_message = true;
 
-                                    message = std::string(party.Members[current + offset].Name) + std::string(" is DEAD!");
+                                    message = std::string(party.Members[current + offset].Name) + std::string(" is dead!");
 
                                     start_ticks = SDL_GetTicks();
 
@@ -9024,6 +9024,420 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
     }
 
     return result;
+}
+
+std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Control::Type mode)
+{
+    auto selected_party = std::vector<int>();
+
+    auto title = "Legendary Kingdoms: Select Party Members";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto main_buttonh = 48;
+
+        auto font_size = 20;
+        auto text_space = 8;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = 48;
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - 2 * text_space) / (88);
+        auto last = offset + limit;
+
+        if (last > party.Members.size())
+        {
+            last = party.Members.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+
+        auto done = false;
+
+        auto selection = std::vector<int>();
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                if (last - offset > 0)
+                {
+                    for (auto i = 0; i < last - offset; i++)
+                    {
+                        auto result = Engine::FIND_LIST(selection, offset + i);
+
+                        if (result >= 0 && result < selection.size())
+                        {
+                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        }
+                        else if (Engine::SCORE(party.Members[offset + i], Attribute::Type::HEALTH) > 0)
+                        {
+                            if (team != Team::Type::NONE)
+                            {
+                                if (party.Members[offset + i].Team == team)
+                                {
+                                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                }
+                                else
+                                {
+                                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
+                                }
+                            }
+                            else
+                            {
+                                drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            }
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, 4);
+
+                if (mode == Control::Type::SPELL_TARGET)
+                {
+                    putHeader(renderer, "Choose targets for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (mode == Control::Type::GAIN_HEALTH)
+                {
+                    putHeader(renderer, "Choose party members to recover health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (mode == Control::Type::LOSE_HEALTH)
+                {
+                    putHeader(renderer, "Choose party members to lose health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else
+                {
+                    putHeader(renderer, "Choose Party Members", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+
+                putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (selection.size() > 0)
+                {
+                    std::string party_string = "";
+
+                    for (auto i = 0; i < selection.size(); i++)
+                    {
+                        if (i > 0)
+                        {
+                            party_string += "\n";
+                        }
+
+                        party_string += party.Members[selection[i]].Name;
+
+                        if (Engine::SCORE(party.Members[selection[i]], Attribute::Type::HEALTH) <= 0)
+                        {
+                            party_string += " (D)";
+                        }
+                    }
+
+                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+                else
+                {
+                    putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+                {
+                    if (controls[current].Type == Control::Type::BACK)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Members.size())
+                            {
+                                last = party.Members.size();
+                            }
+
+                            controls.clear();
+
+                            controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                    {
+                        if (party.Members.size() - last > 0)
+                        {
+                            if (offset < party.Members.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > party.Members.size() - limit)
+                            {
+                                offset = party.Members.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Members.size())
+                            {
+                                last = party.Members.size();
+                            }
+
+                            controls.clear();
+
+                            controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (party.Members.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (selection.size() > 0 && (selection.size() >= team_size || selection.size() >= Engine::COUNT(party, team)))
+                        {
+                            done = true;
+
+                            selected_party = selection;
+
+                            current = -1;
+
+                            selected = false;
+                        }
+                        else
+                        {
+                            flash_message = true;
+
+                            message = "You must select " + std::to_string(team_size) + " party members!";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intRD;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION)
+                    {
+                        if (current + offset >= 0 && current + offset < party.Members.size())
+                        {
+                            auto result = Engine::FIND_LIST(selection, current + offset);
+
+                            if (result >= 0 && result < selection.size())
+                            {
+                                selection.erase(selection.begin() + result);
+                            }
+                            else
+                            {
+                                if (Engine::SCORE(party.Members[current + offset], Attribute::Type::HEALTH) > 0)
+                                {
+                                    if (team == Team::Type::NONE || party.Members[current + offset].Team == team)
+                                    {
+                                        if (Engine::HAS_STATUS(party.Members[current + offset], Character::Status::CAPTURED))
+                                        {
+                                            message = std::string(party.Members[current + offset].Name) + " has been captured!";
+
+                                            flash_message = true;
+
+                                            start_ticks = SDL_GetTicks();
+
+                                            flash_color = intRD;
+                                        }
+                                        else if (Engine::SCORE(party.Members[current + offset], Attribute::Type::HEALTH) <= 0)
+                                        {
+                                            message = std::string(party.Members[current + offset].Name) + " is dead!";
+
+                                            flash_message = true;
+
+                                            start_ticks = SDL_GetTicks();
+
+                                            flash_color = intRD;
+                                        }
+                                        else if (party.InCity && !party.Members[current + offset].IsCivilized)
+                                        {
+                                            message = std::string(party.Members[current + offset].Name) + " is waiting outside the city!";
+
+                                            flash_message = true;
+
+                                            start_ticks = SDL_GetTicks();
+
+                                            flash_color = intRD;
+                                        }
+                                        else
+                                        {
+                                            selection.push_back(current + offset);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        flash_message = true;
+
+                                        if (!Engine::IS_CHARACTER(team))
+                                        {
+                                            message = std::string(party.Members[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!";
+                                        }
+                                        else
+                                        {
+                                            message = "You can only choose " + std::string(Team::Descriptions[team]) + "!";
+                                        }
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_color = intRD;
+                                    }
+                                }
+                                else
+                                {
+                                    flash_message = true;
+
+                                    message = std::string(party.Members[current + offset].Name) + std::string(" is dead!");
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intRD;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    party.LastSelection = selected_party;
+
+    if (selected_party.size() == 1)
+    {
+        if (selected_party[0] >= 0 && selected_party[0] < party.Members.size())
+        {
+            party.LastSelected = selected_party[0];
+        }
+    }
+
+    return selected_party;
 }
 
 Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool canFlee, int fleeRound, int roundLimit, bool useEquipment)
@@ -9512,13 +9926,12 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     if (monsters[i].Health > 0 && Engine::COUNT(party, team) > 0 && combatRound >= monsters[i].Round)
                                     {
-                                        if (monsters[i].Type != Monster::Type::ZEALOT_HEALER)
+                                        if (monsters[i].Type != Monster::Type::ZEALOT_HEALER || Engine::COUNT(monsters) == 1)
                                         {
-                                            attackScreen(window, renderer, party, team, monsters, -1, i, 1, useEquipment);
-                                        }
-                                        else if (Engine::COUNT(monsters) == 1)
-                                        {
-                                            attackScreen(window, renderer, party, team, monsters, -1, i, 1, useEquipment);
+                                            if (monsters[i].Attack > 0 && monsters[i].Difficulty > 0)
+                                            {
+                                                attackScreen(window, renderer, party, team, monsters, -1, i, 1, useEquipment);
+                                            }
                                         }
                                     }
                                 }
@@ -9533,7 +9946,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     flash_color = intRD;
 
-                                    message = "Blocks of stone come raining down from the walls! The priest and each party member LOSES 1 Health!";
+                                    message = "Blocks of stone come raining down from the walls! The priest and each party member loses 1 Health!";
 
                                     Engine::GAIN_HEALTH(party, -1);
 
@@ -9564,6 +9977,38 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     Engine::GAIN_HEALTH(monsters, 2);
 
                                     start_ticks = SDL_GetTicks();
+                                }
+                                else if (Engine::HAS_MONSTER(monsters, Monster::Type::SKELETON_ARCHERS))
+                                {
+                                    auto result = Engine::FIND_MONSTER(monsters, Monster::Type::SKELETON_ARCHERS);
+
+                                    if (result >= 0 && result < monsters.size() && !monsters[result].Damaged)
+                                    {
+                                        auto selection = selectPartyMembers(window, renderer, party, team, 2, Control::Type::LOSE_HEALTH);
+
+                                        if (selection.size() > 0)
+                                        {
+                                            message = "Skeleton Archers deal 2 damage to: ";
+
+                                            for (auto i = 0; i < selection.size(); i++)
+                                            {
+                                                if (i > 0)
+                                                {
+                                                    message += ", ";
+                                                }
+
+                                                message += party.Members[selection[i]].Name;
+
+                                                Engine::GAIN_HEALTH(party.Members[selection[i]], -2);
+                                            }
+                                            
+                                            flash_message = true;
+
+                                            flash_color = intRD;
+
+                                            start_ticks = SDL_GetTicks();
+                                        }
+                                    }
                                 }
 
                                 allyAttack.clear();
@@ -17742,7 +18187,7 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
             {
                 Engine::GAIN_HEALTH(party.Members[result], -1);
 
-                temp_string = std::string(party.Members[result].Name) + " LOSES 1 Health Point.";
+                temp_string = std::string(party.Members[result].Name) + " loses 1 Health Point.";
 
                 addBye(story, temp_string);
             }
