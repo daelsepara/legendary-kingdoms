@@ -9634,7 +9634,7 @@ namespace Book1
             Text = "With a mighty blow you cleave the Iron King's head from his shoulders. A mighty clang fills the hall as his heavy metal crown crashes to the floor. Standing outside the palace holding the bloody crown aloft you cry victory for the Everchild. In an instant the remaining forces of the old king disperse and surrender, and a great cheer goes up from your army. The day is won!\n\nThe Everchild is led into the palace in a great parade, tears of joy flowing from the oppressed citizens of Saltdad. She is merciful towards her defeated foes, sparing all but the worst offenders of the old regime. You have accomplished an action long predicted in legend. The Everchild once again sits on the throne of Saltdad. She could not have hoped to accomplish such a feat without you.\n\nThere follows a great celebration, the fat stores of the Iron King are broken open to hold a massive feast for the people. An elegant diadem upon her head, the Everchild finally looks the part of queen. Wine and food are consumed in great amounts, and songs are sung across the city. Your party's health scores are restored to maximum.\n\nYou gained the code A1.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose two party members and increase their maximum, unwounded Health score by 1 point", {Book::Type::BOOK1, -309}, Choice::Type::TEAM_MAX_HEALTH, 2, 1));
+            Choices.push_back(Choice::Base("Choose two party members and increase their maximum, unwounded Health score by 1 point", {Book::Type::BOOK1, 280}, Choice::Type::TEAM_MAX_HEALTH, 2, 1));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -9646,35 +9646,16 @@ namespace Book1
             Engine::GET_CODES(party, {Codes::A(1)});
 
             Engine::LOSE_CODES(party, {Codes::A(6), Codes::A(7)});
-        }
-    };
 
-    class Event309 : public Story::Base
-    {
-    public:
-        Event309()
-        {
-            BookID = Book::Type::BOOK1;
-
-            ID = -309;
-
-            DisplayID = 309;
-
-            Choices.clear();
-
-            Controls = Story::Controls::NONE;
-        }
-
-        Engine::Destination Background(Party::Base &party)
-        {
             if (Engine::IN_PARTY(party, Character::Type::AMELIA_PASS_DAYNE))
             {
-                return {Book::Type::BOOK1, 181};
+                Choices[0].Destination = {Book::Type::BOOK1, 181};
             }
             else
             {
-                return {Book::Type::BOOK1, 280};
+                Choices[0].Destination = {Book::Type::BOOK1, 280};
             }
+
         }
     };
 
@@ -10015,14 +9996,13 @@ namespace Book1
     auto story307 = Story307();
     auto story308 = Story308();
     auto story309 = Story309();
-    auto event309 = Event309();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
-            &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event309,
+            &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
