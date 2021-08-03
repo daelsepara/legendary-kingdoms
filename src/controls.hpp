@@ -69,6 +69,7 @@ namespace Control
         HEALTH,
         GAIN_HEALTH,
         LOSE_HEALTH,
+        RAISE_MAX_HEALTH,
         TRANSFER,
         VAULT,
         ENTER_SHOP,

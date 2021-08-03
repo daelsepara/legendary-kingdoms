@@ -43,6 +43,7 @@ namespace Choice
         BARTER,
         SHIP,
         ADD_MAX_HEALTH,
+        TEAM_MAX_HEALTH,
         GAIN_HEALTH,
         BRIBE_CODEWORD,
         ROLL_FOR_ATTRIBUTE_INCREASE,
@@ -457,6 +458,19 @@ namespace Choice
             Attributes = attributes;
 
             Value = value;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, int value, int success)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Value = value;
+
+            Success = success;
         }
     };
 } // namespace Choice

@@ -74,13 +74,14 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
 Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
 
-Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool canFlee, int fleeRound, int roundLimit, bool useEquipment);
+Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool storyFlee, int fleeRound, int roundLimit, bool useEquipment);
 Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus);
 
 Story::Base *findStory(Engine::Destination destination);
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
 Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
 
+std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Control::Type mode);
 std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Character::Base &caster, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
 
 void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus, Location::Zone zone, int combatRound);
@@ -6910,6 +6911,16 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
     return test_result;
 }
 
+bool magicRound0(Character::Base &character, int combatRound)
+{
+    auto result = true;
+
+    result &= (!Engine::HAS_STATUS(character, Character::Status::EXTRA_MAGIC_ROUND0) || (Engine::HAS_STATUS(character, Character::Status::EXTRA_MAGIC_ROUND0) && combatRound != 0));
+    result &= (!Engine::HAS_STATUS(character, Character::Status::UNLIMITED_MAGIC_ROUND0) || (Engine::HAS_STATUS(character, Character::Status::UNLIMITED_MAGIC_ROUND0) && combatRound != 0));
+
+    return result;
+}
+
 int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, int combatRound, Control::Type mode)
 {
     auto result = -1;
@@ -7058,7 +7069,7 @@ int castSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Te
                         {
                             if (party.Members[selection].SpellCaster)
                             {
-                                if (hasAttacked.size() > 0 && Engine::FIND_LIST(hasAttacked, selection) >= 0 && (!Engine::HAS_STATUS(party.Members[selection], Character::Status::EXTRA_MAGIC_ROUND0) || (Engine::HAS_STATUS(party.Members[selection], Character::Status::EXTRA_MAGIC_ROUND0) && combatRound != 0)))
+                                if (hasAttacked.size() > 0 && Engine::FIND_LIST(hasAttacked, selection) >= 0 && magicRound0(party.Members[selection], combatRound))
                                 {
                                     flash_message = true;
 
@@ -9173,6 +9184,10 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                 {
                     putHeader(renderer, "Choose targets for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
+                else if (mode == Control::Type::RAISE_MAX_HEALTH)
+                {
+                    putHeader(renderer, "Choose party members to raise maximum health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
                 else if (mode == Control::Type::GAIN_HEALTH)
                 {
                     putHeader(renderer, "Choose party members to recover health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -9382,7 +9397,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
 
                                             flash_color = intRD;
                                         }
-                                        else
+                                        else if (selection.size() < team_size)
                                         {
                                             selection.push_back(current + offset);
                                         }
@@ -9466,7 +9481,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
     return selected_party;
 }
 
-Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool canFlee, int fleeRound, int roundLimit, bool useEquipment)
+Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool storyFlee, int fleeRound, int roundLimit, bool useEquipment)
 {
     auto combatResult = Engine::Combat::NONE;
 
@@ -9542,6 +9557,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto allyAttack = std::vector<Allies::Type>();
 
         auto current_mode = Control::Type::ATTACK;
+        auto canFlee = storyFlee;
 
         while (Engine::COUNT(monsters) > 0 && Engine::COUNT(party, team) > 0 && (roundLimit == -1 || (roundLimit > 0 && combatRound < roundLimit)))
         {
@@ -9884,10 +9900,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                 {
                                                     hasAttacked.push_back(result);
 
-                                                    if (canFlee)
-                                                    {
-                                                        canFlee = false;
-                                                    }
+                                                    canFlee = false;
                                                 }
                                             }
                                             else
@@ -10083,11 +10096,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 hasAttacked.clear();
 
+                                canFlee = storyFlee;
+
                                 combatRound++;
 
                                 for (auto i = 0; i < party.Members.size(); i++)
                                 {
                                     Engine::REMOVE_STATUS(party.Members[i], Character::Status::EXTRA_MAGIC_ROUND0);
+                                    Engine::REMOVE_STATUS(party.Members[i], Character::Status::UNLIMITED_MAGIC_ROUND0);
                                 }
 
                                 // clear damaged flag for next round
@@ -17245,6 +17261,44 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 error = true;
 
                                 message = "You do not have a ship at this location!";
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::TEAM_MAX_HEALTH)
+                        {
+                            auto target = std::vector<int>();
+
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
+
+                            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size() && Engine::SCORE(party.Members[party.CurrentCharacter], Attribute::Type::HEALTH) > 0)
+                            {
+                                target = {party.CurrentCharacter};
+                            }
+                            else if (Engine::COUNT(party) == 1)
+                            {
+                                target = {Engine::FIRST(party)};
+                            }
+                            else
+                            {
+                                target = selectPartyMembers(window, renderer, party, story->Choices[choice].Team, story->Choices[choice].Value, Control::Type::RAISE_MAX_HEALTH);
+                            }
+
+                            if (target.size() > 0)
+                            {
+                                for (auto i = 0; i < target.size(); i++)
+                                {
+                                    if (target[i] >= 0 && target[i] < party.Members.size())
+                                    {
+                                        party.Members[target[i]].MaximumHealth += story->Choices[choice].Success;
+
+                                        Engine::GAIN_HEALTH(party.Members[target[i]], story->Choices[choice].Success);
+                                    }
+                                }
+
+                                next = findStory(story->Choices[choice].Destination);
+
+                                done = true;
+
+                                break;
                             }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::ADD_MAX_HEALTH)

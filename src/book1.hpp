@@ -9308,10 +9308,374 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR});
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR3}))
+            {
+                if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR2}))
+                {
+                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR3});
+                    Engine::LOSE_CODES(party, {Codes::Type::LOST_SCHOLAR2});
+                }
+                else if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR1}))
+                {
+                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR2});
+                    Engine::LOSE_CODES(party, {Codes::Type::LOST_SCHOLAR1});
+                }
+                else
+                {
+                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR1});
+                }
+            }
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 150}; }
+    };
+
+    class Story300 : public Story::Base
+    {
+    public:
+        Story300()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 300;
+
+            Text = "You are about to fight in a Mass Combat. This involves hundreds of soldiers clashing on the field of battle. Each unit represents around five hundred soldiers. In any given battle you can bring a maximum of six units from your barracks. It will probably help if you record the location of your units, and those of your enemy, on the Battlefield section on your adventure sheet.\n\nTo win a Mass Combat you must control two out of three combat zones. The zones are called Left Flank, Centre and Right Flank. You control a zone when you have units in it, but your opponent does not. As soon as either you or the enemy general controls two zones the battle immediately ends. Any enemy units in the remaining zone will rout and flee as soon as it becomes obvious that one side has won.\n\nUnits have two attributes -- Strength and Morale. Strength shows how good the unit is at fighting, and Morale demonstrates how well a unit can cope with upsets such as casualties and enemy magic. Before the battle you must arrange your units on the battlefield. You can put a maximum of two units into each zone (Left Flank, Centre and Right Flank). One unit is put at the Front -- preferably a unit with a high Strength score -- and the second unit is put behind in Support. The Support unit is there to take over the fight if the unit at the Front routs (runs away!). You can see where the enemy have deployed their units, so try to match or beat the Strength score of the enemy unit at the Front in each zone.\n\nOnce you have assigned your units the battle will begin. You will fight in each zone, starting in the Left Flank, moving to the Centre, and then fighting on the Right Flank. If you have any spellcasters who can cast Mass Combat spells, each caster can cast a single spell just before the combat starts. If you have any spells left over, you can cast again each time you are about to fight on the Left Flank.\n\nStarting with the enemy unit at the Front on the Left Flank, roll a die and add that unit's Strength score to the result. This is the unit's battle score. Now do the same for your own unit at the front. If your battle score is higher than the enemy's, the enemy must make a morale check. If the enemy's score is higher, you must make a morale check. If the results are equal the fight is inconclusive -- move onto the next zone.\n\nTo make a morale check, roll a die and compare it to the defeated unit's Morale score. If the result is higher, that unit immediately routs. Cross it off the battlefield! If the result is equal or lower than the unit's Morale score the unit does not rout -- but it does lose a point of Morale. The more often a unit checks morale, the lower its morale becomes.\n\nIf a unit routs, the unit behind it in support can immediately take its place. If there is no unit in support, then the zone is lost.\n\nKeep fighting, moving from zone to zone, until either you or your opponent controls two zones. Units in Support do not fight until the unit at the Front has routed -- at that point the unit in Support moves to the Front. As soon someone controls two zones the battle is over.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+    };
+
+    class Story301 : public Story::Base
+    {
+    public:
+        Story301()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 301;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::COUNT(party, Team::Type::EVERCHILD_SECURITY) > 0)
+            {
+                return {Book::Type::BOOK1, 648};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 591};
+            }
+        }
+    };
+
+    class Story302 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story302()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 302;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            party.CurrentCharacter = Engine::FIND_SOLO(party);
+
+            auto target = -1;
+
+            if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size())
+            {
+                target = party.CurrentCharacter;
+            }
+            else if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
+            {
+                target = party.LastSelected;
+            }
+
+            PreText = "You are grabbed and pulled to the floor. Tommul and his brutish friend beat you with clubs until the shouts of the guards chase them away.\n\n";
+
+            if (target >= 0 && target < party.Members.size())
+            {
+                PreText += std::string(party.Members[target].Name) + " loses 3 Health Points.";
+
+                Engine::GAIN_HEALTH(party.Members[target], -3);
+
+                if (Engine::SCORE(party.Members[target], Attribute::Type::HEALTH) > 0)
+                {
+                    Bye = "You nurse your wounds grudgingly, muttering words of revenge under your breath.";
+                }
+            }
+            else
+            {
+                PreText += "You lose 3 Health Points.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 157}; }
+    };
+
+    class Story303 : public Story::Base
+    {
+    public:
+        Story303()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 303;
+
+            Text = "You climb back out of the pit on the far side. Why risk crossing a rickety plank when a little caution can keep life and limb intact? You smartly continue down the tunnel.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 686}; }
+    };
+
+    class Story304 : public Story::Base
+    {
+    public:
+        Story304()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 304;
+
+            Text = "It will be no easy matter to sneak into the palace. Unbraaki is well-guarded and probably protects himself with powerful sorcery. You wait until nightfall to give you cover. The palace is dark except for a single light in the library. Now is your chance, and you scamper through the garden, ducking behind bushes and fountains on your way to the palace.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Sneak through the garden (Team check: Stealth 4+, Successes: 5)", {Book::Type::BOOK1, 871}, {Book::Type::BOOK1, 632}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 4, 5));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story305 : public Story::Base
+    {
+    public:
+        Story305()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 305;
+
+            Text = "With a low clunk the window pops open. You crawl inside, opening the other window using the latch. Brekken and his gang are soon inside.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 116}; }
+    };
+
+    class Story306 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Engine::Destination destination = {Book::Type::NONE, -1};
+
+        Story306()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 306;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 736};
+
+            Take.clear();
+
+            Limit = 0;
+
+            Monsters.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(65)}))
+            {
+                PreText = "The room beyond is different from the others. It is a rough chamber, cut from the living rock, rather than a flagstone and brick room. Inside you can see, piled up, many crudely manufactured crates. These appear to be the orc's supplies, shipped all the way from the Savage Lands. Before them a pack of savage hounds have been left on guard, attached to long chains that will not let them leave the room, but gives them free reign to attack intruders. They bark and snarl at you, but with their masters dead you have little to fear from the noise. If you want the supplies you will have to deal with the hounds...\n\nNote: You can cast any number of spells before combat starts, as the chained hounds cannot reach you through the door.";
+
+                CanFlee = true;
+
+                Monsters = {
+                    Monster::Base("Warhound", 4, 4, 4, 5, 0),
+                    Monster::Base("Warhound", 3, 4, 4, 4, 0),
+                    Monster::Base("Warhound", 4, 4, 4, 6, 0)};
+
+                for (auto i = 0; i < party.Members.size(); i++)
+                {
+                    if (party.Members[i].SpellCaster && Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
+                    {
+                        Engine::GAIN_STATUS(party.Members[i], Character::Status::UNLIMITED_MAGIC_ROUND0);
+                    }
+                }
+            }
+            else
+            {
+                PreText = "This chamber is empty.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                destination = {Book::Type::BOOK1, 816};
+            }
+            else if (result == Engine::Combat::FLEE)
+            {
+                destination = {Book::Type::BOOK1, 736};
+            }
+        }
+    };
+
+    class Story307 : public Story::Base
+    {
+    public:
+        Story307()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 307;
+
+            Text = "Finally, after days of wandering you collapse, helpless into the dry sands. You fear death will take you. What happens later is scarcely much better. A patrol of guards from Clifftop come across your nearly dead bodies. Seeing the opportunity to make a quick coin, they decide to sell you into slavery.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 55}; }
+    };
+
+    class Story308 : public Story::Base
+    {
+    public:
+        Story308()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 308;
+
+            Text = "The door opens and you get to your feet, expecting to see the king and his councillors. Instead, five burly barbarians enter the room with weapons drawn. They quietly close the door behind them. \"Sorry, foreigners,\" apologises the tallest. \"But we've been paid three hundred silver coins to ensure you come to a sticky end. No offence. It's just business.\"\n\n\"None taken,\" you snarl, drawing your own weapons.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take.clear();
+
+            Limit = 0;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Lhasbreath Barbarians", 6, 4, 3, 15, 0),
+                Monster::Base("Barbarian Leader", 4, 4, 3, 8, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Take = {Equipment::IRON_GREATAXE2};
+
+                Limit = 1;
+
+                Engine::GAIN_MONEY(party, 300);
+            }
+        }
+    };
+
+    class Story309 : public Story::Base
+    {
+    public:
+        Story309()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 309;
+
+            Image = "images/book1/victory_over_ironking.png";
+
+            Text = "With a mighty blow you cleave the Iron King's head from his shoulders. A mighty clang fills the hall as his heavy metal crown crashes to the floor. Standing outside the palace holding the bloody crown aloft you cry victory for the Everchild. In an instant the remaining forces of the old king disperse and surrender, and a great cheer goes up from your army. The day is won!\n\nThe Everchild is led into the palace in a great parade, tears of joy flowing from the oppressed citizens of Saltdad. She is merciful towards her defeated foes, sparing all but the worst offenders of the old regime. You have accomplished an action long predicted in legend. The Everchild once again sits on the throne of Saltdad. She could not have hoped to accomplish such a feat without you.\n\nThere follows a great celebration, the fat stores of the Iron King are broken open to hold a massive feast for the people. An elegant diadem upon her head, the Everchild finally looks the part of queen. Wine and food are consumed in great amounts, and songs are sung across the city. Your party's health scores are restored to maximum.\n\nYou gained the code A1.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose two party members and increase their maximum, unwounded Health score by 1 point", {Book::Type::BOOK1, -309}, Choice::Type::TEAM_MAX_HEALTH, 2, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::REST(party);
+
+            Engine::GET_CODES(party, {Codes::A(1)});
+
+            Engine::LOSE_CODES(party, {Codes::A(6), Codes::A(7)});
+        }
+    };
+
+    class Event309 : public Story::Base
+    {
+    public:
+        Event309()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -309;
+
+            DisplayID = 309;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::AMELIA_PASS_DAYNE))
+            {
+                return {Book::Type::BOOK1, 181};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 280};
+            }
+        }
     };
 
     auto story001 = Story001();
@@ -9641,13 +10005,24 @@ namespace Book1
     auto story297 = Story297();
     auto story298 = Story298();
     auto story299 = Story299();
+    auto story300 = Story300();
+    auto story301 = Story301();
+    auto story302 = Story302();
+    auto story303 = Story303();
+    auto story304 = Story304();
+    auto story305 = Story305();
+    auto story306 = Story306();
+    auto story307 = Story307();
+    auto story308 = Story308();
+    auto story309 = Story309();
+    auto event309 = Event309();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
-            &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273,
+            &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event309,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -9677,7 +10052,8 @@ namespace Book1
             &story260, &story261, &story262, &story263, &story264, &story265, &story266, &story267, &story268, &story269,
             &story270, &story271, &story272, &story273, &story274, &story275, &story276, &story277, &story278, &story279,
             &story280, &story281, &story282, &story283, &story284, &story285, &story286, &story287, &story288, &story289,
-            &story290, &story291, &story292, &story293, &story294, &story295, &story296, &story297, &story298, &story299};
+            &story290, &story291, &story292, &story293, &story294, &story295, &story296, &story297, &story298, &story299,
+            &story300, &story301, &story302, &story303, &story304, &story305, &story306, &story307, &story308, &story309};
     }
 }
 #endif

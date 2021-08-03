@@ -34,7 +34,9 @@ namespace Codes
         EVERCHILD_POISONED,
         DAZING_LIGHTS,
         BANDITS_GET3,
-        LOST_SCHOLAR
+        LOST_SCHOLAR1,
+        LOST_SCHOLAR2,
+        LOST_SCHOLAR3
     };
 
     std::map<Book::Type, const char *> Prefix = {
