@@ -2176,7 +2176,7 @@ namespace Engine
 
         party.Army.clear();
 
-        if (remainging_army.size() > 0)
+        if (remaining_army.size() > 0)
         {
             party.Army.insert(party.Army.end(), remaining_army.begin(), remaining_army.end());
         }
