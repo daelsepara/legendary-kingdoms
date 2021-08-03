@@ -9655,7 +9655,6 @@ namespace Book1
             {
                 Choices[0].Destination = {Book::Type::BOOK1, 280};
             }
-
         }
     };
 
