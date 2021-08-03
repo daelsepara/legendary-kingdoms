@@ -79,7 +79,10 @@ namespace Equipment
         CLUB,
         RUGGED_CLOAK2,
         AMULET_OF_HEALTH1,
-        BEAUTIFUL_LETTER
+        BEAUTIFUL_LETTER,
+        CHAIN_ARMOUR2,
+        GLITTERING_NECKLACE2,
+        MAGICAL_WEAVE
     };
 
     class Base
@@ -207,6 +210,9 @@ namespace Equipment
     auto RUGGED_CLOAK2 = Equipment::Base("RUGGED CLOAK", "RUGGED CLOAK", Equipment::Class::ROBE, Equipment::Type::RUGGED_CLOAK2, Attribute::Type::SURVIVAL, 2, false);
     auto AMULET_OF_HEALTH1 = Equipment::Base("RUGGED CLOAK", "RUGGED CLOAK", Equipment::Class::NORMAL, Equipment::Type::AMULET_OF_HEALTH1, Attribute::Type::HEALTH, 1, false);
     auto BEAUTIFUL_LETTER = Equipment::Base("BEAUTIFUL LETTER", "BEAUTIFUL LETTER", Equipment::Class::NORMAL, Equipment::Type::BEAUTIFUL_LETTER, Attribute::Type::NONE, 0, false);
+    auto CHAIN_ARMOUR2 = Equipment::Base("CHAIN ARMOUR", "CHAIN ARMOUR", Equipment::Class::ARMOUR, Equipment::Type::CHAIN_ARMOUR2, Attribute::Type::ARMOUR, 2, false);
+    auto GLITTERING_NECKLACE2 = Equipment::Base("GLITTERING NECKLACE", "GLITTERING NECKLACE", Equipment::Class::NORMAL, Equipment::Type::GLITTERING_NECKLACE2, Attribute::Type::CHARISMA, 2, false);
+    auto MAGICAL_WEAVE = Equipment::Base("MAGICAL WEAVE", "MAGICAL WEAVE", Equipment::Class::NORMAL, Equipment::Type::MAGICAL_WEAVE, Attribute::Type::NONE, 0, false);
 }
 
 #endif

@@ -30,7 +30,11 @@ namespace Army
         MERCENARY_KNIGHTS,
         MERCENARY_SPEARS,
         KENSAI_WARRIORS,
-        CHALICE_ARCHERS
+        CHALICE_ARCHERS,
+        MERCENARY_MEN_AT_ARMS,
+        CURSITE_CITIZENS,
+        TEMPLE_GUARD,
+        MERCENARY_CROSSBOWS
     };
 
     class Base

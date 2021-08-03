@@ -81,6 +81,7 @@ Story::Base *findStory(Engine::Destination destination);
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
 Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
 
+std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Location::Type garrison, int num_limit);
 std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Control::Type mode);
 std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Character::Base &caster, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
 
@@ -13092,6 +13093,294 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
     return false;
 }
 
+std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Location::Type garrison, int num_limit)
+{
+    auto selected_units = std::vector<int>();
+
+    if (party.Army.size() > 0)
+    {
+        auto font_size = 28;
+        auto text_space = 8;
+        auto scrollSpeed = 1;
+        auto offset = 0;
+        auto infoh = 48;
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto last = offset + limit;
+
+        if (last > party.Army.size())
+        {
+            last = party.Army.size();
+        }
+
+        std::string message = "";
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        auto textwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+
+        auto controls = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh, false);
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto selected = false;
+        auto current = -1;
+        auto quit = false;
+        auto scrollUp = false;
+        auto scrollDown = false;
+        auto hold = false;
+
+        auto selection = std::vector<int>();
+
+        auto done = false;
+
+        while (!done)
+        {
+            last = offset + limit;
+
+            if (last > party.Army.size())
+            {
+                last = party.Army.size();
+            }
+
+            SDL_SetWindowTitle(window, "Legendary Kingdoms: Select Army Units");
+
+            fillWindow(renderer, intWH);
+
+            std::string army_string = "";
+
+            if (selection.size() > 0)
+            {
+                for (auto i = 0; i < selection.size(); i++)
+                {
+                    if (i > 0)
+                    {
+                        army_string += ", ";
+                    }
+
+                    std::string description = party.Army[selection[i]].Name;
+
+                    army_string += description;
+                }
+            }
+
+            putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putText(renderer, selection.size() > 0 ? army_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+
+            putHeader(renderer, "Select units", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+            fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+
+            if (last - offset > 0)
+            {
+                for (auto i = 0; i < last - offset; i++)
+                {
+                    if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                    {
+                        thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    }
+                }
+            }
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+
+            done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (offset > 0)
+                    {
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > party.Army.size())
+                        {
+                            last = party.Army.size();
+                        }
+
+                        controls = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh, false);
+
+                        SDL_Delay(50);
+                    }
+
+                    if (offset <= 0)
+                    {
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                {
+                    if (party.Army.size() - last > 0)
+                    {
+                        if (offset < party.Army.size() - limit)
+                        {
+                            offset += scrollSpeed;
+                        }
+
+                        if (offset > party.Army.size() - limit)
+                        {
+                            offset = party.Army.size() - limit;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > party.Army.size())
+                        {
+                            last = party.Army.size();
+                        }
+
+                        controls = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh, false);
+
+                        SDL_Delay(50);
+
+                        if (offset > 0)
+                        {
+                            if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                            {
+                                current++;
+                            }
+                        }
+                    }
+
+                    if (party.Army.size() - last <= 0)
+                    {
+                        selected = false;
+
+                        current = -1;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    auto result = Engine::FIND_LIST(selection, offset + current);
+
+                    if (result >= 0 && result < party.Army.size())
+                    {
+                        selection.erase(selection.begin() + result);
+                    }
+                    else
+                    {
+                        if (offset + current >= 0 && offset + current < party.Army.size())
+                        {
+                            if (garrison == Location::Type::NONE || party.Army[offset + current].Garrison == garrison)
+                            {
+                                if (selection.size() < num_limit)
+                                {
+                                    selection.push_back(offset + current);
+                                }
+                            }
+                            else
+                            {
+                                flash_message = true;
+
+                                message = "You can only select units from the " + std::string(Location::Description[garrison]) + " garrison!";
+
+                                flash_color = intRD;
+
+                                start_ticks = SDL_GetTicks();
+                            }
+                        }
+                    }
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                {
+                    if (selection.size() > 0)
+                    {
+                        if (selection.size() >= num_limit || selection.size() >= Engine::COUNT(party.Army, garrison))
+                        {
+                            selected_units = selection;
+
+                            done = true;
+                        }
+                        else
+                        {
+                            flash_message = true;
+
+                            message = "Please complete your selection!";
+
+                            flash_color = intRD;
+
+                            start_ticks = SDL_GetTicks();
+                        }
+                    }
+                    else
+                    {
+                        flash_message = true;
+
+                        message = "Please complete your selection!";
+
+                        flash_color = intRD;
+
+                        start_ticks = SDL_GetTicks();
+                    }
+                }
+                else if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    selected_units = {};
+
+                    done = true;
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        TTF_Quit();
+    }
+
+    return selected_units;
+}
+
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army)
 {
     auto done = false;
@@ -18249,6 +18538,29 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 error = true;
 
                                 message = "You do not have " + std::to_string(story->Choices[choice].Value) + " silver coins!";
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::GAIN_MORALE)
+                        {
+                            auto target = selectArmyUnits(window, renderer, party, story->Choices[choice].Location, story->Choices[choice].Value);
+
+                            if (target.size() >= story->Choices[choice].Value || target.size() >= Engine::COUNT(party.Army, story->Choices[choice].Location))
+                            {
+                                for (auto i = 0; i < target.size(); i++)
+                                {
+                                    if (target[i] >= 0 && target[i] < party.Members.size())
+                                    {
+                                        party.Army[target[i]].MaximumMorale += story->Choices[choice].Success;
+
+                                        Engine::GAIN_MORALE(party.Army[target[i]], story->Choices[choice].Success);
+                                    }
+                                }
+
+                                next = findStory(story->Choices[choice].Destination);
+
+                                done = true;
+
+                                break;
                             }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::PAY_WITH)

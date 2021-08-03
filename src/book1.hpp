@@ -9658,6 +9658,315 @@ namespace Book1
         }
     };
 
+    class Story310 : public Story::Base
+    {
+    public:
+        Story310()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 310;
+
+            Text = "You have reached a crossroads, with the corridor splitting off into four directions. To the north you make out a door in the eastern wall. The western branch of the corridor has a door in the north wall. The tunnels leads off into darkness to the south and east.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go through the door in the north tunnel", {Book::Type::BOOK1, 361}));
+            Choices.push_back(Choice::Base("Go north, past the door, down the tunnel", {Book::Type::BOOK1, 634}));
+            Choices.push_back(Choice::Base("Go through the door in the west tunnel", {Book::Type::BOOK1, 247}));
+            Choices.push_back(Choice::Base("Go south", {Book::Type::BOOK1, 196}));
+            Choices.push_back(Choice::Base("Go east", {Book::Type::BOOK1, 23}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story311 : public Story::Base
+    {
+    public:
+        Story311()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 311;
+
+            Text = "Imopposh gives an unearthly howl before collapsing into piles of dust. You are relieved that the foul sorcerer has finally met his end.\n\nYour rewards are considerable. A MASTERWORK BLADE (Fighting +3) and some CHAIN ARMOUR (Armour +2) are stuffed into an urn, along with 900 silver coins. In an ancient wooden box stuffed underneath rotten funeral garbs you discover a GLITTERING NECKLACE (Charisma +2). You may also take a MAGICAL WEAVE from Imopposh's funeral bandages.\n\nYou gained the code A39.";
+
+            Bye = "When you have finished your looting, you return to the desert.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(39)});
+
+            Take = {Equipment::MASTERWORK_BLADE3, Equipment::CHAIN_ARMOUR2, Equipment::GLITTERING_NECKLACE2, Equipment::MAGICAL_WEAVE};
+
+            Limit = 4;
+
+            Engine::GAIN_MONEY(party, 900);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 115}; }
+    };
+
+    class Story312 : public Story::Base
+    {
+    public:
+        Story312()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 312;
+
+            Text = "You quickly show the High Zealot your ring, before he can summon the guards. The zealot snarls and sits back down. \"I find it distasteful that the patriarch sees fit to employ such godless servants -- but his will be done. You may leave.\"";
+
+            Bye = "You don't need to be told twice.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 574}; }
+    };
+
+    class Story313 : public Story::Base
+    {
+    public:
+        Story313()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 313;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "You stumble through the busy streets of Saltdad, pushed hither and thither by the bustling crowds. By accident you crash into a merchant carrying a box of nails and bolts, spilling his inventory across the dusty ground. Fortunately, he is a merry fellow and laughs the incident off. His name is Hammon, and once you have finished scrabbling in the dirt to retrieve his spilt goods, he insists you join him for a coffee at a local parlour to show there are no hard feelings.\n\nDrinking down the oddly bitter liquid you ask if there is any opportunity to earn money in the valley. \"Why, Saltdad itself is a city of boundless adventure and opportunity!\" exclaims Hammon. \"Try exploring the many streets and alleys of the city. There are plenty of people who need help these days. I've heard that the master of the salt mines to the north-east is looking for muscular sorts to help him with a few problems, so you might consider heading east if you'd like to avoid the city. If you're after a real adventure, I've heard tell that some crazy foreigners have set-up an Expeditionary Guild in the city of Lhasbreath. Apparently, they are searching the jungle for something, although what could be found in that green hell I cannot imagine!\"";
+
+            Bye = "It is getting late. You thank Hammon for his courtesy and head into the centre of the city.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story314 : public Story::Base
+    {
+    public:
+        Story314()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 314;
+
+            Text = "You utter your spell. In an instant the beetle swarm keels over and dies, destroyed utterly by your spell. Feeling overmighty, you stroll into the room, crushing the dead beetles underfoot as you go.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 251}; }
+    };
+
+    class Story315 : public Story::Base
+    {
+    public:
+        Story315()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 315;
+
+            Text = "You walk along the featureless black stone wall, your reflections on the mirror-bright surface following you. The wall seems endless, ahead and behind, and you feel as if you have been walking for days.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Keep following the wall", {Book::Type::BOOK1, 259}));
+            Choices.push_back(Choice::Base("Break off from the wall and head north", {Book::Type::BOOK1, 858}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story316 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story316()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 316;
+
+            Choices.push_back(Choice::Base("Keep following the wall", {Book::Type::BOOK1, 259}));
+            Choices.push_back(Choice::Base("Break off from the wall and head north", {Book::Type::BOOK1, 858}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "With a war cry, your forces overwhelm the Cursites, who flee into their city of black tombs. Alas, your battle is only half won. Now the fight must be carried into the city itself.\n\nNote: Your units do not get the chance to recover any lost morale points; they keep their current Morale values the same until the city is taken. Any units which have fled are not available for this battle.";
+
+            Engine::REMOVE_ROUTED(party);
+            
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::EVERCHILD_POISONED}))
+            {
+                PreText += "\n\nYou are relieved to see her emerge from her campaign tent, unscathed. She has apparently managed to cure herself, and her presence on the battlefield reassures many men.";
+
+                Choices.push_back(Choice::Base("Choose a unit of your choice and raise its Morale by 1 point", {Book::Type::BOOK1, -316}, Choice::Type::GAIN_MORALE, Location::Type::SALTDAD, 1, 1));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, -316}; }
+    };
+
+    class Event316 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {Book::Type::BOOK1, 220};
+
+        Event316()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -316;
+
+            DisplayID = 316;
+
+            Text = "Now you fight again. You can choose up to six units from the Saltdad garrison. These can be units you used before, or fresh troops, or a combination of both. Descantos, if he is still alive, can cast no more spells -- so at least that is in your favour.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 220};
+
+            EnemyArmy.clear();
+            EnemySpells.clear();
+            EnemyArmyStatus.clear();
+
+            BattleLocation = Location::Type::SALTDAD;
+
+            if (Engine::VERIFY_CODES(party, {Codes::A(96)}))
+            {
+                EnemyArmy.push_back(Army::Base("Cursite Citizens", Army::Type::CURSITE_CITIZENS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 2, 3, false));
+
+                if (!Engine::VERIFY_CODES(party, {Codes::A(40)}))
+                {
+                    EnemyArmy.push_back(Army::Base("Cursite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 4, 5, false));
+                }
+            }
+            else
+            {
+                EnemyArmy.push_back(Army::Base("Mercenary Men-at-Arms", Army::Type::MERCENARY_MEN_AT_ARMS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 2, false));
+                EnemyArmy.push_back(Army::Base("Cursite Citizens", Army::Type::CURSITE_CITIZENS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_SUPPORT, 2, 3, false));
+
+                if (!Engine::VERIFY_CODES(party, {Codes::A(40)}))
+                {
+                    EnemyArmy.push_back(Army::Base("Cursite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 4, 5, false));
+                    EnemyArmy.push_back(Army::Base("Mercenary Crossbows", Army::Type::MERCENARY_CROSSBOWS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 2, 2, false));
+                }
+                else
+                {
+                    EnemyArmy.push_back(Army::Base("Mercenary Crossbows", Army::Type::MERCENARY_CROSSBOWS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 2, 2, false));
+                }
+            }
+
+            EnemyArmy.push_back(Army::Base("Temple Guard", Army::Type::TEMPLE_GUARD, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 5, 4, false));
+            EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::SALTDAD, Location::BattleField::CENTER_SUPPORT, 2, 4, false));
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                destination = {Book::Type::BOOK1, 363};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 220};
+            }
+        }
+    };
+
+    class Story317 : public Story::Base
+    {
+    public:
+        Story317()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 317;
+
+            Image = "images/book1/water_filled_archways.png";
+
+            Text = "Time is of the essence. You quickly regroup with your companions and make your way down darkened tunnels to the dig-site. A tiny crawlspace has been painstakingly carved out of the wall, concealed by a few broken barrels. The Everchild, Che Long, and three other conspirators are here, delighted to see you as you come bearing armfuls of weapons. They have not been idle, securing torches and packs stuffed with waterskins and food supplies.\n\n\"What follows will not be easy,\" she warns. \"The tunnels are far from safe, but with your help we might just stand a chance.\"\n\nAt a nod from the Everchild, Che Long descends into the tunnel first, with you following tight behind. The flames from your torches lick the low roof of the hand-dug tunnel, and the space is claustrophobic in the extreme. To your delight the tunnel eventually breaks through into an ancient chamber, half-flooded, with two arched exits. The walls are painted in old flecks of colour, displaying an ancient city dominated by a tall palace.\n\n\"The palace of my ancestor still stands,\" notes the Everchild as she examines the decaying mural with you. \"Much of the rest of the city is little better than mud-brick hovels now. There is much work to be done.\"\n\nYou examine the exits from the chamber, one at the back of the water-logged chamber, which seems to descend down into yet more murky water.\n\n\"The dry exit looks the most logical -- but I wonder where the water-filled one leads?\" muses the Everchild.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Offer to scout out the watery arch", {Book::Type::BOOK1, 438}));
+            Choices.push_back(Choice::Base("Suggest you head through the safer, dryer archway", {Book::Type::BOOK1, 523}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story318 : public Story::Base
+    {
+    public:
+        Story318()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 318;
+
+            Text = "You have returned to the door you forced open earlier.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Head north into the room beyond", {Book::Type::BOOK1, 494}));
+            Choices.push_back(Choice::Base("Head south to the junction", {Book::Type::BOOK1, 350}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story319 : public Story::Base
+    {
+    public:
+        Story319()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 319;
+
+            Text = "Milagros wails but does not weep as she is beaten, the guard stopping short as he sees the angry gazes of the other slaves. Departing in a hail of foul language, he leaves the bloodied and defiant child. You feel ungallant for not interfering, but strangely proud of Milagros for her bravery.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 700}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -9995,13 +10304,24 @@ namespace Book1
     auto story307 = Story307();
     auto story308 = Story308();
     auto story309 = Story309();
+    auto story310 = Story310();
+    auto story311 = Story311();
+    auto story312 = Story312();
+    auto story313 = Story313();
+    auto story314 = Story314();
+    auto story315 = Story315();
+    auto story316 = Story316();
+    auto event316 = Event316();
+    auto story317 = Story317();
+    auto story318 = Story318();
+    auto story319 = Story319();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
-            &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273,
+            &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -10032,7 +10352,8 @@ namespace Book1
             &story270, &story271, &story272, &story273, &story274, &story275, &story276, &story277, &story278, &story279,
             &story280, &story281, &story282, &story283, &story284, &story285, &story286, &story287, &story288, &story289,
             &story290, &story291, &story292, &story293, &story294, &story295, &story296, &story297, &story298, &story299,
-            &story300, &story301, &story302, &story303, &story304, &story305, &story306, &story307, &story308, &story309};
+            &story300, &story301, &story302, &story303, &story304, &story305, &story306, &story307, &story308, &story309,
+            &story310, &story311, &story312, &story313, &story314, &story315, &story316, &story317, &story318, &story319};
     }
 }
 #endif

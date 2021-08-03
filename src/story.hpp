@@ -63,7 +63,8 @@ namespace Choice
         RAISEATTRIBUTE_WITH_BLESSING,
         PAYFORBLESSING_WITH_ITEM,
         PAYFORSTATUS_WITH_HEALTH,
-        GAIN_HEALTH_ATTRIBUTE
+        GAIN_HEALTH_ATTRIBUTE,
+        GAIN_MORALE
     };
 
     class Base
@@ -467,6 +468,21 @@ namespace Choice
             Type = type;
 
             Destination = destination;
+
+            Value = value;
+
+            Success = success;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, Location::Type location, int value, int success)
+        {
+            Text = text;
+
+            Type = type;
+
+            Destination = destination;
+
+            Location = location;
 
             Value = value;
 

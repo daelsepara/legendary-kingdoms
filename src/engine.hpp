@@ -2162,6 +2162,26 @@ namespace Engine
         }
     }
 
+    void REMOVE_ROUTED(Party::Base &party)
+    {
+        auto remaining_army = std::vector<Army::Base>();
+
+        for (auto i = 0; i < party.Army.size(); i++)
+        {
+            if (party.Army[i].Morale > 0)
+            {
+                remaining_army.push_back(party.Army[i]);
+            }
+        }
+
+        party.Army.clear();
+
+        if (remainging_army.size() > 0)
+        {
+            party.Army.insert(party.Army.end(), remaining_army.begin(), remaining_army.end());
+        }
+    }
+
     int ZONES(std::vector<Army::Base> &army, std::vector<Army::Base> &opposingArmy)
     {
         auto zones = 3;
@@ -2345,6 +2365,43 @@ namespace Engine
         {
             follower.Health = 0;
         }
+    }
+
+    int COUNT(std::vector<Army::Base> &army)
+    {
+        auto result = 0;
+
+        for (auto i = 0; i < army.size(); i++)
+        {
+            if (army[i].Morale > 0)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    int COUNT(std::vector<Army::Base> &army, Location::Type garrison)
+    {
+        auto result = 0;
+
+        if (garrison == Location::Type::NONE)
+        {
+            result = Engine::COUNT(army);
+        }
+        else
+        {
+            for (auto i = 0; i < army.size(); i++)
+            {
+                if (army[i].Morale > 0 && army[i].Garrison == garrison)
+                {
+                    result++;
+                }
+            }
+        }
+
+        return result;
     }
 }
 #endif
