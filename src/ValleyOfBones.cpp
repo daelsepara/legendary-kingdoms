@@ -4786,7 +4786,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                 flash_color = intRD;
 
-                                message = "Skallos unleashes a roar of black magic! Each party member loses 1 Health. Skallos RECOVERS 4 Health Points!";
+                                message = "Skallos unleashes a roar of black magic! Each party member loses 1 Health. Skallos recovers 4 Health points!";
 
                                 start_ticks = SDL_GetTicks();
 
@@ -9948,7 +9948,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     flash_message = true;
 
-                                    message = "The slaves attack the orcs! All orcs lose 1 Health Point!";
+                                    message = "The slaves attack the orcs! All orcs lose 1 Health point!";
 
                                     Engine::GAIN_HEALTH(monsters, Monster::Type::ORC, -1);
 
@@ -10052,7 +10052,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     flash_color = intRD;
 
-                                    message = "The Zealot Healer heals each Zealot for 2 Health Points!";
+                                    message = "The Zealot Healer heals each Zealot for 2 Health points!";
 
                                     Engine::GAIN_HEALTH(monsters, 2);
 
@@ -17654,7 +17654,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     story->temp_string += "loses " + std::to_string(-story->Choices[choice].Value);
                                 }
 
-                                story->temp_string += " Health Point";
+                                story->temp_string += " Health point";
 
                                 if (std::abs(story->Choices[choice].Value) > 1)
                                 {
@@ -17709,7 +17709,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     story->temp_string += "loses " + std::to_string(-story->Choices[choice].Value);
                                 }
 
-                                story->temp_string += " Health Point";
+                                story->temp_string += " Health point";
 
                                 if (std::abs(story->Choices[choice].Value) > 1)
                                 {
@@ -18720,7 +18720,7 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
             {
                 Engine::GAIN_HEALTH(party.Members[result], -1);
 
-                temp_string = std::string(party.Members[result].Name) + " loses 1 Health Point.";
+                temp_string = std::string(party.Members[result].Name) + " loses 1 Health point.";
 
                 addBye(story, temp_string);
             }

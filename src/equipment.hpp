@@ -82,7 +82,8 @@ namespace Equipment
         BEAUTIFUL_LETTER,
         CHAIN_ARMOUR2,
         GLITTERING_NECKLACE2,
-        MAGICAL_WEAVE
+        MAGICAL_WEAVE,
+        MADSHARD
     };
 
     class Base
@@ -213,6 +214,7 @@ namespace Equipment
     auto CHAIN_ARMOUR2 = Equipment::Base("CHAIN ARMOUR", "CHAIN ARMOUR", Equipment::Class::ARMOUR, Equipment::Type::CHAIN_ARMOUR2, Attribute::Type::ARMOUR, 2, false);
     auto GLITTERING_NECKLACE2 = Equipment::Base("GLITTERING NECKLACE", "GLITTERING NECKLACE", Equipment::Class::NORMAL, Equipment::Type::GLITTERING_NECKLACE2, Attribute::Type::CHARISMA, 2, false);
     auto MAGICAL_WEAVE = Equipment::Base("MAGICAL WEAVE", "MAGICAL WEAVE", Equipment::Class::NORMAL, Equipment::Type::MAGICAL_WEAVE, Attribute::Type::NONE, 0, false);
+    auto MADSHARD = Equipment::Base("MADSHARD", "MADSHARD", Equipment::Class::NORMAL, Equipment::Type::MADSHARD, Attribute::Type::NONE, 0, false);
 }
 
 #endif

@@ -502,7 +502,7 @@ namespace Book1
 
             ID = 17;
 
-            Text = "The Iron King is most displeased to see you. He clicks his fingers and soon you have been dragged away to the dungeons for a gruesome session of torture. Each party member LOSES 4 Health points. Afterwards, the king has the guards dispose of you as they see fit.";
+            Text = "The Iron King is most displeased to see you. He clicks his fingers and soon you have been dragged away to the dungeons for a gruesome session of torture. Each party member loses 4 Health points. Afterwards, the king has the guards dispose of you as they see fit.";
 
             Choices.clear();
 
@@ -585,7 +585,7 @@ namespace Book1
             }
             else
             {
-                temp_string = std::string(party.Members[selection[0]].Name) + " LOSES 1 Health Point.";
+                temp_string = std::string(party.Members[selection[0]].Name) + " loses 1 Health point.";
 
                 Bye = temp_string.c_str();
 
@@ -1201,7 +1201,7 @@ namespace Book1
 
             ID = 35;
 
-            Text = "\"You say the captain wishes to see us? And he mentioned a promotion?\" presses the guard.\n\n\"Apparently his current lieutenant is not up to scratch,\" shrugs Brash. \"He's asked to see other guards as well. I imagine the first to see the captain will probably get the promotion.\"\n\nThe guards push past you in their eagerness to get to the captain's office.\n\nNote: Your DISTRACTION TEAM can join up with the WEAPON's TEAM for all future checks.";
+            Text = "\"You say the captain wishes to see us? And he mentioned a promotion?\" presses the guard.\n\n\"Apparently his current lieutenant is not up to scratch,\" shrugs Brash. \"He's asked to see other guards as well. I imagine the first to see the captain will probably get the promotion.\"\n\nThe guards push past you in their eagerness to get to the captain's office.\n\nNote: Your DISTRACTION TEAM can join up with the WEAPONS TEAM for all future checks.";
 
             Choices.clear();
 
@@ -1536,7 +1536,7 @@ namespace Book1
 
             ID = 45;
 
-            Text = "Timing it just right, you begin to shove one another in the water queue. To make it convincing, you start to exchange a few hard blows, attempting to drag other slaves in the queue into your rumble.\n\nEach party member involved in the fight LOSES 1 Health point.\n\nNote: Only party members assigned to the DISTRACTION TEAM can contribute to the check.";
+            Text = "Timing it just right, you begin to shove one another in the water queue. To make it convincing, you start to exchange a few hard blows, attempting to drag other slaves in the queue into your rumble.\n\nEach party member involved in the fight loses 1 Health point.\n\nNote: Only party members assigned to the DISTRACTION TEAM can contribute to the check.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -2116,7 +2116,9 @@ namespace Book1
 
             ID = 66;
 
-            Text = "You spend several days in the handsomely appointed Cold River Inn.\n\nNote: For every 5 silver coins you spend, each party member can RECOVER 1 Health point.\n\nSpell casters can also spend silver here to RECHARGE their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
+            Location = Location::Type::LUUTANESH;
+
+            Text = "You spend several days in the handsomely appointed Cold River Inn.\n\nNote: For every 5 silver coins you spend, each party member can recover 1 Health point.\n\nSpell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
 
             RestPrice = 5;
             CanRecharge = true;
@@ -3855,7 +3857,7 @@ namespace Book1
 
             ID = 118;
 
-            Text = "You try to elbow your way through the crowd, but by the time you have reached the carcass it has been almost stripped clean. You are forced to gnaw on empty bones, feeding on marrow and almost inedible ligaments. The lack of food begins to drain your spirits.\n\nEach Party Member must LOSES 1 Health point.";
+            Text = "You try to elbow your way through the crowd, but by the time you have reached the carcass it has been almost stripped clean. You are forced to gnaw on empty bones, feeding on marrow and almost inedible ligaments. The lack of food begins to drain your spirits.\n\nEach party member must lose 1 Health point.";
 
             Choices.clear();
 
@@ -4086,7 +4088,10 @@ namespace Book1
         {
             Choices.clear();
 
-            Choices.push_back(Choice::Base("Exchange a BLUESTONE for a blessing", {Book::Type::BOOK1, -128002}, {Equipment::BLUESTONE}));
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
+            {
+                Choices.push_back(Choice::Base("Exchange a BLUESTONE for a blessing", {Book::Type::BOOK1, -128002}, {Equipment::BLUESTONE}));
+            }
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::REPAIR_CALENDAR_KALU}))
             {
@@ -4118,13 +4123,26 @@ namespace Book1
 
             DisplayID = 128;
 
-            Text = "The calendar is repaired. You receive the blessing of the priests.";
-
-            Choices.clear();
-            Choices.push_back(Choice::Base("Choose a member among your party with the lowest SURVIVAL score", {Book::Type::BOOK1, 75}, Choice::Type::RAISE_LOWEST_ATTRIBUTE, {Attribute::Type::SURVIVAL}, 1));
-
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
+            {
+                Text = "The calendar is repaired. You receive the blessing of the priests.";
+
+                Choices.push_back(Choice::Base("Choose a member among your party with the lowest SURVIVAL score", {Book::Type::BOOK1, 75}, Choice::Type::RAISE_LOWEST_ATTRIBUTE, {Attribute::Type::SURVIVAL}, 1));
+            }
+            else
+            {
+                Text = "The calendar is repaired. Your business here is done.";
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
     };
 
     class E128_002 : public Story::Base
@@ -4217,7 +4235,7 @@ namespace Book1
             {
                 if (Engine::SCORE(party.Members[party.LastSelected], Attribute::Type::HEALTH) > 0)
                 {
-                    PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " LOSES 1 Health Point.";
+                    PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses 1 Health point.";
 
                     Engine::GAIN_HEALTH(party.Members[party.LastSelected], -1);
                 }
@@ -6492,12 +6510,20 @@ namespace Book1
 
             Text = "The Church of Cursus in Clifftop is unique in the valley, in that it is made of jungle timbers rather than stone. The city is poor, and not even the faithful have the means to pay for the impressive black stone ziggurats more common to Cursus temples. Within the hall you can see flagellated parishioners begging for forgiveness from their distant god, whilst poor priests while away the endless hours with chants they must recite from memory for lack of expensive books to refer to.\n\nThe high priest is eager for donations. If you pay him 1,000 silver coins he will clumsily bless you. Find the party member with the lowest Stealth score in the team, and if their Stealth score is less than 3, increase their Stealth by 1 point. If all your party member's Stealth scores are already 3 or above, the blessing will have no effect.\n\nYou may also receive some RITUAL SCARRING, which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some RITUAL SCARRING, they must lose 1 point of Health permanently.";
 
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
             Choices.clear();
-            Choices.push_back(Choice::Base("Select party member with lowest Stealth score", {Book::Type::BOOK1, -207}, Choice::Type::RAISEATTRIBUTE_WITH_BLESSING, {Attribute::Type::STEALTH}, 1000, 3, 1));
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
+            {
+                Choices.push_back(Choice::Base("Select party member with lowest Stealth score", {Book::Type::BOOK1, -207}, Choice::Type::RAISEATTRIBUTE_WITH_BLESSING, {Attribute::Type::STEALTH}, 1000, 3, 1));
+            }
+
             Choices.push_back(Choice::Base("Receive some ritual scarring", {Book::Type::BOOK1, -207}, Choice::Type::PAYFORSTATUS_WITH_HEALTH, {Character::Status::RITUAL_SCARRING}, -1));
             Choices.push_back(Choice::Base("You are finished here", {Book::Type::BOOK1, 19}));
-
-            Controls = Story::Controls::STANDARD;
         }
     };
 
@@ -6546,7 +6572,7 @@ namespace Book1
 
                 Engine::GAIN_HEALTH(party.Members[party.LastSelected], -result[0]);
 
-                PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses " + std::to_string(result[0]) + " Health Point";
+                PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses " + std::to_string(result[0]) + " Health point";
 
                 if (result[0] > 1)
                 {
@@ -8351,12 +8377,20 @@ namespace Book1
 
             Text = "Even the smaller temples to Cursus are fantastic in their ornamentation. Gold ornaments lustre against the deep black stone, and haunting choral odes echo through the square chamber, as if the singers were surrounding you.\n\nIf you have any INCENSE, you may exchange some for a blessing from the priests. Find the party member with the lowest Stealth score in the team and increase their Stealth by 1 point.\n\nYou may also receive some ritual scarring, which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some ritual scarring, they must lose 1 point of Health permanently.";
 
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
             Choices.clear();
-            Choices.push_back(Choice::Base("(INCENSE) Select party member with lowest Stealth score", {Book::Type::BOOK1, -272}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::INCENSE}, {Attribute::Type::STEALTH}, 1));
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
+            {
+                Choices.push_back(Choice::Base("(INCENSE) Select party member with lowest Stealth score", {Book::Type::BOOK1, -272}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::INCENSE}, {Attribute::Type::STEALTH}, 1));
+            }
+
             Choices.push_back(Choice::Base("Receive some ritual scarring", {Book::Type::BOOK1, -272}, Choice::Type::PAYFORSTATUS_WITH_HEALTH, {Character::Status::RITUAL_SCARRING}, -1));
             Choices.push_back(Choice::Base("You are finished here", {Book::Type::BOOK1, 340}));
-
-            Controls = Story::Controls::STANDARD;
         }
     };
 
@@ -8999,7 +9033,7 @@ namespace Book1
 
             if (target >= 0 && target < party.Members.size())
             {
-                PreText += std::string(party.Members[target].Name) + " loses 3 Health Points.";
+                PreText += std::string(party.Members[target].Name) + " loses 3 Health points.";
 
                 Engine::GAIN_HEALTH(party.Members[target], -3);
 
@@ -9010,7 +9044,7 @@ namespace Book1
             }
             else
             {
-                PreText += "You lose 3 Health Points.";
+                PreText += "You lose 3 Health points.";
             }
 
             Text = PreText.c_str();
@@ -9421,7 +9455,7 @@ namespace Book1
 
             if (target >= 0 && target < party.Members.size())
             {
-                PreText += std::string(party.Members[target].Name) + " loses 3 Health Points.";
+                PreText += std::string(party.Members[target].Name) + " loses 3 Health points.";
 
                 Engine::GAIN_HEALTH(party.Members[target], -3);
 
@@ -9432,7 +9466,7 @@ namespace Book1
             }
             else
             {
-                PreText += "You lose 3 Health Points.";
+                PreText += "You lose 3 Health points.";
             }
 
             Text = PreText.c_str();
@@ -10062,6 +10096,7 @@ namespace Book1
             {
                 PreText += "\n\nThe keeper has no time for you, and has you pushed out of his office.";
             }
+
             Text = PreText.c_str();
         }
 
@@ -10227,6 +10262,294 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+    };
+
+    class Story330 : public Story::Base
+    {
+    public:
+        Story330()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 330;
+
+            Text = "You present the Everchild with CALLIGRAPHY INK and ask her to write a letter to the God King of Chalice. She spends a full day working on her note, pleading for aid in a beautiful hand. The resultant BEAUTIFUL LETTER from the Everchild is a work of art.\n\n\"Let us hope that he likes what he sees,\" muses the Everchild. \"Thank you for pursuing this matter. I shall pray for your success.\"";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::CALLIGRAPHY_INK});
+
+            Take = {Equipment::BEAUTIFUL_LETTER};
+
+            Limit = 1;
+
+            Engine::LOSE_CODES(party, {Codes::A(28)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 263}; }
+    };
+
+    class Story331 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story331()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 331;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You pass by a number of Lhasbreath drinking halls, where the barbarians sing and dance to the sound of drums and flutes. A Lhasbreath maiden puts a garland of flowers around your neck, winking lewdly at you as you pass. The folk of this city seem to have no cares in the world!";
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(1)}) || Engine::VERIFY_CODES(party, {Codes::A(90)}))
+            {
+                PreText += "\n\nYou stroll on past the merriment.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(1)}) && !Engine::VERIFY_CODES(party, {Codes::A(90)}))
+            {
+                return {Book::Type::BOOK1, 394};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 775};
+            }
+        }
+    };
+
+    class Story332 : public Story::Base
+    {
+    public:
+        Story332()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 332;
+
+            Text = "You launch yourself through the window and tackle the thief to the ground, just before he reaches the rope. He kicks you away and begins to dash out of the door. The second party member who climbed the rope has now joined you in the room.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Chase the thief", {Book::Type::BOOK1, 573}));
+            Choices.push_back(Choice::Base("Rifle through the bag left by the thief", {Book::Type::BOOK1, 868}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story333 : public Story::Base
+    {
+    public:
+        Story333()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 333;
+
+            Text = "The guards grunt and uncross their spears. \"Go through, but we'll be watching you...\" they snarl. Nodding, you pass through into the cool palace.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 868}; }
+    };
+
+    class Story334 : public Story::Base
+    {
+    public:
+        Story334()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 334;
+
+            Text = "Fastilon falls to the ground, quite dead, his glowing sword vanishing in his hand. He appears to be wearing nothing of value on his person, despite the power he summoned to fight you. Checking that the MADSHARDs are still in your possession, you return to the surface. Your workers have gone, scared away by the sounds of battle, leaving you alone amongst the ruins.\n\nYou gained the code A81.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take.clear();
+
+            Limit = 0;
+
+            if (Engine::COUNT_EQUIPMENT(party, {Equipment::Type::MADSHARD}) < 1)
+            {
+                Take.push_back(Equipment::MADSHARD);
+            }
+
+            if (Engine::COUNT_EQUIPMENT(party, {Equipment::Type::MADSHARD}) < 2)
+            {
+                Take.push_back(Equipment::MADSHARD);
+            }
+
+            Limit = Take.size();
+
+            Engine::GET_CODES(party, {Codes::A(81)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 515}; }
+    };
+
+    class Story335 : public Story::Base
+    {
+    public:
+        Story335()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 335;
+
+            Text = "Akihiro draws his sword and hurls it at the thrown dagger. There is a clang of steel as the sword knocks the dagger off target. Brash snatches Akihiro's sword as it deflects off the dagger, throwing it smoothly back to Akihiro who catches it by the hilt.\n\nBrash will not forget this.\n\nNote: Brash has gained a heart for Akihiro. Akihiro also gains a heart for Brash.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEARTS(party, Character::Type::BRASH, Character::Type::AKIHIRO_OF_CHALICE, 1);
+            Engine::GAIN_HEARTS(party, Character::Type::AKIHIRO_OF_CHALICE, Character::Type::BRASH, 1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 60}; }
+    };
+
+    class Story336 : public Story::Base
+    {
+    public:
+        Story336()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 336;
+
+            Text = "There is only room for one person in the team to make this attempt... careful now!";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Assassinate the wizard (Individual check: Stealth 4+, Successes: 4)", {Book::Type::BOOK1, 655}, {Book::Type::BOOK1, 877}, Team::Type::ASSASSINATION_DESCANTOS, {Attribute::Type::STEALTH}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story337 : public Story::Base
+    {
+    public:
+        Story337()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 337;
+
+            Text = "You punt hard to avoid some oncoming rocks, but overcompensate, sending the raft splintering onto a jagged rock just beyond. You leap aside into the frothy waters, gasping and splashing as you attempt to gain purchase. You watch in horror as one of the scholars is pulled under the water and does not emerge. It takes all your strength just to pull yourselves onto the heavily forested bank.\n\nYou have lost a scholar. Each party member loses 1 Health point.";
+
+            Bye = "Bedraggled, you stagger into the thick jungle. You'll be on foot from here!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR3}))
+            {
+                if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR2}))
+                {
+                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR3});
+                    Engine::LOSE_CODES(party, {Codes::Type::LOST_SCHOLAR2});
+                }
+                else if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR1}))
+                {
+                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR2});
+                    Engine::LOSE_CODES(party, {Codes::Type::LOST_SCHOLAR1});
+                }
+                else
+                {
+                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR1});
+                }
+            }
+
+            Engine::GAIN_HEALTH(party, -1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 501}; }
+    };
+
+    class Story338 : public Story::Base
+    {
+    public:
+        Story338()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 338;
+
+            Text = "The ghastly screams of the man echo in your head long after his eyes have been torn from his skull. Lothor congratulates you for your choice of punishments, gifting you a purse of 20 silver coins, but you shall pay a hefty price spiritually. The gods despise a torturer -- from now on you cannot receive any blessings from any priest in the world.\n\nYou gained the code A34.";
+
+            Bye = "Feeling dead inside, you depart.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 20);
+
+            Engine::GET_CODES(party, {Codes::A(34)});
+            Engine::GET_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story339 : public Story::Base
+    {
+    public:
+        Story339()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 339;
+
+            Text = "The Bando are more sophisticated than they appear. You make a small exchange of gifts, a few coils of rope and a pair of hammers, and you are presented with flowery wreaths in exchange. The tribe holler their acceptance of you, and soon a kind of impromptu party begins, with wild dancing and sweet, fermented fruit drinks. As evening descends you are brought before the shaman.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 381}; }
     };
 
     auto story001 = Story001();
@@ -10584,10 +10907,20 @@ namespace Book1
     auto story324 = Story324();
     auto event324 = Event324();
     auto story325 = Story325();
-    auto story326 = Story326();    
+    auto story326 = Story326();
     auto story327 = Story327();
     auto story328 = Story328();
     auto story329 = Story329();
+    auto story330 = Story330();
+    auto story331 = Story331();
+    auto story332 = Story332();
+    auto story333 = Story333();
+    auto story334 = Story334();
+    auto story335 = Story335();
+    auto story336 = Story336();
+    auto story337 = Story337();
+    auto story338 = Story338();
+    auto story339 = Story339();
 
     void InitializeStories()
     {
@@ -10627,7 +10960,8 @@ namespace Book1
             &story290, &story291, &story292, &story293, &story294, &story295, &story296, &story297, &story298, &story299,
             &story300, &story301, &story302, &story303, &story304, &story305, &story306, &story307, &story308, &story309,
             &story310, &story311, &story312, &story313, &story314, &story315, &story316, &story317, &story318, &story319,
-            &story320, &story321, &story322, &story323, &story324, &story325, &story326, &story327, &story328, &story329};
+            &story320, &story321, &story322, &story323, &story324, &story325, &story326, &story327, &story328, &story329,
+            &story330, &story331, &story332, &story333, &story334, &story335, &story336, &story337, &story338, &story339};
     }
 }
 #endif
