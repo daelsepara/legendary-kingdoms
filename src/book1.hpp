@@ -270,7 +270,7 @@ namespace Book1
                 }
                 else
                 {
-                    Choices.push_back(Choice::Base("Seduce the Guards (Team check: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, Team::Type::DISTRACTION, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 2));
+                    Choices.push_back(Choice::Base("Seduce the Guards (Team check: Charisma 3+, Successes: 2)", {Book::Type::BOOK1, 364}, {Book::Type::BOOK1, 588}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::DISTRACTION, {Attribute::Type::CHARISMA}, 3, 2));
                 }
             }
 
@@ -883,7 +883,7 @@ namespace Book1
             Choices.push_back(Choice::Base("Give the mercenaries a GOLD BULLION bar", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION1}, 1));
             Choices.push_back(Choice::Base("Give the mercenaries two GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 2));
             Choices.push_back(Choice::Base("Give the mercenaries three GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 3));
-            Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
+            Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::MERCENARY, {Attribute::Type::CHARISMA}, 6, 7));
 
             Take = {Equipment::GOLD_BULLION};
 
@@ -913,19 +913,19 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION1}))
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 5+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 5+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::MERCENARY, {Attribute::Type::CHARISMA}, 5, 7));
             }
             else if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION2}))
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 4+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 4+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::MERCENARY, {Attribute::Type::CHARISMA}, 4, 7));
             }
             else if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_GOLD_BULLION2}))
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 2+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 2, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 2+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::MERCENARY, {Attribute::Type::CHARISMA}, 2, 7));
             }
             else
             {
-                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Team::Type::MERCENARY, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 7));
+                Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::MERCENARY, {Attribute::Type::CHARISMA}, 6, 7));
             }
         }
     };
@@ -1339,31 +1339,41 @@ namespace Book1
     class Story041 : public Story::Base
     {
     public:
+        std::string PreText = "";
+
         Story041()
         {
             BookID = Book::Type::BOOK1;
 
             ID = 41;
 
-            Text = "Dazzling sunlight almost blinds you as you emerge into daylight. You are in a sandy, secluded alleyway, the sounds of marketplace hawkers reaching your ears. You quickly help the Everchild out of the drains, hiding her behind some tall baskets as you check for the guards.\n\n\"We are free!\" she gasps. \"I feared I might die in that terrible place.\"\n\n\"What will you do now?\" you ask. \"You cannot stay in the city...\"\n\n\"No -- here we shall divide for safety,\" she agrees. \"Che Long can look after me from here on in. I cannot thank you enough for your safe delivery of myself and my followers. I can give you no reward, and you owe me nothing, but...\"\n\nYou silence her as you duck behind the baskets. A guard patrol of men in gleaming bronze armour clank past, wickedly shaped halberds in their grasp. \"The Bronzeguard,\" hisses Che Long. \"The elite warriors and boot lickers of the Iron King. Their amour is supposedly enchanted, dug up from the palace vaults by the Iron King's servants.\"\n\n\"They are still men underneath,\" you growl.\n\n\"If you hate tyranny and would see justice restored, come and find me in the Cold River Inn, in Luutanesh,\" implores the Everchild. \"The path to freedom is long and difficult, but together we can find a way to end the bloody reign of the Iron King forever.\"\n\nThe coast is clear, and Che Long quickly bows to you. \"We must go before the general alarm is raised. You have my thanks. Come majesty.\"\n\nAt that the Everchild dons a cowl over her head and slips into the crowds with her followers. \n\nYour experiences in the arena have taught you much. You may raise one skill (Fighting, Stealth, Lore, etc) by one point for each of your characters.\n\nYou gain the code A6.";
-
             Controls = Story::Controls::STANDARD;
         }
 
         void Event(Party::Base &party)
         {
+            PreText = "Dazzling sunlight almost blinds you as you emerge into daylight. You are in a sandy, secluded alleyway, the sounds of marketplace hawkers reaching your ears. You quickly help the Everchild out of the drains, hiding her behind some tall baskets as you check for the guards.\n\n\"We are free!\" she gasps. \"I feared I might die in that terrible place.\"\n\n\"What will you do now?\" you ask. \"You cannot stay in the city...\"\n\n\"No -- here we shall divide for safety,\" she agrees. \"Che Long can look after me from here on in. I cannot thank you enough for your safe delivery of myself and my followers. I can give you no reward, and you owe me nothing, but...\"\n\nYou silence her as you duck behind the baskets. A guard patrol of men in gleaming bronze armour clank past, wickedly shaped halberds in their grasp. \"The Bronzeguard,\" hisses Che Long. \"The elite warriors and boot lickers of the Iron King. Their amour is supposedly enchanted, dug up from the palace vaults by the Iron King's servants.\"\n\n\"They are still men underneath,\" you growl.\n\n\"If you hate tyranny and would see justice restored, come and find me in the Cold River Inn, in Luutanesh,\" implores the Everchild. \"The path to freedom is long and difficult, but together we can find a way to end the bloody reign of the Iron King forever.\"\n\nThe coast is clear, and Che Long quickly bows to you. \"We must go before the general alarm is raised. You have my thanks. Come majesty.\"\n\nAt that the Everchild dons a cowl over her head and slips into the crowds with her followers. Your experiences in the arena have taught you much. ";
+
             Choices.clear();
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::STARTED_IN_BOOK1}))
             {
+                PreText += "You may raise one skill (Fighting, Stealth, Lore, etc) by one point for each of your characters.";
+
                 Choices.push_back(Choice::Base("Each of your characters raises one skill by one point", {Book::Type::BOOK1, 313}, Choice::Type::PARTY_RAISE_ATTRIBUTE, 1));
             }
             else
             {
-                Choices.push_back(Choice::Base("Each of your characters raises maximum health points by one point", {Book::Type::BOOK1, 313}, Choice::Type::PARTY_RAISE_HEALTH, 1));
+                PreText += "Each of your party members can raise their maximum health points by one point.";
+
+                Choices.push_back(Choice::Base("Raise the maximum health points of your party by one point", {Book::Type::BOOK1, 313}, Choice::Type::PARTY_RAISE_HEALTH, 1));
             }
 
+            PreText += "\n\nYou gain the code A6.";
+
             Engine::GET_CODES(party, {Codes::A(6)});
+
+            Text = PreText.c_str();
         }
     };
 
@@ -1543,7 +1553,7 @@ namespace Book1
             }
             else
             {
-                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Team::Type::DISTRACTION, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3));
+                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::DISTRACTION, {Attribute::Type::FIGHTING}, 4, 3));
             }
         }
     };
@@ -3803,7 +3813,7 @@ namespace Book1
             }
             else
             {
-                Choices.push_back(Choice::Base("Rob the upper floor (Team check: Stealth 4+, Successes: 5)", {Book::Type::BOOK1, 22}, {Book::Type::BOOK1, 529}, Team::Type::WALL_CLIMBING, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 4, 5));
+                Choices.push_back(Choice::Base("Rob the upper floor (Team check: Stealth 4+, Successes: 5)", {Book::Type::BOOK1, 22}, {Book::Type::BOOK1, 529}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::WALL_CLIMBING, {Attribute::Type::STEALTH}, 4, 5));
             }
         }
     };
@@ -9818,7 +9828,7 @@ namespace Book1
             PreText = "With a war cry, your forces overwhelm the Cursites, who flee into their city of black tombs. Alas, your battle is only half won. Now the fight must be carried into the city itself.\n\nNote: Your units do not get the chance to recover any lost morale points; they keep their current Morale values the same until the city is taken. Any units which have fled are not available for this battle.";
 
             Engine::REMOVE_ROUTED(party);
-            
+
             Choices.clear();
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::EVERCHILD_POISONED}))
@@ -9965,6 +9975,258 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 700}; }
+    };
+
+    class Story320 : public Story::Base
+    {
+    public:
+        Story320()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 320;
+
+            Text = "You emerge from the tent the next morning to a sad scene. Akihiro, your friend, lies dead in the sands -- his sword across his chest. You were unable, with raw terror, to leave the tent and assist him. You can only pray that he has found his peace at last. After burying him in the sands you move on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::KILL(party, Character::Type::AKIHIRO_OF_CHALICE);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 840}; }
+    };
+
+    class Story321 : public Story::Base
+    {
+    public:
+        Story321()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 321;
+
+            Text = "You coldly sheathe your weapon, your companions bleeding into the flagstones and crumbling books around you. You push aside their bodies, sit and begin to read. You continue to read, unmoving, until death takes you.";
+
+            Type = Story::Type::DOOM;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story322 : public Story::Base
+    {
+    public:
+        Story322()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 322;
+
+            Text = "You approach the door carefully, examining the mystic runes carved around its edge.\n\nNote: Only those party members assigned to the door may contribute to this check.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the runes (Team check: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 420}, {Book::Type::BOOK1, 464}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::MAGICAL_DOOR, {Attribute::Type::LORE}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story323 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story323()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 323;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The keeper of the holy purse is in charge of tax administration, specifically the religious tithes paid by other cities. He is a fat, wealthy priest, who eyes you lazily as you enter.";
+
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::IRON_SCEPTRE}))
+            {
+                PreText += "\n\nThe keeper has no time for you, and has you pushed out of his office.";
+            }
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::IRON_SCEPTRE}))
+            {
+                return {Book::Type::BOOK1, 153};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 574};
+            }
+        }
+    };
+
+    class Story324 : public Story::Base
+    {
+    public:
+        Story324()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 324;
+
+            Text = "The textureless sands swirl like dust on your boots. You feel cold and drained.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, -324}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event324 : public Story::Base
+    {
+    public:
+        Event324()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -324;
+
+            DisplayID = 324;
+
+            Text = "Where will you go?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North", {Book::Type::BOOK1, 692}));
+            Choices.push_back(Choice::Base("West", {Book::Type::BOOK1, 73}));
+            Choices.push_back(Choice::Base("South", {Book::Type::BOOK1, 273}));
+            Choices.push_back(Choice::Base("East", {Book::Type::BOOK1, 886}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story325 : public Story::Base
+    {
+    public:
+        Story325()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 325;
+
+            Text = "You have entered the orc leader's war room. His body, and those of his followers, are still here.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go through the west door", {Book::Type::BOOK1, 736}));
+            Choices.push_back(Choice::Base("Go through the south door", {Book::Type::BOOK1, 566}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story326 : public Story::Base
+    {
+    public:
+        Story326()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 326;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "The Saltdad slave markets sell flesh from all across the valley. Some are unfortunates who have crossed the jealous desert kings, others have been plucked, dying from dehydration, from the waterless wastes. Most are miserable-looking specimens in rags and heavy chains, but every so often a promising candidate will show up.\n\nNote: If you have fewer than four party members in your team, you may recruit some more from the slave market. It costs 200 silver coins to buy another party member, and they start with no equipment. Remember that a party member without a weapon has their Fighting score reduced by 1 point in combat.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::RECRUIT;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story327 : public Story::Base
+    {
+    public:
+        Story327()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 327;
+
+            Text = "You cannot expect to rob the patriarch twice and get away with it! As soon as your party have made it down the stairs you are pounced upon by dozens of guards in hiding. Those who dash up the stairs are cut off by another troop. You have been captured!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 55}; }
+    };
+
+    class Story328 : public Story::Base
+    {
+    public:
+        Story328()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 328;
+
+            Text = "The aftermath of the battle is bloody indeed. A dozen thieves, as well as one of the Everchild's men, lie dead. Reasoning that you might as well take the thieves' ill-gotten gains, you open the chests and crates to examine what kind of goods they had stolen. You count 75 silver coins, a REFERENCE BOOK (Lore +1), an ENGAGEMENT RING, as well as large amounts of clothes. Thinking quickly, you strip off your slave rags and change into more common garb, the Everchild and her followers doing the same.\n\nYou slip out of the thieves' hideaway and into the storm drains beneath the city.";
+
+            Bye = "After an hour's wandering you eventually come to a ladder, leading up to a drain cover. You cautiously make your way upwards.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::REFERENCE_BOOK1, Equipment::ENGAGEMENT_RING};
+
+            Limit = 2;
+
+            Engine::GAIN_MONEY(party, 75);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 41}; }
+    };
+
+    class Story329 : public Story::Base
+    {
+    public:
+        Story329()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 329;
+
+            Text = "The bridge creaks alarmingly as you put your weight on it. Nearby rice farmers shake their heads sadly before returning to their work.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Back out of crossing", {Book::Type::BOOK1, 442}));
+            Choices.push_back(Choice::Base("Carefully cross", {Book::Type::BOOK1, 85}));
+
+            Controls = Story::Controls::STANDARD;
+        }
     };
 
     auto story001 = Story001();
@@ -10315,13 +10577,24 @@ namespace Book1
     auto story317 = Story317();
     auto story318 = Story318();
     auto story319 = Story319();
+    auto story320 = Story320();
+    auto story321 = Story321();
+    auto story322 = Story322();
+    auto story323 = Story323();
+    auto story324 = Story324();
+    auto event324 = Event324();
+    auto story325 = Story325();
+    auto story326 = Story326();    
+    auto story327 = Story327();
+    auto story328 = Story328();
+    auto story329 = Story329();
 
     void InitializeStories()
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
-            &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316,
+            &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -10353,7 +10626,8 @@ namespace Book1
             &story280, &story281, &story282, &story283, &story284, &story285, &story286, &story287, &story288, &story289,
             &story290, &story291, &story292, &story293, &story294, &story295, &story296, &story297, &story298, &story299,
             &story300, &story301, &story302, &story303, &story304, &story305, &story306, &story307, &story308, &story309,
-            &story310, &story311, &story312, &story313, &story314, &story315, &story316, &story317, &story318, &story319};
+            &story310, &story311, &story312, &story313, &story314, &story315, &story316, &story317, &story318, &story319,
+            &story320, &story321, &story322, &story323, &story324, &story325, &story326, &story327, &story328, &story329};
     }
 }
 #endif

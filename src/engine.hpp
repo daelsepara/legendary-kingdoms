@@ -36,6 +36,9 @@ namespace Engine
     // status, unit number, start round, duration
     typedef std::tuple<Army::Status, int, int, int> ArmyStatus;
 
+    // treshold, bye text, destination
+    typedef std::tuple<int, const char *, Engine::Destination> RandomDestination;
+
     enum class Combat
     {
         NONE,
@@ -2402,6 +2405,16 @@ namespace Engine
         }
 
         return result;
+    }
+
+    void KILL(Party::Base &party, Character::Type character)
+    {
+        auto result = Engine::FIND_CHARACTER(party, character);
+
+        if (result >= 0 && result < party.Members.size())
+        {
+            party.Members[result].Health = 0;
+        }
     }
 }
 #endif

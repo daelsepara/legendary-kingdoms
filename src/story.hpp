@@ -84,7 +84,7 @@ namespace Choice
 
         std::vector<Codes::Type> InvisibleCodes = std::vector<Codes::Type>();
 
-        std::vector<std::tuple<int, const char *, Engine::Destination>> RandomDestinations = {};
+        std::vector<Engine::RandomDestination> RandomDestinations = {};
 
         std::vector<Character::Status> Status = {};
 
@@ -108,27 +108,27 @@ namespace Choice
         {
             Text = text;
 
-            Type = Choice::Type::NORMAL;
-
             Destination = destination;
+
+            Type = Choice::Type::NORMAL;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type)
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, Team::Type team)
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Team = team;
         }
@@ -137,27 +137,29 @@ namespace Choice
         {
             Text = text;
 
-            Type = Choice::Type::EQUIPMENT;
+            Destination = destination;
 
             Equipment = equipment;
 
-            Destination = destination;
+            Type = Choice::Type::EQUIPMENT;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment)
         {
             Text = text;
 
+            Destination = destination;
+
             Type = type;
 
             Equipment = equipment;
-
-            Destination = destination;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, std::vector<Codes::Base> codes, std::vector<Codes::Type> invisibleCodes)
         {
             Text = text;
+
+            Destination = destination;
 
             Type = type;
 
@@ -166,28 +168,28 @@ namespace Choice
             Codes = codes;
 
             InvisibleCodes = invisibleCodes;
-
-            Destination = destination;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, int value)
         {
             Text = text;
 
+            Destination = destination;
+
             Type = type;
 
             Equipment = equipment;
 
             Value = value;
-
-            Destination = destination;
         }
 
         Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Team::Type team, std::vector<Attribute::Type> attributes, int difficulty, int success)
         {
-            Type = Choice::Type::ATTRIBUTES;
-
             Text = text;
+
+            Destination = destination;
+
+            DestinationFailed = destinationFailed;
 
             Team = team;
 
@@ -197,16 +199,16 @@ namespace Choice
 
             Success = success;
 
-            Destination = destination;
-
-            DestinationFailed = destinationFailed;
+            Type = Choice::Type::ATTRIBUTES;
         }
 
         Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, std::vector<Attribute::Type> attributes, int difficulty, int success)
         {
-            Type = Choice::Type::ATTRIBUTES;
-
             Text = text;
+
+            Destination = destination;
+
+            DestinationFailed = destinationFailed;
 
             Attributes = attributes;
 
@@ -214,15 +216,17 @@ namespace Choice
 
             Success = success;
 
-            Destination = destination;
-
-            DestinationFailed = destinationFailed;
+            Type = Choice::Type::ATTRIBUTES;
         }
 
         Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, std::vector<Attribute::Type> attributes, int difficulty, int success)
         {
             Text = text;
 
+            Destination = destination;
+
+            DestinationFailed = destinationFailed;
+
             Type = type;
 
             Attributes = attributes;
@@ -230,15 +234,15 @@ namespace Choice
             Difficulty = difficulty;
 
             Success = success;
+        }
+
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, Team::Type team, std::vector<Attribute::Type> attributes, int difficulty, int success)
+        {
+            Text = text;
 
             Destination = destination;
 
             DestinationFailed = destinationFailed;
-        }
-
-        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Team::Type team, Choice::Type type, std::vector<Attribute::Type> attributes, int difficulty, int success)
-        {
-            Text = text;
 
             Type = type;
 
@@ -249,48 +253,46 @@ namespace Choice
             Difficulty = difficulty;
 
             Success = success;
-
-            Destination = destination;
-
-            DestinationFailed = destinationFailed;
         }
 
         Base(const char *text, Engine::Destination destination, std::vector<Codes::Base> codes)
         {
             Text = text;
 
-            Type = Choice::Type::CODES;
+            Destination = destination;
 
             Codes = codes;
 
-            Destination = destination;
+            Type = Choice::Type::CODES;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Codes::Base> codes)
         {
             Text = text;
 
+            Destination = destination;
+
             Type = type;
 
             Codes = codes;
-
-            Destination = destination;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, int value)
         {
             Text = text;
 
+            Destination = destination;
+
             Type = type;
 
             Value = value;
-
-            Destination = destination;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, std::vector<Codes::Type> codes, int value)
         {
             Text = text;
+
+            Destination = destination;
 
             Type = type;
 
@@ -299,41 +301,39 @@ namespace Choice
             InvisibleCodes = codes;
 
             Value = value;
-
-            Destination = destination;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Attribute::Type> attributes, int value)
         {
             Text = text;
 
+            Destination = destination;
+
             Type = type;
 
             Attributes = attributes;
 
             Value = value;
-
-            Destination = destination;
         }
 
-        Base(const char *text, std::vector<std::tuple<int, const char *, Engine::Destination>> destinations, int value)
+        Base(const char *text, std::vector<Engine::RandomDestination> destinations, int value)
         {
             Text = text;
-
-            Type = Choice::Type::RANDOM_EVENT;
 
             RandomDestinations = destinations;
 
             Value = value;
+
+            Type = Choice::Type::RANDOM_EVENT;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, Location::Type location, int value)
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Location = location;
 
@@ -344,9 +344,9 @@ namespace Choice
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Location = location;
         }
@@ -355,9 +355,9 @@ namespace Choice
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Delivery = delivery;
 
@@ -370,9 +370,9 @@ namespace Choice
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Status = status;
         }
@@ -381,9 +381,9 @@ namespace Choice
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Status = status;
 
@@ -394,9 +394,9 @@ namespace Choice
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Teams = teams;
         }
@@ -405,9 +405,9 @@ namespace Choice
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Teams = teams;
 
@@ -418,9 +418,9 @@ namespace Choice
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Attributes = attributes;
 
@@ -435,9 +435,9 @@ namespace Choice
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Attributes = attributes;
 
@@ -450,9 +450,9 @@ namespace Choice
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Equipment = equipment;
 
@@ -465,9 +465,9 @@ namespace Choice
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Value = value;
 
@@ -478,9 +478,9 @@ namespace Choice
         {
             Text = text;
 
-            Type = type;
-
             Destination = destination;
+
+            Type = type;
 
             Location = location;
 
