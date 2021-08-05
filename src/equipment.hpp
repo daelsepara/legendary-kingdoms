@@ -83,7 +83,9 @@ namespace Equipment
         CHAIN_ARMOUR2,
         GLITTERING_NECKLACE2,
         MAGICAL_WEAVE,
-        MADSHARD
+        MADSHARD,
+        AMULET_OF_DEFENSE1,
+        FAIRBROTHER_FAMILY_CREST
     };
 
     class Base
@@ -215,6 +217,8 @@ namespace Equipment
     auto GLITTERING_NECKLACE2 = Equipment::Base("GLITTERING NECKLACE", "GLITTERING NECKLACE", Equipment::Class::NORMAL, Equipment::Type::GLITTERING_NECKLACE2, Attribute::Type::CHARISMA, 2, false);
     auto MAGICAL_WEAVE = Equipment::Base("MAGICAL WEAVE", "MAGICAL WEAVE", Equipment::Class::NORMAL, Equipment::Type::MAGICAL_WEAVE, Attribute::Type::NONE, 0, false);
     auto MADSHARD = Equipment::Base("MADSHARD", "MADSHARD", Equipment::Class::NORMAL, Equipment::Type::MADSHARD, Attribute::Type::NONE, 0, false);
+    auto AMULET_OF_DEFENSE1 = Equipment::Base("AMULET OF DEFENSE", "AMULET OF DEFENSE", Equipment::Class::NORMAL, Equipment::Type::AMULET_OF_DEFENSE1, Attribute::Type::ARMOUR, 1, false);
+    auto FAIRBROTHER_FAMILY_CREST = Equipment::Base("FAIRBROTHER FAMILY CREST", "FAIRBROTHER FAMILY CREST", Equipment::Class::NORMAL, Equipment::Type::FAIRBROTHER_FAMILY_CREST, Attribute::Type::NONE, 0, false);
 }
 
 #endif

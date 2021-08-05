@@ -9,6 +9,7 @@ namespace Location
     {
         NONE = -1,
         DESERT,
+        JUNGLE,
         WILDERNESS,
         CLIFFTOP,
         SALTDAD,
@@ -20,12 +21,14 @@ namespace Location
         MORDAIN,
         CHALICE,
         TUMBLESTONES,
-        WITHERED_STEPPES
+        WITHERED_STEPPES,
+        CAVES_OF_URANU
     };
 
     std::map<Location::Type, const char *> Description = {
         {Location::Type::NONE, "Unknown"},
         {Location::Type::DESERT, "Desert"},
+        {Location::Type::JUNGLE, "Jungle"},
         {Location::Type::WILDERNESS, "Wilderness"},
         {Location::Type::CLIFFTOP, "Clifftop"},
         {Location::Type::SALTDAD, "Saltdad"},
@@ -37,7 +40,8 @@ namespace Location
         {Location::Type::MORDAIN, "Mordain"},
         {Location::Type::CHALICE, "Chalice"},
         {Location::Type::TUMBLESTONES, "Tumblestones"},
-        {Location::Type::WITHERED_STEPPES, "Withered Steppes"}};
+        {Location::Type::WITHERED_STEPPES, "Withered Steppes"},
+        {Location::Type::CAVES_OF_URANU, "Caves of Uranu"}};
 
     enum class BattleField
     {

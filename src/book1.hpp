@@ -10552,6 +10552,297 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 381}; }
     };
 
+    class Story340 : public Story::Base
+    {
+    public:
+        Story340()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 340;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Image = "images/book1/city_of_cursus.png";
+
+            Text = "The city of Cursus is a dominated by thirteen flat-topped step pyramids made of black stone. It is the spiritual and cultural centre of valley, the domain of the millennia-spanning worship of the god of judgement. Priests and worshipers, dressed in long black robes, are commonplace. Only those inducted into the church can have a profession or own property in the city, so displays of sombre piety are everywhere. Slaves and the faithless toil in the fields around the rushing Cold River, which feeds into a magnificent harbour. Sadly, for the city, all too few merchant vessels stop here. Cursus may be rich by the standards of the valley, but it has few trade goods to share with the outside world, and Clifftop tends to dominate the salt trade, being closer to the trade routes of Royce.\n\nDominating the centre of the city is the Grand Ziggurat, the political and financial centre of the city. From here the priests of Cursus calculate their taxes and work to expunge all other faiths in the valley.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Find an inn", {Book::Type::BOOK1, 201}));
+            Choices.push_back(Choice::Base("Go to the marketplace", {Book::Type::BOOK1, 375}));
+            Choices.push_back(Choice::Base("Go to the slave market", {Book::Type::BOOK1, 595}));
+            Choices.push_back(Choice::Base("Visit the Grand Ziggurat", {Book::Type::BOOK1, 110}));
+            Choices.push_back(Choice::Base("Visit a small temple of Cursus", {Book::Type::BOOK1, 272}));
+            Choices.push_back(Choice::Base("Go to the harbour", {Book::Type::BOOK1, 33}));
+            Choices.push_back(Choice::Base("Explore the city", {Book::Type::BOOK1, 369}));
+            Choices.push_back(Choice::Base("Follow the Northroad out of the city", {Book::Type::BOOK1, 822}));
+            Choices.push_back(Choice::Base("Go northeast, following the eastern bank of the river", {Book::Type::BOOK1, 625}));
+            Choices.push_back(Choice::Base("Go west, into the desert", {Book::Type::BOOK1, 657}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story341 : public Story::Base
+    {
+    public:
+        Story341()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 341;
+
+            Text = "You sheathe your weapons and search through the coffin, somewhat gingerly given the amount of oozing fluid puddling in the bottom.\n\nYou manage to stomach extracting 240 silver coins and an AMULET OF DEFENCE (Armour +1). You also discover the FAIRBROTHER FAMILY CREST, which was tucked into corner covered in ooze-soaked cloth.\n\nTake what you wish.\n\nYou gained the code A58.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 240);
+
+            Take = {Equipment::AMULET_OF_DEFENSE1, Equipment::FAIRBROTHER_FAMILY_CREST};
+
+            Limit = 2;
+
+            Engine::GET_CODES(party, {Codes::A(58)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 211}; }
+    };
+
+    class Story342 : public Story::Base
+    {
+    public:
+        Story342()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 342;
+
+            Text = "King Lothor's forces collapse in disorder. There is a general rout, and a terrible crush at the bridge as the tyrant's forces all attempt to cross it at once. Your army closes in against the defenceless foe, caught between the river and destruction. Lothor is singled out and cut down by a common infantryman even as he attempts escape. Soon, the enemy have surrendered en-masse. The Everchild is victorious.\n\nYou gained the code A33.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(33)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 626}; }
+    };
+
+    class Story343 : public Story::Base
+    {
+    public:
+        Story343()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 343;
+
+            Location = Location::Type::JUNGLE;
+
+            Text = "You didn't think you went so far into the jungle... but when you tried to find your way out, you realised you had no idea where you were. You've become disorientated, and your supplies are getting low.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Find your way out of the jungle (Team check: Survival 4+, Successes: 4)", {Book::Type::BOOK1, 618}, {Book::Type::BOOK1, -343}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "You manage to reach the treeline.";
+            }
+            else
+            {
+                Bye = "Each party member loses 1 Health point.";
+
+                Engine::GAIN_HEALTH(party, -1);
+            }
+        }
+    };
+
+    class Event343 : public Story::Base
+    {
+    public:
+        Event343()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -343;
+
+            DisplayID = 343;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 343}; }
+    };
+
+    class Story344 : public Story::Base
+    {
+    public:
+        Story344()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 344;
+
+            Text = "You have returned to the dragon's lair, now long since looted. The tunnel the dragon made into the lands of Drakehallow is still here.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("(Drakehallow) Follow the tunnel", {Book::Type::BOOK6, 33}));
+            Choices.push_back(Choice::Base("Go back to the lift", {Book::Type::BOOK1, 135}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story345 : public Story::Base
+    {
+    public:
+        Story345()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 345;
+
+            Text = "The final skeleton shatters into pieces. With the bodies so damaged it will be impossible to animate them again using the book. Musing on the inconsistent nature of necromantic magic, you return to the crossroads.\n\nYou gained the code A75.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(75)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 310}; }
+    };
+
+    class Story346 : public Story::Base
+    {
+    public:
+        Story346()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 346;
+
+            Location = Location::Type::CAVES_OF_URANU;
+
+            Image = "images/book1/caves_of_uranu.png";
+
+            Text = "You are on the eastern bank of the Cold River, a wide, life-giving waterway. To the north lies the beautiful city of Chalice. Abutting against the side of the river come a series of steep desert hills, riddled with caves said to contain hordes of vicious monsters.\n\nThese are the infamous Caves of Uranu, named after the valley-god of the underworld.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Explore the caves", {Book::Type::BOOK1, 493}));
+            Choices.push_back(Choice::Base("Skirt around the caves and move on", {Book::Type::BOOK1, 445}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story347 : public Story::Base
+    {
+    public:
+        Story347()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 347;
+
+            Text = "You emerge into a tunnel that soon splits in two. One route leads down slightly, the other slopes up. Ancient writing crosses the walls, and the Everchild calls for more light as she examines it. \"The downward slope led to an old armoury,\" she comments. \"Upwards was a changing room. There is no indication which route leads out, however.\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Head down towards the armoury", {Book::Type::BOOK1, 242}));
+            Choices.push_back(Choice::Base("Head upwards towards the changing room", {Book::Type::BOOK1, 883}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story348 : public Story::Base
+    {
+    public:
+        Story348()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 348;
+
+            Text = "The vault door is wide open, its contents looted. There is nothing more to be found here.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Check out the room to the south", {Book::Type::BOOK1, 484}));
+            Choices.push_back(Choice::Base("Leave the palace", {Book::Type::BOOK6, 265}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story349 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story349()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 349;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "For modesty's sake you divide yourselves into male and female groups, a bank of reeds providing cover between you, before stripping off and plunging into the cool waters. This has been your first bath since coming to valley, and the water feels glorious on your skin.";
+
+            if (!Engine::IN_PARTY(party, Character::Type::TASHA))
+            {
+                PreText += "\n\nAfter scrubbing yourselves clean you emerge from the oasis refreshed and ready to continue your journey.";
+            }
+
+            PreText += "\n\nNote: Each party member recovers 2 Health points. You gained the code A44.";
+
+            Engine::GET_CODES(party, {Codes::A(44)});
+
+            Engine::GAIN_HEALTH(party, 2);
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::TASHA))
+            {
+                return {Book::Type::BOOK1, 802};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 51};
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -10921,6 +11212,17 @@ namespace Book1
     auto story337 = Story337();
     auto story338 = Story338();
     auto story339 = Story339();
+    auto story340 = Story340();
+    auto story341 = Story341();
+    auto story342 = Story342();
+    auto story343 = Story343();
+    auto event343 = Event343();
+    auto story344 = Story344();
+    auto story345 = Story345();
+    auto story346 = Story346();
+    auto story347 = Story347();
+    auto story348 = Story348();
+    auto story349 = Story349();
 
     void InitializeStories()
     {
@@ -10928,6 +11230,7 @@ namespace Book1
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
+            &event343,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -10961,7 +11264,8 @@ namespace Book1
             &story300, &story301, &story302, &story303, &story304, &story305, &story306, &story307, &story308, &story309,
             &story310, &story311, &story312, &story313, &story314, &story315, &story316, &story317, &story318, &story319,
             &story320, &story321, &story322, &story323, &story324, &story325, &story326, &story327, &story328, &story329,
-            &story330, &story331, &story332, &story333, &story334, &story335, &story336, &story337, &story338, &story339};
+            &story330, &story331, &story332, &story333, &story334, &story335, &story336, &story337, &story338, &story339,
+            &story340, &story341, &story342, &story343, &story344, &story345, &story346, &story347, &story348, &story349};
     }
 }
 #endif
