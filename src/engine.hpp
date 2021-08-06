@@ -1383,6 +1383,23 @@ namespace Engine
         return result;
     }
 
+    int FIND_CHARACTER(std::vector<Character::Type> &party, Character::Type type)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.size(); i++)
+        {
+            if (party[i] == type)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
     void GAIN_HEARTS(Party::Base &party, Character::Type from, Character::Type to, int heart)
     {
         Character::Romance romance = {from, to};

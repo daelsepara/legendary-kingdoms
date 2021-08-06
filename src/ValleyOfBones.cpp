@@ -9471,6 +9471,16 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
 
     party.LastSelection = selected_party;
 
+    if (selected_party.size() > 0)
+    {
+        party.Order.clear();
+
+        for (auto i = 0; i < selected_party.size(); i++)
+        {
+            party.Order.push_back(party.Members[selected_party[i]].Type);
+        }
+    }
+
     if (selected_party.size() == 1)
     {
         if (selected_party[0] >= 0 && selected_party[0] < party.Members.size())
@@ -19359,6 +19369,16 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                     if (party.Members[i].Equipment.size() > 0)
                                     {
                                         deadInventory.insert(deadInventory.end(), party.Members[i].Equipment.begin(), party.Members[i].Equipment.end());
+                                    }
+
+                                    // TODO: Consolidate party.LastSection and party.Order
+                                    
+                                    // FOR NOW: Remove characer from the ordered list
+                                    auto deadCharacter = Engine::FIND_CHARACTER(party.Order, party.Members[i].Type);
+
+                                    if (deadCharacter >= 0 && deadCharacter < party.Order.size())
+                                    {
+                                        party.Order.erase(party.Order.begin() + deadCharacter);
                                     }
                                 }
                             }
