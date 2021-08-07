@@ -2998,7 +2998,7 @@ namespace Book1
             Text = "Climbing through the window silently will take some skill.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Force open the door (Individual check: Stealth 5+, Successes: 3)", {Book::Type::BOOK1, 487}, {Book::Type::BOOK1, 724}, Choice::Type::LAST_CHARACTER, {Attribute::Type::STEALTH}, 5, 3));
+            Choices.push_back(Choice::Base("Force open the door (Individual check: Stealth 5+, Successes: 3)", {Book::Type::BOOK1, 487}, {Book::Type::BOOK1, 724}, Choice::Type::ORDER_SKILL_CHECK, 1, {Attribute::Type::STEALTH}, 5, 3));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -4185,6 +4185,14 @@ namespace Book1
             Choices.push_back(Choice::Base("Secure the cogwheel (Individual check: Survival 4+, Successes: 3)", {Book::Type::BOOK1, 745}, {Book::Type::BOOK1, 549}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::SURVIVAL}, 4, 3));
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
+            {
+                Engine::GAIN_STATUS(party.Members[party.LastSelected], Character::Status::FOUND_COGWHEEL);
+            }
         }
     };
 
@@ -5844,8 +5852,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Bye = NULL;
-
             Choices.clear();
 
             if (!Engine::HAS_SPELL(party, {Spells::Type::NATURE_WARD}))
@@ -5853,6 +5859,8 @@ namespace Book1
                 Choices.push_back(Choice::Base("Navigate the storm (Individual check: Survival 6+, Successes: Special)", {Book::Type::BOOK1, -186}, {Book::Type::BOOK1, -186}, {Attribute::Type::SURVIVAL}, 6, 0));
             }
         }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 892}; }
     };
 
     class Event186 : public Story::Base
@@ -10843,6 +10851,310 @@ namespace Book1
         }
     };
 
+    class Story350 : public Story::Base
+    {
+    public:
+        Story350()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 350;
+
+            Text = "You are in a short, well-trodden corridor with an open door in the west wall. A little beyond the door, the corridor splits, branching to the west and north. The north end of the corridor ends in a strong looking door with a red 'x' upon it. To the south, stairs lead up into brilliant daylight.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Exit the dungeon by going south, up the stairs", {Book::Type::BOOK1, 515}));
+            Choices.push_back(Choice::Base("Check out the open door in the west wall", {Book::Type::BOOK6, 654}));
+            Choices.push_back(Choice::Base("Head down the corridor west", {Book::Type::BOOK6, 566}));
+            Choices.push_back(Choice::Base("Check out the door to the north", {Book::Type::BOOK6, 31}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story351 : public Story::Base
+    {
+    public:
+        Story351()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 351;
+
+            Text = "You invoke the shadow door, and soon enough a dark portal opens up in the west wall. The chamber beyond looks as empty as the first, with no exits except for the shadow door you just conjured. A circular tunnel, about three feet wide, is raised four feet from the ground on the far wall. It seems to turn sharply upwards. Strange.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Close the shadow door", {Book::Type::BOOK1, 717}));
+            Choices.push_back(Choice::Base("Examine the curved tunnel", {Book::Type::BOOK6, 224}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(60)}))
+            {
+                return {Book::Type::BOOK1, 527};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story352 : public Story::Base
+    {
+    public:
+        Story352()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 352;
+
+            Text = "Heaving with steady progress, you eventually pull the great cogwheel from the sea and roll it into the boat. Your jollyboat floats low in the water, and you waste no time rowing it to shore. There is a great cheer from the harbour crew as you moor up. The harbourmaster gratefully presents you with a purse of 300 silver coins. Soon the cogwheel is cleaned up and reinstalled into the crane.\n\nYou gained the code A31.";
+
+            Bye = "Waving the harbour crew goodbye you return to your ship.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 82}, Choice::Type::ROLL_ATTRIBUTE_WITH_STATUS, {Character::Status::FOUND_COGWHEEL}, {Attribute::Type::SURVIVAL}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 300);
+
+            Engine::LOSE_CODES(party, {Codes::A(32)});
+
+            Engine::GET_CODES(party, {Codes::A(31)});
+        }
+    };
+
+    class Story353 : public Story::Base
+    {
+    public:
+        Story353()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 353;
+
+            Text = "The armoury is quiet at this time of night. A cluster of spears line the far wall, but it is the complete suit of BRONZE ARMOUR (Armour +4) that catches your eye. The rumours about its incredible durability are true, the magical armour is indeed stronger than the steel plate of Royce and weighs only half as much. Take it, if you wish.\n\nYou gained the code A9.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(9)}))
+            {
+                return {Book::Type::BOOK1, 427};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(9)});
+
+            Take = {Equipment::BRONZE_ARMOUR4};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 424}; }
+    };
+
+    class Story354 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story354()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 354;
+
+            Location = Location::Type::CLIFFTOP;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "Clifftop was not built for sightseers. There are no monuments or grand constructions, bar the cliff-side crane that is designed to haul goods from the harbour below.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(35)}))
+            {
+                PreText += "\n\nYou come upon a young woman in a field being beaten by a pack of overseers. They idly kick her as she attempts to stand, and jeer at her for being lazy and worthless.\n\nYou gained the code A35.";
+
+                Engine::GET_CODES(party, {Codes::A(35)});
+
+                Choices.push_back(Choice::Base("Intervene", {Book::Type::BOOK1, 417}));
+                Choices.push_back(Choice::Base("Leave the locals to their sport", {Book::Type::BOOK6, 19}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 581}; }
+    };
+
+    class Story355 : public Story::Base
+    {
+    public:
+        Story355()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 355;
+
+            Text = "The mood is quiet and professional in the king's hall today. King Scarrenden acknowledges your arrival with a curt nod as he finishes his business with another councillor and asks your business in the hall.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES_ANY(party, {Codes::A(1), Codes::A(17)}))
+            {
+                Choices.push_back(Choice::Base("Talk politics with the king", {Book::Type::BOOK1, 826}));
+            }
+
+            Choices.push_back(Choice::Base("Ask the king for a boon", {Book::Type::BOOK1, 834}));
+            Choices.push_back(Choice::Base("Thank the king for his time and leave the hall", {Book::Type::BOOK1, 775}));
+        }
+    };
+
+    class Story356 : public Story::Base
+    {
+    public:
+        Story356()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 356;
+
+            Text = "You enter a stale smelling cave with a heavy overhang, which plunges the tunnel beyond into darkness. Lighting your lanterns, you illuminate a pack of giant sand lizards shielding themselves from the noonday sun. With alien speed they bolt at you, eager for a good meal.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take.clear();
+
+            Limit = 0;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Sand Lizard", 6, 3, 4, 8, 0),
+                Monster::Base("Sand Lizard", 4, 3, 4, 9, 0),
+                Monster::Base("Sand Lizard", 5, 3, 4, 10, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 395}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Take = {Equipment::LIZARD_HIDE};
+
+                Limit = 1;
+            }
+        }
+    };
+
+    class Story357 : public Story::Base
+    {
+    public:
+        Story357()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 357;
+
+            Text = "The old father is tearful with gratitude. \"I have no money to give you, obviously,\" he says. \"But I insist you have this. In my youth I travelled the world, and made a pilgrimage to Pendrilor, where St Elias, the holiest man in the world, blessed this humble wooden talisman for me. It kept me safe from the grasp of undead horrors, but it's powers only work here in the Valley. Please, take it with my thanks.\"\n\nHe presses the TALISMAN of St Elias into your hands. It is little more than a humble wooden pendant.\n\nTake it if you wish.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::TALISMAN_OF_ST_ELIAS};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story358 : public Story::Base
+    {
+    public:
+        Story358()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 358;
+
+            Text = "You must climb the rope one at a time.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose what order you want your party to climb the rope, from first to last", {Book::Type::BOOK1, 255}, Choice::Type::SET_PARTY_ORDER));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story359 : public Story::Base
+    {
+    public:
+        Story359()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 359;
+
+            Text = "Your trek through the jungle continues, moisture dripping from the long-leafed and hairy trees around you. Peering at her water-logged map, Emlyn Pass-Ross leads the way through the chittering rainforest. Eventually you become aware of movement above you. As you gaze upwards you see hundreds of small monkeys, each less than a foot high, leaping and howling through the treetops.\n\n\"Uh oh... trouble,\" mutters Emlyn as she beholds them.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::HAS_SPELL(party, {Spells::Type::ANIMAL_SPEECH}))
+            {
+                Choices.push_back(Choice::Base("Cast Animal Speech", {Book::Type::BOOK1, 496}));
+            }
+
+            Choices.push_back(Choice::Base("Hold up your hands and show the monkeys you mean them no harm", {Book::Type::BOOK1, 671}));
+            Choices.push_back(Choice::Base("Make a run for it", {Book::Type::BOOK1, 879}));
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -11223,6 +11535,16 @@ namespace Book1
     auto story347 = Story347();
     auto story348 = Story348();
     auto story349 = Story349();
+    auto story350 = Story350();
+    auto story351 = Story351();
+    auto story352 = Story352();
+    auto story353 = Story353();
+    auto story354 = Story354();
+    auto story355 = Story355();
+    auto story356 = Story356();
+    auto story357 = Story357();
+    auto story358 = Story358();
+    auto story359 = Story359();
 
     void InitializeStories()
     {
@@ -11265,7 +11587,8 @@ namespace Book1
             &story310, &story311, &story312, &story313, &story314, &story315, &story316, &story317, &story318, &story319,
             &story320, &story321, &story322, &story323, &story324, &story325, &story326, &story327, &story328, &story329,
             &story330, &story331, &story332, &story333, &story334, &story335, &story336, &story337, &story338, &story339,
-            &story340, &story341, &story342, &story343, &story344, &story345, &story346, &story347, &story348, &story349};
+            &story340, &story341, &story342, &story343, &story344, &story345, &story346, &story347, &story348, &story349,
+            &story350, &story351, &story352, &story353, &story354, &story355, &story356, &story357, &story358, &story359};
     }
 }
 #endif

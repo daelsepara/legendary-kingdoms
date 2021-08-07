@@ -47,6 +47,7 @@ namespace Choice
         GAIN_HEALTH,
         BRIBE_CODEWORD,
         ROLL_FOR_ATTRIBUTE_INCREASE,
+        ROLL_ATTRIBUTE_WITH_STATUS,
         RAISE_ATTRIBUTE_SCORE,
         PARTY_RAISE_ATTRIBUTE,
         PARTY_RAISE_HEALTH,
@@ -64,7 +65,9 @@ namespace Choice
         PAYFORBLESSING_WITH_ITEM,
         PAYFORSTATUS_WITH_HEALTH,
         GAIN_HEALTH_ATTRIBUTE,
-        GAIN_MORALE
+        GAIN_MORALE,
+        SET_PARTY_ORDER,
+        ORDER_SKILL_CHECK
     };
 
     class Base
@@ -488,7 +491,42 @@ namespace Choice
 
             Success = success;
         }
+
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, int value, std::vector<Attribute::Type> attributes, int difficulty, int success)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            DestinationFailed = destinationFailed;
+
+            Type = type;
+
+            Value = value;
+
+            Attributes = attributes;
+
+            Difficulty = difficulty;
+
+            Success = success;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Character::Status> status, std::vector<Attribute::Type> attributes, int value)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Status = status;
+
+            Attributes = attributes;
+
+            Value = value;
+        }
     };
+
 } // namespace Choice
 
 namespace Story

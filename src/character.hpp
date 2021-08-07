@@ -121,7 +121,8 @@ namespace Character
         CAPTURED,
         ENLIGHTENED,
         EXTRA_MAGIC_ROUND0,
-        UNLIMITED_MAGIC_ROUND0
+        UNLIMITED_MAGIC_ROUND0,
+        FOUND_COGWHEEL
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;
@@ -136,7 +137,8 @@ namespace Character
         {Character::Status::CAPTURED, "Captured"},
         {Character::Status::ENLIGHTENED, "Enlightened"},
         {Character::Status::EXTRA_MAGIC_ROUND0, "Extra Magic Attack on Round 1"},
-        {Character::Status::UNLIMITED_MAGIC_ROUND0, "Unlimited Magic Attacks on Round 1"}};
+        {Character::Status::UNLIMITED_MAGIC_ROUND0, "Unlimited Magic Attacks on Round 1"},
+        {Character::Status::FOUND_COGWHEEL, "Found the cogwheel"}};
 
     class Base
     {

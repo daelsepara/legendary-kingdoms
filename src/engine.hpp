@@ -192,6 +192,33 @@ namespace Engine
         return score;
     }
 
+    int RAW_SCORE(Character::Base &character, Attribute::Type type)
+    {
+        auto score = 0;
+
+        if (type == Attribute::Type::HEALTH)
+        {
+            score = character.Health;
+        }
+
+        for (auto i = 0; i < character.Attributes.size(); i++)
+        {
+            if (character.Attributes[i].Type == type)
+            {
+                score = character.Attributes[i].Value;
+
+                break;
+            }
+        }
+
+        if (score < 0)
+        {
+            score = 0;
+        }
+
+        return score;
+    }
+
     void GAIN_MONEY(Party::Base &party, int money)
     {
         party.Money += money;
@@ -2432,6 +2459,23 @@ namespace Engine
         {
             party.Members[result].Health = 0;
         }
+    }
+
+    int FIND_CHARACTER(Party::Base &party, Character::Status status)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (Engine::HAS_STATUS(party.Members[i], status))
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
     }
 }
 #endif

@@ -78,7 +78,8 @@ namespace Control
         HEAL1,
         FULL_RECOVERY,
         RECHARGE,
-        FOLLOWERS
+        FOLLOWERS,
+        SELECT_ORDER
     };
 
     class Base
