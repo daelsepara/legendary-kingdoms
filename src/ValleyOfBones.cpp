@@ -1505,8 +1505,6 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
             }
 
-            fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
-
             if (current_mode == Control::Type::ARMY)
             {
                 putHeader(renderer, "Army", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -1523,6 +1521,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             {
                 fillRect(renderer, textwidth, infoh, textx, texty, intBR);
             }
+
+            fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
             for (auto i = offset; i < last; i++)
             {
@@ -9803,7 +9803,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             current = -1;
                         }
                     }
-                    else if (controls[current].Type == Control::Type::FLEE)
+                    else if (controls[current].Type == Control::Type::FLEE && !hold)
                     {
                         if (canFlee)
                         {
@@ -9848,7 +9848,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             flash_color = intRD;
                         }
                     }
-                    else if (controls[current].Type == Control::Type::PARTY)
+                    else if (controls[current].Type == Control::Type::PARTY && !hold)
                     {
                         viewParty(window, renderer, party, true);
 
@@ -9856,7 +9856,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                         current = -1;
                     }
-                    else if (controls[current].Type == Control::Type::ATTACK)
+                    else if (controls[current].Type == Control::Type::ATTACK && !hold)
                     {
                         if (allies_attack)
                         {
@@ -10140,7 +10140,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                         selected = false;
                     }
-                    else if (controls[current].Type == Control::Type::SPELL)
+                    else if (controls[current].Type == Control::Type::SPELL && !hold)
                     {
                         if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_COMBAT_SPELLS}))
                         {
@@ -17526,11 +17526,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     if (story->Choices[choice].Equipment.size() > 1)
                                     {
-                                        message = "You do not have the REQUIRED ITEMS!";
+                                        message = "You do not have the required items!";
                                     }
                                     else
                                     {
-                                        message = "You do not have the REQUIRED ITEM!";
+                                        message = "You do not have the required item!";
                                     }
                                 }
                             }
@@ -17550,11 +17550,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     if (story->Choices[choice].Equipment.size() > 1)
                                     {
-                                        message = "You do not have the REQUIRED ITEMS!";
+                                        message = "You do not have the required items!";
                                     }
                                     else
                                     {
-                                        message = "You do not have the REQUIRED ITEM!";
+                                        message = "You do not have the required item!";
                                     }
                                 }
                             }
@@ -17584,7 +17584,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     error = true;
 
-                                    message = "You do not have any of the REQUIRED ITEMS!";
+                                    message = "You do not have any of the required items!";
                                 }
                             }
                             else
@@ -17601,7 +17601,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     error = true;
 
-                                    message = "You do not have any of the REQUIRED ITEMS!";
+                                    message = "You do not have any of the required items!";
                                 }
                             }
                         }
@@ -17846,11 +17846,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (story->Choices[choice].Value > 1)
                                 {
-                                    message = "You do not have the REQUIRED ITEMS!";
+                                    message = "You do not have the required items!";
                                 }
                                 else
                                 {
-                                    message = "You do not have the REQUIRED ITEM!";
+                                    message = "You do not have the required item!";
                                 }
 
                                 error = true;

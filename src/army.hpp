@@ -34,7 +34,9 @@ namespace Army
         MERCENARY_MEN_AT_ARMS,
         CURSITE_CITIZENS,
         TEMPLE_GUARD,
-        MERCENARY_CROSSBOWS
+        MERCENARY_CROSSBOWS,
+        LUUTANESH_SPEARS,
+        FAITHFUL_IRREGULARS
     };
 
     class Base

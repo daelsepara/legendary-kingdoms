@@ -10798,7 +10798,7 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("Check out the room to the south", {Book::Type::BOOK1, 484}));
-            Choices.push_back(Choice::Base("Leave the palace", {Book::Type::BOOK6, 265}));
+            Choices.push_back(Choice::Base("Leave the palace", {Book::Type::BOOK1, 265}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -10864,9 +10864,9 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("Exit the dungeon by going south, up the stairs", {Book::Type::BOOK1, 515}));
-            Choices.push_back(Choice::Base("Check out the open door in the west wall", {Book::Type::BOOK6, 654}));
-            Choices.push_back(Choice::Base("Head down the corridor west", {Book::Type::BOOK6, 566}));
-            Choices.push_back(Choice::Base("Check out the door to the north", {Book::Type::BOOK6, 31}));
+            Choices.push_back(Choice::Base("Check out the open door in the west wall", {Book::Type::BOOK1, 654}));
+            Choices.push_back(Choice::Base("Head down the corridor west", {Book::Type::BOOK1, 566}));
+            Choices.push_back(Choice::Base("Check out the door to the north", {Book::Type::BOOK1, 31}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -10885,7 +10885,7 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("Close the shadow door", {Book::Type::BOOK1, 717}));
-            Choices.push_back(Choice::Base("Examine the curved tunnel", {Book::Type::BOOK6, 224}));
+            Choices.push_back(Choice::Base("Examine the curved tunnel", {Book::Type::BOOK1, 224}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -11001,7 +11001,7 @@ namespace Book1
                 Engine::GET_CODES(party, {Codes::A(35)});
 
                 Choices.push_back(Choice::Base("Intervene", {Book::Type::BOOK1, 417}));
-                Choices.push_back(Choice::Base("Leave the locals to their sport", {Book::Type::BOOK6, 19}));
+                Choices.push_back(Choice::Base("Leave the locals to their sport", {Book::Type::BOOK1, 19}));
             }
 
             Text = PreText.c_str();
@@ -11152,6 +11152,244 @@ namespace Book1
 
             Choices.push_back(Choice::Base("Hold up your hands and show the monkeys you mean them no harm", {Book::Type::BOOK1, 671}));
             Choices.push_back(Choice::Base("Make a run for it", {Book::Type::BOOK1, 879}));
+        }
+    };
+
+    class Story360 : public Story::Base
+    {
+    public:
+        Story360()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 360;
+
+            Location = Location::Type::LUUTANESH;
+
+            Text = "You travel a few miles outside the village before coming to the Everchild's training grounds. Her soldiers are divided into two types. The guards of Luutanesh are easily the best, well-provisioned and equipped with hide armour and long spears. They are disciplined and well trained. The other half of her army are less impressive, peasants and freed slaves armed with crude weapons, and only a few with shields. They are eager, and evidently their morale is quite good. Still, you wouldn't want to use them in battle as anything except reserve troops.\n\n\"As they say in Royce, from small seeds mighty trees grow,\" quotes the Everchild. \"Still, I am eager for more soldiers. I will even accept foreign mercenaries if you have access to them. However, Lhasbreath and Chalice are your best bets in the short term.\"\n\nShe cocks her head thoughtfully. \"I find that I trust you well,\" she says. \"I am happy to launch the attack on Saltdad as soon as you think we have enough soldiers, and the Iron King is suitably diminished in power. We shall only have one chance, so choose our moment well.\"\n\nNote: You can note the following soldiers in your Army:\n\n[Luutanesh Spears]: Strength 3, Morale 3\n[Faithful Irregulars]: Strength 1, Morale 4\n\nThese forces are currently in Luutanesh garrison. You cannot transfer troops from the Luutanesh barracks without permission from the Everchild. Because the Everchild does not yet own a port city, you also cannot transfer troops you might own in other barracks to the Luutanesh barracks.";
+
+            Bye = "At that she kisses you on your cheeks and departs for her chambers at the Cold River Inn.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Army = {
+                Army::Base("Kensai Warriors", Army::Type::LUUTANESH_SPEARS, Location::Type::LUUTANESH, 3, 3),
+                Army::Base("Chalice Archers", Army::Type::FAITHFUL_IRREGULARS, Location::Type::LUUTANESH, 1, 4)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 263}; }
+    };
+
+    class Story361 : public Story::Base
+    {
+    public:
+        Story361()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 361;
+
+            Text = "You open the door to discover a dark room with the bodies of four complete skeletons lying stretched out on long tables. At the back of the room is a large book, wide open, displaying a page full of strange chants and diagrams of skeletal bodies. The whole place gives you the creeps. There are no other exits from this room.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Smash the skeletons to pieces", {Book::Type::BOOK1, 97}));
+            Choices.push_back(Choice::Base("Examine the book", {Book::Type::BOOK1, 8}));
+            Choices.push_back(Choice::Base("Return to the crossroads", {Book::Type::BOOK1, 310}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(75)}))
+            {
+                return {Book::Type::BOOK1, 845};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story362 : public Story::Base
+    {
+    public:
+        Story362()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 362;
+
+            Location = Location::Type::LUUTANESH;
+
+            Text = "A senior priest steps forward and puts a hand on the shoulder of the taxman. \"Are you deranged?\" he asks. \"Can you not see that these are the agents of the queen?\"";
+
+            Bye = "Grumbling his apologies, the taxman allows you to pass.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 458}; }
+    };
+
+    class Story363 : public Story::Base
+    {
+    public:
+        Story363()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 363;
+
+            Location = Location::Type::CURSUS;
+
+            Text = "With a final despairing cry, the Cursite forces surrender. There is nowhere left for them to run. They wail and weep at the loss of their city and their power, recoiling before the Everchild as if she was a burning brand.\n\nWasting no time, you accompany the Everchild into the Grand Ziggurat, your best soldiers by your side. You fully expect a bitter final showdown between the patriarch and the queen. You are almost disappointed as you enter the ceremonial chamber, to find the patriarch and his high priests dead by their own hands. Only a single priest remains alive, the dagger hovering uncertainly by his belly.\n\n\"These are sad findings, and not what I wished,\" says the Everchild, shaking her head. \"As for you, fellow, put down your knife. The war is done, and you have nothing to fear from me.\"\n\n\"I... cannot bear to watch you pull down the holy temples!\" he weeps.\n\n\"I shall do no such thing, to this or any other temple,\" says the Everchild firmly. \"Men may worship what gods they wish, from this day, old or new. And temples need priests. Will you abandon your god when he needs you the most?\"\n\nThe priest swallows and drops the dagger. The Everchild's handmaidens attend him as she walks towards the sacred throne. She nods to Che Long, who pushes the body of the patriarch from it. She seats herself with a satisfied smile, gazing across the halls that have oppressed the people for so long. Halls, which now, like every hall in the valley, she rules as absolute monarch.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 400}; }
+    };
+
+    class Story364 : public Story::Base
+    {
+    public:
+        Story364()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 364;
+
+            Text = "The eager guards take your distraction team away to a more private location. Hopefully this should give the other team enough time to carry out their task!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 456}; }
+    };
+
+    class Story365 : public Story::Base
+    {
+    public:
+        Story365()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 365;
+
+            Location = Location::Type::CURSUS;
+
+            Text = "You prowl silently through the night, unseen, past the many soldiers of Cursus. Soon you arrive at a dark green tent with glowing sigils woven into it. This must be it. You approach cautiously -- wizards are famed for using magical defences about their sleeping places.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Disenchant the wizard's tent (Team check: Lore 4+, Successes: 5)", {Book::Type::BOOK1, 32}, {Book::Type::BOOK1, 687}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::ASSASSINATION_DESCANTOS, {Attribute::Type::LORE}, 4, 5));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story366 : public Story::Base
+    {
+    public:
+        Story366()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 366;
+
+            Text = "You find yourselves in a long corridor that runs east-west. Three doors present themselves as ways onwards.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Take the door in the southern wall at the far eastern end of the corridor", {Book::Type::BOOK1, 717}));
+            Choices.push_back(Choice::Base("Open the door in the middle corridor, also in the south wall, from which pleasant smells emerge", {Book::Type::BOOK1, 551}));
+            Choices.push_back(Choice::Base("Open the door in the far west end of the corridor", {Book::Type::BOOK1, 821}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story367 : public Story::Base
+    {
+    public:
+        Story367()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 367;
+
+            Text = "You draw your weapons. \"We will not let you harm grieving people,\" you say sharply. The kensai bow to you and draw their swords as one. This will be a tough fight.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Kensai", 6, 4, 4, 9, 0),
+                Monster::Base("Kensai", 7, 4, 4, 8, 0),
+                Monster::Base("Kensai", 6, 4, 4, 10, 0),
+                Monster::Base("Kensai", 6, 4, 4, 9, 0),
+                Monster::Base("Kensai Master", 8, 3, 5, 11, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 874}; }
+    };
+
+    class Story368 : public Story::Base
+    {
+    public:
+        Story368()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 368;
+
+            Text = "The stone blocks are so withered and aged it is impossible to get an exact fit between the blocks. After several failed attempts you give up, the inscribed spell making no sense to you. Perhaps you could try again later, when your magical knowledge has increased?";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 453}; }
+    };
+
+    class Story369 : public Story::Base
+    {
+    public:
+        Story369()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 369;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "You are walking through the Streel, a marketplace in Cursus that sells the most exclusive ornaments and clothing for the well-to-do. One stall is particularly impressive, stacked top to bottom with exotic birds in cages. Though you have no business in buying a bird, you cannot help but examine some of the fascinating (and noisy) specimens on sale. The seller, named Haatchi, is generous with his time, explaining where each creature came from and the lengths he had to go to acquire them.\n\n\"You look adventurous sorts,\" he grins. \"Perhaps you can help me resolve a commission? I've been trying to acquire a crier bird, a relatively rare specimen that lives in the Lhasbreath jungles. It is not much to look at, but its voice is so uncanny it almost sounds human. If you can retrieve one for me, there is 100 silver in it for you.\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("You have a CRIER BIRD", {Book::Type::BOOK1, 441}, {Equipment::CRIER_BIRD}));
+            Choices.push_back(Choice::Base("promise to keep a look out for the bird, should you ever head out that way", {Book::Type::BOOK1, 340}));
+
+            Controls = Story::Controls::STANDARD;
         }
     };
 
@@ -11545,6 +11783,16 @@ namespace Book1
     auto story357 = Story357();
     auto story358 = Story358();
     auto story359 = Story359();
+    auto story360 = Story360();
+    auto story361 = Story361();
+    auto story362 = Story362();
+    auto story363 = Story363();
+    auto story364 = Story364();
+    auto story365 = Story365();
+    auto story366 = Story366();
+    auto story367 = Story367();
+    auto story368 = Story368();
+    auto story369 = Story369();
 
     void InitializeStories()
     {
@@ -11588,7 +11836,8 @@ namespace Book1
             &story320, &story321, &story322, &story323, &story324, &story325, &story326, &story327, &story328, &story329,
             &story330, &story331, &story332, &story333, &story334, &story335, &story336, &story337, &story338, &story339,
             &story340, &story341, &story342, &story343, &story344, &story345, &story346, &story347, &story348, &story349,
-            &story350, &story351, &story352, &story353, &story354, &story355, &story356, &story357, &story358, &story359};
+            &story350, &story351, &story352, &story353, &story354, &story355, &story356, &story357, &story358, &story359,
+            &story360, &story361, &story362, &story363, &story364, &story365, &story366, &story367, &story368, &story369};
     }
 }
 #endif
