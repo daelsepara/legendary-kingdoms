@@ -14,7 +14,8 @@ namespace Attribute
         SURVIVAL,
         CHARISMA,
         ARMOUR,
-        HEALTH
+        HEALTH,
+        ALL_SKILLS
     };
 
     enum class Test
@@ -33,6 +34,7 @@ namespace Attribute
         {Attribute::Type::CHARISMA, "Charisma"},
         {Attribute::Type::ARMOUR, "Armour"},
         {Attribute::Type::HEALTH, "Health"},
+        {Attribute::Type::ALL_SKILLS, "All Skills"}
     };
 
     class Base

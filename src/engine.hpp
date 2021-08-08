@@ -144,6 +144,303 @@ namespace Engine
         return result;
     }
 
+    int FIND_SOLO(Party::Base &party)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (party.Members[i].Team == Team::Type::SOLO && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    void GET_EQUIPMENT(Character::Base &character, std::vector<Equipment::Base> equipment)
+    {
+        if (!Engine::HAS_STATUS(character, Character::Status::CAPTURED) && character.Type != Character::Type::SKULLCRACKER)
+        {
+            character.Equipment.insert(character.Equipment.end(), equipment.begin(), equipment.end());
+        }
+    }
+
+    int FIND_EQUIPMENT(Character::Base &character, Equipment::Type item)
+    {
+        auto found = -1;
+
+        if (character.Equipment.size() > 0)
+        {
+            for (auto i = 0; i < character.Equipment.size(); i++)
+            {
+                if (character.Equipment[i].Type == item)
+                {
+                    found = i;
+
+                    break;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    int FIND_BEARER(Party::Base &party, Equipment::Type item)
+    {
+        auto found = -1;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            auto result = Engine::FIND_EQUIPMENT(party.Members[i], item);
+
+            if (result >= 0 && result < party.Members[i].Equipment.size() && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            {
+                found = i;
+
+                break;
+            }
+        }
+
+        return found;
+    }
+
+    void LOSE_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> items)
+    {
+        if (character.Equipment.size() > 0 && items.size() > 0 && !Engine::HAS_STATUS(character, Character::Status::CAPTURED) && character.Type != Character::Type::SKULLCRACKER)
+        {
+            for (auto i = 0; i < items.size(); i++)
+            {
+                auto result = Engine::FIND_EQUIPMENT(character, items[i]);
+
+                if (result >= 0)
+                {
+                    character.Equipment.erase(character.Equipment.begin() + result);
+                }
+            }
+        }
+    }
+
+    void LOSE_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> items)
+    {
+        for (auto i = 0; i < items.size(); i++)
+        {
+            for (auto j = 0; j < party.Members.size(); j++)
+            {
+                auto result = Engine::FIND_EQUIPMENT(party.Members[j], items[i]);
+
+                if (result >= 0 && !Engine::HAS_STATUS(party.Members[j], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[j].IsCivilized)) && party.Members[i].Type != Character::Type::SKULLCRACKER)
+                {
+                    party.Members[j].Equipment.erase(party.Members[j].Equipment.begin() + result);
+
+                    // break out of party loop
+                    break;
+                }
+            }
+        }
+    }
+
+    void LOSE_EQUIPMENT(Party::Base &party, Equipment::Type item, int count)
+    {
+        for (auto i = 0; i < count; i++)
+        {
+            Engine::LOSE_EQUIPMENT(party, {item});
+        }
+    }
+
+    int COUNT_INVENTORY(Character::Base &character)
+    {
+        auto size = character.Equipment.size();
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            size += character.Equipment[i].AdditionalSlots;
+        }
+
+        return size;
+    }
+
+    bool VERIFY_EQUIPMENT_LIMIT(Character::Base &character)
+    {
+        return Engine::COUNT_INVENTORY(character) <= character.MaximumEquipment;
+    }
+
+    bool VERIFY_EQUIPMENT_LIMIT(Party::Base &party)
+    {
+        auto result = true;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            result &= Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[i]);
+        }
+
+        return result;
+    }
+
+    bool VERIFY_EQUIPMENT_LIMIT(Character::Base &character, int limit)
+    {
+        return Engine::COUNT_INVENTORY(character) <= limit;
+    }
+
+    bool VERIFY_EQUIPMENT_LIMIT(Party::Base &party, int limit)
+    {
+        auto result = true;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            result &= Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[i], limit);
+        }
+
+        return result;
+    }
+
+    int COUNT_EQUIPMENT(Character::Base &character, Equipment::Type item)
+    {
+        auto found = 0;
+
+        if (character.Equipment.size() > 0)
+        {
+            for (auto i = 0; i < character.Equipment.size(); i++)
+            {
+                if (character.Equipment[i].Type == item)
+                {
+                    found++;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    int COUNT_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> equipment)
+    {
+        auto found = 0;
+
+        for (auto i = 0; i < equipment.size(); i++)
+        {
+            if (Engine::COUNT_EQUIPMENT(character, equipment[i]) > 0)
+            {
+                found++;
+            }
+        }
+
+        return found;
+    }
+
+    int COUNT_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> equipment)
+    {
+        auto found = 0;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if ((!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            {
+                found += Engine::COUNT_EQUIPMENT(party.Members[i], equipment);
+            }
+        }
+
+        return found;
+    }
+
+    bool VERIFY_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> equipment)
+    {
+        auto found = 0;
+
+        if (equipment.size() > 0)
+        {
+            for (auto i = 0; i < equipment.size(); i++)
+            {
+                auto result = Engine::FIND_EQUIPMENT(character, equipment[i]);
+
+                if (result >= 0)
+                {
+                    found++;
+                }
+            }
+        }
+
+        return found >= equipment.size();
+    }
+
+    bool VERIFY_ANY_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> equpment)
+    {
+        return Engine::COUNT_EQUIPMENT(character, equpment) > 0;
+    }
+
+    bool VERIFY_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> equipment)
+    {
+        auto found = false;
+
+        auto result = Engine::FIND_SOLO(party);
+
+        if (result >= 0 && result < party.Members.size() && (!party.InCity || (party.InCity && party.Members[result].IsCivilized)))
+        {
+            found = Engine::VERIFY_EQUIPMENT(party.Members[result], equipment);
+        }
+        else
+        {
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::VERIFY_EQUIPMENT(party.Members[i], equipment) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+                {
+                    found = true;
+
+                    break;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    bool VERIFY_ANY_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> equipment)
+    {
+        auto found = false;
+
+        auto result = Engine::FIND_SOLO(party);
+
+        if (result >= 0 && result < party.Members.size())
+        {
+            found = Engine::VERIFY_ANY_EQUIPMENT(party.Members[result], equipment);
+        }
+        else
+        {
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::VERIFY_ANY_EQUIPMENT(party.Members[i], equipment) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+                {
+                    found = true;
+
+                    break;
+                }
+            }
+        }
+
+        return found;
+    }
+
+
+    int MAX(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
+    {
+        auto max = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class == type && (character.Equipment[i].Attribute == attribute || character.Equipment[i].Attribute == Attribute::Type::ALL_SKILLS))
+            {
+                if (character.Equipment[i].Modifier > max)
+                {
+                    max = character.Equipment[i].Modifier;
+                }
+            }
+        }
+
+        return max;
+    }
+
     int SCORE(Character::Base &character, Attribute::Type type)
     {
         auto score = 0;
@@ -182,6 +479,11 @@ namespace Engine
                     score += character.Equipment[i].Modifier;
                 }
             }
+        }
+
+        if (type != Attribute::Type::HEALTH && type != Attribute::Type::ARMOUR)
+        {
+            score += Engine::MAX(character, Equipment::Class::ROBE, type);
         }
 
         if (score < 0)
@@ -482,23 +784,6 @@ namespace Engine
         return found;
     }
 
-    int FIND_SOLO(Party::Base &party)
-    {
-        auto result = -1;
-
-        for (auto i = 0; i < party.Members.size(); i++)
-        {
-            if (party.Members[i].Team == Team::Type::SOLO && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
-            {
-                result = i;
-
-                break;
-            }
-        }
-
-        return result;
-    }
-
     std::vector<int> ROLL_DICE(int count)
     {
         Engine::Random.UniformIntDistribution(1, 6);
@@ -697,24 +982,6 @@ namespace Engine
         }
 
         return result;
-    }
-
-    int MAX(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
-    {
-        auto max = 0;
-
-        for (auto i = 0; i < character.Equipment.size(); i++)
-        {
-            if (character.Equipment[i].Class == type && character.Equipment[i].Attribute == attribute)
-            {
-                if (character.Equipment[i].Modifier > max)
-                {
-                    max = character.Equipment[i].Modifier;
-                }
-            }
-        }
-
-        return max;
     }
 
     int FIND_EQUIPMENT(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
@@ -955,267 +1222,6 @@ namespace Engine
         }
 
         return result;
-    }
-
-    void GET_EQUIPMENT(Character::Base &character, std::vector<Equipment::Base> equipment)
-    {
-        if (!Engine::HAS_STATUS(character, Character::Status::CAPTURED) && character.Type != Character::Type::SKULLCRACKER)
-        {
-            character.Equipment.insert(character.Equipment.end(), equipment.begin(), equipment.end());
-        }
-    }
-
-    int FIND_EQUIPMENT(Character::Base &character, Equipment::Type item)
-    {
-        auto found = -1;
-
-        if (character.Equipment.size() > 0)
-        {
-            for (auto i = 0; i < character.Equipment.size(); i++)
-            {
-                if (character.Equipment[i].Type == item)
-                {
-                    found = i;
-
-                    break;
-                }
-            }
-        }
-
-        return found;
-    }
-
-    int FIND_BEARER(Party::Base &party, Equipment::Type item)
-    {
-        auto found = -1;
-
-        for (auto i = 0; i < party.Members.size(); i++)
-        {
-            auto result = Engine::FIND_EQUIPMENT(party.Members[i], item);
-
-            if (result >= 0 && result < party.Members[i].Equipment.size() && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
-            {
-                found = i;
-
-                break;
-            }
-        }
-
-        return found;
-    }
-
-    void LOSE_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> items)
-    {
-        if (character.Equipment.size() > 0 && items.size() > 0 && !Engine::HAS_STATUS(character, Character::Status::CAPTURED) && character.Type != Character::Type::SKULLCRACKER)
-        {
-            for (auto i = 0; i < items.size(); i++)
-            {
-                auto result = Engine::FIND_EQUIPMENT(character, items[i]);
-
-                if (result >= 0)
-                {
-                    character.Equipment.erase(character.Equipment.begin() + result);
-                }
-            }
-        }
-    }
-
-    void LOSE_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> items)
-    {
-        for (auto i = 0; i < items.size(); i++)
-        {
-            for (auto j = 0; j < party.Members.size(); j++)
-            {
-                auto result = Engine::FIND_EQUIPMENT(party.Members[j], items[i]);
-
-                if (result >= 0 && !Engine::HAS_STATUS(party.Members[j], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[j].IsCivilized)) && party.Members[i].Type != Character::Type::SKULLCRACKER)
-                {
-                    party.Members[j].Equipment.erase(party.Members[j].Equipment.begin() + result);
-
-                    // break out of party loop
-                    break;
-                }
-            }
-        }
-    }
-
-    void LOSE_EQUIPMENT(Party::Base &party, Equipment::Type item, int count)
-    {
-        for (auto i = 0; i < count; i++)
-        {
-            Engine::LOSE_EQUIPMENT(party, {item});
-        }
-    }
-
-    int COUNT_INVENTORY(Character::Base &character)
-    {
-        auto size = character.Equipment.size();
-
-        for (auto i = 0; i < character.Equipment.size(); i++)
-        {
-            size += character.Equipment[i].AdditionalSlots;
-        }
-
-        return size;
-    }
-
-    bool VERIFY_EQUIPMENT_LIMIT(Character::Base &character)
-    {
-        return Engine::COUNT_INVENTORY(character) <= character.MaximumEquipment;
-    }
-
-    bool VERIFY_EQUIPMENT_LIMIT(Party::Base &party)
-    {
-        auto result = true;
-
-        for (auto i = 0; i < party.Members.size(); i++)
-        {
-            result &= Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[i]);
-        }
-
-        return result;
-    }
-
-    bool VERIFY_EQUIPMENT_LIMIT(Character::Base &character, int limit)
-    {
-        return Engine::COUNT_INVENTORY(character) <= limit;
-    }
-
-    bool VERIFY_EQUIPMENT_LIMIT(Party::Base &party, int limit)
-    {
-        auto result = true;
-
-        for (auto i = 0; i < party.Members.size(); i++)
-        {
-            result &= Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[i], limit);
-        }
-
-        return result;
-    }
-
-    int COUNT_EQUIPMENT(Character::Base &character, Equipment::Type item)
-    {
-        auto found = 0;
-
-        if (character.Equipment.size() > 0)
-        {
-            for (auto i = 0; i < character.Equipment.size(); i++)
-            {
-                if (character.Equipment[i].Type == item)
-                {
-                    found++;
-                }
-            }
-        }
-
-        return found;
-    }
-
-    int COUNT_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> equipment)
-    {
-        auto found = 0;
-
-        for (auto i = 0; i < equipment.size(); i++)
-        {
-            if (Engine::COUNT_EQUIPMENT(character, equipment[i]) > 0)
-            {
-                found++;
-            }
-        }
-
-        return found;
-    }
-
-    int COUNT_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> equipment)
-    {
-        auto found = 0;
-
-        for (auto i = 0; i < party.Members.size(); i++)
-        {
-            if ((!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
-            {
-                found += Engine::COUNT_EQUIPMENT(party.Members[i], equipment);
-            }
-        }
-
-        return found;
-    }
-
-    bool VERIFY_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> equipment)
-    {
-        auto found = 0;
-
-        if (equipment.size() > 0)
-        {
-            for (auto i = 0; i < equipment.size(); i++)
-            {
-                auto result = Engine::FIND_EQUIPMENT(character, equipment[i]);
-
-                if (result >= 0)
-                {
-                    found++;
-                }
-            }
-        }
-
-        return found >= equipment.size();
-    }
-
-    bool VERIFY_ANY_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> equpment)
-    {
-        return Engine::COUNT_EQUIPMENT(character, equpment) > 0;
-    }
-
-    bool VERIFY_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> equipment)
-    {
-        auto found = false;
-
-        auto result = Engine::FIND_SOLO(party);
-
-        if (result >= 0 && result < party.Members.size() && (!party.InCity || (party.InCity && party.Members[result].IsCivilized)))
-        {
-            found = Engine::VERIFY_EQUIPMENT(party.Members[result], equipment);
-        }
-        else
-        {
-            for (auto i = 0; i < party.Members.size(); i++)
-            {
-                if (Engine::VERIFY_EQUIPMENT(party.Members[i], equipment) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
-                {
-                    found = true;
-
-                    break;
-                }
-            }
-        }
-
-        return found;
-    }
-
-    bool VERIFY_ANY_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> equipment)
-    {
-        auto found = false;
-
-        auto result = Engine::FIND_SOLO(party);
-
-        if (result >= 0 && result < party.Members.size())
-        {
-            found = Engine::VERIFY_ANY_EQUIPMENT(party.Members[result], equipment);
-        }
-        else
-        {
-            for (auto i = 0; i < party.Members.size(); i++)
-            {
-                if (Engine::VERIFY_ANY_EQUIPMENT(party.Members[i], equipment) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
-                {
-                    found = true;
-
-                    break;
-                }
-            }
-        }
-
-        return found;
     }
 
     int FIND_CODE(Party::Base &party, Codes::Base code)

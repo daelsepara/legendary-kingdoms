@@ -37,7 +37,8 @@ namespace Codes
         LOST_SCHOLAR1,
         LOST_SCHOLAR2,
         LOST_SCHOLAR3,
-        NO_BLESSINGS_FOREVER
+        NO_BLESSINGS_FOREVER,
+        TAUGHT_KOPU_DREAR
     };
 
     std::map<Book::Type, const char *> Prefix = {

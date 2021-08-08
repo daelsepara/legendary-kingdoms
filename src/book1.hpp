@@ -11092,7 +11092,7 @@ namespace Book1
 
             ID = 357;
 
-            Text = "The old father is tearful with gratitude. \"I have no money to give you, obviously,\" he says. \"But I insist you have this. In my youth I travelled the world, and made a pilgrimage to Pendrilor, where St Elias, the holiest man in the world, blessed this humble wooden talisman for me. It kept me safe from the grasp of undead horrors, but it's powers only work here in the Valley. Please, take it with my thanks.\"\n\nHe presses the TALISMAN of St Elias into your hands. It is little more than a humble wooden pendant.\n\nTake it if you wish.";
+            Text = "The old father is tearful with gratitude. \"I have no money to give you, obviously,\" he says. \"But I insist you have this. In my youth I travelled the world, and made a pilgrimage to Pendrilor, where St. Elias, the holiest man in the world, blessed this humble wooden talisman for me. It kept me safe from the grasp of undead horrors, but it's powers only work here in the Valley. Please, take it with my thanks.\"\n\nHe presses the TALISMAN of St. Elias into your hands. It is little more than a humble wooden pendant.\n\nTake it if you wish.";
 
             Choices.clear();
 
@@ -11390,6 +11390,318 @@ namespace Book1
             Choices.push_back(Choice::Base("promise to keep a look out for the bird, should you ever head out that way", {Book::Type::BOOK1, 340}));
 
             Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story370 : public Story::Base
+    {
+    public:
+        Story370()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 370;
+
+            Location = Location::Type::LHASBREATH;
+
+            Image = "images/book1/lhasbreath_jungle.png";
+
+            Text = "You have come to the outskirts of a thick jungle that lies just to the west of Lhasbreath. It is too difficult to traverse far into the jungle without a proper expedition, but perhaps you might discover something interesting with a quick look.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("See what you discover", {{4, NULL, {Book::Type::BOOK1, 701}}, {6, NULL, {Book::Type::BOOK1, 343}}, {7, NULL, {Book::Type::BOOK1, 598}}, {9, NULL, {Book::Type::BOOK1, 449}}, {12, NULL, {Book::Type::BOOK1, 547}}}, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story371 : public Story::Base
+    {
+    public:
+        Story371()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 371;
+
+            Text = "You look around the chamber, attempting to puzzle out what the orcs were doing here. The tunnels they have cut lead in all directions, but end in disappointing dead ends. It has the feel of an expedition that was sure it was in the right place but didn't know exactly which way to go once they got here. Shrugging your shoulders, you make your way out of the cavern and back up the stairs.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 634}; }
+    };
+
+    class Story372 : public Story::Base
+    {
+    public:
+        Story372()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 372;
+
+            Text = "You step off the lift onto the top floor of the mine.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(1)}))
+            {
+                Choices.push_back(Choice::Base("Sell some TROGLODYTE HEADs to Clavod", {Book::Type::BOOK1, 233}, {Equipment::TROGLODYTE_HEAD}));
+                Choices.push_back(Choice::Base("Make your way onwards", {Book::Type::BOOK1, 722}));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 722}; }
+    };
+
+    class Story373 : public Story::Base
+    {
+    public:
+        Story373()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 373;
+
+            Text = "You have returned to the sinister chamber where you found the silver skull. However, that grim artefact is now missing from its pedestal. There is nothing more to be found here, so you make your way back to the crossroads.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 46}; }
+    };
+
+    class Story374 : public Story::Base
+    {
+    public:
+        Story374()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 374;
+
+            Text = "The slaves merely laugh at you and push you away. Demoralised, you are forced to wait for your food like everyone else.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 118}; }
+    };
+
+    class Story375 : public Story::Base
+    {
+    public:
+        Story375()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 375;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "The marketplace of Cursus is strictly organised. The same family of food sellers have occupied the same stall locations for hundreds of years, and the more modern the good the further to the exterior of the market can be found the stall. Priests of Cursus occupy each stall, each uttering a solemn praise to their god before welcoming you curtly.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::SHOP;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Shop = {
+                {Equipment::CRUDE_BLADE, 25, 10},
+                {Equipment::MAUL, 50, 25},
+                {Equipment::IRON_SHORTSWORD1, 200, 100},
+                {Equipment::IRON_GREATAXE2, -1, 150},
+                {Equipment::STEEL_LONGSWORD2, -1, 400},
+                {Equipment::STEEL_GREATSWORD3, -1, 450},
+                {Equipment::SHIELD2, 50, 25},
+                {Equipment::HIDE_ARMOUR1, 70, 35},
+                {Equipment::BONE_ARMOUR2, -1, 150},
+                {Equipment::BRONZE_ARMOUR4, -1, 2000},
+                {Equipment::SOFT_BOOTS1, 500, 250},
+                {Equipment::REFERENCE_BOOK1, 500, 250},
+                {Equipment::WARM_CLOAK1, -1, 250},
+                {Equipment::HANDSOME_BROOCH1, -1, 250},
+                {Equipment::PRYBAR, 100, 50},
+                {Equipment::INCENSE, -1, 90},
+                {Equipment::CALLIGRAPHY_INK, 2000, 1000},
+                {Equipment::SILVER_IDOL, -1, 50},
+                {Equipment::VIAL_OF_POISON, -1, 50},
+                {Equipment::DRAGONYAK_HORN, -1, 35},
+                {Equipment::LIZARD_HIDE, -1, 25}};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
+    };
+
+    class Story376 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {Book::Type::BOOK1, 670};
+
+        Story376()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 376;
+
+            Location = Location::Type::LUUTANESH;
+
+            Text = "You feel that you have done all you can to prepare the Everchild's forces for battle. You go into council with her and convince the queen to commit her soldiers. \"Very well,\" she says solemnly. \"May St. Elias guide our blades. Good luck, my generals.\"\n\nMustering your soldiers from the Luutanesh barracks, you begin your march across the Great Westroad to Saltdad, the sun hanging low in the sky. Soon enough the Iron King's forces intercept you, the ramshackle palace of Saltdad visible in the distance. The coward king himself has not deigned to take the field and has left governorship of his army in the hands of his generals.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 670};
+
+            EnemyArmy.clear();
+            EnemySpells.clear();
+            EnemyArmyStatus.clear();
+
+            BattleLocation = Location::Type::LUUTANESH;
+
+            if (Engine::VERIFY_CODES(party, {Codes::A(8)}))
+            {
+                EnemyArmy.push_back(Army::Base("Peasant Levies", Army::Type::CURSITE_INFANTRY, Location::Type::LUUTANESH, Location::BattleField::CENTER_FRONT, 1, 1, false));
+            }
+            else
+            {
+                EnemyArmy.push_back(Army::Base("Bronzeguard", Army::Type::BRONZEGUARD, Location::Type::LUUTANESH, Location::BattleField::CENTER_FRONT, 5, 5, true));
+                EnemyArmy.push_back(Army::Base("Peasant Levies", Army::Type::CURSITE_INFANTRY, Location::Type::LUUTANESH, Location::BattleField::CENTER_SUPPORT, 1, 1, false));
+            }
+
+            EnemyArmy.push_back(Army::Base("Spearmen of Saltdad", Army::Type::SPEARMEN_OF_SALTDAD, Location::Type::LUUTANESH, Location::BattleField::LEFT_FLANK_FRONT, 2, 2, false));
+            EnemyArmy.push_back(Army::Base("Mercenary Swords", Army::Type::MERCENARY_SWORDS, Location::Type::LUUTANESH, Location::BattleField::RIGHT_FLANK_FRONT, 3, 2, false));
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                destination = {Book::Type::BOOK1, 214};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 670};
+            }
+        }
+    };
+
+    class Story377 : public Story::Base
+    {
+    public:
+        Story377()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 377;
+
+            Text = "The thief reluctantly hands over 100 silver coins. When the rest of your party climb through the window, he also decides to throw in a HANDSOME BROOCH (Charisma +1) to discourage any further extortion.";
+
+            Bye = "You slip away into the streets together, the thief soon vanishing from sight.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::HANDSOME_BROOCH1};
+
+            Limit = 1;
+
+            Engine::GAIN_MONEY(party, 100);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story378 : public Story::Base
+    {
+    public:
+        Story378()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 378;
+
+            Text = "Kopu is astounded you have learned this forbidden language. \"You keep divine company, for the only man I know who understands the Drear tongue is St. Elias himself. He would not have taught you such a language unless the world itself was at stake.\"\n\nKopu waves his hands and a magical cabinet made of purple wood appears, floating in the air. From the cabinet he retrieves a CLOAK OF WONDER (all skills +3). \"Take it!\" he insists. \"And banish the darkness from our land once and for all!\" You vow to do so.\n\nNote: In addition, any injured party members restore their Health to full, as you spend many days resting in the tower whilst you teach the language to Kopu.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::Type::TAUGHT_KOPU_DREAR}))
+            {
+                return {Book::Type::BOOK1, 539};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::CLOAK_OF_WONDER3};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::Type::TAUGHT_KOPU_DREAR});
+
+            Engine::REST(party);
+        }
+    };
+
+    class Story379 : public Story::Base
+    {
+    public:
+        Story379()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 379;
+
+            Text = "You make your way down the pitch-black tunnel, relying on touching the damp walls to guide you. You emerge into a small cell, through which light streams weakly from a tiny arch high in the wall. In the cell you can see Che Long, your trainer, and several other gladiator slaves.\n\n\"Welcome, my students,\" bows Che Long. He indicates Milagros. \"You come in good company, I see.\"\n\n\"I believe we can trust these warriors,\" announces Milagros. \"Tell them the plan, Che Long.\"\n\n\"Do they know what they are letting themselves in for... who they fight for?\"\n\n\"We are all slaves here,\" you assure them. \"We fight for our freedom.\"\n\n\"That, and so much more,\" says Che Long, smiling. \"This is no mere slave girl. Standing before you is the reincarnation of the Everchild. The Queen of the Valley. The supreme sorceress herself.\"\n\nYou look down at the dirty blonde waif. She speaks well, but could she really be a queen? The Everchild is a figure of legend, a story told to squires and children. Milagros sees the doubt in your eyes and places a finger in the soul bowl. She withdraws it, and paints the walls with the thick soup, drawing strange symbols and wards which begin to pulse and move as if under their own power. To your astonishment she has drawn a spell upon the walls, filled with arcane power.\n\nWith a wave of her hands Milagros bathes your bodies in healing energies. Your party's Health scores are restored to full. Any of your characters that lost limbs, tongues or other organs, are restored. Any diseases or curses you are affected by are also removed.\n\nThere can be no doubt. This young slave girl is, if not the Everchild, certainly a sorceress of great power.\n\nNote: You can learn the following spell:\n\nSoothing Touch (Adventure or Combat)\n\nYour hands glow with divine energy. Choose one of your party members; they can restore 5 Health points.\n\nRecharge: 50 silver.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Ask her how she came to be enslaved", {Book::Type::BOOK1, 629}));
+            Choices.push_back(Choice::Base("Ask her about the escape plan", {Book::Type::BOOK1, 743}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Spells = {Spells::SOOTHING_TOUCH};
+
+            //TODO: Cure lost limbs, diseases
+            Engine::REST(party);
         }
     };
 
@@ -11793,6 +12105,16 @@ namespace Book1
     auto story367 = Story367();
     auto story368 = Story368();
     auto story369 = Story369();
+    auto story370 = Story370();
+    auto story371 = Story371();
+    auto story372 = Story372();
+    auto story373 = Story373();
+    auto story374 = Story374();
+    auto story375 = Story375();
+    auto story376 = Story376();
+    auto story377 = Story377();
+    auto story378 = Story378();
+    auto story379 = Story379();
 
     void InitializeStories()
     {
@@ -11837,7 +12159,8 @@ namespace Book1
             &story330, &story331, &story332, &story333, &story334, &story335, &story336, &story337, &story338, &story339,
             &story340, &story341, &story342, &story343, &story344, &story345, &story346, &story347, &story348, &story349,
             &story350, &story351, &story352, &story353, &story354, &story355, &story356, &story357, &story358, &story359,
-            &story360, &story361, &story362, &story363, &story364, &story365, &story366, &story367, &story368, &story369};
+            &story360, &story361, &story362, &story363, &story364, &story365, &story366, &story367, &story368, &story369,
+            &story370, &story371, &story372, &story373, &story374, &story375, &story376, &story377, &story378, &story379};
     }
 }
 #endif

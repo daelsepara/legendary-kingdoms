@@ -2,6 +2,7 @@
 #define __SPELLS__HPP__
 
 #include <map>
+#include <vector>
 
 namespace Spells
 {
@@ -26,7 +27,8 @@ namespace Spells
         ORB_OF_ANNIHILATION,
         MAELSTROM,
         NATURE_WARD,
-        DAZING_LIGHTS
+        DAZING_LIGHTS,
+        SOOTHING_TOUCH
     };
 
     enum class MassCombat
@@ -65,7 +67,7 @@ namespace Spells
         {Spells::Scope::COMBAT, "Combat"},
         {Spells::Scope::MASS_COMBAT, "Mass Combat"},
         {Spells::Scope::SEA_COMBAT, "Sea Combat"},
-        {Spells::Scope::ADVENTURE, "Adventure/Combat"},
+        {Spells::Scope::ADVENTURE_COMBAT, "Adventure/Combat"},
         {Spells::Scope::EXPLORATION, "Exploration"}};
 
     class Base
@@ -108,6 +110,7 @@ namespace Spells
     auto MAGIC_CABINET = Spells::Base("Magic Cabinet", "You summon a magic cabinet made of purple wood. You can use this cabinet to access The Vault, storing and/or taking out as many items as you wish. When you have done this, the cabinet will vanish, until summoned again.", Spells::Scope::ADVENTURE, Spells::Type::MAGIC_CABINET, 100);
     auto WISDOM = Spells::Base("Wisdom", "Your mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.", Spells::Scope::EXPLORATION, Spells::Type::WISDOM, 75);
     auto DAZING_LIGHTS = Spells::Base("Dazing Lights", "Swirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.", Spells::Scope::COMBAT, Spells::Type::DAZING_LIGHTS, 50);
+    auto SOOTHING_TOUCH = Spells::Base("Soothing Touch", "Your hands glow with divine energy. Choose one of your party members; they can restore 5 Health points.", Spells::Scope::ADVENTURE_COMBAT, Spells::Type::SOOTHING_TOUCH, 50);
 
     std::vector<Spells::Base> BOOK1_SPELLS = {Spells::ANIMAL_SPEECH, Spells::ARMOUR_OF_HEAVEN, Spells::ICE_BOLT, Spells::POISON_STREAM, Spells::UNFAILING_STRIKE, Spells::WOLF_SPIRIT, Spells::MAGIC_CABINET};
 }
