@@ -9567,7 +9567,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         auto font_size = 20;
         auto text_space = 8;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
@@ -9600,7 +9599,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
             }
         }
 
-        int combatRound = 0;
+        auto combatRound = 0;
+        auto round0_attacks = 0;
         auto allies_attack = false;
         auto allyAttack = std::vector<Allies::Type>();
 
@@ -9627,6 +9627,51 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             while (!done)
             {
+                if (combatRound == 0 && Engine::VERIFY_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0}))
+                {
+                    if (party.LastSelected >= 0 && party.LastSelected < party.Members.size() && monsters.size() > 0)
+                    {
+                        auto free_attack = Engine::COUNT(monsters[0].Attack, monsters[0].Difficulty);
+
+                        message = "The " + std::string(monsters[0].Name);
+
+                        if (free_attack > 0)
+                        {
+                            if (Engine::ARMOUR(party.Members[party.LastSelected]) > 0 && monsters[0].Type != Monster::Type::PAPER)
+                            {
+                                free_attack = std::max(0, armourSave(window, renderer, party.Members[party.LastSelected], free_attack));
+                            }
+
+                            if (free_attack > 0)
+                            {
+                                flash_color = intRD;
+
+                                message += " deals " + std::to_string(free_attack) + " damage to " + std::string(party.Members[0].Name) + "!";
+
+                                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -free_attack);
+                            }
+                            else
+                            {
+                                flash_color = intLB;
+
+                                message = +"'s attack was ineffective!";
+                            }
+                        }
+                        else
+                        {
+                            message = +"'s attack was ineffective!";
+
+                            flash_color = intLB;
+                        }
+
+                        start_ticks = SDL_GetTicks();
+
+                        flash_message = true;
+                    }
+
+                    Engine::LOSE_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0});
+                }
+
                 auto last = offset + limit;
 
                 if (last > monsters.size())
@@ -9909,7 +9954,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 result = selectPartyMember(window, renderer, party, team, Equipment::NONE, Control::Type::COMBAT);
                             }
 
-                            if (Engine::FIND_LIST(hasAttacked, result) >= 0)
+                            if (Engine::FIND_LIST(hasAttacked, result) >= 0 && !(Engine::HAS_STATUS(party.Members[result], Character::Status::ATTACK2_ENEMY0_ROUND0) && combatRound == 0 && round0_attacks < 2))
                             {
                                 flash_message = true;
 
@@ -9929,26 +9974,49 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     {
                                         if (Engine::COUNT(monsters, combatRound) > 0)
                                         {
-                                            auto attack = -1;
+                                            auto opponent = -1;
 
                                             if (Engine::COUNT(monsters, combatRound) == 1)
                                             {
-                                                attack = Engine::FIRST(monsters, combatRound);
+                                                opponent = Engine::FIRST(monsters, combatRound);
                                             }
                                             else
                                             {
-                                                attack = selectOpponent(window, renderer, monsters, {}, combatRound);
+                                                opponent = selectOpponent(window, renderer, monsters, {}, combatRound);
                                             }
 
-                                            if (attack >= 0)
+                                            if (opponent >= 0 && opponent < monsters.size())
                                             {
-                                                auto damage = attackScreen(window, renderer, party, team, monsters, result, attack, 0, useEquipment);
-
-                                                if (damage >= 0)
+                                                if (Engine::HAS_STATUS(party.Members[result], Character::Status::ATTACK2_ENEMY0_ROUND0) && opponent != 0 && round0_attacks > 0 && combatRound == 0)
                                                 {
-                                                    hasAttacked.push_back(result);
+                                                    flash_message = true;
 
-                                                    canFlee = false;
+                                                    message = "You cannot attack another opponent";
+
+                                                    start_ticks = SDL_GetTicks();
+
+                                                    flash_color = intRD;
+                                                }
+                                                else
+                                                {
+                                                    auto damage = attackScreen(window, renderer, party, team, monsters, result, opponent, 0, useEquipment);
+
+                                                    if (damage >= 0)
+                                                    {
+                                                        hasAttacked.push_back(result);
+
+                                                        if (Engine::HAS_STATUS(party.Members[result], Character::Status::ATTACK2_ENEMY0_ROUND0))
+                                                        {
+                                                            round0_attacks++;
+
+                                                            if (opponent != 0 || round0_attacks > 1 || combatRound != 0)
+                                                            {
+                                                                Engine::REMOVE_STATUS(party.Members[result], Character::Status::ATTACK2_ENEMY0_ROUND0);
+                                                            }
+                                                        }
+
+                                                        canFlee = false;
+                                                    }
                                                 }
                                             }
                                             else

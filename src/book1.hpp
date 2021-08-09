@@ -11837,16 +11837,22 @@ namespace Book1
 
             if (outcome)
             {
-                Bye = "Your stealthy character may attack the first orc twice in the first round.";
-
                 if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
                 {
-                    Engine::GAIN_STATUS(party.Members[party.LastSelected], Character::Status::ATTACK2_ENEMY1_ROUND0);
+                    temp_string = "Note: " + std::string(party.Members[party.LastSelected].Name) + " may attack the first orc twice in the first round.";
+
+                    Bye = temp_string.c_str();
+
+                    Engine::GAIN_STATUS(party.Members[party.LastSelected], Character::Status::ATTACK2_ENEMY0_ROUND0);
+                }
+                else
+                {
+                    Bye = "Note: Your stealthy character may attack the first orc twice in the first round.";
                 }
             }
             else
             {
-                Bye = "The 1st Orc gets a free attack at the beginning of the battle on the party member who failed the stealth check.";
+                Bye = "Note: The 1st Orc gets a free attack at the beginning of the battle on the party member who failed the stealth check.";
 
                 Engine::GET_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0});
             }
