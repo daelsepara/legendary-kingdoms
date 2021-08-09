@@ -86,7 +86,8 @@ namespace Equipment
         MADSHARD,
         AMULET_OF_DEFENSE1,
         FAIRBROTHER_FAMILY_CREST,
-        CLOAK_OF_WONDER3
+        CLOAK_OF_WONDER3,
+        BLACK_PRISM
     };
 
     class Base
@@ -221,6 +222,7 @@ namespace Equipment
     auto AMULET_OF_DEFENSE1 = Equipment::Base("AMULET OF DEFENSE", "AMULET OF DEFENSE", Equipment::Class::NORMAL, Equipment::Type::AMULET_OF_DEFENSE1, Attribute::Type::ARMOUR, 1, false);
     auto FAIRBROTHER_FAMILY_CREST = Equipment::Base("FAIRBROTHER FAMILY CREST", "FAIRBROTHER FAMILY CREST", Equipment::Class::NORMAL, Equipment::Type::FAIRBROTHER_FAMILY_CREST, Attribute::Type::NONE, 0, false);
     auto CLOAK_OF_WONDER3 = Equipment::Base("CLOAK OF WONDER", "CLOAK OF WONDER", Equipment::Class::ROBE, Equipment::Type::CLOAK_OF_WONDER3, Attribute::Type::ALL_SKILLS, 3, false);
+    auto BLACK_PRISM = Equipment::Base("BLACK PRISM", "BLACK PRISM", Equipment::Class::NORMAL, Equipment::Type::BLACK_PRISM, Attribute::Type::NONE, 0, false);
 }
 
 #endif

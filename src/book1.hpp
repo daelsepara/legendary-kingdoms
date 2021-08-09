@@ -11676,6 +11676,8 @@ namespace Book1
 
             Engine::REST(party);
         }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 539}; }
     };
 
     class Story379 : public Story::Base
@@ -11703,6 +11705,391 @@ namespace Book1
             //TODO: Cure lost limbs, diseases
             Engine::REST(party);
         }
+    };
+
+    class Story380 : public Story::Base
+    {
+    public:
+        Story380()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 380;
+
+            Text = "The door is unlocked and leads to a priest's sanctum. There is a small altar with a block of INCENSE and 15 silver coins on it. The place is tidy, but there are no comfortable bits of furniture such as chairs or tables here.";
+
+            Bye = "With no other exits available, you make your way to the archway.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::INCENSE};
+
+            Limit = 1;
+
+            Engine::GAIN_MONEY(party, 15);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 806}; }
+    };
+
+    class Story381 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story381()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 381;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You sit before the shaman, a ghostly looking man with silver hair and skull-like white makeup, in the company of what looks like the chief and his most loyal warriors. Your packs are searched whilst the shaman casts strange incense into the firepit.";
+
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::MAGICAL_WEAVE}))
+            {
+                PreText += "\n\nAfter a full search of your packs the shaman shrugs and you are escorted back to your ship. You get the impression your audience with the Bando has come to an end.";
+            }
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::MAGICAL_WEAVE}))
+            {
+                return {Book::Type::BOOK1, 767};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 144};
+            }
+        }
+    };
+
+    class Story382 : public Story::Base
+    {
+    public:
+        Story382()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 382;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "The Temple of Kalu is nothing more than a pile of rubble. The religion has been decreed heresy by the patriarch of Cursus, and the temple has been torn down.";
+
+            Bye = "Mystified at this barbaric zealotry, you return to the city centre.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(1)}))
+            {
+                return {Book::Type::BOOK1, 128};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story383 : public Story::Base
+    {
+    public:
+        Story383()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 383;
+
+            Text = "Choose a party member to perform this stealthy manoeuvre. You drop down to your belly and wriggle through the open door as quietly as possible.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Sneak up on the orcs (Individual check: Stealth 5+, Successes: 2)", {Book::Type::BOOK1, 2}, {Book::Type::BOOK1, 2}, {Attribute::Type::STEALTH}, 5, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            Bye = NULL;
+
+            if (outcome)
+            {
+                Bye = "Your stealthy character may attack the first orc twice in the first round.";
+
+                if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
+                {
+                    Engine::GAIN_STATUS(party.Members[party.LastSelected], Character::Status::ATTACK2_ENEMY1_ROUND0);
+                }
+            }
+            else
+            {
+                Bye = "The 1st Orc gets a free attack at the beginning of the battle on the party member who failed the stealth check.";
+
+                Engine::GET_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0});
+            }
+        }
+    };
+
+    class Story384 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story384()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 384;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            PreText = "You make your way to Dulcimer's house, a red-roofed cubical block of stone and rough cement in the wealthiest part of the city. The house is well guarded and the family large in number, with aunts, uncles, nieces and nephews in ample numbers attending Dulcimer as he receives you in the family hall.\n\n\"That witch has damaged my honour and made me look a fool!\" rages Dulcimer as you explain the purpose of your visit. \"She is a thief and a harlot! My sister has volunteered personally to deal the killing blow to her.\"\n\nDulcimer's sister, a thin and sinister woman with sharp eyebrows, looks positively excited at the prospect.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::ENGAGEMENT_RING}))
+            {
+                PreText += "\n\nThis will require delicate negotiations indeed.";
+
+                Choices.push_back(Choice::Base("Calm Dulcimer's Rage (Team check: Charisma 5+, Successes: 4)", {Book::Type::BOOK1, 204}, {Book::Type::BOOK1, 155}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 4));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 83}; }
+    };
+
+    class Story385 : public Story::Base
+    {
+    public:
+        Story385()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 385;
+
+            Text = "Hardly daring to breathe, your party member manages to step carefully across the chamber, avoiding every pressure plate and hidden tripwire. You may take the BLACK PRISM from the pedestal. You only hope it was worth the danger retrieving it!\n\nRetracing your steps with a heart-thumping precision, you manage to make it out of the chamber to the warm congratulations of your colleagues.\n\nYou gained the code A80.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 310}, Choice::Type::LASTCHARACTER_ROLLS_FOR_ATTRIBUTEINCREASE, {Attribute::Type::SURVIVAL}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::BLACK_PRISM};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::A(80)});
+        }
+    };
+
+    class Story386 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {Book::Type::BOOK1, 596};
+
+        Team::Type previousTeam = Team::Type::NONE;
+
+        int character = -1;
+
+        Story386()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 386;
+
+            Image = "images/book1/akihiro_battles_monk.png";
+
+            Text = "You inform your companions to stand aside.\n\nGazing directly into the eyes of the opposing monks you strip away your weapon belt and throw it to the side. Armed only with your fists you approach, the monks adopting fighting stances.\n\nNote: Because you have no weapon for this fight, you cannot add any Fighting bonus a weapon can give you. However, because you are familiar with the unarmed combat style of the monks, you do not lose a point of Fighting for having no weapon.\n\nOnly Akihiro may engage in this battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 596};
+
+            CanFlee = false;
+
+            Team = Team::Type::AKIHIRO_OF_CHALICE;
+
+            character = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
+
+            if (character >= 0 && character < party.Members.size())
+            {
+                previousTeam = party.Members[character].Team;
+
+                Engine::SET_TEAM(party.Members[character]);
+
+                Monsters = {Monster::Base("Monks", 5, 4, 4, 8, 0)};
+
+                Engine::GAIN_STATUS(party.Members[character], Character::Status::UNARMED_COMBAT);
+            }
+            else
+            {
+                Monsters.clear();
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                if (character >= 0 && character < party.Members.size())
+                {
+                    Engine::SET_TEAM(party.Members[character], previousTeam);
+                }
+
+                destination = {Book::Type::BOOK1, 9};
+            }
+            else
+            {
+                if (character >= 0 && character < party.Members.size())
+                {
+                    party.Members[character].Health = 1;
+                }
+
+                destination = {Book::Type::BOOK1, 596};
+            }
+        }
+    };
+
+    class Story387 : public Story::Base
+    {
+    public:
+        Story387()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 387;
+
+            Text = "As soon as you show the ring, the guards become humble. \"Forgive us, great ones, we did not know!\" they whisper. \"Naturally, you may pass!\"";
+
+            Bye = "Hoping your cover will not be blown, your party makes its way inside.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 574}; }
+    };
+
+    class Story388 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+        Story388()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 388;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The mine lift creaks loudly as you reach the thirteenth floor.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(25)}))
+            {
+                PreText += "\n\nYou speak to the miners, asking them about recent attacks. They confirm that there have been a few, but that the troglodytes have been hiding in the deep tunnels to avoid the attention of the guards. Clearly you will have to flush them out!";
+
+                Choices.push_back(Choice::Base("Explore the thirteenth level (Team check: Survival 4+, Successes: 5)", {Book::Type::BOOK1, 446}, {Book::Type::BOOK1, -388}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 5));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 817}; }
+    };
+
+    class Event388 : public Story::Base
+    {
+    public:
+        Event388()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -388;
+
+            DisplayID = 388;
+
+            Text = "You only manage to bang your head on one of the low walls.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose the party member to lose 1 Health", {Book::Type::BOOK1, 135}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story389 : public Story::Base
+    {
+    public:
+        Story389()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 389;
+
+            Text = "You curse as three of the goblins bolt past you out of the south door. The other three goblins bear their teeth and lunge at you.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Goblin", 2, 4, 4, 3, 0),
+                Monster::Base("Goblin", 3, 4, 4, 5, 0),
+                Monster::Base("Goblin", 2, 4, 4, 4, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 650}; }
     };
 
     auto story001 = Story001();
@@ -12115,6 +12502,17 @@ namespace Book1
     auto story377 = Story377();
     auto story378 = Story378();
     auto story379 = Story379();
+    auto story380 = Story380();
+    auto story381 = Story381();
+    auto story382 = Story382();
+    auto story383 = Story383();
+    auto story384 = Story384();
+    auto story385 = Story385();
+    auto story386 = Story386();
+    auto story387 = Story387();
+    auto story388 = Story388();
+    auto event388 = Event388();
+    auto story389 = Story389();
 
     void InitializeStories()
     {
@@ -12122,7 +12520,7 @@ namespace Book1
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
-            &event343,
+            &event343, &event388,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -12160,7 +12558,8 @@ namespace Book1
             &story340, &story341, &story342, &story343, &story344, &story345, &story346, &story347, &story348, &story349,
             &story350, &story351, &story352, &story353, &story354, &story355, &story356, &story357, &story358, &story359,
             &story360, &story361, &story362, &story363, &story364, &story365, &story366, &story367, &story368, &story369,
-            &story370, &story371, &story372, &story373, &story374, &story375, &story376, &story377, &story378, &story379};
+            &story370, &story371, &story372, &story373, &story374, &story375, &story376, &story377, &story378, &story379,
+            &story380, &story381, &story382, &story383, &story384, &story385, &story386, &story387, &story388, &story389};
     }
 }
 #endif

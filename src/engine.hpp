@@ -422,7 +422,6 @@ namespace Engine
         return found;
     }
 
-
     int MAX(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
     {
         auto max = 0;
@@ -942,7 +941,7 @@ namespace Engine
             }
         }
 
-        score = max >= 0 ? (score + max) : (score - 1);
+        score = max >= 0 ? (score + max) : (Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT) ? score : (score - 1));
 
         if (score < 1)
         {

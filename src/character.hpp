@@ -122,7 +122,9 @@ namespace Character
         ENLIGHTENED,
         EXTRA_MAGIC_ROUND0,
         UNLIMITED_MAGIC_ROUND0,
-        FOUND_COGWHEEL
+        FOUND_COGWHEEL,
+        ATTACK2_ENEMY1_ROUND0,
+        UNARMED_COMBAT
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;
@@ -138,7 +140,9 @@ namespace Character
         {Character::Status::ENLIGHTENED, "Enlightened"},
         {Character::Status::EXTRA_MAGIC_ROUND0, "Extra Magic Attack on Round 1"},
         {Character::Status::UNLIMITED_MAGIC_ROUND0, "Unlimited Magic Attacks on Round 1"},
-        {Character::Status::FOUND_COGWHEEL, "Found the cogwheel"}};
+        {Character::Status::FOUND_COGWHEEL, "Found the cogwheel"},
+        {Character::Status::ATTACK2_ENEMY1_ROUND0, "Can attack first enemy twice on Round 1"},
+        {Character::Status::UNARMED_COMBAT, "Unarmed Combat"}};
 
     class Base
     {
