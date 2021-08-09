@@ -5165,7 +5165,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     }
 
     // if opponent left any loot that can be used, allow party to take it
-    if (monsters[opponent].Health == 0 && monsters[opponent].Loot.size() > 0 && Engine::COUNT(monsters) > 0)
+    if (monsters[opponent].Health <= 0 && monsters[opponent].Loot.size() > 0)
     {
         takeScreen(window, renderer, party, monsters[opponent].Loot, monsters[opponent].Loot.size(), false);
     }
