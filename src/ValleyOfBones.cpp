@@ -6732,7 +6732,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                             fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
 
-                            if (stage == Attribute::Test::CHECK)
+                            if (stage == Attribute::Test::CHECK || starge == Attribute::Test::MAGIC)
                             {
                                 if (results[i] >= difficulty)
                                 {
