@@ -68,7 +68,8 @@ namespace Choice
         GAIN_HEALTH_ATTRIBUTE,
         GAIN_MORALE,
         SET_PARTY_ORDER,
-        ORDER_SKILL_CHECK
+        ORDER_SKILL_CHECK,
+        RESET_SHOP
     };
 
     class Base
@@ -620,6 +621,8 @@ namespace Story
 
         // temporary string
         std::string temp_string = "";
+
+        bool ResetShop = false;
 
         // Handle background events
         virtual Engine::Destination Background(Party::Base &party) { return {Book::Type::NONE, -1}; };

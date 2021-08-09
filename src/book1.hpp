@@ -2769,6 +2769,7 @@ namespace Book1
             Engine::GET_CODES(party, {Codes::Type::NO_VAULT_ACCESS});
             Engine::LOSE_ALL(party, Equipment::Class::ARMOUR);
             Engine::LOSE_ALL(party, Equipment::Class::ROBE);
+            Engine::SINK_SHIP(party);
 
             Choices.clear();
 
@@ -2929,12 +2930,12 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Shop = {
-                {Equipment::CRUDE_BLADE, 25, 10},
-                {Equipment::MAUL, 50, 20},
-                {Equipment::SHIELD2, 50, 25},
-                {Equipment::INCENSE, -1, 90},
-                {Equipment::BLUESTONE, -1, 45},
-                {Equipment::TALISMAN_OF_ST_ELIAS, -1, 150}};
+                {Equipment::CRUDE_BLADE, 25, 10, -1, {}},
+                {Equipment::MAUL, 50, 20, -1, {}},
+                {Equipment::SHIELD2, 50, 25, -1, {}},
+                {Equipment::INCENSE, -1, 90, -1, {}},
+                {Equipment::BLUESTONE, -1, 45, -1, {}},
+                {Equipment::TALISMAN_OF_ST_ELIAS, -1, 150, -1, {}}};
         }
     };
 
@@ -4524,29 +4525,29 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Shop = {
-                {Equipment::CRUDE_BLADE, 25, 10},
-                {Equipment::MAUL, -1, 25},
-                {Equipment::IRON_SHORTSWORD1, 200, 100},
-                {Equipment::IRON_GREATAXE2, -1, 150},
-                {Equipment::STEEL_LONGSWORD2, 800, 400},
-                {Equipment::STEEL_GREATSWORD3, -1, 450},
-                {Equipment::MASTERWORK_BLADE3, -1, 900},
-                {Equipment::MASTERWORK_GREATSWORD4, -1, 1250},
-                {Equipment::SHIELD2, 50, 25},
-                {Equipment::HIDE_ARMOUR1, -1, 30},
-                {Equipment::BONE_ARMOUR2, -1, 150},
-                {Equipment::BRONZE_ARMOUR4, -1, 2000},
-                {Equipment::SOFT_BOOTS1, 500, 250},
-                {Equipment::REFERENCE_BOOK1, 500, 250},
-                {Equipment::WARM_CLOAK1, -1, 250},
-                {Equipment::HANDSOME_BROOCH1, -1, 250},
-                {Equipment::PRYBAR, 100, 50},
-                {Equipment::INCENSE, -1, 90},
-                {Equipment::GOLDWAX_CANDLE, -1, 100},
-                {Equipment::ENGAGEMENT_RING, -1, 65},
-                {Equipment::VIAL_OF_POISON, -1, 50},
-                {Equipment::DRAGONYAK_HORN, -1, 35},
-                {Equipment::LIZARD_HIDE, -1, 50}};
+                {Equipment::CRUDE_BLADE, 25, 10, -1, {}},
+                {Equipment::MAUL, -1, 25, -1, {}},
+                {Equipment::IRON_SHORTSWORD1, 200, 100, -1, {}},
+                {Equipment::IRON_GREATAXE2, -1, 150, -1, {}},
+                {Equipment::STEEL_LONGSWORD2, 800, 400, -1, {}},
+                {Equipment::STEEL_GREATSWORD3, -1, 450, -1, {}},
+                {Equipment::MASTERWORK_BLADE3, -1, 900, -1, {}},
+                {Equipment::MASTERWORK_GREATSWORD4, -1, 1250, -1, {}},
+                {Equipment::SHIELD2, 50, 25, -1, {}},
+                {Equipment::HIDE_ARMOUR1, -1, 30, -1, {}},
+                {Equipment::BONE_ARMOUR2, -1, 150, -1, {}},
+                {Equipment::BRONZE_ARMOUR4, -1, 2000, -1, {}},
+                {Equipment::SOFT_BOOTS1, 500, 250, -1, {}},
+                {Equipment::REFERENCE_BOOK1, 500, 250, -1, {}},
+                {Equipment::WARM_CLOAK1, -1, 250, -1, {}},
+                {Equipment::HANDSOME_BROOCH1, -1, 250, -1, {}},
+                {Equipment::PRYBAR, 100, 50, -1, {}},
+                {Equipment::INCENSE, -1, 90, -1, {}},
+                {Equipment::GOLDWAX_CANDLE, -1, 100, -1, {}},
+                {Equipment::ENGAGEMENT_RING, -1, 65, -1, {}},
+                {Equipment::VIAL_OF_POISON, -1, 50, -1, {}},
+                {Equipment::DRAGONYAK_HORN, -1, 35, -1, {}},
+                {Equipment::LIZARD_HIDE, -1, 50, -1, {}}};
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
@@ -4964,28 +4965,28 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Shop = {
-                {Equipment::CRUDE_BLADE, 25, 10},
-                {Equipment::MAUL, 50, 25},
-                {Equipment::IRON_SHORTSWORD1, 200, 100},
-                {Equipment::IRON_GREATAXE2, 300, 150},
-                {Equipment::STEEL_LONGSWORD2, -1, 400},
-                {Equipment::STEEL_GREATSWORD3, -1, 450},
-                {Equipment::SHIELD2, 50, 20},
-                {Equipment::HIDE_ARMOUR1, 70, 35},
-                {Equipment::BONE_ARMOUR2, 300, 150},
-                {Equipment::BRONZE_ARMOUR4, -1, 2000},
-                {Equipment::SOFT_BOOTS1, -1, 250},
-                {Equipment::REFERENCE_BOOK1, -1, 250},
-                {Equipment::WARM_CLOAK1, 500, 250},
-                {Equipment::HANDSOME_BROOCH1, -1, 250},
-                {Equipment::PRYBAR, 100, 50},
-                {Equipment::INCENSE, -1, 90},
-                {Equipment::BLUESTONE, -1, 45},
-                {Equipment::GREY_TALISMAN, -1, 100},
-                {Equipment::ENGAGEMENT_RING, -1, 65},
-                {Equipment::VIAL_OF_POISON, -1, 50},
-                {Equipment::DRAGONYAK_HORN, -1, 35},
-                {Equipment::LIZARD_HIDE, -1, 25}};
+                {Equipment::CRUDE_BLADE, 25, 10, -1, {}},
+                {Equipment::MAUL, 50, 25, -1, {}},
+                {Equipment::IRON_SHORTSWORD1, 200, 100, -1, {}},
+                {Equipment::IRON_GREATAXE2, 300, 150, -1, {}},
+                {Equipment::STEEL_LONGSWORD2, -1, 400, -1, {}},
+                {Equipment::STEEL_GREATSWORD3, -1, 450, -1, {}},
+                {Equipment::SHIELD2, 50, 20, -1, {}},
+                {Equipment::HIDE_ARMOUR1, 70, 35, -1, {}},
+                {Equipment::BONE_ARMOUR2, 300, 150, -1, {}},
+                {Equipment::BRONZE_ARMOUR4, -1, 2000, -1, {}},
+                {Equipment::SOFT_BOOTS1, -1, 250, -1, {}},
+                {Equipment::REFERENCE_BOOK1, -1, 250, -1, {}},
+                {Equipment::WARM_CLOAK1, 500, 250, -1, {}},
+                {Equipment::HANDSOME_BROOCH1, -1, 250, -1, {}},
+                {Equipment::PRYBAR, 100, 50, -1, {}},
+                {Equipment::INCENSE, -1, 90, -1, {}},
+                {Equipment::BLUESTONE, -1, 45, -1, {}},
+                {Equipment::GREY_TALISMAN, -1, 100, -1, {}},
+                {Equipment::ENGAGEMENT_RING, -1, 65, -1, {}},
+                {Equipment::VIAL_OF_POISON, -1, 50, -1, {}},
+                {Equipment::DRAGONYAK_HORN, -1, 35, -1, {}},
+                {Equipment::LIZARD_HIDE, -1, 25, -1, {}}};
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
@@ -11523,27 +11524,27 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Shop = {
-                {Equipment::CRUDE_BLADE, 25, 10},
-                {Equipment::MAUL, 50, 25},
-                {Equipment::IRON_SHORTSWORD1, 200, 100},
-                {Equipment::IRON_GREATAXE2, -1, 150},
-                {Equipment::STEEL_LONGSWORD2, -1, 400},
-                {Equipment::STEEL_GREATSWORD3, -1, 450},
-                {Equipment::SHIELD2, 50, 25},
-                {Equipment::HIDE_ARMOUR1, 70, 35},
-                {Equipment::BONE_ARMOUR2, -1, 150},
-                {Equipment::BRONZE_ARMOUR4, -1, 2000},
-                {Equipment::SOFT_BOOTS1, 500, 250},
-                {Equipment::REFERENCE_BOOK1, 500, 250},
-                {Equipment::WARM_CLOAK1, -1, 250},
-                {Equipment::HANDSOME_BROOCH1, -1, 250},
-                {Equipment::PRYBAR, 100, 50},
-                {Equipment::INCENSE, -1, 90},
-                {Equipment::CALLIGRAPHY_INK, 2000, 1000},
-                {Equipment::SILVER_IDOL, -1, 50},
-                {Equipment::VIAL_OF_POISON, -1, 50},
-                {Equipment::DRAGONYAK_HORN, -1, 35},
-                {Equipment::LIZARD_HIDE, -1, 25}};
+                {Equipment::CRUDE_BLADE, 25, 10, -1, {}},
+                {Equipment::MAUL, 50, 25, -1, {}},
+                {Equipment::IRON_SHORTSWORD1, 200, 100, -1, {}},
+                {Equipment::IRON_GREATAXE2, -1, 150, -1, {}},
+                {Equipment::STEEL_LONGSWORD2, -1, 400, -1, {}},
+                {Equipment::STEEL_GREATSWORD3, -1, 450, -1, {}},
+                {Equipment::SHIELD2, 50, 25, -1, {}},
+                {Equipment::HIDE_ARMOUR1, 70, 35, -1, {}},
+                {Equipment::BONE_ARMOUR2, -1, 150, -1, {}},
+                {Equipment::BRONZE_ARMOUR4, -1, 2000, -1, {}},
+                {Equipment::SOFT_BOOTS1, 500, 250, -1, {}},
+                {Equipment::REFERENCE_BOOK1, 500, 250, -1, {}},
+                {Equipment::WARM_CLOAK1, -1, 250, -1, {}},
+                {Equipment::HANDSOME_BROOCH1, -1, 250, -1, {}},
+                {Equipment::PRYBAR, 100, 50, -1, {}},
+                {Equipment::INCENSE, -1, 90, -1, {}},
+                {Equipment::CALLIGRAPHY_INK, 2000, 1000, -1, {}},
+                {Equipment::SILVER_IDOL, -1, 50, -1, {}},
+                {Equipment::VIAL_OF_POISON, -1, 50, -1, {}},
+                {Equipment::DRAGONYAK_HORN, -1, 35, -1, {}},
+                {Equipment::LIZARD_HIDE, -1, 25, -1, {}}};
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
@@ -12021,7 +12022,7 @@ namespace Book1
     {
     public:
         std::string PreText = "";
-        
+
         Story388()
         {
             BookID = Book::Type::BOOK1;
@@ -12097,6 +12098,334 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 650}; }
+    };
+
+    class Story390 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story390()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 390;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The Bronzeguard live in a large, low compound with reinforced walls, just adjacent to the palace.\n\nGuards are everywhere, though servants flow through the gates, delivering food, water and other materials into the building.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(7)}) || Engine::VERIFY_CODES(party, {Codes::A(8)}))
+            {
+                PreText += "\n\nYou have no business here and depart once the guards start glowering at you across the street.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(7)}) && !Engine::VERIFY_CODES(party, {Codes::A(8)}))
+            {
+                return {Book::Type::BOOK1, 684};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 75};
+            }
+        }
+    };
+
+    class Story391 : public Story::Base
+    {
+    public:
+        Story391()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 391;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "The thief lies dead at your feet. You may take his IRON SHORTSWORD (Fighting +1), his LEATHER ARMOUR (Armour +1) and a pair of SOFT BOOTS (Stealth +1). He also carries 30 silver coins. Eventually the city guards arrive and you inform them what has just happened. Fortunately, they have been looking for this thief for some time and so believe your story.\n\nThe thief's victim, a local magistrate, is delighted with your kindness. He promises to put in a good word with the authorities whilst you are in Chalice.\n\nNote: From now on, any time you have to make a Charisma skill check in the city of Chalice, you may pass it automatically.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::IRON_SHORTSWORD1, Equipment::LEATHER_ARMOUR1, Equipment::SOFT_BOOTS1};
+
+            Limit = 3;
+
+            Engine::GAIN_MONEY(party, 30);
+
+            Engine::GET_CODES(party, {Codes::Type::CHARISMA_SUCCESS_CHALICE});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story392 : public Story::Base
+    {
+    public:
+        Story392()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 392;
+
+            Text = "You make your way to the king's hall, a vast timber and stone structure which displays the heads and horns of terrible beasts. The hall is the living space of the King Scarrenden and his most trusted berserkers, and you are rudely shoved about by passing housecarls and beer wenches in the crowded space. The king himself is peering over the edge of a pit, where one of his warriors is being mauled to death by an angry sand bear. The king toasts the bear's victory with a flagon of frothy beer, much to the laughter of the assembled barbarians.\n\n\"What was his crime?\" you ask a passing wench.\n\n\"No crime, we don't feed criminals to bears,\" she laughs. \"He chose to fight the bear to impress the king. You can petition the king for aid if you display a great feat of strength.\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Offer to wrestle the bear", {Book::Type::BOOK1, 425}));
+            Choices.push_back(Choice::Base("Attempt to woo one of the king's most trusted councillors", {Book::Type::BOOK1, 86}));
+            Choices.push_back(Choice::Base("Leave these savages to their amusement", {Book::Type::BOOK1, 775}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(82)}))
+            {
+                return {Book::Type::BOOK1, 355};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story393 : public Story::Base
+    {
+    public:
+        Story393()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 393;
+
+            Text = "The overseer is not present, but guards and servants walk by the door frequently. You need to be in and out as quickly as possible.\n\nNote: Multiple people might be spotted, so only one party member in the weapon stealing team can be chosen for this task.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Steal the key (Individual check: Stealth 4+, Successes: 2)", {Book::Type::BOOK1, 147}, {Book::Type::BOOK1, 483}, Team::Type::WEAPONS, {Attribute::Type::STEALTH}, 4, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story394 : public Story::Base
+    {
+    public:
+        Story394()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 394;
+
+            Text = "A surly group of barbarians begin pushing you, spoiling for a fight. In the background a weaselly looking man with a long knife observes the horseplay, his finger pressing to the top of his dagger meaningfully.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Push the barbarians back", {Book::Type::BOOK1, 435}));
+            Choices.push_back(Choice::Base("Try to diffuse the situation", {Book::Type::BOOK1, 472}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story395 : public Story::Base
+    {
+    public:
+        Story395()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 395;
+
+            Location = Location::Type::CAVES_OF_URANU;
+
+            Text = "You are leaving the Caves of Uranu behind. Where will you go?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North, towards Chalice", {Book::Type::BOOK1, 450}));
+            Choices.push_back(Choice::Base("South, towards Cursus", {Book::Type::BOOK1, 625}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story396 : public Story::Base
+    {
+    public:
+        Story396()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 396;
+
+            Text = "There is no shelter and the storm lashes you cruelly.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Survive the Sandstorm (Team check: Survival 4+, Successes: 4)", {Book::Type::BOOK1, 569}, {Book::Type::BOOK1, 569}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (!outcome)
+            {
+                Bye = "Each party member loses 2 Health pointS.";
+
+                Engine::GAIN_HEALTH(party, -2);
+            }
+            else
+            {
+                Bye = "You manage to bury yourselves in the sand until the storm abates.";
+            }
+        }
+    };
+
+    class Story397 : public Story::Base
+    {
+    public:
+        Story397()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 397;
+
+            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful. All prices are in silver coins.\n\nIf you have a ship docked in Clifftop, you can also buy up to three cargo units of Salt from the merchants for 500 silver coins each. They will deliver this cargo straight to your ship provided there is room for it.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Buy one cargo unit of SALT", {Book::Type::BOOK1, -397}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 500));
+            Choices.push_back(Choice::Base("Buy two cargo units of SALT", {Book::Type::BOOK1, -397}, Choice::Type::DELIVER, {Cargo::Type::SALT, Cargo::Type::SALT}, Location::Type::CLIFFTOP, 1000));
+            Choices.push_back(Choice::Base("Buy three cargo units of SALT", {Book::Type::BOOK1, -397}, Choice::Type::DELIVER, {Cargo::Type::SALT, Cargo::Type::SALT, Cargo::Type::SALT}, Location::Type::CLIFFTOP, 1500));
+            Choices.push_back(Choice::Base("You have finished your trading", {Book::Type::BOOK1, 569}, Choice::Type::RESET_SHOP));
+
+            Controls = Story::Controls::SHOP;
+
+            ResetShop = true;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(21)}) && ResetShop)
+            {
+                return {Book::Type::BOOK1, 89};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            if (ResetShop)
+            {
+                Shop = {
+                    {Equipment::CRUDE_BLADE, 25, 10, -1, {}},
+                    {Equipment::MAUL, 50, 25, -1, {}},
+                    {Equipment::SHIELD2, 50, 25, -1, {}},
+                    {Equipment::INCENSE, 500, 90, 1, {Codes::A(21)}},
+                    {Equipment::BLUESTONE, 400, 45, 1, {Codes::A(21)}},
+                    {Equipment::TALISMAN_OF_ST_ELIAS, -1, 150, -1, {}}};
+
+                ResetShop = false;
+            }
+        }
+    };
+
+    class Event397 : public Story::Base
+    {
+    public:
+        Event397()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -397;
+
+            DisplayID = 397;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 397}; }
+    };
+
+    class Story398 : public Story::Base
+    {
+    public:
+        Story398()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 398;
+
+            Text = "Water gushes in through the ripped hole in your vessel. Your crew give a great cry and abandon ship, leaping into the frothing waves with a wail. You have scant seconds to prepare yourself to dive into the ocean.\n\nThere is nowhere to swim but the harbour.\n\nNote: Any character wearing or carrying a suit of armour or robes must discard it. In addition, you can carry no more than four items each before leaping into the sea -- any remaining items are lost (there is no time to conjure a magic cabinet). Each party member loses 2 Health points.";
+
+            Bye = "After an exhausting swim, you manage to pull yourself onto the harbourside. Of your ship crew there is no sign.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::NO_VAULT_ACCESS});
+            Engine::LOSE_ALL(party, Equipment::Class::ARMOUR);
+            Engine::LOSE_ALL(party, Equipment::Class::ROBE);
+            Engine::GAIN_HEALTH(party, -2);
+            Engine::SINK_SHIP(party);
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_EQUIPMENT_LIMIT(party, 4))
+            {
+                Choices.push_back(Choice::Base("Drop number of items down to 4", {Book::Type::BOOK1, 662}, Choice::Type::LIMIT_EQUIPMENT, 4));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 662}; }
+    };
+
+    class Story399 : public Story::Base
+    {
+    public:
+        Story399()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 399;
+
+            Location = Location::Type::DESERT;
+
+            Text = "\"Bless you strangers,\" murmurs the monkey. \"I knew there was kindness in human-folk. Alas, I have seen all too little of it. I was a slave of the devious sorcerer Unbraaki. He took me from my home and made me his apprentice. I longed to return to my family, but Unbraaki swore he would find me and slay my kin if I ever escaped. I fled into the desert, rather than endanger them, but the land could not sustain me.\"\n\n\"A sad tale,\" you say. \"We will avenge you if we can.\"\n\n\"He is a covetous man, but powerful,\" sighs the monkey. \"Avenge me by taking what was his. I alone know the password to enter his secret vault. It is 'amora'. Say that word, and the doors shall open. Goodbye friends...\"\n\nAt this the monkey closes his eyes and dies in your arms.\n\nYou gain the code A43.";
+
+            Bye = "Burying the monkey in the desert, you make your way onwards.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(43)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 125}; }
     };
 
     auto story001 = Story001();
@@ -12520,6 +12849,17 @@ namespace Book1
     auto story388 = Story388();
     auto event388 = Event388();
     auto story389 = Story389();
+    auto story390 = Story390();
+    auto story391 = Story391();
+    auto story392 = Story392();
+    auto story393 = Story393();
+    auto story394 = Story394();
+    auto story395 = Story395();
+    auto story396 = Story396();
+    auto story397 = Story397();
+    auto event397 = Event397();
+    auto story398 = Story398();
+    auto story399 = Story399();
 
     void InitializeStories()
     {
@@ -12527,7 +12867,7 @@ namespace Book1
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
-            &event343, &event388,
+            &event343, &event388, &event397,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -12566,7 +12906,8 @@ namespace Book1
             &story350, &story351, &story352, &story353, &story354, &story355, &story356, &story357, &story358, &story359,
             &story360, &story361, &story362, &story363, &story364, &story365, &story366, &story367, &story368, &story369,
             &story370, &story371, &story372, &story373, &story374, &story375, &story376, &story377, &story378, &story379,
-            &story380, &story381, &story382, &story383, &story384, &story385, &story386, &story387, &story388, &story389};
+            &story380, &story381, &story382, &story383, &story384, &story385, &story386, &story387, &story388, &story389,
+            &story390, &story391, &story392, &story393, &story394, &story395, &story396, &story397, &story398, &story399};
     }
 }
 #endif

@@ -55,7 +55,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Book::Type book, Story::Base *story);
 bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int unit, Location::Type &location, int threshold, int rolls);
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
-bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::EquipmentPrice> shop, Character::Base &character);
+bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::EquipmentPrice> &shop, Character::Base &character);
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection, bool useEquipment);
 bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team_type, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
 bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int spells_limit);
@@ -10542,6 +10542,8 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto sell = std::get<2>(shop[index]);
 
+            auto supply = std::get<3>(shop[index]);
+
             std::string item_string = std::string(item.Name);
 
             if (item.TwoHanded)
@@ -10569,6 +10571,25 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
                 }
 
                 item_string += +")";
+            }
+
+            if (supply >= 0)
+            {
+                if (supply == 0)
+                {
+                    item_string += ", out of stock";
+                }
+                else
+                {
+                    item_string += ", " + std::to_string(supply) + " stock";
+
+                    if (supply > 1)
+                    {
+                        item_string += "s";
+                    }
+                    
+                    item_string += " remaining";
+                }
             }
 
             item_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + ", Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
@@ -10614,7 +10635,7 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     return controls;
 }
 
-bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::EquipmentPrice> shop, Character::Base &character)
+bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::EquipmentPrice> &shop, Character::Base &character)
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
@@ -10699,6 +10720,9 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         {
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
+
+        putHeader(renderer, "Money", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (5 * boxh / 2) - 2 * infoh - box_space);
+        putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh / 2, startx, starty + text_bounds - (5 * boxh / 2) - infoh - box_space);
 
         putHeader(renderer, (selection.size() > 0 ? (std::string("Selected (") + std::to_string(selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -10946,7 +10970,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     auto total = 0;
 
-                    auto items = std::vector<Equipment::Base>();
+                    auto items = std::vector<std::tuple<Equipment::Base, int>>();
+                    auto codes_gained = std::vector<Codes::Base>();
 
                     for (auto i = 0; i < selection.size(); i++)
                     {
@@ -10956,9 +10981,11 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                             auto price = std::get<1>(shop[selection[i]]);
 
-                            if (price > 0)
+                            auto supply = std::get<3>(shop[selection[i]]);
+
+                            if (price > 0 && (supply == -1 || supply > 0))
                             {
-                                items.push_back(item);
+                                items.push_back({item, selection[i]});
 
                                 total += price;
                             }
@@ -10971,12 +10998,75 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         {
                             Engine::GAIN_MONEY(party, -total);
 
-                            character.Equipment.insert(character.Equipment.end(), items.begin(), items.end());
+                            message = "Item";
+
+                            if (items.size() > 1)
+                            {
+                                message += "s";
+                            }
+
+                            message += " purchased: ";
+
+                            for (auto i = 0; i < items.size(); i++)
+                            {
+                                auto item = std::get<0>(items[i]);
+                                auto index = std::get<1>(items[i]);
+
+                                character.Equipment.push_back(item);
+
+                                if (index >= 0 && index < shop.size())
+                                {
+                                    auto supply = std::get<3>(shop[index]);
+                                    auto codes = std::get<4>(shop[index]);
+
+                                    if (supply > 0)
+                                    {
+                                        std::get<3>(shop[index]) = supply - 1;
+                                    }
+
+                                    if (codes.size() > 0)
+                                    {
+                                        if (!Engine::VERIFY_CODES(party, codes))
+                                        {
+                                            codes_gained.insert(codes_gained.end(), codes.begin(), codes.end());
+                                        }
+
+                                        Engine::GET_CODES(party, codes);
+                                    }
+                                }
+
+                                if (i > 0)
+                                {
+                                    message += ", ";
+                                }
+
+                                message += item.Name;
+                            }
+
+                            if (codes_gained.size() > 0)
+                            {
+                                message += ", Codes gained: ";
+
+                                for (auto i = 0; i < codes_gained.size(); i++)
+                                {
+                                    message += std::string(Codes::Prefix[codes_gained[i].Type]) + std::to_string(codes_gained[i].Code);
+                                }
+                            }
 
                             while (!Engine::VERIFY_EQUIPMENT_LIMIT(character))
                             {
                                 inventoryScreen(window, renderer, party, character, -1, false);
                             }
+
+                            flash_message = true;
+
+                            flash_color = intLB;
+
+                            start_ticks = SDL_GetTicks();
+
+                            controls.clear();
+
+                            controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
                         }
                         else
                         {
@@ -17553,6 +17643,16 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     {
                         if (story->Choices[choice].Type == Choice::Type::NORMAL)
                         {
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
+                        }
+                        if (story->Choices[choice].Type == Choice::Type::RESET_SHOP)
+                        {
+                            story->ResetShop = true;
+
                             next = findStory(story->Choices[choice].Destination);
 
                             done = true;

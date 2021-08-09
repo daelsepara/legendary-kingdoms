@@ -21,8 +21,8 @@ namespace Engine
     // cargo, price, sell price
     typedef std::tuple<Cargo::Type, int, int> CargoPrices;
 
-    // equipment, price, sell price
-    typedef std::tuple<Equipment::Base, int, int> EquipmentPrice;
+    // equipment, price, sell price, supply limit
+    typedef std::tuple<Equipment::Base, int, int, int, std::vector<Codes::Base>> EquipmentPrice;
 
     // equipment needed, equipment that can be exchanged for it
     typedef std::tuple<Equipment::Base, std::vector<Equipment::Base>> BarterExchanges;
