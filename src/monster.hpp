@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "equipment.hpp"
+
 namespace Allies
 {
     enum class Type
@@ -59,6 +61,8 @@ namespace Monster
 
         bool Damaged = false;
 
+        std::vector<Equipment::Base> Loot = {};
+
         Base()
         {
         }
@@ -78,6 +82,25 @@ namespace Monster
             MaximumHealth = health;
 
             Auto = damage;
+        }
+
+        Base(const char *name, int attack, int difficulty, int defence, int health, int damage, std::vector<Equipment::Base> loot)
+        {
+            Name = name;
+
+            Attack = attack;
+
+            Difficulty = difficulty;
+
+            Defence = defence;
+
+            Health = health;
+
+            MaximumHealth = health;
+
+            Auto = damage;
+
+            Loot = loot;
         }
 
         Base(const char *name, int attack, int difficulty, int defence, int health, int damage, int round)
