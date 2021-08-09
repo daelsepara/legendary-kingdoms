@@ -6904,11 +6904,15 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         {
                             Engine::CAST_SPELL(party, team_type, Spells::Type::WOLF_SPIRIT);
 
+                            party.RecentSuccesses += 3;
+
                             test_result = true;
                         }
                         else if (Skill == Attribute::Type::LORE)
                         {
                             Engine::CAST_SPELL(party, team_type, Spells::Type::WISDOM);
+
+                            party.RecentSuccesses += 3;
 
                             test_result = true;
                         }
