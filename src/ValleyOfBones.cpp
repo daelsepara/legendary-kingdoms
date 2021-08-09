@@ -57,7 +57,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
 bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::EquipmentPrice> shop, Character::Base &character);
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection, bool useEquipment);
-bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
+bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team_type, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
 bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int spells_limit);
 bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
@@ -6572,8 +6572,13 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
     return result;
 }
 
-bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment)
+bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team_type, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment)
 {
+    if (Skill == Attribute::Type::CHARISMA && Engine::VERIFY_CODES(party, {Codes::Type::CHARISMA_SUCCESS_CHALICE}) && party.Location == Location::Type::CHALICE && party.InCity == true)
+    {
+        return true;
+    }
+
     bool test_result = false;
 
     if (Engine::COUNT(party) > 0 && Engine::COUNT(party) >= team.size())
@@ -6624,6 +6629,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
             const char *choices_skill[3] = {"Skill Check", "Add Focus", "Remove Focus"};
             const char *choices_confirm[1] = {"Confirm"};
+            const char *choices_wolfspirit[2] = {"Cast Wolf Spirit", "Done"};
+            const char *choices_wisdom[2] = {"Cast Wisdom", "Done"};
             const char *choices_end[1] = {"Done"};
 
             SDL_Surface *dice[6];
@@ -6635,7 +6642,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto main_buttonw = 220;
+            auto main_buttonw = 240;
 
             auto controls_skill = createFixedTextButtons(choices_skill, 3, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
             controls_skill[0].Type = Control::Type::CONFIRM;
@@ -6647,6 +6654,14 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
             auto controls_end = createFixedTextButtons(choices_end, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
             controls_end[0].Type = Control::Type::BACK;
+
+            auto controls_wolfspirit = createFixedTextButtons(choices_wolfspirit, 2, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+            controls_wolfspirit[0].Type = Control::Type::CONFIRM;
+            controls_wolfspirit[1].Type = Control::Type::BACK;
+
+            auto controls_wisdom = createFixedTextButtons(choices_wisdom, 2, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+            controls_wisdom[0].Type = Control::Type::CONFIRM;
+            controls_wisdom[1].Type = Control::Type::BACK;
 
             auto current = -1;
 
@@ -6827,7 +6842,29 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                 }
                 else if (stage == Attribute::Test::CHECK)
                 {
-                    controls = controls_end;
+                    if (test_result)
+                    {
+                        controls = controls_end;
+                    }
+                    else
+                    {
+                        if (Skill == Attribute::Type::SURVIVAL && Engine::CAN_CAST(party, team_type, Spells::Type::WOLF_SPIRIT) && ((success_counter + 3) >= success))
+                        {
+                            stage = Attribute::Test::MAGIC;
+
+                            controls = controls_wolfspirit;
+                        }
+                        else if (Skill == Attribute::Type::LORE && Engine::CAN_CAST(party, team_type, Spells::Type::WISDOM) && ((success_counter + 3) >= success))
+                        {
+                            stage = Attribute::Test::MAGIC;
+
+                            controls = controls_wisdom;
+                        }
+                        else
+                        {
+                            controls = controls_end;
+                        }
+                    }
                 }
 
                 if (flash_message)
@@ -6855,6 +6892,43 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     else if (stage == Attribute::Test::CONFIRM && controls[current].Type == Control::Type::CONFIRM)
                     {
                         stage = Attribute::Test::CHECK;
+                    }
+                    else if (stage == Attribute::Test::MAGIC && controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        stage = Attribute::Test::END;
+
+                        if (Skill == Attribute::Type::SURVIVAL)
+                        {
+                            Engine::CAST_SPELL(party, team_type, Spells::Type::WOLF_SPIRIT);
+
+                            test_result = true;
+                        }
+                        else if (Skill == Attribute::Type::LORE)
+                        {
+                            Engine::CAST_SPELL(party, team_type, Spells::Type::WISDOM);
+
+                            test_result = true;
+                        }
+
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+
+                        break;
+                    }
+                    else if (stage == Attribute::Test::MAGIC && controls[current].Type == Control::Type::BACK)
+                    {
+                        stage = Attribute::Test::END;
+
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+
+                        break;
                     }
                     else if (stage == Attribute::Test::CHECK && controls[current].Type == Control::Type::BACK)
                     {
@@ -7469,6 +7543,11 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection, bool useEquipment)
 {
+    if (skill == Attribute::Type::CHARISMA && Engine::VERIFY_CODES(party, {Codes::Type::CHARISMA_SUCCESS_CHALICE}) && party.Location == Location::Type::CHALICE && party.InCity == true)
+    {
+        return true;
+    }
+
     bool result = false;
 
     auto title = "Legendary Kingdoms: Skill Check";
@@ -7659,7 +7738,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         {
                             done = true;
 
-                            result = skillTestScreen(window, renderer, party, selection, skill, difficulty, success, useEquipment);
+                            result = skillTestScreen(window, renderer, party, team, selection, skill, difficulty, success, useEquipment);
 
                             current = -1;
 
@@ -17485,7 +17564,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 selection = {party.CurrentCharacter};
 
-                                success = skillTestScreen(window, renderer, party, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
+                                success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
                             }
                             else
                             {
@@ -17529,7 +17608,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     selection.push_back(party.LastSelected);
 
-                                    success = skillTestScreen(window, renderer, party, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
+                                    success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
                                 }
                                 else
                                 {
@@ -17585,7 +17664,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     selection.push_back(party.LastSelected);
 
-                                    success = skillTestScreen(window, renderer, party, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
+                                    success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
                                 }
                                 else
                                 {
@@ -18585,7 +18664,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     if (Engine::SCORE(party.Members[target], Attribute::Type::HEALTH) > 0)
                                     {
-                                        success = skillTestScreen(window, renderer, party, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
+                                        success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
                                     }
                                 }
                                 else

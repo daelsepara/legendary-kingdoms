@@ -1659,6 +1659,46 @@ namespace Engine
         return result;
     }
 
+    bool CAN_CAST(Party::Base &party, Team::Type team, Spells::Type spell)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0 && (team == Team::Type::NONE || party.Members[i].Team == team))
+            {
+                auto found = Engine::FIND_SPELL(party.Members[i], spell);
+
+                if (found >= 0 && found < party.Members[i].SpellBook.size() && party.Members[i].SpellBook[found].Charged)
+                {
+                    result = true;
+                    
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    void CAST_SPELL(Party::Base &party, Team::Type team, Spells::Type spell)
+    {
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0&& (team == Team::Type::NONE || party.Members[i].Team == team))
+            {
+                auto found = Engine::FIND_SPELL(party.Members[i], spell);
+
+                if (found >= 0 && found < party.Members[i].SpellBook.size() && party.Members[i].SpellBook[found].Charged)
+                {
+                    party.Members[i].SpellBook[found].Charged = false;
+                    
+                    break;
+                }
+            }
+        }
+    }
+
     bool HAS_SPELL_ANY(Party::Base &party, std::vector<Spells::Type> spells)
     {
         auto result = false;

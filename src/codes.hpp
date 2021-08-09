@@ -39,7 +39,8 @@ namespace Codes
         LOST_SCHOLAR3,
         NO_BLESSINGS_FOREVER,
         TAUGHT_KOPU_DREAR,
-        ENEMY1_FREEATTACK_ROUND0
+        ENEMY1_FREEATTACK_ROUND0,
+        CHARISMA_SUCCESS_CHALICE
     };
 
     std::map<Book::Type, const char *> Prefix = {

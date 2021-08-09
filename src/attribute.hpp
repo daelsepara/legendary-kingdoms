@@ -23,6 +23,7 @@ namespace Attribute
         START,
         CHECK,
         CONFIRM,
+        MAGIC,
         END
     };
 
