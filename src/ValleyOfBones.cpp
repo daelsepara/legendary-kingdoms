@@ -6738,7 +6738,10 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                                 {
                                     thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
 
-                                    success_counter++;
+                                    if (stage == Attribute::Test::CHECK)
+                                    {
+                                        success_counter++;
+                                    }
                                 }
                             }
 
