@@ -574,6 +574,24 @@ namespace Engine
         }
     }
 
+    void RAISE_HEALTH(Party::Base &party, int value)
+    {
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
+            {
+                party.Members[i].MaximumHealth += value;
+
+                if (party.Members[i].MaximumHealth < 0)
+                {
+                    party.Members[i].MaximumHealth = 0;
+                }
+
+                Engine::GAIN_HEALTH(party.Members[i], value);
+            }
+        }
+    }
+
     void GAIN_HEALTH(Ship::Base &ship, int health)
     {
         if (ship.Health > 0)
@@ -716,6 +734,32 @@ namespace Engine
                 if (party.Army[i].Garrison == garrison)
                 {
                     party.Army[i].Morale = party.Army[i].MaximumMorale;
+                }
+            }
+        }
+    }
+
+    void RESTORE_STRENGTH(Party::Base &party)
+    {
+        for (auto i = 0; i < party.Army.size(); i++)
+        {
+            party.Army[i].Strength = party.Army[i].MaximumStrength;
+        }
+    }
+
+    void RESTORE_STRENGTH(Party::Base &party, Location::Type garrison)
+    {
+        if (garrison == Location::Type::NONE)
+        {
+            Engine::RESTORE_STRENGTH(party);
+        }
+        else
+        {
+            for (auto i = 0; i < party.Army.size(); i++)
+            {
+                if (party.Army[i].Garrison == garrison)
+                {
+                    party.Army[i].Strength = party.Army[i].MaximumStrength;
                 }
             }
         }

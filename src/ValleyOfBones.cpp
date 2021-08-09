@@ -15032,13 +15032,11 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 }
             }
 
-            fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
-
             if (current_mode == Control::Type::BUY_SELL_SHIP)
             {
                 putHeader(renderer, "Ship Prices", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                if (harbour->Cargo.size() == 0)
+                if (harbour->Ships.size() == 0)
                 {
                     putText(renderer, "\nYou cannot buy nor sell ships here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
@@ -15071,6 +15069,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
             {
                 fillRect(renderer, textwidth, infoh, textx, texty, intBR);
             }
+
+            fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
             for (auto i = offset; i < last; i++)
             {
@@ -18337,20 +18337,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::PARTY_RAISE_HEALTH)
                         {
-                            for (auto i = 0; i < party.Members.size(); i++)
-                            {
-                                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
-                                {
-                                    party.Members[i].MaximumHealth += story->Choices[choice].Value;
-
-                                    if (party.Members[i].MaximumHealth < 0)
-                                    {
-                                        party.Members[i].MaximumHealth = 0;
-                                    }
-
-                                    Engine::GAIN_HEALTH(party.Members[i], story->Choices[choice].Value);
-                                }
-                            }
+                            Engine::RAISE_HEALTH(party, story->Choices[choice].Value);
 
                             next = findStory(story->Choices[choice].Destination);
 
@@ -19044,6 +19031,24 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 break;
                             }
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::GET_CODES)
+                        {
+                            if (story->Choices[choice].Codes.size() > 0)
+                            {
+                                Engine::GET_CODES(party, story->Choices[choice].Codes);
+                            }
+
+                            if (story->Choices[choice].InvisibleCodes.size() > 0)
+                            {
+                                Engine::GET_CODES(party, story->Choices[choice].InvisibleCodes);
+                            }
+
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::PAY_WITH)
                         {
                         }
@@ -19054,9 +19059,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                         }
                         else if (story->Choices[choice].Type == Choice::Type::BRIBE)
-                        {
-                        }
-                        else if (story->Choices[choice].Type == Choice::Type::GET_CODES)
                         {
                         }
                         else if (story->Choices[choice].Type == Choice::Type::LOSE_CODES)
@@ -20352,7 +20354,7 @@ int main(int argc, char **argv)
 #if defined(DEBUG)
         testScreen(window, renderer, bookID, storyID);
 #else
-        if (storyID < 2)
+        if (storyID == 1 || storyID == 0)
         {
             introScreen(window, renderer);
         }

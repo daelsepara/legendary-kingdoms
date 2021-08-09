@@ -2767,8 +2767,11 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Engine::GET_CODES(party, {Codes::Type::NO_VAULT_ACCESS});
+
             Engine::LOSE_ALL(party, Equipment::Class::ARMOUR);
+
             Engine::LOSE_ALL(party, Equipment::Class::ROBE);
+
             Engine::SINK_SHIP(party);
 
             Choices.clear();
@@ -12386,9 +12389,13 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Engine::GET_CODES(party, {Codes::Type::NO_VAULT_ACCESS});
+
             Engine::LOSE_ALL(party, Equipment::Class::ARMOUR);
+
             Engine::LOSE_ALL(party, Equipment::Class::ROBE);
+
             Engine::GAIN_HEALTH(party, -2);
+
             Engine::SINK_SHIP(party);
 
             Choices.clear();
@@ -12426,6 +12433,393 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 125}; }
+    };
+
+    class Story400 : public Story::Base
+    {
+    public:
+        Story400()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 400;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "The plaza in the temple district is full. Soldiers and diplomats from across the valley fill it, from sweaty Lhasbreath Barbarians to dignified Chalice scholars. Ayleta the Traveller leads a delegation from Clifftop, sun-bronzed peasants and sailors from that poorest of cities following in her wake. King Scarrenden of Lhasbreath grins widely, missing teeth on show, his housecarls and berserkers drinking deeply and cheering. The innkeep from Luutanesh engages Che Long in animated discussion. Priests of Cursus, grumbling under their breath, kneel before the throne.\n\nJoining the Everchild on the raised stage comes the God King of Chalice, elegant, eternally young and fit. The lord of that city kneels and bows before the small child who ascends a throne made of wood and bronze -- the final homage that acknowledges to all who the ruler of the valley truly is.\n\nThe Everchild sits and motions with her hand. A silence falls. \"The scholars tell us that there is no such thing as victory,\" she says, her voice amplifying by some sorcerous means. \"There are battles to be won and wars to be fought. But no vision of even the humblest ruler is ever truly realised. But there is such a thing as change. The Valley of Bones is now mine. Every city and every living being within them is my subject. From today we are no longer competitors, but brothers and sisters, driven not to exceed or dominate the others, but to strive to make our family strong. I see a vision of flourishing cities; I see the casting down of whips. I see a time when Royce and Drakehallow shall look with envy on our shores and say, 'if only our lands were as fair as those in the valley'. And well they might. No people are as vigorous or determined as ours. We shall be the crucible of new learning. Our many cultures shall create a land of beauty and flowers, and in time, the sun itself shall cease its scorching, and instead caress a land of meadows and rivers. I am the Everchild. And I shall be your ruler forever!\"\n\nThere is a mighty cheer, which resounds across the city and its dark mausoleums. A new day has come, and the Everchild is finally secure on her throne.\n\nNote: You have achieved a mighty feat in restoring the valley to the authority of the Everchild. Each party member increases their Health scores by 1 point.\n\nAny troops that were not routed returns to the Saltdad barracks. Their Morale and Strength scores to maximum.\n\nYou gained the code A100.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::RAISE_HEALTH(party, 1);
+
+            Engine::GET_CODES(party, {Codes::A(100)});
+
+            Engine::REMOVE_ROUTED(party);
+
+            Engine::RESTORE_MORALE(party, Location::Type::SALTDAD);
+
+            Engine::RESTORE_STRENGTH(party, Location::Type::SALTDAD);
+
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES(party, {Codes::A(16), Codes::A(20), Codes::A(37), Codes::A(89)}))
+            {
+                Choices.push_back(Choice::Base("Each of your characters raises one skill by one point", {Book::Type::BOOK1, -400}, Choice::Type::PARTY_RAISE_ATTRIBUTE, 1));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, -400}; }
+    };
+
+    class Event400 : public Story::Base
+    {
+    public:
+        Event400()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -400;
+
+            DisplayID = 400;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "The Everchild is generous and awards you 2000 silver coins.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Escort her back to Saltdad", {Book::Type::BOOK1, 75}));
+            Choices.push_back(Choice::Base("Remain a while in Cursus", {Book::Type::BOOK1, 340}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 2000);
+        }
+    };
+
+    class Story401 : public Story::Base
+    {
+    public:
+        Story401()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 401;
+
+            Text = "Sar Jessica has a lingering strain in her arm from her last battle and is struggling to wash her back. Tasha volunteers to help, perhaps a little too eagerly. The knight is beautiful, noble-born with strong limbs and an air of authority. Tasha has often glanced at her across an inn room, when deep in her cups, with admiration and desire. Now Tasha is washing her, she cannot resist cradling her against her body, feeling her flesh against hers. Jessica acts as if nothing is going on, but surely she cannot be so blind to Tasha's affections?\n\nNote: Tasha has gained a heart for Sar Jessica. Sar Jessica also gains a heart for Tasha.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            Engine::GAIN_HEARTS(party, Character::Type::TASHA, Character::Type::SAR_JESSICA_DAYNE, 1);
+            Engine::GAIN_HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::Type::TASHA, 1);
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::AMELIA_PASS_DAYNE) && Engine::HEARTS(party, Character::Type::AMELIA_PASS_DAYNE, Character::Type::TASHA) > 0)
+            {
+                return {Book::Type::BOOK1, 888};
+            }
+            else if (Engine::HEARTS(party, Character::Type::TASHA, Character::Type::SAR_JESSICA_DAYNE) >= 2 && Engine::HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::Type::TASHA) >= 2)
+            {
+                return {Book::Type::BOOK1, 726};
+            }
+            else
+            {
+                Bye = "The sound of the men on the other side of the reed bank getting out of the water ends this quiet moment and you blushingly emerge yourselves.";
+
+                return {Book::Type::BOOK1, 51};
+            }
+        }
+    };
+
+    class Story402 : public Story::Base
+    {
+    public:
+        Story402()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 402;
+
+            Text = "Throwing caution to the wind you pluck some flowers, keeping some in your pack, and perhaps wearing some in your hair. A little colour for your bleak desert trips. They are slightly magical, and it takes years for them to decay.";
+
+            Bye = "Feeling slightly prettier you move on.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::HYGLIPH_FLOWER};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 618}; }
+    };
+
+    class Story403 : public Story::Base
+    {
+    public:
+        Story403()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 403;
+
+            Location = Location::Type::CLIFFTOP;
+
+            Text = "With the cargo crane in operation you can buy goods in Cargo Units from Clifftop. These goods are too large for your characters to carry, but they can be loaded onto any ship you have in Clifftop harbour. You cannot buy more cargo units than you can store in your ship (for instance, a Cog can carry 2 Cargo Units). You can also sell any goods you are carrying in your ships for the same price as well:\n\nSALT: 550 silver coins\nCROPS: 600 silver coins\nSTEEL: 3000 silver coins\nSPICES: 3200 silver coins\nWINE: 2000 silver coins\nSLAVES: 700 silver coins";
+
+            Choices.clear();
+
+            Controls = Story::Controls::HARBOUR;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Ships.clear();
+
+            Cargo = {
+                {Cargo::Type::SALT, 550, 550},
+                {Cargo::Type::CROPS, 600, 600},
+                {Cargo::Type::STEEL, 3000, 3000},
+                {Cargo::Type::SPICES, 3200, 3200},
+                {Cargo::Type::WINE, 2000, 2000},
+                {Cargo::Type::SLAVES, 7000, 700}
+
+            };
+
+            ShipRepairPrice = -1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 703}; }
+    };
+
+    class Story404 : public Story::Base
+    {
+    public:
+        Story404()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 404;
+
+            Text = "Something isn't right here. You don't know a lot about growing flowers, but something must be tending those blooms. And until you find out what that is, those scholars are going to stay out of sight! Stepping cautiously into the gloom your worst fears are confirmed. Dreadful snakemen, their curved swords already drawn, come hissing into the gateway to intercept you.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 150}; }
+    };
+
+    class Story405 : public Story::Base
+    {
+    public:
+        Story405()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 405;
+
+            Text = "The work is hot, smelly and dirty, and the piles of junk in the cave seem endless.\n\nNote: Each party member loses 1 Health point as they heave the heavy trash outside the cave.";
+
+            Bye = "After a number of hours you still haven't found anything of value and decide to call it quits.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 395}; }
+    };
+
+    class Story406 : public Story::Base
+    {
+    public:
+        Story406()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 406;
+
+            Text = "Picking up a nearby bench you attempt to ram the gatehouse door.\n\nNote: Only members of the weapon stealing team may help in this test.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::WEAPONS, {Attribute::Type::FIGHTING}, 5, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            Bye = NULL;
+
+            if (outcome)
+            {
+                Bye = "You succeed: the door flies open after a few attempts.";
+            }
+        }
+    };
+
+    class Event406 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Event406()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -406;
+
+            DisplayID = 406;
+
+            Text = "You fail but you still manage to force open the door, but not before a pair of guards, attracted by the noise, interrupt you!\n\nNote: Only members of the weapon stealing team may help in this combat.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 292};
+
+            Team = Team::Type::WEAPONS;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Guard", 4, 4, 4, 8, 0, {Equipment::IRON_SHORTSWORD1}),
+                Monster::Base("Guard", 3, 4, 4, 7, 0, {Equipment::IRON_SHORTSWORD1})};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                destination = {Book::Type::BOOK1, 611};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 292};
+            }
+        }
+    };
+
+    class Story407 : public Story::Base
+    {
+    public:
+        Story407()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 407;
+
+            Text = "The power of St. Elias should be effective against intelligent undead, even these slavering lunatics. You brandish the talisman, the ghouls hissing in pain as you present it. You can actually see their flesh begin to wither and disintegrate in the holy glow that pours from the artefact. Soon you have boxed the ghouls into a corner, their bodies withering before the talisman. In moments they have become little more than bleached bones, cleansed entirely by the power of the holy man who crafted the talisman.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 651}; }
+    };
+
+    class Story408 : public Story::Base
+    {
+    public:
+        Story408()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 408;
+
+            Text = "\"Oh! Please, your majesty, don't take my fingernails! I need my hands to work!\" begs the fellow.\n\n\"Well, unless anyone else would like to volunteer to have their nails removed in your place, I'm going to do it,\" grins the king.\n\nWould anyone in the party be noble enough to suffer such a torment for a lowly peasant?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Volunteer someone from your party", {Book::Type::BOOK1, 294}, Choice::Type::CHOOSE_PARTY_MEMBER));
+            Choices.push_back(Choice::Base("Volunteer no one", {Book::Type::BOOK1, -408}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event408 : public Story::Base
+    {
+    public:
+        Event408()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -408;
+
+            DisplayID = 408;
+
+            Text = "The peasant howls in agony as the nails are torn from his hands with rusty pliers. You are forced to withdraw from the court, the bile building in your mouths, at the ghastly inhumanity of it all.\n\nYou gained the code A34.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(34)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story409 : public Story::Base
+    {
+    public:
+        Story409()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 409;
+
+            Text = "With almost every ounce of energy spent, you finally manage to haul yourselves up onto the edge of the cliffside. Slumping against the base of a tree, the chirp of insects and caws of birds lull you to sleep.\n\nNote: Each party member loses 3 Health points.";
+
+            Bye = "In the morning you rise, your stomach's growling. You must start your lives again with what you have.\n\nFirst, though, you must brave the perils of the jungle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -3);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 370}; }
     };
 
     auto story001 = Story001();
@@ -12860,6 +13254,19 @@ namespace Book1
     auto event397 = Event397();
     auto story398 = Story398();
     auto story399 = Story399();
+    auto story400 = Story400();
+    auto event400 = Event400();
+    auto story401 = Story401();
+    auto story402 = Story402();
+    auto story403 = Story403();
+    auto story404 = Story404();
+    auto story405 = Story405();
+    auto story406 = Story406();
+    auto event406 = Event406();
+    auto story407 = Story407();
+    auto story408 = Story408();
+    auto event408 = Event408();
+    auto story409 = Story409();
 
     void InitializeStories()
     {
@@ -12867,7 +13274,7 @@ namespace Book1
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
-            &event343, &event388, &event397,
+            &event343, &event388, &event397, &event400, &event406, &event408,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -12907,7 +13314,8 @@ namespace Book1
             &story360, &story361, &story362, &story363, &story364, &story365, &story366, &story367, &story368, &story369,
             &story370, &story371, &story372, &story373, &story374, &story375, &story376, &story377, &story378, &story379,
             &story380, &story381, &story382, &story383, &story384, &story385, &story386, &story387, &story388, &story389,
-            &story390, &story391, &story392, &story393, &story394, &story395, &story396, &story397, &story398, &story399};
+            &story390, &story391, &story392, &story393, &story394, &story395, &story396, &story397, &story398, &story399,
+            &story400, &story401, &story402, &story403, &story404, &story405, &story406, &story407, &story408, &story409};
     }
 }
 #endif
