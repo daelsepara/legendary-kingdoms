@@ -12021,6 +12021,7 @@ namespace Book1
     {
     public:
         std::string PreText = "";
+        
         Story388()
         {
             BookID = Book::Type::BOOK1;
