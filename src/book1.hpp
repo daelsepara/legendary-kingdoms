@@ -12190,7 +12190,7 @@ namespace Book1
             Text = "You make your way to the king's hall, a vast timber and stone structure which displays the heads and horns of terrible beasts. The hall is the living space of the King Scarrenden and his most trusted berserkers, and you are rudely shoved about by passing housecarls and beer wenches in the crowded space. The king himself is peering over the edge of a pit, where one of his warriors is being mauled to death by an angry sand bear. The king toasts the bear's victory with a flagon of frothy beer, much to the laughter of the assembled barbarians.\n\n\"What was his crime?\" you ask a passing wench.\n\n\"No crime, we don't feed criminals to bears,\" she laughs. \"He chose to fight the bear to impress the king. You can petition the king for aid if you display a great feat of strength.\"";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Offer to wrestle the bear", {Book::Type::BOOK1, 425}));
+            Choices.push_back(Choice::Base("Offer to wrestle the bear", {Book::Type::BOOK1, 425}, Choice::Type::CHOOSE_PARTY_MEMBER));
             Choices.push_back(Choice::Base("Attempt to woo one of the king's most trusted councillors", {Book::Type::BOOK1, 86}));
             Choices.push_back(Choice::Base("Leave these savages to their amusement", {Book::Type::BOOK1, 775}));
 
