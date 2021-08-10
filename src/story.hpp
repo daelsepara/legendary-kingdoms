@@ -595,6 +595,7 @@ namespace Story
 
         // Combat encounters
         std::vector<Monster::Base> Monsters = {};
+        std::vector<Ship::Base> EnemyFleet = {};
         int FleeRound = -1;
         int RoundLimit = -1;
         bool CanFlee = false;
