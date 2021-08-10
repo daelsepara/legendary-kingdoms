@@ -1611,7 +1611,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
             }
 
-            renderButtons(renderer, controls, current, intLB, 8, 4);
+            renderButtons(renderer, controls, current, intLB, border_space, border_pts);
 
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -2635,7 +2635,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, 8, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -2932,7 +2932,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer)
                 fitImage(renderer, map_kingdom, startx + offset_x, offset_y, marginw, text_bounds);
             }
 
-            renderButtons(renderer, controls, current, intLB, 8, 4);
+            renderButtons(renderer, controls, current, intLB, border_space, border_pts);
 
             bool scrollUp = false;
             bool scrollDown = false;
@@ -4113,16 +4113,16 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
                         else if (Engine::SCORE(party.Members[index], Attribute::Type::HEALTH) > 0)
                         {
-                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                            drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - 4, controls[index].Y - 4, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intRD);
+                            drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - 4, controls[index].Y - 4, intRD);
                         }
                     }
                 }
 
-                renderButtons(renderer, controls, current, intLB, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
@@ -6532,15 +6532,15 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                     {
                         if (Engine::FIND_LIST(selection, offset + i) >= 0)
                         {
-                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else if (spells[offset + i].Charged)
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
                     }
                 }
@@ -6561,7 +6561,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                     }
                 }
 
-                renderButtons(renderer, controls, current, intLB, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 std::string list_header = "Choose " + (select_limit > 1 ? std::to_string(select_limit) : "a") + " spell" + (select_limit > 1 ? "s" : "") + " to ";
 
@@ -6953,27 +6953,27 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                     {
                         if (selection == offset + i)
                         {
-                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else if (monsters[offset + i].Health > 0)
                         {
                             if (combatRound >= monsters[offset + i].Round)
                             {
-                                drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                             }
                             else
                             {
-                                thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
+                                thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
                             }
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
                     }
                 }
 
-                renderButtons(renderer, controls, current, intLB, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
@@ -7313,20 +7313,20 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                     {
                         if (selection == offset + i)
                         {
-                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else if (enemyFleet[offset + i].Health > 0)
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
                     }
                 }
 
-                renderButtons(renderer, controls, current, intLB, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
@@ -8094,20 +8094,20 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     {
                         if (selection == offset + i)
                         {
-                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else if (Engine::SCORE(party.Members[offset + i], Attribute::Type::HEALTH) > 0)
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
                     }
                 }
 
-                renderButtons(renderer, controls, current, intLB, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
@@ -8639,7 +8639,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     {
                         if (Engine::FIND_LIST(selection, index) >= 0)
                         {
-                            thickRect(renderer, controls[index].W + 4, controls[index].H + 4, controls[index].X - 2, controls[index].Y - 2, intLB, 2);
+                            thickRect(renderer, controls[index].W + border_pts, controls[index].H + border_pts, controls[index].X - 2, controls[index].Y - 2, intLB, 2);
                         }
                         else if (Engine::SCORE(party.Members[index], Attribute::Type::HEALTH) > 0)
                         {
@@ -8647,26 +8647,26 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             {
                                 if (party.Members[index].Team == team)
                                 {
-                                    drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                                    drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - 4, controls[index].Y - 4, intBK);
                                 }
                                 else
                                 {
-                                    thickRect(renderer, controls[index].W + 4, controls[index].H + 4, controls[index].X - 2, controls[index].Y - 2, intGR, 2);
+                                    thickRect(renderer, controls[index].W + border_pts, controls[index].H + border_pts, controls[index].X - 2, controls[index].Y - 2, intGR, 2);
                                 }
                             }
                             else
                             {
-                                drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intBK);
+                                drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - 4, controls[index].Y - 4, intBK);
                             }
                         }
                         else
                         {
-                            drawRect(renderer, controls[index].W + 8, controls[index].H + 8, controls[index].X - 4, controls[index].Y - 4, intRD);
+                            drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - 4, controls[index].Y - 4, intRD);
                         }
                     }
                 }
 
-                renderButtons(renderer, controls, current, intLB, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 if (team_size > 1)
                 {
@@ -8935,16 +8935,16 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
                     {
                         if (selection == offset + i)
                         {
-                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                         }
                     }
                 }
 
-                renderButtons(renderer, controls, current, intLB, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 std::string select_string = "Which of " + std::string(character.Name) + "'s attributes will be raised by " + std::to_string(increase) + "?";
 
@@ -9231,11 +9231,11 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
                     {
                         if (selection == offset + i)
                         {
-                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                         }
                     }
                 }
@@ -9497,7 +9497,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     for (auto i = 0; i < last - offset; i++)
                     {
-                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                     }
                 }
 
@@ -9819,7 +9819,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     {
                         if (selection == offset + i)
                         {
-                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else if (Engine::SCORE(party.Members[offset + i], Attribute::Type::HEALTH) > 0)
                         {
@@ -9827,26 +9827,26 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                             {
                                 if (party.Members[offset + i].Team == team)
                                 {
-                                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                                 }
                                 else
                                 {
-                                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
+                                    thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
                                 }
                             }
                             else
                             {
-                                drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                             }
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
                     }
                 }
 
-                renderButtons(renderer, controls, current, intLB, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 if (mode == Control::Type::COMBAT)
                 {
@@ -10269,7 +10269,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
 
                         if (result >= 0 && result < selection.size())
                         {
-                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else if (Engine::SCORE(party.Members[offset + i], Attribute::Type::HEALTH) > 0)
                         {
@@ -10277,26 +10277,26 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                             {
                                 if (party.Members[offset + i].Team == team)
                                 {
-                                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                                 }
                                 else
                                 {
-                                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
+                                    thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
                                 }
                             }
                             else
                             {
-                                drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                             }
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
                     }
                 }
 
-                renderButtons(renderer, controls, current, intLB, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 if (mode == Control::Type::SPELL_TARGET)
                 {
@@ -10699,46 +10699,6 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
 
             while (!done)
             {
-                if (combatRound == 0 && Engine::VERIFY_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0}))
-                {
-                    if (Engine::SHIP_INTACT(party) && enemyFleet.size() > 0)
-                    {
-                        auto free_attack = Engine::COUNT(enemyFleet[0].Fighting, 4);
-
-                        message = "The " + std::string(enemyFleet[0].Name);
-
-                        if (free_attack > 0)
-                        {
-                            if (free_attack > 0)
-                            {
-                                flash_color = intRD;
-
-                                message += " deals " + std::to_string(free_attack) + " damage to " + std::string(party.Fleet[party.CurrentShip].Name) + "!";
-
-                                Engine::GAIN_HEALTH(party.Fleet[party.LastSelected], -free_attack);
-                            }
-                            else
-                            {
-                                flash_color = intLB;
-
-                                message = +"'s attack was ineffective!";
-                            }
-                        }
-                        else
-                        {
-                            message = +"'s attack was ineffective!";
-
-                            flash_color = intLB;
-                        }
-
-                        start_ticks = SDL_GetTicks();
-
-                        flash_message = true;
-                    }
-
-                    Engine::LOSE_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0});
-                }
-
                 auto last = offset + limit;
 
                 if (last > enemyFleet.size())
@@ -10770,7 +10730,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
 
                 fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
 
-                renderButtons(renderer, controls, current, intLB, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 if (last - offset > 0)
                 {
@@ -10780,16 +10740,16 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                         {
                             if (current + offset == offset + i)
                             {
-                                thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                                thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                             }
                             else
                             {
-                                drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                             }
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
                     }
                 }
@@ -11318,7 +11278,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                 fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
 
-                renderButtons(renderer, controls, current, intLB, space, 4);
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 if (last - offset > 0)
                 {
@@ -11330,21 +11290,21 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (current + offset == offset + i)
                                 {
-                                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                                    thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                                 }
                                 else
                                 {
-                                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                                 }
                             }
                             else
                             {
-                                thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
+                                thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
                             }
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
                         }
                     }
                 }
@@ -12365,11 +12325,11 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (Engine::FIND_LIST(selection, offset + i) >= 0)
                 {
-                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                 }
                 else
                 {
-                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                 }
             }
         }
@@ -12901,11 +12861,11 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                 {
                     if (Engine::FIND_LIST(selection, offset + i) >= 0)
                     {
-                        thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                     }
                 }
             }
@@ -13358,11 +13318,11 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 if (selection != offset + i)
                 {
-                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                 }
                 else
                 {
-                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                 }
             }
         }
@@ -13923,11 +13883,11 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 if (selection != offset + i)
                 {
-                    drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                 }
                 else
                 {
-                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                 }
             }
         }
@@ -14618,16 +14578,16 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 {
                     if (character.SpellBook[offset + i].Charged)
                     {
-                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
                     }
                 }
                 else
                 {
-                    thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                 }
             }
         }
@@ -15051,11 +15011,11 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Par
                 {
                     if (Engine::FIND_LIST(selection, offset + i) >= 0)
                     {
-                        thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                     }
                 }
             }
@@ -15337,11 +15297,11 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     if (Engine::FIND_LIST(selection, offset + i) >= 0)
                     {
-                        thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                     }
                 }
             }
@@ -15614,11 +15574,11 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (Engine::FIND_LIST(selection, offset + i) >= 0)
                     {
-                        thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                     }
                 }
             }
@@ -16039,7 +15999,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     if (Engine::FIND_LIST(selection, offset + i) >= 0)
                     {
-                        thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                     }
                     else
                     {
@@ -16604,7 +16564,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 }
             }
 
-            renderButtons(renderer, controls, current, intLB, 8, 4);
+            renderButtons(renderer, controls, current, intLB, border_space, border_pts);
 
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -17868,8 +17828,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 button.Right = x < 2 ? y * 3 + x + 1 : y * 3 + x;
                 button.Up = y > 0 ? (y - 1) * 3 + x : y * 3 + x;
                 button.Down = y < 1 ? (y + 1) * 3 + x : (x < 2 ? (y + 1) * 3 + x : y * 3 + x);
-                button.X = startx + x * (boxw + box_space) + 8;
-                button.Y = starty + infoh + y * (boxh + box_space) + 8 + text_space;
+                button.X = startx + x * (boxw + box_space) + border_space;
+                button.Y = starty + infoh + y * (boxh + box_space) + border_space + text_space;
                 button.Type = Control::Type::ACTION;
 
                 controls_battlefield.push_back(button);
@@ -17938,7 +17898,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                     {
                         fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
 
-                        thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + 8, starty + infoh + y * (boxh + box_space) + text_space + 8, intBR, 4);
+                        thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + border_space, starty + infoh + y * (boxh + box_space) + text_space + border_space, intBR, border_pts);
                     }
                     else
                     {
@@ -17953,13 +17913,13 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
             if (current_mode == Engine::MassCombatMode::NORMAL)
             {
-                renderButtons(renderer, controls_battlefield, current, intLB, 8, 4);
+                renderButtons(renderer, controls_battlefield, current, intLB, border_space, border_pts);
 
                 controls = controls_battlefield;
             }
             else
             {
-                renderButtons(renderer, controls_battlefield, -1, intLB, 8, 4);
+                renderButtons(renderer, controls_battlefield, -1, intLB, border_space, border_pts);
             }
 
             // Render Enemy army
@@ -17974,13 +17934,13 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                 drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
 
-                putText(renderer, Spells::MassCombatDescriptions[enemy_spell], font_garamond, 8, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popupy - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
+                putText(renderer, Spells::MassCombatDescriptions[enemy_spell], font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popupy - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
 
                 std::string spell_string = "Your enemy has cast " + std::string(Spells::MassCombatNames[enemy_spell]);
 
                 putHeader(renderer, spell_string.c_str(), font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
 
-                renderButtons(renderer, controls_yes, current, intLB, 8, 4);
+                renderButtons(renderer, controls_yes, current, intLB, border_space, border_pts);
 
                 controls = controls_yes;
 
@@ -18217,8 +18177,8 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 button.Right = x < 2 ? y * 3 + x + 1 : y * 3 + x;
                 button.Up = y > 0 ? (y - 1) * 3 + x : y * 3 + x;
                 button.Down = y < 1 ? (y + 1) * 3 + x : (x < 2 ? (y + 1) * 3 + x : y * 3 + x);
-                button.X = startx + x * (boxw + box_space) + 8;
-                button.Y = starty + infoh + y * (boxh + box_space) + 8 + text_space;
+                button.X = startx + x * (boxw + box_space) + border_space;
+                button.Y = starty + infoh + y * (boxh + box_space) + border_space + text_space;
                 button.Type = Control::Type::ACTION;
 
                 controls_battlefield.push_back(button);
@@ -18267,7 +18227,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                     {
                         fillRect(renderer, boxw, boxh, startx + x * (boxw + box_space), starty + infoh + y * (boxh + box_space) + text_space, intBE);
 
-                        thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + 8, starty + infoh + y * (boxh + box_space) + text_space + 8, intBR, 4);
+                        thickRect(renderer, boxw - 2 * text_space, boxh - 2 * text_space, startx + x * (boxw + box_space) + border_space, starty + infoh + y * (boxh + box_space) + text_space + border_space, intBR, border_pts);
                     }
                     else
                     {
@@ -18282,13 +18242,13 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
             if (current_mode == Engine::MassCombatMode::NORMAL)
             {
-                renderButtons(renderer, controls_battlefield, current, intLB, 8, 4);
+                renderButtons(renderer, controls_battlefield, current, intLB, border_space, border_pts);
 
                 controls = controls_battlefield;
             }
             else
             {
-                renderButtons(renderer, controls_battlefield, -1, intLB, 8, 4);
+                renderButtons(renderer, controls_battlefield, -1, intLB, border_space, border_pts);
             }
 
             // Render Enemy army
@@ -18347,16 +18307,16 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                         if (Engine::FIND_LIST(selection, offset + i) >= 0)
                         {
-                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                         }
                     }
                 }
 
-                renderButtons(renderer, controls_deploy, current, intLB, 8, 4);
+                renderButtons(renderer, controls_deploy, current, intLB, border_space, border_pts);
             }
 
             if (flash_message)
