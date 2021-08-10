@@ -4903,7 +4903,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                             attack_score = 0;
                         }
 
-                        attacker_string = "Attack: " + std::to_string(attack_score);
+                        attacker_string = "Fighting: " + std::to_string(attack_score);
                         attacker_string += "\nHealth: " + std::to_string(enemyFleet[opponent].Health);
                     }
 
@@ -10603,7 +10603,6 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
         auto current_mode = Control::Type::ATTACK;
         auto canFlee = storyFlee;
 
-        // TODO: Sea Combat
         while (Engine::COUNT(enemyFleet) > 0 && Engine::SHIP_INTACT(party) && (roundLimit == -1 || (roundLimit > 0 && combatRound < roundLimit)))
         {
             auto done = false;
@@ -10725,7 +10724,9 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
 
                 if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
                 {
-                    std::string ship_string = "";
+                    std::string ship_string = "[" + std::string(party.Fleet[party.CurrentShip].Name) + "]";
+                    ship_string += "\nFighting: " + std::to_string(party.Fleet[party.CurrentShip].Fighting);
+                    ship_string += "\nHealth: " + std::to_string(party.Fleet[party.CurrentShip].Health);
 
                     putText(renderer, ship_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
@@ -10884,14 +10885,12 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                             {
                                 int opponent = -1;
 
-                                // TODO: Party's ship attacks
                                 if (Engine::COUNT(enemyFleet) == 1)
                                 {
                                     opponent = Engine::FIRST(enemyFleet);
                                 }
                                 else
                                 {
-                                    // select Opponent
                                     opponent = selectOpponent(window, renderer, enemyFleet, {}, combatRound);
                                 }
 
@@ -21757,12 +21756,13 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     Party.Fleet.clear();
 
-                    Party.Fleet.push_back(Ship::Base("PIRATE PINNANCE", Ship::Type::PIRATE_PINNANCE, Location::Type::NONE, 5, 6, 3));
+                    Party.Fleet.push_back(Ship::Base("CURSITE WAR GALLEY", Ship::Type::CURSITE_WAR_GALLEY, Location::Type::NONE, 6, 9, 1));
 
                     Party.CurrentShip = 0;
 
                     std::vector<Ship::Base> enemyFleet = {
-                        Ship::Base("HULK", Ship::Type::HULK, Location::Type::NONE, 3, 5, 3)};
+                        Ship::Base("HULK", Ship::Type::HULK, Location::Type::NONE, 3, 5, 3),
+                        Ship::Base("COG", Ship::Type::COG, Location::Type::NONE, 4, 7, 2)};
 
                     std::vector<Allies::Type> allies = {};
 
