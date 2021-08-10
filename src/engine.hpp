@@ -2306,6 +2306,47 @@ namespace Engine
         return result;
     }
 
+    int FIRST(std::vector<Ship::Base> ships)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < ships.size(); i++)
+        {
+            if (ships[i].Health > 0)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    int FIRST(std::vector<Ship::Base> ships, Location::Type location)
+    {
+        auto result = -1;
+
+        if (location == Location::Type::NONE)
+        {
+            result = Engine::FIRST(ships);
+        }
+        else
+        {
+            for (auto i = 0; i < ships.size(); i++)
+            {
+                if (ships[i].Health > 0)
+                {
+                    result = i;
+
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
     bool HAS_UNIT(Party::Base &party, Army::Type unit)
     {
         auto result = Engine::FIND_UNIT(party.Army, unit);
@@ -2571,6 +2612,48 @@ namespace Engine
         }
 
         return result;
+    }
+
+    int COUNT(std::vector<Ship::Base> ships)
+    {
+        auto result = 0;
+
+        for (auto i = 0; i < ships.size(); i++)
+        {
+            if (ships[i].Health > 0)
+            {
+                result += 1;
+            }
+        }
+
+        return result;
+    }
+
+    int COUNT(std::vector<Ship::Base> ships, Location::Type location)
+    {
+        auto result = 0;
+
+        if (location == Location::Type::NONE)
+        {
+            result = Engine::COUNT(ships);
+        }
+        else
+        {
+            for (auto i = 0; i < ships.size(); i++)
+            {
+                if (ships[i].Health > 0 && ships[i].Location == location)
+                {
+                    result += 1;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    bool SHIP_INTACT(Party::Base &party)
+    {
+        return (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size() && party.Fleet[party.CurrentShip].Health > 0);
     }
 
     void KILL(Party::Base &party, Character::Type character)

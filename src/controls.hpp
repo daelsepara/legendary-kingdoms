@@ -75,6 +75,7 @@ namespace Control
         ENTER_SHOP,
         RECRUIT,
         MASS_COMBAT,
+        SEA_COMBAT,
         HEAL1,
         FULL_RECOVERY,
         RECHARGE,

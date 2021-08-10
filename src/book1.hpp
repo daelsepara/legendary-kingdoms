@@ -5889,7 +5889,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (party.CurrentShip != -1 && party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
+            if (Engine::SHIP_INTACT(party))
             {
                 damage = 8 - party.RecentSuccesses;
 

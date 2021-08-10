@@ -4499,6 +4499,578 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
     return combat_damage;
 }
 
+std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> enemyFleet, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (enemyFleet.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto ship = enemyFleet[index];
+
+            std::string ship_string = "";
+
+            ship_string += "[" + std::string(ship.Name) + "]";
+
+            ship_string += "\nFighting: " + (ship.Fighting > 0 ? std::to_string(ship.Fighting) : std::string("Special"));
+
+            ship_string += " Health: " + std::to_string(ship.Health);
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (enemyFleet.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (enemyFleet.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    if (confirm_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/yes.png", idx - 1, (back_button ? idx + 1 : idx), enemyFleet.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+    }
+
+    if (back_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, enemyFleet.size() > 0 ? (last - start) - 1 : idx, idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    }
+
+    return controls;
+}
+
+std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> ships, int start, int last, int limit, int offsetx, int offsety, Control::Type mode)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (ships.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto ship = ships[index];
+
+            std::string ship_string = "";
+
+            ship_string = "[" + std::string(ship.Name) + "]";
+
+            ship_string += "\nFighting: " + (ship.Fighting > 0 ? std::to_string(ship.Fighting) : std::string("Special")) + " Health: " + std::to_string(ship.Health);
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (ships.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (ships.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
+
+    if (mode == Control::Type::ATTACK)
+    {
+        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ATTACK", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? idx - 1 : idx, idx, startx, text_y, Control::Type::ATTACK));
+    }
+    else if (mode == Control::Type::DEFEND)
+    {
+        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "DEFEND", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? idx - 1 : idx, idx, startx, text_y, Control::Type::ATTACK));
+    }
+    else if (mode == Control::Type::NEXT)
+    {
+        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "NEXT ROUND", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? idx - 1 : idx, idx, startx, text_y, Control::Type::ATTACK));
+    }
+
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, 220, 48, -1), idx, idx + 2, ships.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::SPELL));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 2, ships.size() > 0 ? idx - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::FLEE));
+
+    return controls;
+}
+
+int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Ship::Base> &enemyFleet, int opponent, int direction)
+{
+    auto combat_damage = 0;
+
+    auto attacks = 1;
+
+    auto Difficulty = 4;
+
+    std::vector<int> target_damage = {};
+
+    for (auto num_attacks = 0; num_attacks < attacks; num_attacks++)
+    {
+        if (Engine::SHIP_INTACT(party) && opponent >= 0 && opponent < enemyFleet.size() && enemyFleet[opponent].Health > 0)
+        {
+            if (window && renderer)
+            {
+                auto flash_message = false;
+
+                auto flash_color = intRD;
+
+                std::string message = "";
+
+                Uint32 start_ticks = 0;
+
+                Uint32 duration = 3000;
+
+                auto marginx = (int)(Margin * SCREEN_WIDTH);
+
+                auto fullwidth = SCREEN_WIDTH - 2 * marginx;
+
+                auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
+
+                auto headerw = (int)(boxwidth * 0.75);
+
+                auto infoh = 48;
+
+                auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+
+                auto box_space = 10;
+
+                auto main_buttonh = 48;
+
+                auto done = false;
+
+                auto stage = Engine::Attack::START;
+
+                SDL_SetWindowTitle(window, "Legendary Kingdoms: Ship Attack");
+
+                TTF_Init();
+
+                auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+
+                auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
+
+                auto text_space = 8;
+
+                auto font_size = 24;
+
+                const char *choices_attack[2] = {"Attack", "Cancel"};
+                const char *choices_defend[1] = {"Attack"};
+                const char *choices_damage[1] = {"Deal Damage"};
+                const char *choices_end[1] = {"Done"};
+
+                SDL_Surface *dice[6];
+
+                dice[0] = createImage("images/dice/dice1.png");
+                dice[1] = createImage("images/dice/dice2.png");
+                dice[2] = createImage("images/dice/dice3.png");
+                dice[3] = createImage("images/dice/dice4.png");
+                dice[4] = createImage("images/dice/dice5.png");
+                dice[5] = createImage("images/dice/dice6.png");
+
+                auto main_buttonw = 220;
+
+                auto controls_attack = createFixedTextButtons(choices_attack, 2, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                controls_attack[0].Type = Control::Type::CONFIRM;
+                controls_attack[1].Type = Control::Type::BACK;
+
+                auto controls_defend = createFixedTextButtons(choices_defend, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                controls_defend[0].Type = Control::Type::CONFIRM;
+
+                auto controls_damage = createFixedTextButtons(choices_damage, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                controls_damage[0].Type = Control::Type::CONFIRM;
+
+                auto controls_end = createFixedTextButtons(choices_end, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                controls_end[0].Type = Control::Type::BACK;
+
+                auto current = -1;
+
+                auto selected = false;
+
+                auto scrollUp = false;
+
+                auto scrollDown = false;
+
+                auto hold = false;
+
+                auto focus = 0;
+
+                std::vector<int> results = {};
+
+                auto attack_score = 1;
+
+                auto size_dice = 64;
+
+                auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+                auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
+
+                auto controls = std::vector<TextButton>();
+
+                auto damaged = false;
+
+                auto special_event_trigger = true;
+
+                while (!done)
+                {
+                    fillWindow(renderer, intWH);
+
+                    putHeader(renderer, "Attack Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+
+                    fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
+
+                    if (stage != Engine::Attack::START)
+                    {
+                        if (stage == Engine::Attack::ATTACK)
+                        {
+                            if (results.size() == 0)
+                            {
+                                results = Engine::ROLL_DICE(attack_score);
+                            }
+                        }
+
+                        auto row = 0;
+                        auto col = 0;
+
+                        auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
+                        auto offsetx = startx + box_space;
+
+                        int damage = 0;
+
+                        for (auto i = 0; i < results.size(); i++)
+                        {
+                            if (results[i] >= 1 && results[i] <= 6)
+                            {
+                                auto result = results[i] - 1;
+
+                                fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
+
+                                if (stage == Engine::Attack::DAMAGE)
+                                {
+                                    if (results[i] >= Difficulty)
+                                    {
+                                        thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), (direction == 0 ? intLB : intRD), 2);
+
+                                        damage++;
+                                    }
+                                }
+
+                                if (col < cols)
+                                {
+                                    col++;
+                                }
+                                else
+                                {
+                                    col = 0;
+
+                                    row++;
+                                }
+                            }
+                        }
+
+                        if (stage == Engine::Attack::DAMAGE)
+                        {
+                            if (!damaged)
+                            {
+                                if (direction == 0)
+                                {
+                                    auto damage_scale = 1;
+
+                                    Engine::GAIN_HEALTH(enemyFleet[opponent], -(damage_scale * damage));
+
+                                    combat_damage = damage_scale * damage;
+
+                                    flash_message = true;
+
+                                    if (damage_scale * damage > 0)
+                                    {
+                                        message = "The " + std::string(party.Fleet[party.CurrentShip].Name) + " deals " + std::to_string(damage_scale * damage) + " to the " + std::string(enemyFleet[opponent].Name) + "!";
+
+                                        flash_color = intLB;
+                                    }
+                                    else
+                                    {
+                                        message = "The " + std::string(party.Fleet[party.CurrentShip].Name) + "'s attack was ineffective!";
+
+                                        flash_color = intRD;
+                                    }
+
+                                    start_ticks = SDL_GetTicks();
+                                }
+                                else
+                                {
+                                    combat_damage = damage;
+
+                                    if (combat_damage > 0)
+                                    {
+                                        message = std::string(enemyFleet[opponent].Name) + " deals " + std::to_string(damage) + " to your ship!";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_message = true;
+
+                                        flash_color = intRD;
+                                    }
+                                    else
+                                    {
+                                        message = "The " + std::string(enemyFleet[opponent].Name) + "'s attack was ineffective!";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_message = true;
+
+                                        flash_color = intRD;
+                                    }
+                                }
+
+                                damaged = true;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (direction == 1 && special_event_trigger)
+                        {
+                            special_event_trigger = false;
+                        }
+                    }
+
+                    std::string attacker_string = "";
+
+                    fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
+
+                    if (direction == 0)
+                    {
+                        putHeader(renderer, party.Fleet[party.CurrentShip].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+
+                        attack_score = party.Fleet[party.CurrentShip].Fighting;
+
+                        attacker_string = "Fighting: " + std::to_string(attack_score);
+                        attacker_string += "\nHealth: " + std::to_string(party.Fleet[party.CurrentShip].Health);
+                    }
+                    else
+                    {
+                        putHeader(renderer, enemyFleet[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+
+                        attack_score = enemyFleet[opponent].Fighting;
+
+                        if (attack_score < 0)
+                        {
+                            attack_score = 0;
+                        }
+
+                        attacker_string = "Attack: " + std::to_string(attack_score);
+                        attacker_string += "\nHealth: " + std::to_string(enemyFleet[opponent].Health);
+                    }
+
+                    putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+
+                    std::string defender_string = "";
+
+                    if (direction == 0)
+                    {
+                        putHeader(renderer, enemyFleet[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        defender_string = "Defence: " + std::to_string(Difficulty) + "+";
+                        defender_string += "\nHealth: " + std::to_string(enemyFleet[opponent].Health);
+                    }
+                    else
+                    {
+                        putHeader(renderer, party.Fleet[party.CurrentShip].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        defender_string = "Defence: " + std::to_string(Difficulty) + "+";
+                        defender_string += "\nHealth: " + std::to_string(party.Fleet[party.CurrentShip].Health);
+                    }
+
+                    fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
+
+                    putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+
+                    if (stage == Engine::Attack::START)
+                    {
+                        if (direction == 0)
+                        {
+                            controls = controls_attack;
+                        }
+                        else
+                        {
+                            controls = controls_defend;
+                        }
+                    }
+                    else if (stage == Engine::Attack::ATTACK)
+                    {
+                        controls = controls_damage;
+                    }
+                    else if (stage == Engine::Attack::DAMAGE)
+                    {
+                        controls = controls_end;
+                    }
+
+                    if (flash_message)
+                    {
+                        if ((SDL_GetTicks() - start_ticks) < duration)
+                        {
+                            putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        }
+                        else
+                        {
+                            flash_message = false;
+                        }
+                    }
+
+                    renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+
+                    done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                    if (selected && current >= 0 && current < controls.size())
+                    {
+                        if (stage == Engine::Attack::START && controls[current].Type == Control::Type::BACK)
+                        {
+                            done = true;
+
+                            current = -1;
+
+                            selected = false;
+
+                            combat_damage = -1;
+
+                            break;
+                        }
+                        else if (stage == Engine::Attack::START && controls[current].Type == Control::Type::CONFIRM)
+                        {
+                            stage = Engine::Attack::ATTACK;
+                        }
+                        else if (stage == Engine::Attack::ATTACK && controls[current].Type == Control::Type::CONFIRM)
+                        {
+                            stage = Engine::Attack::DAMAGE;
+                        }
+                        else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::BACK)
+                        {
+                            stage = Engine::Attack::END;
+
+                            done = true;
+
+                            current = -1;
+
+                            selected = false;
+
+                            break;
+                        }
+                        else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::CONFIRM)
+                        {
+                            if (Engine::SHIP_INTACT(party))
+                            {
+                                if (combat_damage > 0)
+                                {
+                                    message = std::string(party.Fleet[party.CurrentShip].Name) + " dealt " + std::to_string(combat_damage) + " DAMAGE!";
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_message = true;
+
+                                    flash_color = intRD;
+
+                                    Engine::GAIN_HEALTH(party.Fleet[party.CurrentShip], -combat_damage);
+                                }
+                                else
+                                {
+                                    message = "The " + std::string(enemyFleet[opponent].Name) + "'s attack was ineffective!";
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_message = true;
+
+                                    flash_color = intRD;
+                                }
+                            }
+                            else
+                            {
+                                done = true;
+
+                                selected = false;
+
+                                current = -1;
+
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (font_mason)
+                {
+                    TTF_CloseFont(font_mason);
+
+                    font_mason = NULL;
+                }
+
+                if (font_garamond)
+                {
+                    TTF_CloseFont(font_garamond);
+
+                    font_garamond = NULL;
+                }
+
+                TTF_Quit();
+
+                for (auto i = 0; i < 6; i++)
+                {
+                    if (dice[i])
+                    {
+                        SDL_FreeSurface(dice[i]);
+
+                        dice[i] = NULL;
+                    }
+                }
+            }
+        }
+    }
+
+    return std::max(0, combat_damage);
+}
+
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment)
 {
     auto combat_damage = 0;
@@ -6526,6 +7098,349 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                                     flash_message = true;
 
                                     message = std::string(monsters[current + offset].Name) + std::string(" is dead!");
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intRD;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    return result;
+}
+
+int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &enemyFleet, std::vector<int> previousTargets, int combatRound)
+{
+    auto result = -1;
+
+    auto title = "Legendary Kingdoms: Select Enemy Ship";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto main_buttonh = 48;
+
+        auto font_size = 20;
+        auto text_space = 8;
+        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
+        auto infoh = 48;
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto last = offset + limit;
+
+        if (last > enemyFleet.size())
+        {
+            last = enemyFleet.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, true, false);
+
+        auto done = false;
+
+        auto selection = -1;
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                if (last - offset > 0)
+                {
+                    for (auto i = 0; i < last - offset; i++)
+                    {
+                        if (selection == offset + i)
+                        {
+                            thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        }
+                        else if (enemyFleet[offset + i].Health > 0)
+                        {
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, 4);
+
+                putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                putHeader(renderer, "Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (selection >= 0 && selection < enemyFleet.size())
+                {
+                    if (enemyFleet[selection].Health > 0)
+                    {
+                        putText(renderer, enemyFleet[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    }
+                    else
+                    {
+                        fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                    }
+                }
+                else
+                {
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+                {
+                    if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > enemyFleet.size())
+                            {
+                                last = enemyFleet.size();
+                            }
+
+                            controls.clear();
+
+                            controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, true, false);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                    {
+                        if (enemyFleet.size() - last > 0)
+                        {
+                            if (offset < enemyFleet.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > enemyFleet.size() - limit)
+                            {
+                                offset = enemyFleet.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > enemyFleet.size())
+                            {
+                                last = enemyFleet.size();
+                            }
+
+                            controls.clear();
+
+                            controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, true, false);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (enemyFleet.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::BACK)
+                    {
+                        result = -1;
+
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (selection >= 0 && selection < enemyFleet.size())
+                        {
+                            if (previousTargets.size() > 0)
+                            {
+                                if (Engine::FIND_LIST(previousTargets, selection) >= 0)
+                                {
+                                    flash_message = true;
+
+                                    message = "That opponent has been attacked before! Choose another target!";
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intRD;
+                                }
+                                else
+                                {
+                                    done = true;
+
+                                    result = selection;
+
+                                    current = -1;
+
+                                    selected = false;
+                                }
+                            }
+                            else
+                            {
+                                done = true;
+
+                                result = selection;
+
+                                current = -1;
+
+                                selected = false;
+                            }
+                        }
+                        else
+                        {
+                            flash_message = true;
+
+                            message = "You must select an opponent to attack this round.";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intRD;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION)
+                    {
+                        if (current + offset >= 0 && current + offset < enemyFleet.size())
+                        {
+                            if (selection == current + offset)
+                            {
+                                selection = -1;
+                            }
+                            else
+                            {
+                                if (enemyFleet[current + offset].Health > 0)
+                                {
+                                    selection = current + offset;
+                                }
+                                else
+                                {
+                                    flash_message = true;
+
+                                    message = std::string(enemyFleet[current + offset].Name) + std::string(" is destroyed!");
 
                                     start_ticks = SDL_GetTicks();
 
@@ -9652,10 +10567,6 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
 
         auto main_buttonh = 48;
 
-        const char *choices_attack[3] = {"ATTACK", "CAST SPELL", "FLEE"};
-        const char *choices_defend[3] = {"DEFEND", "CAST SPELL", "FLEE"};
-        const char *choices_next[3] = {"NEXT ROUND", "CAST SPELL", "FLEE"};
-
         std::vector<Button> controls;
 
         auto font_size = 20;
@@ -9693,6 +10604,417 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
         auto canFlee = storyFlee;
 
         // TODO: Sea Combat
+        while (Engine::COUNT(enemyFleet) > 0 && Engine::SHIP_INTACT(party) && (roundLimit == -1 || (roundLimit > 0 && combatRound < roundLimit)))
+        {
+            auto done = false;
+
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                if (combatRound == 0 && Engine::VERIFY_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0}))
+                {
+                    if (Engine::SHIP_INTACT(party) && enemyFleet.size() > 0)
+                    {
+                        auto free_attack = Engine::COUNT(enemyFleet[0].Fighting, 4);
+
+                        message = "The " + std::string(enemyFleet[0].Name);
+
+                        if (free_attack > 0)
+                        {
+                            if (free_attack > 0)
+                            {
+                                flash_color = intRD;
+
+                                message += " deals " + std::to_string(free_attack) + " damage to " + std::string(party.Fleet[party.CurrentShip].Name) + "!";
+
+                                Engine::GAIN_HEALTH(party.Fleet[party.LastSelected], -free_attack);
+                            }
+                            else
+                            {
+                                flash_color = intLB;
+
+                                message = +"'s attack was ineffective!";
+                            }
+                        }
+                        else
+                        {
+                            message = +"'s attack was ineffective!";
+
+                            flash_color = intLB;
+                        }
+
+                        start_ticks = SDL_GetTicks();
+
+                        flash_message = true;
+                    }
+
+                    Engine::LOSE_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0});
+                }
+
+                auto last = offset + limit;
+
+                if (last > enemyFleet.size())
+                {
+                    last = enemyFleet.size();
+                }
+
+                if (Engine::COUNT(enemyFleet) == 0)
+                {
+                    current_mode = Control::Type::NEXT;
+                }
+                else if (!hasAttacked)
+                {
+                    current_mode = Control::Type::ATTACK;
+                }
+                else
+                {
+                    current_mode = Control::Type::DEFEND;
+                }
+
+                controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, current_mode);
+
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                renderButtons(renderer, controls, current, intLB, space, 4);
+
+                if (last - offset > 0)
+                {
+                    for (auto i = 0; i < last - offset; i++)
+                    {
+                        if (enemyFleet[offset + i].Health > 0)
+                        {
+                            if (current + offset == offset + i)
+                            {
+                                thickRect(renderer, controls[i].W + 4, controls[i].H + 4, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                            }
+                            else
+                            {
+                                drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            }
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + 8, controls[i].H + 8, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        }
+                    }
+                }
+
+                putHeader(renderer, "Opponents", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                putHeader(renderer, "Current Ship", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
+                {
+                    std::string ship_string = "";
+
+                    putText(renderer, ship_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+                else
+                {
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold, 200);
+
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+                {
+                    if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > enemyFleet.size())
+                            {
+                                last = enemyFleet.size();
+                            }
+
+                            controls.clear();
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || ((controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown))
+                    {
+                        if (enemyFleet.size() - last > 0)
+                        {
+                            if (offset < enemyFleet.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > enemyFleet.size() - limit)
+                            {
+                                offset = enemyFleet.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > enemyFleet.size())
+                            {
+                                last = enemyFleet.size();
+                            }
+
+                            controls.clear();
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (enemyFleet.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::FLEE && !hold)
+                    {
+                        if (canFlee)
+                        {
+                            if (fleeRound == -1)
+                            {
+                                done = true;
+
+                                combatResult = Engine::Combat::FLEE;
+                            }
+                            else if (combatRound == fleeRound)
+                            {
+                                done = true;
+
+                                combatResult = Engine::Combat::FLEE;
+                            }
+                            else
+                            {
+                                flash_message = true;
+
+                                if (combatRound < fleeRound)
+                                {
+                                    message = "You cannot flee at this time.";
+                                }
+                                else
+                                {
+                                    message = "You can no longer flee from this battle.";
+                                }
+
+                                start_ticks = SDL_GetTicks();
+
+                                flash_color = intRD;
+                            }
+                        }
+                        else
+                        {
+                            flash_message = true;
+
+                            message = "You cannot flee from this battle.";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intRD;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ATTACK && !hold)
+                    {
+                        if (Engine::SHIP_INTACT(party) && !hasAttacked && Engine::COUNT(enemyFleet) > 0)
+                        {
+                            if (hasAttacked)
+                            {
+                                flash_message = true;
+
+                                message = "Your ship has already attacked this round.";
+
+                                start_ticks = SDL_GetTicks();
+
+                                flash_color = intRD;
+                            }
+                            else
+                            {
+                                int opponent = -1;
+
+                                // TODO: Party's ship attacks
+                                if (Engine::COUNT(enemyFleet) == 1)
+                                {
+                                    opponent = Engine::FIRST(enemyFleet);
+                                }
+                                else
+                                {
+                                    // select Opponent
+                                    opponent = selectOpponent(window, renderer, enemyFleet, {}, combatRound);
+                                }
+
+                                if (opponent >= 0 && opponent < enemyFleet.size() && enemyFleet[opponent].Health > 0)
+                                {
+                                    seaAttackScreen(window, renderer, party, enemyFleet, opponent, 0);
+                                }
+
+                                hasAttacked = true;
+                            }
+                        }
+
+                        if (hasAttacked)
+                        {
+                            if (Engine::COUNT(enemyFleet) > 0)
+                            {
+                                for (auto i = 0; i < enemyFleet.size(); i++)
+                                {
+                                    if (enemyFleet[i].Health > 0 && Engine::SHIP_INTACT(party))
+                                    {
+                                        seaAttackScreen(window, renderer, party, enemyFleet, i, 1);
+                                    }
+                                }
+                            }
+
+                            hasAttacked = false;
+                        }
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::SPELL && !hold)
+                    {
+                        if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_COMBAT_SPELLS}))
+                        {
+                            if (Engine::SHIP_INTACT(party) && !hasAttacked)
+                            {
+                                if (Engine::SPELLCASTERS(party) > 0)
+                                {
+                                    auto combat_spells = 0;
+
+                                    for (auto i = 0; i < party.Members.size(); i++)
+                                    {
+                                        if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].SpellCaster)
+                                        {
+                                            auto spells = Engine::COUNT(party.Members[i].SpellBook, Spells::Scope::SEA_COMBAT);
+
+                                            combat_spells += spells;
+                                        }
+                                    }
+
+                                    if (combat_spells <= 0)
+                                    {
+                                        flash_message = true;
+
+                                        message = "Your party does not have any usable sea combat spells.";
+
+                                        start_ticks = SDL_GetTicks();
+
+                                        flash_color = intRD;
+                                    }
+                                    else
+                                    {
+                                        // TODO: Sea combat spell
+                                        selected = false;
+
+                                        current = -1;
+                                    }
+                                }
+                                else
+                                {
+                                    flash_message = true;
+
+                                    message = "There are no spell casters in your party!";
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    flash_color = intRD;
+                                }
+                            }
+                            else
+                            {
+                                flash_message = true;
+
+                                if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}) && combatRound == 0)
+                                {
+                                    message = "Your ship does not get to attack first nor cast spells this round!";
+                                }
+                                else
+                                {
+                                    message = "Your ship has already attacked this round.";
+                                }
+
+                                start_ticks = SDL_GetTicks();
+
+                                flash_color = intRD;
+                            }
+                        }
+                        else
+                        {
+                            flash_message = true;
+
+                            message = "You cannot cast spells in this battle!";
+
+                            start_ticks = SDL_GetTicks();
+
+                            flash_color = intRD;
+                        }
+                    }
+                }
+
+                if (!Engine::SHIP_INTACT(party) || Engine::COUNT(enemyFleet) == 0)
+                {
+                    done = true;
+                }
+            }
+
+            if (combatResult == Engine::Combat::FLEE)
+            {
+                break;
+            }
+        }
 
         if (font_garamond)
         {
@@ -9732,7 +11054,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
             }
             else
             {
-                combatResult = party.Fleet[party.CurrentShip].Health > 0 ? Engine::Combat::VICTORY : Engine::Combat::DEFEAT;
+                combatResult = Engine::SHIP_INTACT(party) ? Engine::Combat::VICTORY : Engine::Combat::DEFEAT;
             }
         }
     }
@@ -9780,10 +11102,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         TTF_SetFontKerning(font_dark11, 0);
 
         auto main_buttonh = 48;
-
-        const char *choices_attack[4] = {"VIEW PARTY", "ATTACK", "CAST SPELL", "FLEE"};
-        const char *choices_defend[4] = {"VIEW PARTY", "DEFEND", "CAST SPELL", "FLEE"};
-        const char *choices_next[4] = {"VIEW PARTY", "NEXT ROUND", "CAST SPELL", "FLEE"};
 
         std::vector<Button> controls;
 
@@ -9868,7 +11186,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 flash_color = intRD;
 
-                                message += " deals " + std::to_string(free_attack) + " damage to " + std::string(party.Members[0].Name) + "!";
+                                message += " deals " + std::to_string(free_attack) + " damage to " + std::string(party.Members[party.LastSelected].Name) + "!";
 
                                 Engine::GAIN_HEALTH(party.Members[party.LastSelected], -free_attack);
                             }
@@ -20281,7 +21599,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
     auto font_size = 20;
     auto text_space = 8;
 
-    auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.\n\nTests:\n1 - Combat\n2 - Map\n3 - Team Skill check\n4 - Individual Skill check\n5 - Mass Combat";
+    auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.\n\nTests:\n1 - Combat\n2 - Map\n3 - Team Skill check\n4 - Individual Skill check\n5 - Mass Combat\n6 - Sea Combat";
 
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, textwidth - 2 * text_space);
 
@@ -20300,16 +21618,17 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
         auto main_buttonh = 48;
 
-        const char *choices[6] = {"1", "2", "3", "4", "5", "Exit"};
+        const char *choices[7] = {"1", "2", "3", "4", "5", "6", "Exit"};
 
-        auto controls = createHTextButtons(choices, 6, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+        auto controls = createHTextButtons(choices, 7, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
 
         controls[0].Type = Control::Type::COMBAT;
         controls[1].Type = Control::Type::MAP;
         controls[2].Type = Control::Type::TEAM_SKILL;
         controls[3].Type = Control::Type::SKILL;
         controls[4].Type = Control::Type::MASS_COMBAT;
-        controls[5].Type = Control::Type::QUIT;
+        controls[5].Type = Control::Type::SEA_COMBAT;
+        controls[6].Type = Control::Type::QUIT;
 
         auto done = false;
 
@@ -20342,7 +21661,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
             if (selected && current >= 0 && current < controls.size())
             {
-                if (controls[current].Type == Control::Type::COMBAT)
+                if (controls[current].Type == Control::Type::COMBAT && !hold)
                 {
                     selectParty(window, renderer, Book::Type::BOOK1, Party);
 
@@ -20360,7 +21679,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::MAP)
+                else if (controls[current].Type == Control::Type::MAP && !hold)
                 {
                     mapScreen(window, renderer);
 
@@ -20370,7 +21689,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::TEAM_SKILL)
+                else if (controls[current].Type == Control::Type::TEAM_SKILL && !hold)
                 {
                     selectParty(window, renderer, Book::Type::BOOK1, Party);
 
@@ -20382,7 +21701,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::SKILL)
+                else if (controls[current].Type == Control::Type::SKILL && !hold)
                 {
                     selectParty(window, renderer, Book::Type::BOOK1, Party);
 
@@ -20394,7 +21713,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::MASS_COMBAT)
+                else if (controls[current].Type == Control::Type::MASS_COMBAT && !hold)
                 {
                     Party.Members.clear();
                     Party.Members.push_back(Character::AMELIA_PASS_DAYNE);
@@ -20427,6 +21746,29 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                         Army::Base("Lhasbreath Berserkers", Army::Type::LHASBREATH_BERSERKERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 5, 2, false)};
 
                     deploymentScreen(window, renderer, Location::Type::SALTDAD, Party, EnemyArmy, EnemySpells, EnemyArmyStatus);
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::SEA_COMBAT && !hold)
+                {
+                    selectParty(window, renderer, Book::Type::BOOK1, Party);
+
+                    Party.Fleet.clear();
+
+                    Party.Fleet.push_back(Ship::Base("PIRATE PINNANCE", Ship::Type::PIRATE_PINNANCE, Location::Type::NONE, 5, 6, 3));
+
+                    Party.CurrentShip = 0;
+
+                    std::vector<Ship::Base> enemyFleet = {
+                        Ship::Base("HULK", Ship::Type::HULK, Location::Type::NONE, 3, 5, 3)};
+
+                    std::vector<Allies::Type> allies = {};
+
+                    combat = seaCombatScreen(window, renderer, Party, enemyFleet, true, 0, -1);
+
+                    done = false;
 
                     current = -1;
 
