@@ -4847,6 +4847,8 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                                     if (combat_damage > 0)
                                     {
+                                        Engine::GAIN_HEALTH(party.Fleet[party.CurrentShip], -damage);
+
                                         message = std::string(enemyFleet[opponent].Name) + " deals " + std::to_string(damage) + " to your ship!";
 
                                         start_ticks = SDL_GetTicks();
