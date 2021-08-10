@@ -9622,6 +9622,135 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
     return selected_party;
 }
 
+Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Ship::Base> &enemyFleet, bool storyFlee, int fleeRound, int roundLimit)
+{
+    auto combatResult = Engine::Combat::NONE;
+
+    auto title = "Legendary Kindoms: Sea Combat";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto main_buttonh = 48;
+
+        const char *choices_attack[3] = {"ATTACK", "CAST SPELL", "FLEE"};
+        const char *choices_defend[3] = {"DEFEND", "CAST SPELL", "FLEE"};
+        const char *choices_next[3] = {"NEXT ROUND", "CAST SPELL", "FLEE"};
+
+        std::vector<Button> controls;
+
+        auto font_size = 20;
+        auto text_space = 8;
+        auto infoh = 48;
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
+        auto offset = 0;
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto last = offset + limit;
+
+        if (last > enemyFleet.size())
+        {
+            last = enemyFleet.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto hasAttacked = false;
+
+        if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}))
+        {
+            hasAttacked = true;
+
+            if (fleeRound == 0)
+            {
+                fleeRound++;
+            }
+        }
+
+        auto combatRound = 0;
+        auto round0_attacks = 0;
+
+        auto current_mode = Control::Type::ATTACK;
+        auto canFlee = storyFlee;
+
+        // TODO: Sea Combat
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+
+        if (combatResult != Engine::Combat::FLEE)
+        {
+            if (roundLimit > 0 && combatRound >= roundLimit)
+            {
+                combatResult = Engine::Combat::EXCEED_LIMIT;
+            }
+            else
+            {
+                combatResult = party.Fleet[party.CurrentShip].Health > 0 ? Engine::Combat::VICTORY : Engine::Combat::DEFEAT;
+            }
+        }
+    }
+
+    // Clear temporary status, e.g. magic effects
+    if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}))
+    {
+        Engine::LOSE_CODES(party, {Codes::Type::LAST_IN_COMBAT});
+    }
+
+    if (combatResult != Engine::Combat::NONE)
+    {
+        Engine::LOSE_CODES(party, {Codes::Type::NO_COMBAT_SPELLS});
+    }
+
+    return combatResult;
+}
+
 Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool storyFlee, int fleeRound, int roundLimit, bool useEquipment)
 {
     auto combatResult = Engine::Combat::NONE;
