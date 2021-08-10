@@ -307,7 +307,7 @@ namespace Engine
             {
                 if (character.Equipment[i].Type == item)
                 {
-                    found++;
+                    found += 1;
                 }
             }
         }
@@ -323,7 +323,7 @@ namespace Engine
         {
             if (Engine::COUNT_EQUIPMENT(character, equipment[i]) > 0)
             {
-                found++;
+                found += 1;
             }
         }
 
@@ -357,7 +357,7 @@ namespace Engine
 
                 if (result >= 0)
                 {
-                    found++;
+                    found += 1;
                 }
             }
         }
@@ -461,12 +461,22 @@ namespace Engine
 
         if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::ENRAGED))
         {
-            score++;
+            score += 1;
         }
 
         if (type == Attribute::Type::FIGHTING && Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
         {
             score += 2;
+        }
+
+        if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::LOST_FINGERNAILS))
+        {
+            score -= 1;
+        }
+
+        if (type == Attribute::Type::LORE && Engine::HAS_STATUS(character, Character::Status::ENLIGHTENED))
+        {
+            score += 1;
         }
 
         if (character.Health > 0)
@@ -510,6 +520,16 @@ namespace Engine
 
                 break;
             }
+        }
+
+        if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::LOST_FINGERNAILS))
+        {
+            score -= 1;
+        }
+
+        if (type == Attribute::Type::LORE && Engine::HAS_STATUS(character, Character::Status::ENLIGHTENED))
+        {
+            score += 1;
         }
 
         if (score < 0)
@@ -851,7 +871,7 @@ namespace Engine
         {
             if (results[i] >= difficulty)
             {
-                count++;
+                count += 1;
             }
         }
 
@@ -893,6 +913,14 @@ namespace Engine
 
                 break;
             }
+        }
+    }
+
+    void REMOVE_STATUS(Party::Base &party, Character::Status status)
+    {
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            Engine::REMOVE_STATUS(party.Members[i], status);
         }
     }
 
@@ -994,7 +1022,12 @@ namespace Engine
 
         if (Engine::HAS_STATUS(character, Character::Status::ENRAGED))
         {
-            score++;
+            score += 1;
+        }
+
+        if (Engine::HAS_STATUS(character, Character::Status::LOST_FINGERNAILS))
+        {
+            score -= 1;
         }
 
         if (Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
@@ -1089,7 +1122,7 @@ namespace Engine
         {
             if (monsters[i].Health > 0)
             {
-                result++;
+                result += 1;
             }
         }
 
@@ -1104,7 +1137,7 @@ namespace Engine
         {
             if (monsters[i].Health > 0 && round >= monsters[i].Round)
             {
-                result++;
+                result += 1;
             }
         }
 
@@ -1119,7 +1152,7 @@ namespace Engine
         {
             if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
             {
-                result++;
+                result += 1;
             }
         }
 
@@ -1134,7 +1167,7 @@ namespace Engine
         {
             if (party.InCity && !party.Members[i].IsCivilized)
             {
-                result++;
+                result += 1;
             }
         }
 
@@ -1155,7 +1188,7 @@ namespace Engine
             {
                 if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
                 {
-                    result++;
+                    result += 1;
                 }
             }
         }
@@ -1171,7 +1204,7 @@ namespace Engine
         {
             if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
             {
-                result++;
+                result += 1;
             }
         }
 
@@ -1192,7 +1225,7 @@ namespace Engine
             {
                 if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
                 {
-                    result++;
+                    result += 1;
                 }
             }
         }
@@ -1214,7 +1247,7 @@ namespace Engine
             {
                 if (party.Members[i].Team == team && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
                 {
-                    result++;
+                    result += 1;
                 }
             }
         }
@@ -1230,7 +1263,7 @@ namespace Engine
         {
             if (spells[i].Charged && spells[i].Scope == scope)
             {
-                result++;
+                result += 1;
             }
         }
 
@@ -1245,7 +1278,7 @@ namespace Engine
         {
             if (spells[i].Charged && spells[i].Type == type)
             {
-                result++;
+                result += 1;
             }
         }
 
@@ -1260,7 +1293,7 @@ namespace Engine
         {
             if (party.Members[i].SpellCaster && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
             {
-                result++;
+                result += 1;
             }
         }
 
@@ -1299,7 +1332,7 @@ namespace Engine
 
                 if (result >= 0)
                 {
-                    found++;
+                    found += 1;
                 }
             }
         }
@@ -1365,7 +1398,7 @@ namespace Engine
 
                 if (result >= 0)
                 {
-                    found++;
+                    found += 1;
                 }
             }
         }
@@ -1659,7 +1692,7 @@ namespace Engine
 
             if (result >= 0)
             {
-                found++;
+                found += 1;
             }
         }
 
@@ -1676,7 +1709,7 @@ namespace Engine
 
             if (result >= 0)
             {
-                found++;
+                found += 1;
             }
         }
 
@@ -2249,7 +2282,7 @@ namespace Engine
         {
             if (score == Engine::SCORE(party.Members[i], type) && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
             {
-                result++;
+                result += 1;
             }
         }
 
@@ -2341,36 +2374,36 @@ namespace Engine
         {
             if (((left_flank2a >= 0 && left_flank2a < army.size()) || (left_flank2b >= 0 && left_flank2b < army.size())))
             {
-                zones--;
+                zones -= 1;
             }
         }
         else
         {
-            zones--;
+            zones -= 1;
         }
 
         if (((centre1a >= 0 && centre1a < army.size()) || (centre1b >= 0 && centre1b < army.size())))
         {
             if (((centre2a >= 0 && centre2a < army.size()) || (centre2b >= 0 && centre2b < army.size())))
             {
-                zones--;
+                zones -= 1;
             }
         }
         else
         {
-            zones--;
+            zones -= 1;
         }
 
         if (((right_flank1a >= 0 && right_flank1a < army.size()) || (right_flank1b >= 0 && right_flank1b < army.size())))
         {
             if (((right_flank2a >= 0 && right_flank2a < army.size()) || (right_flank2b >= 0 && right_flank2b < army.size())))
             {
-                zones--;
+                zones -= 1;
             }
         }
         else
         {
-            zones--;
+            zones -= 1;
         }
 
         if (zones < 0)
@@ -2511,7 +2544,7 @@ namespace Engine
         {
             if (army[i].Morale > 0)
             {
-                result++;
+                result += 1;
             }
         }
 
@@ -2532,7 +2565,7 @@ namespace Engine
             {
                 if (army[i].Morale > 0 && army[i].Garrison == garrison)
                 {
-                    result++;
+                    result += 1;
                 }
             }
         }

@@ -6919,9 +6919,7 @@ namespace Book1
 
                 if (result >= 0 && result < party.Members.size() && Engine::SCORE(party.Members[result], Attribute::Type::HEALTH) > 0)
                 {
-                    PreText += "\n\nAkihiro has achieved Enlightenment. Akihiro can gains 1 point of Lore.";
-
-                    Engine::GAIN_SCORE(party.Members[result], Attribute::Type::LORE, 1);
+                    PreText += "\n\nAkihiro has achieved Enlightenment. Akihiro also gains 1 point of Lore.";
 
                     Engine::GAIN_STATUS(party.Members[result], Character::Status::ENLIGHTENED);
                 }
@@ -9162,7 +9160,7 @@ namespace Book1
 
                 Engine::GAIN_HEALTH(party.Members[target], -2);
 
-                Engine::GAIN_SCORE(party.Members[target], Attribute::Type::FIGHTING, -1);
+                Engine::GAIN_STATUS(party.Members[target], Character::Status::LOST_FINGERNAILS);
             }
             else
             {
@@ -11708,6 +11706,8 @@ namespace Book1
 
             //TODO: Cure lost limbs, diseases
             Engine::REST(party);
+
+            Engine::REMOVE_STATUS(party, Character::Status::LOST_FINGERNAILS);
         }
     };
 
@@ -12764,7 +12764,7 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("Volunteer someone from your party", {Book::Type::BOOK1, 294}, Choice::Type::CHOOSE_PARTY_MEMBER));
-            Choices.push_back(Choice::Base("Volunteer no one", {Book::Type::BOOK1, -408}));
+            Choices.push_back(Choice::Base("Do not volunteer", {Book::Type::BOOK1, -408}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -12820,6 +12820,238 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 370}; }
+    };
+
+    class Story410 : public Story::Base
+    {
+    public:
+        Story410()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 410;
+
+            Text = "You step through the Shaded Gate, becoming engulfed in cool shadow. The land here is different, and you cannot make out the Granite Hills that should lie beyond the wall. The chill nags at you, but you resolve to carry on.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::WAYFINDER_ROD}))
+            {
+                Choices.push_back(Choice::Base("Go south", {Book::Type::BOOK1, 886}));
+                Choices.push_back(Choice::Base("Go west", {Book::Type::BOOK1, 676}));
+                Choices.push_back(Choice::Base("Go east", {Book::Type::BOOK1, 589}));
+                Choices.push_back(Choice::Base("Go north through the Shaded Gate", {Book::Type::BOOK1, 140}));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 481}; }
+    };
+
+    class Story411 : public Story::Base
+    {
+    public:
+        Story411()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 411;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "The Tower of Oneness is not the tallest structure in Chalice, but it is the grandest. Intricately carved from the living rock, and decorated in flecked red and gold paint, the tower stands out amidst a sea of grand temples.\n\nThe mercifully cool insides are open to all, but there are few visitors in this sacred place. The halls of the God King are closed off to most, and the libraries are only useful to those who can read; a rare skill in the Valley of Bones.\n\nAn elderly sister, in long orange robes, asks how she can be of assistance.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Visit the library", {Book::Type::BOOK1, 680}));
+            Choices.push_back(Choice::Base("Ask to see the God King", {Book::Type::BOOK1, 628}));
+            Choices.push_back(Choice::Base("Make your apologies and leave", {Book::Type::BOOK1, 450}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    // TODO: Verify that selected item is lost going into this page reference
+    class Story412 : public Story::Base
+    {
+    public:
+        Story412()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 412;
+
+            Text = "The monkeys paw over the item you give them, hauling it up into the trees. One monkey snatches it from another, and soon the entire pack storm through the trees, howling after the thief, shaking down a rain of leaves as they scramble away.\n\n\"Let's get out of here while we still can!\" smiles Emlyn, urging you down the path.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 740}; }
+    };
+
+    class Story413 : public Story::Base
+    {
+    public:
+        Story413()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 413;
+
+            Text = "You carefully shuffle along the ledge, unaware how weak it is. Midway, a large portion of the ledge collapses, sending you tumbling into the pit, crushing spider eggs as you go. Immediately, swarms of tiny, biting spiders begin to emerge from the broken eggs. Suddenly the giant spiders move as one, descending upon your companions and the Everchild's followers. Eggs crack as careless feet release more baby spiders.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 237}; }
+    };
+
+    class Story414 : public Story::Base
+    {
+    public:
+        Story414()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 414;
+
+            Text = "The coffin is made of stone, and its lid looks heavy. There are scrape marks on the lip of the lid that makes it look like it was opened quite recently. It has a name: 'Sar Wilmot Fairbrother'.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Open the coffin", {Book::Type::BOOK1, 660}));
+            Choices.push_back(Choice::Base("Explore elsewhere", {Book::Type::BOOK1, 494}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story415 : public Story::Base
+    {
+    public:
+        Story415()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 415;
+
+            Image = "images/book1/yu_yuan.png";
+
+            Text = "\"And you are?\" she asks.\n\n\"Akihiro of Chalice, and you?\"\n\n\"Yu Yan,\" she says, offering the smallest of bows in return. She sheathes her sword. \"I take it you are here treasure hunting?\"\n\n\"In a fashion -- I seek a SILVER IDOL for my master, Honnu,\" you admit.\n\n\"That could be a problem,\" says Yu Yan. \"I am not used to sharing. And I am here to treasure hunt.\"\n\nYou frown. You do not seek conflict with this woman, but nor can you just leave without the statue.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Offer to work together with Yu Yan", {Book::Type::BOOK1, 454}));
+            Choices.push_back(Choice::Base("Insist on searching her bags", {Book::Type::BOOK1, 506}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story416 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story416()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 416;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Leave the palace", {Book::Type::BOOK1, 265}));
+            Choices.push_back(Choice::Base("Go to the room in the south", {Book::Type::BOOK1, 506}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You rub your hands together with glee as you behold the stores of treasure. It's time to get looting!\n\nThe following items are in the vault:\n\n1500 silver pieces\nA bar GOLD BULLION\nA MAGICAL WEAVE\nA pile of REGISTRY PAPERS\nA GLITTERING NECKLACE (Charisma +2)\nA TOME OF KNOWLEDGE (Lore +2)\nA SILVER IDOL\n\nWhat will you do now?\n\nNote: You may take what you wish.";
+
+            Take = {
+                Equipment::Base("1500 silver pieces", "1500 silver pieces", Equipment::Class::NORMAL, Equipment::Type::SILVER_COINS, Attribute::Type::NONE, 0, 0, 1500, false),
+                Equipment::GOLD_BULLION,
+                Equipment::REGISTRY_PAPERS,
+                Equipment::GLITTERING_NECKLACE2,
+                Equipment::TOME_OF_KNOWLEDGE2,
+                Equipment::SILVER_IDOL};
+
+            Limit = Take.size();
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::BANDITS_GET3}))
+            {
+                PreText += " The bandits get three of these treasures.";
+
+                Limit -= 3;
+            }
+
+            Text = PreText.c_str();
+        }
+    };
+
+    class Story417 : public Story::Base
+    {
+    public:
+        Story417()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 417;
+
+            Text = "The overseers have no intention of messing with armed warriors, and quickly leave their sport. The woman staggers to her feet, blood flowing from her face.\n\n\"Barbarians!\" she spits. \"They beat me because I am down on my luck. My family used to own half the land in Clifftop, but my grandfather was forced off his land by the vile sorcerer Unbraaki who stole his land documents. You look like adventurous sorts. If you find me the REGISTRY PAPERS from Unbraaki's vault, I'll reward you!\"\n\n\"And you are?\" you ask.\n\n\"They call me Damned Suzanna,\" she shrugs. \"At least, that's what I'm called when people see me. Find those REGISTRY PAPERS and I'll split the land value with you.\"\n\nIt might be worth looking out for.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story418 : public Story::Base
+    {
+    public:
+        Story418()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 418;
+
+            Text = "Your defeat of the kensai in single combat has proven the strength of your convictions. The sister defers and asks you to maintain a respectful tone as she escorts you to Hall of the King.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 638}; }
+    };
+
+    class Story419 : public Story::Base
+    {
+    public:
+        Story419()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 419;
+
+            Text = "You attempt to invoke the power of the book, hoping your pronunciations and somatic gestures are correct.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Animate the Skeletons (Team check: Lore 4+, Successes: 6)", {Book::Type::BOOK1, 232}, {Book::Type::BOOK1, 457}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 6));
+
+            Controls = Story::Controls::STANDARD;
+        }
     };
 
     auto story001 = Story001();
@@ -13267,6 +13499,16 @@ namespace Book1
     auto story408 = Story408();
     auto event408 = Event408();
     auto story409 = Story409();
+    auto story410 = Story410();
+    auto story411 = Story411();
+    auto story412 = Story412();
+    auto story413 = Story413();
+    auto story414 = Story414();
+    auto story415 = Story415();
+    auto story416 = Story416();
+    auto story417 = Story417();
+    auto story418 = Story418();
+    auto story419 = Story419();
 
     void InitializeStories()
     {
@@ -13315,7 +13557,8 @@ namespace Book1
             &story370, &story371, &story372, &story373, &story374, &story375, &story376, &story377, &story378, &story379,
             &story380, &story381, &story382, &story383, &story384, &story385, &story386, &story387, &story388, &story389,
             &story390, &story391, &story392, &story393, &story394, &story395, &story396, &story397, &story398, &story399,
-            &story400, &story401, &story402, &story403, &story404, &story405, &story406, &story407, &story408, &story409};
+            &story400, &story401, &story402, &story403, &story404, &story405, &story406, &story407, &story408, &story409,
+            &story410, &story411, &story412, &story413, &story414, &story415, &story416, &story417, &story418, &story419};
     }
 }
 #endif

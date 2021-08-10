@@ -10309,11 +10309,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 combatRound++;
 
-                                for (auto i = 0; i < party.Members.size(); i++)
-                                {
-                                    Engine::REMOVE_STATUS(party.Members[i], Character::Status::EXTRA_MAGIC_ROUND0);
-                                    Engine::REMOVE_STATUS(party.Members[i], Character::Status::UNLIMITED_MAGIC_ROUND0);
-                                }
+                                Engine::REMOVE_STATUS(party, Character::Status::EXTRA_MAGIC_ROUND0);
+                                Engine::REMOVE_STATUS(party, Character::Status::UNLIMITED_MAGIC_ROUND0);
 
                                 // clear damaged flag for next round
                                 for (auto i = 0; i < monsters.size(); i++)

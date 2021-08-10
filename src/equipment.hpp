@@ -87,7 +87,9 @@ namespace Equipment
         AMULET_OF_DEFENSE1,
         FAIRBROTHER_FAMILY_CREST,
         CLOAK_OF_WONDER3,
-        BLACK_PRISM
+        BLACK_PRISM,
+        WAYFINDER_ROD,
+        TOME_OF_KNOWLEDGE2
     };
 
     class Base
@@ -148,6 +150,27 @@ namespace Equipment
             Modifier = modifier;
 
             AdditionalSlots = additionalSlots;
+
+            TwoHanded = twoHanded;
+        }
+
+        Base(const char *name, const char *description, Equipment::Class equipmentClass, Equipment::Type equipmentType, Attribute::Type modifies, int modifier, int additionalSlots, int value, bool twoHanded)
+        {
+            Name = name;
+
+            Description = description;
+
+            Class = equipmentClass;
+
+            Type = equipmentType;
+
+            Attribute = modifies;
+
+            Modifier = modifier;
+
+            AdditionalSlots = additionalSlots;
+
+            Value = value;
 
             TwoHanded = twoHanded;
         }
@@ -223,6 +246,8 @@ namespace Equipment
     auto FAIRBROTHER_FAMILY_CREST = Equipment::Base("FAIRBROTHER FAMILY CREST", "FAIRBROTHER FAMILY CREST", Equipment::Class::NORMAL, Equipment::Type::FAIRBROTHER_FAMILY_CREST, Attribute::Type::NONE, 0, false);
     auto CLOAK_OF_WONDER3 = Equipment::Base("CLOAK OF WONDER", "CLOAK OF WONDER", Equipment::Class::ROBE, Equipment::Type::CLOAK_OF_WONDER3, Attribute::Type::ALL_SKILLS, 3, false);
     auto BLACK_PRISM = Equipment::Base("BLACK PRISM", "BLACK PRISM", Equipment::Class::NORMAL, Equipment::Type::BLACK_PRISM, Attribute::Type::NONE, 0, false);
+    auto WAYFINDER_ROD = Equipment::Base("WAYFINDER ROD", "WAYFINDER ROD", Equipment::Class::NORMAL, Equipment::Type::WAYFINDER_ROD, Attribute::Type::NONE, 0, false);
+    auto TOME_OF_KNOWLEDGE2 = Equipment::Base("TOME OF KNOWLEDGE", "TOME OF KNOWLEDGE", Equipment::Class::NORMAL, Equipment::Type::TOME_OF_KNOWLEDGE2, Attribute::Type::LORE, 2, false);
 }
 
 #endif

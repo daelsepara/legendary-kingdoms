@@ -124,7 +124,8 @@ namespace Character
         UNLIMITED_MAGIC_ROUND0,
         FOUND_COGWHEEL,
         ATTACK2_ENEMY0_ROUND0,
-        UNARMED_COMBAT
+        UNARMED_COMBAT,
+        LOST_FINGERNAILS
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;
@@ -142,7 +143,8 @@ namespace Character
         {Character::Status::UNLIMITED_MAGIC_ROUND0, "Unlimited Magic Attacks on Round 1"},
         {Character::Status::FOUND_COGWHEEL, "Found the cogwheel"},
         {Character::Status::ATTACK2_ENEMY0_ROUND0, "Can attack first enemy twice on Round 1"},
-        {Character::Status::UNARMED_COMBAT, "Unarmed Combat"}};
+        {Character::Status::UNARMED_COMBAT, "Unarmed Combat"},
+        {Character::Status::LOST_FINGERNAILS, "Lost fingernails"}};
 
     class Base
     {
