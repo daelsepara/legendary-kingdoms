@@ -13886,6 +13886,238 @@ namespace Book1
         }
     };
 
+    class Story450 : public Story::Base
+    {
+    public:
+        Story450()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 450;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Image = "images/book1/city_of_chalice.png";
+
+            Text = "Chalice is a city of tall, decorated towers cut from the mesas of rock that dot the landscape. Between the towers high-topped houses with red roofs cram together to produce neighbourhoods and boroughs, interspersed with painted temples decorated with bells and chimes. The nearby Cold River floods the plains between the rocks to create the most fertile place in the valley. Huge rice fields are tended to by hundreds of farmers in pyramidal hats. Unlike some cities in the valley there are no burly taskmasters savagely beating their workforce into submission. Instead the obedient folk of Chalice labour willingly for their God King, who resides in the Tower of Oneness in the heart of the city. It is an orderly place, quiet and subdued compared with other cities, but also less savage and uncivilised.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::IN_PARTY(party, Character::Type::AKIHIRO_OF_CHALICE))
+            {
+                Choices.push_back(Choice::Base("Visit Akihiro's house", {Book::Type::BOOK1, 897}));
+            }
+
+            Choices.push_back(Choice::Base("Visit the marketplace", {Book::Type::BOOK1, 142}));
+            Choices.push_back(Choice::Base("Find an inn in the foreign quarter", {Book::Type::BOOK1, 665}));
+            Choices.push_back(Choice::Base("Explore the city", {Book::Type::BOOK1, 270}));
+            Choices.push_back(Choice::Base("Leave the city west, over the bridge (you do not need to pay on this side)", {Book::Type::BOOK1, 614}));
+            Choices.push_back(Choice::Base("Leave the city south, along the Cold River", {Book::Type::BOOK1, 346}));
+        }
+    };
+
+    class Story451 : public Story::Base
+    {
+    public:
+        Story451()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 451;
+
+            Text = "The caravan guards sense the uncertainty in your voice as the nomads crash upon them. The line breaks and soon there is chaos. In the fighting and looting that follows you are captured and clad in chains. Because you are such healthy specimens the nomads decide to sell you as slaves.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("See where you are eventually sold", {{2, "You are sold to the Saltdad Arena", {Book::Type::BOOK1, 631}}, {4, "You are sold to the taskmasters of Clifftop", {Book::Type::BOOK1, 866}}, {6, "You are sold to the priests of Cursus", {Book::Type::BOOK1, 531}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            party.Money = 0;
+
+            Engine::LOSE_ALL(party);
+        }
+    };
+
+    class Story452 : public Story::Base
+    {
+    public:
+        Story452()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 452;
+
+            Text = "The Everchild was the immortal ruler of the valley before the desolation of Abraxas. She ruled from the magnificent city of Saltdad in a fantastic palace which was said to hold many wonders of the world. She was eternally young in appearance, although exactly how young is subject to debate.\n\nSome records put her at only seven summers, others twelve, a few even suggest fifteen or eighteen. She possessed powerful magical abilities, so mighty that she had need of very few soldiers, since her magic could annihilate armies and disperse crowds.\n\nMost stories present her as a benevolent but single-minded ruler, who would be inflexible in her judgements once she had made up her mind.\n\nExactly how she died is unclear, but most tales assume that she was slain by Abraxas when the demon lord walked the valley.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 680}; }
+    };
+
+    class Story453 : public Story::Base
+    {
+    public:
+        Story453()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 453;
+
+            Location = Location::Type::TUMBLESTONES;
+
+            Text = "You are leaving The Tumblestones.\n\nWhere will you travel now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Northeast, towards Saltdad", {Book::Type::BOOK1, 511}));
+            Choices.push_back(Choice::Base("East, towards the Blackwall", {Book::Type::BOOK1, 691}));
+            Choices.push_back(Choice::Base("Southeast, into the desert", {Book::Type::BOOK1, 752}));
+            Choices.push_back(Choice::Base("South, to the city of Lhasbreath", {Book::Type::BOOK1, 775}));
+            Choices.push_back(Choice::Base("West, to the Palace of Unbraaki", {Book::Type::BOOK1, 890}));
+            Choices.push_back(Choice::Base("Northwest, towards Clifftop", {Book::Type::BOOK1, 12}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story454 : public Story::Base
+    {
+    public:
+        Story454()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 454;
+
+            Text = "\"What if we worked together?\" you offer. \"In exchange you may have all the treasure we find, except for the silver idol. It is all I am interested in.\"\n\nShe looks you up and down, as if judging you. \"So be it, Akihiro of Chalice,\" she says, smiling. \"This place is quite dangerous, and you look like you can handle yourself. There is nothing to be found in the passage I have just explored. Our only way onwards is up the west side steps. Shall we go together?\"";
+
+            Bye = "You nod cautiously and follow her up the stairwell.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 279}; }
+    };
+
+    class Story455 : public Story::Base
+    {
+    public:
+        Story455()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 455;
+
+            Text = "You ask if you can consult Unbraaki on magical matters, since you have heard of his great reputation as a sorcerer. The guard shakes his head. \"My master is no public oracle, and his palace is not a school like Animus Mast. Get you gone, curs.\" Two dozen soldiers lower their spears in preparation for your defiance, with another company advancing up the road to support them.";
+
+            Bye = "Realising that these are not men to be trifled with you politely depart.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 265}; }
+    };
+
+    class Story456 : public Story::Base
+    {
+    public:
+        Story456()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 456;
+
+            Text = "The door to the gatehouse is now unguarded, and your weapon-stealing team can now approach. The only obstacle is the gate-house door, which is locked at all times.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Steal the key from the overseer's office", {Book::Type::BOOK1, 393}));
+            Choices.push_back(Choice::Base("Attempt to force the door", {Book::Type::BOOK1, 406}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story457 : public Story::Base
+    {
+    public:
+        Story457()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 457;
+
+            Text = "Something goes wrong with the invocation. The skeleton's animate, but you are unable to bind them to your control. They seem to resent being awoken from their rest and make their feelings clear as they try to gouge your eyes out with their bony claws. You must fight!\n\nNote: The skeletons will attack twice each round. You must assign the damage of the second attack to a different character from the first.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {Monster::Base("Skeletons", 5, 5, 4, 24, 0, 0, 2)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 345}; }
+    };
+
+    class Story458 : public Story::Base
+    {
+    public:
+        Story458()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 458;
+
+            Text = "Where will you travel now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go north, up the road", {Book::Type::BOOK1, 113}));
+            Choices.push_back(Choice::Base("Go west, to the Temple of the Unbroken", {Book::Type::BOOK1, 535}));
+            Choices.push_back(Choice::Base("Go south, into the city of Cursus", {Book::Type::BOOK1, 340}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story459 : public Story::Base
+    {
+    public:
+        Story459()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 459;
+
+            Text = "You open the door to the massive library and jolt in shock. Looking up to see you in a velvet armchair is Unbraaki himself, book in hand, a small pack of monkeys reading on the floor alongside him. \"Visitors,\" smiles Unbraaki. \"And unbidden ones! Kill them.\"";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 564}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -14371,6 +14603,16 @@ namespace Book1
     auto story447 = Story447();
     auto story448 = Story448();
     auto story449 = Story449();
+    auto story450 = Story450();
+    auto story451 = Story451();
+    auto story452 = Story452();
+    auto story453 = Story453();
+    auto story454 = Story454();
+    auto story455 = Story455();
+    auto story456 = Story456();
+    auto story457 = Story457();
+    auto story458 = Story458();
+    auto story459 = Story459();
 
     void InitializeStories()
     {
@@ -14423,7 +14665,8 @@ namespace Book1
             &story410, &story411, &story412, &story413, &story414, &story415, &story416, &story417, &story418, &story419,
             &story420, &story421, &story422, &story423, &story424, &story425, &story426, &story427, &story428, &story429,
             &story430, &story431, &story432, &story433, &story434, &story435, &story436, &story437, &story438, &story439,
-            &story440, &story441, &story442, &story443, &story444, &story445, &story446, &story447, &story448, &story449};
+            &story440, &story441, &story442, &story443, &story444, &story445, &story446, &story447, &story448, &story449,
+            &story450, &story451, &story452, &story453, &story454, &story455, &story456, &story457, &story458, &story459};
     }
 }
 #endif
