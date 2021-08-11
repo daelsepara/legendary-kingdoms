@@ -440,7 +440,7 @@ namespace Engine
         return max;
     }
 
-    int SCORE(Character::Base &character, Attribute::Type type)
+    int RAW_SCORE(Character::Base &character, Attribute::Type type, bool clip)
     {
         auto score = 0;
 
@@ -464,11 +464,6 @@ namespace Engine
             score += 1;
         }
 
-        if (type == Attribute::Type::FIGHTING && Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
-        {
-            score += 2;
-        }
-
         if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::LOST_FINGERNAILS))
         {
             score -= 1;
@@ -477,6 +472,26 @@ namespace Engine
         if (type == Attribute::Type::LORE && Engine::HAS_STATUS(character, Character::Status::ENLIGHTENED))
         {
             score += 1;
+        }
+
+        if (clip)
+        {
+            if (score < 0)
+            {
+                score = 0;
+            }
+        }
+
+        return score;
+    }
+
+    int SCORE(Character::Base &character, Attribute::Type type)
+    {
+        auto score = Engine::RAW_SCORE(character, type, false);
+
+        if (type == Attribute::Type::FIGHTING && Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
+        {
+            score += 2;
         }
 
         if (character.Health > 0)
@@ -493,44 +508,35 @@ namespace Engine
         if (type != Attribute::Type::HEALTH && type != Attribute::Type::ARMOUR)
         {
             score += Engine::MAX(character, Equipment::Class::ROBE, type);
+            score += Engine::MAX(character, Equipment::Class::SHIELD, type);
         }
 
-        if (score < 0)
+        if (type != Attribute::Type::FIGHTING)
         {
-            score = 0;
+            if (score < 0)
+            {
+                score = 0;
+            }
         }
 
         return score;
     }
 
-    int RAW_SCORE(Character::Base &character, Attribute::Type type)
+    int FIGHTING_SCORE(Character::Base &character)
     {
-        auto score = 0;
+        auto max = -1;
 
-        if (type == Attribute::Type::HEALTH)
-        {
-            score = character.Health;
-        }
+        auto score = Engine::SCORE(character, Attribute::Type::FIGHTING);
 
-        for (auto i = 0; i < character.Attributes.size(); i++)
+        for (auto i = 0; i < character.Equipment.size(); i++)
         {
-            if (character.Attributes[i].Type == type)
+            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
             {
-                score = character.Attributes[i].Value;
-
-                break;
+                max = std::max(max, character.Equipment[i].Modifier);
             }
         }
 
-        if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::LOST_FINGERNAILS))
-        {
-            score -= 1;
-        }
-
-        if (type == Attribute::Type::LORE && Engine::HAS_STATUS(character, Character::Status::ENLIGHTENED))
-        {
-            score += 1;
-        }
+        score = max >= 0 ? (score + max) : (Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT) ? score : (score - 1));
 
         if (score < 0)
         {
@@ -590,6 +596,17 @@ namespace Engine
             if (party.Members[i].Team == team && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
             {
                 Engine::GAIN_HEALTH(party.Members[i], health);
+            }
+        }
+    }
+
+    void RESTORE_HEALTH(Party::Base &party, int threshold)
+    {
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (party.Members[i].Health > 0 && party.Members[i].Health < threshold && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            {
+                Engine::GAIN_HEALTH(party.Members[i], threshold - party.Members[i].Health);
             }
         }
     }
@@ -997,45 +1014,6 @@ namespace Engine
                 break;
             }
         }
-    }
-
-    int FIGHTING_SCORE(Character::Base &character)
-    {
-        auto max = -1;
-
-        auto score = Engine::SCORE(character, Attribute::Type::FIGHTING);
-
-        for (auto i = 0; i < character.Equipment.size(); i++)
-        {
-            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
-            {
-                max = std::max(max, character.Equipment[i].Modifier);
-            }
-        }
-
-        score = max >= 0 ? (score + max) : (Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT) ? score : (score - 1));
-
-        if (score < 1)
-        {
-            score = 1;
-        }
-
-        if (Engine::HAS_STATUS(character, Character::Status::ENRAGED))
-        {
-            score += 1;
-        }
-
-        if (Engine::HAS_STATUS(character, Character::Status::LOST_FINGERNAILS))
-        {
-            score -= 1;
-        }
-
-        if (Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
-        {
-            score += 2;
-        }
-
-        return score;
     }
 
     bool TWO_HANDED(Character::Base &character)
@@ -1731,6 +1709,18 @@ namespace Engine
                     break;
                 }
             }
+        }
+
+        return result;
+    }
+
+    bool HAS_SPELL(Character::Base &character, std::vector<Spells::Type> spells)
+    {
+        auto result = false;
+
+        if (Engine::SCORE(character, Attribute::Type::HEALTH) > 0 && character.SpellCaster && character.SpellBook.size() > 0)
+        {
+            result = Engine::VERIFY_SPELL(character, spells);
         }
 
         return result;

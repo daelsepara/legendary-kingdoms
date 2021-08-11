@@ -5484,7 +5484,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
                         else
                         {
-                            attack_score = Engine::SCORE(party.Members[combatant], Attribute::Type::FIGHTING);
+                            attack_score = Engine::RAW_SCORE(party.Members[combatant], Attribute::Type::FIGHTING, true);
                         }
 
                         attacker_string = "Fighting: " + std::to_string(attack_score);
@@ -7679,7 +7679,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
             for (auto i = 0; i < team.size(); i++)
             {
-                skill_score += Engine::SCORE(party.Members[team[i]], Skill) + Engine::MAX(party.Members[team[i]], Equipment::Class::NORMAL, Skill);
+                skill_score += Engine::SCORE(party.Members[team[i]], Skill);
             }
 
             if (skill_score > 20)
@@ -7800,11 +7800,30 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                 if (useEquipment)
                 {
-                    score1 = Engine::SCORE(party.Members[team[0]], Skill) + Engine::MAX(party.Members[team[0]], Equipment::Class::NORMAL, Skill);
+                    if (Skill == Attribute::Type::FIGHTING)
+                    {
+                        score1 = Engine::FIGHTING_SCORE(party.Members[team[0]]);
+                    }
+                    else
+                    {
+                        score1 = Engine::SCORE(party.Members[team[0]], Skill);
+                    }
                 }
                 else
                 {
-                    score1 = Engine::RAW_SCORE(party.Members[team[0]], Skill);
+                    if (Skill == Attribute::Type::FIGHTING)
+                    {
+                        score1 = Engine::SCORE(party.Members[team[0]], Attribute::Type::FIGHTING);
+
+                        if (score1 < 0)
+                        {
+                            score1 = 0;
+                        }
+                    }
+                    else
+                    {
+                        score1 = Engine::RAW_SCORE(party.Members[team[0]], Skill, true);
+                    }
                 }
 
                 std::string adventurer1 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score1);
@@ -7821,11 +7840,30 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                     if (useEquipment)
                     {
-                        score2 = Engine::SCORE(party.Members[team[1]], Skill) + Engine::MAX(party.Members[team[1]], Equipment::Class::NORMAL, Skill);
+                        if (Skill == Attribute::Type::FIGHTING)
+                        {
+                            score2 = Engine::FIGHTING_SCORE(party.Members[team[1]]);
+                        }
+                        else
+                        {
+                            score2 = Engine::SCORE(party.Members[team[1]], Skill);
+                        }
                     }
                     else
                     {
-                        score2 = Engine::RAW_SCORE(party.Members[team[1]], Skill);
+                        if (Skill == Attribute::Type::FIGHTING)
+                        {
+                            score2 = Engine::SCORE(party.Members[team[1]], Attribute::Type::FIGHTING);
+
+                            if (score2 < 0)
+                            {
+                                score2 = 0;
+                            }
+                        }
+                        else
+                        {
+                            score2 = Engine::RAW_SCORE(party.Members[team[1]], Skill, true);
+                        }
                     }
 
                     std::string adventurer2 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score2);
@@ -19158,11 +19196,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 selection = {party.CurrentCharacter};
 
-                                success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
+                                success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
                             }
                             else
                             {
-                                success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, true);
+                                success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
                             }
 
                             if (selection.size() == 1)
@@ -19202,16 +19240,16 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     selection.push_back(party.LastSelected);
 
-                                    success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
+                                    success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
                                 }
                                 else
                                 {
-                                    success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, true);
+                                    success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
                                 }
                             }
                             else
                             {
-                                success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, true);
+                                success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
                             }
 
                             if (selection.size() == 1)
@@ -19258,16 +19296,16 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     selection.push_back(party.LastSelected);
 
-                                    success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
+                                    success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
                                 }
                                 else
                                 {
-                                    success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, true);
+                                    success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
                                 }
                             }
                             else
                             {
-                                success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, true);
+                                success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
                             }
 
                             if (selection.size() == 1)
@@ -19292,7 +19330,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto selection = std::vector<int>();
 
-                            auto success = skillCheck(window, renderer, party, story->Choices[choice].Team, 2, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, true);
+                            auto success = skillCheck(window, renderer, party, story->Choices[choice].Team, 2, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
 
                             if (selection.size() == 2 || (selection.size() > 0 && selection.size() >= Engine::COUNT(party, story->Choices[choice].Team)))
                             {
@@ -20245,21 +20283,21 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     if (Engine::SCORE(party.Members[target], Attribute::Type::HEALTH) > 0)
                                     {
-                                        success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, true);
+                                        success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
                                     }
                                 }
                                 else
                                 {
                                     selection.clear();
 
-                                    success = skillCheck(window, renderer, party, story->Choices[choice].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, true);
+                                    success = skillCheck(window, renderer, party, story->Choices[choice].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
                                 }
                             }
                             else
                             {
                                 selection.clear();
 
-                                success = skillCheck(window, renderer, party, story->Choices[choice].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, true);
+                                success = skillCheck(window, renderer, party, story->Choices[choice].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
                             }
 
                             if (selection.size() == 1)

@@ -13054,6 +13054,273 @@ namespace Book1
         }
     };
 
+    class Story420 : public Story::Base
+    {
+    public:
+        Story420()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 420;
+
+            Text = "You carefully mar the strange symbols around the door, being careful not to trigger the effect early. Eventually the runes are ruined and lose their power. To your delight the door merely clicks open; there is not so much as a conventional lock upon them!\n\nYou step into a darkened hallway. A magnificent flight of carpeted steps leads up to the top floor. Rows of books line the walls in antique cases. Nearby, a solid gold candlestick looks a tempting grab.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the bookcase", {Book::Type::BOOK1, 320}));
+            Choices.push_back(Choice::Base("Snatch the golden candlestick", {Book::Type::BOOK1, 644}));
+            Choices.push_back(Choice::Base("Head upstairs to help the climbing team", {Book::Type::BOOK1, 92}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story421 : public Story::Base
+    {
+    public:
+        Story421()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 421;
+
+            Text = "\"You have done all I have asked -- all I can ever ask,\" smiles the Everchild as she greets you into her presence. \"As a boon I am willing to provide soldiers to you, should you ever need the services of an army. Provided you own a barracks elsewhere, you have my permission to transfer soldiers to that barracks from Saltdad. Please leave me with a few units, though... you never know when the valley might need them.\"";
+
+            Bye = "You spend several hours with the Everchild, reflecting on your adventures. Eventually it is time to leave, the Everchild kissing you goodbye.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 620}; }
+    };
+
+    class Story422 : public Story::Base
+    {
+    public:
+        Story422()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 422;
+
+            Text = "You are not successful in your search for the nomads, but you do find trouble. Vicious Sand Drakes, tawny-brown reptilian horrors that stand some ten feet high on two scally legs, take an interest in you. You have little option but to fend them off.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Sand Drake", 6, 5, 4, 12, 0),
+                Monster::Base("Sand Drake", 5, 5, 4, 11, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 115}; }
+    };
+
+    class Story423 : public Story::Base
+    {
+    public:
+        Story423()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 423;
+
+            Text = "You have returned to the goblin kitchen. The goblins greet you with friendly chitters and offer you some food.\n\nNote: Any party members on less than 4 Health restore themselves to 4 Health points by eating here.";
+
+            Bye = "You thank the goblins and move on.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Leave the kitchen through the north door", {Book::Type::BOOK1, 366}));
+            Choices.push_back(Choice::Base("Leave the kitchen through the south door", {Book::Type::BOOK1, 736}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::RESTORE_HEALTH(party, 4);
+        }
+    };
+
+    class Story424 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story424()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 424;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You prowl into the kitchen, ducking behind the counters and peering over. The evening meal is being prepared, and chefs and servants scurry from one place to the other, putting the final herbs and spices into the stew that boils away in an enormous cauldron.";
+
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::VIAL_OF_POISON}))
+            {
+                PreText += "\n\nThere is nothing you can do finish off the Bronzeguard with the ingredients at hand. You quickly flee the compound before you are spotted.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::VIAL_OF_POISON}))
+            {
+                return {Book::Type::BOOK1, 565};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 75};
+            }
+        }
+    };
+
+    class Story425 : public Story::Base
+    {
+    public:
+        Story425()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 425;
+
+            Text = "You step forward and loudly declare your challenge. There is a great cheer from the audience, including the king. Someone gives you a hearty shove, and you are hurled into the pit. The sand bear snarls at you, showing its teeth.\n\nNote: You cannot use any bonuses from your weapon with this check.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size() && !Engine::HAS_STATUS(party.Members[party.LastSelected], Character::Status::CAPTURED) && Engine::HAS_SPELL(party.Members[party.LastSelected], {Spells::Type::ANIMAL_SPEECH}))
+            {
+                Choices.push_back(Choice::Base("Cast Animal Speech", {Book::Type::BOOK1, 615}));
+            }
+
+            Choices.push_back(Choice::Base("Wrestle the Bear (Individual check: Fighting 5+, Successes: 2)", {Book::Type::BOOK1, 677}, {Book::Type::BOOK1, 752}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::FIGHTING}, 5, 2, false));
+        }
+    };
+
+    class Story426 : public Story::Base
+    {
+    public:
+        Story426()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 426;
+
+            Text = "It's time to move on. Where will you go from here?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go northwest, to the Blackwall", {Book::Type::BOOK1, 691}));
+            Choices.push_back(Choice::Base("Go north, towards Saltdad", {Book::Type::BOOK1, 858}));
+            Choices.push_back(Choice::Base("Go northeast into the Withered Steppes", {Book::Type::BOOK1, 115}));
+            Choices.push_back(Choice::Base("Go southeast, into desert", {Book::Type::BOOK1, 202}));
+            Choices.push_back(Choice::Base("Go south towards Lhasbreath Oasis", {Book::Type::BOOK1, 590}));
+            Choices.push_back(Choice::Base("Go southwest towards Lhasbreath", {Book::Type::BOOK1, 752}));
+            Choices.push_back(Choice::Base("Go west to the Tumblestones", {Book::Type::BOOK1, 137}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story427 : public Story::Base
+    {
+    public:
+        Story427()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 427;
+
+            Text = "You had hoped you might be able to take another suit of bronze armour here, but alas no spare suits appear to be present. Cursing your luck, you sneak onwards towards the kitchen.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 424}; }
+    };
+
+    class Story428 : public Story::Base
+    {
+    public:
+        Story428()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 428;
+
+            Text = "Quiet as a mouse you manage to step across the floor of broken bones without so much as raising a dust cloud. Nothing stirs, and you manage to reach the chest quite safely.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 3}; }
+    };
+
+    class Story429 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Story429()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 429;
+
+            Text = "Just as you feared a dreadful pirate pinnace comes swooping around the bay. They seem keen on plundering your ship and crew.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 741};
+
+            CanFlee = false;
+
+            EnemyFleet = {Ship::Base("PIRATE PINNACE", Ship::Type::PIRATE_PINNACE, Location::Type::NONE, 5, 6, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                destination = {Book::Type::BOOK1, 690};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 741};
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -13509,6 +13776,16 @@ namespace Book1
     auto story417 = Story417();
     auto story418 = Story418();
     auto story419 = Story419();
+    auto story420 = Story420();
+    auto story421 = Story421();
+    auto story422 = Story422();
+    auto story423 = Story423();
+    auto story424 = Story424();
+    auto story425 = Story425();
+    auto story426 = Story426();
+    auto story427 = Story427();
+    auto story428 = Story428();
+    auto story429 = Story429();
 
     void InitializeStories()
     {
@@ -13558,7 +13835,8 @@ namespace Book1
             &story380, &story381, &story382, &story383, &story384, &story385, &story386, &story387, &story388, &story389,
             &story390, &story391, &story392, &story393, &story394, &story395, &story396, &story397, &story398, &story399,
             &story400, &story401, &story402, &story403, &story404, &story405, &story406, &story407, &story408, &story409,
-            &story410, &story411, &story412, &story413, &story414, &story415, &story416, &story417, &story418, &story419};
+            &story410, &story411, &story412, &story413, &story414, &story415, &story416, &story417, &story418, &story419,
+            &story420, &story421, &story422, &story423, &story424, &story425, &story426, &story427, &story428, &story429};
     }
 }
 #endif
