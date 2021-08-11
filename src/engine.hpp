@@ -224,6 +224,135 @@ namespace Engine
         }
     }
 
+    int MAX(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
+    {
+        auto max = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class == type && (character.Equipment[i].Attribute == attribute || character.Equipment[i].Attribute == Attribute::Type::ALL_SKILLS))
+            {
+                if (character.Equipment[i].Modifier > max)
+                {
+                    max = character.Equipment[i].Modifier;
+                }
+            }
+        }
+
+        return max;
+    }
+
+    int RAW_SCORE(Character::Base &character, Attribute::Type type, bool clip)
+    {
+        auto score = 0;
+
+        if (type == Attribute::Type::HEALTH)
+        {
+            score = character.Health;
+        }
+
+        for (auto i = 0; i < character.Attributes.size(); i++)
+        {
+            if (character.Attributes[i].Type == type)
+            {
+                score = character.Attributes[i].Value;
+
+                break;
+            }
+        }
+
+        if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::ENRAGED))
+        {
+            score += 1;
+        }
+
+        if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::LOST_FINGERNAILS))
+        {
+            score -= 1;
+        }
+
+        if (type == Attribute::Type::LORE && Engine::HAS_STATUS(character, Character::Status::ENLIGHTENED))
+        {
+            score += 1;
+        }
+
+        if (clip)
+        {
+            if (score < 0)
+            {
+                score = 0;
+            }
+        }
+
+        return score;
+    }
+
+    int SCORE(Character::Base &character, Attribute::Type type)
+    {
+        auto score = Engine::RAW_SCORE(character, type, false);
+
+        if (type == Attribute::Type::FIGHTING && Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
+        {
+            score += 2;
+        }
+
+        if (character.Health > 0)
+        {
+            for (auto i = 0; i < character.Equipment.size(); i++)
+            {
+                if (character.Equipment[i].Class == Equipment::Class::NORMAL && character.Equipment[i].Attribute == type)
+                {
+                    score += character.Equipment[i].Modifier;
+                }
+            }
+        }
+
+        if (type != Attribute::Type::HEALTH && type != Attribute::Type::ARMOUR)
+        {
+            score += Engine::MAX(character, Equipment::Class::ROBE, type);
+            score += Engine::MAX(character, Equipment::Class::SHIELD, type);
+        }
+
+        if (type != Attribute::Type::FIGHTING)
+        {
+            if (score < 0)
+            {
+                score = 0;
+            }
+        }
+
+        return score;
+    }
+
+    int FIGHTING_SCORE(Character::Base &character)
+    {
+        auto max = -1;
+
+        auto score = Engine::SCORE(character, Attribute::Type::FIGHTING);
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
+            {
+                max = std::max(max, character.Equipment[i].Modifier);
+            }
+        }
+
+        score = max >= 0 ? (score + max) : (Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT) ? score : (score - 1));
+
+        if (score < 0)
+        {
+            score = 0;
+        }
+
+        return score;
+    }
+
+    bool IS_ACTIVE(Party::Base &party, int character)
+    {
+        return (character >= 0 && character < party.Members.size() && !Engine::HAS_STATUS(party.Members[character], Character::Status::CAPTURED) && Engine::SCORE(party.Members[character], Attribute::Type::HEALTH) > 0 && (!party.InCity || (party.InCity && party.Members[character].IsCivilized)));
+    }
+
     void LOSE_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> items)
     {
         for (auto i = 0; i < items.size(); i++)
@@ -232,7 +361,7 @@ namespace Engine
             {
                 auto result = Engine::FIND_EQUIPMENT(party.Members[j], items[i]);
 
-                if (result >= 0 && !Engine::HAS_STATUS(party.Members[j], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[j].IsCivilized)) && party.Members[i].Type != Character::Type::SKULLCRACKER)
+                if (result >= 0 && Engine::IS_ACTIVE(party, j) && party.Members[j].Type != Character::Type::SKULLCRACKER)
                 {
                     party.Members[j].Equipment.erase(party.Members[j].Equipment.begin() + result);
 
@@ -422,130 +551,6 @@ namespace Engine
         return found;
     }
 
-    int MAX(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
-    {
-        auto max = 0;
-
-        for (auto i = 0; i < character.Equipment.size(); i++)
-        {
-            if (character.Equipment[i].Class == type && (character.Equipment[i].Attribute == attribute || character.Equipment[i].Attribute == Attribute::Type::ALL_SKILLS))
-            {
-                if (character.Equipment[i].Modifier > max)
-                {
-                    max = character.Equipment[i].Modifier;
-                }
-            }
-        }
-
-        return max;
-    }
-
-    int RAW_SCORE(Character::Base &character, Attribute::Type type, bool clip)
-    {
-        auto score = 0;
-
-        if (type == Attribute::Type::HEALTH)
-        {
-            score = character.Health;
-        }
-
-        for (auto i = 0; i < character.Attributes.size(); i++)
-        {
-            if (character.Attributes[i].Type == type)
-            {
-                score = character.Attributes[i].Value;
-
-                break;
-            }
-        }
-
-        if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::ENRAGED))
-        {
-            score += 1;
-        }
-
-        if (type == Attribute::Type::FIGHTING && Engine::HAS_STATUS(character, Character::Status::LOST_FINGERNAILS))
-        {
-            score -= 1;
-        }
-
-        if (type == Attribute::Type::LORE && Engine::HAS_STATUS(character, Character::Status::ENLIGHTENED))
-        {
-            score += 1;
-        }
-
-        if (clip)
-        {
-            if (score < 0)
-            {
-                score = 0;
-            }
-        }
-
-        return score;
-    }
-
-    int SCORE(Character::Base &character, Attribute::Type type)
-    {
-        auto score = Engine::RAW_SCORE(character, type, false);
-
-        if (type == Attribute::Type::FIGHTING && Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
-        {
-            score += 2;
-        }
-
-        if (character.Health > 0)
-        {
-            for (auto i = 0; i < character.Equipment.size(); i++)
-            {
-                if (character.Equipment[i].Class == Equipment::Class::NORMAL && character.Equipment[i].Attribute == type)
-                {
-                    score += character.Equipment[i].Modifier;
-                }
-            }
-        }
-
-        if (type != Attribute::Type::HEALTH && type != Attribute::Type::ARMOUR)
-        {
-            score += Engine::MAX(character, Equipment::Class::ROBE, type);
-            score += Engine::MAX(character, Equipment::Class::SHIELD, type);
-        }
-
-        if (type != Attribute::Type::FIGHTING)
-        {
-            if (score < 0)
-            {
-                score = 0;
-            }
-        }
-
-        return score;
-    }
-
-    int FIGHTING_SCORE(Character::Base &character)
-    {
-        auto max = -1;
-
-        auto score = Engine::SCORE(character, Attribute::Type::FIGHTING);
-
-        for (auto i = 0; i < character.Equipment.size(); i++)
-        {
-            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
-            {
-                max = std::max(max, character.Equipment[i].Modifier);
-            }
-        }
-
-        score = max >= 0 ? (score + max) : (Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT) ? score : (score - 1));
-
-        if (score < 0)
-        {
-            score = 0;
-        }
-
-        return score;
-    }
-
     void GAIN_MONEY(Party::Base &party, int money)
     {
         party.Money += money;
@@ -604,7 +609,7 @@ namespace Engine
     {
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Health > 0 && party.Members[i].Health < threshold && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (party.Members[i].Health > 0 && party.Members[i].Health < threshold && Engine::IS_ACTIVE(party, i))
             {
                 Engine::GAIN_HEALTH(party.Members[i], threshold - party.Members[i].Health);
             }
@@ -1128,7 +1133,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (Engine::IS_ACTIVE(party, i))
             {
                 result += 1;
             }
@@ -1164,7 +1169,7 @@ namespace Engine
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+                if (party.Members[i].Team == team && Engine::IS_ACTIVE(party, i))
                 {
                     result += 1;
                 }
@@ -1180,7 +1185,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (Engine::FIND_LIST(list, i) < 0 && Engine::IS_ACTIVE(party, i))
             {
                 result += 1;
             }
@@ -1201,7 +1206,7 @@ namespace Engine
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+                if (party.Members[i].Team == team && Engine::FIND_LIST(list, i) < 0 && Engine::IS_ACTIVE(party, i))
                 {
                     result += 1;
                 }
@@ -1223,7 +1228,7 @@ namespace Engine
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (party.Members[i].Team == team && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+                if (party.Members[i].Team == team && Engine::IS_ACTIVE(party, i))
                 {
                     result += 1;
                 }
@@ -1269,7 +1274,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].SpellCaster && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (party.Members[i].SpellCaster && Engine::IS_ACTIVE(party, i))
             {
                 result += 1;
             }
@@ -1732,7 +1737,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0 && (team == Team::Type::NONE || party.Members[i].Team == team))
+            if (Engine::IS_ACTIVE(party, i) && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0 && (team == Team::Type::NONE || party.Members[i].Team == team))
             {
                 auto found = Engine::FIND_SPELL(party.Members[i], spell);
 
@@ -1752,7 +1757,7 @@ namespace Engine
     {
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0 && (team == Team::Type::NONE || party.Members[i].Team == team))
+            if (Engine::IS_ACTIVE(party, i) && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0 && (team == Team::Type::NONE || party.Members[i].Team == team))
             {
                 auto found = Engine::FIND_SPELL(party.Members[i], spell);
 
@@ -2052,7 +2057,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (Engine::FIND_LIST(list, i) < 0 && Engine::IS_ACTIVE(party, i))
             {
                 result = i;
 
@@ -2074,7 +2079,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED))
+            if (Engine::IS_ACTIVE(party, i))
             {
                 result = i;
 
@@ -2096,7 +2101,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (Engine::IS_ACTIVE(party, i) && party.Members[i].Team == team && Engine::FIND_LIST(list, i) < 0)
             {
                 result = i;
 
@@ -2118,7 +2123,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (Engine::IS_ACTIVE(party, i) && party.Members[i].Team == team)
             {
                 result = i;
 
@@ -2140,7 +2145,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && party.Members[i].SpellCaster && Engine::FIND_LIST(list, i) < 0 && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (party.Members[i].Team == team && party.Members[i].SpellCaster && Engine::FIND_LIST(list, i) < 0 && Engine::IS_ACTIVE(party, i))
             {
                 result = i;
 
@@ -2162,7 +2167,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == team && party.Members[i].SpellCaster && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (Engine::IS_ACTIVE(party, i) && party.Members[i].Team == team && party.Members[i].SpellCaster)
             {
                 result = i;
 
@@ -2184,7 +2189,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].SpellCaster && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (Engine::IS_ACTIVE(party, i) && party.Members[i].SpellCaster)
             {
                 result = i;
 
@@ -2270,7 +2275,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (score == Engine::SCORE(party.Members[i], type) && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (score == Engine::SCORE(party.Members[i], type) && Engine::IS_ACTIVE(party, i))
             {
                 result += 1;
             }
@@ -2285,7 +2290,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (score == Engine::SCORE(party.Members[i], type) && !Engine::HAS_STATUS(party.Members[i], Character::Status::CAPTURED) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (score == Engine::SCORE(party.Members[i], type) && Engine::IS_ACTIVE(party, i))
             {
                 result = i;
 
