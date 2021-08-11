@@ -26,7 +26,6 @@ namespace Choice
         LIMIT_EQUIPMENT,
         MONEY,
         GAIN_MONEY,
-        LOSE_MONEY,
         LIFE,
         LOSE_LIFE,
         ATTRIBUTES,

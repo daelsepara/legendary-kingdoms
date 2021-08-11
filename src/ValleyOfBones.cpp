@@ -1046,24 +1046,48 @@ std::string characterText(Character::Base &character, bool compact)
             character_text += ", ";
         }
 
-        character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": " + std::to_string(Engine::SCORE(character, character.Attributes[i].Type));
-    }
+        auto raw_score = Engine::RAW_SCORE(character, character.Attributes[i].Type, true);
+        auto mod_score = 0;
 
-    character_text += ", Health: " + std::to_string(Engine::SCORE(character, Attribute::Type::HEALTH));
+        character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": " + std::to_string(raw_score);
 
-    if (!compact)
-    {
-        if (character.SpellCaster)
+        if (character.Attributes[i].Type == Attribute::Type::FIGHTING)
         {
-            character_text += "\n\nSpellcaster";
+            mod_score = Engine::FIGHTING_SCORE(character);
+        }
+        else
+        {
+            mod_score = Engine::SCORE(character, character.Attributes[i].Type);
+        }
+
+        if (mod_score != raw_score)
+        {
+            character_text += "(" + std::to_string(mod_score) + ")";
         }
     }
-    else
+
+    auto raw_health = character.Health;
+    auto mod_health = Engine::SCORE(character, Attribute::Type::HEALTH);
+
+    character_text += ", Health: " + std::to_string(raw_health);
+
+    if (raw_health != mod_health)
     {
-        if (character.SpellCaster)
+        character_text += "(" + std::to_string(mod_health) + ")";
+    }
+
+    if (character.SpellCaster)
+    {
+        if (!compact)
         {
-            character_text += ", Spellcaster";
+            character_text += "\n\n";
         }
+        else
+        {
+            character_text += ", ";
+        }
+
+        character_text += "Spellcaster";
     }
 
     return character_text;
@@ -7707,7 +7731,35 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
             for (auto i = 0; i < team.size(); i++)
             {
-                skill_score += Engine::SCORE(party.Members[team[i]], Skill);
+                if (useEquipment)
+                {
+                    if (Skill == Attribute::Type::FIGHTING)
+                    {
+                        skill_score += Engine::FIGHTING_SCORE(party.Members[team[i]]);
+                    }
+                    else
+                    {
+                        skill_score += Engine::SCORE(party.Members[team[i]], Skill);
+                    }
+                }
+                else
+                {
+                    if (Skill == Attribute::Type::FIGHTING)
+                    {
+                        auto fight_score = Engine::SCORE(party.Members[team[i]], Attribute::Type::FIGHTING);
+
+                        if (fight_score < 0)
+                        {
+                            fight_score = 0;
+                        }
+
+                        skill_score += fight_score;
+                    }
+                    else
+                    {
+                        skill_score += Engine::RAW_SCORE(party.Members[team[i]], Skill, true);
+                    }
+                }
             }
 
             if (skill_score > 20)
@@ -20559,25 +20611,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 message += " for the blessing!";
                             }
                         }
-                        else if (story->Choices[choice].Type == Choice::Type::LOSE_MONEY)
-                        {
-                            if (party.Money >= story->Choices[choice].Value)
-                            {
-                                Engine::GAIN_MONEY(party, -story->Choices[choice].Value);
-
-                                next = findStory(story->Choices[choice].Destination);
-
-                                done = true;
-
-                                break;
-                            }
-                            else
-                            {
-                                error = true;
-
-                                message = "You do not have " + std::to_string(story->Choices[choice].Value) + " silver coins!";
-                            }
-                        }
                         else if (story->Choices[choice].Type == Choice::Type::GAIN_MORALE)
                         {
                             auto target = selectArmyUnits(window, renderer, party, story->Choices[choice].Location, story->Choices[choice].Value);
@@ -20634,6 +20667,38 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             break;
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::GAIN_MONEY)
+                        {
+                            if (story->Choices[choice].Value >= 0)
+                            {
+                                Engine::GAIN_MONEY(party, story->Choices[choice].Value);
+
+                                next = findStory(story->Choices[choice].Destination);
+
+                                done = true;
+
+                                break;
+                            }
+                            else
+                            {
+                                if (party.Money >= -(story->Choices[choice].Value))
+                                {
+                                    Engine::GAIN_MONEY(party, -story->Choices[choice].Value);
+
+                                    next = findStory(story->Choices[choice].Destination);
+
+                                    done = true;
+
+                                    break;
+                                }
+                                else
+                                {
+                                    error = true;
+
+                                    message = "You do not have " + std::to_string(-story->Choices[choice].Value) + " silver coins!";
+                                }
+                            }
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::PAY_WITH)
                         {
                         }
@@ -20650,9 +20715,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                         }
                         else if (story->Choices[choice].Type == Choice::Type::LOSE_ALL)
-                        {
-                        }
-                        else if (story->Choices[choice].Type == Choice::Type::GAIN_MONEY)
                         {
                         }
                         else if (story->Choices[choice].Type == Choice::Type::MONEY)

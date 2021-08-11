@@ -4326,7 +4326,7 @@ namespace Book1
             Text = "You manage to find one fellow, a young and dynamic looking man, who claims he can arrange an appointment for you. However, it will cost 600 silver coins in administrative fees.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Pay the administrative fees (600 silver coins)", {Book::Type::BOOK1, 171}, Choice::Type::LOSE_MONEY, 600));
+            Choices.push_back(Choice::Base("Pay the administrative fees (600 silver coins)", {Book::Type::BOOK1, 171}, Choice::Type::GAIN_MONEY, -600));
             Choices.push_back(Choice::Base("You have little choice but to leave the hall", {Book::Type::BOOK1, 775}));
 
             Controls = Story::Controls::STANDARD;
@@ -13584,6 +13584,308 @@ namespace Book1
         }
     };
 
+    class Story440 : public Story::Base
+    {
+    public:
+        Story440()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 440;
+
+            Text = "You lunge for the wizard's throat, but he dives aside at the last moment, yelling for aid. You are not given another chance. Between the wizard's magic which forces you away and the dozens of guards that swarm you your capture is inevitable. The assassination team have been captured. What happens to them now is up to you. If you capture the city of Cursus you can free them from prison. If your army is defeated, the party members will be executed. Either way, the captured party members can take no further part in the battle until rescued.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
+                {
+                    Engine::GAIN_STATUS(party.Members[i], Character::Status::CAPTURED);
+                }
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 96}; }
+    };
+
+    class Story441 : public Story::Base
+    {
+    public:
+        Story441()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 441;
+
+            Text = "Haatchi is delighted as you produce the CRIER BIRD for him. He quickly hangs it in pride of place in his collection, the bird singing a mournful but sweet tune. True to his word, Haatchi hands over a purse of 100 silver coins. \"If you find any others, just bring them to me,\" he insists.";
+
+            Bye = "Wishing him a good day, you stroll on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::CRIER_BIRD});
+
+            Engine::GAIN_MONEY(party, 100);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
+    };
+
+    class Story442 : public Story::Base
+    {
+    public:
+        Story442()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 442;
+
+            Text = "You have come to the banks of a wide river that separates the city of Chalice from the rest of the valley. The Cold River pours from the craggy mountain tops of the Stonewalls and bisects the desert like a sword blade. Spanning this river is an ancient bridge, built shortly after the demon lord Abraxas destroyed the elder civilisation. Originally built as an act of faith to restart society, its designers could not hold back the wave of savagery left in the demon's wake as the fine cities of the elders were brought to ruin.\n\nThe bridge, however, still stands, wide and strong. Dozens of heavy wagons ply its ancient length and without it the city of Chalice would be entirely cut off. A fee of 40 silver coins is required to cross it, a steep price normally paid only by merchants. You notice that slimmer, flimsier bridges made of rope and wood also cross the river, through few people seem willing to use them. There is no toll for their use.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Pay 40 silver coins and cross the stone bridge", {Book::Type::BOOK1, 450}, Choice::Type::GAIN_MONEY, -40));
+            Choices.push_back(Choice::Base("Cross the river using one of the rope bridges", {Book::Type::BOOK1, 329}));
+            Choices.push_back(Choice::Base("Head back to Luutanesh", {Book::Type::BOOK1, 614}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story443 : public Story::Base
+    {
+    public:
+        Story443()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 443;
+
+            Text = "The window proves impossible to open and smashing it would create too much noise. Reluctantly you abandon your attempt on the house, dropping back down to the street. Soon Brekken joins you, his gang looking rueful. \"Well -- it was worth an attempt,\" he shrugs. You comfort yourselves with a quick commiseration drink at a local tavern. \"We are usually better than this,\" he assures you. \"If you come across any likely heists you think we could help with, don't forget to pay us a visit.\"";
+
+            Bye = "Assuring Brekken that you will keep him in mind, you depart the tavern at first light.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story444 : public Story::Base
+    {
+    public:
+        Story444()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 444;
+
+            Text = "Kopu is impressed with your learnedness. \"Few people live long enough amongst orcs to grasp their language,\" admits Kopu. \"This requires a significant reward.\"\n\nHe rummages through his notes until he finds some SCROLLS OF LORE (Lore +3). \"These magical scrolls contain vast amounts of knowledge, practically an entire library's worth. I was looking for someone worthy to pass them on to. Consider them yours.\"\n\nNote: In addition, any injured party members may restore their Health to full, as you spend many days resting in the tower whilst you teach the language to Kopu.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::Type::TAUGHT_KOPU_ORCISH}))
+            {
+                return {Book::Type::BOOK1, 539};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::SCROLLS_OF_LORE3};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::Type::TAUGHT_KOPU_ORCISH});
+
+            Engine::REST(party);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 539}; }
+    };
+
+    class Story445 : public Story::Base
+    {
+    public:
+        Story445()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 445;
+
+            Location = Location::Type::CAVES_OF_URANU;
+
+            Text = "It is not so easy to escape unmolested past the Caves of Uranu. There is a reason people use the Northroad rather than trudge through the desert.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Avoid monsters (Team check: Survival 4+, Successes: 7)", {Book::Type::BOOK1, 395}, {Book::Type::BOOK1, 846}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 7));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story446 : public Story::Base
+    {
+    public:
+        Story446()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 446;
+
+            Text = "It was not easy to find them, but finally you discover a band of troglodytes in their lair. They hiss at you and leap to the attack.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            Take.clear();
+
+            Limit = 0;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Troglodyte", 3, 3, 4, 5, 0),
+                Monster::Base("Troglodyte", 2, 3, 4, 3, 0),
+                Monster::Base("Troglodyte", 2, 3, 4, 3, 0),
+                Monster::Base("Troglodyte", 3, 3, 4, 4, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 135}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Take = {Equipment::TROGLODYTE_HEAD, Equipment::TROGLODYTE_HEAD, Equipment::TROGLODYTE_HEAD, Equipment::TROGLODYTE_HEAD, Equipment::HANDSOME_BROOCH1, Equipment::GREY_TALISMAN};
+
+                Limit = 6;
+
+                Engine::GAIN_MONEY(party, 10);
+
+                Engine::GET_CODES(party, {Codes::A(25)});
+
+                Bye = "You gained the code A25.";
+            }
+        }
+    };
+
+    class Story447 : public Story::Base
+    {
+    public:
+        Story447()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 447;
+
+            Text = "Realising your peril, you raise the talisman high in front of you. The green skeletons let out a terrible screech as blue light burns away the scummy slime from their bones, causing them to collapse in a heap. Skallos, roars with hatred, unleashing a great blast of energy from his mouth. The light from the amulet dims for a moment, before shining back into pure radiance. The undead knight cannot stand against its power, igniting into white flames. Soon his body and possessions have turned to dust, all that is left is his sword and a whispered cry for vengeance.\n\nYou may take the SKALLOS RUNEBLADE (Fighting +3, Lore +2) if you wish. Whatever else the black knight might have possessed is now naught but ash.\n\nYou gained the code A79.";
+
+            Bye = "There are no additional exits from this room, so you return to the corridor outside.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::SKALLOS_RUNEBLADE};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::A(79)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 165}; }
+    };
+
+    class Story448 : public Story::Base
+    {
+    public:
+        Story448()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 448;
+
+            Text = "The oasis is packed with herd beasts and nomads, sharing the waterhole like brothers. You have heard savage stories about the nomads, but they seem friendly enough. Indeed, one informs you that violence is forbidden at an oasis, though he does so with one hand on his scimitar, as if to suggest that he is willing to wink at that rule if provoked. You peacefully refill your waterskins and continue with your journey.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 51}; }
+    };
+
+    class Story449 : public Story::Base
+    {
+    public:
+        Story449()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 449;
+
+            Text = "Tromping through the jungle you have attracted attention to yourselves. A pair of jungle panthers have been stalking you. They leap upon you, quite unexpectedly.\n\nNote: The panthers have ambushed you! They get the first turn.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Panther", 5, 4, 4, 6, 0),
+                Monster::Base("Panther", 4, 4, 4, 7, 0)};
+
+            Engine::GET_CODES(party, {Codes::Type::LAST_IN_COMBAT});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 618}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Bye = "You quickly make your way out of the dangerous jungle.";
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -14059,6 +14361,16 @@ namespace Book1
     auto story437 = Story437();
     auto story438 = Story438();
     auto story439 = Story439();
+    auto story440 = Story440();
+    auto story441 = Story441();
+    auto story442 = Story442();
+    auto story443 = Story443();
+    auto story444 = Story444();
+    auto story445 = Story445();
+    auto story446 = Story446();
+    auto story447 = Story447();
+    auto story448 = Story448();
+    auto story449 = Story449();
 
     void InitializeStories()
     {
@@ -14110,7 +14422,8 @@ namespace Book1
             &story400, &story401, &story402, &story403, &story404, &story405, &story406, &story407, &story408, &story409,
             &story410, &story411, &story412, &story413, &story414, &story415, &story416, &story417, &story418, &story419,
             &story420, &story421, &story422, &story423, &story424, &story425, &story426, &story427, &story428, &story429,
-            &story430, &story431, &story432, &story433, &story434, &story435, &story436, &story437, &story438, &story439};
+            &story430, &story431, &story432, &story433, &story434, &story435, &story436, &story437, &story438, &story439,
+            &story440, &story441, &story442, &story443, &story444, &story445, &story446, &story447, &story448, &story449};
     }
 }
 #endif
