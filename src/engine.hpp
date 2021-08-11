@@ -230,16 +230,53 @@ namespace Engine
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
-            if (character.Equipment[i].Class == type && (character.Equipment[i].Attribute == attribute || character.Equipment[i].Attribute == Attribute::Type::ALL_SKILLS))
+            if (character.Equipment[i].Class == type && (character.Equipment[i].Attribute == attribute || character.Equipment[i].Attribute == Attribute::Type::ALL_SKILLS || (character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2 && (attribute == Attribute::Type::LORE || attribute == Attribute::Type::FIGHTING))))
             {
-                if (character.Equipment[i].Modifier > max)
+                if ((character.Equipment[i].Modifier > max) || (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2 && max < 3) || (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2 && max < 2))
                 {
-                    max = character.Equipment[i].Modifier;
+                    if (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                    {
+                        max = 3;
+                    }
+                    else if (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                    {
+                        max = 2;
+                    }
+                    else
+                    {
+                        max = character.Equipment[i].Modifier;
+                    }
                 }
             }
         }
 
         return max;
+    }
+
+    int MODIFIER(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
+    {
+        auto modifier = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class == type && (character.Equipment[i].Attribute == attribute || (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2) || (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)))
+            {
+                if (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                {
+                    modifier += 3;
+                }
+                else if (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                {
+                    modifier += 2;
+                }
+                else
+                {
+                    modifier += character.Equipment[i].Modifier;
+                }
+            }
+        }
+
+        return modifier;
     }
 
     int RAW_SCORE(Character::Base &character, Attribute::Type type, bool clip)
@@ -298,19 +335,18 @@ namespace Engine
 
         if (character.Health > 0)
         {
-            for (auto i = 0; i < character.Equipment.size(); i++)
-            {
-                if (character.Equipment[i].Class == Equipment::Class::NORMAL && character.Equipment[i].Attribute == type)
-                {
-                    score += character.Equipment[i].Modifier;
-                }
-            }
+            score += Engine::MODIFIER(character, Equipment::Class::NORMAL, type);
         }
 
         if (type != Attribute::Type::HEALTH && type != Attribute::Type::ARMOUR)
         {
             score += Engine::MAX(character, Equipment::Class::ROBE, type);
             score += Engine::MAX(character, Equipment::Class::SHIELD, type);
+
+            if (type == Attribute::Type::LORE)
+            {
+                score += Engine::MAX(character, Equipment::Class::WEAPON, type);
+            }
         }
 
         if (type != Attribute::Type::FIGHTING)
@@ -332,9 +368,16 @@ namespace Engine
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
-            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
+            if (character.Equipment[i].Class == Equipment::Class::WEAPON && (character.Equipment[i].Attribute == Attribute::Type::FIGHTING || character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2))
             {
-                max = std::max(max, character.Equipment[i].Modifier);
+                if (character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                {
+                    max = std::max(max, 3);
+                }
+                else
+                {
+                    max = std::max(max, character.Equipment[i].Modifier);
+                }
             }
         }
 
@@ -1029,9 +1072,15 @@ namespace Engine
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
-            if (character.Equipment[i].Class == Equipment::Class::WEAPON && character.Equipment[i].Attribute == Attribute::Type::FIGHTING)
+            if (character.Equipment[i].Class == Equipment::Class::WEAPON && (character.Equipment[i].Attribute == Attribute::Type::FIGHTING || character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2))
             {
-                if (character.Equipment[i].Modifier >= max)
+                if (character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2 && max < 3)
+                {
+                    max = 3;
+
+                    result = character.Equipment[i].TwoHanded;
+                }
+                else if (character.Equipment[i].Modifier >= max)
                 {
                     max = character.Equipment[i].Modifier;
 
@@ -1051,9 +1100,21 @@ namespace Engine
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
-            if (character.Equipment[i].Class == type && character.Equipment[i].Attribute == attribute)
+            if (character.Equipment[i].Class == type && (character.Equipment[i].Attribute == attribute) || (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2) || (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2))
             {
-                if (character.Equipment[i].Modifier > max)
+                if (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2 && max < 3)
+                {
+                    max = 3;
+
+                    result = i;
+                }
+                else if (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2 && max < 2)
+                {
+                    max = 2;
+
+                    result = i;
+                }
+                else if (character.Equipment[i].Modifier > max)
                 {
                     max = character.Equipment[i].Modifier;
 
@@ -1065,24 +1126,9 @@ namespace Engine
         return result;
     }
 
-    int MODIFIER(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
-    {
-        auto modifier = 0;
-
-        for (auto i = 0; i < character.Equipment.size(); i++)
-        {
-            if (character.Equipment[i].Class == type && character.Equipment[i].Attribute == attribute)
-            {
-                modifier += character.Equipment[i].Modifier;
-            }
-        }
-
-        return modifier;
-    }
-
     int ARMOUR(Character::Base &character)
     {
-        auto armour = MAX(character, Equipment::Class::ARMOUR, Attribute::Type::ARMOUR) + MAX(character, Equipment::Class::ROBE, Attribute::Type::ARMOUR) + MODIFIER(character, Equipment::Class::NORMAL, Attribute::Type::ARMOUR);
+        auto armour = MAX(character, Equipment::Class::ARMOUR, Attribute::Type::ARMOUR) + MAX(character, Equipment::Class::ROBE, Attribute::Type::ARMOUR) + Engine::MODIFIER(character, Equipment::Class::NORMAL, Attribute::Type::ARMOUR);
 
         if (!Engine::TWO_HANDED(character))
         {

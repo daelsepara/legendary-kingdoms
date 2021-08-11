@@ -2125,7 +2125,14 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
                             if (party.Members[character].Equipment[i].Attribute != Attribute::Type::NONE)
                             {
-                                equipment_string += "+" + std::to_string(party.Members[character].Equipment[i].Modifier) + " " + std::string(Attribute::Descriptions[party.Members[character].Equipment[i].Attribute]);
+                                if (party.Members[character].Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                                {
+                                    equipment_string += std::string(Attribute::Descriptions[party.Members[character].Equipment[i].Attribute]);
+                                }
+                                else
+                                {
+                                    equipment_string += "+" + std::to_string(party.Members[character].Equipment[i].Modifier) + " " + std::string(Attribute::Descriptions[party.Members[character].Equipment[i].Attribute]);
+                                }
                             }
 
                             if (party.Members[character].Equipment[i].AdditionalSlots > 0)
@@ -3087,7 +3094,14 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 
                 if (list[index].Attribute != Attribute::Type::NONE)
                 {
-                    item_string += "+" + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]);
+                    if (list[index].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                    {
+                        item_string += std::string(Attribute::Descriptions[list[index].Attribute]);
+                    }
+                    else
+                    {
+                        item_string += "+" + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]);
+                    }
                 }
 
                 if (list[index].AdditionalSlots > 0)
@@ -3178,7 +3192,14 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 
                 if (list[index].Attribute != Attribute::Type::NONE)
                 {
-                    item_string += "+" + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]);
+                    if (list[index].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                    {
+                        item_string += std::string(Attribute::Descriptions[list[index].Attribute]);
+                    }
+                    else
+                    {
+                        item_string += "+" + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]);
+                    }
                 }
 
                 if (list[index].AdditionalSlots > 0)
@@ -3263,7 +3284,14 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
                 if (list[index].Attribute != Attribute::Type::NONE)
                 {
-                    item_string += "+" + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]);
+                    if (list[index].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                    {
+                        item_string += std::string(Attribute::Descriptions[list[index].Attribute]);
+                    }
+                    else
+                    {
+                        item_string += "+" + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]);
+                    }
                 }
 
                 if (list[index].AdditionalSlots > 0)
@@ -12081,7 +12109,14 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
                 if (item.Attribute != Attribute::Type::NONE)
                 {
-                    item_string += "+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]);
+                    if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
+                    {
+                        item_string += std::string(Attribute::Descriptions[item.Attribute]);
+                    }
+                    else
+                    {
+                        item_string += "+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]);
+                    }
                 }
 
                 if (item.AdditionalSlots > 0)
@@ -13556,7 +13591,14 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                 if (item.Attribute != Attribute::Type::NONE)
                                 {
-                                    message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                    if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
+                                    {
+                                        message += " (" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                    }
+                                    else
+                                    {
+                                        message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                    }
                                 }
 
                                 message += " transferred to " + std::string(party.Members[target].Name) + "!";
@@ -13617,7 +13659,14 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                             if (item.Attribute != Attribute::Type::NONE)
                             {
-                                message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
+                                {
+                                    message += " (+" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                }
+                                else
+                                {
+                                    message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                }
                             }
 
                             message += " transferred to " + std::string(character.Name) + "!";
@@ -13664,7 +13713,14 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         if (item.Attribute != Attribute::Type::NONE)
                         {
-                            message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                            if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
+                            {
+                                message += " (" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                            }
+                            else
+                            {
+                                message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                            }
                         }
 
                         message += " transferred to " + std::string(character.Name) + "!";
@@ -14163,7 +14219,14 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                         if (item.Attribute != Attribute::Type::NONE)
                         {
-                            message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                            if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
+                            {
+                                message += " (" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                            }
+                            else
+                            {
+                                message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                            }
                         }
 
                         message += " dropped!";
@@ -14235,7 +14298,14 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                                         if (item.Attribute != Attribute::Type::NONE)
                                         {
-                                            message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                            if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
+                                            {
+                                                message += " (" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                            }
+                                            else
+                                            {
+                                                message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                            }
                                         }
 
                                         message += " transferred to " + std::string(party.Members[target].Name) + "!";
@@ -14334,7 +14404,14 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                             if (item.Attribute != Attribute::Type::NONE)
                             {
-                                message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
+                                {
+                                    message += " (" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                }
+                                else
+                                {
+                                    message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
+                                }
                             }
 
                             message += " transferred to the Vault!";
