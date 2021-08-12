@@ -30,7 +30,8 @@ namespace Spells
         DAZING_LIGHTS,
         SOOTHING_TOUCH,
         SHADOW_DOOR,
-        TELEPORT_CIRCLE
+        TELEPORT_CIRCLE,
+        SILVER_TONGUE
     };
 
     enum class MassCombat
@@ -114,6 +115,7 @@ namespace Spells
     auto DAZING_LIGHTS = Spells::Base("Dazing Lights", "Swirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.", Spells::Scope::COMBAT, Spells::Type::DAZING_LIGHTS, 50);
     auto SOOTHING_TOUCH = Spells::Base("Soothing Touch", "Your hands glow with divine energy. Choose one of your party members; they can restore 5 Health points.", Spells::Scope::ADVENTURE_COMBAT, Spells::Type::SOOTHING_TOUCH, 50);
     auto SHADOW_DOOR = Spells::Base("Shadow Door", "You can detect the secret doors installed by the penumbral lords when they ruled the land.", Spells::Scope::ADVENTURE, Spells::Type::SHADOW_DOOR, 50);
+    auto SILVER_TONGUE = Spells::Base("Silver Tongue", "Your confidence grows as you summon this spell. Cast this spell when you fail a Charisma check. You gain an additional 3 automatic successes for this check only.", Spells::Scope::ADVENTURE, Spells::Type::SILVER_TONGUE, 75);
 
     std::vector<Spells::Base> BOOK1_SPELLS = {Spells::ANIMAL_SPEECH, Spells::ARMOUR_OF_HEAVEN, Spells::ICE_BOLT, Spells::POISON_STREAM, Spells::UNFAILING_STRIKE, Spells::WOLF_SPIRIT, Spells::MAGIC_CABINET};
 }

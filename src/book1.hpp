@@ -5816,9 +5816,22 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Take = {Equipment::STONECUTTER_SWORD2, Equipment::SILVER_IDOL};
+            Take.clear();
 
-            Limit = 2;
+            Limit = 0;
+
+            auto akihiro = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
+
+            if (Engine::IS_ACTIVE(party, akihiro))
+            {
+                Engine::GET_EQUIPMENT(party.Members[akihiro], {Equipment::STONECUTTER_SWORD2, Equipment::SILVER_IDOL});
+            }
+            else
+            {
+                Take = {Equipment::STONECUTTER_SWORD2, Equipment::SILVER_IDOL};
+
+                Limit = 2;
+            }
 
             Engine::GAIN_MONEY(party, 135);
         }
@@ -12902,7 +12915,6 @@ namespace Book1
         }
     };
 
-    // TODO: Verify that selected item is lost going into this page reference
     class Story412 : public Story::Base
     {
     public:
@@ -15406,6 +15418,434 @@ namespace Book1
         }
     };
 
+    class Story500 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Team::Type previousTeam = Team::Type::NONE;
+
+        int character = -1;
+
+        Story500()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 500;
+
+            Text = "\"I am for you Akihiro,\" says your father's spirit. \"You know me now, I think.\"\n\n\"There can be no forgiveness,\" you growl, drawing your blade. \"The stain on our family's honour must be expunged.\"\n\n\"No,\" says the spirit sadly. \"You shall fall as I did. As my grandfather slew me, I shall slay you. Have you children, Akihiro? I pray not. Let you be the last in our line to suffer this tragedy.\"\n\n\"I shall be the first,\" you vow. \"The first in a new dawn for our family. Face the blade of a true kensai, father.\"\n\nThe revenant draws his weapon, and so begins the ultimate duel between father and son.\n\nNote: Only Sar Akihiro may engage in this battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 882};
+
+            CanFlee = false;
+
+            Team = Team::Type::AKIHIRO_OF_CHALICE;
+
+            character = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
+
+            if (Engine::IS_ACTIVE(party, character))
+            {
+                previousTeam = party.Members[character].Team;
+
+                Engine::SET_TEAM(party.Members[character]);
+
+                if (Engine::HAS_STATUS(party.Members[character], Character::Status::ENLIGHTENED))
+                {
+                    Monsters = {Monster::Base("Revenant", 6, 4, 4, 8, 0)};
+                }
+                else
+                {
+                    Monsters = {Monster::Base("Revenant", 6, 3, 5, 8, 0)};
+                }
+            }
+            else
+            {
+                Monsters.clear();
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                if (Engine::IS_ACTIVE(party, character))
+                {
+                    Engine::SET_TEAM(party.Members[character], previousTeam);
+                }
+
+                destination = {Book::Type::BOOK1, 882};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 320};
+            }
+        }
+    };
+
+    class Story501 : public Story::Base
+    {
+    public:
+        Engine::Destination destination;
+
+        Story501()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 501;
+
+            Text = "Making your way through the jungle is tiring work. The area is particularly thick with vegetation, and you must hack and hew your way through the dense rainforest to make any progress at all.\n\nNote: Treat the jungle as if it were an opponent. The jungle does not attack, as such. Instead, each party member takes 1 point of Health damage each time they attack the jungle. This is from scrapes, exhaustion, etc, and you cannot use armour to save against this damage. A party member low on Health can skip their attack if you like, as long as at least one party member attacks each round.";
+
+            Bye = "You hack your way through the jungle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {Monster::Base("Jungle", Monster::Type::JUNGLE, 0, 0, 4, 25, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 763}; }
+    };
+
+    class Story502 : public Story::Base
+    {
+    public:
+        Engine::Destination destination;
+
+        Story502()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 502;
+
+            Text = "You are shocked as the kensai beheads your companion in a smooth stroke with his sword. Somehow you assumed the kensai might show mercy, but it appears the kensai take their vows very seriously.\n\nOther kensai arrive to escort you firmly from the premises.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story503 : public Story::Base
+    {
+    public:
+        Engine::Destination destination;
+
+        Story503()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 503;
+
+            Text = "Holding your breath, you plunge into the cold water, swimming through the black tunnel. Eventually you spy the tiniest glimpse of light, and swim onwards, your lungs bursting. You emerge into a small but tall chamber, filled with half-submerged smashed pottery. Light streams through a tiny crack in the ceiling, and you can hear sounds of the city high above you.\n\nThe walls are unscalable, but searching the broken vases nets you 40 silver pieces and a HANDSOME BROOCH (Charisma +1).";
+
+            Bye = "Pleased with your find, you swim back to the Everchild and make your report. Satisfied that the only way to go is through the dry arch, she beckons you onwards.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 40);
+
+            Take = {Equipment::HANDSOME_BROOCH1};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 523}; }
+    };
+
+    class Story504 : public Story::Base
+    {
+    public:
+        Story504()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 504;
+
+            Text = "You have chosen a perilous course indeed! The waves crash against your vessel as you plough towards the rocks.\n\nChoose someone to steer the vessel.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Approach the wreck (Individual check: Survival 4+, Successes: Special)", {Book::Type::BOOK1, -504}, {Book::Type::BOOK1, -504}, {Attribute::Type::SURVIVAL}, 4, 0));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event504 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        int damage = 0;
+
+        Event504()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -504;
+
+            DisplayID = 504;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::SHIP_INTACT(party))
+            {
+                damage = 8 - party.RecentSuccesses;
+
+                Engine::GAIN_HEALTH(party.Fleet[party.CurrentShip], -damage);
+
+                if (party.Fleet[party.CurrentShip].Health > 0)
+                {
+                    return {Book::Type::NONE, -1};
+                }
+                else
+                {
+                    return {Book::Type::BOOK1, 87};
+                }
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 87};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "Your ship suffers " + std::to_string(damage) + " damage.\n\nDespite the collisions you manage to steer your ship adjacent to the wrecked vessel. You order some of your crew to swing aboard the vessel and loot it. They manage to recover a single cargo unit of Wine. Not wishing to push your luck, you sail away from the wreck as soon as your last crewman is aboard. Of the stranded sailor there is no longer any sign.";
+
+            if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size() && party.Fleet[party.CurrentShip].Cargo.size() < party.Fleet[party.CurrentShip].MaximumCargo)
+            {
+                party.Fleet[party.CurrentShip].Cargo.push_back(Cargo::Type::WINE);
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 240}; }
+    };
+
+    class Story505 : public Story::Base
+    {
+    public:
+        Story505()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 505;
+
+            Text = "A row of rowdy taverns stand on the wooden boardwalk built for the harbourside. The taverns are frequently flooded by the incoming tide, and no attempts have been made to sweep away the pooled saltwater that settles in their sunken floors. Frothy waves splash at the windows as you down a tankard of cheap grog at your table, and you wonder how the building manages to stay up.\n\nA nearby sailor sings a sad song about the Maiden of the Depths. She was a pure-hearted girl who was tossed over the side of a ship during one of the frequent storms in the Passage of Illikein around the Splintered Isles. The legend goes that those who present the Maiden with flowers receive rich rewards from sunken hulks beneath the waves.\n\nNote: You may stay at the tavern and recover your strength. For every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms. You gained the code A30.";
+
+            RestPrice = 5;
+            CanRecharge = true;
+
+            Choices.clear();
+
+            Controls = Story::Controls::INN;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(30)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story506 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Team::Type previousTeam = Team::Type::NONE;
+
+        int character = -1;
+
+        Story506()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 506;
+
+            Text = "\"No, Yu Yan,\" you say. \"I cannot allow that.\"\n\n\"A pity,\" she says. \"So be it.\" She draws a long green blade, and goes into a crouch, her sword held high.\n\nThe duel is on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 450};
+
+            CanFlee = false;
+
+            Team = Team::Type::AKIHIRO_OF_CHALICE;
+
+            character = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
+
+            if (Engine::IS_ACTIVE(party, character))
+            {
+                previousTeam = party.Members[character].Team;
+
+                Engine::SET_TEAM(party.Members[character]);
+
+                Monsters = {Monster::Base("Yu Yuan", 5, 4, 4, 9, 0)};
+            }
+            else
+            {
+                Monsters.clear();
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                if (Engine::IS_ACTIVE(party, character))
+                {
+                    Engine::SET_TEAM(party.Members[character], previousTeam);
+                }
+
+                destination = {Book::Type::BOOK1, 184};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 450};
+            }
+        }
+    };
+
+    class Story507 : public Story::Base
+    {
+    public:
+        Story507()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 507;
+
+            Text = "You open the door into a musty library, the air thick with dust and damp, rotting pages. The floor is covered in mouldering books. Around the walls are wooden shelves, some still packed with ruined books.\n\nSitting in the middle of the room, facing away from you, is a burly orc who appears to be reading a black- bound book. A glowing lantern is positioned next to him to enable him to see. He seems completely engrossed in his reading, and does not appear to have noticed your entrance.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Ask the orc what he is reading", {Book::Type::BOOK1, 664}));
+            Choices.push_back(Choice::Base("Sneak up on the orc", {Book::Type::BOOK1, 414}));
+            Choices.push_back(Choice::Base("Close the door and go somewhere", {Book::Type::BOOK1, 821}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(71)}))
+            {
+                return {Book::Type::BOOK1, 474};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story508 : public Story::Base
+    {
+    public:
+        Story508()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 508;
+
+            Text = "You make your way to the training grounds, where you see the soldiers of the Everchild at practice. All the troops you have gathered for her can be found here, their armour and weapons glinting in the unforgiving sun.\n\n\"We can always use more soldiers,\" comments general Che Long. \"I know the Everchild has asked you to find some more from the leaders in the valley, but we can also muster more troops here if we can find the money.\"\n\n\"How much will it cost to levy more troops?\" you ask, checking your purse.\n\n\"More than any number of silver coins!\" laughs Che Long. \"We are talking about hundreds of soldiers, including weapons and supplies. You would need bars of GOLD BULLION to fully pay for the cost.\"\n\nYou ponder Che Long's request. \"If I found some, what kind of soldiers could we raise?\"\n\n\"For one bar of GOLD BULLION we could raise a decent troop of light infantry,\" says Che Long. \"But ideally, we would want two GOLD BULLION bars. With that we could retrain and equip the Bronzeguard. We still have their armour and equipment -- but teaching men to fight to that standard is a long and expensive process.\"\n\nIf you have any bars of GOLD BULLION you can purchase additional troops for the Everchild.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Spend one GOLD BULLION on some light infantry", {Book::Type::BOOK1, 900}, Choice::Type::PAY_WITH, {Equipment::GOLD_BULLION}, 1));
+            Choices.push_back(Choice::Base("Spend two GOLD BULLION on restoring the Bronzeguard", {Book::Type::BOOK1, 143}, Choice::Type::PAY_WITH, {Equipment::GOLD_BULLION}, 2));
+            Choices.push_back(Choice::Base("Leave the training ground", {Book::Type::BOOK1, 620}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            //TODO: Implement codes A33 and A100 troop transfers
+        }
+    };
+
+    class Story509 : public Story::Base
+    {
+    public:
+        Story509()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 509;
+
+            Text = "Unbraaki collapses to the ground, flames still pouring from his palms, igniting the palace. You only just have time to grasp his spellbook from his hands before crashing through the windows, away from the blaze.\n\nUnbraaki's guards cry in horror and amazement as they see the home of their master consumed in flames. Seeing no reason to remain, they scatter into the desert, leaving their master and his sorcerous monkeys to burn.\n\nAs the morning light spreads across the desert you see the extent of the devastation. The palace is a scorched ruin, though curiously a single entrance to the basement remains. Looking through Unbraaki's spellbook you see it contains many interesting notes on the nature of magic, as well as an interesting spell.\n\nNote: You gained the code A88. You can learn the following spell:\n\nSilver Tongue (Adventure)\n\nYour confidence grows as you summon this spell. Cast this spell when you fail a Charisma check. You gain an additional 3 automatic successes for this check only.\n\nRecharge: 75 silver\n\nIn addition, you may raise the Lore skill of one character by a single point for reading Unbraaki's fascinating theories on magic.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of LORE", {Book::Type::BOOK1, -509}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::LORE}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(88)});
+
+            Spells = {Spells::SILVER_TONGUE};
+        }
+    };
+
+    class Event509 : public Story::Base
+    {
+    public:
+        Event509()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -509;
+
+            DisplayID = 509;
+
+            Text = "What will you do now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Explore the basement of the palace", {Book::Type::BOOK1, 67}));
+            Choices.push_back(Choice::Base("Leave the smouldering remains behind", {Book::Type::BOOK1, 265}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -15942,6 +16382,18 @@ namespace Book1
     auto story497 = Story497();
     auto story498 = Story498();
     auto story499 = Story499();
+    auto story500 = Story500();
+    auto story501 = Story501();
+    auto story502 = Story502();
+    auto story503 = Story503();
+    auto story504 = Story504();
+    auto event504 = Event504();
+    auto story505 = Story505();
+    auto story506 = Story506();
+    auto story507 = Story507();
+    auto story508 = Story508();
+    auto story509 = Story509();
+    auto event509 = Event509();
 
     void InitializeStories()
     {
@@ -15949,7 +16401,7 @@ namespace Book1
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
-            &event343, &event388, &event397, &event400, &event406, &event408, &event466,
+            &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -15999,7 +16451,8 @@ namespace Book1
             &story460, &story461, &story462, &story463, &story464, &story465, &story466, &story467, &story468, &story469,
             &story470, &story471, &story472, &story473, &story474, &story475, &story476, &story477, &story478, &story479,
             &story480, &story481, &story482, &story483, &story484, &story485, &story486, &story487, &story488, &story489,
-            &story490, &story491, &story492, &story493, &story494, &story495, &story496, &story497, &story498, &story499};
+            &story490, &story491, &story492, &story493, &story494, &story495, &story496, &story497, &story498, &story499,
+            &story500, &story501, &story502, &story503, &story504, &story505, &story506, &story507, &story508, &story509};
     }
 }
 #endif

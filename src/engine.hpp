@@ -493,10 +493,7 @@ namespace Engine
 
         for (auto i = 0; i < equipment.size(); i++)
         {
-            if (Engine::COUNT_EQUIPMENT(character, equipment[i]) > 0)
-            {
-                found += 1;
-            }
+            found += Engine::COUNT_EQUIPMENT(character, equipment[i]);
         }
 
         return found;
