@@ -1335,7 +1335,7 @@ namespace Book1
             Text = "With a dramatic flourish you unroll the DRAGON HEAD from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Lhasbreath Berserkers]: Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nNote: You gained the code A16.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -2996,7 +2996,7 @@ namespace Book1
             Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nWhen Emlyn reports her findings, the news is rather disappointing. \"We have recovered many pretty blooms,\" she admits. \"Certainly, the fragrances are quite striking... however, there are no medicinal or culinary plants, as far as I can tell. Nothing sellable.\"\n\n\"Curses!\" grumbles Sir Lawrence. \"This expedition is turning into an expensive failure.\"\n\nStill, Sir Lawrence is good to his word and presents you with a purse of 150 silver coins. Offering your consolations over the failed mission, you depart into the city.\n\nAlthough the expedition did not go perfectly you have learned a lot.\n\nNote: You gained the code A85.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -9031,7 +9031,7 @@ namespace Book1
             Text = "he sister bows as you present her with the letter, and immediately escorts you into the chamber of the God King. The king takes the letter, glancing over it with a casual eye. Long before he could have finished reading it, he stands.\n\n\"Yes, this is the Everchild as I remember her,\" nods the God King. \"I officially place the armies of Chalice at her disposal. My kensai warriors shall attend her, a full five hundred men. An additional six hundred archers shall provide her with support. Once she is queen, we shall defer our city to her policies as they relate to all international affairs.\"\n\nYou are dumbstruck. Could the God King really have changed his mind from a quick glance at a letter? Or has he received council since your last meeting and was going to back the Everchild no matter what? You suppose you shall never know.\n\nYou thank the God King for his support, leaving the chamber in amazement at your success.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Kensai Warriors]: Strength 4, Morale 4\n[Chalice Archers]: Strength 2, Morale 3\n\nGaining the God King's support has been quite an endeavour.\n\nNote: You gained the code A20.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of CHARISMA", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of CHARISMA", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1, 2));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -10936,7 +10936,7 @@ namespace Book1
             Bye = "Waving the harbour crew goodbye you return to your ship.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 82}, Choice::Type::ROLL_ATTRIBUTE_WITH_STATUS, {Character::Status::FOUND_COGWHEEL}, {Attribute::Type::SURVIVAL}, 1));
+            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 82}, Choice::Type::ROLL_ATTRIBUTE_WITH_STATUS, {Character::Status::FOUND_COGWHEEL}, {Attribute::Type::SURVIVAL}, 1, 2));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -11927,7 +11927,7 @@ namespace Book1
             Text = "Hardly daring to breathe, your party member manages to step carefully across the chamber, avoiding every pressure plate and hidden tripwire. You may take the BLACK PRISM from the pedestal. You only hope it was worth the danger retrieving it!\n\nRetracing your steps with a heart-thumping precision, you manage to make it out of the chamber to the warm congratulations of your colleagues.\n\nNote: You gained the code A80.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 310}, Choice::Type::LASTCHARACTER_ROLLS_FOR_ATTRIBUTEINCREASE, {Attribute::Type::SURVIVAL}, 1));
+            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 310}, Choice::Type::LASTCHARACTER_ROLLS_FOR_ATTRIBUTEINCREASE, {Attribute::Type::SURVIVAL}, 1, 2));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -15382,7 +15382,7 @@ namespace Book1
             Bye = "You silently return to the ground floor of the pyramid.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of STEALTH", {Book::Type::BOOK1, 574}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::STEALTH}, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of STEALTH", {Book::Type::BOOK1, 574}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::STEALTH}, 1, 2));
 
             Controls = Story::Controls::STANDARD;
         }

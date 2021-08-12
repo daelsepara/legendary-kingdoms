@@ -20786,7 +20786,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (target >= 0 && target < party.Members.size())
                             {
-                                auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[current].Attributes[0], story->Choices[current].Value, 2);
+                                auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[current].Attributes[0], story->Choices[current].Value, story->Choices[current].Difficulty);
 
                                 if (increase >= 0)
                                 {
@@ -20802,7 +20802,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (Engine::IS_ACTIVE(party, party.LastSelected))
                             {
-                                auto increase = gainAttributeScore(window, renderer, party.Members[party.LastSelected], story->Choices[current].Attributes[0], story->Choices[current].Value, 2);
+                                auto increase = gainAttributeScore(window, renderer, party.Members[party.LastSelected], story->Choices[current].Attributes[0], story->Choices[current].Value, story->Choices[current].Difficulty);
 
                                 if (increase >= 0)
                                 {
@@ -20838,7 +20838,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (target >= 0 && target < party.Members.size())
                             {
-                                auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[current].Attributes[0], story->Choices[current].Value, 2);
+                                auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[current].Attributes[0], story->Choices[current].Value, story->Choices[current].Difficulty);
 
                                 if (increase >= 0)
                                 {

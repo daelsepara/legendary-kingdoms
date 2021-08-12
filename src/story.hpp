@@ -590,6 +590,23 @@ namespace Choice
 
             Value = value;
         }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Character::Status> status, std::vector<Attribute::Type> attributes, int value, int difficulty)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Status = status;
+
+            Attributes = attributes;
+
+            Value = value;
+
+            Difficulty = difficulty;
+        }
     };
 
 } // namespace Choice
