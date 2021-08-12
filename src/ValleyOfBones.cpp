@@ -3574,7 +3574,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             monster_string += monster.Name;
 
-            monster_string += "\nAttack: " + (monster.Attack > 0 ? std::to_string(monster.Attack) : std::string("Special")) + " (" + std::to_string(monster.Difficulty) + "+)";
+            monster_string += "\nAttack: " + (monster.Attack > 0 ? std::to_string(monster.Attack) : std::string("Special")) + std::string(monster.Difficulty > 0 ? (" (" + std::to_string(monster.Difficulty) + "+)") : "");
 
             if (monster.Auto > 0)
             {
@@ -3649,7 +3649,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             monster_string += monster.Name;
 
-            monster_string += "\nAttack: " + (monster.Attack > 0 ? std::to_string(monster.Attack) : std::string("Special")) + " (" + std::to_string(monster.Difficulty) + "+)";
+            monster_string += "\nAttack: " + (monster.Attack > 0 ? std::to_string(monster.Attack) : std::string("Special")) + std::string(monster.Difficulty > 0 ? (" (" + std::to_string(monster.Difficulty) + "+)") : "");
 
             if (monster.Auto > 0)
             {
