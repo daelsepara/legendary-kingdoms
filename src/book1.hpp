@@ -15370,7 +15370,7 @@ namespace Book1
             Bye = "You silently return to the ground floor of the pyramid.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 574}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::STEALTH}, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of STEALTH", {Book::Type::BOOK1, 574}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::STEALTH}, 1));
 
             Controls = Story::Controls::STANDARD;
         }
