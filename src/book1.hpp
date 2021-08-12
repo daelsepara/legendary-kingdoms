@@ -14411,7 +14411,7 @@ namespace Book1
 
                 Engine::GET_CODES(party, {Codes::A(73)});
             }
-            
+
             PreText += "\n\nNote: Each party member loses 2 Health points.";
 
             Text = PreText.c_str();
@@ -14463,6 +14463,314 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 213}; }
+    };
+
+    class Story470 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story470()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 470;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(52)}))
+            {
+                return {Book::Type::BOOK1, 613};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You emerge alone from your tent, screwing your courage to the sticking place. You gaze into the light and see it. A skeletal figure, composed of light and hate, a curved longsword in its hands. It is a revenant, a ghost of a dishonoured sword saint. It seeks those undertaking the trial of the kensai to test them.";
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(51)}))
+            {
+                PreText += "\n\n\"Akihiro of Chalice,\" intones the revenant. \"Now you know where I dwell. Know that I am for you, and at my hands you shall face your final death. But not now. You are as a child to me. Return to me when you are worthy.\"\n\nYou snarl, your hand dropping to your weapon, but the spirit is already gone, dissolving into the cold wind like scattered rice paper. In sombre quiet, you return to the tent.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(51)}))
+            {
+                return {Book::Type::BOOK1, 500};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 840};
+            }
+        }
+    };
+
+    class Story471 : public Story::Base
+    {
+    public:
+        Story471()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 471;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Image = "images/book1/pitiful_waif.png";
+
+            Text = "You walk the streets of Saltdad, watching the bronzed, ragged people and avoiding the sinister Bronzeguard patrols where you can. Eventually you come upon a peasant girl, less than twenty summers old, seated upon an upturned barrel and weeping pitifully. The heartless folk of Saltdad ignore her, some going so far as to cross to the other side of street to avoid her.\n\nYou gained the code A14.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Ask her what is wrong", {Book::Type::BOOK1, 829}));
+            Choices.push_back(Choice::Base("Ignore the pitiful waif", {Book::Type::BOOK1, 75}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(1)}))
+            {
+                return {Book::Type::BOOK1, 64};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(7)}) && !Engine::VERIFY_CODES(party, {Codes::A(13)}))
+            {
+                return {Book::Type::BOOK1, 520};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(14)}))
+            {
+                return {Book::Type::BOOK1, 668};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(14)});
+        }
+    };
+
+    class Story472 : public Story::Base
+    {
+    public:
+        Story472()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 472;
+
+            Text = "You raise your hands to show there is no hard feelings. In response, one of your party members is punched in the mouth with the haft of an axe and loses 1 Health point. Weapons are drawn... how did this get so violent so quickly?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, 587}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::BRASH))
+            {
+                return {Book::Type::BOOK1, 513};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story473 : public Story::Base
+    {
+    public:
+        Story473()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 473;
+
+            Location = Location::Type::DESERT;
+
+            Text = "It takes great patience and skill to find the nomad camp. Little wonder, since they are despised by all the kings of the valley. They are an ancient people, who lived as desert wanderers even before the desolation of Abraxas. They greet you with some confidence, for you are in their homeland, and each nomad is a skilled warrior who can best the toughest soldier.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("See the nomad chief", {Book::Type::BOOK1, 30}));
+            Choices.push_back(Choice::Base("Trade with the nomads", {Book::Type::BOOK1, 768}));
+            Choices.push_back(Choice::Base("Bid them farewell and return to the desert", {Book::Type::BOOK1, 115}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story474 : public Story::Base
+    {
+    public:
+        Story474()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 474;
+
+            Text = "You have re-entered the ruined library. A dead orc lies here, decaying amongst the ruined pages.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the black book he was reading", {Book::Type::BOOK1, 119}));
+            Choices.push_back(Choice::Base("Close the door and go somewhere else", {Book::Type::BOOK1, 821}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story475 : public Story::Base
+    {
+    public:
+        Story475()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 475;
+
+            Text = "The guards suspect you are assassins and traitors. One calls out, and suddenly dozens of heavily armed Bronzeguard begin to clank towards you. There are too many to fight, you must flee!";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Escape the Bronzeguard (Team check: Stealth 4+, Successes: 7)", {Book::Type::BOOK1, 75}, {Book::Type::BOOK1, 55}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 4, 7));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "You manage to lose them in the warren of alleyways in the city.";
+            }
+            else
+            {
+                Bye = "You are overwhelmed and arrested";
+            }
+        }
+    };
+
+    class Story476 : public Story::Base
+    {
+    public:
+        Story476()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 476;
+
+            Text = "Mannus understands what you are driving at. He looks very pleased at the thought of accepting the Iron King's bribes and quickly pens an official document. Soon you have a very favourable TITHE REPORT that greatly reduces the amount Saltdad is required to pay.";
+
+            Bye = "Thanking each other for your time, you depart.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::TITHE_REPORT};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 574}; }
+    };
+
+    class Story477 : public Story::Base
+    {
+    public:
+        Story477()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 477;
+
+            Text = "Where will you travel now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North, to Luutanesh", {Book::Type::BOOK1, 614}));
+            Choices.push_back(Choice::Base("West, to the Withered", {Book::Type::BOOK1, 115}));
+            Choices.push_back(Choice::Base("South, towards Cursus", {Book::Type::BOOK1, 822}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story478 : public Story::Base
+    {
+    public:
+        Story478()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 478;
+
+            Text = "With the orcs defeated you quickly search their guard room. In total 20 silver coins lies scattered across the table. You can take either orc's CRUDE BLADE (Fighting +0) if you are short on weapons. The first orc also carried a shield (Armour +2).\n\nYou gained the code A56.";
+
+            Bye = "You return to the corridor outside.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 20);
+
+            Engine::GET_CODES(party, {Codes::A(56)});
+
+            Take = {Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE};
+
+            Limit = 2;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 350}; }
+    };
+
+    class Story479 : public Story::Base
+    {
+    public:
+        Story479()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 479;
+
+            Text = "After days of wandering you reach the outskirts of a ramshackle city which stands in the shadow of a ruined palace. Some peasant girls take pity on you, feeding you with precious water. Thanking them you make your way into the city centre.\n\nYou lose 5 silver coins, if you have them.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, -5);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
     };
 
     auto story001 = Story001();
@@ -14971,6 +15279,16 @@ namespace Book1
     auto story467 = Story467();
     auto story468 = Story468();
     auto story469 = Story469();
+    auto story470 = Story470();
+    auto story471 = Story471();
+    auto story472 = Story472();
+    auto story473 = Story473();
+    auto story474 = Story474();
+    auto story475 = Story475();
+    auto story476 = Story476();
+    auto story477 = Story477();
+    auto story478 = Story478();
+    auto story479 = Story479();
 
     void InitializeStories()
     {
@@ -15025,7 +15343,8 @@ namespace Book1
             &story430, &story431, &story432, &story433, &story434, &story435, &story436, &story437, &story438, &story439,
             &story440, &story441, &story442, &story443, &story444, &story445, &story446, &story447, &story448, &story449,
             &story450, &story451, &story452, &story453, &story454, &story455, &story456, &story457, &story458, &story459,
-            &story460, &story461, &story462, &story463, &story464, &story465, &story466, &story467, &story468, &story469};
+            &story460, &story461, &story462, &story463, &story464, &story465, &story466, &story467, &story468, &story469,
+            &story470, &story471, &story472, &story473, &story474, &story475, &story476, &story477, &story478, &story479};
     }
 }
 #endif
