@@ -37,6 +37,10 @@ namespace Book1
 
             ID = 1;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Image = "images/legendary-kingdoms-logo.png";
 
             Text = "You stir into consciousness. Heat and blazing sunlight... the slow rumble of a wagon... heavy chains upon your limbs. You groan, your mouth dry, your stomach empty. As your eyes focus you can see your companions, fellow survivors of the brutal pirate attack, crushed together with you upon the floor of a rolling wagon. You remember little since then, except vowing to your newfound friends that you would stick together, come what may. You are relieved to see that they are still alive, but where are you?\n\nGazing through the bars of the wagon, your eyes focus on a blazing yellow-grey desert. To your left, filling the sky, are the Stonewalls -- a massive and impenetrable mountain range that divides the barbarian kingdoms of the south from the antique and mysterious lands of Drakehallow. But which side of the range are you? The answer becomes immediately apparent as you look beyond the smelly dragonyaks which are ponderously hauling your cage. A vast, crumbling city of minarets and run-down adobe buildings fills your view. The sting in the air and on your lips tells you all you need to know. This is Saltdad, cruel throne of the tyrant Iron King, one of half a dozen tin-pot dictators in the barbaric Valley of Bones. You are far from civilised lands here...\n\nThin-faced slavers with spears rattle the sides of your cage, barking at you to get down. You slump on your hindquarters. For the moment there is nothing you can do with you and your companions in chains. You swear you will regain your freedom and start your lives anew. But first, you must survive the horrors of slavery.";
@@ -57,7 +61,7 @@ namespace Book1
     class Story002 : public Story::Base
     {
     public:
-        Engine::Destination destination;
+        Engine::Destination destination = {};
 
         Story002()
         {
@@ -1647,7 +1651,7 @@ namespace Book1
 
             ID = 49;
 
-            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are RESTORED to MAXIMUM Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive 600 silver coins as a reward. In addition, he presents you with a SEAL OF HOUSE ROSS. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nNote: You gained the code A85.";
+            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are restored to maximum Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive 600 silver coins as a reward. In addition, he presents you with a SEAL OF HOUSE ROSS. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nNote: You gained the code A85.";
 
             Bye = "Thanking Sir Lawrence and Emlyn for their generosity, you depart into the city.";
 
@@ -3580,6 +3584,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::CONSOLIDATE(party);
+
             PreText = "The Grand Ziggurat is one of the largest buildings in the valley, dwarfed only by the colossal Saltdad palace. Guarding its steps are the fanatical Cursus Temple Guard, the elite soldiers of the patriarch. They halt you as you begin to climb the steps.\n\n\"Hold there, filthy heathens!\" they spit. \"Only true followers of Cursus are allowed within!\"";
 
             Choices.clear();
@@ -4711,8 +4717,6 @@ namespace Book1
     class Story149 : public Story::Base
     {
     public:
-        Engine::Destination destination;
-
         Story149()
         {
             BookID = Book::Type::BOOK1;
@@ -4753,8 +4757,6 @@ namespace Book1
     class Story150 : public Story::Base
     {
     public:
-        Engine::Destination destination;
-
         Story150()
         {
             BookID = Book::Type::BOOK1;
@@ -15337,8 +15339,6 @@ namespace Book1
     class Story497 : public Story::Base
     {
     public:
-        Engine::Destination destination;
-
         Story497()
         {
             BookID = Book::Type::BOOK1;
@@ -15494,8 +15494,6 @@ namespace Book1
     class Story501 : public Story::Base
     {
     public:
-        Engine::Destination destination;
-
         Story501()
         {
             BookID = Book::Type::BOOK1;
@@ -15524,8 +15522,6 @@ namespace Book1
     class Story502 : public Story::Base
     {
     public:
-        Engine::Destination destination;
-
         Story502()
         {
             BookID = Book::Type::BOOK1;
@@ -15545,8 +15541,6 @@ namespace Book1
     class Story503 : public Story::Base
     {
     public:
-        Engine::Destination destination;
-
         Story503()
         {
             BookID = Book::Type::BOOK1;
@@ -15844,6 +15838,222 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+    };
+
+    class Story510 : public Story::Base
+    {
+    public:
+        Story510()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 510;
+
+            Text = "You find you are unable to reach a state of deep mediation, your trials pressing upon your mind. It was this lack of clarity that caused you to fail in your first attempts at becoming kensai. Shaking your head at your own inadequacies, you decide to leave the matter to fate, you stroll towards the hill in front of you and enter the first cave you come across.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 24}; }
+    };
+
+    class Story511 : public Story::Base
+    {
+    public:
+        Story511()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 511;
+
+            Text = "The sun crawls over the horizon, spreading a grey haze across the boundless desert. You are pleased to be raised above the sands on a built-up highway, even if the road itself is in dreadful condition. To the east the crowded city of Saltdad beckons, its decaying palace looming over it like a gnarled hag.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Random Event", {{2, NULL, {Book::Type::BOOK1, 666}}, {6, NULL, {Book::Type::BOOK1, 219}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story512 : public Story::Base
+    {
+    public:
+        Story512()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 512;
+
+            Text = "You manage to persuade the crowd that the dead man has been honoured enough, and that the last thing he would want was violence with the state after working so selflessly for it. Reluctantly the crowd disperse, taking the casket for burial. The kensai thank you for your support and then carry on their way.\n\nThis was a sensitive situation which you have diffused.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of CHARISMA", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story513 : public Story::Base
+    {
+    public:
+        Story513()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 513;
+
+            Text = "Thinking quickly, you point to the knife-wielding man and address the barbarians. \"Oh, dear! You're not working for Gareth the Snitch, are you? Poor fellows. He's always getting people to do his dirty work, and yet when it comes time for payment he uses clipped coins. Well... there's one born every minute, I suppose.\"\n\nThe barbarians turn angrily upon the small man. Your instinct was right. These are paid assassins, but they don't know their employer very well. The man with the knife panics and begins to flee into the crowd, pursued by the howling barbarians.\n\nYou gained the code A90.";
+
+            Bye = "You take the opportunity to slip away.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(90)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story514 : public Story::Base
+    {
+    public:
+        Story514()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 514;
+
+            Text = "The fighting is chaotic, and more slaves come to join the battle as the fight rages on. Sar Jessica is separated during the scrum. After slaying an opponent, she is suddenly bull-rushed to the ground by an enormous Lhasbreath barbarian, her weapon scattering from her grasp. The barbarian hefts his axe high above the helpless knight. You must rescue her!";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose another party member to come to her rescue", {Book::Type::BOOK1, 485}, Choice::Type::CHOOSE_CHARACTER_EXCEPT, Character::Type::SAR_JESSICA_DAYNE));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story515 : public Story::Base
+    {
+    public:
+        Story515()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 515;
+
+            Location = Location::Type::MORDAIN;
+
+            IsCity = true;
+
+            Image = "images/book1/city_of_mordain.png";
+
+            Text = "You have arrived in the ruins of the city of Mordain, sacked over four hundred years ago by the priests of Cursus and the king of Lhasbreath. It is a place of ill-portent, shunned by the locals. No building fully stands in this coastal city, and even its walls are shattered and crumbling.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Explore the temple district", {Book::Type::BOOK1, 432}));
+            Choices.push_back(Choice::Base("Explore the broken merchant quarter", {Book::Type::BOOK1, 79}));
+            Choices.push_back(Choice::Base("Pick your way to the harbour", {Book::Type::BOOK1, 243}));
+            Choices.push_back(Choice::Base("Head west, across the desert toward Lhasbreath", {Book::Type::BOOK1, 752}));
+            Choices.push_back(Choice::Base("Head north, into the desert", {Book::Type::BOOK1, 202}));
+            Choices.push_back(Choice::Base("Head east, across the desert towards Cursus", {Book::Type::BOOK1, 657}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story516 : public Story::Base
+    {
+    public:
+        Story516()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 516;
+
+            Text = "The wind fills your sails as you glide in the straits between the shores of the valley and the jungle-filled island of Viaan.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Random Event", {{2, NULL, {Book::Type::BOOK1, 679}}, {6, NULL, {Book::Type::BOOK1, 144}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story517 : public Story::Base
+    {
+    public:
+        Story517()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 517;
+
+            Text = "The Temple of the Unbroken collapses into a pile of broken stones behind you, great clouds of dust bursting from the shattered chambers. You think yourselves lucky to have survived.\n\nYou gained the code A41.";
+
+            Bye = "After pausing to rest for a while you gather yourselves and prepare to move on.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member and increase their maximum, unwounded Health score by 1 point", {Book::Type::BOOK1, 860}, Choice::Type::ADD_MAX_HEALTH, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(41)});
+        }
+    };
+
+    class Story518 : public Story::Base
+    {
+    public:
+        Story518()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 518;
+
+            Text = "This will be an untypical battle. Whilst it is true you can crush dozens of beetles with each stamp you will be quickly swarmed. Their nasty, biting mandibles can sheer off flesh like tiny razors.\n\nYou cannot add the Fighting bonus from your weapons in this fight -- they are less effective than simply brushing off and standing on the beetles. The beetles will not roll for an attack. Instead each round they inflict 1 point of Health damage on each party member. Armour cannot help you against this damage.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {Monster::Base("Beetle Swarm", Monster::Type::BEETLE_SWARM, 0, 0, 3, 25, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 251}; }
+    };
+
+    class Story519 : public Story::Base
+    {
+    public:
+        Story519()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 519;
+
+            Text = "The bridge holds, much to your relief, and you have soon crossed to the other side in safety.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
     };
 
     auto story001 = Story001();
@@ -16394,6 +16604,16 @@ namespace Book1
     auto story508 = Story508();
     auto story509 = Story509();
     auto event509 = Event509();
+    auto story510 = Story510();
+    auto story511 = Story511();
+    auto story512 = Story512();
+    auto story513 = Story513();
+    auto story514 = Story514();
+    auto story515 = Story515();
+    auto story516 = Story516();
+    auto story517 = Story517();
+    auto story518 = Story518();
+    auto story519 = Story519();
 
     void InitializeStories()
     {
@@ -16452,7 +16672,8 @@ namespace Book1
             &story470, &story471, &story472, &story473, &story474, &story475, &story476, &story477, &story478, &story479,
             &story480, &story481, &story482, &story483, &story484, &story485, &story486, &story487, &story488, &story489,
             &story490, &story491, &story492, &story493, &story494, &story495, &story496, &story497, &story498, &story499,
-            &story500, &story501, &story502, &story503, &story504, &story505, &story506, &story507, &story508, &story509};
+            &story500, &story501, &story502, &story503, &story504, &story505, &story506, &story507, &story508, &story509,
+            &story510, &story511, &story512, &story513, &story514, &story515, &story516, &story517, &story518, &story519};
     }
 }
 #endif

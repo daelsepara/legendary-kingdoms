@@ -11801,7 +11801,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                 }
                                                 else
                                                 {
-                                                    auto damage = attackScreen(window, renderer, party, team, monsters, result, opponent, 0, useEquipment);
+                                                    auto useWeapons = useEquipment;
+
+                                                    if (monsters[opponent].Type == Monster::Type::BEETLE_SWARM)
+                                                    {
+                                                        useWeapons = false;
+                                                    }
+
+                                                    auto damage = attackScreen(window, renderer, party, team, monsters, result, opponent, 0, useWeapons);
 
                                                     if (damage >= 0)
                                                     {
@@ -12018,9 +12025,21 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     flash_color = intRD;
 
-                                    message = "Swarms of tiny spiders attack the party!";
+                                    message = "Swarms of tiny spiders attack the party and deal 1 damage to everyone!";
 
-                                    Engine::GAIN_HEALTH(party, -1);
+                                    Engine::GAIN_HEALTH(party, team, -1);
+
+                                    start_ticks = SDL_GetTicks();
+                                }
+                                else if (Engine::HAS_MONSTER(monsters, Monster::Type::BEETLE_SWARM))
+                                {
+                                    flash_message = true;
+
+                                    flash_color = intRD;
+
+                                    message = "The beetles deals 1 damage to the entire party!";
+
+                                    Engine::GAIN_HEALTH(party, team, -1);
 
                                     start_ticks = SDL_GetTicks();
                                 }
@@ -20985,6 +21004,51 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             else
                             {
                                 message = std::string(party.Members[selected].Name) + " is not part of the " + std::string(Team::Descriptions[story->Choices[choice].Team]) + " team!";
+
+                                error = true;
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::CHOOSE_CHARACTER_EXCEPT)
+                        {
+                            auto selected = -1;
+
+                            while (selected < 0 || selected >= party.Members.size())
+                            {
+                                if (Engine::COUNT(party, story->Choices[choice].Team) == 1)
+                                {
+                                    if (story->Choices[choice].Team == Team::Type::NONE)
+                                    {
+                                        selected = Engine::FIRST(party);
+                                    }
+                                    else
+                                    {
+                                        selected = Engine::FIRST(party, story->Choices[choice].Team);
+                                    }
+                                }
+                                else
+                                {
+                                    selected = selectPartyMember(window, renderer, party, story->Choices[choice].Team, Equipment::NONE, Control::Type::PARTY);
+                                }
+                            }
+
+                            if ((story->Choices[choice].Team == Team::Type::NONE || party.Members[selected].Team == story->Choices[choice].Team) && party.Members[selected].Type != story->Choices[choice].Character)
+                            {
+                                next = findStory(story->Choices[choice].Destination);
+
+                                done = true;
+
+                                break;
+                            }
+                            else
+                            {
+                                if (party.Members[selected].Type == story->Choices[choice].Character)
+                                {
+                                    message = "You cannot select " + std::string(party.Members[selected].Name) + "!";
+                                }
+                                else
+                                {
+                                    message = std::string(party.Members[selected].Name) + " is not part of the " + std::string(Team::Descriptions[story->Choices[choice].Team]) + " team!";
+                                }
 
                                 error = true;
                             }

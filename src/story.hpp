@@ -68,7 +68,8 @@ namespace Choice
         GAIN_MORALE,
         SET_PARTY_ORDER,
         ORDER_SKILL_CHECK,
-        RESET_SHOP
+        RESET_SHOP,
+        CHOOSE_CHARACTER_EXCEPT
     };
 
     class Base
@@ -101,6 +102,8 @@ namespace Choice
         Location::Type Location = Location::Type::NONE;
 
         Team::Type Team = Team::Type::NONE;
+
+        Character::Type Character = Character::Type::NONE;
 
         int Value = 0;
 
@@ -606,6 +609,17 @@ namespace Choice
             Value = value;
 
             Difficulty = difficulty;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, Character::Type character)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Character = character;
         }
     };
 

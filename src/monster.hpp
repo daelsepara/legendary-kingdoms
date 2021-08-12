@@ -34,7 +34,8 @@ namespace Monster
         SPIDER_WITH_SWARM,
         TOMMUL,
         SKELETON_ARCHERS,
-        JUNGLE
+        JUNGLE,
+        BEETLE_SWARM
     };
 
     class Base
