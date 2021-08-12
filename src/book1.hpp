@@ -15116,6 +15116,296 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 162}; }
     };
 
+    class Story490 : public Story::Base
+    {
+    public:
+        Story490()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 490;
+
+            Text = "The dragonyak bull is delighted to see you again, and bids you join the herd at the waterside. You chat idly with the bull as he tells you the ancient stories of his clan.\n\n\"Once,\" he claims, \"the herd found itself lost in the shadowlands. Seeking shelter from the blistering sun they entered the Shaded Gate. Many cattle were lost. But then Ganch, the spirit bull, appeared, and led the herd west, then south, then west again. The Shaded Gate was found, and the herd emerged into the sun once more, weaker but wiser.\"";
+
+            Bye = "Out of the mouths of bulls, eh? You thank the dragonyaks for their tale, and venture onwards.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 115}; }
+    };
+
+    class Story491 : public Story::Base
+    {
+    public:
+        Story491()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 491;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                if (party.Members[party.LastSelected].Type == Character::Type::AKIHIRO_OF_CHALICE)
+                {
+                    return {Book::Type::BOOK1, 470};
+                }
+                else if (party.Members[party.LastSelected].Type == Character::Type::AMELIA_PASS_DAYNE)
+                {
+                    return {Book::Type::BOOK1, 470};
+                }
+                else
+                {
+                    return {Book::Type::BOOK1, 613};
+                }
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 765};
+            }
+        }
+    };
+
+    class Story492 : public Story::Base
+    {
+    public:
+        Story492()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 492;
+
+            Text = "You close your eyes and focus. You can feel them... madshards reverberating in the earth, beneath the temple. Extracting them won't be easy. You will need hundreds of diggers to tear up the unwilling earth. What you will find below... who knows?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Hire workers from Cursus to excavate the ruins for 5000 silver coins", {Book::Type::BOOK1, 571}, Choice::Type::GAIN_MONEY, -5000));
+            Choices.push_back(Choice::Base("Leave the wretched fragments in their earthy tomb", {Book::Type::BOOK1, 515}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(81)}))
+            {
+                return {Book::Type::BOOK1, 887};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story493 : public Story::Base
+    {
+    public:
+        Story493()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 493;
+
+            Text = "The area is seemingly pockmarked with caves. You decide to search one at random.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Search randomly", {{1, NULL, {Book::Type::BOOK1, 797}}, {2, NULL, {Book::Type::BOOK1, 580}}, {3, NULL, {Book::Type::BOOK1, 78}}, {4, NULL, {Book::Type::BOOK1, 855}}, {6, NULL, {Book::Type::BOOK1, 356}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(50)}) && Engine::IN_PARTY(party, Character::Type::AKIHIRO_OF_CHALICE))
+            {
+                return {Book::Type::BOOK1, 699};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story494 : public Story::Base
+    {
+    public:
+        Story494()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 494;
+
+            Text = "You are in a large, rectangular chamber which features a number of complete skeletons which have been carefully assembled and hung up on frames. The centre of the room is dominated by a large stone coffin, whose lid has been carved to resemble a knight.\n\nThere are three doors in the chamber, one in the north wall, a strong looking door in the south wall, and a flimsier looking door in the southwest corner.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Poke one of the skeletons", {Book::Type::BOOK1, 876}));
+            Choices.push_back(Choice::Base("Examine the coffin", {Book::Type::BOOK1, 414}));
+            Choices.push_back(Choice::Base("Go through the north door", {Book::Type::BOOK1, 717}));
+            Choices.push_back(Choice::Base("Go through the south door", {Book::Type::BOOK1, 18}));
+            Choices.push_back(Choice::Base("Go through the south-west door", {Book::Type::BOOK1, 127}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(58)}))
+            {
+                return {Book::Type::BOOK1, 211};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story495 : public Story::Base
+    {
+    public:
+        Story495()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 495;
+
+            Text = "During your evening meal, one of your characters has wandered off.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose which character wandered off", {Book::Type::BOOK1, 285}, Choice::Type::CHOOSE_PARTY_MEMBER));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story496 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story496()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 496;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            PreText = "You invoke the spell and call up to the monkeys. \"Ho there, groundlings!\" cries one of the monkeys. \"You bring exciting things into our home, do you? Glittering treasures and strange objects of metal and wood?\"\n\n\"What of it?\" you ask.\n\n\"Give us! Give us!\" chant the monkeys. \"Give us something! Or we take it all!\"";
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(43)}))
+            {
+                PreText += "\n\nYou must decide what to do.";
+
+                Choices.push_back(Choice::Base("Give the monkeys an item", {Book::Type::BOOK1, 412}, Choice::Type::LOSE_EQUIPMENT, 1));
+                Choices.push_back(Choice::Base("Make a run for it", {Book::Type::BOOK1, 879}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 261}; }
+    };
+
+    class Story497 : public Story::Base
+    {
+    public:
+        Engine::Destination destination;
+
+        Story497()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 497;
+
+            Text = "You step through the archway, the chamber as black as pitch. You carefully shuffle your feet as you walk, nervous of stepping on anything unpleasant, such as trap. You join hands to keep track of where you are, eventually getting the idea of the shape of the room. The jingle of coins through your fingers as you come to a few flat surfaces suggest that something valuable is here. Sadly, you are not alone. Two snakemen are hiding, weapons drawn, in the corners of the room. Though they are blind like you, they can smell you with their tongues and feel an impression of your body heat. You cannot be certain of where the exit is and must fight to the death!\n\nNote: The snakemen strike first in this battle because they are ambushing you. If you have a HYGLIPH FLOWER the snakemen are put off by its pungent odour and require a 6+ on their attack rolls to inflict damage during this battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::LAST_IN_COMBAT});
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 5, 6, 6, 0),
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 5, 6, 5, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 298}; }
+    };
+
+    class Story498 : public Story::Base
+    {
+    public:
+        Story498()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 498;
+
+            Location = Location::Type::LHASBREATH;
+
+            Text = "Straining every sinew, you scrape the door open inch by inch. To your anger you see that this door merely leads to the vault's antechamber, an even large vault door standing on the other side that would take a dozen men to open. Fortunately, the antechamber does contain some easily accessible treasure. You find 500 silver coins, an odd crystalline wand labelled as a wayfinder rod, a bar of GOLD BULLION and a block of INCENSE.\n\nThere are also a number of financial records, none of which look valuable at first. However, one book catches your eye. It is a ROYAL LEDGER, which bears the crest and authority of House Goldwell, the royal family of Royce. In it are detailed a number of transactions to purchase slaves from Cursus for the royal plantations in the Splintered Isles. The purchase of slaves is illegal in Royce... what is the king up to? Take the ledger, if you wish.\n\nBreaking into the patriarch's vault has been the heist of a lifetime.\n\nNote: You gained the code A83.";
+
+            Bye = "You silently return to the ground floor of the pyramid.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 574}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::STEALTH}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 500);
+
+            Take = {Equipment::GOLD_BULLION, Equipment::INCENSE, Equipment::ROYAL_LEDGER};
+
+            Limit = 3;
+
+            Engine::GET_CODES(party, {Codes::A(83)});
+        }
+    };
+
+    class Story499 : public Story::Base
+    {
+    public:
+        Story499()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 499;
+
+            Text = "You are sailing just south of the temple city of Cursus. Long war galleys patrol the coast, black-clad priests whipping the slave rowers in time to dreadful hymns. Traders are rare here, but so are pirates, with little opportunity and considerable danger facing any that dare to raid the coast.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Put into Cursus harbour", {Book::Type::BOOK1, 33}));
+            Choices.push_back(Choice::Base("Sail west, along the coast", {Book::Type::BOOK1, 198}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -15642,6 +15932,16 @@ namespace Book1
     auto story487 = Story487();
     auto story488 = Story488();
     auto story489 = Story489();
+    auto story490 = Story490();
+    auto story491 = Story491();
+    auto story492 = Story492();
+    auto story493 = Story493();
+    auto story494 = Story494();
+    auto story495 = Story495();
+    auto story496 = Story496();
+    auto story497 = Story497();
+    auto story498 = Story498();
+    auto story499 = Story499();
 
     void InitializeStories()
     {
@@ -15698,7 +15998,8 @@ namespace Book1
             &story450, &story451, &story452, &story453, &story454, &story455, &story456, &story457, &story458, &story459,
             &story460, &story461, &story462, &story463, &story464, &story465, &story466, &story467, &story468, &story469,
             &story470, &story471, &story472, &story473, &story474, &story475, &story476, &story477, &story478, &story479,
-            &story480, &story481, &story482, &story483, &story484, &story485, &story486, &story487, &story488, &story489};
+            &story480, &story481, &story482, &story483, &story484, &story485, &story486, &story487, &story488, &story489,
+            &story490, &story491, &story492, &story493, &story494, &story495, &story496, &story497, &story498, &story499};
     }
 }
 #endif

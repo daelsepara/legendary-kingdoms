@@ -5258,7 +5258,9 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 auto font_size = 24;
 
                 const char *choices_attack[4] = {"Attack", "Add Focus", "Remove Focus", "Cancel"};
+                const char *choices_skipattack[5] = {"Attack", "Skip", "Add Focus", "Remove Focus", "Cancel"};
                 const char *choices_defend[1] = {"Attack"};
+                const char *choices_skipdefend[2] = {"Attack", "Skip"};
                 const char *choices_damage[1] = {"Deal Damage"};
                 const char *choices_end[1] = {"Done"};
                 const char *choices_assign[1] = {"Assign"};
@@ -5280,8 +5282,19 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 controls_attack[2].Type = Control::Type::MINUS;
                 controls_attack[3].Type = Control::Type::BACK;
 
+                auto controls_skipattack = createFixedTextButtons(choices_skipattack, 5, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                controls_skipattack[0].Type = Control::Type::CONFIRM;
+                controls_skipattack[1].Type = Control::Type::NEXT;
+                controls_skipattack[2].Type = Control::Type::PLUS;
+                controls_skipattack[3].Type = Control::Type::MINUS;
+                controls_skipattack[4].Type = Control::Type::BACK;
+
                 auto controls_defend = createFixedTextButtons(choices_defend, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
                 controls_defend[0].Type = Control::Type::CONFIRM;
+
+                auto controls_skipdefend = createFixedTextButtons(choices_skipdefend, 2, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+                controls_skipdefend[0].Type = Control::Type::CONFIRM;
+                controls_skipdefend[1].Type = Control::Type::NEXT;
 
                 auto controls_damage = createFixedTextButtons(choices_damage, 1, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
                 controls_damage[0].Type = Control::Type::CONFIRM;
@@ -20727,13 +20740,14 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                             }
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::LOSE_EQUIPMENT)
+                        {
+                            // TODO: Select equipment to lose
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::PAY_WITH)
                         {
                         }
                         else if (story->Choices[choice].Type == Choice::Type::SELL)
-                        {
-                        }
-                        else if (story->Choices[choice].Type == Choice::Type::LOSE_EQUIPMENT)
                         {
                         }
                         else if (story->Choices[choice].Type == Choice::Type::BRIBE)

@@ -91,7 +91,8 @@ namespace Equipment
         WAYFINDER_ROD,
         TOME_OF_KNOWLEDGE2,
         SCROLLS_OF_LORE3,
-        SKALLOS_RUNEBLADE
+        SKALLOS_RUNEBLADE,
+        ROYAL_LEDGER
     };
 
     class Base
@@ -252,6 +253,7 @@ namespace Equipment
     auto TOME_OF_KNOWLEDGE2 = Equipment::Base("TOME OF KNOWLEDGE", "TOME OF KNOWLEDGE", Equipment::Class::NORMAL, Equipment::Type::TOME_OF_KNOWLEDGE2, Attribute::Type::LORE, 2, false);
     auto SCROLLS_OF_LORE3 = Equipment::Base("SCROLLS OF LORE", "SCROLLS OF LORE", Equipment::Class::NORMAL, Equipment::Type::SCROLLS_OF_LORE3, Attribute::Type::LORE, 3, false);
     auto SKALLOS_RUNEBLADE = Equipment::Base("SKALLOS RUNEBLADE", "SKALLOS RUNEBLADE", Equipment::Class::WEAPON, Equipment::Type::SKALLOS_RUNEBLADE, Attribute::Type::FIGHTING3_LORE2, 3, false);
+    auto ROYAL_LEDGER = Equipment::Base("ROYAL LEDGER", "ROYAL LEDGER", Equipment::Class::NORMAL, Equipment::Type::ROYAL_LEDGER, Attribute::Type::NONE, 0, false);
 }
 
 #endif

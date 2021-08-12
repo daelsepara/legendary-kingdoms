@@ -33,7 +33,8 @@ namespace Monster
         ORC_LEADER,
         SPIDER_WITH_SWARM,
         TOMMUL,
-        SKELETON_ARCHERS
+        SKELETON_ARCHERS,
+        JUNGLE
     };
 
     class Base
