@@ -5745,7 +5745,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                             selected = false;
 
-                            combat_damage = 0;
+                            combat_damage = 100;
 
                             break;
                         }
@@ -11830,7 +11830,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                         }
                                                         else
                                                         {
-                                                            if (damage == 0 && hasAttacked.size() == (Engine::TEAM_SIZE(party, team) - 1))
+                                                            if (damage == 100 && hasAttacked.size() == (Engine::TEAM_SIZE(party, team) - 1))
                                                             {
                                                                 flash_message = true;
 
@@ -11842,7 +11842,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                             {
                                                                 hasAttacked.push_back(result);
 
-                                                                if (damage == 0)
+                                                                if (damage == 100)
                                                                 {
                                                                     flash_message = true;
 
