@@ -11756,9 +11756,25 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     flash_message = true;
 
-                                    message = "The slaves attack the orcs! All orcs lose 1 Health point!";
+                                    auto slaves_damage = -1;
 
-                                    Engine::GAIN_HEALTH(monsters, Monster::Type::ORC, -1);
+                                    message = "The slaves attack the orcs! All orcs lose ";
+
+                                    if (Engine::VERIFY_CODES(party, {Codes::Type::SLAVES_DAMAGE_FOR2}))
+                                    {
+                                        slaves_damage = -2;
+                                    }
+
+                                    message += std::to_string(-slaves_damage) + " Health point";
+
+                                    if (std::abs(slaves_damage) > 1)
+                                    {
+                                        message += "s";
+                                    }
+
+                                    message += "!";
+
+                                    Engine::GAIN_HEALTH(monsters, Monster::Type::ORC, slaves_damage);
 
                                     allies_attack = true;
 

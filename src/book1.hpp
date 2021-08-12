@@ -7,6 +7,27 @@ namespace Book1
 {
     auto Stories = std::vector<Story::Base *>();
 
+    void LOST_SCHOLAR(Party::Base &party)
+    {
+        if (!Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR3}))
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR2}))
+            {
+                Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR3});
+                Engine::LOSE_CODES(party, {Codes::Type::LOST_SCHOLAR2});
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR1}))
+            {
+                Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR2});
+                Engine::LOSE_CODES(party, {Codes::Type::LOST_SCHOLAR1});
+            }
+            else
+            {
+                Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR1});
+            }
+        }
+    }
+
     class Story001 : public Story::Base
     {
     public:
@@ -6115,7 +6136,7 @@ namespace Book1
             Text = "In order to get the weapons, you will need to split up your party. Choose up to three party members to perform a distraction, and up to two party members to steal the weapons. You must have at least one party member performing each mission.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Decide who will undertake each task", {Book::Type::BOOK1, 169}, Choice::Type::ASSIGN_TEAMS, {{Team::Type::WEAPONS, 1, 4}, {Team::Type::DISTRACTION, 1, 4}}, 2));
+            Choices.push_back(Choice::Base("Decide who will undertake each task", {Book::Type::BOOK1, 169}, Choice::Type::ASSIGN_TEAMS, {{Team::Type::WEAPONS, 1, 2}, {Team::Type::DISTRACTION, 1, 3}}, 2));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -6684,13 +6705,13 @@ namespace Book1
     class Story213 : public Story::Base
     {
     public:
+        std::string PreText = "";
+
         Story213()
         {
             BookID = Book::Type::BOOK1;
 
             ID = 213;
-
-            Text = "You draw your weapons and prepare for a mighty battle. You are pleased to see the slaves, who realise that this is their best chance of escape, turn on their masters with their picks and shovels.\n\nNote: The slaves will assist you in this battle. After all your party members have attacked, the slaves will inflict 1 point of Health damage on each orc, except the orc leader -- they are too terrified to strike him!";
 
             Choices.clear();
 
@@ -6699,6 +6720,19 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            PreText = "You draw your weapons and prepare for a mighty battle. You are pleased to see the slaves, who realise that this is their best chance of escape, turn on their masters with their picks and shovels.\n\nNote: The slaves will assist you in this battle. After all your party members have attacked, the slaves will inflict ";
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::SLAVES_DAMAGE_FOR2}))
+            {
+                PreText += "2 points";
+            }
+            else
+            {
+                PreText += "1 point";
+            }
+
+            PreText += " of Health damage on each orc, except the orc leader -- they are too terrified to strike him!";
+
             CanFlee = false;
 
             Monsters = {
@@ -6710,6 +6744,8 @@ namespace Book1
                 Monster::Base("Orc Leader", Monster::Type::ORC_LEADER, 7, 4, 4, 14, 0)};
 
             Allies = {Allies::Type::SLAVES};
+
+            Text = PreText.c_str();
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 707}; }
@@ -9362,23 +9398,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            if (!Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR3}))
-            {
-                if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR2}))
-                {
-                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR3});
-                    Engine::LOSE_CODES(party, {Codes::Type::LOST_SCHOLAR2});
-                }
-                else if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR1}))
-                {
-                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR2});
-                    Engine::LOSE_CODES(party, {Codes::Type::LOST_SCHOLAR1});
-                }
-                else
-                {
-                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR1});
-                }
-            }
+            Book1::LOST_SCHOLAR(party);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 150}; }
@@ -10490,23 +10510,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            if (!Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR3}))
-            {
-                if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR2}))
-                {
-                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR3});
-                    Engine::LOSE_CODES(party, {Codes::Type::LOST_SCHOLAR2});
-                }
-                else if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR1}))
-                {
-                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR2});
-                    Engine::LOSE_CODES(party, {Codes::Type::LOST_SCHOLAR1});
-                }
-                else
-                {
-                    Engine::GET_CODES(party, {Codes::Type::LOST_SCHOLAR1});
-                }
-            }
+            Book1::LOST_SCHOLAR(party);
 
             Engine::GAIN_HEALTH(party, -1);
         }
@@ -12221,10 +12225,21 @@ namespace Book1
 
             Text = "The overseer is not present, but guards and servants walk by the door frequently. You need to be in and out as quickly as possible.\n\nNote: Multiple people might be spotted, so only one party member in the weapon stealing team can be chosen for this task.";
 
-            Choices.clear();
-            Choices.push_back(Choice::Base("Steal the key (Individual check: Stealth 4+, Successes: 2)", {Book::Type::BOOK1, 147}, {Book::Type::BOOK1, 483}, Team::Type::WEAPONS, {Attribute::Type::STEALTH}, 4, 2));
-
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::WEAPON_AND_DISTRACTION}))
+            {
+                Choices.push_back(Choice::Base("Steal the key (Individual check: Stealth 4+, Successes: 2)", {Book::Type::BOOK1, 147}, {Book::Type::BOOK1, 483}, {Attribute::Type::STEALTH}, 4, 2));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Steal the key (Individual check: Stealth 4+, Successes: 2)", {Book::Type::BOOK1, 147}, {Book::Type::BOOK1, 483}, Team::Type::WEAPONS, {Attribute::Type::STEALTH}, 4, 2));
+            }
         }
     };
 
@@ -12667,10 +12682,21 @@ namespace Book1
 
             Text = "Picking up a nearby bench you attempt to ram the gatehouse door.\n\nNote: Only members of the weapon stealing team may help in this test.";
 
-            Choices.clear();
-            Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::WEAPONS, {Attribute::Type::FIGHTING}, 5, 3));
-
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::WEAPON_AND_DISTRACTION}))
+            {
+                Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 3));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::WEAPONS, {Attribute::Type::FIGHTING}, 5, 3));
+            }
         }
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
@@ -14118,6 +14144,327 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 564}; }
     };
 
+    class Story460 : public Story::Base
+    {
+    public:
+        Story460()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 460;
+
+            Image = "images/book1/driest_place.png";
+
+            Text = "You have entered the driest place in the Valley of Bones.\n\nThe still, brown-yellow sands glitter with salt crystals, and within an hour your throats are as dry as parchment. Your skin and eyes begin to sting, even as you rapidly drain your water supplies.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Survive the Salt Plains (Team check: Survival 4+, Successes: 6)", {Book::Type::BOOK1, 436}, {Book::Type::BOOK1, 864}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 6));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story461 : public Story::Base
+    {
+    public:
+        Story461()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 461;
+
+            Text = "The spiders seem unsure about attacking such large, fire-wielding prey, especially those that are respecting the integrity of their nests. Heart in your mouth, you move around the egg clusters carefully, not breaking a single one, before clambering out of the crevice along a rubble-scattered ramp. Another chamber beckons on the other side.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 347}; }
+    };
+
+    class Story462 : public Story::Base
+    {
+    public:
+        Story462()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 462;
+
+            Text = "You become dreadfully lost, wandering through the jungle aimlessly, trying to find a familiar landmark. Suddenly, behind you, you hear a terrible cry. You spin around to see that one of the scholars has fallen into a hidden pit. Dashing to the edge of the pit you move to help but see that the poor woman has been impaled on sharpened stakes which have been hammered into the bottom. This was clearly no accident!\n\nYou have lost one scholar. Emlyn refrains from cursing you out loud, but you see the disappointment and fear in her eyes.";
+
+            Bye = "After several hours more fruitless wandering you eventually emerge back onto the path, now clear of water.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Book1::LOST_SCHOLAR(party);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 359}; }
+    };
+
+    class Story463 : public Story::Base
+    {
+    public:
+        Story463()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 463;
+
+            Text = "You are not quite in position to save Brash. He immediately loses 3 Health points. You continue the pursuit.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                if (party.Members[party.LastSelected].Type == Character::Type::AMELIA_PASS_DAYNE)
+                {
+                    return {Book::Type::BOOK1, 831};
+                }
+                else if (party.Members[party.LastSelected].Type == Character::Type::AKIHIRO_OF_CHALICE)
+                {
+                    return {Book::Type::BOOK1, 335};
+                }
+                else
+                {
+                    return {Book::Type::NONE, -1};
+                }
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            auto brash = Engine::FIND_CHARACTER(party, Character::Type::BRASH);
+
+            if (Engine::IS_ACTIVE(party, brash))
+            {
+                Engine::GAIN_HEALTH(party.Members[brash], -3);
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 60}; }
+    };
+
+    class Story464 : public Story::Base
+    {
+    public:
+        Story464()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 464;
+
+            Text = "You cannot determine how the runes might be deactivated. In fact, you are beginning to suspect that the runes might not be magical at all.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Open the door regardless", {Book::Type::BOOK1, 673}));
+            Choices.push_back(Choice::Base("Leave the rest of the mission to the climbing team", {Book::Type::BOOK1, 728}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story465 : public Story::Base
+    {
+    public:
+        Story465()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 465;
+
+            Text = "You look in vain for your foe. Clearly Montague has outmatched you again! Cursing under your breath, you return to the city centre.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
+    };
+
+    class Story466 : public Story::Base
+    {
+    public:
+        Story466()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 466;
+
+            Text = "Sandstorms are common here, the wind whipping up sand that feels like stinging hornets on your flesh.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::HAS_SPELL(party, {Spells::Type::NATURE_WARD}))
+            {
+                Choices.push_back(Choice::Base("Cast Nature Ward", {Book::Type::BOOK1, 784}));
+                Choices.push_back(Choice::Base("Brave the sandstorm", {Book::Type::BOOK1, -466}));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(19)}))
+            {
+                return {Book::Type::BOOK1, 396};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, -466};
+            }
+        }
+    };
+
+    class Event466 : public Story::Base
+    {
+    public:
+        Event466()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -466;
+
+            DisplayID = 466;
+
+            Text = "The storm is becoming unbearable. Fortunately, you espy a good-sized tent through the storm, made of blue canvass. Desperate, you duck into the tent to avoid the storm. Inside is a priest, wearing embroidered blue robes. He is initially startled but begins to relax when you assure him you mean him no harm. His name is Kopu, and he is a priest of Kalu, the god of time and harvest. He offers you shelter, and bids his slaves provide you with wine and food.\n\n\"It is rare to encounter civilised people in these parts,\" admits Kopu. \"The worship of Kalu has been banned by the patriarch of Cursus, and since then we priests have lived the lives of nomads, waiting for a more tolerant ruler to let us rebuild our temples. I wonder if you might be able to help me with a problem?\"\n\n\"It depends what it is,\" you shrug.\n\n\"I am attempting to translate the calendar of the Bando people into the common tongue,\" he explains. \"Calendars are sacred to Kalu, you see. It is the hope of the priesthood that we can gather calendars of all the peoples of the world to create the Great Calendar. From this we could divine the ultimate truths of the universe and predict the future.\"\n\n\"Well... if that is what you believe...\" you say uncertainly.\n\n\"Sadly I have hit a snag,\" he says. \"This translation book I have acquired is a fake. Evidently the author had never come across a speaker of Bando in his life! I need someone skilled in Bando to translate the symbols on this calendar I have acquired.\"\n\nNote: Your entire party regain 1 Healh point from eating and drinking.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(19)}))
+            {
+                return {Book::Type::BOOK1, 396};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, 1);
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::SPEAK_BANDO}))
+            {
+                Choices.push_back(Choice::Base("Attempt the translation yourself", {Book::Type::BOOK1, 288}));
+                Choices.push_back(Choice::Base("Decline to help the strange priest", {Book::Type::BOOK1, 585}));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 50}; }
+    };
+
+    class Story467 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story467()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 467;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Pass through the door in the western wall", {Book::Type::BOOK1, 256}));
+            Choices.push_back(Choice::Base("Return to the corridor through the east door", {Book::Type::BOOK1, 755}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "Something has clearly gone wrong. As you heat the mixture it explodes violently, shattering the delicate equipment and scorching you.";
+
+            Engine::GAIN_HEALTH(party, -2);
+
+            if (Engine::COUNT(party) > 0)
+            {
+                PreText += " Nursing your injuries, you decide to make your way on.\n\nYou gain the code A73.";
+
+                Engine::GET_CODES(party, {Codes::A(73)});
+            }
+            
+            PreText += "\n\nNote: Each party member loses 2 Health points.";
+
+            Text = PreText.c_str();
+        }
+    };
+
+    class Story468 : public Story::Base
+    {
+    public:
+        Story468()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 468;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "You return empty-handed to Akini, apologising for your failure. Akini thanks you for your efforts but is resigned to a grisly death at the hands of her lover. You cannot stay to watch, and leave, despairing at the savagery of the Saltdad court.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story469 : public Story::Base
+    {
+    public:
+        Story469()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 469;
+
+            Text = "Quick as a flash you dash across the room and come amongst the slaves. You rip the restraining bolts from their manacles, freeing their hands, as your companions prepare to jump from their hiding places. Eventually the orcs spot you, but not before the majority of the slaves are freed.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::SLAVES_DAMAGE_FOR2});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 213}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -14613,6 +14960,17 @@ namespace Book1
     auto story457 = Story457();
     auto story458 = Story458();
     auto story459 = Story459();
+    auto story460 = Story460();
+    auto story461 = Story461();
+    auto story462 = Story462();
+    auto story463 = Story463();
+    auto story464 = Story464();
+    auto story465 = Story465();
+    auto story466 = Story466();
+    auto event466 = Event466();
+    auto story467 = Story467();
+    auto story468 = Story468();
+    auto story469 = Story469();
 
     void InitializeStories()
     {
@@ -14620,7 +14978,7 @@ namespace Book1
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
-            &event343, &event388, &event397, &event400, &event406, &event408,
+            &event343, &event388, &event397, &event400, &event406, &event408, &event466,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -14666,7 +15024,8 @@ namespace Book1
             &story420, &story421, &story422, &story423, &story424, &story425, &story426, &story427, &story428, &story429,
             &story430, &story431, &story432, &story433, &story434, &story435, &story436, &story437, &story438, &story439,
             &story440, &story441, &story442, &story443, &story444, &story445, &story446, &story447, &story448, &story449,
-            &story450, &story451, &story452, &story453, &story454, &story455, &story456, &story457, &story458, &story459};
+            &story450, &story451, &story452, &story453, &story454, &story455, &story456, &story457, &story458, &story459,
+            &story460, &story461, &story462, &story463, &story464, &story465, &story466, &story467, &story468, &story469};
     }
 }
 #endif
