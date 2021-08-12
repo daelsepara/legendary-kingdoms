@@ -113,7 +113,7 @@ namespace Book1
 
             ID = 3;
 
-            Text = "The treasure chest contains 200 silver coins and a BLUESTONE. Take what you wish.\n\nYou gained the code A45.";
+            Text = "The treasure chest contains 200 silver coins and a BLUESTONE. Take what you wish.\n\nNote: You gained the code A45.";
 
             Bye = "Not wishing to tarry longer, you depart the chamber and return to the crossroads.";
 
@@ -344,7 +344,7 @@ namespace Book1
 
             ID = 9;
 
-            Text = "With a high kick you send the final monk sprawling. The other monks in the temple lower their eyes and return to their duties, unwilling to block your progress further. You retrieve your weapon and march smartly into the temple.\n\nHonnu is waiting for you, cross-legged on the floor. You join him in meditation for an hour or so, your companions venturing elsewhere in the city now they can see you are safe. \"It is rare for a supplicant to be granted the trials of perfection twice, but you are an unusual man, Akihiro. You must know that your father never returned from the trials. But I sense in you a steel he never had.\"\n\n\"Thank you, Honnu,\" you say, bowing your head.\n\n\"There would be little point in having you study at the temple, you are already skilled in your craft,\" shrugs Honnu. \"Instead I shall send you straight onto your tasks. Two must be completed before you are deemed worthy. It is traditional to send an applicant to retrieve some trifling artefact as proof of dedication; a tedious matter, since the only item of true worth is enlightenment. Therefore, I bid you find me a SILVER IDOL. Find yourself, Akihiro, whilst you are at it.\"\n\n\"Where can I find a SILVER IDOL?\" you ask unsurely.\n\n\"I'm sure more than one exists, but a man of open mind and willing to embrace his destiny might find one in the caves of Uranu,\" suggests Honnu. \"That place has tested, and slain, many a kensai aspirant. Go wisely, Akihiro. I shall see you soon.\"\n\nYou gained the code A50.";
+            Text = "With a high kick you send the final monk sprawling. The other monks in the temple lower their eyes and return to their duties, unwilling to block your progress further. You retrieve your weapon and march smartly into the temple.\n\nHonnu is waiting for you, cross-legged on the floor. You join him in meditation for an hour or so, your companions venturing elsewhere in the city now they can see you are safe. \"It is rare for a supplicant to be granted the trials of perfection twice, but you are an unusual man, Akihiro. You must know that your father never returned from the trials. But I sense in you a steel he never had.\"\n\n\"Thank you, Honnu,\" you say, bowing your head.\n\n\"There would be little point in having you study at the temple, you are already skilled in your craft,\" shrugs Honnu. \"Instead I shall send you straight onto your tasks. Two must be completed before you are deemed worthy. It is traditional to send an applicant to retrieve some trifling artefact as proof of dedication; a tedious matter, since the only item of true worth is enlightenment. Therefore, I bid you find me a SILVER IDOL. Find yourself, Akihiro, whilst you are at it.\"\n\n\"Where can I find a SILVER IDOL?\" you ask unsurely.\n\n\"I'm sure more than one exists, but a man of open mind and willing to embrace his destiny might find one in the caves of Uranu,\" suggests Honnu. \"That place has tested, and slain, many a kensai aspirant. Go wisely, Akihiro. I shall see you soon.\"\n\nNote: You gained the code A50.";
 
             Bye = "You rise, bow, and go to re-join your companions.";
 
@@ -372,7 +372,7 @@ namespace Book1
 
             ID = 10;
 
-            Text = "\"You should send the man to the Church of Cursus and have priests ritually scar him,\" says Ti'quon coldly.\n\n\"That way he shall be both punished and spiritually improved.\"\n\n\"Yes!\" hisses the King. \"The scarring is most painful. Send this dog to the church!\"\n\nThe poor man is dragged away, and the king retires with his councillors to discuss other business. You take the opportunity to slip away from the hall.\n\n\"A rather harsh punishment, ritual scarring,\" you mutter to Ti'quon as you exit the building.\n\n\"True enough,\" admits Ti'quon. \"Except that I noticed the poor man had already been scarred by the priests, and it is forbidden to perform the ritual twice. Getting him out of the sight of the mad king seemed to be the most important thing.\"\n\nYou shake your head, smiling.\n\nYou gained the code A34.";
+            Text = "\"You should send the man to the Church of Cursus and have priests ritually scar him,\" says Ti'quon coldly.\n\n\"That way he shall be both punished and spiritually improved.\"\n\n\"Yes!\" hisses the King. \"The scarring is most painful. Send this dog to the church!\"\n\nThe poor man is dragged away, and the king retires with his councillors to discuss other business. You take the opportunity to slip away from the hall.\n\n\"A rather harsh punishment, ritual scarring,\" you mutter to Ti'quon as you exit the building.\n\n\"True enough,\" admits Ti'quon. \"Except that I noticed the poor man had already been scarred by the priests, and it is forbidden to perform the ritual twice. Getting him out of the sight of the mad king seemed to be the most important thing.\"\n\nYou shake your head, smiling.\n\nNote: You gained the code A34.";
 
             Choices.clear();
 
@@ -804,7 +804,7 @@ namespace Book1
 
             ID = 24;
 
-            Text = "You have entered a chamber which is well furnished with flags and banners. It has the feel of a Chalice temple, although there is no sign that anyone actually worships here. A statue of a kneeling monk sits at the far end of the room. There are two exits from the chamber, each of them leading to a tunnel with stairs ascending.\n\nYou gain the code A77.\n\nSuddenly you see a light coming down the left-hand stairwell. Something is coming... but it is walking softly, as you cannot make out the sound of footsteps.";
+            Text = "You have entered a chamber which is well furnished with flags and banners. It has the feel of a Chalice temple, although there is no sign that anyone actually worships here. A statue of a kneeling monk sits at the far end of the room. There are two exits from the chamber, each of them leading to a tunnel with stairs ascending.\n\nSuddenly you see a light coming down the left-hand stairwell. Something is coming... but it is walking softly, as you cannot make out the sound of footsteps.\n\nNote: You gained the code A77.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Hide behind the statue", {Book::Type::BOOK1, 782}));
@@ -1290,7 +1290,7 @@ namespace Book1
 
             ID = 38;
 
-            Text = "You kill the orc in a single stroke. He keels over, the book slipping from his grasp.\n\nYou gain the code A71.";
+            Text = "You kill the orc in a single stroke. He keels over, the book slipping from his grasp.\n\nNote: You gained the code A71.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Examine the black book he was reading", {Book::Type::BOOK1, 119}));
@@ -1332,7 +1332,7 @@ namespace Book1
 
             ID = 40;
 
-            Text = "With a dramatic flourish you unroll the DRAGON HEAD from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Lhasbreath Berserkers]: Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nYou gained the code A16.";
+            Text = "With a dramatic flourish you unroll the DRAGON HEAD from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Lhasbreath Berserkers]: Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nNote: You gained the code A16.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1));
@@ -1390,7 +1390,7 @@ namespace Book1
                 Choices.push_back(Choice::Base("Raise the maximum health points of your party by one point", {Book::Type::BOOK1, 313}, Choice::Type::PARTY_RAISE_HEALTH, 1));
             }
 
-            PreText += "\n\nYou gain the code A6.";
+            PreText += "\n\nNote: You gained the code A6.";
 
             Engine::GET_CODES(party, {Codes::A(6)});
 
@@ -1468,7 +1468,7 @@ namespace Book1
 
             ID = 43;
 
-            Text = "Janus is overjoyed to see the LOCKET. You hand it over to him and he cradles it in his hands. \"Now I can remember Alidale always!\" he sighs. He opens the LOCKET to have a look inside, when suddenly there is a flash and a profusion of smoke.\n\nStepping out of the smoke comes a young woman, a wizard by the looks of her, coughing and waving the smoke away from her face. \"Alidale?\" gasps Janus. \"Why! You don't look a day older than when you left for that temple!\"\n\n\"Janus!\" she cries overjoyed. \"You... do look a bit older, if I'm honest. I must have been in that locket for a long time.\"\n\nAlidale explains that she was surrounded by hideous serpent men and was forced to transport herself inside her locket for protection. The snake men assumed she had teleported away, but in fact she has been trapped in the locket for all these years. She never expected a rescue would take forty summers. She has little to reward you with but shares with you some of her many discoveries and insights into the ancient world that she has uncovered in her travels.\n\nYou gained the code A29.";
+            Text = "Janus is overjoyed to see the LOCKET. You hand it over to him and he cradles it in his hands. \"Now I can remember Alidale always!\" he sighs. He opens the LOCKET to have a look inside, when suddenly there is a flash and a profusion of smoke.\n\nStepping out of the smoke comes a young woman, a wizard by the looks of her, coughing and waving the smoke away from her face. \"Alidale?\" gasps Janus. \"Why! You don't look a day older than when you left for that temple!\"\n\n\"Janus!\" she cries overjoyed. \"You... do look a bit older, if I'm honest. I must have been in that locket for a long time.\"\n\nAlidale explains that she was surrounded by hideous serpent men and was forced to transport herself inside her locket for protection. The snake men assumed she had teleported away, but in fact she has been trapped in the locket for all these years. She never expected a rescue would take forty summers. She has little to reward you with but shares with you some of her many discoveries and insights into the ancient world that she has uncovered in her travels.\n\nNote: You gained the code A29.";
 
             Bye = "Bidding the odd couple farewell, you resume your journey.";
 
@@ -1647,7 +1647,7 @@ namespace Book1
 
             ID = 49;
 
-            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are RESTORED to MAXIMUM Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive 600 silver coins as a reward. In addition, he presents you with a SEAL OF HOUSE ROSS. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nYou gained the code A85.";
+            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are RESTORED to MAXIMUM Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive 600 silver coins as a reward. In addition, he presents you with a SEAL OF HOUSE ROSS. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nNote: You gained the code A85.";
 
             Bye = "Thanking Sir Lawrence and Emlyn for their generosity, you depart into the city.";
 
@@ -1816,7 +1816,7 @@ namespace Book1
 
             ID = 56;
 
-            Text = "You kiss the burning, rich-yellow sands as you emerge from the shadow lands. You are free from the tyranny of the monochrome world.\n\nYou gained the code A23.";
+            Text = "You kiss the burning, rich-yellow sands as you emerge from the shadow lands. You are free from the tyranny of the monochrome world.\n\nNote: You gained the code A23.";
 
             Bye = "You head north, directly away from the Blackwall.";
 
@@ -2047,7 +2047,7 @@ namespace Book1
 
             ID = 62;
 
-            Text = "That night, you stroll along the terrace, the night a canopy of stars, reflected in the watery rice paddies that surround the house. You need some fresh air. Being treated as a hero all day and night can be exhausting.\n\nYou spy Brash leaning back on a chair, his feet up on the railings, a cup of rice wine in hand. He stares out over the still landscape.\n\n\"Silver for your thoughts,\" you say, causing Brash to yelp in surprise, fall off his chair and crash to ground.\n\n\"Ah! Akihiro! Always catching me at my best!\" Brash says sheepishly. You offer him a hand up, the fair lad accepting, pulled almost into an embrace. He blushes and backs away.\n\n\"Not like you to lose your tongue, my friend,\" you smile. \"You've been avoiding me, I sense.\"\n\n\"A bit,\" he says. \"I just don't know what to do with myself these days...\"\n\n\"How so?\" you ask. When he doesn't respond you flick him a silver coin, which he catches with his quick reflexes. He looks at it in his hand and realises he has been fooled.\n\n\"I've been thinking about you,\" he admits. \"Quite a bit. I don't know what to do about it. The kind of feelings I have aren't allowed in Royce.\"\n\n\"They are not allowed anywhere,\" you say, joining him at the railings. \"There are many men who would rather kill than love. And more who would kill to stop love, no matter how earnest. I will never hurry you, Brash, but I do not accept uncertainty. If you feel for me what I feel for you, you must be sure. Once done, we cannot undo it.\"\n\nYou are disturbed by a creak on the floorboards. You turn to see your sister arriving on the terrace. \"Come, Akihiro, you are asked for! Do not keep the people from their hero!\"\n\n\"The price of fame,\" you smile. \"Come, Brash. Walking out on a party is not done.\"\n\nYou offer him your hand, and he accepts, squeezing before releasing.\n\nAkihiro has gained a HEART for Brash. Brash also gains a HEART for Akihiro.\n\nYou gained the code A98.";
+            Text = "That night, you stroll along the terrace, the night a canopy of stars, reflected in the watery rice paddies that surround the house. You need some fresh air. Being treated as a hero all day and night can be exhausting.\n\nYou spy Brash leaning back on a chair, his feet up on the railings, a cup of rice wine in hand. He stares out over the still landscape.\n\n\"Silver for your thoughts,\" you say, causing Brash to yelp in surprise, fall off his chair and crash to ground.\n\n\"Ah! Akihiro! Always catching me at my best!\" Brash says sheepishly. You offer him a hand up, the fair lad accepting, pulled almost into an embrace. He blushes and backs away.\n\n\"Not like you to lose your tongue, my friend,\" you smile. \"You've been avoiding me, I sense.\"\n\n\"A bit,\" he says. \"I just don't know what to do with myself these days...\"\n\n\"How so?\" you ask. When he doesn't respond you flick him a silver coin, which he catches with his quick reflexes. He looks at it in his hand and realises he has been fooled.\n\n\"I've been thinking about you,\" he admits. \"Quite a bit. I don't know what to do about it. The kind of feelings I have aren't allowed in Royce.\"\n\n\"They are not allowed anywhere,\" you say, joining him at the railings. \"There are many men who would rather kill than love. And more who would kill to stop love, no matter how earnest. I will never hurry you, Brash, but I do not accept uncertainty. If you feel for me what I feel for you, you must be sure. Once done, we cannot undo it.\"\n\nYou are disturbed by a creak on the floorboards. You turn to see your sister arriving on the terrace. \"Come, Akihiro, you are asked for! Do not keep the people from their hero!\"\n\n\"The price of fame,\" you smile. \"Come, Brash. Walking out on a party is not done.\"\n\nYou offer him your hand, and he accepts, squeezing before releasing.\n\nAkihiro has gained a HEART for Brash. Brash also gains a HEART for Akihiro.\n\nNote: You gained the code A98.";
 
             Choices.clear();
 
@@ -2301,7 +2301,7 @@ namespace Book1
 
             ID = 70;
 
-            Text = "You track down Damned Suzanna through the dusty gulches in Clifftop. Eventually you find her, recovering from the wounds of her beating, sweltering in her open-doored shack. When she sees you her eyes light up, and she eagerly snatches the proffered REGISTRY PAPERS from your hands. She gazes with confusion as she reads.\n\n\"This can't be right!\" she exclaims. \"It says here that my grandfather legally sold his land to Unbraaki fifty years ago. But my father said...\"\n\n\"I'm afraid it was countersigned by the priests of Cursus,\" you say. \"I suppose it's possible that there was a conspiracy against your family, but it's rare for priests to conspire with sorcerers.\"\n\nSuzanna slumps upon her bed. \"Everything my father told me was a lie,\" she groans. \"I'm not the inheritor of a massive estate, I'm just... me.\"\n\n\"That should be good enough,\" you say. \"Wealth rarely comes to those who sit around for it. If you want to make something of yourself, get out there and do it. You're certainly tough enough.\"\n\nShe nods. \"You're right. It's time I stopped waiting for my life to get better; I've got nothing to lose going adventuring. I'll sign on with the next ship in port.\" She presses a GREY TALISMAN into your hand. \"It's not much, but I want you to have this. It was the last thing my father gave me. Time for a new life.\"\n\nYou gained the code A36.";
+            Text = "You track down Damned Suzanna through the dusty gulches in Clifftop. Eventually you find her, recovering from the wounds of her beating, sweltering in her open-doored shack. When she sees you her eyes light up, and she eagerly snatches the proffered REGISTRY PAPERS from your hands. She gazes with confusion as she reads.\n\n\"This can't be right!\" she exclaims. \"It says here that my grandfather legally sold his land to Unbraaki fifty years ago. But my father said...\"\n\n\"I'm afraid it was countersigned by the priests of Cursus,\" you say. \"I suppose it's possible that there was a conspiracy against your family, but it's rare for priests to conspire with sorcerers.\"\n\nSuzanna slumps upon her bed. \"Everything my father told me was a lie,\" she groans. \"I'm not the inheritor of a massive estate, I'm just... me.\"\n\n\"That should be good enough,\" you say. \"Wealth rarely comes to those who sit around for it. If you want to make something of yourself, get out there and do it. You're certainly tough enough.\"\n\nShe nods. \"You're right. It's time I stopped waiting for my life to get better; I've got nothing to lose going adventuring. I'll sign on with the next ship in port.\" She presses a GREY TALISMAN into your hand. \"It's not much, but I want you to have this. It was the last thing my father gave me. Time for a new life.\"\n\nNote: You gained the code A36.";
 
             Bye = "Waving Damned Suzanna farewell, you make your way on.";
 
@@ -2993,7 +2993,7 @@ namespace Book1
 
             Location = Location::Type::LHASBREATH;
 
-            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nWhen Emlyn reports her findings, the news is rather disappointing. \"We have recovered many pretty blooms,\" she admits. \"Certainly, the fragrances are quite striking... however, there are no medicinal or culinary plants, as far as I can tell. Nothing sellable.\"\n\n\"Curses!\" grumbles Sir Lawrence. \"This expedition is turning into an expensive failure.\"\n\nStill, Sir Lawrence is good to his word and presents you with a purse of 150 silver coins. Offering your consolations over the failed mission, you depart into the city.\n\nAlthough the expedition did not go perfectly you have learned a lot.\n\nYou gained the code A85.";
+            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nWhen Emlyn reports her findings, the news is rather disappointing. \"We have recovered many pretty blooms,\" she admits. \"Certainly, the fragrances are quite striking... however, there are no medicinal or culinary plants, as far as I can tell. Nothing sellable.\"\n\n\"Curses!\" grumbles Sir Lawrence. \"This expedition is turning into an expensive failure.\"\n\nStill, Sir Lawrence is good to his word and presents you with a purse of 150 silver coins. Offering your consolations over the failed mission, you depart into the city.\n\nAlthough the expedition did not go perfectly you have learned a lot.\n\nNote: You gained the code A85.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1));
@@ -3081,7 +3081,7 @@ namespace Book1
 
             ID = 94;
 
-            Text = "You carefully lower yourself into the pit, being careful to avoid the spikes. Moving aside the timbers you check over the body. You find 15 silver coins spilling from a rotten pouch and a still intact DRAGONYAK HORN.\n\nYou gained the code A46.";
+            Text = "You carefully lower yourself into the pit, being careful to avoid the spikes. Moving aside the timbers you check over the body. You find 15 silver coins spilling from a rotten pouch and a still intact DRAGONYAK HORN.\n\nNote: You gained the code A46.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Climb up the far side of the pit", {Book::Type::BOOK1, 303}));
@@ -3169,7 +3169,7 @@ namespace Book1
 
             ID = 97;
 
-            Text = "You do not trust idly displayed skeletons these days. You make a point of shattering their skulls and ribcages, casting their bones about and generally demolishing their mortal remains. You feel a little bad about it afterwards, wondering if you have committed some sort of sacrilege, but there is no going back now.\n\nYou gained the code A75.";
+            Text = "You do not trust idly displayed skeletons these days. You make a point of shattering their skulls and ribcages, casting their bones about and generally demolishing their mortal remains. You feel a little bad about it afterwards, wondering if you have committed some sort of sacrilege, but there is no going back now.\n\nNote: You gained the code A75.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Examine the book", {Book::Type::BOOK1, 8}));
@@ -3395,7 +3395,7 @@ namespace Book1
 
             ID = 104;
 
-            Text = "You cannot be certain, but the mural appears to be telling some sort of story. An image of a terrible demon, possibly Abraxas from legend, rises from the earth and demolishes a number of cities. From cracks in the ground come snakemen, slithering around the survivors and rounding them up. The humans are turned into slaves, building the snakemen a mighty temple, but soon even the slaves begin to worship at the altars of the temple as well. Here the mural ends abruptly. Make of it what you will.\n\nYou gained the code A41.";
+            Text = "You cannot be certain, but the mural appears to be telling some sort of story. An image of a terrible demon, possibly Abraxas from legend, rises from the earth and demolishes a number of cities. From cracks in the ground come snakemen, slithering around the survivors and rounding them up. The humans are turned into slaves, building the snakemen a mighty temple, but soon even the slaves begin to worship at the altars of the temple as well. Here the mural ends abruptly. Make of it what you will.\n\nNote: You gained the code A41.";
 
             Choices.clear();
 
@@ -3437,7 +3437,7 @@ namespace Book1
 
             ID = 106;
 
-            Text = "You pretend to offer aid; anything to get out of sight of the Everchild's rebellious followers. At the first opportunity you inform the guards about the rebel's intentions. A few days later Che Long, Milagros and her followers have vanished from the arena. Word reaches you about a bloody struggle in the cells, but there are few details. Not long after, the arena master releases you under orders of the Iron King. \"His majesty is most pleased with your loyalty; the identity of the rebel leaders has been a well-kept secret. He offers you this reward and asks you to attend him at his palace if you seek further remunerating work.\"\n\nThe arena master presents you with 200 silver pieces.\n\nYou gained the code A4.";
+            Text = "You pretend to offer aid; anything to get out of sight of the Everchild's rebellious followers. At the first opportunity you inform the guards about the rebel's intentions. A few days later Che Long, Milagros and her followers have vanished from the arena. Word reaches you about a bloody struggle in the cells, but there are few details. Not long after, the arena master releases you under orders of the Iron King. \"His majesty is most pleased with your loyalty; the identity of the rebel leaders has been a well-kept secret. He offers you this reward and asks you to attend him at his palace if you seek further remunerating work.\"\n\nThe arena master presents you with 200 silver pieces.\n\nNote: You gained the code A4.";
 
             Bye = "Weighing the price of treachery with a smile, you gleefully leave the arena.";
 
@@ -3962,7 +3962,7 @@ namespace Book1
 
             ID = 122;
 
-            Text = "After strenuous negotiations the mercenaries finally agree to be discreetly absent during the battle tomorrow. Changing sides altogether would be a step too far for their precious reputations. This will have an enormous impact on the forthcoming battle.\n\nYou gained the code A96.";
+            Text = "After strenuous negotiations the mercenaries finally agree to be discreetly absent during the battle tomorrow. Changing sides altogether would be a step too far for their precious reputations. This will have an enormous impact on the forthcoming battle.\n\nNote: You gained the code A96.";
 
             Bye = "Wishing them a speedy journey to their homelands you return triumphant.";
 
@@ -4385,7 +4385,7 @@ namespace Book1
 
             ID = 136;
 
-            Text = "You complete the finishing touches, grinding the components to the necessary fineness, and sprinkling them with confidence into the brew. Soon you have completed two POTIONS OF INVULNERABILITY. Pleased with your new finds, you store them in your pack.\n\nYou gained the code A73.\n\nNote: When a party member drinks this potion at the start of a combat round, they can ignore any amount of damage they take from the next attack that hits them. The potion wears off after absorbing the first hit, or if the combat ends.";
+            Text = "You complete the finishing touches, grinding the components to the necessary fineness, and sprinkling them with confidence into the brew. Soon you have completed two POTIONS OF INVULNERABILITY. Pleased with your new finds, you store them in your pack.\n\nNote: When a party member drinks this potion at the start of a combat round, they can ignore any amount of damage they take from the next attack that hits them. The potion wears off after absorbing the first hit, or if the combat ends.\n\nYou gained the code A73.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Pass through the door in the western wall", {Book::Type::BOOK1, 256}));
@@ -4417,7 +4417,7 @@ namespace Book1
 
             Image = "images/book1/statue_wreck.png";
 
-            Text = "The sands whip against your face as you stagger through the desert. You seek shelter against the wreck of a once enormous statue, with only the sombre face of a long-forgotten king still visible in the lashing wind. Taking cover behind the hawkish nose of the stone face, you wait the storm out.\n\nWhen the wind dies down you examine the area. You realise where you are now. These are the Tumblestones, the remains of an ancient civilisation lost to the sands for all time. Historians from distant lands have attempted excavations here, but the heaped sands filled their trenches as fast as they could be dug, and the storms battered away their camps. Not much is left. A scattering of broken stones, perhaps once an enormous carved mural of some kind, lie revealed across the sands, the recent storms having unearthed them. Taking a casual look, you are surprised to see that they are fragments of a spell, carved in enormous letters.\n\nThe broken mural lies in pieces around you. It might be possible to fit the shattered mural together and decipher the spell if you are clever enough to puzzle it out.\n\nYou gained the code A17.";
+            Text = "The sands whip against your face as you stagger through the desert. You seek shelter against the wreck of a once enormous statue, with only the sombre face of a long-forgotten king still visible in the lashing wind. Taking cover behind the hawkish nose of the stone face, you wait the storm out.\n\nWhen the wind dies down you examine the area. You realise where you are now. These are the Tumblestones, the remains of an ancient civilisation lost to the sands for all time. Historians from distant lands have attempted excavations here, but the heaped sands filled their trenches as fast as they could be dug, and the storms battered away their camps. Not much is left. A scattering of broken stones, perhaps once an enormous carved mural of some kind, lie revealed across the sands, the recent storms having unearthed them. Taking a casual look, you are surprised to see that they are fragments of a spell, carved in enormous letters.\n\nThe broken mural lies in pieces around you. It might be possible to fit the shattered mural together and decipher the spell if you are clever enough to puzzle it out.\n\nNote: You gained the code A17.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Rebuild the spell mural (Team check: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 603}, {Book::Type::BOOK1, 368}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 4));
@@ -5025,7 +5025,7 @@ namespace Book1
 
             ID = 159;
 
-            Text = "As you cross a dune you come upon a strange sight. A monkey, just an arms-length tall, lies in the sand, breathing heavily, almost dehydrated. Such beasts are never seen outside the Lhasbreath jungles, and yet here is one apparently wandering the desert like a nomad. It is in a dreadful state.\n\nYou gained the code A42.";
+            Text = "As you cross a dune you come upon a strange sight. A monkey, just an arms-length tall, lies in the sand, breathing heavily, almost dehydrated. Such beasts are never seen outside the Lhasbreath jungles, and yet here is one apparently wandering the desert like a nomad. It is in a dreadful state.\n\nNote: You gained the code A42.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Give the monkey some water", {Book::Type::BOOK1, 552}));
@@ -5081,7 +5081,7 @@ namespace Book1
 
             DisplayID = 160;
 
-            Text = "The rest of your party manage to drag the orc away and stab him to death as he violently thrashes. The change over the orc seemed unbelievable. You didn't even realise orcs could read!\n\nYou gained the code A71.";
+            Text = "The rest of your party manage to drag the orc away and stab him to death as he violently thrashes. The change over the orc seemed unbelievable. You didn't even realise orcs could read!\n\nNote: You gained the code A71.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Examine the black book he was reading", {Book::Type::BOOK1, 119}));
@@ -5200,7 +5200,7 @@ namespace Book1
 
             ID = 163;
 
-            Text = "Swallowing your fear you crawl out of the tent and approach the strange light. You see it coalesce into a familiar figure. \"Mother...\" you say sadly.\n\n\"Aye, Amelia, it is I,\" responds your mother, her ghostly form wavering before you. \"I have travelled far from the Savage Lands to give you this warning. Beware Ashdain, lord of the third circle. He has fallen under the power of the dark one and is not your friend. Accept no quest or task he might give you.\"\n\n\"But... I have never heard of this man...\" you whisper. \"And who is this dark one you speak of...?\"\n\n\"I have said more than I should,\" responds the ghostly figure. \"Even your father, Baldwin, never treated me as wickedly as Ashdain. Find my bones... then you shall find the answers you seek.\"\n\n\"Where shall I find them?\" you ask desperately. \"Mother! Mother!\"\n\nBut it is too late. Your mother's image fades like moonlight and vanishes into the black sky. You are sobbing as you return to the tent, and your companions comfort you as best they can. If your mother is indeed dead, you will swear a vengeance upon her killer... if the ghost can be trusted.\n\nYou gained the code A49";
+            Text = "Swallowing your fear you crawl out of the tent and approach the strange light. You see it coalesce into a familiar figure. \"Mother...\" you say sadly.\n\n\"Aye, Amelia, it is I,\" responds your mother, her ghostly form wavering before you. \"I have travelled far from the Savage Lands to give you this warning. Beware Ashdain, lord of the third circle. He has fallen under the power of the dark one and is not your friend. Accept no quest or task he might give you.\"\n\n\"But... I have never heard of this man...\" you whisper. \"And who is this dark one you speak of...?\"\n\n\"I have said more than I should,\" responds the ghostly figure. \"Even your father, Baldwin, never treated me as wickedly as Ashdain. Find my bones... then you shall find the answers you seek.\"\n\n\"Where shall I find them?\" you ask desperately. \"Mother! Mother!\"\n\nBut it is too late. Your mother's image fades like moonlight and vanishes into the black sky. You are sobbing as you return to the tent, and your companions comfort you as best they can. If your mother is indeed dead, you will swear a vengeance upon her killer... if the ghost can be trusted.\n\nNote: You gained the code A49";
 
             Choices.clear();
 
@@ -5718,7 +5718,7 @@ namespace Book1
             }
             else
             {
-                Bye = "You promise the old man that you will keep an eye out for him, and leave him to his misery.\n\nYou gained the code A67.";
+                Bye = "You promise the old man that you will keep an eye out for him, and leave him to his misery.\n\nNote: You gained the code A67.";
 
                 Engine::GET_CODES(party, {Codes::A(67)});
 
@@ -6818,7 +6818,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::A(43)}))
             {
-                PreText += " Perhaps you can find an expert to help you with the vault door?\n\nYou gained the code A11.";
+                PreText += " Perhaps you can find an expert to help you with the vault door?\n\nNote: You gained the code A11.";
 
                 Engine::GET_CODES(party, {Codes::A(11)});
 
@@ -7354,7 +7354,7 @@ namespace Book1
 
             ID = 232;
 
-            Text = "To your mixed delight and horror, the [SKELETONS] rise from the dead, their bones clicking and clacking as they stand up straight before you. The [SKELETONS] will be useful allies.\n\nYou gained the code A75.\n\nNote: There are [SKELETONS] for each party member to control. While a party member has a [SKELETON] following them, they gain an additional 2 points to their Fighting skill, which combines with any other bonuses from weapons or other items. Additionally, your [SKELETONS] will bravely take damage for you. Each skeleton has 6 Health points. When a party member takes damage in combat (not from any other source) the skeleton will step in the way and take the damage for that character. They have no armour, and are destroyed when they are reduced to 0 Health. Skeletons cannot regain Health points. Your [SKELETONS] can only exist whilst you are in the Mordain ruins. As soon as you step outside they will crumble to dust.";
+            Text = "To your mixed delight and horror, the [SKELETONS] rise from the dead, their bones clicking and clacking as they stand up straight before you. The [SKELETONS] will be useful allies.\n\nNote: There are [SKELETONS] for each party member to control. While a party member has a [SKELETON] following them, they gain an additional 2 points to their Fighting skill, which combines with any other bonuses from weapons or other items. Additionally, your [SKELETONS] will bravely take damage for you. Each skeleton has 6 Health points. When a party member takes damage in combat (not from any other source) the skeleton will step in the way and take the damage for that character. They have no armour, and are destroyed when they are reduced to 0 Health. Skeletons cannot regain Health points. Your [SKELETONS] can only exist whilst you are in the Mordain ruins. As soon as you step outside they will crumble to dust.\n\nYou gained the code A75.";
 
             Bye = "Pleased with your new companions, you make your way back to the crossroads.";
 
@@ -7750,7 +7750,7 @@ namespace Book1
 
             ID = 245;
 
-            Text = "The ogre seems stunned that such thin and puny creatures could possess so much money. \"Beats me why you wander 'round dungeons when you have that kind of dosh lining your pockets, but well'a'day.\"\n\nThe ogre rises to his feet. \"Skullcracker's the name,\" he says. \"I don't do cities, and I don't do boats. Other than that, I'll hang around with you for a bit.\n\nSkullcracker hands you a RUSTY KEY. \"This is the key to the room I'm supposed to be guarding,\" he says. \"Why don't we loot it, instead? Just go north, then east a bit, and you'll find it.\"\n\nYou gained the code A76.\n\nNote: Skullcracker can be treated just like an ordinary party member. He possesses the following skills:\n\nFighting: 8, Stealth: 1, Lore: 1, Survival: 3, Charisma: 2, Health: 12\n\nSkullcracker has a number of special rules as a party member:\n\n* He is lazy and he will not carry any equipment for you, even items that boost his skills. Skullcracker wields a CLUB, but it is nothing special. Should the party ever lose their equipment he will be able to replace the CLUB instantly with a bit of large bone, table leg or other such item. Effectively, Skullcracker is never disarmed.\n\n* He won't enter a city, which includes the following locations: Chalice, Clifftop, Cursus, Lhasbreath, Luutanesh or Saltdad. If you go to these places, Skullcracker will wait outside until you leave. Ogres aren't very popular in civilised places.\n\n* Even though he can't stay in human inns, Skullcracker will recover Health points at the same rate as your other party members when you pay to stay at an inn.\n\n* He won't board a ship. He had a queasy tummy on the orc boat and won't tolerate going aboard another. If you insist on going sailing, he will leave the party.\n\n* His contract with you ends when you travel to another land -- i.e. you begin to explore another book.\n\nAt this point, Skullcracker with take his leave and wander into the desert.";
+            Text = "The ogre seems stunned that such thin and puny creatures could possess so much money. \"Beats me why you wander 'round dungeons when you have that kind of dosh lining your pockets, but well'a'day.\"\n\nThe ogre rises to his feet. \"Skullcracker's the name,\" he says. \"I don't do cities, and I don't do boats. Other than that, I'll hang around with you for a bit.\n\nSkullcracker hands you a RUSTY KEY. \"This is the key to the room I'm supposed to be guarding,\" he says. \"Why don't we loot it, instead? Just go north, then east a bit, and you'll find it.\"\n\nNote: Skullcracker can be treated just like an ordinary party member. He possesses the following skills:\n\nFighting: 8, Stealth: 1, Lore: 1, Survival: 3, Charisma: 2, Health: 12\n\nSkullcracker has a number of special rules as a party member:\n\n* He is lazy and he will not carry any equipment for you, even items that boost his skills. Skullcracker wields a CLUB, but it is nothing special. Should the party ever lose their equipment he will be able to replace the CLUB instantly with a bit of large bone, table leg or other such item. Effectively, Skullcracker is never disarmed.\n\n* He won't enter a city, which includes the following locations: Chalice, Clifftop, Cursus, Lhasbreath, Luutanesh or Saltdad. If you go to these places, Skullcracker will wait outside until you leave. Ogres aren't very popular in civilised places.\n\n* Even though he can't stay in human inns, Skullcracker will recover Health points at the same rate as your other party members when you pay to stay at an inn.\n\n* He won't board a ship. He had a queasy tummy on the orc boat and won't tolerate going aboard another. If you insist on going sailing, he will leave the party.\n\n* His contract with you ends when you travel to another land -- i.e. you begin to explore another book.\n\nAt this point, Skullcracker with take his leave and wander into the desert.\n\nYou gained the code A76.";
 
             Bye = "Thanking your new companion, you return to the crossroads.";
 
@@ -7849,7 +7849,7 @@ namespace Book1
 
             ID = 248;
 
-            Text = "The dragonyak bull bows to you as you speak in the ancient tongue of beasts. \"You are an animal friend,\" he intones. \"Our legends say that it has been an eon since any dragonyak was so addressed. You honour us.\" The dragonyak unleashes a bellowing roar, which is repeated by his herd. One dragonyak immerses herself in the water of the oasis and emerges sometime later with a CLOAK, sodden with water, but miraculously unharmed by the passage of years. The bull insists you take the cloak, for he is aware that man-apes such as yourself favour them.\n\nYou take THE RUGGED CLOAK (Survival +2) so as not to offend the mighty bull and make your way onwards.\n\nYou gained the code A38.";
+            Text = "The dragonyak bull bows to you as you speak in the ancient tongue of beasts. \"You are an animal friend,\" he intones. \"Our legends say that it has been an eon since any dragonyak was so addressed. You honour us.\" The dragonyak unleashes a bellowing roar, which is repeated by his herd. One dragonyak immerses herself in the water of the oasis and emerges sometime later with a CLOAK, sodden with water, but miraculously unharmed by the passage of years. The bull insists you take the cloak, for he is aware that man-apes such as yourself favour them.\n\nYou take THE RUGGED CLOAK (Survival +2) so as not to offend the mighty bull and make your way onwards.\n\nNote: You gained the code A38.";
 
             Choices.clear();
 
@@ -7877,7 +7877,7 @@ namespace Book1
 
             ID = 249;
 
-            Text = "You seek out the father of Garon the Bloody Mouthed. He is still sitting sadly upon his doorstep when you return, bearing his son's body in your arms. The father gives a great howl and clasps his son's body.\n\n\"It is as I feared,\" he weeps. \"I thank you for returning his body so it may be buried with honour. I was to present my son with his grandfather's magical amulet upon his successful return -- but now I have no sons left to inherit. I wish you to have it. It is what Garon would have wanted.\"\n\nThe old man presents you with an AMULET OF HEALTH (Health +1). It would be churlish to refuse it. You leave the old man to his sorrows.\n\nYou gain the code A86.";
+            Text = "You seek out the father of Garon the Bloody Mouthed. He is still sitting sadly upon his doorstep when you return, bearing his son's body in your arms. The father gives a great howl and clasps his son's body.\n\n\"It is as I feared,\" he weeps. \"I thank you for returning his body so it may be buried with honour. I was to present my son with his grandfather's magical amulet upon his successful return -- but now I have no sons left to inherit. I wish you to have it. It is what Garon would have wanted.\"\n\nThe old man presents you with an AMULET OF HEALTH (Health +1). It would be churlish to refuse it. You leave the old man to his sorrows.\n\nNote: You gained the code A86.";
 
             Choices.clear();
 
@@ -7933,7 +7933,7 @@ namespace Book1
 
             ID = 251;
 
-            Text = "You gained the code A61.\n\nWith the beetles destroyed you brush them away from the mystic circle and examine it. It appears to be some kind of health boosting magic circle with a small indentation in the middle, not unlike an ink well. Indeed, the instructions for its use have been usefully painted upon the walls of the chamber. It appears that if you pour some QUICKSILVER into the central well the circle will activate and imbue you with power.";
+            Text = "With the beetles destroyed you brush them away from the mystic circle and examine it. It appears to be some kind of health boosting magic circle with a small indentation in the middle, not unlike an ink well. Indeed, the instructions for its use have been usefully painted upon the walls of the chamber. It appears that if you pour some QUICKSILVER into the central well the circle will activate and imbue you with power.\n\nNote: You gained the code A61.\n\n";
 
             Choices.clear();
             Choices.push_back(Choice::Base("You have some QUICKSILVER and want to try it out", {Book::Type::BOOK1, 26}, {Equipment::QUICKSILVER}));
@@ -8357,7 +8357,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You stroll around the city, getting a closer look at the spiralling towers that Chalice is famous for. The streets are almost empty as you walk through the neighbourhoods. Unlike in many cities almost everyone in Chalice works, if not in the fields than in the temples or guard towers of the kensai. As a consequence, the streets are relatively quiet except around the well-ordered shops and market stalls. As you pass through a pleasant borough you spot something curious. A rope is dangling from the window of a tall house with a curved red roof. It reaches all the way to the ground. Strangely there seems to be no one around.\n\nYou gained the code A54.";
+            Text = "You stroll around the city, getting a closer look at the spiralling towers that Chalice is famous for. The streets are almost empty as you walk through the neighbourhoods. Unlike in many cities almost everyone in Chalice works, if not in the fields than in the temples or guard towers of the kensai. As a consequence, the streets are relatively quiet except around the well-ordered shops and market stalls. As you pass through a pleasant borough you spot something curious. A rope is dangling from the window of a tall house with a curved red roof. It reaches all the way to the ground. Strangely there seems to be no one around.\n\nNote: You gained the code A54.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Climb up the rope and investigate", {Book::Type::BOOK1, 358}));
@@ -8516,7 +8516,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            PreText = "You examine the body. The man was strongly built, with a great beard with flecks of red paint in it.\n\nYou gained the code A66.";
+            PreText = "You examine the body. The man was strongly built, with a great beard with flecks of red paint in it.\n\nNote: You gained the code A66.";
 
             Engine::GET_CODES(party, {Codes::A(66)});
 
@@ -8627,7 +8627,7 @@ namespace Book1
 
             ID = 278;
 
-            Text = "Clearly your allegiance to the Everchild has not gone unnoticed. You search the zealots, finding three CRUDE BLADES (Fighting +0), 60 silver coins and the Sorcerer's spell book! Sadly, the book has been badly damaged in the battle, but at least one interesting spell has survived:\n\nDazing Lights (Combat)\n\nSwirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.\n\nRecharge: 50 silver\n\nAny of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time.\n\nYou gained the code A22.";
+            Text = "Clearly your allegiance to the Everchild has not gone unnoticed. You search the zealots, finding three CRUDE BLADES (Fighting +0), 60 silver coins and the Sorcerer's spell book! Sadly, the book has been badly damaged in the battle, but at least one interesting spell has survived:\n\nDazing Lights (Combat)\n\nSwirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.\n\nRecharge: 50 silver\n\nAny of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time.\n\nNote: You gained the code A22.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -8911,7 +8911,7 @@ namespace Book1
 
             ID = 286;
 
-            Text = "You believe you have already found this man... stretched out on a rack in an orcish prison. Tears form in the old man's eyes. \"Oh! Return his body -- I beg you!\" he pleads. \"My son's spirit cannot rest unless he is buried with his ancestors.\" The thought of dragging a six-foot barbarian across the desert does not exactly appeal, but you say you will do what you can.\n\nYou gained the code A67.";
+            Text = "You believe you have already found this man... stretched out on a rack in an orcish prison. Tears form in the old man's eyes. \"Oh! Return his body -- I beg you!\" he pleads. \"My son's spirit cannot rest unless he is buried with his ancestors.\" The thought of dragging a six-foot barbarian across the desert does not exactly appeal, but you say you will do what you can.\n\nNote: You gained the code A67.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -9015,7 +9015,7 @@ namespace Book1
 
             ID = 290;
 
-            Text = "he sister bows as you present her with the letter, and immediately escorts you into the chamber of the God King. The king takes the letter, glancing over it with a casual eye. Long before he could have finished reading it, he stands.\n\n\"Yes, this is the Everchild as I remember her,\" nods the God King. \"I officially place the armies of Chalice at her disposal. My kensai warriors shall attend her, a full five hundred men. An additional six hundred archers shall provide her with support. Once she is queen, we shall defer our city to her policies as they relate to all international affairs.\"\n\nYou are dumbstruck. Could the God King really have changed his mind from a quick glance at a letter? Or has he received council since your last meeting and was going to back the Everchild no matter what? You suppose you shall never know.\n\nYou thank the God King for his support, leaving the chamber in amazement at your success.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Kensai Warriors]: Strength 4, Morale 4\n[Chalice Archers]: Strength 2, Morale 3\n\nGaining the God King's support has been quite an endeavour.\n\nYou gained the code A20.";
+            Text = "he sister bows as you present her with the letter, and immediately escorts you into the chamber of the God King. The king takes the letter, glancing over it with a casual eye. Long before he could have finished reading it, he stands.\n\n\"Yes, this is the Everchild as I remember her,\" nods the God King. \"I officially place the armies of Chalice at her disposal. My kensai warriors shall attend her, a full five hundred men. An additional six hundred archers shall provide her with support. Once she is queen, we shall defer our city to her policies as they relate to all international affairs.\"\n\nYou are dumbstruck. Could the God King really have changed his mind from a quick glance at a letter? Or has he received council since your last meeting and was going to back the Everchild no matter what? You suppose you shall never know.\n\nYou thank the God King for his support, leaving the chamber in amazement at your success.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Kensai Warriors]: Strength 4, Morale 4\n[Chalice Archers]: Strength 2, Morale 3\n\nGaining the God King's support has been quite an endeavour.\n\nNote: You gained the code A20.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Choose a party member to gain 1 point of CHARISMA", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1));
@@ -9203,7 +9203,7 @@ namespace Book1
                 PreText += "You lose";
             }
 
-            PreText += " 2 points of Health and 1 point of Fighting skill, as wielding a weapon without fingernails is agony. After removing five nails Lothor seems pleased with himself, and graciously lets you keep the nails on the other hand.\n\nYou stagger, wincing from the hall, your companions holding you up. The peasant you saved is nowhere to be found. Perhaps you will get your reward in paradise?\n\nYou gained the code A34.";
+            PreText += " 2 points of Health and 1 point of Fighting skill, as wielding a weapon without fingernails is agony. After removing five nails Lothor seems pleased with himself, and graciously lets you keep the nails on the other hand.\n\nYou stagger, wincing from the hall, your companions holding you up. The peasant you saved is nowhere to be found. Perhaps you will get your reward in paradise?\n\nNote: You gained the code A34.";
 
             Engine::GET_CODES(party, {Codes::A(34)});
 
@@ -9280,7 +9280,7 @@ namespace Book1
 
                 Engine::GET_CODES(party, {Codes::A(26)});
 
-                Bye = "Pleased with yourselves you leave the fourteenth level.\n\nYou gained the code A26.";
+                Bye = "Pleased with yourselves you leave the fourteenth level.\n\nNote: You gained the code A26.";
             }
         }
     };
@@ -9705,7 +9705,7 @@ namespace Book1
 
             Image = "images/book1/victory_over_ironking.png";
 
-            Text = "With a mighty blow you cleave the Iron King's head from his shoulders. A mighty clang fills the hall as his heavy metal crown crashes to the floor. Standing outside the palace holding the bloody crown aloft you cry victory for the Everchild. In an instant the remaining forces of the old king disperse and surrender, and a great cheer goes up from your army. The day is won!\n\nThe Everchild is led into the palace in a great parade, tears of joy flowing from the oppressed citizens of Saltdad. She is merciful towards her defeated foes, sparing all but the worst offenders of the old regime. You have accomplished an action long predicted in legend. The Everchild once again sits on the throne of Saltdad. She could not have hoped to accomplish such a feat without you.\n\nThere follows a great celebration, the fat stores of the Iron King are broken open to hold a massive feast for the people. An elegant diadem upon her head, the Everchild finally looks the part of queen. Wine and food are consumed in great amounts, and songs are sung across the city. Your party's health scores are restored to maximum.\n\nYou gained the code A1.";
+            Text = "With a mighty blow you cleave the Iron King's head from his shoulders. A mighty clang fills the hall as his heavy metal crown crashes to the floor. Standing outside the palace holding the bloody crown aloft you cry victory for the Everchild. In an instant the remaining forces of the old king disperse and surrender, and a great cheer goes up from your army. The day is won!\n\nThe Everchild is led into the palace in a great parade, tears of joy flowing from the oppressed citizens of Saltdad. She is merciful towards her defeated foes, sparing all but the worst offenders of the old regime. You have accomplished an action long predicted in legend. The Everchild once again sits on the throne of Saltdad. She could not have hoped to accomplish such a feat without you.\n\nThere follows a great celebration, the fat stores of the Iron King are broken open to hold a massive feast for the people. An elegant diadem upon her head, the Everchild finally looks the part of queen. Wine and food are consumed in great amounts, and songs are sung across the city. Your party's health scores are restored to maximum.\n\nNote: You gained the code A1.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Choose two party members and increase their maximum, unwounded Health score by 1 point", {Book::Type::BOOK1, 280}, Choice::Type::TEAM_MAX_HEALTH, 2, 1));
@@ -9763,7 +9763,7 @@ namespace Book1
 
             ID = 311;
 
-            Text = "Imopposh gives an unearthly howl before collapsing into piles of dust. You are relieved that the foul sorcerer has finally met his end.\n\nYour rewards are considerable. A MASTERWORK BLADE (Fighting +3) and some CHAIN ARMOUR (Armour +2) are stuffed into an urn, along with 900 silver coins. In an ancient wooden box stuffed underneath rotten funeral garbs you discover a GLITTERING NECKLACE (Charisma +2). You may also take a MAGICAL WEAVE from Imopposh's funeral bandages.\n\nYou gained the code A39.";
+            Text = "Imopposh gives an unearthly howl before collapsing into piles of dust. You are relieved that the foul sorcerer has finally met his end.\n\nYour rewards are considerable. A MASTERWORK BLADE (Fighting +3) and some CHAIN ARMOUR (Armour +2) are stuffed into an urn, along with 900 silver coins. In an ancient wooden box stuffed underneath rotten funeral garbs you discover a GLITTERING NECKLACE (Charisma +2). You may also take a MAGICAL WEAVE from Imopposh's funeral bandages.\n\nNote: You gained the code A39.";
 
             Bye = "When you have finished your looting, you return to the desert.";
 
@@ -10416,7 +10416,7 @@ namespace Book1
 
             ID = 334;
 
-            Text = "Fastilon falls to the ground, quite dead, his glowing sword vanishing in his hand. He appears to be wearing nothing of value on his person, despite the power he summoned to fight you. Checking that the MADSHARDs are still in your possession, you return to the surface. Your workers have gone, scared away by the sounds of battle, leaving you alone amongst the ruins.\n\nYou gained the code A81.";
+            Text = "Fastilon falls to the ground, quite dead, his glowing sword vanishing in his hand. He appears to be wearing nothing of value on his person, despite the power he summoned to fight you. Checking that the MADSHARDs are still in your possession, you return to the surface. Your workers have gone, scared away by the sounds of battle, leaving you alone amongst the ruins.\n\nNote: You gained the code A81.";
 
             Choices.clear();
 
@@ -10527,7 +10527,7 @@ namespace Book1
 
             ID = 338;
 
-            Text = "The ghastly screams of the man echo in your head long after his eyes have been torn from his skull. Lothor congratulates you for your choice of punishments, gifting you a purse of 20 silver coins, but you shall pay a hefty price spiritually. The gods despise a torturer -- from now on you cannot receive any blessings from any priest in the world.\n\nYou gained the code A34.";
+            Text = "The ghastly screams of the man echo in your head long after his eyes have been torn from his skull. Lothor congratulates you for your choice of punishments, gifting you a purse of 20 silver coins, but you shall pay a hefty price spiritually. The gods despise a torturer -- from now on you cannot receive any blessings from any priest in the world.\n\nNote: You gained the code A34.";
 
             Bye = "Feeling dead inside, you depart.";
 
@@ -10608,7 +10608,7 @@ namespace Book1
 
             ID = 341;
 
-            Text = "You sheathe your weapons and search through the coffin, somewhat gingerly given the amount of oozing fluid puddling in the bottom.\n\nYou manage to stomach extracting 240 silver coins and an AMULET OF DEFENCE (Armour +1). You also discover the FAIRBROTHER FAMILY CREST, which was tucked into corner covered in ooze-soaked cloth.\n\nTake what you wish.\n\nYou gained the code A58.";
+            Text = "You sheathe your weapons and search through the coffin, somewhat gingerly given the amount of oozing fluid puddling in the bottom.\n\nYou manage to stomach extracting 240 silver coins and an AMULET OF DEFENCE (Armour +1). You also discover the FAIRBROTHER FAMILY CREST, which was tucked into corner covered in ooze-soaked cloth.\n\nTake what you wish.\n\nNote: You gained the code A58.";
 
             Choices.clear();
 
@@ -10638,7 +10638,7 @@ namespace Book1
 
             ID = 342;
 
-            Text = "King Lothor's forces collapse in disorder. There is a general rout, and a terrible crush at the bridge as the tyrant's forces all attempt to cross it at once. Your army closes in against the defenceless foe, caught between the river and destruction. Lothor is singled out and cut down by a common infantryman even as he attempts escape. Soon, the enemy have surrendered en-masse. The Everchild is victorious.\n\nYou gained the code A33.";
+            Text = "King Lothor's forces collapse in disorder. There is a general rout, and a terrible crush at the bridge as the tyrant's forces all attempt to cross it at once. Your army closes in against the defenceless foe, caught between the river and destruction. Lothor is singled out and cut down by a common infantryman even as he attempts escape. Soon, the enemy have surrendered en-masse. The Everchild is victorious.\n\nNote: You gained the code A33.";
 
             Choices.clear();
 
@@ -10734,7 +10734,7 @@ namespace Book1
 
             ID = 345;
 
-            Text = "The final skeleton shatters into pieces. With the bodies so damaged it will be impossible to animate them again using the book. Musing on the inconsistent nature of necromantic magic, you return to the crossroads.\n\nYou gained the code A75.";
+            Text = "The final skeleton shatters into pieces. With the bodies so damaged it will be impossible to animate them again using the book. Musing on the inconsistent nature of necromantic magic, you return to the crossroads.\n\nNote: You gained the code A75.";
 
             Choices.clear();
 
@@ -10918,7 +10918,7 @@ namespace Book1
 
             ID = 352;
 
-            Text = "Heaving with steady progress, you eventually pull the great cogwheel from the sea and roll it into the boat. Your jollyboat floats low in the water, and you waste no time rowing it to shore. There is a great cheer from the harbour crew as you moor up. The harbourmaster gratefully presents you with a purse of 300 silver coins. Soon the cogwheel is cleaned up and reinstalled into the crane.\n\nYou gained the code A31.";
+            Text = "Heaving with steady progress, you eventually pull the great cogwheel from the sea and roll it into the boat. Your jollyboat floats low in the water, and you waste no time rowing it to shore. There is a great cheer from the harbour crew as you moor up. The harbourmaster gratefully presents you with a purse of 300 silver coins. Soon the cogwheel is cleaned up and reinstalled into the crane.\n\nNote: You gained the code A31.";
 
             Bye = "Waving the harbour crew goodbye you return to your ship.";
 
@@ -10947,7 +10947,7 @@ namespace Book1
 
             ID = 353;
 
-            Text = "The armoury is quiet at this time of night. A cluster of spears line the far wall, but it is the complete suit of BRONZE ARMOUR (Armour +4) that catches your eye. The rumours about its incredible durability are true, the magical armour is indeed stronger than the steel plate of Royce and weighs only half as much. Take it, if you wish.\n\nYou gained the code A9.";
+            Text = "The armoury is quiet at this time of night. A cluster of spears line the far wall, but it is the complete suit of BRONZE ARMOUR (Armour +4) that catches your eye. The rumours about its incredible durability are true, the magical armour is indeed stronger than the steel plate of Royce and weighs only half as much. Take it, if you wish.\n\nNote: You gained the code A9.";
 
             Choices.clear();
 
@@ -11002,7 +11002,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::A(35)}))
             {
-                PreText += "\n\nYou come upon a young woman in a field being beaten by a pack of overseers. They idly kick her as she attempts to stand, and jeer at her for being lazy and worthless.\n\nYou gained the code A35.";
+                PreText += "\n\nYou come upon a young woman in a field being beaten by a pack of overseers. They idly kick her as she attempts to stand, and jeer at her for being lazy and worthless.\n\nNote: You gained the code A35.";
 
                 Engine::GET_CODES(party, {Codes::A(35)});
 
@@ -11653,7 +11653,7 @@ namespace Book1
 
             ID = 378;
 
-            Text = "Kopu is astounded you have learned this forbidden language. \"You keep divine company, for the only man I know who understands the Drear tongue is St. Elias himself. He would not have taught you such a language unless the world itself was at stake.\"\n\nKopu waves his hands and a magical cabinet made of purple wood appears, floating in the air. From the cabinet he retrieves a CLOAK OF WONDER (all skills +3). \"Take it!\" he insists. \"And banish the darkness from our land once and for all!\" You vow to do so.\n\nNote: In addition, any injured party members restore their Health to full, as you spend many days resting in the tower whilst you teach the language to Kopu.";
+            Text = "Kopu is astounded you have learned this forbidden language. \"You keep divine company, for the only man I know who understands the Drear tongue is St. Elias himself. He would not have taught you such a language unless the world itself was at stake.\"\n\nKopu waves his hands and a magical cabinet made of purple wood appears, floating in the air. From the cabinet he retrieves a CLOAK OF WONDER (all skills +3). \"Take it!\" he insists. \"And banish the darkness from our land once and for all!\" You vow to do so.\n\nNote: In addition, all injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
 
             Choices.clear();
 
@@ -11911,7 +11911,7 @@ namespace Book1
 
             ID = 385;
 
-            Text = "Hardly daring to breathe, your party member manages to step carefully across the chamber, avoiding every pressure plate and hidden tripwire. You may take the BLACK PRISM from the pedestal. You only hope it was worth the danger retrieving it!\n\nRetracing your steps with a heart-thumping precision, you manage to make it out of the chamber to the warm congratulations of your colleagues.\n\nYou gained the code A80.";
+            Text = "Hardly daring to breathe, your party member manages to step carefully across the chamber, avoiding every pressure plate and hidden tripwire. You may take the BLACK PRISM from the pedestal. You only hope it was worth the danger retrieving it!\n\nRetracing your steps with a heart-thumping precision, you manage to make it out of the chamber to the warm congratulations of your colleagues.\n\nNote: You gained the code A80.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 310}, Choice::Type::LASTCHARACTER_ROLLS_FOR_ATTRIBUTEINCREASE, {Attribute::Type::SURVIVAL}, 1));
@@ -12435,7 +12435,7 @@ namespace Book1
 
             Location = Location::Type::DESERT;
 
-            Text = "\"Bless you strangers,\" murmurs the monkey. \"I knew there was kindness in human-folk. Alas, I have seen all too little of it. I was a slave of the devious sorcerer Unbraaki. He took me from my home and made me his apprentice. I longed to return to my family, but Unbraaki swore he would find me and slay my kin if I ever escaped. I fled into the desert, rather than endanger them, but the land could not sustain me.\"\n\n\"A sad tale,\" you say. \"We will avenge you if we can.\"\n\n\"He is a covetous man, but powerful,\" sighs the monkey. \"Avenge me by taking what was his. I alone know the password to enter his secret vault. It is 'amora'. Say that word, and the doors shall open. Goodbye friends...\"\n\nAt this the monkey closes his eyes and dies in your arms.\n\nYou gain the code A43.";
+            Text = "\"Bless you strangers,\" murmurs the monkey. \"I knew there was kindness in human-folk. Alas, I have seen all too little of it. I was a slave of the devious sorcerer Unbraaki. He took me from my home and made me his apprentice. I longed to return to my family, but Unbraaki swore he would find me and slay my kin if I ever escaped. I fled into the desert, rather than endanger them, but the land could not sustain me.\"\n\n\"A sad tale,\" you say. \"We will avenge you if we can.\"\n\n\"He is a covetous man, but powerful,\" sighs the monkey. \"Avenge me by taking what was his. I alone know the password to enter his secret vault. It is 'amora'. Say that word, and the doors shall open. Goodbye friends...\"\n\nAt this the monkey closes his eyes and dies in your arms.\n\nNote: You gained the code A43.";
 
             Bye = "Burying the monkey in the desert, you make your way onwards.";
 
@@ -12807,7 +12807,7 @@ namespace Book1
 
             DisplayID = 408;
 
-            Text = "The peasant howls in agony as the nails are torn from his hands with rusty pliers. You are forced to withdraw from the court, the bile building in your mouths, at the ghastly inhumanity of it all.\n\nYou gained the code A34.";
+            Text = "The peasant howls in agony as the nails are torn from his hands with rusty pliers. You are forced to withdraw from the court, the bile building in your mouths, at the ghastly inhumanity of it all.\n\nNote: You gained the code A34.";
 
             Choices.clear();
 
@@ -13356,7 +13356,7 @@ namespace Book1
 
             ID = 430;
 
-            Text = "You convince the thieves that you are not dangerous, nor are you agents of the Iron King. Your slave garb assures them you are speaking the truth, and instead you are even offered some decent hospitality in the form of beer and bread. The thief's leader, Brekken, reveals that they are downtrodden citizens of Saltdad, and that they only prey on the merchants and nobles who support the king's rule. \"But slaves have nothing to fear from us,\" he assures you. \"If you wish, we can provide you with some spare clothing to help conceal your identity in the city.\"\n\n\"That would be most kind, thank you, Brekken,\" nods the Everchild. \"You show greater civility than your monarch.\"\n\n\"A plague-ridden dragonyak shows more grace than our king,\" laughs Brekken. \"But thank you, girl, for the compliment.\"\n\nYou can see that the Everchild would dearly love to share her secret with Brekken, but wisely holds her tongue, instead asking if the thieves could show you all a safe route out of the ruined tunnels. Brekken agrees, escorting you into the old storm drains that lie beneath the city, and to a drain cover that leads to an isolated alleyway.\n\nYou have gained a useful ally.\n\nNote: You gained the code A5. Each party member recovers 2 Health points.";
+            Text = "You convince the thieves that you are not dangerous, nor are you agents of the Iron King. Your slave garb assures them you are speaking the truth, and instead you are even offered some decent hospitality in the form of beer and bread. The thief's leader, Brekken, reveals that they are downtrodden citizens of Saltdad, and that they only prey on the merchants and nobles who support the king's rule. \"But slaves have nothing to fear from us,\" he assures you. \"If you wish, we can provide you with some spare clothing to help conceal your identity in the city.\"\n\n\"That would be most kind, thank you, Brekken,\" nods the Everchild. \"You show greater civility than your monarch.\"\n\n\"A plague-ridden dragonyak shows more grace than our king,\" laughs Brekken. \"But thank you, girl, for the compliment.\"\n\nYou can see that the Everchild would dearly love to share her secret with Brekken, but wisely holds her tongue, instead asking if the thieves could show you all a safe route out of the ruined tunnels. Brekken agrees, escorting you into the old storm drains that lie beneath the city, and to a drain cover that leads to an isolated alleyway.\n\nYou have gained a useful ally.\n\nNote: Each party member recovers 2 Health points.  You gained the code A5.";
 
             Choices.clear();
 
@@ -13382,7 +13382,7 @@ namespace Book1
 
             ID = 431;
 
-            Text = "You find 123 silver coins and a RUSTY KEY on the bodies.\n\nNote: If you paid any bribes to an ogre, you can recover that money as well. You gained the code A76.";
+            Text = "You find 123 silver coins and a RUSTY KEY on the bodies.\n\nNote: If you paid any bribes to an ogre, you can recover that money as well.\n\nNote: You gained the code A76.";
 
             Choices.clear();
 
@@ -13718,7 +13718,7 @@ namespace Book1
 
             ID = 444;
 
-            Text = "Kopu is impressed with your learnedness. \"Few people live long enough amongst orcs to grasp their language,\" admits Kopu. \"This requires a significant reward.\"\n\nHe rummages through his notes until he finds some SCROLLS OF LORE (Lore +3). \"These magical scrolls contain vast amounts of knowledge, practically an entire library's worth. I was looking for someone worthy to pass them on to. Consider them yours.\"\n\nNote: In addition, any injured party members may restore their Health to full, as you spend many days resting in the tower whilst you teach the language to Kopu.";
+            Text = "Kopu is impressed with your learnedness. \"Few people live long enough amongst orcs to grasp their language,\" admits Kopu. \"This requires a significant reward.\"\n\nHe rummages through his notes until he finds some SCROLLS OF LORE (Lore +3). \"These magical scrolls contain vast amounts of knowledge, practically an entire library's worth. I was looking for someone worthy to pass them on to. Consider them yours.\"\n\nNote: In addition, all injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
 
             Choices.clear();
 
@@ -13818,7 +13818,7 @@ namespace Book1
 
                 Engine::GET_CODES(party, {Codes::A(25)});
 
-                Bye = "You gained the code A25.";
+                Bye = "\n\nNote: You gained the code A25.";
             }
         }
     };
@@ -13832,7 +13832,7 @@ namespace Book1
 
             ID = 447;
 
-            Text = "Realising your peril, you raise the talisman high in front of you. The green skeletons let out a terrible screech as blue light burns away the scummy slime from their bones, causing them to collapse in a heap. Skallos, roars with hatred, unleashing a great blast of energy from his mouth. The light from the amulet dims for a moment, before shining back into pure radiance. The undead knight cannot stand against its power, igniting into white flames. Soon his body and possessions have turned to dust, all that is left is his sword and a whispered cry for vengeance.\n\nYou may take the SKALLOS RUNEBLADE (Fighting +3, Lore +2) if you wish. Whatever else the black knight might have possessed is now naught but ash.\n\nYou gained the code A79.";
+            Text = "Realising your peril, you raise the talisman high in front of you. The green skeletons let out a terrible screech as blue light burns away the scummy slime from their bones, causing them to collapse in a heap. Skallos, roars with hatred, unleashing a great blast of energy from his mouth. The light from the amulet dims for a moment, before shining back into pure radiance. The undead knight cannot stand against its power, igniting into white flames. Soon his body and possessions have turned to dust, all that is left is his sword and a whispered cry for vengeance.\n\nYou may take the SKALLOS RUNEBLADE (Fighting +3, Lore +2) if you wish. Whatever else the black knight might have possessed is now naught but ash.\n\nNote: You gained the code A79.";
 
             Bye = "There are no additional exits from this room, so you return to the corridor outside.";
 
@@ -14407,12 +14407,14 @@ namespace Book1
 
             if (Engine::COUNT(party) > 0)
             {
-                PreText += " Nursing your injuries, you decide to make your way on.\n\nYou gain the code A73.";
+                PreText += " Nursing your injuries, you decide to make your way on.\n\nNote: Each party member loses 2 Health points. You gained the code A73.";
 
                 Engine::GET_CODES(party, {Codes::A(73)});
             }
-
-            PreText += "\n\nNote: Each party member loses 2 Health points.";
+            else
+            {
+                PreText += "\n\nNote: Each party member loses 2 Health points.";
+            }
 
             Text = PreText.c_str();
         }
@@ -14533,7 +14535,7 @@ namespace Book1
 
             Image = "images/book1/pitiful_waif.png";
 
-            Text = "You walk the streets of Saltdad, watching the bronzed, ragged people and avoiding the sinister Bronzeguard patrols where you can. Eventually you come upon a peasant girl, less than twenty summers old, seated upon an upturned barrel and weeping pitifully. The heartless folk of Saltdad ignore her, some going so far as to cross to the other side of street to avoid her.\n\nYou gained the code A14.";
+            Text = "You walk the streets of Saltdad, watching the bronzed, ragged people and avoiding the sinister Bronzeguard patrols where you can. Eventually you come upon a peasant girl, less than twenty summers old, seated upon an upturned barrel and weeping pitifully. The heartless folk of Saltdad ignore her, some going so far as to cross to the other side of street to avoid her.\n\nNote: You gained the code A14.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Ask her what is wrong", {Book::Type::BOOK1, 829}));
@@ -14726,7 +14728,7 @@ namespace Book1
 
             ID = 478;
 
-            Text = "With the orcs defeated you quickly search their guard room. In total 20 silver coins lies scattered across the table. You can take either orc's CRUDE BLADE (Fighting +0) if you are short on weapons. The first orc also carried a shield (Armour +2).\n\nYou gained the code A56.";
+            Text = "With the orcs defeated you quickly search their guard room. In total 20 silver coins lies scattered across the table. You can take either orc's CRUDE BLADE (Fighting +0) if you are short on weapons. The first orc also carried a shield (Armour +2).\n\nNote: You gained the code A56.";
 
             Bye = "You return to the corridor outside.";
 
@@ -14771,6 +14773,347 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story480 : public Story::Base
+    {
+    public:
+        Story480()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 480;
+
+            Text = "Since this is the first time you have taught this language Kopu is delighted. He offers you a BLUESTONE in exchange.\n\nNote: In addition, any injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::Type::TAUGHT_KOPU_BANDO}))
+            {
+                return {Book::Type::BOOK1, 539};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::BLUESTONE};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::Type::TAUGHT_KOPU_BANDO});
+
+            Engine::REST(party);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 539}; }
+    };
+
+    class Story481 : public Story::Base
+    {
+    public:
+        Story481()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 481;
+
+            Text = "The WAYFINDER ROD seems to hum and vibrate in your pack. Pulling it out you see that the strength of the vibrations lead in a south-easterly direction. You follow it for some time, every so often the rod bidding you to change direction, and you walk through the strange, cool, sunless desert for many hours.\n\nFinally, you arrive at an obelisk, carved with mystic runes. The WAYFINDER ROD crumbles away in your hands. Examining the obelisk you find a strange spell carved into its surface.\n\nOddly, the Shaded Gate has appeared again, the rich colour of the real world blazing through the aperture\n\nNote: You can learn the following spell:\n\nShadow Door (Adventure)\n\nYou can detect the secret doors installed by the penumbral lords when they ruled the land.\n\nRecharge: 50 silver";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go through the Shaded Gate", {Book::Type::BOOK1, 140}));
+            Choices.push_back(Choice::Base("Head south, instead", {Book::Type::BOOK1, 537}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::WAYFINDER_ROD});
+
+            Spells = {Spells::SHADOW_DOOR};
+        }
+    };
+
+    class Story482 : public Story::Base
+    {
+    public:
+        Story482()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 482;
+
+            Text = "You consult the instructions and check the ingredients. This should be possible, but you can see why a less talented alchemist might struggle to complete the potions.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Brew the potions (Team check: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 136}, {Book::Type::BOOK1, 467}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story483 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Story483()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 483;
+
+            Text = "You emerge with key in hand and must stifle a cry of shock as you stroll right in front of a pair of armed guards.\n\nNote: Any party members in the weapon stealing team can leap to your defence.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 292};
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Guard", 4, 4, 4, 8, 0, {Equipment::IRON_SHORTSWORD1}),
+                Monster::Base("Guard", 3, 4, 4, 7, 0, {Equipment::IRON_SHORTSWORD1})};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                if (Engine::COUNT(party, Team::Type::WEAPONS) <= 0)
+                {
+                    destination = {Book::Type::BOOK1, 292};
+                }
+                else
+                {
+                    destination = {Book::Type::BOOK1, 611};
+                }
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 292};
+            }
+        }
+    };
+
+    class Story484 : public Story::Base
+    {
+    public:
+        Story484()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 484;
+
+            Text = "You have arrived at Unbraaki's teleport circle, deep inside his palace.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::HAS_SPELL(party, {Spells::Type::TELEPORT_CIRCLE}))
+            {
+                Choices.push_back(Choice::Base("Cast Teleport Circle", {Book::Type::BOOK1, 859}));
+            }
+
+            Choices.push_back(Choice::Base("There is nothing you can do here but leave through the only exit.", {Book::Type::BOOK1, 67}));
+        }
+    };
+
+    class Story485 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story485()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 485;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                if (party.Members[party.LastSelected].Type == Character::Type::TASHA)
+                {
+                    return {Book::Type::BOOK1, 37};
+                }
+                else if (party.Members[party.LastSelected].Type == Character::Type::AKIHIRO_OF_CHALICE)
+                {
+                    return {Book::Type::BOOK1, 735};
+                }
+                else
+                {
+                    return {Book::Type::NONE, -1};
+                }
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You dash to Jessica's defence, but alas, you are too far out of position. The axe lands with a sickening thud. Sar Jessica loses 3 Health points. You manage to impale the barbarian from behind, kicking his dying body away from the knight.";
+
+            auto jessica = Engine::FIND_CHARACTER(party, Character::Type::SAR_JESSICA_DAYNE);
+
+            if (Engine::IS_ACTIVE(party, jessica))
+            {
+                Engine::GAIN_HEALTH(party.Members[jessica], -3);
+
+                if (Engine::SCORE(party.Members[jessica], Attribute::Type::HEALTH) > 0)
+                {
+                    PreText += "\n\nYou haul Sar Jessica to her feet and spin around to face the rest of your opponents.";
+                }
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 753}; }
+    };
+
+    class Story486 : public Story::Base
+    {
+    public:
+        Story486()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 486;
+
+            Text = "It's kind of an old trick, but you suggest to the goblins that they might want to poison the orc leader's food with the handy vial of poison you have on you. The goblins eagerly agree, cackling wickedly as they sprinkle liberal drops of the venom across the orc's dinner. Several of the braver goblins vanish, dropping off their deadly meals, only to come scurrying back a few minutes later.\n\nThey are too cowardly to check the results of their poisoning. It looks like you will have to do that for them!\n\nThere's no more to do here. Where will you go now?\n\nNote: You gained the code A63.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Leave the kitchen through the north door", {Book::Type::BOOK1, 366}));
+            Choices.push_back(Choice::Base("Leave the kitchen through the south door", {Book::Type::BOOK1, 736}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::VIAL_OF_POISON});
+
+            Engine::GET_CODES(party, {Codes::A(63)});
+        }
+    };
+
+    class Story487 : public Story::Base
+    {
+    public:
+        Story487()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 487;
+
+            Text = "Quiet as a mouse you step towards the thief, drawing your weapon silently. The thief pauses in the middle of his rifling, and spins around. He is a man of Royce, handsome in a roguish kind of way. \"Well, you're a silent one,\" he grins. \"I'll split the takings in this house fifty-fifty with you if you promise not to make trouble.\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Accept his offer", {Book::Type::BOOK1, 377}));
+            Choices.push_back(Choice::Base("Arrest him", {Book::Type::BOOK1, 573}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story488 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story488()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 488;
+
+            Bye = "You thank her for her time and leave.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The Everchild nods to her generals, who reluctantly depart her company. She indicates for you to sit and joins you. \"What is on your mind?\" she asks.";
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(37)}) || Engine::VERIFY_CODES(party, {Codes::A(94)}))
+            {
+                PreText += "\n\n\"Have you considered suing for peace with the patriarch of Cursus?\" you ask. \"Perhaps further bloodshed can be avoided?\"\n\n\"No,\" she says with certainty. \"The patriarch will never rest whilst I am queen. It is the foul beliefs of his god that have kept the valley in its barbaric state. We can never improve, never develop whilst his agents control all trade, progress and education.\n\nAt best, Saltdad would be a light in the darkness, waiting to be snuffed out. For now, we have sympathy from most of the city states. The other kings are tired of the patriarch's tyranny and wish to assert themselves. That won't last forever. A change of king, a bad harvest, a sudden surge amongst the faithful, would all topple my new regime. No. We must strike hard and fast, whilst the momentum is with us. I appreciate your calls for peace, but it would end as a call for bloodshed without end.\"\n\nThe Everchild rises and looks out the window upon her city. \"I need you to trust me just a little while longer,\" she says. \"I will not war forever. I promise.\"\n\nClearly the Everchild has made her mind up.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(37)}) && !Engine::VERIFY_CODES(party, {Codes::A(94)}))
+            {
+                return {Book::Type::BOOK1, 795};
+            }
+            else
+            {
+                return {Book::Type::NONE, 620};
+            }
+        }
+    };
+
+    class Story489 : public Story::Base
+    {
+    public:
+        Story489()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 489;
+
+            Location = Location::Type::SALTDAD;
+
+            Text = "You are not sure how it happened. Foul sorcery? Assassins from the House of Silence? Either way, a lone assassin managed to penetrate the defences around the Everchild and stab her with a poisoned dagger. By the time your team have returned you find her in a critical condition, unable to stand, her flesh looking as grey as stone. In her fevered delirium she insists on leading the troops into battle, but this is clearly impossible. You command her to concentrate on getting better, and to focus all her healing energies on herself.\n\nWord soon gets around about the Everchild's condition.\n\nNote: Each army unit in the Saltdad barracks must lose 1 point of Morale.";
+
+            Bye = "You dread the coming of the dawn, but you realise you cannot escape now. You must face what comes with as much courage as you can muster.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MORALE(party, Location::Type::SALTDAD, -1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 162}; }
     };
 
     auto story001 = Story001();
@@ -15289,6 +15632,16 @@ namespace Book1
     auto story477 = Story477();
     auto story478 = Story478();
     auto story479 = Story479();
+    auto story480 = Story480();
+    auto story481 = Story481();
+    auto story482 = Story482();
+    auto story483 = Story483();
+    auto story484 = Story484();
+    auto story485 = Story485();
+    auto story486 = Story486();
+    auto story487 = Story487();
+    auto story488 = Story488();
+    auto story489 = Story489();
 
     void InitializeStories()
     {
@@ -15344,7 +15697,8 @@ namespace Book1
             &story440, &story441, &story442, &story443, &story444, &story445, &story446, &story447, &story448, &story449,
             &story450, &story451, &story452, &story453, &story454, &story455, &story456, &story457, &story458, &story459,
             &story460, &story461, &story462, &story463, &story464, &story465, &story466, &story467, &story468, &story469,
-            &story470, &story471, &story472, &story473, &story474, &story475, &story476, &story477, &story478, &story479};
+            &story470, &story471, &story472, &story473, &story474, &story475, &story476, &story477, &story478, &story479,
+            &story480, &story481, &story482, &story483, &story484, &story485, &story486, &story487, &story488, &story489};
     }
 }
 #endif

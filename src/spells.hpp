@@ -28,7 +28,9 @@ namespace Spells
         MAELSTROM,
         NATURE_WARD,
         DAZING_LIGHTS,
-        SOOTHING_TOUCH
+        SOOTHING_TOUCH,
+        SHADOW_DOOR,
+        TELEPORT_CIRCLE
     };
 
     enum class MassCombat
@@ -111,6 +113,7 @@ namespace Spells
     auto WISDOM = Spells::Base("Wisdom", "Your mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.", Spells::Scope::EXPLORATION, Spells::Type::WISDOM, 75);
     auto DAZING_LIGHTS = Spells::Base("Dazing Lights", "Swirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.", Spells::Scope::COMBAT, Spells::Type::DAZING_LIGHTS, 50);
     auto SOOTHING_TOUCH = Spells::Base("Soothing Touch", "Your hands glow with divine energy. Choose one of your party members; they can restore 5 Health points.", Spells::Scope::ADVENTURE_COMBAT, Spells::Type::SOOTHING_TOUCH, 50);
+    auto SHADOW_DOOR = Spells::Base("Shadow Door", "You can detect the secret doors installed by the penumbral lords when they ruled the land.", Spells::Scope::ADVENTURE, Spells::Type::SHADOW_DOOR, 50);
 
     std::vector<Spells::Base> BOOK1_SPELLS = {Spells::ANIMAL_SPEECH, Spells::ARMOUR_OF_HEAVEN, Spells::ICE_BOLT, Spells::POISON_STREAM, Spells::UNFAILING_STRIKE, Spells::WOLF_SPIRIT, Spells::MAGIC_CABINET};
 }

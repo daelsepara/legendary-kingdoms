@@ -5498,6 +5498,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::HYGLIPH_FLOWER}))
                                 {
+                                    Difficulty = 5;
+
                                     flash_message = true;
 
                                     flash_color = intRD;
@@ -5508,13 +5510,15 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     }
                                     else if (monsters[opponent].Type == Monster::Type::SNAKEMAN)
                                     {
-
-                                        message = "The snakeman is put off by the pungent odour of the HYGLIPH FLOWER and requires a 5+ to his attack rolls to inflict damage during this battle.";
+                                        if (monsters[opponent].Difficulty == 5)
+                                        {
+                                            Difficulty = 6;
+                                        }
+                                        
+                                        message = "The snakeman is put off by the pungent odour of the HYGLIPH FLOWER and requires a " + std::to_string(Difficulty) + "+ to his attack rolls to inflict damage during this battle.";
                                     }
 
                                     start_ticks = SDL_GetTicks();
-
-                                    Difficulty = 5;
                                 }
                             }
 
@@ -14720,7 +14724,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 }
                 else
                 {
-                    putHeader(renderer, (std::string(character.Name) + "'s items").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string(character.Name) + "'s spells").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
                 }
             }
             else
@@ -14936,7 +14940,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                                 flash_message = true;
                             }
                         }
-                        else if (party.Members[selection].SpellBook[selection].Type == Spells::Type::SOOTHING_TOUCH)
+                        else if (character.SpellBook[selection].Type == Spells::Type::SOOTHING_TOUCH)
                         {
                             auto target = -1;
 
@@ -14982,6 +14986,14 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                                 }
                             }
                         }
+                        else
+                        {
+                            message = "You cannot cast " + std::string(character.SpellBook[selection].Name) + " at this time!";
+
+                            flash_color = intRD;
+
+                            flash_message = true;
+                        }
                     }
                     else
                     {
@@ -15001,14 +15013,14 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         flash_color = intLB;
 
                         character.SpellBook[selection].Charged = false;
-
-                        selection = -1;
-
-                        current = -1;
-
-                        selected = false;
                     }
                 }
+
+                selection = -1;
+
+                current = -1;
+
+                selected = false;
             }
             else if (controls[current].Type == Control::Type::UNLEARN && !hold)
             {
