@@ -250,6 +250,25 @@ namespace Choice
             Type = Choice::Type::ATTRIBUTES;
         }
 
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, std::vector<Attribute::Type> attributes, int difficulty, int success, bool useWeapon)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            DestinationFailed = destinationFailed;
+
+            Attributes = attributes;
+
+            Difficulty = difficulty;
+
+            Success = success;
+
+            UseWeapon = useWeapon;
+
+            Type = Choice::Type::ATTRIBUTES;
+        }
+
         Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, std::vector<Attribute::Type> attributes, int difficulty, int success)
         {
             Text = text;
@@ -346,6 +365,17 @@ namespace Choice
             Type = type;
 
             Codes = codes;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Codes::Type> codes)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            InvisibleCodes = codes;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, int value)

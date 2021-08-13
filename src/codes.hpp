@@ -45,7 +45,9 @@ namespace Codes
         TAUGHT_KOPU_ORCISH,
         ENEMY1_FREEATTACK_ROUND0,
         CHARISMA_SUCCESS_CHALICE,
-        SLAVES_DAMAGE_FOR2
+        SLAVES_DAMAGE_FOR2,
+        CAST_ORB,
+        CAST_MAELSTROM
     };
 
     std::map<Book::Type, const char *> Prefix = {

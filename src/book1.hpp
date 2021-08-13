@@ -2180,7 +2180,16 @@ namespace Book1
 
             if (Engine::HAS_SPELL_ANY(party, {Spells::Type::ORB_OF_ANNIHILATION, Spells::Type::MAELSTROM}))
             {
-                Choices.push_back(Choice::Base("Cast Orb of Annihilation or Maelstrom", {Book::Type::BOOK1, 121}));
+                if (Engine::HAS_SPELL(party, {Spells::Type::ORB_OF_ANNIHILATION}))
+                {
+                    Choices.push_back(Choice::Base("Cast Orb of Annihilation", {Book::Type::BOOK1, 121}, Choice::Type::GET_CODES, {Codes::Type::CAST_ORB}));
+                }
+
+                if (Engine::HAS_SPELL(party, {Spells::Type::MAELSTROM}))
+                {
+                    Choices.push_back(Choice::Base("Cast Maelstrom", {Book::Type::BOOK1, 121}, Choice::Type::GET_CODES, {Codes::Type::CAST_MAELSTROM}));
+                }
+
                 Choices.push_back(Choice::Base("Defend yourselves against these weird opponents", {Book::Type::BOOK1, -67}));
             }
             else
@@ -3950,6 +3959,23 @@ namespace Book1
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::Type::CAST_ORB}))
+            {
+                Engine::LOSE_CODES(party, {Codes::Type::CAST_ORB});
+
+                Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::ORB_OF_ANNIHILATION);
+            }
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::CAST_MAELSTROM}))
+            {
+                Engine::LOSE_CODES(party, {Codes::Type::CAST_MAELSTROM});
+
+                Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::MAELSTROM);
+            }
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 168}; }
@@ -12458,6 +12484,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::ANIMAL_SPEECH);
+
             Engine::GET_CODES(party, {Codes::A(43)});
         }
 
@@ -15317,6 +15345,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::ANIMAL_SPEECH);
+
             Choices.clear();
 
             PreText = "You invoke the spell and call up to the monkeys. \"Ho there, groundlings!\" cries one of the monkeys. \"You bring exciting things into our home, do you? Glittering treasures and strange objects of metal and wood?\"\n\n\"What of it?\" you ask.\n\n\"Give us! Give us!\" chant the monkeys. \"Give us something! Or we take it all!\"";
@@ -16823,7 +16853,7 @@ namespace Book1
 
             if (Engine::HAS_SPELL(party, {Spells::Type::SHADOW_DOOR}))
             {
-                Choices.push_back(Choice::Base("Cast Shadow Door", {Book::Type::BOOK1, 496}));
+                Choices.push_back(Choice::Base("Cast Shadow Door", {Book::Type::BOOK1, 637}));
                 Choices.push_back(Choice::Base("Give up searching", {Book::Type::BOOK1, 620}));
             }
             else
