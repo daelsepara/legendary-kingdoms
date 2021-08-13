@@ -99,7 +99,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, bool inCombat);
 
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
-int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team);
+int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int combat_damage);
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, int combatRound, bool useEquipment);
 int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, int combatRound);
 int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, Attribute::Type &attribute, int score, int rolls);
@@ -4004,7 +4004,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
     return std::max(0, final_damage);
 }
 
-int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team)
+int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int combat_damage)
 {
     auto result = -1;
 
@@ -4110,7 +4110,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                 putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putHeader(renderer, "Assign damage to", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, (std::string("Assign " + std::to_string(combat_damage) + " to")).c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection >= 0 && selection < party.Members.size())
                 {
@@ -5774,7 +5774,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     }
                                     else
                                     {
-                                        result = assignDamage(window, renderer, party, team);
+                                        result = assignDamage(window, renderer, party, team, combat_damage);
                                     }
 
                                     if (result >= 0 && result < party.Members.size())
