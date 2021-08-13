@@ -2407,6 +2407,43 @@ namespace Engine
         return result;
     }
 
+    int COUNT(Party::Base &party, Character::Status status)
+    {
+        auto result = 0;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (Engine::IS_ACTIVE(party, i) && Engine::HAS_STATUS(party.Members[i], status))
+            {
+                result += 1;
+            }
+        }
+
+        return result;
+    }
+
+    int COUNT(Party::Base &party, Team::Type team, Character::Status status)
+    {
+        auto result = 0;
+
+        if (team == Team::Type::NONE)
+        {
+            result = Engine::COUNT(party, status);
+        }
+        else
+        {
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::IS_ACTIVE(party, i) && party.Members[i].Team == team && Engine::HAS_STATUS(party.Members[i], status))
+                {
+                    result += 1;
+                }
+            }
+        }
+
+        return result;
+    }
+
     int FIRST(Party::Base &party, Attribute::Type type, int score)
     {
         auto result = -1;
