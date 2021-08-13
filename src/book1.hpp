@@ -17443,6 +17443,238 @@ namespace Book1
         }
     };
 
+    class Story560 : public Story::Base
+    {
+    public:
+        Story560()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 560;
+
+            Text = "Mannus is clearly troubled at the brazen way you are attempting to bribe him. Suspecting that you might be a plant from one of his opponents he calls the guards and has you arrested. Here, in the heart of the temple, you have no chance of escape.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 55}; }
+    };
+
+    class Story561 : public Story::Base
+    {
+    public:
+        Story561()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 561;
+
+            Text = "You have returned to the orc guard room. Except for a pair of dead orcs there is nothing to see here. You return to the corridor.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 350}; }
+    };
+
+    class Story562 : public Story::Base
+    {
+    public:
+        Story562()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 562;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(7)}))
+            {
+                return {Book::Type::BOOK1, 263};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 750};
+            }
+        }
+    };
+
+    class Story563 : public Story::Base
+    {
+    public:
+        Story563()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 563;
+
+            Text = "This unnatural monster cannot be allowed to live. Drawing your weapons with a grimace, you advance.\n\nNote: Imopposh, instead of attacking, will cast the following spells each turn, as long as he is still alive:\n\n1st turn: Imopposh casts a Thunderbolt spell. He makes two Fighting: 10 attacks.\n\n2nd turn: Imopposh casts an Orb of Annihilation spell. He makes a single Fighting: 13 attack.\n\n3rd turn: Imopposh casts a Sandstorm spell. He makes a Fighting: 3 attack on each party member.\n\n4th turn onwards: Imopposh makes a standard attack.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {Monster::Base("Imopposh the Mad", Monster::Type::IMOPPOSH_THE_MAD, 3, 4, 4, 30, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 311}; }
+    };
+
+    class Story564 : public Story::Base
+    {
+    public:
+        Story564()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 564;
+
+            Text = "You are about to battle the foremost wizard of the Valley of Bones. His colourful robe blazes with light, making him hard to see as he commands his monkeys to attack. To your horror the monkeys do not attack with teeth and nails, but with blasts of magic. You are not just fighting one sorcerer -- but a whole pack of them!\n\nNote: Unbraaki fights with blasts of black flames from his hands. These flames leech your life into his. For every Health point you lose, Unbraaki gains a Health point, even if this takes him over his starting Health. The monkeys do not attack physically, but each will cast a spell from the following list:\n\nIce Bolt: Make a Fighting: 8 attack at 4+ difficulty\n\nUnfailing Strike: Inflict 3 damage on one party member\n\nPoison Stream: Make two Fighting: 5 attacks at 4+ difficulty";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Unbraaki", Monster::Type::UNBRAAKI, 8, 3, 6, 11, 0),
+                Monster::Base("Monkey", Monster::Type::MONKEY_WITH_SPELLS, 0, 0, 5, 3, 0),
+                Monster::Base("Monkey", Monster::Type::MONKEY_WITH_SPELLS, 0, 0, 5, 4, 0),
+                Monster::Base("Monkey", Monster::Type::MONKEY_WITH_SPELLS, 0, 0, 5, 3, 0),
+                Monster::Base("Monkey", Monster::Type::MONKEY_WITH_SPELLS, 0, 0, 5, 5, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 509}; }
+    };
+
+    class Story565 : public Story::Base
+    {
+    public:
+        Story565()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 565;
+
+            Text = "There is no chance that you will all be able to sneak up to the cauldron as a team without raising the alarm. Nominate a party member to sneak up to cauldron with the vial of poison.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Poison the Cauldron (Individual check: Stealth 4+, Successes: 3)", {Book::Type::BOOK1, 661}, {Book::Type::BOOK1, 58}, {Attribute::Type::STEALTH}, 4, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story566 : public Story::Base
+    {
+    public:
+        Story566()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 566;
+
+            Text = "You have reached a crossroads, with tunnels going off in all directions. The corridors are short to the south and west, and each contains a door. To the east the corridor stretches into darkness, though you can make out a door in the north wall. Going north you think you can make out another pair of doors, but you will have to get closer to find out.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go north", {Book::Type::BOOK1, 736}));
+            Choices.push_back(Choice::Base("Go east, down the corridor", {Book::Type::BOOK1, 350}));
+            Choices.push_back(Choice::Base("Go east, and through the door in the north wall", {Book::Type::BOOK1, 723}));
+            Choices.push_back(Choice::Base("Go through the door in the south tunnel", {Book::Type::BOOK1, 857}));
+            Choices.push_back(Choice::Base("Go through the door in the west tunnel", {Book::Type::BOOK1, 151}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story567 : public Story::Base
+    {
+    public:
+        Story567()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 567;
+
+            Text = "With your missions assigned the Everchild wishes you good luck as you vanish under the cover of night.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::COUNT(party, Team::Type::ASSASSINATION_DESCANTOS) > 0)
+            {
+                return {Book::Type::BOOK1, 880};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 639};
+            }
+        }
+    };
+
+    class Story568 : public Story::Base
+    {
+    public:
+        Story568()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 568;
+
+            Text = "You have returned to the chamber of Skallos, the dark knight. This champion of evil has been destroyed, and you have no wish to remain in his haunted chamber any longer than you need to.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 165}; }
+    };
+
+    class Story569 : public Story::Base
+    {
+    public:
+        Story569()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 569;
+
+            Text = "You are on the Westroad, somewhat near to Clifftop. Where will you travel now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("West, to Clifftop", {Book::Type::BOOK1, 19}));
+            Choices.push_back(Choice::Base("Southwest, into the desert", {Book::Type::BOOK1, 350}));
+            Choices.push_back(Choice::Base("South, to the Tumblestones", {Book::Type::BOOK1, 137}));
+            Choices.push_back(Choice::Base("East, along the road to Saltdad", {Book::Type::BOOK1, 511}));
+            Choices.push_back(Choice::Base("North, to the Salt Plains", {Book::Type::BOOK1, 460}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -18046,6 +18278,16 @@ namespace Book1
     auto story558 = Story558();
     auto event558 = Event558();
     auto story559 = Story559();
+    auto story560 = Story560();
+    auto story561 = Story561();
+    auto story562 = Story562();
+    auto story563 = Story563();
+    auto story564 = Story564();
+    auto story565 = Story565();
+    auto story566 = Story566();
+    auto story567 = Story567();
+    auto story568 = Story568();
+    auto story569 = Story569();
 
     void InitializeStories()
     {
@@ -18110,7 +18352,8 @@ namespace Book1
             &story520, &story521, &story522, &story523, &story524, &story525, &story526, &story527, &story528, &story529,
             &story530, &story531, &story532, &story533, &story534, &story535, &story536, &story537, &story538, &story539,
             &story540, &story541, &story542, &story543, &story544, &story545, &story546, &story547, &story548, &story549,
-            &story550, &story551, &story552, &story553, &story554, &story555, &story556, &story557, &story558, &story559};
+            &story550, &story551, &story552, &story553, &story554, &story555, &story556, &story557, &story558, &story559,
+            &story560, &story561, &story562, &story563, &story564, &story565, &story566, &story567, &story568, &story569};
     }
 }
 #endif

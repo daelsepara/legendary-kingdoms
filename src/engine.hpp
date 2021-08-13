@@ -756,7 +756,7 @@ namespace Engine
 
         if (monster.Health > monster.MaximumHealth)
         {
-            if (monster.Type == Monster::Type::ZEALOT)
+            if (monster.Type == Monster::Type::ZEALOT || monster.Type == Monster::Type::UNBRAAKI)
             {
                 monster.MaximumHealth = monster.Health;
             }

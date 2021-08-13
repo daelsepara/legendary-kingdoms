@@ -100,7 +100,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
 int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team);
-int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment);
+int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, int combatRound, bool useEquipment);
 int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<int> hasAttacked, int combatRound);
 int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, Attribute::Type &attribute, int score, int rolls);
 int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, Spells::Base &spell, int combatant, int opponent, int fighting_score);
@@ -5156,7 +5156,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                             {
                                 if (combat_damage > 0)
                                 {
-                                    message = std::string(party.Fleet[party.CurrentShip].Name) + " dealt " + std::to_string(combat_damage) + " DAMAGE!";
+                                    message = std::string(party.Fleet[party.CurrentShip].Name) + " dealt " + std::to_string(combat_damage) + " damage!";
 
                                     start_ticks = SDL_GetTicks();
 
@@ -5223,7 +5223,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
     return std::max(0, combat_damage);
 }
 
-int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, bool useEquipment)
+int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, int combatRound, bool useEquipment)
 {
     auto combat_damage = 0;
 
@@ -5232,6 +5232,48 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     auto Difficulty = monsters[opponent].Difficulty;
 
     std::vector<int> target_damage = {};
+
+    auto spell = Spells::Type::NONE;
+
+    if (direction == 1)
+    {
+        if (monsters[opponent].Type == Monster::Type::IMOPPOSH_THE_MAD)
+        {
+            if (combatRound == 0)
+            {
+                attacks = std::min(2, Engine::COUNT(party, team));
+            }
+            else if (combatRound == 2)
+            {
+                attacks = Engine::COUNT(party, team);
+            }
+        }
+        else if (monsters[opponent].Type == Monster::Type::MONKEY_WITH_SPELLS)
+        {
+            auto roll = Engine::ROLL(1);
+
+            if (roll <= 2)
+            {
+                spell = Spells::Type::ICE_BOLT;
+
+                Difficulty = 4;
+            }
+            else if (roll <= 4)
+            {
+                spell = Spells::Type::UNFAILING_STRIKE;
+
+                Difficulty = 1;
+            }
+            else if (roll <= 6)
+            {
+                attacks = std::min(2, Engine::COUNT(party, team));
+
+                spell = Spells::Type::POISON_STREAM;
+
+                Difficulty = 4;
+            }
+        }
+    }
 
     for (auto num_attacks = 0; num_attacks < attacks; num_attacks++)
     {
@@ -5552,6 +5594,54 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     start_ticks = SDL_GetTicks();
                                 }
                             }
+                            else if (monsters[opponent].Type == Monster::Type::IMOPPOSH_THE_MAD)
+                            {
+                                if (num_attacks == 0)
+                                {
+                                    flash_message = true;
+
+                                    flash_color = intRD;
+
+                                    start_ticks = SDL_GetTicks();
+
+                                    if (combatRound == 0)
+                                    {
+                                        message = "Imopposh casts a Thunderbolt spell! He makes two Fighting: 10 attacks!";
+                                    }
+                                    else if (combatRound == 1)
+                                    {
+                                        message = "Imopposh casts an Orb of Annihilation! He makes a single Fighting: 13 attack!";
+                                    }
+                                    else if (combatRound == 2)
+                                    {
+                                        message = "Imopposh casts a Sandstorm spel! He makes a Fighting: 3 attack on each party member!";
+                                    }
+                                }
+                            }
+
+                            if (spell != Spells::Type::NONE && num_attacks == 0)
+                            {
+                                flash_message = true;
+
+                                flash_color = intRD;
+
+                                start_ticks = SDL_GetTicks();
+
+                                message = std::string(monsters[opponent].Name) + " casts ";
+
+                                if (spell == Spells::Type::ICE_BOLT)
+                                {
+                                    message += "Ice Bolt! The " + std::string(monsters[opponent].Name) + " makes a Fighting: 8 attack at Difficulty: " + std::to_string(Difficulty) + "+";
+                                }
+                                else if (spell == Spells::Type::UNFAILING_STRIKE)
+                                {
+                                    message += "Unfailing Strike! The " + std::string(monsters[opponent].Name) + " deals 3 damage to your party!";
+                                }
+                                else if (spell == Spells::Type::POISON_STREAM)
+                                {
+                                    message += "Poison Stream! The " + std::string(monsters[opponent].Name) + " makes a Fighting: 5 attack at Difficulty: " + std::to_string(Difficulty) + "+";
+                                }
+                            }
 
                             special_event_trigger = false;
                         }
@@ -5582,6 +5672,35 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                         attack_score = monsters[opponent].Attack;
+
+                        if (monsters[opponent].Type == Monster::Type::IMOPPOSH_THE_MAD)
+                        {
+                            if (combatRound == 0)
+                            {
+                                attack_score = 10;
+                            }
+                            else if (combatRound == 1)
+                            {
+                                attack_score = 13;
+                            }
+                            else if (combatRound == 2)
+                            {
+                                attack_score = 3;
+                            }
+                        }
+
+                        if (spell == Spells::Type::ICE_BOLT)
+                        {
+                            attack_score = 8;
+                        }
+                        else if (spell == Spells::Type::UNFAILING_STRIKE)
+                        {
+                            attack_score = 3;
+                        }
+                        else if (spell == Spells::Type::POISON_STREAM)
+                        {
+                            attack_score = 5;
+                        }
 
                         if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
                         {
@@ -5819,11 +5938,16 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                                     current = -1;
 
+                                                    if (monsters[opponent].Type == Monster::Type::UNBRAAKI && combat_damage > 0)
+                                                    {
+                                                        Engine::GAIN_HEALTH(monsters[opponent], combat_damage);
+                                                    }
+
                                                     break;
                                                 }
                                                 else
                                                 {
-                                                    message = std::string(party.Members[result].Name) + " dealt " + std::to_string(combat_damage) + " DAMAGE!";
+                                                    message = std::string(party.Members[result].Name) + " dealt " + std::to_string(combat_damage) + " damage!";
 
                                                     start_ticks = SDL_GetTicks();
 
@@ -5833,12 +5957,26 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                                     Engine::GAIN_HEALTH(party.Members[result], -combat_damage);
 
+                                                    if (monsters[opponent].Type == Monster::Type::UNBRAAKI && combat_damage > 0)
+                                                    {
+                                                        Engine::GAIN_HEALTH(monsters[opponent], combat_damage);
+
+                                                        message += " " + std::string(monsters[opponent].Name) + " gains " + std::to_string(combat_damage) + " health point";
+
+                                                        if (combat_damage > 1)
+                                                        {
+                                                            message += "s";
+                                                        }
+
+                                                        message += ".";
+                                                    }
+
                                                     combat_damage = result;
                                                 }
                                             }
                                             else
                                             {
-                                                if (attacks < Engine::COUNT(party, team))
+                                                if ((num_attacks + 1) < Engine::COUNT(party, team))
                                                 {
                                                     message = std::string(party.Members[result].Name) + " was already assigned damage. Please choose another target.";
 
@@ -8519,7 +8657,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                     flash_color = intRD;
                                                 }
                                             }
-                                            else if (party.Members[selection].SpellBook[i].Type == Spells::Type::POSION_STREAM)
+                                            else if (party.Members[selection].SpellBook[i].Type == Spells::Type::POISON_STREAM)
                                             {
                                                 if (Engine::COUNT(monsters, combatRound) > 0)
                                                 {
@@ -11702,7 +11840,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                         useWeapons = false;
                                                     }
 
-                                                    auto damage = attackScreen(window, renderer, party, team, monsters, result, opponent, 0, useWeapons);
+                                                    auto damage = attackScreen(window, renderer, party, team, monsters, result, opponent, 0, combatRound, useWeapons);
 
                                                     if (damage >= 0)
                                                     {
@@ -11887,9 +12025,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     {
                                         if (monsters[i].Type != Monster::Type::ZEALOT_HEALER || Engine::COUNT(monsters) == 1)
                                         {
-                                            if (monsters[i].Attack > 0 && monsters[i].Difficulty > 0)
+                                            if ((monsters[i].Attack > 0 && monsters[i].Difficulty > 0) || monsters[i].Type == Monster::Type::MONKEY_WITH_SPELLS)
                                             {
-                                                attackScreen(window, renderer, party, team, monsters, -1, i, 1, useEquipment);
+                                                attackScreen(window, renderer, party, team, monsters, -1, i, 1, combatRound, useEquipment);
                                             }
                                         }
                                     }

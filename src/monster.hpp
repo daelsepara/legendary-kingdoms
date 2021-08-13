@@ -35,7 +35,10 @@ namespace Monster
         TOMMUL,
         SKELETON_ARCHERS,
         JUNGLE,
-        BEETLE_SWARM
+        BEETLE_SWARM,
+        IMOPPOSH_THE_MAD,
+        MONKEY_WITH_SPELLS,
+        UNBRAAKI
     };
 
     class Base
