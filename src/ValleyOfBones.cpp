@@ -16926,7 +16926,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     {
                         auto result = Engine::FIND_LIST(selection, offset + current);
 
-                        if (result >= 0)
+                        if (result >= 0 && result < selection.size())
                         {
                             selection.erase(selection.begin() + result);
                         }
@@ -16938,8 +16938,6 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             }
                         }
                     }
-
-                    current = -1;
 
                     selected = false;
                 }
