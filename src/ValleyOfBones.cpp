@@ -358,9 +358,6 @@ int fadeImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, i
 
 void stretchImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, int h)
 {
-    auto splash_h = image->h;
-    auto splash_w = w;
-
     if (image && renderer)
     {
         SDL_Rect position;
@@ -698,8 +695,6 @@ void renderTextButtons(SDL_Renderer *renderer, std::vector<TextButton> controls,
                 {
                     for (auto size = pts; size >= 0; size--)
                     {
-                        auto Y = controls[i].Type == Control::Type::SCROLL_UP ? texty + border_space : scrolly;
-
                         if (i == selected)
                         {
                             SDL_Rect rect;
@@ -978,8 +973,6 @@ bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
     auto splashLogo = "images/legendary-kingdoms.png";
 
     auto splashImage = createImage(splashLogo);
-
-    auto quit = false;
 
     if (window && renderer && splashImage)
     {
@@ -1431,7 +1424,6 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     auto *title = "Legendary Kingdoms: Party";
 
     auto font_size = 28;
-    auto text_space = 8;
 
     TTF_Init();
 
@@ -1440,9 +1432,6 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
     TTF_SetFontKerning(font_dark11, 0);
-
-    auto box_space = 10;
-    auto character_box = (int)(text_bounds * 2 / 3);
 
     // Render window
     if (window && renderer)
@@ -1484,8 +1473,6 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         {
             // Fill the surface with background
             fillWindow(renderer, intWH);
-
-            auto adventurerh = splashw;
 
             putHeader(renderer, "Location", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
             putText(renderer, Location::Description[party.Location], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
@@ -1877,7 +1864,6 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
     auto *title = "Legendary Kingdoms: View Party";
 
     auto font_size = 20;
-    auto text_space = 8;
     auto garamond_size = 24;
 
     TTF_Init();
@@ -1889,7 +1875,6 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
     TTF_SetFontKerning(font_dark11, 0);
 
-    auto box_space = 10;
     auto character_box = (int)(text_bounds * 2 / 3);
     auto offset = 0;
 
@@ -2210,7 +2195,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                 auto mousex = 0;
                 auto mousey = 0;
 
-                auto state = SDL_GetMouseState(&mousex, &mousey);
+                SDL_GetMouseState(&mousex, &mousey);
 
                 auto zoomw = (int)(0.80 * (double)textwidth);
                 auto zoomh = (int)(0.80 * (double)text_bounds);
@@ -2506,7 +2491,6 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     auto *title = "Legendary Kingdoms: Select adventurers for your party";
 
     auto font_size = 20;
-    auto text_space = 8;
     auto garamond_size = 24;
 
     TTF_Init();
@@ -2977,7 +2961,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer)
                 auto mousex = 0;
                 auto mousey = 0;
 
-                auto state = SDL_GetMouseState(&mousex, &mousey);
+                SDL_GetMouseState(&mousex, &mousey);
 
                 auto zoomw = (int)(0.40 * (double)(marginw - 2 * offset_x));
                 auto zoomh = (int)(0.40 * (double)text_bounds);
@@ -3838,8 +3822,6 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 {
     auto combat_damage = damage;
     auto final_damage = damage;
-    auto font_size = 32;
-    auto text_space = 8;
 
     if (Engine::SCORE(character, Attribute::Type::HEALTH) > 0 && Engine::ARMOUR(character) > 0)
     {
@@ -3921,8 +3903,6 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
             auto hold = false;
 
-            auto focus = 0;
-
             std::vector<int> results = {};
 
             auto save_score = Engine::ARMOUR(character);
@@ -3935,12 +3915,10 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
             auto size_dice = 64;
 
             auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
-            auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
             auto controls = std::vector<TextButton>();
 
             auto reduced = false;
-            auto assigned = false;
 
             final_damage = combat_damage;
             auto reduced_damage = 0;
@@ -4153,14 +4131,9 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
         auto text_space = 8;
-        auto font_size = 32;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -4189,8 +4162,6 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             auto scrollDown = false;
 
             auto hold = false;
-
-            auto scrollSpeed = 1;
 
             auto space = 8;
 
@@ -4475,19 +4446,15 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
             auto hold = false;
 
-            auto focus = 0;
-
             std::vector<int> results = {};
 
             auto size_dice = 64;
 
             auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
-            auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
             auto controls = std::vector<TextButton>();
 
             auto damaged = false;
-            auto assigned = false;
 
             while (!done)
             {
@@ -4924,8 +4891,6 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                 auto hold = false;
 
-                auto focus = 0;
-
                 std::vector<int> results = {};
 
                 auto attack_score = 1;
@@ -4933,7 +4898,6 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                 auto size_dice = 64;
 
                 auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
-                auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
                 auto controls = std::vector<TextButton>();
 
@@ -5379,7 +5343,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 auto size_dice = 64;
 
                 auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
-                auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
                 auto controls = std::vector<TextButton>();
 
@@ -5426,7 +5389,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     if (direction == 0)
                                     {
-                                        if (results[i] >= monsters[opponent].Defence)
+                                        if (results[i] >= (monsters[opponent].Defence - focus))
                                         {
                                             thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
 
@@ -5604,11 +5567,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         if (useEquipment)
                         {
-                            attack_score = Engine::FIGHTING_SCORE(party.Members[combatant]);
+                            attack_score = Engine::FIGHTING_SCORE(party.Members[combatant]) - (focus * 5);
                         }
                         else
                         {
-                            attack_score = Engine::RAW_SCORE(party.Members[combatant], Attribute::Type::FIGHTING, true);
+                            attack_score = Engine::RAW_SCORE(party.Members[combatant], Attribute::Type::FIGHTING, true) - (focus * 5);
                         }
 
                         attacker_string = "Fighting: " + std::to_string(attack_score);
@@ -6048,14 +6011,11 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             auto hold = false;
 
-            auto focus = 0;
-
             std::vector<int> results = {};
 
             auto size_dice = 64;
 
             auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
-            auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -6354,14 +6314,11 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
 
             auto hold = false;
 
-            auto focus = 0;
-
             std::vector<int> results = {};
 
             auto size_dice = 64;
 
             auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
-            auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -6614,11 +6571,8 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
         auto font_size = 24;
         auto text_space = 8;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
@@ -7038,14 +6992,9 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
-        auto font_size = 20;
         auto text_space = 8;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -7398,14 +7347,9 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
-        auto font_size = 20;
         auto text_space = 8;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -7831,11 +7775,11 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                 {
                     if (Skill == Attribute::Type::FIGHTING)
                     {
-                        skill_score += Engine::FIGHTING_SCORE(party.Members[team[i]]);
+                        skill_score += (Engine::FIGHTING_SCORE(party.Members[team[i]]) - (focus * 5));
                     }
                     else
                     {
-                        skill_score += Engine::SCORE(party.Members[team[i]], Skill);
+                        skill_score += (Engine::SCORE(party.Members[team[i]], Skill) - (focus * 5));
                     }
                 }
                 else
@@ -7849,11 +7793,11 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                             fight_score = 0;
                         }
 
-                        skill_score += fight_score;
+                        skill_score += (fight_score - (focus * 5));
                     }
                     else
                     {
-                        skill_score += Engine::RAW_SCORE(party.Members[team[i]], Skill, true);
+                        skill_score += (Engine::RAW_SCORE(party.Members[team[i]], Skill, true) - (focus * 5));
                     }
                 }
             }
@@ -7866,7 +7810,6 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             auto size_dice = 64;
 
             auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
-            auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -7908,7 +7851,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                             if (stage == Attribute::Test::CHECK || stage == Attribute::Test::MAGIC)
                             {
-                                if (results[i] >= difficulty)
+                                if (results[i] >= (difficulty - focus))
                                 {
                                     thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
 
@@ -7978,18 +7921,18 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                 {
                     if (Skill == Attribute::Type::FIGHTING)
                     {
-                        score1 = Engine::FIGHTING_SCORE(party.Members[team[0]]);
+                        score1 = Engine::FIGHTING_SCORE(party.Members[team[0]]) - (focus * 5);
                     }
                     else
                     {
-                        score1 = Engine::SCORE(party.Members[team[0]], Skill);
+                        score1 = Engine::SCORE(party.Members[team[0]], Skill) - (focus * 5);
                     }
                 }
                 else
                 {
                     if (Skill == Attribute::Type::FIGHTING)
                     {
-                        score1 = Engine::SCORE(party.Members[team[0]], Attribute::Type::FIGHTING);
+                        score1 = Engine::SCORE(party.Members[team[0]], Attribute::Type::FIGHTING) - (focus * 5);
 
                         if (score1 < 0)
                         {
@@ -7998,7 +7941,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     }
                     else
                     {
-                        score1 = Engine::RAW_SCORE(party.Members[team[0]], Skill, true);
+                        score1 = Engine::RAW_SCORE(party.Members[team[0]], Skill, true) - (focus * 5);
                     }
                 }
 
@@ -8018,18 +7961,18 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     {
                         if (Skill == Attribute::Type::FIGHTING)
                         {
-                            score2 = Engine::FIGHTING_SCORE(party.Members[team[1]]);
+                            score2 = Engine::FIGHTING_SCORE(party.Members[team[1]]) - (focus * 5);
                         }
                         else
                         {
-                            score2 = Engine::SCORE(party.Members[team[1]], Skill);
+                            score2 = Engine::SCORE(party.Members[team[1]], Skill) - (focus * 5);
                         }
                     }
                     else
                     {
                         if (Skill == Attribute::Type::FIGHTING)
                         {
-                            score2 = Engine::SCORE(party.Members[team[1]], Attribute::Type::FIGHTING);
+                            score2 = Engine::SCORE(party.Members[team[1]], Attribute::Type::FIGHTING) - (focus * 5);
 
                             if (score2 < 0)
                             {
@@ -8038,7 +7981,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         }
                         else
                         {
-                            score2 = Engine::RAW_SCORE(party.Members[team[1]], Skill, true);
+                            score2 = Engine::RAW_SCORE(party.Members[team[1]], Skill, true) - (focus * 5);
                         }
                     }
 
@@ -8264,14 +8207,9 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
-        auto font_size = 20;
         auto text_space = 8;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -8300,8 +8238,6 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             auto scrollDown = false;
 
             auto hold = false;
-
-            auto scrollSpeed = 1;
 
             auto space = 8;
 
@@ -8497,8 +8433,6 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                             }
                                             else if (party.Members[selection].SpellBook[i].Type == Spells::Type::DAZING_LIGHTS)
                                             {
-                                                auto target = -1;
-
                                                 if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
                                                 {
                                                     flash_message = true;
@@ -8807,14 +8741,9 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
-        auto font_size = 20;
         auto text_space = 8;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -8843,8 +8772,6 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             auto scrollDown = false;
 
             auto hold = false;
-
-            auto scrollSpeed = 1;
 
             auto space = 8;
 
@@ -9103,14 +9030,9 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
-        auto font_size = 20;
         auto text_space = 8;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -9391,14 +9313,9 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
-        auto font_size = 20;
         auto text_space = 8;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
 
@@ -9669,14 +9586,9 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
-        auto font_size = 20;
         auto text_space = 8;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -9989,14 +9901,9 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
-        auto font_size = 20;
         auto text_space = 8;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space) / (88);
         auto last = offset + limit;
@@ -10437,14 +10344,9 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
-        auto font_size = 20;
         auto text_space = 8;
-        auto messageh = (int)(0.25 * SCREEN_HEIGHT);
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space) / (88);
         auto last = offset + limit;
@@ -10869,15 +10771,11 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
         std::vector<Button> controls;
 
-        auto font_size = 20;
         auto text_space = 8;
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -10902,7 +10800,6 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
         }
 
         auto combatRound = 0;
-        auto round0_attacks = 0;
 
         auto current_mode = Control::Type::ATTACK;
         auto canFlee = storyFlee;
@@ -11364,15 +11261,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto main_buttonh = 48;
-
         std::vector<Button> controls;
 
-        auto font_size = 20;
         auto text_space = 8;
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -12486,7 +12379,6 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto selected = false;
     auto current = -1;
-    auto quit = false;
     auto scrollUp = false;
     auto scrollDown = false;
     auto hold = false;
@@ -13043,14 +12935,9 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
         auto selection = std::vector<int>();
 
-        auto main_buttonh = 48;
-
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
-
-        auto scrolly = texty + text_bounds - arrow_size - border_space;
-        auto offsetx = (int)((1.0 - Margin) * SCREEN_WIDTH) - arrow_size;
 
         int offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
@@ -13575,7 +13462,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     auto infoh = 48;
     auto boxh = (int)(0.150 * SCREEN_HEIGHT);
-    auto box_space = 10;
 
     auto font_size = 28;
     auto text_space = 8;
@@ -13620,7 +13506,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     auto selected = false;
     auto current = -1;
-    auto quit = false;
     auto scrollUp = false;
     auto scrollDown = false;
     auto hold = false;
@@ -13836,6 +13721,10 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     auto used_up = false;
 
                     auto item = party.Vault[selection];
+
+                    if (item.Type == Equipment::Type::SCROLL_OF_RAGE)
+                    {
+                    }
 
                     if (used_up)
                     {
@@ -14113,7 +14002,6 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
     auto infoh = 48;
     auto boxh = (int)(0.150 * SCREEN_HEIGHT);
-    auto box_space = 10;
 
     auto font_size = 28;
     auto text_space = 8;
@@ -14158,7 +14046,6 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
     auto selected = false;
     auto current = -1;
-    auto quit = false;
     auto scrollUp = false;
     auto scrollDown = false;
     auto hold = false;
@@ -14888,7 +14775,6 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
     auto selected = false;
     auto current = -1;
-    auto quit = false;
     auto scrollUp = false;
     auto scrollDown = false;
     auto hold = false;
@@ -15411,7 +15297,6 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
     auto selected = false;
     auto current = -1;
-    auto quit = false;
     auto scrollUp = false;
     auto scrollDown = false;
     auto hold = false;
@@ -15771,7 +15656,6 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Par
 
         auto selected = false;
         auto current = -1;
-        auto quit = false;
         auto scrollUp = false;
         auto scrollDown = false;
         auto hold = false;
@@ -16059,7 +15943,6 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         auto selected = false;
         auto current = -1;
-        auto quit = false;
         auto scrollUp = false;
         auto scrollDown = false;
         auto hold = false;
@@ -16336,7 +16219,6 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         auto selected = false;
         auto current = -1;
-        auto quit = false;
         auto scrollUp = false;
         auto scrollDown = false;
         auto hold = false;
@@ -16718,7 +16600,6 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         auto selected = false;
         auto current = -1;
-        auto quit = false;
         auto scrollUp = false;
         auto scrollDown = false;
         auto hold = false;
@@ -17045,7 +16926,6 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
         auto selected = false;
         auto current = -1;
-        auto quit = false;
         auto scrollUp = false;
         auto scrollDown = false;
         auto hold = false;
@@ -17448,8 +17328,6 @@ std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer)
 {
     auto controls = std::vector<Button>();
 
-    auto text_space = 8;
-
     auto idx = 0;
 
     auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
@@ -17476,15 +17354,10 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
     TTF_SetFontKerning(font_dark11, 0);
 
-    auto box_space = 10;
-    auto character_box = (int)(text_bounds * 2 / 3);
-
     // Render window
     if (window && renderer)
     {
         SDL_SetWindowTitle(window, title);
-
-        const char *choices[4] = {"BUY/SELL SHIPS", "REPAIR SHIP", "BUY/SELL CARGO", "BACK"};
 
         auto current = 0;
 
@@ -17521,8 +17394,6 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
         {
             // Fill the surface with background
             fillWindow(renderer, intWH);
-
-            auto adventurerh = splashw;
 
             putHeader(renderer, "Location", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
             putText(renderer, Location::Description[party.Location], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
@@ -18067,8 +17938,6 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, i
 
         auto hold = false;
 
-        auto focus = 0;
-
         std::vector<int> morale = {};
 
         int morale_score = 0;
@@ -18076,7 +17945,6 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, i
         auto size_dice = 64;
 
         auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
-        auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
         auto controls = std::vector<TextButton>();
 
@@ -18339,8 +18207,6 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
         auto hold = false;
 
-        auto focus = 0;
-
         std::vector<int> party_combat_results = {};
         std::vector<int> enemy_combat_results = {};
         std::vector<int> morale = {};
@@ -18352,7 +18218,6 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
         auto size_dice = 64;
 
         auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
-        auto rows = (boxh * 3 - box_space) / (size_dice + box_space);
 
         auto controls = std::vector<TextButton>();
 
@@ -18884,8 +18749,6 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto font_size = 28;
-
         auto box_space = 10;
 
         auto text_space = 8;
@@ -18905,11 +18768,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto popupx = (SCREEN_WIDTH - popupw) / 2;
         auto popupy = (SCREEN_HEIGHT - popuph) / 2;
 
-        auto done = false;
-
         auto main_buttonw = 220;
-
-        auto main_buttonh = 48;
 
         std::vector<Button> controls_yes = {Button(0, "icons/yes.png", 0, 0, 0, 0, popupx + button_space, popupy + popuph - button_space - buttonh, Control::Type::CONFIRM)};
 
@@ -19259,8 +19118,6 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto done = false;
 
         auto main_buttonw = 220;
-
-        auto main_buttonh = 48;
 
         auto controls = std::vector<Button>();
 
@@ -20106,7 +19963,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 auto mousex = 0;
                 auto mousey = 0;
 
-                auto state = SDL_GetMouseState(&mousex, &mousey);
+                SDL_GetMouseState(&mousex, &mousey);
 
                 auto zoomw = (int)(0.80 * (double)listwidth);
                 auto zoomh = (int)(0.80 * (double)text_bounds);
@@ -21963,8 +21820,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             auto jumpBook = jump.first;
 
-            auto jumpID = jump.second;
-
             if (jumpBook != Book::Type::NONE)
             {
                 story = findStory(jump);
@@ -22220,7 +22075,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     auto mousex = 0;
                     auto mousey = 0;
 
-                    auto state = SDL_GetMouseState(&mousex, &mousey);
+                    SDL_GetMouseState(&mousex, &mousey);
 
                     auto zoomw = (int)(0.80 * (double)textwidth);
                     auto zoomh = (int)(0.80 * (double)text_bounds);
@@ -22888,8 +22743,6 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
             bool scrollDown = false;
             bool hold = false;
 
-            Control::Type result;
-
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
             auto combat = Engine::Combat::NONE;
@@ -23040,9 +22893,7 @@ int main(int argc, char **argv)
 
     createWindow(SDL_INIT_VIDEO, &window, &renderer, title, "icons/toxic.png");
 
-    auto numGamePads = Input::InitializeGamePads();
-
-    auto quit = false;
+    Input::InitializeGamePads();
 
     auto storyID = 1;
 
@@ -23067,7 +22918,6 @@ int main(int argc, char **argv)
 #endif
 
         // Destroy window and renderer
-
         if (renderer)
         {
             SDL_DestroyRenderer(renderer);

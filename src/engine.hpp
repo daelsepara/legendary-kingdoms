@@ -1145,7 +1145,7 @@ namespace Engine
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
-            if (character.Equipment[i].Class == type && (character.Equipment[i].Attribute == attribute) || (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2) || (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2))
+            if (character.Equipment[i].Class == type && (character.Equipment[i].Attribute == attribute || (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2) || (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)))
             {
                 if (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2 && max < 3)
                 {

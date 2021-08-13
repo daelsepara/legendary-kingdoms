@@ -745,13 +745,13 @@ namespace Story
         {
             ID = id;
             Text = text;
-            type = type;
+            Type = type;
         }
 
         Base(const char *text, Story::Type type)
         {
             Text = text;
-            type = type;
+            Type = type;
         }
     };
 
