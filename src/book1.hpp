@@ -590,11 +590,11 @@ namespace Book1
 
             if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PRYBAR}))
             {
-                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 4, 3));
+                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 4, 3, false));
             }
             else
             {
-                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 5, 3));
+                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 5, 3, false));
             }
 
             Choices.push_back(Choice::Base("Consider other exits from the room", {Book::Type::BOOK1, 494}));
@@ -1572,11 +1572,11 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::WEAPON_AND_DISTRACTION}))
             {
-                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3));
+                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3, false));
             }
             else
             {
-                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::DISTRACTION, {Attribute::Type::FIGHTING}, 4, 3));
+                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::DISTRACTION, {Attribute::Type::FIGHTING}, 4, 3, false));
             }
         }
     };
@@ -5749,11 +5749,11 @@ namespace Book1
 
             if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PRYBAR}))
             {
-                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 5+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 4));
+                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 5+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 4, false));
             }
             else
             {
-                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 6+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 6, 4));
+                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 6+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 6, 4, false));
             }
 
             Choices.push_back(Choice::Base("Give up and return to the main floor", {Book::Type::BOOK1, 574}));
@@ -6707,7 +6707,7 @@ namespace Book1
             Text = "Puffing yourselves up, you and your companions put on a brave show before the slaves, shoving them hard and roaring bold threats. This will require a good deal of bravery and force.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Threaten greedy slaves (Team check: Fighting 4+, Successes: 4)", {Book::Type::BOOK1, 526}, {Book::Type::BOOK1, 572}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 4));
+            Choices.push_back(Choice::Base("Threaten greedy slaves (Team check: Fighting 4+, Successes: 4)", {Book::Type::BOOK1, 526}, {Book::Type::BOOK1, 572}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 4, false));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -12705,11 +12705,11 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::WEAPON_AND_DISTRACTION}))
             {
-                Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 3));
+                Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 3, false));
             }
             else
             {
-                Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::WEAPONS, {Attribute::Type::FIGHTING}, 5, 3));
+                Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::WEAPONS, {Attribute::Type::FIGHTING}, 5, 3, false));
             }
         }
 
@@ -16206,11 +16206,11 @@ namespace Book1
 
             if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PRYBAR}))
             {
-                Choices.push_back(Choice::Base("Break into the basement (Individual check: Fighting 4+, Successes: 2)", {Book::Type::BOOK1, 766}, {Book::Type::BOOK1, 468}, {Attribute::Type::FIGHTING}, 4, 2));
+                Choices.push_back(Choice::Base("Break into the basement (Individual check: Fighting 4+, Successes: 2)", {Book::Type::BOOK1, 766}, {Book::Type::BOOK1, 468}, {Attribute::Type::FIGHTING}, 4, 2, false));
             }
             else
             {
-                Choices.push_back(Choice::Base("Break into the basement (Individual check: Fighting 5+, Successes: 2)", {Book::Type::BOOK1, 766}, {Book::Type::BOOK1, 468}, {Attribute::Type::FIGHTING}, 5, 2));
+                Choices.push_back(Choice::Base("Break into the basement (Individual check: Fighting 5+, Successes: 2)", {Book::Type::BOOK1, 766}, {Book::Type::BOOK1, 468}, {Attribute::Type::FIGHTING}, 5, 2, false));
             }
         }
 
@@ -16425,7 +16425,7 @@ namespace Book1
 
             ID = 530;
 
-            Text = "\"Now it is time to demonstrate your bladecraft,\" nods Honnu. \"And it must be against a foe that can test you spiritually as well as physically. It is known that somewhere in the central deserts of the valley dwells a revenant -- the undead spirit of a man who failed his kensai trials so disastrously he is doomed to walk the earth forever. You must find this spirit and defeat it in single combat.\"\n\nYou feel no fear. \"I shall,\" you vow. \n\n\"This task will not be easy,\" says Honnu. \"Get yourself a good sword, and train yourself to the highest standard before you track down your foe. It will be the duel that defines your family's fate forever. When you have slain it, return to me.\"";
+            Text = "\"Now it is time to demonstrate your bladecraft,\" nods Honnu. \"And it must be against a foe that can test you spiritually as well as physically. It is known that somewhere in the central deserts of the valley dwells a revenant -- the undead spirit of a man who failed his kensai trials so disastrously he is doomed to walk the earth forever. You must find this spirit and defeat it in single combat.\"\n\nYou feel no fear. \"I shall,\" you vow. \n\n\"This task will not be easy,\" says Honnu. \"Get yourself a good sword, and train yourself to the highest standard before you track down your foe. It will be the duel that defines your family's fate forever. When you have slain it, return to me.\"\n\nNote: You gained the code A51.";
 
             Bye = "You stand and bow, pondering where to begin your search.";
 
@@ -16702,6 +16702,328 @@ namespace Book1
             }
 
             Choices.push_back(Choice::Base("Bid Kopu farewell", {Book::Type::BOOK1, 775}));
+        }
+    };
+
+    class Story540 : public Story::Base
+    {
+    public:
+        Story540()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 540;
+
+            Text = "Representatives from all the settlements in the valley, bar Cursus, now fill the Everchild's war room. A map of the valley, carved onto the wall behind the throne, illuminates the Everchild's many lands and legions. A hush descends as the girl queen enters the chamber and climbs the platform which raises her seat above all others. She clicks her fingers, and Che Long, her guardian, presents her with a long, steel sword. She points it at the map, right above Cursus.\n\n\"There is now only one obstacle that stands between us and the unity of the valley,\" says the Everchild boldly. \"Cursus has not been idle. The patriarch has hired mercenaries from Royce and Thalsia to bolster his armies of fanatics. Despite sorcery being forbidden in their religion, they have employed the dark wizard Descantos to fortify their defences. The Cursites have skilled warriors. The Cursites have loyal warriors. But they do not have warriors who are both skilled and loyal. Something must give, and it is this miss-match between their forces that I intend to exploit.\"\n\n\"To bolster our chances,\" she continues, returning the sword to Che Long, \"I intend to rob the patriarch of some of these advantages. My agents will either dispose of Descantos or pay-off the mercenaries to abandon the patriarch's cause. I believe that without either of these advantages, the patriarch cannot hold against us.\"\n\n\"What of your safety, majesty?\" prompts one of her generals. \"The attempts against your life have increased in intensity since you took Clifftop. We have reason to believe another attempt will be made on the eve of battle.\"\n\n\"My personal security is peerless, and my followers loyal, do not fear for me,\" rebuts the Everchild. \"All I require of you is that you look to your legions.\"\n\nShe turns to you with expectation. \"And you, my friends, tell me: Is now the time to make the attack?\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Launch the attack now", {Book::Type::BOOK1, 268}));
+            Choices.push_back(Choice::Base("Wait until you are ready", {Book::Type::BOOK1, 620}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story541 : public Story::Base
+    {
+    public:
+        Story541()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 541;
+
+            Text = "You get to work attempting to rip the barricade down.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PRYBAR}))
+            {
+                Choices.push_back(Choice::Base("Pull down the barricade (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 630}, {Book::Type::BOOK1, -541}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3, false));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 630}, {Book::Type::BOOK1, -541}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 3, false));
+            }
+
+            Choices.push_back(Choice::Base("Make your way back down the stairs", {Book::Type::BOOK1, 23}));
+        }
+    };
+
+    class Event541 : public Story::Base
+    {
+    public:
+        Event541()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -541;
+
+            DisplayID = 541;
+
+            Text = "You strain yourselves.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, 541}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story542 : public Story::Base
+    {
+    public:
+        Story542()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 542;
+
+            Text = "Your marshal tone cannot be denied. You form an impenetrable thicket of soldiers against the cavalry charge. Your archers pepper the hesitating nomads with arrows. Realising that their shock tactics have failed, the nomads flee back into the desert rather than face a long, bloody combat for a few barrels of salt.\n\nA great cheer goes up from the caravan guards. The merchants, delighted with your brave actions, reward you with 100 silver coins.";
+
+            Bye = "After a brief rest you continue on your way.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 100);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 477}; }
+    };
+
+    class Story543 : public Story::Base
+    {
+    public:
+        Story543()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 543;
+
+            Text = "The palace of Saltdad has vast underground chambers which are still in the process of being unearthed. In one of the vaults the Iron King discovered the weapons and armour for his Bronzeguard. In another was found Malronac the Deathengine. Who knows what still awaits to be found within the cold earth?\n\nYou spend some time exploring the ancient arcades and hallways, looking for secret passages or forgotten routes.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            Choices.clear();
+
+            if (Engine::HAS_SPELL(party, {Spells::Type::SHADOW_DOOR}))
+            {
+                Choices.push_back(Choice::Base("Cast Shadow Door", {Book::Type::BOOK1, 496}));
+                Choices.push_back(Choice::Base("Give up searching", {Book::Type::BOOK1, 620}));
+            }
+            else
+            {
+                Bye = "After a considerable search you find nothing new.";
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 620}; }
+    };
+
+    class Story544 : public Story::Base
+    {
+    public:
+        Story544()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 544;
+
+            Text = "Discretion is the better part of valour. You attempt to bolt, Tommul diving to make a grab for you. You must use the Stealth ability of the character you have chosen.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Escape from Tommul (Individual check: Stealth 4+, Successes: 2)", {Book::Type::BOOK1, 193}, {Book::Type::BOOK1, 302}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::STEALTH}, 4, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story545 : public Story::Base
+    {
+    public:
+        Story545()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 545;
+
+            Text = "Some of the Everchild's agents are skilled negotiators... still, they might lack the authority needed to get the mercenaries to co-operate.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Negotiate with the mercenaries", {{4, "The agents fail in their task, and you will have to face the full might of the patriarch's forces.", {Book::Type::BOOK1, 301}}, {6, NULL, {Book::Type::BOOK1, -545}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event545 : public Story::Base
+    {
+    public:
+        Event545()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -545;
+
+            DisplayID = 545;
+
+            Text = "The agents are successful and convince some of the mercenaries to abandon the patriarch.\n\nNote: You gained the code A96.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(96)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 301}; }
+    };
+
+    class Story546 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story546()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 546;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You are so busy examining the coffer that you fail to spot the raised stone step in front of you. As soon as you step on the trap a stone block descends down upon your head.";
+
+            auto first = Engine::FIRST(party, Character::Status::FRONT);
+
+            if (Engine::IS_ACTIVE(party, first))
+            {
+                Engine::GAIN_HEALTH(party, Character::Status::FRONT, -5);
+
+                PreText += std::string(party.Members[first].Name) + " loses 5 Health.";
+
+                if (!Engine::IS_ACTIVE(party, first))
+                {
+                    PreText += " The stone slab is too heavy to move and all of " + std::string(party.Members[first].Name) + "'s gear is lost.";
+
+                    party.Members[first].Equipment.clear();
+                }
+                else
+                {
+                    PreText += std::string(party.Members[first].Name) + " manages to dive aside before the block completely crushes them.";
+                }
+            }
+
+            PreText += "\n\nThe slab does not block off the way onwards, and you are able to crawl over the slab and towards the coffer.";
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 277}; }
+    };
+
+    class Story547 : public Story::Base
+    {
+    public:
+        Story547()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 547;
+
+            Text = "You come upon a patch of bright yellow flowers. They have a pleasing scent and your first thought is to gather some up. You pause, though... you are unsure if it is safe to pluck these blooms. They might be poisonous.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Pick some anyway", {Book::Type::BOOK1, 402}));
+            Choices.push_back(Choice::Base("Avoid the flowers and move on", {Book::Type::BOOK1, 618}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story548 : public Story::Base
+    {
+    public:
+        Story548()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 548;
+
+            Text = "You recite every blessing and counterspell you know. You are not sure which incantation was the correct one, but suddenly the spell breaks, and the skull stops its infernal murmuring.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 132}; }
+    };
+
+    class Story549 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story549()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 549;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Make another attempt", {Book::Type::BOOK1, 583}));
+            Choices.push_back(Choice::Base("Abandon the attempt for the moment.", {Book::Type::BOOK1, 82}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You are caught in a sudden current and dashed against the cliffside.";
+
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                auto result = Engine::ROLL(1);
+
+                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -result);
+
+                PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses " + std::to_string(result) + " Health point";
+
+                if (result > 1)
+                {
+                    PreText += "s";
+                }
+
+                PreText += ".";
+            }
+
+            PreText += "The rest of the party quickly come to your rescue, hauling you back into the jollyboat.";
+
+            Text = PreText.c_str();
         }
     };
 
@@ -17285,6 +17607,18 @@ namespace Book1
     auto event537 = Event537();
     auto story538 = Story538();
     auto story539 = Story539();
+    auto story540 = Story540();
+    auto story541 = Story541();
+    auto event541 = Event541();
+    auto story542 = Story542();
+    auto story543 = Story543();
+    auto story544 = Story544();
+    auto story545 = Story545();
+    auto event545 = Event545();
+    auto story546 = Story546();
+    auto story547 = Story547();
+    auto story548 = Story548();
+    auto story549 = Story549();
 
     void InitializeStories()
     {
@@ -17293,7 +17627,7 @@ namespace Book1
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
-            &event537,
+            &event537, &event541, &event545,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -17347,7 +17681,8 @@ namespace Book1
             &story500, &story501, &story502, &story503, &story504, &story505, &story506, &story507, &story508, &story509,
             &story510, &story511, &story512, &story513, &story514, &story515, &story516, &story517, &story518, &story519,
             &story520, &story521, &story522, &story523, &story524, &story525, &story526, &story527, &story528, &story529,
-            &story530, &story531, &story532, &story533, &story534, &story535, &story536, &story537, &story538, &story539};
+            &story530, &story531, &story532, &story533, &story534, &story535, &story536, &story537, &story538, &story539,
+            &story540, &story541, &story542, &story543, &story544, &story545, &story546, &story547, &story548, &story549};
     }
 }
 #endif

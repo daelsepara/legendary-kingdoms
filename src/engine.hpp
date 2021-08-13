@@ -679,6 +679,17 @@ namespace Engine
         }
     }
 
+    void GAIN_HEALTH(Party::Base &party, Character::Status status, int health)
+    {
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (Engine::IS_ACTIVE(party, i) && Engine::HAS_STATUS(party.Members[i], status))
+            {
+                Engine::GAIN_HEALTH(party.Members[i], health);
+            }
+        }
+    }
+
     void RESTORE_HEALTH(Party::Base &party, int threshold)
     {
         for (auto i = 0; i < party.Members.size(); i++)
@@ -2214,6 +2225,28 @@ namespace Engine
         for (auto i = 0; i < party.Members.size(); i++)
         {
             if (Engine::IS_ACTIVE(party, i) && party.Members[i].Team == team)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        if (result >= 0 && result < party.Members.size())
+        {
+            party.LastSelected = result;
+        }
+
+        return result;
+    }
+
+    int FIRST(Party::Base &party, Character::Status status)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (Engine::IS_ACTIVE(party, i) && Engine::HAS_STATUS(party.Members[i], status))
             {
                 result = i;
 
