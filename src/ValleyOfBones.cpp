@@ -108,7 +108,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
 // game screen: select single stuff
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &enemyFleet, std::vector<int> previousTargets, int combatRound);
-int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets, int combatRound);
+int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int attacker, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets, int combatRound, Control::Type mode);
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Equipment::Base equipment, Control::Type mode);
 
 Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
@@ -125,7 +125,8 @@ Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Ba
 
 // description utilities
 std::string characterText(Character::Base &character, bool compact);
-std::string itemString(Equipment::Base equipment);
+std::string itemString(Equipment::Base &equipment);
+std::string monsterString(Monster::Base &monster);
 
 // game screens (select multiple stuff)
 std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Location::Type garrison, int num_limit);
@@ -3045,7 +3046,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer)
     return done;
 }
 
-std::string itemString(Equipment::Base equipment)
+std::string itemString(Equipment::Base &equipment)
 {
     std::string item_string = equipment.Name;
 
@@ -3447,6 +3448,22 @@ std::vector<Button> rechargeList(SDL_Window *window, SDL_Renderer *renderer, std
     return controls;
 }
 
+std::string monsterString(Monster::Base &monster)
+{
+    std::string monster_string = monster.Name;
+
+    monster_string += "\nAttack: " + (monster.Attack > 0 ? std::to_string(monster.Attack) : std::string("Special")) + std::string(monster.Difficulty > 0 ? (" (" + std::to_string(monster.Difficulty) + "+)") : "");
+
+    if (monster.Auto > 0)
+    {
+        monster_string += " +" + std::to_string(monster.Auto) + " Auto";
+    }
+
+    monster_string += ", Defense: " + std::to_string(monster.Defence) + "+, Health: " + std::to_string(monster.Health);
+
+    return monster_string;
+}
+
 std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button)
 {
     auto controls = std::vector<Button>();
@@ -3461,18 +3478,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             auto monster = monsters[index];
 
-            std::string monster_string = "";
-
-            monster_string += monster.Name;
-
-            monster_string += "\nAttack: " + (monster.Attack > 0 ? std::to_string(monster.Attack) : std::string("Special")) + std::string(monster.Difficulty > 0 ? (" (" + std::to_string(monster.Difficulty) + "+)") : "");
-
-            if (monster.Auto > 0)
-            {
-                monster_string += " +" + std::to_string(monster.Auto) + " Auto";
-            }
-
-            monster_string += ", Defense: " + std::to_string(monster.Defence) + "+, Health: " + std::to_string(monster.Health);
+            std::string monster_string = monsterString(monster);
 
             auto button = createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
 
@@ -3536,18 +3542,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             auto monster = monsters[index];
 
-            std::string monster_string = "";
-
-            monster_string += monster.Name;
-
-            monster_string += "\nAttack: " + (monster.Attack > 0 ? std::to_string(monster.Attack) : std::string("Special")) + std::string(monster.Difficulty > 0 ? (" (" + std::to_string(monster.Difficulty) + "+)") : "");
-
-            if (monster.Auto > 0)
-            {
-                monster_string += " +" + std::to_string(monster.Auto) + " Auto";
-            }
-
-            monster_string += ", Defense: " + std::to_string(monster.Defence) + "+, Health: " + std::to_string(monster.Health);
+            std::string monster_string = monsterString(monster);
 
             auto button = createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
 
@@ -7005,7 +7000,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
     return select_result;
 }
 
-int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets, int combatRound)
+int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int attacker, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets, int combatRound, Control::Type mode)
 {
     auto result = -1;
 
@@ -7036,6 +7031,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
         auto text_space = 8;
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -7109,6 +7105,17 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monst
                 renderButtons(renderer, controls, current, intLB, space, border_pts);
 
                 putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                if (mode == Control::Type::COMBAT)
+                {
+                    putHeader(renderer, "Attacker", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                }
+                else if (mode == Control::Type::SPELL)
+                {
+                    putHeader(renderer, "Spell Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                }
+
+                putText(renderer, party.Members[attacker].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
 
                 putHeader(renderer, "Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -8503,7 +8510,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                     }
                                                     else
                                                     {
-                                                        target = selectOpponent(window, renderer, monsters, {}, combatRound);
+                                                        target = selectOpponent(window, renderer, party, selection, monsters, {}, combatRound, Control::Type::SPELL);
                                                     }
 
                                                     if (target >= 0)
@@ -8539,7 +8546,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                     }
                                                     else
                                                     {
-                                                        target = selectOpponent(window, renderer, monsters, {}, combatRound);
+                                                        target = selectOpponent(window, renderer, party, selection, monsters, {}, combatRound, Control::Type::SPELL);
                                                     }
 
                                                     if (target >= 0)
@@ -8578,7 +8585,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                         }
                                                         else
                                                         {
-                                                            target = selectOpponent(window, renderer, monsters, targets, combatRound);
+                                                            target = selectOpponent(window, renderer, party, selection, monsters, targets, combatRound, Control::Type::SPELL);
                                                         }
 
                                                         if (target >= 0)
@@ -9945,6 +9952,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         auto text_space = 8;
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space) / (88);
         auto last = offset + limit;
@@ -10076,6 +10084,13 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 else
                 {
                     putHeader(renderer, "Choose Party Member", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+
+                if (mode == Control::Type::EQUIPMENT && equipment.Type != Equipment::Type::NONE)
+                {
+                    putHeader(renderer, "Details", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+
+                    putText(renderer, itemString(equipment).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
                 }
 
                 putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
@@ -11743,7 +11758,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                             }
                                             else
                                             {
-                                                opponent = selectOpponent(window, renderer, monsters, {}, combatRound);
+                                                opponent = selectOpponent(window, renderer, party, result, monsters, {}, combatRound, Control::Type::COMBAT);
                                             }
 
                                             if (opponent >= 0 && opponent < monsters.size())
