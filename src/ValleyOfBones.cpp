@@ -11381,6 +11381,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
     {
         SDL_SetWindowTitle(window, title);
 
+        auto allies_attack = false;
+
         auto flash_message = false;
 
         auto flash_color = intRD;
@@ -11390,6 +11392,29 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         Uint32 start_ticks = 0;
 
         Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
+        auto allyMessage = [&](std::string msg, Uint32 color)
+        {
+            allies_attack = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
 
         TTF_Init();
 
@@ -11434,11 +11459,13 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         }
 
         auto combatRound = 0;
+
         auto round0_attacks = 0;
-        auto allies_attack = false;
+
         auto allyAttack = std::vector<Allies::Type>();
 
         auto current_mode = Control::Type::ATTACK;
+
         auto canFlee = storyFlee;
 
         while (Engine::COUNT(monsters) > 0 && Engine::COUNT(party, team) > 0 && (roundLimit == -1 || (roundLimit > 0 && combatRound < roundLimit)))
@@ -11478,29 +11505,25 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (free_attack > 0)
                             {
-                                flash_color = intRD;
-
                                 message += " deals " + std::to_string(free_attack) + " damage to " + std::string(party.Members[party.LastSelected].Name) + "!";
 
                                 Engine::GAIN_HEALTH(party.Members[party.LastSelected], -free_attack);
+
+                                displayMessage(message, intRD);
                             }
                             else
                             {
-                                flash_color = intLB;
-
                                 message = +"'s attack was ineffective!";
+
+                                displayMessage(message, intLB);
                             }
                         }
                         else
                         {
                             message = +"'s attack was ineffective!";
 
-                            flash_color = intLB;
+                            displayMessage(message, intLB);
                         }
-
-                        start_ticks = SDL_GetTicks();
-
-                        flash_message = true;
                     }
 
                     Engine::LOSE_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0});
@@ -11726,8 +11749,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                             else
                             {
-                                flash_message = true;
-
                                 if (combatRound < fleeRound)
                                 {
                                     message = "You cannot flee at this time.";
@@ -11737,20 +11758,12 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     message = "You can no longer flee from this battle.";
                                 }
 
-                                start_ticks = SDL_GetTicks();
-
-                                flash_color = intRD;
+                                displayMessage(message, intRD);
                             }
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "You cannot flee from this battle.";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage("You cannot flee from this battle.", intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::PARTY && !hold)
@@ -11790,13 +11803,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (Engine::FIND_LIST(hasAttacked, result) >= 0 && !(Engine::HAS_STATUS(party.Members[result], Character::Status::ATTACK2_ENEMY0_ROUND0) && combatRound == 0 && round0_attacks < 2))
                             {
-                                flash_message = true;
-
                                 message = std::string(party.Members[result].Name) + " already attacked this round.";
 
-                                start_ticks = SDL_GetTicks();
-
-                                flash_color = intRD;
+                                displayMessage(message, intRD);
                             }
                             else
                             {
@@ -11823,13 +11832,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                             {
                                                 if (Engine::HAS_STATUS(party.Members[result], Character::Status::ATTACK2_ENEMY0_ROUND0) && opponent != 0 && round0_attacks > 0 && combatRound == 0)
                                                 {
-                                                    flash_message = true;
-
-                                                    message = "You cannot attack another opponent";
-
-                                                    start_ticks = SDL_GetTicks();
-
-                                                    flash_color = intRD;
+                                                    displayMessage("You cannot attack another opponent.", intRD);
                                                 }
                                                 else
                                                 {
@@ -11864,11 +11867,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                         {
                                                             if (damage == 100 && hasAttacked.size() == (Engine::TEAM_SIZE(party, team) - 1))
                                                             {
-                                                                flash_message = true;
-
-                                                                message = "There must be at least 1 attack on the Jungle each round";
-
-                                                                flash_color = intRD;
+                                                                displayMessage("There must be at least 1 attack on the Jungle each round.", intRD);
                                                             }
                                                             else
                                                             {
@@ -11876,11 +11875,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                                                 if (damage == 100)
                                                                 {
-                                                                    flash_message = true;
-
                                                                     message = std::string(party.Members[result].Name) + " did not attack this round.";
 
-                                                                    flash_color = intLB;
+                                                                    displayMessage(message, intLB);
                                                                 }
                                                                 else
                                                                 {
@@ -11888,18 +11885,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                                     {
                                                                         Engine::GAIN_HEALTH(party.Members[result], -1);
 
-                                                                        flash_message = true;
-
                                                                         message = "The " + std::string(monsters[opponent].Name) + " deals 1 damage to " + std::string(party.Members[result].Name) + "!";
 
-                                                                        flash_color = intRD;
+                                                                        displayMessage(message, intRD);
                                                                     }
                                                                 }
-                                                            }
-
-                                                            if (flash_message)
-                                                            {
-                                                                start_ticks = SDL_GetTicks();
                                                             }
                                                         }
                                                     }
@@ -11907,35 +11897,17 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                             }
                                             else
                                             {
-                                                flash_message = true;
-
-                                                message = "The attack has failed!";
-
-                                                start_ticks = SDL_GetTicks();
-
-                                                flash_color = intRD;
+                                                displayMessage("The attack has failed!", intRD);
                                             }
                                         }
                                         else
                                         {
-                                            flash_message = true;
-
-                                            message = "Your party has prevailed!";
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_color = intLB;
+                                            displayMessage("Your party has prevailed!", intLB);
                                         }
                                     }
                                     else
                                     {
-                                        flash_message = true;
-
-                                        message = std::string(party.Members[result].Name) + " is dead.";
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_color = intRD;
+                                        displayMessage(message, intRD);
                                     }
                                 }
                             }
@@ -11947,8 +11919,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (Engine::HAS_MONSTER(monsters, Monster::Type::ORC))
                                 {
-                                    flash_message = true;
-
                                     auto slaves_damage = -1;
 
                                     message = "The slaves attack the orcs! All orcs lose ";
@@ -11969,13 +11939,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     Engine::GAIN_HEALTH(monsters, Monster::Type::ORC, slaves_damage);
 
-                                    allies_attack = true;
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intLB;
-
                                     allyAttack.push_back(Allies::Type::SLAVES);
+
+                                    allyMessage(message, intLB);
                                 }
                             }
 
@@ -11987,31 +11953,21 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     if (target >= 0 && target < monsters.size())
                                     {
-                                        flash_message = true;
-
                                         auto attack_result = Engine::COUNT(5, monsters[target].Defence);
 
                                         if (attack_result > 0)
                                         {
                                             message = "Yu Yuan deals " + std::to_string(attack_result) + " to the " + std::string(monsters[target].Name) + "!";
 
-                                            flash_color = intLB;
-
                                             Engine::GAIN_HEALTH(monsters[target], -attack_result);
+
+                                            allyMessage(message, intLB);
                                         }
                                         else
                                         {
-                                            message = "Yu Yuan's attack was ineffective!";
-
-                                            flash_color = intRD;
+                                            allyMessage("Yu Yuan's attack was ineffective!", intRD);
                                         }
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_message = true;
                                     }
-
-                                    allies_attack = true;
 
                                     allyAttack.push_back(Allies::Type::YU_YUAN);
                                 }
@@ -12039,53 +11995,29 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 // After combat round trigger
                                 if (Engine::HAS_MONSTER(monsters, Monster::Type::SNAKEMAN_PRIEST))
                                 {
-                                    flash_message = true;
-
-                                    flash_color = intRD;
-
-                                    message = "Blocks of stone come raining down from the walls! The priest and each party member loses 1 Health!";
-
                                     Engine::GAIN_HEALTH(party, -1);
 
                                     Engine::GAIN_HEALTH(monsters, -1);
 
-                                    start_ticks = SDL_GetTicks();
+                                    displayMessage("Blocks of stone come raining down from the walls! The priest and each party member loses 1 Health!", intRD);
                                 }
                                 else if (Engine::HAS_MONSTER(monsters, Monster::Type::SPIDER_WITH_SWARM))
                                 {
-                                    flash_message = true;
-
-                                    flash_color = intRD;
-
-                                    message = "Swarms of tiny spiders attack the party and deal 1 damage to everyone!";
-
                                     Engine::GAIN_HEALTH(party, team, -1);
 
-                                    start_ticks = SDL_GetTicks();
+                                    displayMessage("Swarms of tiny spiders attack the party and deal 1 damage to everyone!", intRD);
                                 }
                                 else if (Engine::HAS_MONSTER(monsters, Monster::Type::BEETLE_SWARM))
                                 {
-                                    flash_message = true;
-
-                                    flash_color = intRD;
-
-                                    message = "The beetles deals 1 damage to the entire party!";
-
                                     Engine::GAIN_HEALTH(party, team, -1);
 
-                                    start_ticks = SDL_GetTicks();
+                                    displayMessage("The beetles deals 1 damage to the entire party!", intRD);
                                 }
                                 else if (Engine::HAS_MONSTER(monsters, Monster::Type::ZEALOT_HEALER) && Engine::COUNT(monsters) > 1)
                                 {
-                                    flash_message = true;
-
-                                    flash_color = intRD;
-
-                                    message = "The Zealot Healer heals each Zealot for 2 Health points!";
-
                                     Engine::GAIN_HEALTH(monsters, 2);
 
-                                    start_ticks = SDL_GetTicks();
+                                    displayMessage("The Zealot Healer heals each Zealot for 2 Health points!", intRD);
                                 }
                                 else if (Engine::HAS_MONSTER(monsters, Monster::Type::SKELETON_ARCHERS))
                                 {
@@ -12111,11 +12043,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                 Engine::GAIN_HEALTH(party.Members[selection[i]], -2);
                                             }
 
-                                            flash_message = true;
-
-                                            flash_color = intRD;
-
-                                            start_ticks = SDL_GetTicks();
+                                            displayMessage(message, intRD);
                                         }
                                     }
                                 }
@@ -12131,6 +12059,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 combatRound++;
 
                                 Engine::REMOVE_STATUS(party, Character::Status::EXTRA_MAGIC_ROUND0);
+
                                 Engine::REMOVE_STATUS(party, Character::Status::UNLIMITED_MAGIC_ROUND0);
 
                                 // clear damaged flag for next round
@@ -12167,13 +12096,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     if (combat_spells <= 0)
                                     {
-                                        flash_message = true;
-
-                                        message = "Your party does not have any usable combat spells.";
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_color = intRD;
+                                        displayMessage("Your party does not have any usable combat spells.", intRD);
                                     }
                                     else
                                     {
@@ -12181,14 +12104,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                         if (result >= 0 && result < party.Members.size())
                                         {
-                                            flash_message = true;
-
-                                            message = std::string(party.Members[result].Name) + " casts a spell!";
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_color = intLB;
-
                                             if (Engine::FIND_LIST(hasAttacked, result) < 0)
                                             {
                                                 hasAttacked.push_back(result);
@@ -12200,6 +12115,10 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                     Engine::REMOVE_STATUS(party.Members[result], Character::Status::EXTRA_MAGIC_ROUND0);
                                                 }
                                             }
+
+                                            message = std::string(party.Members[result].Name) + " casts a spell!";
+
+                                            displayMessage(message, intLB);
                                         }
 
                                         selected = false;
@@ -12209,19 +12128,11 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                                 else
                                 {
-                                    flash_message = true;
-
-                                    message = "There are no spell casters in your party!";
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage("There are no spell casters in your party!", intRD);
                                 }
                             }
                             else
                             {
-                                flash_message = true;
-
                                 if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}) && combatRound == 0)
                                 {
                                     message = "Your party does not get to attack first nor cast spells this round!";
@@ -12231,20 +12142,12 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     message = "Your entire party has already attacked this round.";
                                 }
 
-                                start_ticks = SDL_GetTicks();
-
-                                flash_color = intRD;
+                                displayMessage(message, intRD);
                             }
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "You cannot cast spells in this battle!";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage("You cannot cast spells in this battle!", intRD);
                         }
                     }
                 }
