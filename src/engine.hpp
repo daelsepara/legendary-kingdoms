@@ -415,11 +415,45 @@ namespace Engine
         }
     }
 
+    void LOSE_EQUIPMENT(Party::Base &party, Team::Type team, std::vector<Equipment::Type> items)
+    {
+        if (team == Team::Type::NONE)
+        {
+            Engine::LOSE_EQUIPMENT(party, items);
+        }
+        else
+        {
+            for (auto i = 0; i < items.size(); i++)
+            {
+                for (auto j = 0; j < party.Members.size(); j++)
+                {
+                    auto result = Engine::FIND_EQUIPMENT(party.Members[j], items[i]);
+
+                    if (result >= 0 && Engine::IS_ACTIVE(party, j) && party.Members[j].Team == team && party.Members[j].Type != Character::Type::SKULLCRACKER)
+                    {
+                        party.Members[j].Equipment.erase(party.Members[j].Equipment.begin() + result);
+
+                        // break out of party loop
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     void LOSE_EQUIPMENT(Party::Base &party, Equipment::Type item, int count)
     {
         for (auto i = 0; i < count; i++)
         {
             Engine::LOSE_EQUIPMENT(party, {item});
+        }
+    }
+
+    void LOSE_EQUIPMENT(Party::Base &party, Team::Type team, Equipment::Type item, int count)
+    {
+        for (auto i = 0; i < count; i++)
+        {
+            Engine::LOSE_EQUIPMENT(party, team, {item});
         }
     }
 
@@ -921,6 +955,20 @@ namespace Engine
         }
 
         return results;
+    }
+
+    int ROLL(int count)
+    {
+        auto sum = 0;
+
+        auto results = Engine::ROLL_DICE(count);
+
+        for (auto i = 0; i < results.size(); i++)
+        {
+            sum += results[i];
+        }
+
+        return sum;
     }
 
     int COUNT(int rolls, int difficulty)
@@ -1484,13 +1532,13 @@ namespace Engine
         }
     }
 
-    int FIND_CHARACTER(Party::Base &party, Character::Type type)
+    int FIND_CHARACTER(std::vector<Character::Type> &party, Character::Type type)
     {
         auto result = -1;
 
-        for (auto i = 0; i < party.Members.size(); i++)
+        for (auto i = 0; i < party.size(); i++)
         {
-            if (party.Members[i].Type == type)
+            if (party[i] == type)
             {
                 result = i;
 
@@ -1518,21 +1566,9 @@ namespace Engine
         return result;
     }
 
-    int FIND_CHARACTER(std::vector<Character::Type> &party, Character::Type type)
+    int FIND_CHARACTER(Party::Base &party, Character::Type type)
     {
-        auto result = -1;
-
-        for (auto i = 0; i < party.size(); i++)
-        {
-            if (party[i] == type)
-            {
-                result = i;
-
-                break;
-            }
-        }
-
-        return result;
+        return Engine::FIND_CHARACTER(party.Members, type);
     }
 
     void GAIN_HEARTS(Party::Base &party, Character::Type from, Character::Type to, int heart)
@@ -1637,7 +1673,7 @@ namespace Engine
     {
         Engine::CONSOLIDATE(party);
 
-        auto result = Engine::FIND_CHARACTER(party.Members, character);
+        auto result = Engine::FIND_CHARACTER(party, character);
 
         if (result >= 0 && result < party.Members.size())
         {
@@ -1928,7 +1964,7 @@ namespace Engine
     {
         auto found = false;
 
-        auto result = Engine::FIND_CHARACTER(party.Members, character);
+        auto result = Engine::FIND_CHARACTER(party, character);
 
         if (result >= 0 && result < party.Members.size())
         {
@@ -2015,6 +2051,17 @@ namespace Engine
         for (auto i = 0; i < party.Members.size(); i++)
         {
             if (party.Members[i].Type != Character::Type::SKULLCRACKER)
+            {
+                party.Members[i].Equipment.clear();
+            }
+        }
+    }
+
+    void LOSE_ALL(Party::Base &party, Team::Type team)
+    {
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (party.Members[i].Type != Character::Type::SKULLCRACKER && (party.Members[i].Team == team || team == Team::Type::NONE))
             {
                 party.Members[i].Equipment.clear();
             }
@@ -2719,6 +2766,16 @@ namespace Engine
         }
 
         return result;
+    }
+
+    void GET_EQUIPMENT(Party::Base &party, Character::Type type, std::vector<Equipment::Base> equipment)
+    {
+        auto character = Engine::FIND_CHARACTER(party, type);
+
+        if (Engine::IS_ACTIVE(party, character))
+        {
+            Engine::GET_EQUIPMENT(party.Members[character], equipment);
+        }
     }
 }
 #endif

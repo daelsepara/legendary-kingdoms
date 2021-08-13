@@ -1440,6 +1440,10 @@ namespace Book1
                 }
             }
 
+            Take.clear();
+
+            Limit = 0;
+
             if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::SCROLL_OF_RAGE}))
             {
                 Take = {Equipment::SCROLL_OF_RAGE};
@@ -1447,12 +1451,6 @@ namespace Book1
                 Limit = 1;
 
                 PreText += "\n\nYou can take the SCROLL OF RAGE. ";
-            }
-            else
-            {
-                Take = {};
-
-                Limit = 0;
             }
 
             PreText += "You cannot have more than one SCROLL OF RAGE equipped at any given time. You can use it in combat to increase the Fighting score of each of your party members by 1 point until the end of the combat. After one use it will teleport back to the bookshelf in this room.";
@@ -1985,13 +1983,7 @@ namespace Book1
             }
             else if (Engine::COUNT(party) > 0)
             {
-                for (auto i = 0; i < party.Members.size(); i++)
-                {
-                    if (party.Members[i].Team == Team::Type::CHASE)
-                    {
-                        party.Members[i].Equipment.clear();
-                    }
-                }
+                Engine::LOSE_ALL(party, Team::Type::CHASE);
 
                 Bye = "The team you sent to chase the thief are all dead. The thief has taken all of their possessions. The remaining party members are mourning the loss.";
 
@@ -2372,6 +2364,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Team = Team::Type::ZIGGURAT;
+
             Take = {Equipment::SHIELD2, Equipment::SHIELD2, Equipment::SHIELD2, Equipment::SHIELD2};
 
             Limit = 4;
@@ -2927,9 +2921,7 @@ namespace Book1
         {
             Engine::GAIN_MONEY(party, 200);
 
-            Take = {Equipment::SILVER_IDOL};
-
-            Limit = 1;
+            Engine::GET_EQUIPMENT(party, Character::Type::AKIHIRO_OF_CHALICE, {Equipment::SILVER_IDOL});
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 856}; }
@@ -3566,6 +3558,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 110;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -6442,9 +6438,9 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            auto result = Engine::ROLL_DICE(1);
+            auto result = Engine::ROLL(1);
 
-            if (result[0] < 3)
+            if (result < 3)
             {
                 return {Book::Type::BOOK1, 159};
             }
@@ -6616,13 +6612,13 @@ namespace Book1
 
             if (Engine::IS_ACTIVE(party, party.LastSelected))
             {
-                auto result = Engine::ROLL_DICE(1);
+                auto result = Engine::ROLL(1);
 
-                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -result[0]);
+                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -result);
 
-                PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses " + std::to_string(result[0]) + " Health point";
+                PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses " + std::to_string(result) + " Health point";
 
-                if (result[0] > 1)
+                if (result > 1)
                 {
                     PreText += "s";
                 }
@@ -7336,6 +7332,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Team = Team::Type::MAGICAL_DOOR;
+
             Take = {Equipment::REFERENCE_BOOK1, Equipment::PRECIOUS_TOMES};
 
             Limit = 2;
@@ -7488,6 +7486,7 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Engine::LOSE_ALL(party, Equipment::Class::ARMOUR);
+
             Engine::LOSE_ALL(party, Equipment::Class::WEAPON);
         }
     };
@@ -7645,9 +7644,9 @@ namespace Book1
 
                     if (target >= 0 && target < party.Members.size())
                     {
-                        auto result = Engine::ROLL_DICE(1);
+                        auto result = Engine::ROLL(1);
 
-                        if (result[0] > Engine::SCORE(party.Members[target], Attribute::Type::FIGHTING))
+                        if (result > Engine::SCORE(party.Members[target], Attribute::Type::FIGHTING))
                         {
                             Engine::GAIN_SCORE(party.Members[target], Attribute::Type::FIGHTING, 1);
 
@@ -16056,6 +16055,367 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
     };
 
+    class Story520 : public Story::Base
+    {
+    public:
+        Story520()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 520;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "You have been charged by the Everchild to attempt to destroy Malronac the Deathengine. This will be a fearsome task indeed.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Spy on the palace until you see him emerge", {Book::Type::BOOK1, 733}));
+            Choices.push_back(Choice::Base("The Everchild's request is too much for you", {Book::Type::BOOK1, 75}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story521 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story521()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 521;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Bye = "Once they have exhausted themselves you are thrown out of the ziggurat.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You babble an excuse about wishing to bathe in the beauty of their faith, but the zealots are having none of it. Soon guards arrive, and you are stripped to the waist and tied to the pillars in the grand hall. The zealots cruelly whip you.\n\nNote: Your party loses ";
+
+            auto result = Engine::ROLL(1);
+
+            Engine::GAIN_HEALTH(party, Team::Type::ZIGGURAT, -result);
+
+            PreText += std::to_string(result) + " Health point";
+
+            if (result > 1)
+            {
+                PreText += "s";
+            }
+
+            PreText += ".";
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
+    };
+
+    class Story522 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story522()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 522;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The common temples of Chalice are dedicated to their strange meditative religion. They are open structures without walls, although low wooden screens are used to separate the different orders of worshipers. You are surprised that no one here worships the God King, but merely pays reverence to his immortal insights into their faith. You cannot receive blessings here since there is no external god to bless you, instead all truth and beauty must be found from within through a process of long introspection.\n\nClearly, only a native of this land could master such intricacies.";
+
+            if (!Engine::IN_PARTY(party, Character::Type::AKIHIRO_OF_CHALICE))
+            {
+                PreText += " Besides wondering at the strangeness of it all, you can gain no benefit here.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::AKIHIRO_OF_CHALICE))
+            {
+                return {Book::Type::BOOK1, 856};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 450};
+            }
+        }
+    };
+
+    class Story523 : public Story::Base
+    {
+    public:
+        Story523()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 523;
+
+            Text = "You emerge into a large chamber, filled with cobwebs which incinerate at the touch of your torches. The floor of this chamber has half collapsed, and in a small crevice you can make out the eggs of giant spiders, heaped upon one another. The adult spiders lurk in the ceiling corners of the chamber, waiting patiently for a chance to strike. You could make your way carefully through the crevice, since sloped rubble is piled up on either side of the drop -- but you would have to carefully navigate past the eggs. You also spy a narrow ledge around the crevice which might allow you to avoid the crevice completely, provided you could all make it across without falling. Or perhaps it would be wiser to attack the spiders whilst you are on firm ground, and get a battle out of the way?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Creep through the crevice", {Book::Type::BOOK1, 80}));
+            Choices.push_back(Choice::Base("Sneak along the ledge", {Book::Type::BOOK1, 895}));
+            Choices.push_back(Choice::Base("Provoke the spiders into battle", {Book::Type::BOOK1, 133}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story524 : public Story::Base
+    {
+    public:
+        Story524()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 524;
+
+            Text = "In the dead of night you approach Dulcimer's house, in the rich quarter of the city. It is a red-roofed cubical block of stone and rough cement, with lacklustre guard patrols orbiting the estate at uneven intervals. You spy what looks to be the outdoor entrance to the basement; a large trapdoor wide enough to roll barrels into.\n\nWaiting for the right moment, you dash to the basement doors, some of you keeping watch whilst another attempts to break the padlock on the basement.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            Choices.clear();
+
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PRYBAR}))
+            {
+                Choices.push_back(Choice::Base("Break into the basement (Individual check: Fighting 4+, Successes: 2)", {Book::Type::BOOK1, 766}, {Book::Type::BOOK1, 468}, {Attribute::Type::FIGHTING}, 4, 2));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Break into the basement (Individual check: Fighting 5+, Successes: 2)", {Book::Type::BOOK1, 766}, {Book::Type::BOOK1, 468}, {Attribute::Type::FIGHTING}, 5, 2));
+            }
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            Bye = NULL;
+
+            if (!outcome)
+            {
+                Bye = "You are still struggling with the padlock when the guards arrive. You are chased away.";
+            }
+        }
+    };
+
+    class Story525 : public Story::Base
+    {
+    public:
+        Story525()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 525;
+
+            Text = "This is harder than it looks. Sand is tricky stuff and it is easy to accidentally leave a limb uncovered.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Hide from the barbarians (Team check: Stealth 5+, Successes: 4)", {Book::Type::BOOK1, 840}, {Book::Type::BOOK1, 238}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 5, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            Bye = NULL;
+
+            if (!outcome)
+            {
+                Bye = "The barbarians spot you, and begin to wheel towards you, weapons drawn.";
+            }
+        }
+    };
+
+    class Story526 : public Story::Base
+    {
+    public:
+        Story526()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 526;
+
+            Text = "Your physical strength and martial technique intimidate the slaves, who grumble and back down, allowing you to rip the choicest and best-cooked flesh off the goat first. One of the slaves, a fellow called Tommul, mutters dark warnings about revenge. Snarling at him, you retreat to a corner to finish your food.\n\nNote: You gained the code A2.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(2)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 865}; }
+    };
+
+    class Story527 : public Story::Base
+    {
+    public:
+        Story527()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 527;
+
+            Text = "You cast the spell, but the shadow door is blocked on the other side by a huge stone slab. The weird magics of the shadow door make getting a grip on the stone block impossible. Eventually you are forced to give up.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 717}; }
+    };
+
+    class Story528 : public Story::Base
+    {
+    public:
+        Story528()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 528;
+
+            Text = "You are not quick enough. You are still hanging onto the rope when the thief cuts it, sending your whole party into a heap on the ground. You dust yourselves off and consider attempting a pursuit, but the thief has made good his escape, and the only way to chase him would be to break into the house.\n\nNote: Each party member loses 1 Health point.";
+
+            Bye = "Shaking your head at his audacity you make your way into town.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story529 : public Story::Base
+    {
+    public:
+        Story529()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 529;
+
+            Text = "The heist began well, with you being able to snatch a GOLD PORTRAIT and a BRONZE SCORPION.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Team = Team::Type::WALL_CLIMBING;
+
+            Take = {Equipment::GOLD_PORTRAIT, Equipment::BRONZE_SCORPION};
+
+            Limit = 2;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, -529}; }
+    };
+
+    class Event529 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Event529()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -529;
+
+            DisplayID = 529;
+
+            Text = "As you are rifling through a chest of drawers you disturb a mirror, which crashes to the floor with an almighty smash! Soon, the house guards from the ground floor come swarming up upon you. You draw your swords and, back to back with Brekken's team, you prepare to fight to the death to defend your loot.\n\nNote: Only members of the wall-climbing team may help in this fight.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Team = Team::Type::WALL_CLIMBING;
+
+            destination = {Book::Type::BOOK1, 75};
+
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Guard", 4, 4, 4, 7, 0),
+                Monster::Base("Guard", 4, 4, 3, 9, 0),
+                Monster::Base("Guard", 5, 5, 4, 11, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            Bye = NULL;
+            
+            if (result == Engine::Combat::VICTORY)
+            {
+                if (Engine::COUNT(party, Team::Type::WALL_CLIMBING) <= 0)
+                {
+                    Bye = "All members of the wall-climbing team are dead.";
+
+                    Engine::LOSE_ALL(party, Team::Type::WALL_CLIMBING);
+
+                    destination = {Book::Type::BOOK1, 75};
+                }
+                else
+                {
+                    destination = {Book::Type::BOOK1, 833};
+                }
+            }
+            else
+            {
+                Bye = "All members of the wall-climbing team are dead.";
+
+                Engine::LOSE_ALL(party, Team::Type::WALL_CLIMBING);
+
+                destination = {Book::Type::BOOK1, 75};
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -16614,6 +16974,17 @@ namespace Book1
     auto story517 = Story517();
     auto story518 = Story518();
     auto story519 = Story519();
+    auto story520 = Story520();
+    auto story521 = Story521();
+    auto story522 = Story522();
+    auto story523 = Story523();
+    auto story524 = Story524();
+    auto story525 = Story525();
+    auto story526 = Story526();
+    auto story527 = Story527();
+    auto story528 = Story528();
+    auto story529 = Story529();
+    auto event529 = Event529();
 
     void InitializeStories()
     {
@@ -16621,7 +16992,7 @@ namespace Book1
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
-            &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509,
+            &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -16673,7 +17044,8 @@ namespace Book1
             &story480, &story481, &story482, &story483, &story484, &story485, &story486, &story487, &story488, &story489,
             &story490, &story491, &story492, &story493, &story494, &story495, &story496, &story497, &story498, &story499,
             &story500, &story501, &story502, &story503, &story504, &story505, &story506, &story507, &story508, &story509,
-            &story510, &story511, &story512, &story513, &story514, &story515, &story516, &story517, &story518, &story519};
+            &story510, &story511, &story512, &story513, &story514, &story515, &story516, &story517, &story518, &story519,
+            &story520, &story521, &story522, &story523, &story524, &story525, &story526, &story527, &story528, &story529};
     }
 }
 #endif

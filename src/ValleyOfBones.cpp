@@ -78,6 +78,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
 bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge);
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
+bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Equipment::Base> equipment, int LoseLimit, bool back_button);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, int combatRound);
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
@@ -92,7 +93,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int spells_limit);
 bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Spells::Base> spells, bool back_button);
 bool storyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Engine::Destination destination);
-bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button);
+bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character);
 bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, bool inCombat);
@@ -5957,7 +5958,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     // if opponent left any loot that can be used, allow party to take it
     if (monsters[opponent].Health <= 0 && monsters[opponent].Loot.size() > 0)
     {
-        takeScreen(window, renderer, party, monsters[opponent].Loot, monsters[opponent].Loot.size(), false);
+        takeScreen(window, renderer, party, team, monsters[opponent].Loot, monsters[opponent].Loot.size(), false);
     }
 
     return std::max(0, combat_damage);
@@ -16678,7 +16679,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     return done;
 }
 
-bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button)
+bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button)
 {
     auto done = false;
 
@@ -16951,7 +16952,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                     }
                                     else
                                     {
-                                        character = selectPartyMember(window, renderer, party, Team::Type::NONE, equipment[selection[i]], Control::Type::EQUIPMENT);
+                                        character = selectPartyMember(window, renderer, party, team, equipment[selection[i]], Control::Type::EQUIPMENT);
                                     }
                                 }
 
@@ -17005,7 +17006,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return done;
 }
 
-bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Equipment::Base> equipment, int LoseLimit, bool back_button)
+bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Equipment::Base> equipment, int LoseLimit, bool back_button)
 {
     auto done = false;
 
@@ -17261,7 +17262,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, s
                             items.push_back(equipment[selection[i]].Type);
                         }
 
-                        Engine::LOSE_EQUIPMENT(party, items);
+                        Engine::LOSE_EQUIPMENT(party, team, items);
 
                         done = true;
 
@@ -21091,7 +21092,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::GET_EQUIPMENT)
                         {
-                            done = takeScreen(window, renderer, party, story->Choices[choice].Equipment, story->Choices[choice].Equipment.size(), true);
+                            done = takeScreen(window, renderer, party, story->Choices[choice].Team, story->Choices[choice].Equipment, story->Choices[choice].Equipment.size(), true);
 
                             if (done)
                             {
@@ -21102,7 +21103,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::GET_EQUIPMENT_CODE)
                         {
-                            done = takeScreen(window, renderer, party, story->Choices[choice].Equipment, story->Choices[choice].Equipment.size(), true);
+                            done = takeScreen(window, renderer, party, story->Choices[choice].Team, story->Choices[choice].Equipment, story->Choices[choice].Equipment.size(), true);
 
                             if (done)
                             {
@@ -21581,7 +21582,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     {
                                         Engine::GAIN_SCORE(party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Value);
 
-                                        Engine::LOSE_EQUIPMENT(party, equipment);
+                                        Engine::LOSE_EQUIPMENT(party, story->Choices[choice].Team, equipment);
 
                                         next = findStory(story->Choices[choice].Destination);
 
@@ -21705,7 +21706,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             for (auto i = 0; i < party.Members.size(); i++)
                             {
-                                if (Engine::IS_ACTIVE(party, i))
+                                if (Engine::IS_ACTIVE(party, i) && (party.Members[i].Team == story->Choices[choice].Team || story->Choices[choice].Team == Team::Type::NONE))
                                 {
                                     for (auto j = 0; j < party.Members[i].Equipment.size(); i++)
                                     {
@@ -21720,7 +21721,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                             else
                             {
-                                loseItems(window, renderer, party, equipment, story->Choices[choice].Value, false);
+                                loseItems(window, renderer, party, story->Choices[choice].Team, equipment, story->Choices[choice].Value, false);
                             }
 
                             next = findStory(story->Choices[choice].Destination);
@@ -22434,7 +22435,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         {
                             if (story->Take.size() > 0 && story->Limit > 0)
                             {
-                                auto done = takeScreen(window, renderer, party, story->Take, story->Limit, true);
+                                auto done = takeScreen(window, renderer, party, story->Team, story->Take, story->Limit, true);
 
                                 if (!done)
                                 {
@@ -22538,7 +22539,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             if (deadInventory.size() > 0)
                             {
-                                takeScreen(window, renderer, party, deadInventory, deadInventory.size(), false);
+                                takeScreen(window, renderer, party, Team::Type::NONE, deadInventory, deadInventory.size(), false);
                             }
 
                             while (!Engine::VERIFY_EQUIPMENT_LIMIT(party))
