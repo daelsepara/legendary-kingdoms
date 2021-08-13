@@ -977,7 +977,7 @@ namespace Book1
 
             Choices.clear();
 
-            if (!Engine::HAS_STATUS(party, Character::Status::RITUAL_SCARRING))
+            if (!Engine::HAS_STATUS(party, Character::Status::RITUAL_SCARRING_CURSUS))
             {
                 PreText += "They bombard you with questions about the faith, to determine your worthiness.";
 
@@ -3605,7 +3605,7 @@ namespace Book1
             {
                 PreText += "\n\nNote: Only party members who have Ritual Scarring (Cursus) are permitted to enter the ziggurat. Those without the scarring must wait outside, and you cannot use their equipment or abilities until you leave the ziggurat.";
 
-                Choices.push_back(Choice::Base("Enter the ziggurat (party members without Ritual Scarring must wait outside)", {Book::Type::BOOK1, 574}, Choice::Type::HAS_STATUS, {Character::Status::RITUAL_SCARRING}));
+                Choices.push_back(Choice::Base("Enter the ziggurat (party members without Ritual Scarring (Cursus) must wait outside)", {Book::Type::BOOK1, 574}, Choice::Type::HAS_STATUS, {Character::Status::RITUAL_SCARRING_CURSUS}));
                 Choices.push_back(Choice::Base("Return to the town centre", {Book::Type::BOOK1, 340}));
             }
 
@@ -6584,7 +6584,7 @@ namespace Book1
 
             ID = 207;
 
-            Text = "The Church of Cursus in Clifftop is unique in the valley, in that it is made of jungle timbers rather than stone. The city is poor, and not even the faithful have the means to pay for the impressive black stone ziggurats more common to Cursus temples. Within the hall you can see flagellated parishioners begging for forgiveness from their distant god, whilst poor priests while away the endless hours with chants they must recite from memory for lack of expensive books to refer to.\n\nThe high priest is eager for donations. If you pay him 1,000 silver coins he will clumsily bless you. Find the party member with the lowest Stealth score in the team, and if their Stealth score is less than 3, increase their Stealth by 1 point. If all your party member's Stealth scores are already 3 or above, the blessing will have no effect.\n\nYou may also receive some RITUAL SCARRING, which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some RITUAL SCARRING, they must lose 1 point of Health permanently.";
+            Text = "The Church of Cursus in Clifftop is unique in the valley, in that it is made of jungle timbers rather than stone. The city is poor, and not even the faithful have the means to pay for the impressive black stone ziggurats more common to Cursus temples. Within the hall you can see flagellated parishioners begging for forgiveness from their distant god, whilst poor priests while away the endless hours with chants they must recite from memory for lack of expensive books to refer to.\n\nThe high priest is eager for donations. If you pay him 1,000 silver coins he will clumsily bless you. Find the party member with the lowest Stealth score in the team, and if their Stealth score is less than 3, increase their Stealth by 1 point. If all your party member's Stealth scores are already 3 or above, the blessing will have no effect.\n\nYou may also receive some Ritual Scarring (Cursus), which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some Ritual Scarring (Cursus), they must lose 1 point of Health permanently.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -6598,7 +6598,7 @@ namespace Book1
                 Choices.push_back(Choice::Base("Select party member with lowest Stealth score", {Book::Type::BOOK1, -207}, Choice::Type::RAISEATTRIBUTE_WITH_BLESSING, {Attribute::Type::STEALTH}, 1000, 3, 1));
             }
 
-            Choices.push_back(Choice::Base("Receive some ritual scarring", {Book::Type::BOOK1, -207}, Choice::Type::PAYFORSTATUS_WITH_HEALTH, {Character::Status::RITUAL_SCARRING}, -1));
+            Choices.push_back(Choice::Base("Receive some Ritual Scarring (Cursus)", {Book::Type::BOOK1, -207}, Choice::Type::PAYFORSTATUS_WITH_HEALTH, {Character::Status::RITUAL_SCARRING_CURSUS}, -1));
             Choices.push_back(Choice::Base("You are finished here", {Book::Type::BOOK1, 19}));
         }
     };
@@ -8469,7 +8469,7 @@ namespace Book1
 
             ID = 272;
 
-            Text = "Even the smaller temples to Cursus are fantastic in their ornamentation. Gold ornaments lustre against the deep black stone, and haunting choral odes echo through the square chamber, as if the singers were surrounding you.\n\nIf you have any INCENSE, you may exchange some for a blessing from the priests. Find the party member with the lowest Stealth score in the team and increase their Stealth by 1 point.\n\nYou may also receive some ritual scarring, which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some ritual scarring, they must lose 1 point of Health permanently.";
+            Text = "Even the smaller temples to Cursus are fantastic in their ornamentation. Gold ornaments lustre against the deep black stone, and haunting choral odes echo through the square chamber, as if the singers were surrounding you.\n\nIf you have any INCENSE, you may exchange some for a blessing from the priests. Find the party member with the lowest Stealth score in the team and increase their Stealth by 1 point.\n\nYou may also receive some Ritual Scarring (Cursus), which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some Ritual Scarring (Cursus), they must lose 1 point of Health permanently.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -8483,7 +8483,7 @@ namespace Book1
                 Choices.push_back(Choice::Base("(INCENSE) Select party member with lowest Stealth score", {Book::Type::BOOK1, -272}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::INCENSE}, {Attribute::Type::STEALTH}, 1));
             }
 
-            Choices.push_back(Choice::Base("Receive some ritual scarring", {Book::Type::BOOK1, -272}, Choice::Type::PAYFORSTATUS_WITH_HEALTH, {Character::Status::RITUAL_SCARRING}, -1));
+            Choices.push_back(Choice::Base("Receive some Ritual Scarring (Cursus)", {Book::Type::BOOK1, -272}, Choice::Type::PAYFORSTATUS_WITH_HEALTH, {Character::Status::RITUAL_SCARRING_CURSUS}, -1));
             Choices.push_back(Choice::Base("You are finished here", {Book::Type::BOOK1, 340}));
         }
     };

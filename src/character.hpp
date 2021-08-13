@@ -113,7 +113,7 @@ namespace Character
     enum class Status
     {
         ARMOUR3,
-        RITUAL_SCARRING,
+        RITUAL_SCARRING_CURSUS,
         ENRAGED,
         FRONT,
         BACK,
@@ -133,7 +133,7 @@ namespace Character
 
     std::map<Character::Status, const char *> StatusDescriptions = {
         {Character::Status::ARMOUR3, "+3 Armour"},
-        {Character::Status::RITUAL_SCARRING, "Ritual Scarring"},
+        {Character::Status::RITUAL_SCARRING_CURSUS, "Ritual Scarring (Cursus)"},
         {Character::Status::ENRAGED, "Enraged"},
         {Character::Status::FRONT, "in Front"},
         {Character::Status::BACK, "at the Back"},
