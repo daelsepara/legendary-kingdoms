@@ -22,7 +22,8 @@ namespace Location
         CHALICE,
         TUMBLESTONES,
         WITHERED_STEPPES,
-        CAVES_OF_URANU
+        CAVES_OF_URANU,
+        PALACE_OF_UNBRAAKI
     };
 
     std::map<Location::Type, const char *> Description = {
@@ -41,7 +42,8 @@ namespace Location
         {Location::Type::CHALICE, "Chalice"},
         {Location::Type::TUMBLESTONES, "Tumblestones"},
         {Location::Type::WITHERED_STEPPES, "Withered Steppes"},
-        {Location::Type::CAVES_OF_URANU, "Caves of Uranu"}};
+        {Location::Type::CAVES_OF_URANU, "Caves of Uranu"},
+        {Location::Type::PALACE_OF_UNBRAAKI, "Palace of Unbraaki"}};
 
     enum class BattleField
     {

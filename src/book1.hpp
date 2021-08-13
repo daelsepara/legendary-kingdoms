@@ -897,7 +897,7 @@ namespace Book1
 
             ID = 27;
 
-            Text = "The Everchild presents you with a bar of GOLD BULLION to help convince the mercenaries to change sides. Ayleta has been in private communication with the mercenaries for some time and has already negotiated a safe path between the mercenary encampment and the Everchild's forces.\n\nYou are received coolly by the unit captain, who cautiously welcomes you into his tent with his officers and bodyguards around him. You state your opinion that the Everchild's victory in the coming conflict is all but certain, and that she is willing to let mercenary companies that co-operate with her depart safely. Matters soon turn to money, with the mercenary captain suggesting that quite a lot of additional money will be coming his way should the patriarch win the battle, and Saltdad and other cities need to be supressed. He is also worried about his reputation if he plays turncoat without fighting even a single battle for his employer.\n\nOnly party members assigned to the MERCENARY TEAM may assist with this skill check.\n\nNote: If you give the mercenaries a bar of GOLD BULLION, the DC of this check becomes 5+. If you give them two bars, the DC becomes 4+. If you give them three bars the DC becomes 2+.";
+            Text = "The Everchild presents you with a bar of GOLD BULLION to help convince the mercenaries to change sides. Ayleta has been in private communication with the mercenaries for some time and has already negotiated a safe path between the mercenary encampment and the Everchild's forces.\n\nYou are received coolly by the unit captain, who cautiously welcomes you into his tent with his officers and bodyguards around him. You state your opinion that the Everchild's victory in the coming conflict is all but certain, and that she is willing to let mercenary companies that co-operate with her depart safely. Matters soon turn to money, with the mercenary captain suggesting that quite a lot of additional money will be coming his way should the patriarch win the battle, and Saltdad and other cities need to be supressed. He is also worried about his reputation if he plays turncoat without fighting even a single battle for his employer.\n\nNote: Only party members assigned to the MERCENARY TEAM may assist with this skill check.\n\nIf you give the mercenaries a bar of GOLD BULLION, the DC of this check becomes 5+. If you give them two bars, the DC becomes 4+. If you give them three bars the DC becomes 2+.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -2157,6 +2157,8 @@ namespace Book1
 
             ID = 67;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Text = "You descend into the basement, carved out of cliff rock, and decorated with thick carpets and ever-burning candlesticks. Eventually you emerge into an oval chamber. To the south an archway leads to another circular room filled with strange, glowing runes. In the north wall is a strong, round steel door. It appears to have no handle or lock upon it. Perhaps this is the fabled vault of Unbraaki?\n\nOn either side of the vault are bookcases which are stacked with blank paper. Your entrance has created a draught, and a single blank sheet tumbles from the stacks to drift to the floor. You watch with growing nervousness as another sheet floats free and then another and another. The sheets of paper fold themselves rapidly, joining together and folding and refolding into shapes. Soon, a man-like figure has formed, followed by another and another. A paper tiger is folded into completion, as well as a fierce dragon. As one, the paper figures turn, swirls of sheets whipping around them like a snowstorm. They advance towards you.\n\nNotes: You cannot make armour saves against the attacks of these paper opponents.";
 
             Controls = Story::Controls::STANDARD;
@@ -2306,6 +2308,8 @@ namespace Book1
 
             ID = 70;
 
+            Location = Location::Type::CLIFFTOP;
+
             Text = "You track down Damned Suzanna through the dusty gulches in Clifftop. Eventually you find her, recovering from the wounds of her beating, sweltering in her open-doored shack. When she sees you her eyes light up, and she eagerly snatches the proffered REGISTRY PAPERS from your hands. She gazes with confusion as she reads.\n\n\"This can't be right!\" she exclaims. \"It says here that my grandfather legally sold his land to Unbraaki fifty years ago. But my father said...\"\n\n\"I'm afraid it was countersigned by the priests of Cursus,\" you say. \"I suppose it's possible that there was a conspiracy against your family, but it's rare for priests to conspire with sorcerers.\"\n\nSuzanna slumps upon her bed. \"Everything my father told me was a lie,\" she groans. \"I'm not the inheritor of a massive estate, I'm just... me.\"\n\n\"That should be good enough,\" you say. \"Wealth rarely comes to those who sit around for it. If you want to make something of yourself, get out there and do it. You're certainly tough enough.\"\n\nShe nods. \"You're right. It's time I stopped waiting for my life to get better; I've got nothing to lose going adventuring. I'll sign on with the next ship in port.\" She presses a GREY TALISMAN into your hand. \"It's not much, but I want you to have this. It was the last thing my father gave me. Time for a new life.\"\n\nNote: You gained the code A36.";
 
             Bye = "Waving Damned Suzanna farewell, you make your way on.";
@@ -2430,6 +2434,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 74;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
 
             Text = "You inform the guard that you wish to see Unbraaki again. You are escorted into his presence, though he seems surprised to see you. \"I have already given you my soldiers,\" he grumbles. \"What more could your queen possibly desire?\"\n\n\"What if we need reinforcements?\" you ask. \"Your soldiers may not be enough to complete the campaign.\"\n\n\"That is no concern of mine,\" snaps Unbraaki coldly. \"You'll get no more from me. I have spent a fortune replacing the soldiers I gave to the Everchild. Send her my regards -- but don't bother me again.\"";
 
@@ -8294,6 +8300,8 @@ namespace Book1
 
             ID = 265;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Text = "You are leaving the Palace of Unbraaki. Where will you venture now?";
 
             Choices.clear();
@@ -11809,6 +11817,7 @@ namespace Book1
             {
                 PreText += "\n\nAfter a full search of your packs the shaman shrugs and you are escorted back to your ship. You get the impression your audience with the Bando has come to an end.";
             }
+
             Text = PreText.c_str();
         }
 
@@ -11986,7 +11995,7 @@ namespace Book1
 
             Image = "images/book1/akihiro_battles_monk.png";
 
-            Text = "You inform your companions to stand aside.\n\nGazing directly into the eyes of the opposing monks you strip away your weapon belt and throw it to the side. Armed only with your fists you approach, the monks adopting fighting stances.\n\nNote: Because you have no weapon for this fight, you cannot add any Fighting bonus a weapon can give you. However, because you are familiar with the unarmed combat style of the monks, you do not lose a point of Fighting for having no weapon.\n\nOnly Akihiro may engage in this battle.";
+            Text = "You inform your companions to stand aside.\n\nGazing directly into the eyes of the opposing monks you strip away your weapon belt and throw it to the side. Armed only with your fists you approach, the monks adopting fighting stances.\n\nNote: Because you have no weapon for this fight, you cannot add any Fighting bonus a weapon can give you. However, because you are familiar with the unarmed combat style of the monks, you do not lose a point of Fighting for having no weapon.\n\nNote: Only Akihiro may engage in this battle.";
 
             Choices.clear();
 
@@ -14089,6 +14098,8 @@ namespace Book1
 
             ID = 455;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Text = "You ask if you can consult Unbraaki on magical matters, since you have heard of his great reputation as a sorcerer. The guard shakes his head. \"My master is no public oracle, and his palace is not a school like Animus Mast. Get you gone, curs.\" Two dozen soldiers lower their spears in preparation for your defiance, with another company advancing up the road to support them.";
 
             Bye = "Realising that these are not men to be trifled with you politely depart.";
@@ -14174,6 +14185,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 459;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
 
             Text = "You open the door to the massive library and jolt in shock. Looking up to see you in a velvet armchair is Unbraaki himself, book in hand, a small pack of monkeys reading on the floor alongside him. \"Visitors,\" smiles Unbraaki. \"And unbidden ones! Kill them.\"";
 
@@ -14961,6 +14974,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 484;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
 
             Text = "You have arrived at Unbraaki's teleport circle, deep inside his palace.";
 
@@ -15831,6 +15846,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 509;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
 
             Text = "Unbraaki collapses to the ground, flames still pouring from his palms, igniting the palace. You only just have time to grasp his spellbook from his hands before crashing through the windows, away from the blaze.\n\nUnbraaki's guards cry in horror and amazement as they see the home of their master consumed in flames. Seeing no reason to remain, they scatter into the desert, leaving their master and his sorcerous monkeys to burn.\n\nAs the morning light spreads across the desert you see the extent of the devastation. The palace is a scorched ruin, though curiously a single entrance to the basement remains. Looking through Unbraaki's spellbook you see it contains many interesting notes on the nature of magic, as well as an interesting spell.\n\nNote: You gained the code A88. You can learn the following spell:\n\nSilver Tongue (Adventure)\n\nYour confidence grows as you summon this spell. Cast this spell when you fail a Charisma check. You gain an additional 3 automatic successes for this check only.\n\nRecharge: 75 silver\n\nIn addition, you may raise the Lore skill of one character by a single point for reading Unbraaki's fascinating theories on magic.";
 
@@ -17057,6 +17074,375 @@ namespace Book1
         }
     };
 
+    class Story550 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Engine::Destination destination = {};
+
+        Story550()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 550;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "There is no point in provoking anything. You would rather deal with wounded and exhausted opponents than arena champions. You cast your eyes warily across the exterior of the battle.";
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(3)}))
+            {
+                PreText += "\n\nAn arrow thudding into the ground near you, launched from one the arena guards, spurs you back into action. Clearly you must fight hard or be executed. Hurriedly you engage with the dregs of the fight to keep busy.";
+
+                CanFlee = false;
+
+                Monsters = {Monster::Base("Slaves", 6, 5, 3, 20, 0)};
+
+                destination = {Book::Type::BOOK1, 71};
+            }
+            else
+            {
+                Monsters.clear();
+
+                destination = {Book::Type::BOOK1, 718};
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+    };
+
+    class Story551 : public Story::Base
+    {
+    public:
+        Story551()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 551;
+
+            Text = "You open the door into a busy looking kitchen. Goblins, slaves by the look of their garb, are busy cooking a surprisingly decent looking broth in a large cauldron. Even through the thick clouds of steam they spot you, mouths open in surprise.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Try to speak to them", {Book::Type::BOOK1, 57}));
+            Choices.push_back(Choice::Base("Rush to an attack", {Book::Type::BOOK1, 389}));
+            Choices.push_back(Choice::Base("Wait to see what they will do", {Book::Type::BOOK1, 99}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(61)}))
+            {
+                return {Book::Type::BOOK1, 809};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(62)}))
+            {
+                return {Book::Type::BOOK1, 423};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story552 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story552()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 552;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The poor monkey is dying, but your water eases its suffering somewhat, and it cradles itself lovingly in your arms.";
+
+            Choices.clear();
+
+            if (Engine::HAS_SPELL(party, {Spells::Type::ANIMAL_SPEECH}))
+            {
+                Choices.push_back(Choice::Base("Cast Animal Speech", {Book::Type::BOOK1, 399}));
+                Choices.push_back(Choice::Base("Comfort the monkey until its life fades away", {Book::Type::BOOK1, 125}));
+            }
+            else
+            {
+                PreText += "\n\nYou comfort the monkey until its life fades away, wondering what could bring such tragedy to a harmless creature.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 125}; }
+    };
+
+    class Story553 : public Story::Base
+    {
+    public:
+        Story553()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 553;
+
+            Text = "A lone assassin does make an attempt on the Everchild's life, but her alert agents manage to foil the attack. The Everchild looks unflustered and calm as the morning sun illuminates the horizon, and her presence on the field, astride a nomad steed, causes your army to cheer wildly. Confidence is high. Now it is time to see if your preparations for the coming battle have been enough.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 162}; }
+    };
+
+    class Story554 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Story554()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 554;
+
+            Text = "\"Death to the Iron King!\" you snarl, drawing your weapons. The soldiers look horrified to see such disciplined warriors before them.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 357};
+
+            CanFlee = true;
+
+            Monsters = {
+                Monster::Base("Soldier", 3, 4, 4, 6, 0),
+                Monster::Base("Soldier", 3, 4, 3, 7, 0),
+                Monster::Base("Soldier", 4, 4, 3, 9, 0),
+                Monster::Base("Soldier", 3, 4, 4, 8, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::FLEE)
+            {
+                destination = {Book::Type::BOOK1, 75};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 357};
+            }
+        }
+    };
+
+    class Story555 : public Story::Base
+    {
+    public:
+        Story555()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 555;
+
+            Text = "This battle has taught you much about combat strategy.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of FIGHTING", {Book::Type::BOOK1, 3}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story556 : public Story::Base
+    {
+    public:
+        Story556()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 556;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
+            Text = "You inform the soldier that you are agents of the Everchild and have come to plead for Unbraaki's support in her cause. The soldier nods and asks you to wait in the garden until his return. Slave girls deliver iced fruit juices to you as you sit upon a bench in the shade. Eventually the soldier returns.\n\n\"Unbraaki sends his greetings to you,\" says the soldier formally. \"Alas, he is not interested in supporting a rebel leader in her cause at this time. Should the Everchild ever become a serious political figure, he would be delighted to meet with you. Until that time, Unbraaki has no intention of disrupting the order of the valley.\"\n\n\"I see,\" you nod. \"Perhaps if we met, we might be able to persuade your master...\"\n\n\"You may go,\" interrupts the soldier, firmly. A dozen additional soldiers arrive to reinforce his suggestion.";
+
+            Bye = "Thanking the slaves for their refreshment you depart.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 265}; }
+    };
+
+    class Story557 : public Story::Base
+    {
+    public:
+        Story557()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 557;
+
+            Text = "You enter the hall of Lothor the Ugly, brutal king of Clifftop. He is currently in the process of torturing one of his servants, his lords urging him on to greater acts of cruelty. The hideous, scarred king looks up at you as you enter. \"What's this?\" he gargles. \"More petitioners for my favour? If you would be my friend, tell me what kind of punishment I should inflict on this man? Don't be too lenient, or you will share his fate!\"\n\nDozens of guards close in around you as you consider your answer.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(33)}))
+            {
+                return {Book::Type::BOOK1, 126};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(34)}))
+            {
+                return {Book::Type::BOOK1, 642};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (!Engine::IN_PARTY(party, Character::Type::LORD_TIQUON))
+            {
+                Choices.push_back(Choice::Base("Have the man whipped", {Book::Type::BOOK1, 658}));
+                Choices.push_back(Choice::Base("Pull out his fingernails", {Book::Type::BOOK1, 408}));
+                Choices.push_back(Choice::Base("Gouge out his eyes", {Book::Type::BOOK1, 338}));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 10}; }
+    };
+
+    class Story558 : public Story::Base
+    {
+    public:
+        Story558()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 558;
+
+            Text = "You browse the selection, with many interesting tomes on philosophy, war and architecture on display. Disturbingly, you also come across the bodies of two orcs, lying dead on the floor. They seem to have been bludgeoned to death. Your eyes flick to a blood-stained tome that seems to be pulling itself off the shelves. To your horror it is joined by a veritable swarm of books. They fly off the shelves, bashing into the sides of your faces, flapping their heavy leather and wooden pages like aggressive pigeons before your startled eyes.\n\nYou attempt to hold your ground for a few moments, but as more and more books fly off the shelf, you realise your task is hopeless. You must fight your way to the exit!\n\nNote:  Each party member loses 1 Health point.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Fight your way out of the library (Team check: Fighting 4+, Successes: 4)", {Book::Type::BOOK1, 203}, {Book::Type::BOOK1, -558}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 4, false));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -1);
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (!outcome)
+            {
+                Bye = "Each party member loses 1 Health point.";
+
+                Engine::GAIN_HEALTH(party, -1);
+            }
+        }
+    };
+
+    class Event558 : public Story::Base
+    {
+    public:
+        Event558()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -558;
+
+            DisplayID = 558;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 558}; }
+    };
+
+    class Story559 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story559()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 559;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
+            Image = "images/book1/unbraaki.png";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            PreText = "You inform the soldier that you are agents of the queen of Saltdad and have come to plead for Unbraaki's support in her cause. The soldier nods and asks you to wait in the garden until his return. Slave girls deliver iced fruit juices to you as you sit upon a bench in the shade. Eventually the soldier returns.\n\n\"Please, come with me,\" he says. \"Unbraaki will see you now.\"\n\nYou follow the soldier into the gorgeous palace, quite the equal of any manorial estate in Royce or Drakehallow. You are led into a private study where you meet Unbraaki himself. He is an elegant, though rather short man, with a long, thin oiled moustache. His robes are a dazzle of colours that seem to shift before your eyes. On his desk sits a small monkey, oddly wearing a tiny wizard's hat. It looks at you with penetrating, intelligent eyes. Unbraaki bids you to sit, seating himself on a throne-like chair cunningly designed to make him look taller.\n\n\"I am pleased you came to see me,\" smiles Unbraaki. \"I have been following your progress, and that of your queen, with great interest. I am now satisfied that the wind is changing in the valley, and that the Everchild is both a promising and likely leader.\"\n\n\"You will support her, then?\" you press.\n\n\"Perhaps,\" says Unbraaki suddenly cold. \"My soldiers are some of the best in the land, and their loyalty comes with a cost.\"\n\n\"I'm sure the Everchild can provide you with the necessary compensation,\" you say breezily.\n\n\"The Everchild does not have what I want,\" Unbraaki says.\n\n\"And what do you want, eminence?\" you ask.\n\nUnbraaki rises and walks to a bookcase. He snaps his fingers, and the monkey on the desk scales the tall shelves, pulling down an ancient tome and passing it to his master.\n\nUnbraaki opens the book at a particular page and shows you a picture. It appears to be a triangular object, grey or black in colour, with light streaming through it. \"The black prism,\" says Unbraaki. \"It holds the secrets of light itself. Long I've sought it, in this world and the world of shadow, but to no avail. I have consulted an oracle in Drakehallow who told me that only the agents of the queen of Saltdad can find the prism. Of course, there has been no queen in Saltdad for a thousand years. You have just made that happen. I want you to find me the black prism, and in exchange I will provide my soldiers to the Everchild's cause.\"";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::BLACK_PRISM}))
+            {
+                PreText += "\n\n\"Where can I find it?\" you ask.\n\n\"I only know that it was hidden on the south coast of the valley,\" says Unbraaki. \"Perhaps the patriarch has it hidden in his vault? Or maybe it lies in the dread city of Mordain? You are fated to find it, so I doubt you will struggle hard to locate it.\"\n\nWell, the directions are vague, but it's something to go on.";
+
+                Bye = "You thank Unbraaki for his time and promise to return with the prism. You are escorted out of the palace.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::BLACK_PRISM}))
+            {
+                return {Book::Type::BOOK1, 818};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 265};
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -17649,6 +18035,17 @@ namespace Book1
     auto story547 = Story547();
     auto story548 = Story548();
     auto story549 = Story549();
+    auto story550 = Story550();
+    auto story551 = Story551();
+    auto story552 = Story552();
+    auto story553 = Story553();
+    auto story554 = Story554();
+    auto story555 = Story555();
+    auto story556 = Story556();
+    auto story557 = Story557();
+    auto story558 = Story558();
+    auto event558 = Event558();
+    auto story559 = Story559();
 
     void InitializeStories()
     {
@@ -17657,7 +18054,7 @@ namespace Book1
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
-            &event537, &event541, &event545,
+            &event537, &event541, &event545, &event558,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -17712,7 +18109,8 @@ namespace Book1
             &story510, &story511, &story512, &story513, &story514, &story515, &story516, &story517, &story518, &story519,
             &story520, &story521, &story522, &story523, &story524, &story525, &story526, &story527, &story528, &story529,
             &story530, &story531, &story532, &story533, &story534, &story535, &story536, &story537, &story538, &story539,
-            &story540, &story541, &story542, &story543, &story544, &story545, &story546, &story547, &story548, &story549};
+            &story540, &story541, &story542, &story543, &story544, &story545, &story546, &story547, &story548, &story549,
+            &story550, &story551, &story552, &story553, &story554, &story555, &story556, &story557, &story558, &story559};
     }
 }
 #endif
