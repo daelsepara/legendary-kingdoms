@@ -5635,11 +5635,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 }
                                 else if (spell == Spells::Type::UNFAILING_STRIKE)
                                 {
-                                    message += "Unfailing Strike! The " + std::string(monsters[opponent].Name) + " deals 3 damage to your party!";
+                                    message += "Unfailing Strike!";
                                 }
                                 else if (spell == Spells::Type::POISON_STREAM)
                                 {
-                                    message += "Poison Stream! The " + std::string(monsters[opponent].Name) + " makes a Fighting: 5 attack at Difficulty: " + std::to_string(Difficulty) + "+";
+                                    message += "Poison Stream! The " + std::string(monsters[opponent].Name) + " makes two Fighting: 5 attack at Difficulty: " + std::to_string(Difficulty) + "+";
                                 }
                             }
 
