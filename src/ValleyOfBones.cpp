@@ -4110,7 +4110,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                 putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                putHeader(renderer, (std::string("Assign " + std::to_string(combat_damage) + " to")).c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, (std::string("Deal " + std::to_string(combat_damage) + " damage to")).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (selection >= 0 && selection < party.Members.size())
                 {
