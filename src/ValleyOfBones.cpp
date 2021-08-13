@@ -123,8 +123,9 @@ Story::Base *findStory(Engine::Destination destination);
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
 Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
 
-// character description utility
+// description utilities
 std::string characterText(Character::Base &character, bool compact);
+std::string itemString(Equipment::Base equipment);
 
 // game screens (select multiple stuff)
 std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Location::Type garrison, int num_limit);
@@ -2124,41 +2125,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                             equipment_string += ", ";
                         }
 
-                        equipment_string += party.Members[character].Equipment[i].Name;
-
-                        if (party.Members[character].Equipment[i].TwoHanded)
-                        {
-                            equipment_string += "*";
-                        }
-
-                        if (party.Members[character].Equipment[i].Attribute != Attribute::Type::NONE || party.Members[character].Equipment[i].AdditionalSlots > 0)
-                        {
-                            equipment_string += " (";
-
-                            if (party.Members[character].Equipment[i].Attribute != Attribute::Type::NONE)
-                            {
-                                if (party.Members[character].Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
-                                {
-                                    equipment_string += std::string(Attribute::Descriptions[party.Members[character].Equipment[i].Attribute]);
-                                }
-                                else
-                                {
-                                    equipment_string += "+" + std::to_string(party.Members[character].Equipment[i].Modifier) + " " + std::string(Attribute::Descriptions[party.Members[character].Equipment[i].Attribute]);
-                                }
-                            }
-
-                            if (party.Members[character].Equipment[i].AdditionalSlots > 0)
-                            {
-                                if (party.Members[character].Equipment[i].Attribute != Attribute::Type::NONE)
-                                {
-                                    equipment_string += ", ";
-                                }
-
-                                equipment_string += std::to_string(party.Members[character].Equipment[i].AdditionalSlots + 1) + " slots";
-                            }
-
-                            equipment_string += +")";
-                        }
+                        equipment_string += itemString(party.Members[character].Equipment[i]);
                     }
 
                     putText(renderer, equipment_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
@@ -3078,6 +3045,47 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer)
     return done;
 }
 
+std::string itemString(Equipment::Base equipment)
+{
+    std::string item_string = equipment.Name;
+
+    if (equipment.TwoHanded)
+    {
+        item_string += "*";
+    }
+
+    if (equipment.Attribute != Attribute::Type::NONE || equipment.AdditionalSlots > 0)
+    {
+        item_string += " (";
+
+        if (equipment.Attribute != Attribute::Type::NONE)
+        {
+            if (equipment.Attribute == Attribute::Type::FIGHTING3_LORE2)
+            {
+                item_string += std::string(Attribute::Descriptions[equipment.Attribute]);
+            }
+            else
+            {
+                item_string += "+" + std::to_string(equipment.Modifier) + " " + std::string(Attribute::Descriptions[equipment.Attribute]);
+            }
+        }
+
+        if (equipment.AdditionalSlots > 0)
+        {
+            if (equipment.Attribute != Attribute::Type::NONE)
+            {
+                item_string += ", ";
+            }
+
+            item_string += std::to_string(equipment.AdditionalSlots + 1) + " slots";
+        }
+
+        item_string += ")";
+    }
+
+    return item_string;
+}
+
 std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, bool confirm_button, bool back_button)
 {
     auto font_size = 28;
@@ -3092,41 +3100,7 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
         {
             auto index = start + i;
 
-            std::string item_string = list[index].Name;
-
-            if (list[index].TwoHanded)
-            {
-                item_string += "*";
-            }
-
-            if (list[index].Attribute != Attribute::Type::NONE || list[index].AdditionalSlots > 0)
-            {
-                item_string += " (";
-
-                if (list[index].Attribute != Attribute::Type::NONE)
-                {
-                    if (list[index].Attribute == Attribute::Type::FIGHTING3_LORE2)
-                    {
-                        item_string += std::string(Attribute::Descriptions[list[index].Attribute]);
-                    }
-                    else
-                    {
-                        item_string += "+" + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]);
-                    }
-                }
-
-                if (list[index].AdditionalSlots > 0)
-                {
-                    if (list[index].Attribute != Attribute::Type::NONE)
-                    {
-                        item_string += ", ";
-                    }
-
-                    item_string += std::to_string(list[index].AdditionalSlots + 1) + " slots";
-                }
-
-                item_string += ")";
-            }
+            auto item_string = itemString(list[index]);
 
             auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, listwidth - 4 * text_space, TTF_STYLE_NORMAL);
 
@@ -3190,41 +3164,7 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
         {
             auto index = start + i;
 
-            std::string item_string = list[index].Name;
-
-            if (list[index].TwoHanded)
-            {
-                item_string += "*";
-            }
-
-            if (list[index].Attribute != Attribute::Type::NONE || list[index].AdditionalSlots > 0)
-            {
-                item_string += " (";
-
-                if (list[index].Attribute != Attribute::Type::NONE)
-                {
-                    if (list[index].Attribute == Attribute::Type::FIGHTING3_LORE2)
-                    {
-                        item_string += std::string(Attribute::Descriptions[list[index].Attribute]);
-                    }
-                    else
-                    {
-                        item_string += "+" + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]);
-                    }
-                }
-
-                if (list[index].AdditionalSlots > 0)
-                {
-                    if (list[index].Attribute != Attribute::Type::NONE)
-                    {
-                        item_string += ", ";
-                    }
-
-                    item_string += std::to_string(list[index].AdditionalSlots + 1) + " slots";
-                }
-
-                item_string += ")";
-            }
+            auto item_string = itemString(list[index]);
 
             auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, listwidth - 4 * text_space, TTF_STYLE_NORMAL);
 
@@ -3282,41 +3222,7 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
         {
             auto index = start + i;
 
-            std::string item_string = list[index].Name;
-
-            if (list[index].TwoHanded)
-            {
-                item_string += "*";
-            }
-
-            if (list[index].Attribute != Attribute::Type::NONE || list[index].AdditionalSlots > 0)
-            {
-                item_string += " (";
-
-                if (list[index].Attribute != Attribute::Type::NONE)
-                {
-                    if (list[index].Attribute == Attribute::Type::FIGHTING3_LORE2)
-                    {
-                        item_string += std::string(Attribute::Descriptions[list[index].Attribute]);
-                    }
-                    else
-                    {
-                        item_string += "+" + std::to_string(list[index].Modifier) + " " + std::string(Attribute::Descriptions[list[index].Attribute]);
-                    }
-                }
-
-                if (list[index].AdditionalSlots > 0)
-                {
-                    if (list[index].Attribute != Attribute::Type::NONE)
-                    {
-                        item_string += ", ";
-                    }
-
-                    item_string += std::to_string(list[index].AdditionalSlots + 1) + " slots";
-                }
-
-                item_string += ")";
-            }
+            auto item_string = itemString(list[index]);
 
             auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, listwidth - 4 * text_space, TTF_STYLE_NORMAL);
 
@@ -11426,6 +11332,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto text_space = 8;
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -11555,7 +11462,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                putHeader(renderer, "Opponents", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
                 renderButtons(renderer, controls, current, intLB, space, border_pts);
 
@@ -11588,7 +11497,19 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                 }
 
-                putHeader(renderer, "Opponents", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                if (team != Team::Type::NONE)
+                {
+                    if (Engine::IS_CHARACTER(team))
+                    {
+                        putHeader(renderer, "Current", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                    }
+                    else
+                    {
+                        putHeader(renderer, "Team", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                    }
+
+                    putText(renderer, Team::Descriptions[team], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+                }
 
                 putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -12269,41 +12190,7 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto supply = std::get<3>(shop[index]);
 
-            std::string item_string = std::string(item.Name);
-
-            if (item.TwoHanded)
-            {
-                item_string += "*";
-            }
-
-            if (item.Attribute != Attribute::Type::NONE || item.AdditionalSlots > 0)
-            {
-                item_string += " (";
-
-                if (item.Attribute != Attribute::Type::NONE)
-                {
-                    if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
-                    {
-                        item_string += std::string(Attribute::Descriptions[item.Attribute]);
-                    }
-                    else
-                    {
-                        item_string += "+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]);
-                    }
-                }
-
-                if (item.AdditionalSlots > 0)
-                {
-                    if (item.Attribute != Attribute::Type::NONE)
-                    {
-                        item_string += ", ";
-                    }
-
-                    item_string += std::to_string(item.AdditionalSlots + 1) + " slots";
-                }
-
-                item_string += +")";
-            }
+            auto item_string = itemString(item);
 
             if (supply >= 0)
             {
@@ -13829,24 +13716,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                 controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
-                                message = item.Name;
-
-                                if (item.TwoHanded)
-                                {
-                                    message += "*";
-                                }
-
-                                if (item.Attribute != Attribute::Type::NONE)
-                                {
-                                    if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
-                                    {
-                                        message += " (" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                                    }
-                                    else
-                                    {
-                                        message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                                    }
-                                }
+                                message = itemString(item);
 
                                 message += " transferred to " + std::string(party.Members[target].Name) + "!";
 
@@ -13897,24 +13767,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                             controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
-                            message = item.Name;
-
-                            if (item.TwoHanded)
-                            {
-                                message += "*";
-                            }
-
-                            if (item.Attribute != Attribute::Type::NONE)
-                            {
-                                if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
-                                {
-                                    message += " (+" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                                }
-                                else
-                                {
-                                    message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                                }
-                            }
+                            message = itemString(item);
 
                             message += " transferred to " + std::string(character.Name) + "!";
 
@@ -13951,24 +13804,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
-                        message = item.Name;
-
-                        if (item.TwoHanded)
-                        {
-                            message += "*";
-                        }
-
-                        if (item.Attribute != Attribute::Type::NONE)
-                        {
-                            if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
-                            {
-                                message += " (" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                            }
-                            else
-                            {
-                                message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                            }
-                        }
+                        message = itemString(item);
 
                         message += " transferred to " + std::string(character.Name) + "!";
 
@@ -14455,24 +14291,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                         controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
 
-                        message = item.Name;
-
-                        if (item.TwoHanded)
-                        {
-                            message += "*";
-                        }
-
-                        if (item.Attribute != Attribute::Type::NONE)
-                        {
-                            if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
-                            {
-                                message += " (" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                            }
-                            else
-                            {
-                                message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                            }
-                        }
+                        message = itemString(item);
 
                         message += " dropped!";
 
@@ -14534,24 +14353,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                                         controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
 
-                                        message = item.Name;
-
-                                        if (item.TwoHanded)
-                                        {
-                                            message += "*";
-                                        }
-
-                                        if (item.Attribute != Attribute::Type::NONE)
-                                        {
-                                            if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
-                                            {
-                                                message += " (" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                                            }
-                                            else
-                                            {
-                                                message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                                            }
-                                        }
+                                        message = itemString(item);
 
                                         message += " transferred to " + std::string(party.Members[target].Name) + "!";
 
@@ -14640,24 +14442,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                             controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
 
-                            message = item.Name;
-
-                            if (item.TwoHanded)
-                            {
-                                message += "*";
-                            }
-
-                            if (item.Attribute != Attribute::Type::NONE)
-                            {
-                                if (item.Attribute == Attribute::Type::FIGHTING3_LORE2)
-                                {
-                                    message += " (" + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                                }
-                                else
-                                {
-                                    message += " (+" + std::to_string(item.Modifier) + " " + std::string(Attribute::Descriptions[item.Attribute]) + ")";
-                                }
-                            }
+                            message = itemString(item);
 
                             message += " transferred to the Vault!";
 
