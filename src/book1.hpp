@@ -16389,7 +16389,7 @@ namespace Book1
         void AfterCombat(Party::Base &party, Engine::Combat result)
         {
             Bye = NULL;
-            
+
             if (result == Engine::Combat::VICTORY)
             {
                 if (Engine::COUNT(party, Team::Type::WALL_CLIMBING) <= 0)
@@ -16413,6 +16413,295 @@ namespace Book1
 
                 destination = {Book::Type::BOOK1, 75};
             }
+        }
+    };
+
+    class Story530 : public Story::Base
+    {
+    public:
+        Story530()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 530;
+
+            Text = "\"Now it is time to demonstrate your bladecraft,\" nods Honnu. \"And it must be against a foe that can test you spiritually as well as physically. It is known that somewhere in the central deserts of the valley dwells a revenant -- the undead spirit of a man who failed his kensai trials so disastrously he is doomed to walk the earth forever. You must find this spirit and defeat it in single combat.\"\n\nYou feel no fear. \"I shall,\" you vow. \n\n\"This task will not be easy,\" says Honnu. \"Get yourself a good sword, and train yourself to the highest standard before you track down your foe. It will be the duel that defines your family's fate forever. When you have slain it, return to me.\"";
+
+            Bye = "You stand and bow, pondering where to begin your search.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_CODES(party, {Codes::A(50)});
+
+            Engine::GET_CODES(party, {Codes::A(51)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story531 : public Story::Base
+    {
+    public:
+        Story531()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 531;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "You have been sold to a rice farmer in the city of Cursus, and work knee-deep in muck along the Cold River. Your surroundings are suitably dramatic; huge black step pyramids dominate the landscape, the holy temples of Cursus from which chants and deep choral hymns echo at all times of day. Your owner is a pious man, and surprisingly gentle for a slave owner. Whipping is rare, although the threat of execution hangs over anyone who does not work hard enough.\n\nYour thoughts soon turn to escape. There seem two likely methods. You will be helping to construct a granary next week, and builders are freed from their chains so they can move around more freely. It would involve a bit of a dramatic breakout, but it might be possible.\n\nOtherwise you might be able to persuade priest who owns you to free you, if you express enough devotion to his god.\n\nNote: Your party members to are restored full Health as they carry out their labours.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Attempt a breakout", {Book::Type::BOOK1, 785}));
+            Choices.push_back(Choice::Base("Try and charm your way out", {Book::Type::BOOK1, 570}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::REST(party);
+        }
+    };
+
+    class Story532 : public Story::Base
+    {
+    public:
+        Story532()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 532;
+
+            Text = "Clavod is not happy to see you. \"Since your political machinations we have been forced to free our miners and pay them a wage. Many of our warehouses now contain sleeping quarters rather than salt. Why, the place is barely worth keeping anymore,\" he moans.\n\n\"The wages of sin are high,\" you say dryly. \"You've lived off fat profits for long enough.\"\n\nClavod merely sniffs with contempt. \"I'm no longer paying bounties for troglodytes,\" he says airily. \"The queen can look to the protection of free men. I suppose I can still sell you salt, I'll take money even from the most sanctimonious wretch.\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Demand entrance to the mines as representatives of the queen", {Book::Type::BOOK1, 227}));
+            Choices.push_back(Choice::Base("Express interest in buying salt for your ships", {Book::Type::BOOK1, 575}));
+            Choices.push_back(Choice::Base("Leave with distaste", {Book::Type::BOOK1, 722}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story533 : public Story::Base
+    {
+    public:
+        Story533()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 533;
+
+            Text = "You have already looted this chamber of its funeral goods. It would serve no point to disturb the dead further.";
+
+            Bye = "You return to the crossroads.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 46}; }
+    };
+
+    class Story534 : public Story::Base
+    {
+    public:
+        Story534()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 534;
+
+            Text = "Although the desert nights are cold, the temperature tonight is particularly freezing. You pitch up your tents and huddle together for warmth. Outside the tents you suddenly perceive a light, like the flame of a lantern, only brighter. Something stalks around your tent menacingly, the crunch of bootprints on the sand. A sudden fear grips you, and it is difficult to leave the safety of your tent. You briefly decide together who should check out this frightening phenomenon.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose someone to look outside", {Book::Type::BOOK1, 765}, Choice::Type::CHOOSE_PARTY_MEMBER));
+            Choices.push_back(Choice::Base("Decide to all go out together, although this feels dangerous", {Book::Type::BOOK1, 613}));
+            Choices.push_back(Choice::Base("Stay safely inside the tent", {Book::Type::BOOK1, 584}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story535 : public Story::Base
+    {
+    public:
+        Story535()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 535;
+
+            Image = "images/book1/shattered_ziggurat.png";
+
+            Text = "You travel through the desert for many days, the desolation and quiet of the sands absolute and still. On the fourth day you cross over a dune to see a colossal wreck before you. It is a shattered ziggurat of black stone, somewhat similar in design to the slab-like temples in the city of Cursus. This structure has been blasphemously left to disintegrate with age. You wonder why the zealous priests of Cursus would allow such a thing to happen?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Investigate the temple", {Book::Type::BOOK1, 708}));
+            Choices.push_back(Choice::Base("Go north, into the Withered Steppes", {Book::Type::BOOK1, 115}));
+            Choices.push_back(Choice::Base("West, into the desert", {Book::Type::BOOK1, 202}));
+            Choices.push_back(Choice::Base("South, towards the coast", {Book::Type::BOOK1, 657}));
+            Choices.push_back(Choice::Base("East, towards the Northroad", {Book::Type::BOOK1, 822}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story536 : public Story::Base
+    {
+    public:
+        Story536()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 536;
+
+            Text = "As you sail along the coast you come upon the sight of a colossal wreck. A Drakehallow greatship, a four-master from the looks of her, has dashed herself on the rocks. Powerful winds buffet the cliff face, and you are already on half sails to ride out the winds. A little way off the wreck, on a tall rock against the cliffside, you can see a lone figure desperately clinging on for life. The spray and powerful waves threaten to engulf him at any moment.\n\nNote: You gained the code A99.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Launch a lifeboat and try to rescue the man", {Book::Type::BOOK1, 667}));
+            Choices.push_back(Choice::Base("Ignore the man and try to loot the wreck", {Book::Type::BOOK1, 504}));
+            Choices.push_back(Choice::Base("Refuse to risk your ship and sail onwards", {Book::Type::BOOK1, 240}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(99)}))
+            {
+                return {Book::Type::BOOK1, 186};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(99)});
+        }
+    };
+
+    class Story537 : public Story::Base
+    {
+    public:
+        Story537()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 537;
+
+            Text = "There is not even a breath of wind in this silent hell. There is nothing to see for miles around. Your limbs ache.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, -537}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event537 : public Story::Base
+    {
+    public:
+        Event537()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -537;
+
+            DisplayID = 537;
+
+            Text = "Where will you go?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North", {Book::Type::BOOK1, 589}));
+            Choices.push_back(Choice::Base("West", {Book::Type::BOOK1, 692}));
+            Choices.push_back(Choice::Base("South", {Book::Type::BOOK1, 273}));
+            Choices.push_back(Choice::Base("East", {Book::Type::BOOK1, 886}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story538 : public Story::Base
+    {
+    public:
+        Story538()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 538;
+
+            Text = "The tunnel emerges into a larger temple room, in which snakemen appear to be at worship by a flat-black altar. They hiss in alarm as you enter, reaching for their wickedly curved swords. You narrow your eyes in concentration as their swaying bodies slither towards you.\n\nNote: If you have a HYGLIPH FLOWER the snakemen are put off by its pungent odour and require a 5+ on their attack rolls to inflict damage during this battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 4, 3, 5, 0),
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 4, 3, 8, 0),
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 4, 3, 4, 0),
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 3, 4, 3, 6, 0),
+                Monster::Base("Snakeman Champion", Monster::Type::SNAKEMAN, 6, 4, 3, 12, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 748}; }
+    };
+
+    class Story539 : public Story::Base
+    {
+    public:
+        Story539()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 539;
+
+            Text = "Kopu is delighted to see you again and beckons you inside his comfortably furnished tower. Open books are spread across his table, and he beckons his slaves to remove them as he fetches some wine. Kopu is interested in all kinds of languages. If you have been taught any of the languages below, you can teach him the rudiments.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES_ANY(party, {Codes::Type::SPEAK_BANDO}))
+            {
+                Choices.push_back(Choice::Base("Teach Kopu the Bando language", {Book::Type::BOOK1, 480}));
+            }
+
+            if (Engine::VERIFY_CODES_ANY(party, {Codes::Type::SPEAK_ORCISH}))
+            {
+                Choices.push_back(Choice::Base("Teach Kopu the Orc language", {Book::Type::BOOK1, 444}));
+            }
+
+            if (Engine::VERIFY_CODES_ANY(party, {Codes::Type::SPEAK_DREAR}))
+            {
+                Choices.push_back(Choice::Base("Teach Kopu the Drear language", {Book::Type::BOOK1, 378}));
+            }
+
+            Choices.push_back(Choice::Base("Bid Kopu farewell", {Book::Type::BOOK1, 775}));
         }
     };
 
@@ -16985,6 +17274,17 @@ namespace Book1
     auto story528 = Story528();
     auto story529 = Story529();
     auto event529 = Event529();
+    auto story530 = Story530();
+    auto story531 = Story531();
+    auto story532 = Story532();
+    auto story533 = Story533();
+    auto story534 = Story534();
+    auto story535 = Story535();
+    auto story536 = Story536();
+    auto story537 = Story537();
+    auto event537 = Event537();
+    auto story538 = Story538();
+    auto story539 = Story539();
 
     void InitializeStories()
     {
@@ -16993,6 +17293,7 @@ namespace Book1
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
+            &event537,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -17045,7 +17346,8 @@ namespace Book1
             &story490, &story491, &story492, &story493, &story494, &story495, &story496, &story497, &story498, &story499,
             &story500, &story501, &story502, &story503, &story504, &story505, &story506, &story507, &story508, &story509,
             &story510, &story511, &story512, &story513, &story514, &story515, &story516, &story517, &story518, &story519,
-            &story520, &story521, &story522, &story523, &story524, &story525, &story526, &story527, &story528, &story529};
+            &story520, &story521, &story522, &story523, &story524, &story525, &story526, &story527, &story528, &story529,
+            &story530, &story531, &story532, &story533, &story534, &story535, &story536, &story537, &story538, &story539};
     }
 }
 #endif

@@ -28,6 +28,8 @@ namespace Codes
         QUEEN_IN_SALTDAD,
         FIRST_TIME_SCROLL_OF_RAGE,
         SPEAK_BANDO,
+        SPEAK_ORCISH,
+        SPEAK_DREAR,
         WALL_CLIMBING_AND_DOOR,
         REPAIR_CALENDAR_KALU,
         NO_COMBAT_SPELLS,
