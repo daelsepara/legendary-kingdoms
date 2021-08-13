@@ -5227,7 +5227,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 {
     auto combat_damage = 0;
 
-    auto attacks = direction == 0 ? 1 : monsters[opponent].Attacks;
+    auto num_attacks = direction == 0 ? 1 : std::min(monsters[opponent].Attacks, Engine::COUNT(party, team));
 
     auto Difficulty = monsters[opponent].Difficulty;
 
@@ -5241,11 +5241,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         {
             if (combatRound == 0)
             {
-                attacks = std::min(2, Engine::COUNT(party, team));
+                num_attacks = std::min(2, Engine::COUNT(party, team));
             }
             else if (combatRound == 2)
             {
-                attacks = Engine::COUNT(party, team);
+                num_attacks = Engine::COUNT(party, team);
             }
         }
         else if (monsters[opponent].Type == Monster::Type::MONKEY_WITH_SPELLS)
@@ -5266,7 +5266,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             }
             else if (roll <= 6)
             {
-                attacks = std::min(2, Engine::COUNT(party, team));
+                num_attacks = std::min(2, Engine::COUNT(party, team));
 
                 spell = Spells::Type::POISON_STREAM;
 
@@ -5275,9 +5275,9 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         }
     }
 
-    for (auto num_attacks = 0; num_attacks < attacks; num_attacks++)
+    for (auto attacks = 0; attacks < num_attacks; attacks++)
     {
-        if (Engine::COUNT(party) > 0 && Engine::COUNT(monsters) > 0)
+        if (Engine::COUNT(party, team) > 0 && Engine::COUNT(monsters) > 0)
         {
             if (window && renderer)
             {
@@ -5596,7 +5596,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             }
                             else if (monsters[opponent].Type == Monster::Type::IMOPPOSH_THE_MAD)
                             {
-                                if (num_attacks == 0)
+                                if (attacks == 0)
                                 {
                                     flash_message = true;
 
@@ -5619,7 +5619,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 }
                             }
 
-                            if (spell != Spells::Type::NONE && num_attacks == 0)
+                            if (spell != Spells::Type::NONE && attacks == 0)
                             {
                                 flash_message = true;
 
@@ -5976,16 +5976,13 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                             }
                                             else
                                             {
-                                                if ((num_attacks + 1) < Engine::COUNT(party, team))
-                                                {
-                                                    message = std::string(party.Members[result].Name) + " was already assigned damage. Please choose another target.";
+                                                message = std::string(party.Members[result].Name) + " was already assigned damage. Please choose another target.";
 
-                                                    start_ticks = SDL_GetTicks();
+                                                start_ticks = SDL_GetTicks();
 
-                                                    flash_message = true;
+                                                flash_message = true;
 
-                                                    flash_color = intRD;
-                                                }
+                                                flash_color = intRD;
                                             }
                                         }
                                         else
