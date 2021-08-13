@@ -2152,6 +2152,36 @@ namespace Engine
         }
     }
 
+    Team::Type GET_TEAM(Character::Base &character)
+    {
+        if (character.Type == Character::Type::SAR_JESSICA_DAYNE)
+        {
+            return Team::Type::SAR_JESSICA_DAYNE;
+        }
+        else if (character.Type == Character::Type::LORD_TIQUON)
+        {
+            return Team::Type::LORD_TIQUON;
+        }
+        else if (character.Type == Character::Type::TASHA)
+        {
+            return Team::Type::TASHA;
+        }
+        else if (character.Type == Character::Type::AMELIA_PASS_DAYNE)
+        {
+            return Team::Type::AMELIA_PASS_DAYNE;
+        }
+        else if (character.Type == Character::Type::AKIHIRO_OF_CHALICE)
+        {
+            return Team::Type::AKIHIRO_OF_CHALICE;
+        }
+        else if (character.Type == Character::Type::BRASH)
+        {
+            return Team::Type::BRASH;
+        }
+
+        return Team::Type::NONE;
+    }
+
     int FIRST(Party::Base &party, std::vector<int> list)
     {
         auto result = -1;

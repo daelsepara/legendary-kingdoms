@@ -19939,11 +19939,29 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
             }
 
-            if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && Engine::COUNT_TEAMS(party) > 0)
+            if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && (Engine::COUNT_TEAMS(party) > 0 || story->Team != Team::Type::NONE))
             {
-                putHeader(renderer, "Teams", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+                std::vector<Team::Type> teams = {};
 
-                auto teams = Engine::GET_TEAMS(party);
+                if (Engine::IS_ACTIVE(party, party.CurrentCharacter) || story->Team != Team::Type::NONE)
+                {
+                    putHeader(renderer, "Current", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+
+                    if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
+                    {
+                        teams.push_back(Engine::GET_TEAM(party.Members[party.CurrentCharacter]));
+                    }
+                    else
+                    {
+                        teams.push_back(story->Team);
+                    }
+                }
+                else
+                {
+                    putHeader(renderer, "Teams", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+
+                    teams = Engine::GET_TEAMS(party);
+                }
 
                 if (teams.size() > 0)
                 {
@@ -22044,11 +22062,29 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                 }
 
-                if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && Engine::COUNT_TEAMS(party) > 0)
+                if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && (Engine::COUNT_TEAMS(party) > 0 || story->Team != Team::Type::NONE))
                 {
-                    putHeader(renderer, "Teams", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+                    std::vector<Team::Type> teams = {};
 
-                    auto teams = Engine::GET_TEAMS(party);
+                    if (Engine::IS_ACTIVE(party, party.CurrentCharacter) || story->Team != Team::Type::NONE)
+                    {
+                        putHeader(renderer, "Current", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+
+                        if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
+                        {
+                            teams.push_back(Engine::GET_TEAM(party.Members[party.CurrentCharacter]));
+                        }
+                        else
+                        {
+                            teams.push_back(story->Team);
+                        }
+                    }
+                    else
+                    {
+                        putHeader(renderer, "Teams", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+
+                        teams = Engine::GET_TEAMS(party);
+                    }
 
                     if (teams.size() > 0)
                     {
