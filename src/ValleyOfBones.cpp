@@ -20784,19 +20784,23 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
+                            auto team = story->Choices[current].Team;
+
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
                             if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
                             {
                                 target = party.CurrentCharacter;
+
+                                team = party.Members[party.CurrentCharacter].Team;
                             }
-                            else if (Engine::COUNT(party) == 1)
+                            else if (Engine::COUNT(party, story->Choices[current].Team) == 1)
                             {
-                                target = Engine::FIRST(party);
+                                target = Engine::FIRST(party, story->Choices[current].Team);
                             }
                             else
                             {
-                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE);
+                                target = selectPartyMember(window, renderer, party, story->Choices[current].Team, Equipment::NONE, Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE);
                             }
 
                             if (target >= 0 && target < party.Members.size())

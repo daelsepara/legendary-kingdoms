@@ -4876,6 +4876,10 @@ namespace Book1
 
             ID = 153;
 
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
             Text = "You show Mannus, the keeper of the holy purse, the IRON SCEPTRE -- a symbol that you speak with the Iron King's authority. He takes it and welcomes you, commanding a slave to pour you some wine and close the door. You begin to discuss the Saltdad tithe and convey the Iron King's wishes that it should be modified downwards as a point of principal. You also add that, coincidentally, the Iron King understands that Mannus is poorly compensated for his time in the tax office and that good conscience compels him to see that changed.";
 
             Choices.clear();
@@ -5766,6 +5770,10 @@ namespace Book1
 
             ID = 183;
 
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
             Image = "images/book1/vault_door.png";
 
             Text = "Dashing from one pillar to the next as each guard turns their back, you manage to creep as stealthily as mice until you are out of sight of the guards. Eventually you reach the back of the hallway and come to vault door itself. It is a colossal slab of black marble. It has no lock, nor handle, and needs none. Its weight alone is designed to ensure it stays closed. It would take half a dozen men to open this door in normal times. Can you manage it yourselves?";
@@ -5781,11 +5789,11 @@ namespace Book1
 
             if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PRYBAR}))
             {
-                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 5+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 4, false));
+                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 5+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::ZIGGURAT, {Attribute::Type::FIGHTING}, 5, 4, false));
             }
             else
             {
-                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 6+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 6, 4, false));
+                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 6+, Successes: 4)", {Book::Type::BOOK1, 498}, {Book::Type::BOOK1, -183}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::ZIGGURAT, {Attribute::Type::FIGHTING}, 6, 4, false));
             }
 
             Choices.push_back(Choice::Base("Give up and return to the main floor", {Book::Type::BOOK1, 574}));
@@ -5797,7 +5805,7 @@ namespace Book1
             {
                 Bye = "Each party member loses 1 Health point from the strain.";
 
-                Engine::GAIN_HEALTH(party, -1);
+                Engine::GAIN_HEALTH(party, Team::Type::ZIGGURAT, -1);
             }
             else
             {
@@ -8822,10 +8830,14 @@ namespace Book1
 
             ID = 281;
 
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
             Text = "Acting casually, you take a flight of steps down into the bowels of the pyramid. You hear the sounds of guards ahead, and cautiously peek around a corner. A long, wide hallway held aloft by pillars, leads into the darkness. A guard post, occupied by the Temple Guard, has been set up here. A dozen guards whisper and game by torchlight. To sneak past so many will require great skill.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Sneak past the Temple Guard (Team check: Stealth 5+, Successes: 4)", {Book::Type::BOOK1, 183}, {Book::Type::BOOK1, 55}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 5, 4));
+            Choices.push_back(Choice::Base("Sneak past the Temple Guard (Team check: Stealth 5+, Successes: 4)", {Book::Type::BOOK1, 183}, {Book::Type::BOOK1, 55}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::ZIGGURAT, {Attribute::Type::STEALTH}, 5, 4));
             Choices.push_back(Choice::Base("Return to the main floor", {Book::Type::BOOK1, 574}));
 
             Controls = Story::Controls::STANDARD;
@@ -10160,6 +10172,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 323;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
 
             Choices.clear();
 
@@ -14734,6 +14750,10 @@ namespace Book1
 
             ID = 476;
 
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
             Text = "Mannus understands what you are driving at. He looks very pleased at the thought of accepting the Iron King's bribes and quickly pens an official document. Soon you have a very favourable TITHE REPORT that greatly reduces the amount Saltdad is required to pay.";
 
             Bye = "Thanking each other for your time, you depart.";
@@ -15419,14 +15439,16 @@ namespace Book1
 
             ID = 498;
 
-            Location = Location::Type::LHASBREATH;
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
 
             Text = "Straining every sinew, you scrape the door open inch by inch. To your anger you see that this door merely leads to the vault's antechamber, an even large vault door standing on the other side that would take a dozen men to open. Fortunately, the antechamber does contain some easily accessible treasure. You find 500 silver coins, an odd crystalline wand labelled as a wayfinder rod, a bar of GOLD BULLION and a block of INCENSE.\n\nThere are also a number of financial records, none of which look valuable at first. However, one book catches your eye. It is a ROYAL LEDGER, which bears the crest and authority of House Goldwell, the royal family of Royce. In it are detailed a number of transactions to purchase slaves from Cursus for the royal plantations in the Splintered Isles. The purchase of slaves is illegal in Royce... what is the king up to? Take the ledger, if you wish.\n\nBreaking into the patriarch's vault has been the heist of a lifetime.\n\nNote: You gained the code A83.";
 
             Bye = "You silently return to the ground floor of the pyramid.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of STEALTH", {Book::Type::BOOK1, 574}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::STEALTH}, 1, 2));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of STEALTH", {Book::Type::BOOK1, 574}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, Team::Type::ZIGGURAT, {Attribute::Type::STEALTH}, 1, 2));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -17451,6 +17473,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 560;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
 
             Text = "Mannus is clearly troubled at the brazen way you are attempting to bribe him. Suspecting that you might be a plant from one of his opponents he calls the guards and has you arrested. Here, in the heart of the temple, you have no chance of escape.";
 

@@ -547,6 +547,23 @@ namespace Choice
             Difficulty = difficulty;
         }
 
+        Base(const char *text, Engine::Destination destination, Choice::Type type, Team::Type team, std::vector<Attribute::Type> attributes, int value, int difficulty)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Team = team;
+
+            Attributes = attributes;
+
+            Value = value;
+
+            Difficulty = difficulty;
+        }
+
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, std::vector<Attribute::Type> attributes, int value)
         {
             Text = text;
