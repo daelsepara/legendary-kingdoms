@@ -4024,6 +4024,18 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         Uint32 duration = 3000;
 
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
@@ -4166,13 +4178,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "You must select an adventurer damaged by the attack.";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage("You must select an adventurer damaged by the attack.", intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::ACTION)
@@ -4193,31 +4199,19 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     }
                                     else
                                     {
-                                        flash_message = true;
-
                                         if (!Engine::IS_CHARACTER(party.Members[current + offset].Team))
                                         {
-                                            message = std::string(party.Members[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!";
+                                            displayMessage(std::string(party.Members[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!", intRD);
                                         }
                                         else
                                         {
-                                            message = "You can only assign damage to " + std::string(Team::Descriptions[team]) + "!";
+                                            displayMessage("You can only assign damage to " + std::string(Team::Descriptions[team]) + "!", intRD);
                                         }
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_color = intRD;
                                     }
                                 }
                                 else
                                 {
-                                    flash_message = true;
-
-                                    message = std::string(party.Members[current + offset].Name) + std::string(" is dead!");
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage(std::string(party.Members[current + offset].Name) + " is dead!", intRD);
                                 }
                             }
                         }
@@ -4721,6 +4715,18 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                 Uint32 duration = 3000;
 
+                // Lambda functions for displaying flash messages
+                auto displayMessage = [&](std::string msg, Uint32 color)
+                {
+                    flash_message = true;
+
+                    message = msg;
+
+                    flash_color = color;
+
+                    start_ticks = SDL_GetTicks();
+                };
+
                 auto marginx = (int)(Margin * SCREEN_WIDTH);
 
                 auto fullwidth = SCREEN_WIDTH - 2 * marginx;
@@ -4875,22 +4881,14 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                                     combat_damage = damage_scale * damage;
 
-                                    flash_message = true;
-
                                     if (damage_scale * damage > 0)
                                     {
-                                        message = "The " + std::string(party.Fleet[party.CurrentShip].Name) + " deals " + std::to_string(damage_scale * damage) + " to the " + std::string(enemyFleet[opponent].Name) + "!";
-
-                                        flash_color = intLB;
+                                        displayMessage("The " + std::string(party.Fleet[party.CurrentShip].Name) + " deals " + std::to_string(damage_scale * damage) + " to the " + std::string(enemyFleet[opponent].Name) + "!", intLB);
                                     }
                                     else
                                     {
-                                        message = "The " + std::string(party.Fleet[party.CurrentShip].Name) + "'s attack was ineffective!";
-
-                                        flash_color = intRD;
+                                        displayMessage("The " + std::string(party.Fleet[party.CurrentShip].Name) + "'s attack was ineffective!", intRD);
                                     }
-
-                                    start_ticks = SDL_GetTicks();
                                 }
                                 else
                                 {
@@ -4900,23 +4898,11 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                     {
                                         Engine::GAIN_HEALTH(party.Fleet[party.CurrentShip], -damage);
 
-                                        message = std::string(enemyFleet[opponent].Name) + " deals " + std::to_string(damage) + " to your ship!";
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_message = true;
-
-                                        flash_color = intRD;
+                                        displayMessage(std::string(enemyFleet[opponent].Name) + " deals " + std::to_string(damage) + " to your ship!", intRD);
                                     }
                                     else
                                     {
-                                        message = "The " + std::string(enemyFleet[opponent].Name) + "'s attack was ineffective!";
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_message = true;
-
-                                        flash_color = intRD;
+                                        displayMessage("The " + std::string(enemyFleet[opponent].Name) + "'s attack was ineffective!", intLB);
                                     }
                                 }
 
@@ -5057,25 +5043,13 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                             {
                                 if (combat_damage > 0)
                                 {
-                                    message = std::string(party.Fleet[party.CurrentShip].Name) + " dealt " + std::to_string(combat_damage) + " damage!";
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_message = true;
-
-                                    flash_color = intRD;
+                                    displayMessage(std::string(party.Fleet[party.CurrentShip].Name) + " dealt " + std::to_string(combat_damage) + " damage!", intRD);
 
                                     Engine::GAIN_HEALTH(party.Fleet[party.CurrentShip], -combat_damage);
                                 }
                                 else
                                 {
-                                    message = "The " + std::string(enemyFleet[opponent].Name) + "'s attack was ineffective!";
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_message = true;
-
-                                    flash_color = intRD;
+                                    displayMessage("The " + std::string(enemyFleet[opponent].Name) + "'s attack was ineffective!", intLB);
                                 }
                             }
                             else
@@ -5408,8 +5382,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     Engine::GAIN_HEALTH(monsters[opponent], -(damage_scale * damage));
 
                                     combat_damage = damage_scale * damage;
-
-                                    flash_message = true;
 
                                     if (damage_scale * damage > 0)
                                     {
@@ -5933,6 +5905,18 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             Uint32 duration = 3000;
 
+            // Lambda functions for displaying flash messages
+            auto displayMessage = [&](std::string msg, Uint32 color)
+            {
+                flash_message = true;
+
+                message = msg;
+
+                flash_color = color;
+
+                start_ticks = SDL_GetTicks();
+            };
+
             auto marginx = (int)(Margin * SCREEN_WIDTH);
 
             auto fullwidth = SCREEN_WIDTH - 2 * marginx;
@@ -6070,13 +6054,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     retreats = true;
 
-                                    message = std::string(party.Army[unit].Name) + " retreats safely to " + std::string(Location::Description[location]) + ".";
-
-                                    flash_color = intLB;
-
-                                    flash_message = true;
-
-                                    start_ticks = SDL_GetTicks();
+                                    displayMessage(std::string(party.Army[unit].Name) + " retreats safely to " + std::string(Location::Description[location]) + ".", intLB);
 
                                     party.Army[unit].Morale = party.Army[unit].MaximumMorale;
 
@@ -6086,26 +6064,14 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     retreats = false;
 
-                                    message = std::string(party.Army[unit].Name) + " destroyed.";
-
-                                    flash_color = intRD;
-
-                                    flash_message = true;
-
-                                    start_ticks = SDL_GetTicks();
+                                    displayMessage(std::string(party.Army[unit].Name) + " routed.", intRD);
                                 }
                             }
                             else
                             {
                                 retreats = true;
 
-                                message = std::string(party.Army[unit].Name) + " retreats safely to " + std::string(Location::Description[location]) + ".";
-
-                                flash_color = intLB;
-
-                                flash_message = true;
-
-                                start_ticks = SDL_GetTicks();
+                                displayMessage(std::string(party.Army[unit].Name) + " retreats safely to " + std::string(Location::Description[location]) + ".", intLB);
 
                                 party.Army[unit].Morale = party.Army[unit].MaximumMorale;
 
@@ -6234,6 +6200,18 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
             Uint32 start_ticks = 0;
 
             Uint32 duration = 3000;
+
+            // Lambda functions for displaying flash messages
+            auto displayMessage = [&](std::string msg, Uint32 color)
+            {
+                flash_message = true;
+
+                message = msg;
+
+                flash_color = color;
+
+                start_ticks = SDL_GetTicks();
+            };
 
             auto marginx = (int)(Margin * SCREEN_WIDTH);
 
@@ -6371,44 +6349,26 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
                             {
                                 if (success > Engine::SCORE(character, attribute))
                                 {
+                                    increase = score;
+
                                     Engine::GAIN_SCORE(character, attribute, score);
 
-                                    message = std::string(character.Name) + "'s " + std::string(Attribute::Descriptions[attribute]) + " increased by " + std::to_string(score) + "!";
-
-                                    flash_color = intLB;
-
-                                    flash_message = true;
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    increase = score;
+                                    displayMessage(std::string(character.Name) + "'s " + std::string(Attribute::Descriptions[attribute]) + " increased by " + std::to_string(score) + "!", intLB);
                                 }
                                 else
                                 {
-                                    message = std::string(character.Name) + "'s " + std::string(Attribute::Descriptions[attribute]) + " score did not increase.";
-
-                                    flash_color = intRD;
-
-                                    flash_message = true;
-
-                                    start_ticks = SDL_GetTicks();
-
                                     increase = 0;
+
+                                    displayMessage(std::string(character.Name) + "'s " + std::string(Attribute::Descriptions[attribute]) + " score did not increase.", intRD);
                                 }
                             }
                             else
                             {
+                                increase = score;
+
                                 Engine::GAIN_SCORE(character, attribute, score);
 
-                                message = std::string(character.Name) + "'s " + std::string(Attribute::Descriptions[attribute]) + " increased by " + std::to_string(score) + "!";
-
-                                flash_color = intLB;
-
-                                flash_message = true;
-
-                                start_ticks = SDL_GetTicks();
-
-                                increase = score;
+                                displayMessage(std::string(character.Name) + "'s " + std::string(Attribute::Descriptions[attribute]) + " increased by " + std::to_string(score) + "!", intLB);
                             }
 
                             confirmed = true;
@@ -6549,6 +6509,18 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
         Uint32 start_ticks = 0;
 
         Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
 
         TTF_Init();
 
@@ -6821,8 +6793,6 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                         }
                         else
                         {
-                            flash_message = true;
-
                             if (mode == Spells::Select::CAST_SPELL)
                             {
                                 message = "You must select a spell to CAST.";
@@ -6870,9 +6840,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                                 message += " spellbook.";
                             }
 
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage(message, intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::ACTION)
@@ -6896,13 +6864,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                                 }
                                 else
                                 {
-                                    flash_message = true;
-
-                                    message = std::string(spells[current + offset].Name) + std::string(" is not USABLE!");
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage(std::string(spells[current + offset].Name) + " cannot be cast!", intRD);
                                 }
                             }
                         }
@@ -7327,6 +7289,18 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
 
         Uint32 duration = 3000;
 
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
@@ -7532,13 +7506,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                             {
                                 if (Engine::FIND_LIST(previousTargets, selection) >= 0)
                                 {
-                                    flash_message = true;
-
-                                    message = "That opponent has been attacked before! Choose another target!";
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage("That opponent has been attacked before! Choose another target!", intRD);
                                 }
                                 else
                                 {
@@ -7564,13 +7532,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "You must select an opponent to attack this round.";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage("You must select an opponent to attack this round.", intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::ACTION)
@@ -7589,13 +7551,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                                 }
                                 else
                                 {
-                                    flash_message = true;
-
-                                    message = std::string(enemyFleet[current + offset].Name) + std::string(" is destroyed!");
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage(std::string(enemyFleet[current + offset].Name) + " is destroyed!", intRD);
                                 }
                             }
                         }
@@ -8665,6 +8621,18 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         Uint32 duration = 3000;
 
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
@@ -8840,13 +8808,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "You must select the adventurer(s) who will perform the skill check.";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage("You must select the adventurer(s) who will perform the skill check.", intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::ACTION)
@@ -8875,24 +8837,12 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                         }
                                         else
                                         {
-                                            flash_message = true;
-
-                                            message = std::string(party.Members[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!";
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_color = intRD;
+                                            displayMessage(std::string(party.Members[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!", intRD);
                                         }
                                     }
                                     else
                                     {
-                                        flash_message = true;
-
-                                        message = std::string(party.Members[current + offset].Name) + std::string(" is dead!");
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_color = intRD;
+                                        displayMessage(std::string(party.Members[current + offset].Name) + " is dead!", intRD);
                                     }
                                 }
                             }
@@ -10174,8 +10124,6 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                     }
                                     else
                                     {
-                                        flash_message = true;
-
                                         if (!Engine::IS_CHARACTER(team))
                                         {
                                             displayMessage(std::string(party.Members[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!", intRD);
@@ -10255,6 +10203,18 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
         Uint32 start_ticks = 0;
 
         Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
 
         TTF_Init();
 
@@ -10514,13 +10474,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "You must select " + std::to_string(team_size) + " party members!";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage("You must select " + std::to_string(team_size) + " party members!", intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::ACTION)
@@ -10541,33 +10495,15 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                                     {
                                         if (Engine::HAS_STATUS(party.Members[current + offset], Character::Status::CAPTURED))
                                         {
-                                            message = std::string(party.Members[current + offset].Name) + " has been captured!";
-
-                                            flash_message = true;
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_color = intRD;
+                                            displayMessage(std::string(party.Members[current + offset].Name) + " has been captured!", intRD);
                                         }
                                         else if (Engine::SCORE(party.Members[current + offset], Attribute::Type::HEALTH) <= 0)
                                         {
-                                            message = std::string(party.Members[current + offset].Name) + " is dead!";
-
-                                            flash_message = true;
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_color = intRD;
+                                            displayMessage(std::string(party.Members[current + offset].Name) + " is dead!", intRD);
                                         }
                                         else if (party.InCity && !party.Members[current + offset].IsCivilized)
                                         {
-                                            message = std::string(party.Members[current + offset].Name) + " is waiting outside the city!";
-
-                                            flash_message = true;
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_color = intRD;
+                                            displayMessage(std::string(party.Members[current + offset].Name) + " is waiting outside the city!", intRD);
                                         }
                                         else if (selection.size() < team_size)
                                         {
@@ -10576,31 +10512,19 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                                     }
                                     else
                                     {
-                                        flash_message = true;
-
                                         if (!Engine::IS_CHARACTER(team))
                                         {
-                                            message = std::string(party.Members[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!";
+                                            displayMessage(std::string(party.Members[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!", intRD);
                                         }
                                         else
                                         {
-                                            message = "You can only choose " + std::string(Team::Descriptions[team]) + "!";
+                                            displayMessage("You can only choose " + std::string(Team::Descriptions[team]) + "!", intRD);
                                         }
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_color = intRD;
                                     }
                                 }
                                 else
                                 {
-                                    flash_message = true;
-
-                                    message = std::string(party.Members[current + offset].Name) + std::string(" is dead!");
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage(std::string(party.Members[current + offset].Name) + " is dead!", intRD);
                                 }
                             }
                         }
@@ -10682,6 +10606,18 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
         Uint32 start_ticks = 0;
 
         Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
 
         TTF_Init();
 
@@ -10921,31 +10857,19 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                             }
                             else
                             {
-                                flash_message = true;
-
                                 if (combatRound < fleeRound)
                                 {
-                                    message = "You cannot flee at this time.";
+                                    displayMessage("You cannot flee at this time.", intRD);
                                 }
                                 else
                                 {
-                                    message = "You can no longer flee from this battle.";
+                                    displayMessage("You can no longer flee from this battle.", intRD);
                                 }
-
-                                start_ticks = SDL_GetTicks();
-
-                                flash_color = intRD;
                             }
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "You cannot flee from this battle.";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage("You cannot flee from this battle.", intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::ATTACK && !hold)
@@ -10954,13 +10878,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                         {
                             if (hasAttacked)
                             {
-                                flash_message = true;
-
-                                message = "Your ship has already attacked this round.";
-
-                                start_ticks = SDL_GetTicks();
-
-                                flash_color = intRD;
+                                displayMessage("Your ship has already attacked this round.", intRD);
                             }
                             else
                             {
@@ -11026,13 +10944,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
 
                                     if (combat_spells <= 0)
                                     {
-                                        flash_message = true;
-
-                                        message = "Your party does not have any usable sea combat spells.";
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_color = intRD;
+                                        displayMessage("Your party does not have any usable sea combat spells.", intRD);
                                     }
                                     else
                                     {
@@ -11044,42 +10956,24 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                                 }
                                 else
                                 {
-                                    flash_message = true;
-
-                                    message = "There are no spell casters in your party!";
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage("There are no spell casters in your party!", intRD);
                                 }
                             }
                             else
                             {
-                                flash_message = true;
-
                                 if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}) && combatRound == 0)
                                 {
-                                    message = "Your ship does not get to attack first nor cast spells this round!";
+                                    displayMessage("Your ship does not get to attack first nor cast spells this round!", intRD);
                                 }
                                 else
                                 {
-                                    message = "Your ship has already attacked this round.";
+                                    displayMessage("Your ship has already attacked this round.", intRD);
                                 }
-
-                                start_ticks = SDL_GetTicks();
-
-                                flash_color = intRD;
                             }
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "You cannot cast spells in this battle!";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage("You cannot cast spells in this battle!", intRD);
                         }
                     }
                 }
@@ -12165,6 +12059,18 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     Uint32 duration = 3000;
 
+    // Lambda functions for displaying flash messages
+    auto displayMessage = [&](std::string msg, Uint32 color)
+    {
+        flash_message = true;
+
+        message = msg;
+
+        flash_color = color;
+
+        start_ticks = SDL_GetTicks();
+    };
+
     auto done = false;
 
     auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
@@ -12193,13 +12099,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     {
         if (!Engine::VERIFY_EQUIPMENT_LIMIT(character))
         {
-            message = "You are carrying too many items! Drop or transfer excess items.";
-
-            flash_message = true;
-
-            flash_color = intRD;
-
-            start_ticks = SDL_GetTicks();
+            displayMessage("You are carrying too many items! Drop or transfer excess items.", intRD);
         }
 
         last = offset + limit;
@@ -12555,11 +12455,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                 inventoryScreen(window, renderer, party, character, -1, false);
                             }
 
-                            flash_message = true;
-
-                            flash_color = intLB;
-
-                            start_ticks = SDL_GetTicks();
+                            displayMessage(message, intLB);
 
                             controls.clear();
 
@@ -12567,13 +12463,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         }
                         else
                         {
-                            message = "You do not have enough silver coins!";
-
-                            flash_message = true;
-
-                            flash_color = intRD;
-
-                            start_ticks = SDL_GetTicks();
+                            displayMessage("You do not have enough silver coins!", intRD);
                         }
                     }
                 }
@@ -12656,8 +12546,6 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         message += "Items not sold: " + unsold_string;
                     }
 
-                    flash_message = true;
-
                     if (sold > unsold)
                     {
                         flash_color = intLB;
@@ -12667,7 +12555,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         flash_color = intRD;
                     }
 
-                    start_ticks = SDL_GetTicks();
+                    displayMessage(message, flash_color);
                 }
             }
             else if (controls[current].Type == Control::Type::EQUIPMENT && !hold)
@@ -12773,6 +12661,18 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
         Uint32 start_ticks = 0;
 
         Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
 
         while (!done)
         {
@@ -13005,13 +12905,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
                         if (party.Money < cost)
                         {
-                            flash_message = true;
-
-                            message = "You do not have enough silver coins!";
-
-                            flash_color = intRD;
-
-                            start_ticks = SDL_GetTicks();
+                            displayMessage("You do not have enough silver coins!", intRD);
                         }
                         else
                         {
@@ -13024,8 +12918,6 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                             }
 
                             Engine::GAIN_MONEY(party, -cost);
-
-                            flash_message = true;
 
                             if (cost > 0)
                             {
@@ -13043,9 +12935,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                                 }
                             }
 
-                            flash_color = intLB;
-
-                            start_ticks = SDL_GetTicks();
+                            displayMessage(message, intLB);
 
                             offset = 0;
 
@@ -13079,13 +12969,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
                         if (party.Money < cost)
                         {
-                            flash_message = true;
-
-                            message = "You do not have enough silver coins!";
-
-                            flash_color = intRD;
-
-                            start_ticks = SDL_GetTicks();
+                            displayMessage("You do not have enough silver coins!", intRD);
                         }
                         else
                         {
@@ -13098,8 +12982,6 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                             }
 
                             Engine::GAIN_MONEY(party, -cost);
-
-                            flash_message = true;
 
                             if (cost > 0)
                             {
@@ -13117,9 +12999,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                                 }
                             }
 
-                            flash_color = intLB;
-
-                            start_ticks = SDL_GetTicks();
+                            displayMessage(message, intLB);
 
                             offset = 0;
 
@@ -13165,59 +13045,29 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                                 }
                                 else
                                 {
-                                    message = std::string(party.Members[character].Name) + "'s spellbook is empty!";
-
-                                    flash_message = true;
-
-                                    flash_color = intRD;
-
-                                    start_ticks = SDL_GetTicks();
+                                    displayMessage(std::string(party.Members[character].Name) + "'s spellbook is empty!", intRD);
                                 }
                             }
                             else
                             {
-                                message = std::string(party.Members[character].Name) + " is not a spell caster!";
-
-                                flash_message = true;
-
-                                flash_color = intRD;
-
-                                start_ticks = SDL_GetTicks();
+                                displayMessage(std::string(party.Members[character].Name) + " is not a spell caster!", intRD);
                             }
                         }
                         else
                         {
                             if (character >= 0 && character < party.Members.size())
                             {
-                                message = std::string(party.Members[character].Name) + " cannot recharge spells!";
-
-                                flash_message = true;
-
-                                flash_color = intRD;
-
-                                start_ticks = SDL_GetTicks();
+                                displayMessage(std::string(party.Members[character].Name) + " cannot recharge spells!", intRD);
                             }
                         }
                     }
                     else if (Engine::SPELLCASTERS(party) > 0)
                     {
-                        message = "You cannot recharge your spells here!";
-
-                        flash_message = true;
-
-                        flash_color = intRD;
-
-                        start_ticks = SDL_GetTicks();
+                        displayMessage("You cannot recharge your spells here!", intRD);
                     }
                     else
                     {
-                        message = "You do not have any spell casters in your party!";
-
-                        flash_message = true;
-
-                        flash_color = intRD;
-
-                        start_ticks = SDL_GetTicks();
+                        displayMessage("You do not have any spell casters in your party!", intRD);
                     }
 
                     done = false;
@@ -13780,6 +13630,18 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
     Uint32 duration = 3000;
 
+    // Lambda functions for displaying flash messages
+    auto displayMessage = [&](std::string msg, Uint32 color)
+    {
+        flash_message = true;
+
+        message = msg;
+
+        flash_color = color;
+
+        start_ticks = SDL_GetTicks();
+    };
+
     auto done = false;
 
     auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
@@ -13832,11 +13694,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                 message = "You are carrying too many items! Drop or transfer excess items.";
             }
 
-            flash_message = true;
-
-            flash_color = intRD;
-
-            start_ticks = SDL_GetTicks();
+            displayMessage(message, intRD);
         }
 
         last = offset + limit;
@@ -14074,19 +13932,11 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                                 Engine::GAIN_STATUS(party.Members[i], Character::Status::ENRAGED);
                             }
 
-                            message = "Your party gains +1 Fighting score until end of combat!";
-
-                            flash_color = intLB;
-
-                            flash_message = true;
+                            displayMessage("Your party gains +1 Fighting score until end of combat!", intLB);
                         }
                         else
                         {
-                            message = "You cannot use the " + std::string(item.Name) + " when not in combat!";
-
-                            flash_color = intRD;
-
-                            flash_message = true;
+                            displayMessage("You cannot use the " + std::string(item.Name) + " when not in combat!", intRD);
                         }
                     }
                     else if (item.Type == Equipment::Type::POTION_OF_INVULNERABILITY)
@@ -14097,19 +13947,11 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                             Engine::GAIN_STATUS(character, Character::Status::POTION_OF_INVULNERABILITY);
 
-                            message = character.Name = " becomes Invulnerable!";
-
-                            flash_color = intLB;
-
-                            flash_message = true;
+                            displayMessage(std::string(character.Name) + " becomes Invulnerable!", intLB);
                         }
                         else
                         {
-                            message = "You cannot use the " + std::string(item.Name) + " when not in combat!";
-
-                            flash_color = intRD;
-
-                            flash_message = true;
+                            displayMessage("You cannot use the " + std::string(item.Name) + " when not in combat!", intRD);
                         }
                     }
 
@@ -14174,17 +14016,11 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                         message += " dropped!";
 
-                        flash_color = intRD;
-
-                        flash_message = true;
+                        displayMessage(message, intRD);
                     }
                     else
                     {
-                        message = "Skullcracker refuses!";
-
-                        flash_color = intRD;
-
-                        flash_message = true;
+                        displayMessage("Skullcracker refuses!", intRD);
                     }
 
                     selected = false;
@@ -14236,9 +14072,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                                         message += " transferred to " + std::string(party.Members[target].Name) + "!";
 
-                                        flash_color = intLB;
-
-                                        flash_message = true;
+                                        displayMessage(message, intLB);
 
                                         selected = false;
 
@@ -14250,44 +14084,28 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                                     {
                                         if (party.Members[target].Type != Character::Type::SKULLCRACKER)
                                         {
-                                            message = "You can only transfer to another party member!";
+                                            displayMessage("You can only transfer to another party member!", intRD);
                                         }
                                         else
                                         {
-                                            message = "Skullcrdacker refuses!";
+                                            displayMessage("Skullcracker refuses!", intRD);
                                         }
-
-                                        flash_color = intRD;
-
-                                        flash_message = true;
                                     }
                                 }
                             }
                             else
                             {
-                                message = "Skullcrdacker refuses!";
-
-                                flash_color = intRD;
-
-                                flash_message = true;
+                                displayMessage("Skullcracker refuses!", intRD);
                             }
                         }
                         else
                         {
-                            message = std::string(character.Name) + " is alone right now!";
-
-                            flash_color = intRD;
-
-                            flash_message = true;
+                            displayMessage(std::string(character.Name) + " is alone right now!", intRD);
                         }
                     }
                     else
                     {
-                        message = "There is no one else in your party!";
-
-                        flash_color = intRD;
-
-                        flash_message = true;
+                        displayMessage("There is no one else in your party!", intRD);
                     }
                 }
             }
@@ -14325,9 +14143,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                             message += " transferred to the Vault!";
 
-                            flash_color = intLB;
-
-                            flash_message = true;
+                            displayMessage(message, intLB);
 
                             selected = false;
 
@@ -14359,20 +14175,12 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     }
                     else
                     {
-                        message = "You cannot access this while in combat!";
-
-                        flash_color = intRD;
-
-                        flash_message = true;
+                        displayMessage("You cannot access this while in combat!", intRD);
                     }
                 }
                 else
                 {
-                    message = "The Vault is not accessible at this time!";
-
-                    flash_color = intRD;
-
-                    flash_message = true;
+                    displayMessage("The Vault is not accessible at this time!", intRD);
                 }
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
@@ -14458,6 +14266,18 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
     Uint32 duration = 3000;
 
+    // Lambda functions for displaying flash messages
+    auto displayMessage = [&](std::string msg, Uint32 color)
+    {
+        flash_message = true;
+
+        message = msg;
+
+        flash_color = color;
+
+        start_ticks = SDL_GetTicks();
+    };
+
     auto done = false;
 
     auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
@@ -14510,11 +14330,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 message = "Your spellbook is holding too many spells! You must unlearn spells from your spellbook.";
             }
 
-            flash_message = true;
-
-            flash_color = intRD;
-
-            start_ticks = SDL_GetTicks();
+            displayMessage(message, intRD);
         }
 
         last = offset + limit;
@@ -14760,20 +14576,12 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                                 }
                                 else
                                 {
-                                    message = "The vault is not accessible at this time!";
-
-                                    flash_color = intRD;
-
-                                    flash_message = true;
+                                    displayMessage("The vault is not accessible at this time!", intRD);
                                 }
                             }
                             else
                             {
-                                message = "The magic vault is already accessible!";
-
-                                flash_color = intRD;
-
-                                flash_message = true;
+                                displayMessage("The magic vault is already accessible!", intRD);
                             }
                         }
                         else if (character.SpellBook[selection].Type == Spells::Type::SOOTHING_TOUCH)
@@ -14793,8 +14601,6 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                             {
                                 if (party.Members[target].Health <= 0 || party.Members[target].Health == party.Members[target].MaximumHealth || Engine::HAS_STATUS(party.Members[target], Character::Status::CAPTURED))
                                 {
-                                    flash_message = true;
-
                                     message = std::string(party.Members[target].Name);
 
                                     if (party.Members[target].Health <= 0)
@@ -14810,9 +14616,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                                         message += " is not injured!";
                                     }
 
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage(message, intRD);
                                 }
                                 else
                                 {
@@ -14824,29 +14628,17 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         }
                         else
                         {
-                            message = "You cannot cast " + std::string(character.SpellBook[selection].Name) + " at this time!";
-
-                            flash_color = intRD;
-
-                            flash_message = true;
+                            displayMessage("You cannot cast " + std::string(character.SpellBook[selection].Name) + " at this time!", intRD);
                         }
                     }
                     else
                     {
-                        message = "You cannot cast " + std::string(character.SpellBook[selection].Name) + " at this time!";
-
-                        flash_color = intRD;
-
-                        flash_message = true;
+                        displayMessage("You cannot cast " + std::string(character.SpellBook[selection].Name) + " at this time!", intRD);
                     }
 
                     if (used_up)
                     {
-                        flash_message = true;
-
-                        message = std::string(character.Name) + " casts " + character.SpellBook[selection].Name;
-
-                        flash_color = intLB;
+                        displayMessage(std::string(character.Name) + " casts " + std::string(character.SpellBook[selection].Name), intLB);
 
                         character.SpellBook[selection].Charged = false;
                     }
@@ -14886,9 +14678,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
                     message += " erased from spellbook!";
 
-                    flash_color = intRD;
-
-                    flash_message = true;
+                    displayMessage(message, intRD);
 
                     selected = false;
 
