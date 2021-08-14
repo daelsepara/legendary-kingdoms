@@ -8199,6 +8199,18 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
         Uint32 duration = 3000;
 
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
@@ -8322,13 +8334,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                             {
                                 if (hasAttacked.size() > 0 && Engine::FIND_LIST(hasAttacked, selection) >= 0 && magicRound0(party.Members[selection], combatRound))
                                 {
-                                    flash_message = true;
-
-                                    message = std::string(party.Members[selection].Name) + " already attacked this turn!";
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage(std::string(party.Members[selection].Name) + " already attacked this turn!", intRD);
                                 }
                                 else
                                 {
@@ -8366,13 +8372,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                 {
                                                     if (Engine::HAS_STATUS(party.Members[target], Character::Status::ARMOUR3))
                                                     {
-                                                        flash_message = true;
-
-                                                        message = std::string(party.Members[target].Name) + " already has the " + std::string(party.Members[selection].SpellBook[i].Name) + "!";
-
-                                                        start_ticks = SDL_GetTicks();
-
-                                                        flash_color = intRD;
+                                                        displayMessage(std::string(party.Members[target].Name) + " already has the " + std::string(party.Members[selection].SpellBook[i].Name) + "!", intRD);
                                                     }
                                                     else
                                                     {
@@ -8406,8 +8406,6 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                 {
                                                     if (party.Members[target].Health <= 0 || party.Members[target].Health == party.Members[target].MaximumHealth)
                                                     {
-                                                        flash_message = true;
-
                                                         message = std::string(party.Members[target].Name);
 
                                                         if (party.Members[target].Health <= 0)
@@ -8419,9 +8417,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                             message += " is not injured!";
                                                         }
 
-                                                        start_ticks = SDL_GetTicks();
-
-                                                        flash_color = intRD;
+                                                        displayMessage(message, intRD);
                                                     }
                                                     else
                                                     {
@@ -8435,13 +8431,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                             {
                                                 if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
                                                 {
-                                                    flash_message = true;
-
-                                                    message = "Dazing Lights has already been cast!";
-
-                                                    start_ticks = SDL_GetTicks();
-
-                                                    flash_color = intRD;
+                                                    displayMessage("Dazing Lights has already been cast!", intRD);
                                                 }
                                                 else
                                                 {
@@ -8477,13 +8467,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                 }
                                                 else
                                                 {
-                                                    flash_message = true;
-
-                                                    message = "There are no targets for " + std::string(party.Members[selection].SpellBook[i].Name) + "!";
-
-                                                    start_ticks = SDL_GetTicks();
-
-                                                    flash_color = intRD;
+                                                    displayMessage("There are no targets for " + std::string(party.Members[selection].SpellBook[i].Name) + "!", intRD);
                                                 }
                                             }
                                             else if (party.Members[selection].SpellBook[i].Type == Spells::Type::UNFAILING_STRIKE)
@@ -8510,13 +8494,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                 }
                                                 else
                                                 {
-                                                    flash_message = true;
-
-                                                    message = "There are no targets for " + std::string(party.Members[selection].SpellBook[i].Name) + "!";
-
-                                                    start_ticks = SDL_GetTicks();
-
-                                                    flash_color = intRD;
+                                                    displayMessage("There are no targets for " + std::string(party.Members[selection].SpellBook[i].Name) + "!", intRD);
                                                 }
                                             }
                                             else if (party.Members[selection].SpellBook[i].Type == Spells::Type::POISON_STREAM)
@@ -8563,13 +8541,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                 }
                                                 else
                                                 {
-                                                    flash_message = true;
-
-                                                    message = "There are no targets for " + std::string(party.Members[selection].SpellBook[i].Name) + "!";
-
-                                                    start_ticks = SDL_GetTicks();
-
-                                                    flash_color = intRD;
+                                                    displayMessage("There are no targets for " + std::string(party.Members[selection].SpellBook[i].Name) + "!", intRD);
                                                 }
                                             }
 
@@ -8584,13 +8556,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                         }
                                         else
                                         {
-                                            flash_message = true;
-
-                                            message = std::string(party.Members[selection].Name) + " cannot cast " + std::string(party.Members[selection].SpellBook[spell[0]].Name) + " during COMBAT!";
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_color = intRD;
+                                            displayMessage(std::string(party.Members[selection].Name) + " cannot cast " + std::string(party.Members[selection].SpellBook[spell[0]].Name) + " during combat!", intRD);
                                         }
                                     }
                                     else
@@ -8603,24 +8569,12 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                             }
                             else
                             {
-                                flash_message = true;
-
-                                message = std::string(party.Members[selection].Name) + " cannot cast spells!";
-
-                                start_ticks = SDL_GetTicks();
-
-                                flash_color = intRD;
+                                displayMessage(std::string(party.Members[selection].Name) + " cannot cast spells!", intRD);
                             }
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "You must select the adventurer to cast a spell.";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage("You must select the adventurer to cast a spell.", intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::ACTION)
@@ -8641,8 +8595,6 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                     }
                                     else
                                     {
-                                        flash_message = true;
-
                                         if (!Engine::IS_CHARACTER(team))
                                         {
                                             message = std::string(party.Members[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!";
@@ -8652,20 +8604,12 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                             message = "You can only choose " + std::string(Team::Descriptions[team]) + "!";
                                         }
 
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_color = intRD;
+                                        displayMessage(message, intRD);
                                     }
                                 }
                                 else
                                 {
-                                    flash_message = true;
-
-                                    message = std::string(party.Members[current + offset].Name) + std::string(" is dead!");
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage(std::string(party.Members[current + offset].Name) + " is dead!", intRD);
                                 }
                             }
                         }
