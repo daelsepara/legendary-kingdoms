@@ -2877,5 +2877,15 @@ namespace Engine
             Engine::GET_EQUIPMENT(party.Members[character], equipment);
         }
     }
+
+    void GAIN_SCORE(Party::Base &party, Character::Type character, Attribute::Type attribute, int score)
+    {
+        auto result = Engine::FIND_CHARACTER(party, character);
+
+        if (Engine::IS_ACTIVE(party, result))
+        {
+            Engine::GAIN_SCORE(party.Members[result], attribute, score);
+        }
+    }
 }
 #endif

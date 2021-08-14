@@ -126,7 +126,9 @@ namespace Character
         ATTACK2_ENEMY0_ROUND0,
         UNARMED_COMBAT,
         LOST_FINGERNAILS,
-        STUNNED
+        STUNNED,
+        LOST_TONGUE,
+        USED_MAGIC_INARENA
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;
@@ -146,7 +148,9 @@ namespace Character
         {Character::Status::ATTACK2_ENEMY0_ROUND0, "Can attack first enemy twice on Round 1"},
         {Character::Status::UNARMED_COMBAT, "Unarmed Combat"},
         {Character::Status::LOST_FINGERNAILS, "Lost fingernails"},
-        {Character::Status::STUNNED, "Stunned"}};
+        {Character::Status::LOST_TONGUE, "Lost Tongue"},
+        {Character::Status::STUNNED, "Stunned"},
+        {Character::Status::USED_MAGIC_INARENA, "Used magic in Saltdad Arena"}};
 
     class Base
     {

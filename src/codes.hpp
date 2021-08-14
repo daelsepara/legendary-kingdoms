@@ -47,7 +47,8 @@ namespace Codes
         CHARISMA_SUCCESS_CHALICE,
         SLAVES_DAMAGE_FOR2,
         CAST_ORB,
-        CAST_MAELSTROM
+        CAST_MAELSTROM,
+        CAST_SPELLS_INARENA
     };
 
     std::map<Book::Type, const char *> Prefix = {

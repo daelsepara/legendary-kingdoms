@@ -149,7 +149,7 @@ namespace Book1
 
             ID = 4;
 
-            Text = "You swoop Amelia up into your arms just before she reaches the wine barrel. She shrieks in delight and throws an arm around your neck.\n\n\"Is it my prinsh charming?\" she slurs, nuzzling into your chest.\n\n\"Well... if by prince you meant castle pot-washer, then yes,\" you smile, carrying her over to her quarters in the palace.\n\n\"Tell me something,\" says Amelia dreamily, between snoozes, as you bear her through the palace. \"Why are you so charming to everyone except me?\"\n\n\"Charming is another word for lying,\" you say in a rare moment of honesty. \"I'd never lie to you, Amelia...\"\n\nHer snores cut off a potentially romantic moment. Tucking her into bed you go to join the rest of your companions.\n\nAmelia has gained a HEART for Brash. Brash also gains a HEART for Amelia.";
+            Text = "You swoop Amelia up into your arms just before she reaches the wine barrel. She shrieks in delight and throws an arm around your neck.\n\n\"Is it my prinsh charming?\" she slurs, nuzzling into your chest.\n\n\"Well... if by prince you meant castle pot-washer, then yes,\" you smile, carrying her over to her quarters in the palace.\n\n\"Tell me something,\" says Amelia dreamily, between snoozes, as you bear her through the palace. \"Why are you so charming to everyone except me?\"\n\n\"Charming is another word for lying,\" you say in a rare moment of honesty. \"I'd never lie to you, Amelia...\"\n\nHer snores cut off a potentially romantic moment. Tucking her into bed you go to join the rest of your companions.\n\nNote: Amelia has gained a HEART for Brash. Brash also gains a HEART for Amelia.";
 
             Choices.clear();
 
@@ -508,8 +508,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Skallos", Monster::Type::SKALLOS, 9, 4, 5, 20, 0),
                 Monster::Base("Green Skeletons", 8, 4, 3, 30, 0)};
@@ -692,8 +690,6 @@ namespace Book1
             PreText = "The passageway opens up into a long hall, lined with stamped bronze plates. Torches burn in brackets along the walls, illuminating hideous murals of serpents devouring animals, trees and rocks. You see daylight ahead and come upon a chamber whose roof is open to the blazing sun. It is another temple chamber with black altars and fine silverwork dominating the room.\n\nRising from his position in front of the high altar, a snakeman priest in flowing vestal robes turns to gaze at you with piercing eyes.\n\n\"The heretic slaves return!\" he hisses. \"Do not think that you can seek repentance from the lord of judgement now! Once a traitor, always a traitor!\"";
 
             Monsters.clear();
-
-            CanFlee = false;
 
             if (!Engine::VERIFY_CODES(party, {Codes::A(41)}))
             {
@@ -1022,8 +1018,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Zealot", Monster::Type::ZEALOT, 3, 4, 4, 10, 0),
                 Monster::Base("Zealot", Monster::Type::ZEALOT, 4, 4, 4, 11, 0),
@@ -1269,7 +1263,7 @@ namespace Book1
 
             ID = 37;
 
-            Text = "The Lhasbreath barbarian suddenly jolts, a blade sticking out of his chest. He falls away, to reveal a smirking Tash, her crude sword dripping with blood.\n\n\"Thanks, Tash,\" smiles Jessica, helped to her feet by the clever thief. Sar Jessica won't soon forget this.\n\nJessica has gained a heart for Tasha. Tasha also gains a heart for Sar Jessica.";
+            Text = "The Lhasbreath barbarian suddenly jolts, a blade sticking out of his chest. He falls away, to reveal a smirking Tash, her crude sword dripping with blood.\n\n\"Thanks, Tash,\" smiles Jessica, helped to her feet by the clever thief. Sar Jessica won't soon forget this.\n\nNote: Jessica has gained a heart for Tasha. Tasha also gains a heart for Sar Jessica.";
 
             Choices.clear();
 
@@ -1913,8 +1907,6 @@ namespace Book1
         {
             Engine::LOSE_EQUIPMENT(party, {Equipment::Type::VIAL_OF_POISON});
 
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Bronzeguard", 8, 4, 5, 12, 0),
                 Monster::Base("Bronzeguard", 9, 4, 5, 10, 0),
@@ -1967,8 +1959,6 @@ namespace Book1
             destination = {Book::Type::BOOK1, 391};
 
             Bye = NULL;
-
-            CanFlee = false;
 
             Monsters = {Monster::Base("Thief of Royce", 5, 4, 4, 14, 0)};
         }
@@ -2043,7 +2033,7 @@ namespace Book1
 
             ID = 62;
 
-            Text = "That night, you stroll along the terrace, the night a canopy of stars, reflected in the watery rice paddies that surround the house. You need some fresh air. Being treated as a hero all day and night can be exhausting.\n\nYou spy Brash leaning back on a chair, his feet up on the railings, a cup of rice wine in hand. He stares out over the still landscape.\n\n\"Silver for your thoughts,\" you say, causing Brash to yelp in surprise, fall off his chair and crash to ground.\n\n\"Ah! Akihiro! Always catching me at my best!\" Brash says sheepishly. You offer him a hand up, the fair lad accepting, pulled almost into an embrace. He blushes and backs away.\n\n\"Not like you to lose your tongue, my friend,\" you smile. \"You've been avoiding me, I sense.\"\n\n\"A bit,\" he says. \"I just don't know what to do with myself these days...\"\n\n\"How so?\" you ask. When he doesn't respond you flick him a silver coin, which he catches with his quick reflexes. He looks at it in his hand and realises he has been fooled.\n\n\"I've been thinking about you,\" he admits. \"Quite a bit. I don't know what to do about it. The kind of feelings I have aren't allowed in Royce.\"\n\n\"They are not allowed anywhere,\" you say, joining him at the railings. \"There are many men who would rather kill than love. And more who would kill to stop love, no matter how earnest. I will never hurry you, Brash, but I do not accept uncertainty. If you feel for me what I feel for you, you must be sure. Once done, we cannot undo it.\"\n\nYou are disturbed by a creak on the floorboards. You turn to see your sister arriving on the terrace. \"Come, Akihiro, you are asked for! Do not keep the people from their hero!\"\n\n\"The price of fame,\" you smile. \"Come, Brash. Walking out on a party is not done.\"\n\nYou offer him your hand, and he accepts, squeezing before releasing.\n\nAkihiro has gained a HEART for Brash. Brash also gains a HEART for Akihiro.\n\nNote: You gained the code A98.";
+            Text = "That night, you stroll along the terrace, the night a canopy of stars, reflected in the watery rice paddies that surround the house. You need some fresh air. Being treated as a hero all day and night can be exhausting.\n\nYou spy Brash leaning back on a chair, his feet up on the railings, a cup of rice wine in hand. He stares out over the still landscape.\n\n\"Silver for your thoughts,\" you say, causing Brash to yelp in surprise, fall off his chair and crash to ground.\n\n\"Ah! Akihiro! Always catching me at my best!\" Brash says sheepishly. You offer him a hand up, the fair lad accepting, pulled almost into an embrace. He blushes and backs away.\n\n\"Not like you to lose your tongue, my friend,\" you smile. \"You've been avoiding me, I sense.\"\n\n\"A bit,\" he says. \"I just don't know what to do with myself these days...\"\n\n\"How so?\" you ask. When he doesn't respond you flick him a silver coin, which he catches with his quick reflexes. He looks at it in his hand and realises he has been fooled.\n\n\"I've been thinking about you,\" he admits. \"Quite a bit. I don't know what to do about it. The kind of feelings I have aren't allowed in Royce.\"\n\n\"They are not allowed anywhere,\" you say, joining him at the railings. \"There are many men who would rather kill than love. And more who would kill to stop love, no matter how earnest. I will never hurry you, Brash, but I do not accept uncertainty. If you feel for me what I feel for you, you must be sure. Once done, we cannot undo it.\"\n\nYou are disturbed by a creak on the floorboards. You turn to see your sister arriving on the terrace. \"Come, Akihiro, you are asked for! Do not keep the people from their hero!\"\n\n\"The price of fame,\" you smile. \"Come, Brash. Walking out on a party is not done.\"\n\nYou offer him your hand, and he accepts, squeezing before releasing.\n\nNote: Akihiro has gained a HEART for Brash. Brash also gains a HEART for Akihiro. You gained the code A98.";
 
             Choices.clear();
 
@@ -2200,8 +2190,6 @@ namespace Book1
                     Monster::Base("Paper Golems", Monster::Type::PAPER, 4, 4, 4, 10, 0),
                     Monster::Base("Paper Tiger", Monster::Type::PAPER, 5, 4, 4, 6, 0),
                     Monster::Base("Paper Dragon", Monster::Type::PAPER, 5, 4, 4, 6, 0)};
-
-                CanFlee = false;
             }
         }
 
@@ -2232,8 +2220,6 @@ namespace Book1
                 Monster::Base("Paper Golems", Monster::Type::PAPER, 4, 4, 4, 10, 0),
                 Monster::Base("Paper Tiger", Monster::Type::PAPER, 5, 4, 4, 6, 0),
                 Monster::Base("Paper Dragon", Monster::Type::PAPER, 5, 4, 4, 6, 0)};
-
-            CanFlee = false;
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 168}; }
@@ -2341,6 +2327,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 71;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "With a final flourish, you slay your last opponent. Although there are other living slaves in the arena, the battle suddenly stops as the Iron King stands. In a thickly accented voice, the king declares you champions of the arena. The crowd go wild, cheering you heartily as you catch your breath from the intense battle.\n\nAny hopes you had that being made champion would grant you freedom are soon quashed. Instead you are disarmed and led back into the dungeons to nurse your wounds.";
 
@@ -3298,6 +3288,10 @@ namespace Book1
 
             ID = 101;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "Spitting on the blood-stained sands, you stride into the central battle, back to back, swords in hand.";
 
             Choices.clear();
@@ -3307,8 +3301,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Lhasbreth Barbarians", 7, 5, 3, 17, 0),
                 Monster::Base("Chalice Swordsmen", 5, 4, 4, 10, 0)};
@@ -3361,8 +3353,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Giant Skeleton", 8, 3, 5, 30, 0),
                 Monster::Base("Giant Skeleton", 10, 3, 4, 25, 0)};
@@ -3641,8 +3631,6 @@ namespace Book1
         {
             destination = {Book::Type::BOOK1, 68};
 
-            CanFlee = false;
-
             Team = Team::Type::SAR_JESSICA_DAYNE;
 
             character = Engine::FIND_CHARACTER(party, Character::Type::SAR_JESSICA_DAYNE);
@@ -3880,8 +3868,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Skullcracker", 8, 4, 4, 12, 0),
                 Monster::Base("Daisy", 9, 4, 4, 13, 0, 2)};
@@ -3898,6 +3884,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 118;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "You try to elbow your way through the crowd, but by the time you have reached the carcass it has been almost stripped clean. You are forced to gnaw on empty bones, feeding on marrow and almost inedible ligaments. The lack of food begins to drain your spirits.\n\nEach party member must lose 1 Health point.";
 
@@ -4357,8 +4347,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Black Spider", 5, 5, 4, 6, 0),
                 Monster::Base("Grey Spider", 4, 5, 4, 6, 0),
@@ -4505,7 +4493,7 @@ namespace Book1
 
             ID = 139;
 
-            Text = "After washing yourselves you sit upon the bank. Amelia has washed her long hair and is beginning to re-braid it, gazing into her own reflection in the oasis. On a whim Tasha offers to help her, and soon she is twisting her hair into tight braids in a style reminiscent of a Splintered Isle buccaneer. It is a moment of tender kindness, which have been rare since you came to the savage Valley of Bones. Amelia accepts Tasha's help, occasionally checking her progress by glancing into the water.\n\n\"You're going to make me look like a pirate!\" Amelia laughs. \"I quite like it.\"\n\n\"We can take it out if you have to meet any fine lords or ladies,\" Tasha says idly, continuing to braid.\n\n\"If it makes me look more like you, I don't care if some noble doesn't like it,\" shrugs Amelia. \"I'm a bastard girl. No one in Royce see's past my name. Not even my own father.\"\n\n\"Strange customs in your land,\" Tasha muses. \n\n\"Perhaps we'll sail to the Splintered Isles, next. That's true freedom. There's no kings or queens there.\"\n\n\"Or laws,\" laughs Amelia. \"Maybe they're better off for it.\"\n\nThis has been a kindly encounter.\n\nTasha has gained a HEART for Amelia Pass-Dayne. Amelia Pass-Dayne also gains a HEART for Tasha.";
+            Text = "After washing yourselves you sit upon the bank. Amelia has washed her long hair and is beginning to re-braid it, gazing into her own reflection in the oasis. On a whim Tasha offers to help her, and soon she is twisting her hair into tight braids in a style reminiscent of a Splintered Isle buccaneer. It is a moment of tender kindness, which have been rare since you came to the savage Valley of Bones. Amelia accepts Tasha's help, occasionally checking her progress by glancing into the water.\n\n\"You're going to make me look like a pirate!\" Amelia laughs. \"I quite like it.\"\n\n\"We can take it out if you have to meet any fine lords or ladies,\" Tasha says idly, continuing to braid.\n\n\"If it makes me look more like you, I don't care if some noble doesn't like it,\" shrugs Amelia. \"I'm a bastard girl. No one in Royce see's past my name. Not even my own father.\"\n\n\"Strange customs in your land,\" Tasha muses. \n\n\"Perhaps we'll sail to the Splintered Isles, next. That's true freedom. There's no kings or queens there.\"\n\n\"Or laws,\" laughs Amelia. \"Maybe they're better off for it.\"\n\nThis has been a kindly encounter.\n\nNote: Tasha has gained a HEART for Amelia Pass-Dayne. Amelia Pass-Dayne also gains a HEART for Tasha.";
 
             Choices.clear();
 
@@ -4764,8 +4752,6 @@ namespace Book1
 
             Limit = 0;
 
-            CanFlee = false;
-
             Monsters = {Monster::Base("Dragonyak Bull", 6, 3, 4, 15, 0)};
         }
 
@@ -4800,8 +4786,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 3, 4, 3, 7, 0),
                 Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 4, 3, 7, 0),
@@ -5322,8 +5306,6 @@ namespace Book1
 
             Limit = 0;
 
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Scorpion", 5, 4, 4, 5, 0),
                 Monster::Base("Scorpion", 4, 4, 4, 4, 0),
@@ -5436,8 +5418,6 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Engine::GET_CODES(party, {Codes::Type::NO_COMBAT_SPELLS});
-
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Lion", 4, 4, 4, 9, 0),
@@ -6742,6 +6722,10 @@ namespace Book1
         {
             BookID = Book::Type::BOOK1;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             ID = 212;
 
             Text = "Puffing yourselves up, you and your companions put on a brave show before the slaves, shoving them hard and roaring bold threats. This will require a good deal of bravery and force.";
@@ -6784,8 +6768,6 @@ namespace Book1
 
             PreText += " of Health damage on each orc, except the orc leader -- they are too terrified to strike him!";
 
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Orc", Monster::Type::ORC, 4, 4, 4, 9, 0),
                 Monster::Base("Orc", Monster::Type::ORC, 5, 4, 4, 11, 0),
@@ -6824,8 +6806,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
-
             Monsters.clear();
 
             Monsters.push_back(Monster::Base("The Iron King", 6, 4, 4, 15, 0));
@@ -7182,8 +7162,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Grim Gladiator", 8, 4, 4, 12, 0),
                 Monster::Base("Mighty Gladiator", 5, 3, 4, 10, 0),
@@ -7553,7 +7531,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Black Spider", Monster::Type::SPIDER_WITH_SWARM, 5, 5, 4, 7, 0),
@@ -7586,7 +7563,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Lhasbreath Barbarians", 9, 5, 3, 16, 0),
@@ -7625,8 +7601,6 @@ namespace Book1
         void Event(Party::Base &party)
         {
             previousTeam = Team::Type::NONE;
-
-            CanFlee = false;
 
             RoundLimit = 3;
 
@@ -7912,6 +7886,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::ANIMAL_SPEECH);
+
             Take = {Equipment::RUGGED_CLOAK2};
 
             Limit = 1;
@@ -8128,8 +8104,6 @@ namespace Book1
 
             Limit = 0;
 
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Sand Lizard", 4, 3, 4, 7, 0),
                 Monster::Base("Sand Lizard", 4, 3, 4, 9, 0)};
@@ -8289,7 +8263,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Skeleton Warriros", 9, 4, 4, 12, 0),
@@ -8449,7 +8422,7 @@ namespace Book1
 
             ID = 271;
 
-            Location = Location::Type::SALTDAD;
+            Location = Location::Type::SALTDAD_ARENA;
 
             IsCity = true;
 
@@ -8732,8 +8705,6 @@ namespace Book1
 
             destination = {Book::Type::NONE, -1};
 
-            CanFlee = false;
-
             Team = Team::Type::AKIHIRO_OF_CHALICE;
 
             party.CurrentCharacter = Engine::FIND_SOLO(party);
@@ -8864,6 +8835,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 282;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "You attempt to get the violent-looking slaves on side, offering to join their gang and share the spoils of the goat evenly.";
 
@@ -9316,8 +9291,6 @@ namespace Book1
 
             Limit = 0;
 
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Troglodyte", 4, 3, 4, 8, 0),
                 Monster::Base("Troglodyte", 2, 3, 4, 4, 0),
@@ -9368,8 +9341,6 @@ namespace Book1
             Take.clear();
 
             Limit = 0;
-
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Lhasbreath Barbarians", 9, 5, 3, 16, 0),
@@ -9731,8 +9702,6 @@ namespace Book1
             Take.clear();
 
             Limit = 0;
-
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Lhasbreath Barbarians", 6, 4, 3, 15, 0),
@@ -11134,8 +11103,6 @@ namespace Book1
 
             Limit = 0;
 
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Sand Lizard", 6, 3, 4, 8, 0),
                 Monster::Base("Sand Lizard", 4, 3, 4, 9, 0),
@@ -11410,7 +11377,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Kensai", 6, 4, 4, 9, 0),
@@ -11561,6 +11527,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 374;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "The slaves merely laugh at you and push you away. Demoralised, you are forced to wait for your food like everyone else.";
 
@@ -11778,6 +11748,7 @@ namespace Book1
             Engine::REST(party);
 
             Engine::REMOVE_STATUS(party, Character::Status::LOST_FINGERNAILS);
+            Engine::REMOVE_STATUS(party, Character::Status::LOST_TONGUE);
         }
     };
 
@@ -12024,8 +11995,6 @@ namespace Book1
         {
             destination = {Book::Type::BOOK1, 596};
 
-            CanFlee = false;
-
             Team = Team::Type::AKIHIRO_OF_CHALICE;
 
             character = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
@@ -12163,7 +12132,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Goblin", 2, 4, 4, 3, 0),
@@ -12805,8 +12773,6 @@ namespace Book1
 
             Team = Team::Type::WEAPONS;
 
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Guard", 4, 4, 4, 8, 0, {Equipment::IRON_SHORTSWORD1}),
                 Monster::Base("Guard", 3, 4, 4, 7, 0, {Equipment::IRON_SHORTSWORD1})};
@@ -13207,7 +13173,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Sand Drake", 6, 5, 4, 12, 0),
@@ -13394,8 +13359,6 @@ namespace Book1
         void Event(Party::Base &party)
         {
             destination = {Book::Type::BOOK1, 741};
-
-            CanFlee = false;
 
             EnemyFleet = {Ship::Base("PIRATE PINNACE", Ship::Type::PIRATE_PINNACE, Location::Type::NONE, 5, 6, 0)};
         }
@@ -13861,8 +13824,6 @@ namespace Book1
 
             Limit = 0;
 
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Troglodyte", 3, 3, 4, 5, 0),
                 Monster::Base("Troglodyte", 2, 3, 4, 3, 0),
@@ -13957,8 +13918,6 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Bye = NULL;
-
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Panther", 5, 4, 4, 6, 0),
@@ -14165,7 +14124,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {Monster::Base("Skeletons", 5, 5, 4, 24, 0, 0, 2)};
         }
@@ -14957,8 +14915,6 @@ namespace Book1
         {
             destination = {Book::Type::BOOK1, 292};
 
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Guard", 4, 4, 4, 8, 0, {Equipment::IRON_SHORTSWORD1}),
                 Monster::Base("Guard", 3, 4, 4, 7, 0, {Equipment::IRON_SHORTSWORD1})};
@@ -15420,8 +15376,6 @@ namespace Book1
         {
             Engine::GET_CODES(party, {Codes::Type::LAST_IN_COMBAT});
 
-            CanFlee = false;
-
             Monsters = {
                 Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 5, 6, 6, 0),
                 Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 5, 6, 5, 0)};
@@ -15510,8 +15464,6 @@ namespace Book1
         {
             destination = {Book::Type::BOOK1, 882};
 
-            CanFlee = false;
-
             Team = Team::Type::AKIHIRO_OF_CHALICE;
 
             character = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
@@ -15577,7 +15529,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {Monster::Base("Jungle", Monster::Type::JUNGLE, 0, 0, 4, 25, 0)};
         }
@@ -15762,8 +15713,6 @@ namespace Book1
         void Event(Party::Base &party)
         {
             destination = {Book::Type::BOOK1, 450};
-
-            CanFlee = false;
 
             Team = Team::Type::AKIHIRO_OF_CHALICE;
 
@@ -16095,7 +16044,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {Monster::Base("Beetle Swarm", Monster::Type::BEETLE_SWARM, 0, 0, 3, 25, 0)};
         }
@@ -16329,6 +16277,10 @@ namespace Book1
 
             ID = 526;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "Your physical strength and martial technique intimidate the slaves, who grumble and back down, allowing you to rip the choicest and best-cooked flesh off the goat first. One of the slaves, a fellow called Tommul, mutters dark warnings about revenge. Snarling at him, you retreat to a corner to finish your food.\n\nNote: You gained the code A2.";
 
             Choices.clear();
@@ -16442,8 +16394,6 @@ namespace Book1
             Team = Team::Type::WALL_CLIMBING;
 
             destination = {Book::Type::BOOK1, 75};
-
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Guard", 4, 4, 4, 7, 0),
@@ -16720,7 +16670,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 4, 3, 5, 0),
@@ -17119,8 +17068,6 @@ namespace Book1
             if (!Engine::VERIFY_CODES(party, {Codes::A(3)}))
             {
                 PreText += "\n\nAn arrow thudding into the ground near you, launched from one the arena guards, spurs you back into action. Clearly you must fight hard or be executed. Hurriedly you engage with the dregs of the fight to keep busy.";
-
-                CanFlee = false;
 
                 Monsters = {Monster::Base("Slaves", 6, 5, 3, 20, 0)};
 
@@ -17550,7 +17497,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {Monster::Base("Imopposh the Mad", Monster::Type::IMOPPOSH_THE_MAD, 3, 4, 4, 30, 0)};
         }
@@ -17576,7 +17522,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Unbraaki", Monster::Type::UNBRAAKI, 8, 3, 6, 11, 0),
@@ -17820,6 +17765,10 @@ namespace Book1
 
             ID = 572;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "Neither side is willing to back down, and soon the hall dissolves into a violent scrum. Fists fly and blood is spilt as people fight like animals for a sliver of cooked flesh.\n\nNote: Health points of all Party Members are reduced by 2 points.";
 
             Bye = "You have managed to feed, but are a mass of bruises.";
@@ -17834,7 +17783,7 @@ namespace Book1
             Engine::GAIN_HEALTH(party, -2);
         }
 
-        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 509}; }
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 865}; }
     };
 
     class Story573 : public Story::Base
@@ -18396,7 +18345,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            CanFlee = false;
 
             Monsters = {
                 Monster::Base("Berserker", 7, 4, 3, 12, 0),
@@ -18751,6 +18699,397 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 277}; }
+    };
+
+    class Story600 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story600()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 600;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::CONSOLIDATE(party);
+
+            PreText = "As you make your way to the steps of the temple you can see monks lining up on both sides. Many of the God King's kensai bow deeply as you pass, recognising you as one of their own. You can see your family is also gathered here, including your mother and sister, looking so proud they are fit to burst.\n\nHonnu, now dressed in the shell-blue robes of a kensai, greets you with a bow. He takes you aside behind a screen, where you are presented with high-collared KENSAI ROBES (Armour +3) to change into. You emerge to cheers, the great and the good of Chalice turning out to applaud you.\n\n";
+
+            Choices.clear();
+
+            if (Engine::IN_PARTY(party, Character::Type::SAR_JESSICA_DAYNE) && Engine::IN_PARTY(party, Character::Type::BRASH))
+            {
+                PreText += "Both Sar Jessica and Brash gain a heart for Akihiro. He";
+
+                Choices.push_back(Choice::Base("Akihiro gains a heart for Sar Jessica", {Book::Type::BOOK1, 450}, Choice::Type::GAIN_HEART, Character::Type::AKIHIRO_OF_CHALICE, Character::Type::SAR_JESSICA_DAYNE, 1));
+                Choices.push_back(Choice::Base("Akihiro gains a heart for Brash", {Book::Type::BOOK1, 450}, Choice::Type::GAIN_HEART, Character::Type::AKIHIRO_OF_CHALICE, Character::Type::BRASH, 1));
+                Choices.push_back(Choice::Base("Go back to the city centre", {Book::Type::BOOK1, 450}));
+
+                Engine::GAIN_HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::AKIHIRO_OF_CHALICE, 1);
+                Engine::GAIN_HEARTS(party, Character::Type::BRASH, Character::AKIHIRO_OF_CHALICE, 1);
+            }
+            else if (Engine::IN_PARTY(party, Character::Type::SAR_JESSICA_DAYNE))
+            {
+                PreText += "Sar Jessica gains a heart for Akihiro. He";
+
+                Engine::GAIN_HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::AKIHIRO_OF_CHALICE, 1);
+
+                Choices.push_back(Choice::Base("Akihiro gains a heart for Sar Jessica", {Book::Type::BOOK1, 450}, Choice::Type::GAIN_HEART, Character::Type::AKIHIRO_OF_CHALICE, Character::Type::SAR_JESSICA_DAYNE, 1));
+                Choices.push_back(Choice::Base("Go back to the city centre", {Book::Type::BOOK1, 450}));
+            }
+            else if (Engine::IN_PARTY(party, Character::Type::BRASH))
+            {
+                PreText += "Brash gains a heart for Akihiro. He";
+
+                Engine::GAIN_HEARTS(party, Character::Type::BRASH, Character::AKIHIRO_OF_CHALICE, 1);
+
+                Choices.push_back(Choice::Base("Akihiro gains a heart for Brash", {Book::Type::BOOK1, 450}, Choice::Type::GAIN_HEART, Character::Type::AKIHIRO_OF_CHALICE, Character::Type::BRASH, 1));
+                Choices.push_back(Choice::Base("Go back to the city centre", {Book::Type::BOOK1, 450}));
+            }
+            else
+            {
+                PreText += "Akihiro";
+            }
+
+            PreText += " looks particularly handsome in his fine KENSAI ROBES, and the loving praise being heaped upon him makes him seem even more attractive.\n\nThe family curse is broken, Akihiro is at last at peace.\n\nNote: Akihiro's Charisma score increases by 1 point.\n\nNote: You gained the code A53.";
+
+            Engine::GET_EQUIPMENT(party, Character::Type::AKIHIRO_OF_CHALICE, {Equipment::KENSAI_ROBES3});
+
+            Engine::GAIN_SCORE(party, Character::Type::AKIHIRO_OF_CHALICE, Attribute::Type::CHARISMA, 1);
+
+            Engine::GET_CODES(party, {Codes::A(53)});
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story601 : public Story::Base
+    {
+    public:
+        Story601()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 601;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IN_TEAM(party, Character::Type::BRASH, Team::Type::CHASE))
+            {
+                return {Book::Type::BOOK1, 819};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 60};
+            }
+        }
+    };
+
+    class Story602 : public Story::Base
+    {
+    public:
+        Story602()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 602;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
+            Text = "You stroll down the gorgeous avenue towards the palace gates, allowing Unbraaki's soldiers to intercept you. \"What business do you have here?\" grunts the guard, through a helmet made of a sand lizard's skull.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(89)}))
+            {
+                return {Book::Type::BOOK1, 74};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(1)}))
+            {
+                return {Book::Type::BOOK1, 559};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(7)}))
+            {
+                return {Book::Type::BOOK1, 556};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 455};
+            }
+        }
+    };
+
+    class Story603 : public Story::Base
+    {
+    public:
+        Story603()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 603;
+
+            Text = "To your delight you manage to find all the relevant pieces of the mural and reassemble them together. Inscribed into the stone is a most useful spell.\n\nNote: Any of your spellcasters can add this spell to their spellbooks if they wish but remember that you cannot have more than six spells in a single spellbook at any given time:\n\nSandstorm (Combat)\n\nYou whip up a blast of glassy sand to shred all your foes at once. Make an immediate attack with a Fighting score of 3 against each opponent.\n\nRecharge: 50 silver.";
+
+            Bye = "The heat is overbearing you in this desolate place, so you decide to move on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Spells = {Spells::SANDSTORM};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 453}; }
+    };
+
+    class Story604 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Story604()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 604;
+
+            Location = Location::Type::MORDAIN;
+
+            Text = "You have entered a comfortable looking room with a large fireplace, a table scattered with ancient art objects, and a number of straw pallets. You are just getting comfortable when the door opposite you opens and five burly looking orcs emerge. They do not hesitate to give a great roar and leap to the attack.\n\nNote: You can only escape if you have a ship in Mordain harbour.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(74)}))
+            {
+                return {Book::Type::BOOK1, 861};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 734};
+
+            Bye = NULL;
+
+            if (Engine::HAS_SHIP(party, Location::Type::MORDAIN))
+            {
+                CanFlee = true;
+            }
+
+            Monsters = {
+                Monster::Base("Orc", 5, 4, 4, 8, 0),
+                Monster::Base("Orc", 5, 4, 4, 9, 0),
+                Monster::Base("Orc", 4, 4, 4, 11, 0),
+                Monster::Base("Orc", 6, 5, 3, 10, 0),
+                Monster::Base("Orc", 4, 4, 4, 7, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::FLEE)
+            {
+                Bye = "You flee back to the harbour, get aboard your ship, and sail off. Your crew gives you covering arrow fire.";
+
+                destination = {Book::Type::BOOK1, 851};
+            }
+        }
+    };
+
+    class Story605 : public Story::Base
+    {
+    public:
+        Story605()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 605;
+
+            Text = "You descend into a mighty canyon, different coloured bands of earth clearly visible along the tall walls of the cleft. Water pools in some places, with patches of lush vegetation clogging parts of the valley. A herd of wild dragonyaks, like scaled buffalo, cluster around the oasis, munching contentedly. A dragonyak bull, appalled at your intervention, stamps his clawed hoof and utters a roar of challenge. He is clearly unwilling to yield the water to you.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            Choices.push_back(Choice::Base("Back away, out of the canyon", {Book::Type::BOOK1, 115}));
+            Choices.push_back(Choice::Base("Hold your ground", {Book::Type::BOOK1, 149}));
+
+            if (Engine::HAS_SPELL(party, {Spells::Type::ANIMAL_SPEECH}))
+            {
+                Choices.push_back(Choice::Base("Cast Animal Speech", {Book::Type::BOOK1, 248}));
+            }
+        }
+    };
+
+    class Story606 : public Story::Base
+    {
+    public:
+        Story606()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 606;
+
+            Text = "You quickly examine the bodies before the housecarls arrive on the scene. You find a little money, 20 silver coins. Most damningly you find a RING OF THE PATRIARCH. These rings are only given out to the most loyal servants of Cursus. Clearly your allegiance to the Everchild will mean you shall be hounded by these fanatics until the end of your days! Shaking your head, you quickly flee the scene.\n\nNote: You gained the code A90.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::RING_OF_THE_PATRIARCH};
+
+            Limit = 1;
+
+            Engine::GAIN_MONEY(party, 20);
+
+            Engine::GET_CODES(party, {Codes::A(90)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story607 : public Story::Base
+    {
+    public:
+        Story607()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 607;
+
+            Text = "That night, you stroll along the terrace, the night a canopy of stars, reflected in the watery rice paddies that surround the house. Sar Jessica is with you, and in the tradition of Royce you hold her arm as you stroll.\n\n\"You are a fine man, Akihiro,\" says Sar Jessica. \"Honourable, yet not proud. Willing to forgive insult, but not bear it. And handsome too.\"\n\nYou shrug. \"No more than any other man,\" you say.\n\n\"Much more than most,\" corrects Sar Jessica. She gazes into your eyes. \"My father intends me to marry Sir Anthony Ross. He is a kind man, but crude. I am not sure I can marry him now I know what true manhood is. Delicate but strong, wise but not insufferable. How could I settle for less, now I have seen what the true flower of chivalry is?\"\n\n\"Your father would never approve of me, Sar Jessica,\" you say darkly. \"Your people would never accept me. I am foreign. You shall be a baroness...\"\n\nSuddenly her lips are pressing against yours. It seems that the knight will not be denied. Her kind words and your feeling of triumph combine, and you kiss her back, unable to restrain yourself.\n\n\"Oh! Forgive me!\" you hear a familiar voice cry. Breaking off you can see Yuko, your sister, her hand to her mouth at the scandal she has witnessed. She quickly scampers away.\n\n\"Privacy is rarer than gold,\" you muse, turning back to Jessica. \"Come, let us go in before gossip overtakes us.\"\n\nNote: Akihiro has gained a heart for Sar Jessica Dayne. Sar Jessica Dayne also gains a heart for Akihiro. You gained the code A98.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEARTS(party, Character::Type::AKIHIRO_OF_CHALICE, Character::Type::SAR_JESSICA_DAYNE, 1);
+            Engine::GAIN_HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::Type::AKIHIRO_OF_CHALICE, 1);
+
+            Engine::GET_CODES(party, {Codes::A(98)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story608 : public Story::Base
+    {
+    public:
+        Story608()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 608;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            Text = "Because some of your party members used magic spells while in the arena, they are taken away by the guards to a small room where their tongues are cut out and then sealed with branding irons.\n\nNote: Each magic-using character loses 3 Health and cannot cast spells unless they can find a way to regrow their tongues!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::CAST_SPELLS_INARENA}))
+            {
+                return {Book::Type::BOOK1, 792};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::HAS_STATUS(party.Members[i], Character::Status::USED_MAGIC_INARENA))
+                {
+                    Engine::GAIN_HEALTH(party.Members[i], -3);
+
+                    Engine::GAIN_STATUS(party.Members[i], Character::Status::LOST_TONGUE);
+
+                    Engine::REMOVE_STATUS(party.Members[i], Character::Status::USED_MAGIC_INARENA);
+                }
+            }
+
+            Engine::LOSE_CODES(party, {Codes::Type::CAST_SPELLS_INARENA});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 792}; }
+    };
+
+    class Story609 : public Story::Base
+    {
+    public:
+        Story609()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 609;
+
+            Text = "You wade waist-deep through the cloudy, muddy water. Leeches latch onto your skin and the insanitary conditions take their toll on your health.\n\nNote: Each party member loses 2 Health points.";
+
+            Bye = "However, by following the trail you have not gotten lost. Eventually the path leads to higher, drier grounds.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -2);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 359}; }
     };
 
     auto story001 = Story001();
@@ -19403,6 +19742,16 @@ namespace Book1
     auto event597 = Event597();
     auto story598 = Story598();
     auto story599 = Story599();
+    auto story600 = Story600();
+    auto story601 = Story601();
+    auto story602 = Story602();
+    auto story603 = Story603();
+    auto story604 = Story604();
+    auto story605 = Story605();
+    auto story606 = Story606();
+    auto story607 = Story607();
+    auto story608 = Story608();
+    auto story609 = Story609();
 
     void InitializeStories()
     {
@@ -19472,7 +19821,8 @@ namespace Book1
             &story560, &story561, &story562, &story563, &story564, &story565, &story566, &story567, &story568, &story569,
             &story570, &story571, &story572, &story573, &story574, &story575, &story576, &story577, &story578, &story579,
             &story580, &story581, &story582, &story583, &story584, &story585, &story586, &story587, &story588, &story589,
-            &story590, &story591, &story592, &story593, &story594, &story595, &story596, &story597, &story598, &story599};
+            &story590, &story591, &story592, &story593, &story594, &story595, &story596, &story597, &story598, &story599,
+            &story600, &story601, &story602, &story603, &story604, &story605, &story606, &story607, &story608, &story609};
     }
 }
 #endif

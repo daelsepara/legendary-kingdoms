@@ -70,7 +70,8 @@ namespace Choice
         ORDER_SKILL_CHECK,
         RESET_SHOP,
         CHOOSE_CHARACTER_EXCEPT,
-        EVERYONE_SKILL_CHECKS
+        EVERYONE_SKILL_CHECKS,
+        GAIN_HEART
     };
 
     class Base
@@ -105,6 +106,8 @@ namespace Choice
         Team::Type Team = Team::Type::NONE;
 
         Character::Type Character = Character::Type::NONE;
+
+        Character::Type SecondCharacter = Character::Type::NONE;
 
         int Value = 0;
 
@@ -655,6 +658,34 @@ namespace Choice
             Type = type;
 
             Character = character;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, Character::Type character, int value)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Character = character;
+
+            Value = value;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, Character::Type character, Character::Type secondCharacter, int value)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Character = character;
+
+            SecondCharacter = secondCharacter;
+
+            Value = value;
         }
     };
 

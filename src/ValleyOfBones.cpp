@@ -8274,7 +8274,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     {
                         if (selection >= 0 && selection < party.Members.size())
                         {
-                            if (party.Members[selection].SpellCaster)
+                            if (party.Members[selection].SpellCaster && !Engine::HAS_STATUS(party.Members[selection], Character::Status::LOST_TONGUE))
                             {
                                 if (hasAttacked.size() > 0 && Engine::FIND_LIST(hasAttacked, selection) >= 0 && magicRound0(party.Members[selection], combatRound))
                                 {
@@ -8488,9 +8488,63 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                     displayMessage("There are no targets for " + std::string(party.Members[selection].SpellBook[i].Name) + "!", intRD);
                                                 }
                                             }
+                                            else if (party.Members[selection].SpellBook[i].Type == Spells::Type::SANDSTORM)
+                                            {
+                                                if (Engine::COUNT(monsters, combatRound) > 0)
+                                                {
+                                                    auto max_targets = Engine::COUNT(monsters, combatRound);
+
+                                                    auto targets = std::vector<int>();
+
+                                                    while (targets.size() < max_targets)
+                                                    {
+                                                        auto target = -1;
+
+                                                        if (Engine::COUNT(monsters, combatRound) == 1)
+                                                        {
+                                                            target = Engine::FIRST(monsters, combatRound);
+                                                        }
+                                                        else
+                                                        {
+                                                            target = selectOpponent(window, renderer, party, selection, monsters, targets, combatRound, Control::Type::SPELL);
+                                                        }
+
+                                                        if (target >= 0)
+                                                        {
+                                                            auto damage = magicAttackScreen(window, renderer, party, monsters, party.Members[selection].SpellBook[i], selection, target, 3);
+
+                                                            if (damage >= 0)
+                                                            {
+                                                                targets.push_back(target);
+
+                                                                cast = true;
+                                                            }
+                                                            else
+                                                            {
+                                                                break;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    displayMessage("There are no targets for " + std::string(party.Members[selection].SpellBook[i].Name) + "!", intRD);
+                                                }
+                                            }
 
                                             if (cast)
                                             {
+                                                if (party.Location == Location::Type::SALTDAD_ARENA)
+                                                {
+                                                    Engine::GET_CODES(party, {Codes::Type::CAST_SPELLS_INARENA});
+
+                                                    Engine::GAIN_STATUS(party.Members[selection], Character::Status::USED_MAGIC_INARENA);
+                                                }
+
                                                 party.Members[selection].SpellBook[i].Charged = false;
 
                                                 result = selection;
@@ -14564,7 +14618,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 {
                     auto used_up = false;
 
-                    if (character.SpellBook[selection].Charged)
+                    if (character.SpellBook[selection].Charged && !Engine::HAS_STATUS(character, Character::Status::LOST_TONGUE))
                     {
                         if (character.SpellBook[selection].Type == Spells::Type::MAGIC_CABINET)
                         {
@@ -14630,12 +14684,12 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         }
                         else
                         {
-                            displayMessage("You cannot cast " + std::string(character.SpellBook[selection].Name) + " at this time!", intRD);
+                            displayMessage(std::string(character.Name) + " cannot cast " + std::string(character.SpellBook[selection].Name) + " at this time!", intRD);
                         }
                     }
                     else
                     {
-                        displayMessage("You cannot cast " + std::string(character.SpellBook[selection].Name) + " at this time!", intRD);
+                        displayMessage(std::string(character.Name) + " cannot cast " + std::string(character.SpellBook[selection].Name) + " at this time!", intRD);
                     }
 
                     if (used_up)
@@ -21131,23 +21185,15 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             break;
                         }
-                        else if (story->Choices[choice].Type == Choice::Type::SELL)
+                        else if (story->Choices[choice].Type == Choice::Type::GAIN_HEART)
                         {
-                        }
-                        else if (story->Choices[choice].Type == Choice::Type::BRIBE)
-                        {
-                        }
-                        else if (story->Choices[choice].Type == Choice::Type::LOSE_CODES)
-                        {
-                        }
-                        else if (story->Choices[choice].Type == Choice::Type::LOSE_ALL)
-                        {
-                        }
-                        else if (story->Choices[choice].Type == Choice::Type::MONEY)
-                        {
-                        }
-                        else if (story->Choices[choice].Type == Choice::Type::LIFE)
-                        {
+                            Engine::GAIN_HEARTS(party, story->Choices[choice].Character, story->Choices[choice].SecondCharacter, story->Choices[choice].Value);
+
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
                         }
 
                         if (error)
