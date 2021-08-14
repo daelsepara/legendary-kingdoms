@@ -4617,7 +4617,22 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Army = {Army::Base("Bronzeguard", Army::Type::BRONZEGUARD, Location::Type::SALTDAD, 5, 5, true)};
+            Army.clear();
+
+            if (Engine::HAS_UNIT(party, Army::Type::BRONZEGUARD))
+            {
+                auto bronzeguard = Engine::FIND_UNIT(party.Army, Army::Type::BRONZEGUARD);
+
+                if (bronzeguard >= 0 && bronzeguard < party.Army.size())
+                {
+                    party.Army[bronzeguard].Morale = 5;
+                    party.Army[bronzeguard].Strength = 5;
+                }
+            }
+            else
+            {
+                Army = {Army::Base("Bronzeguard", Army::Type::BRONZEGUARD, Location::Type::SALTDAD, 5, 5, true)};
+            }
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 620}; }
@@ -18735,14 +18750,14 @@ namespace Book1
                 Choices.push_back(Choice::Base("Akihiro gains a heart for Brash", {Book::Type::BOOK1, 450}, Choice::Type::GAIN_HEART, Character::Type::AKIHIRO_OF_CHALICE, Character::Type::BRASH, 1));
                 Choices.push_back(Choice::Base("Go back to the city centre", {Book::Type::BOOK1, 450}));
 
-                Engine::GAIN_HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::AKIHIRO_OF_CHALICE, 1);
-                Engine::GAIN_HEARTS(party, Character::Type::BRASH, Character::AKIHIRO_OF_CHALICE, 1);
+                Engine::GAIN_HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::Type::AKIHIRO_OF_CHALICE, 1);
+                Engine::GAIN_HEARTS(party, Character::Type::BRASH, Character::Type::AKIHIRO_OF_CHALICE, 1);
             }
             else if (Engine::IN_PARTY(party, Character::Type::SAR_JESSICA_DAYNE))
             {
                 PreText += "Sar Jessica gains a heart for Akihiro. He";
 
-                Engine::GAIN_HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::AKIHIRO_OF_CHALICE, 1);
+                Engine::GAIN_HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::Type::AKIHIRO_OF_CHALICE, 1);
 
                 Choices.push_back(Choice::Base("Akihiro gains a heart for Sar Jessica", {Book::Type::BOOK1, 450}, Choice::Type::GAIN_HEART, Character::Type::AKIHIRO_OF_CHALICE, Character::Type::SAR_JESSICA_DAYNE, 1));
                 Choices.push_back(Choice::Base("Go back to the city centre", {Book::Type::BOOK1, 450}));
@@ -18751,7 +18766,7 @@ namespace Book1
             {
                 PreText += "Brash gains a heart for Akihiro. He";
 
-                Engine::GAIN_HEARTS(party, Character::Type::BRASH, Character::AKIHIRO_OF_CHALICE, 1);
+                Engine::GAIN_HEARTS(party, Character::Type::BRASH, Character::Type::AKIHIRO_OF_CHALICE, 1);
 
                 Choices.push_back(Choice::Base("Akihiro gains a heart for Brash", {Book::Type::BOOK1, 450}, Choice::Type::GAIN_HEART, Character::Type::AKIHIRO_OF_CHALICE, Character::Type::BRASH, 1));
                 Choices.push_back(Choice::Base("Go back to the city centre", {Book::Type::BOOK1, 450}));
