@@ -9462,6 +9462,18 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         Uint32 duration = 3000;
 
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
@@ -9673,13 +9685,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         if (assignment_error || Engine::COUNT_TEAMS(party) < min_teams)
                         {
-                            flash_message = true;
-
-                            flash_color = intRD;
-
-                            start_ticks = SDL_GetTicks();
-
-                            message = "Please complete team selection";
+                            displayMessage("Please complete team selection", intRD);
 
                             done = false;
                         }
@@ -9708,13 +9714,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 }
                                 else
                                 {
-                                    flash_message = true;
-
-                                    flash_color = intRD;
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    message = std::string(party.Members[selection].Name) + " is dead!";
+                                    displayMessage(std::string(party.Members[selection].Name) + " is dead!", intRD);
                                 }
                             }
                         }
@@ -13141,6 +13141,18 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     Uint32 duration = 3000;
 
+    // Lambda functions for displaying flash messages
+    auto displayMessage = [&](std::string msg, Uint32 color)
+    {
+        flash_message = true;
+
+        message = msg;
+
+        flash_color = color;
+
+        start_ticks = SDL_GetTicks();
+    };
+
     auto done = false;
 
     auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
@@ -13449,9 +13461,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                 message += " transferred to " + std::string(party.Members[target].Name) + "!";
 
-                                flash_color = intLB;
-
-                                flash_message = true;
+                                displayMessage(message, intLB);
 
                                 selected = false;
 
@@ -13461,11 +13471,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             }
                             else if (target >= 0 && target < party.Members.size() && party.Members[target].Type == Character::Type::SKULLCRACKER)
                             {
-                                message += std::string(party.Members[target].Name) + " refuses to accept it!";
-
-                                flash_color = intRD;
-
-                                flash_message = true;
+                                displayMessage(std::string(party.Members[target].Name) + " refuses to accept it!", intRD);
 
                                 selected = false;
 
@@ -13500,9 +13506,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                             message += " transferred to " + std::string(character.Name) + "!";
 
-                            flash_color = intLB;
-
-                            flash_message = true;
+                            displayMessage(message, intLB);
 
                             selected = false;
 
@@ -13537,9 +13541,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         message += " transferred to " + std::string(character.Name) + "!";
 
-                        flash_color = intLB;
-
-                        flash_message = true;
+                        displayMessage(message, intLB);
 
                         selected = false;
 
@@ -14770,6 +14772,18 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
     Uint32 duration = 3000;
 
+    // Lambda functions for displaying flash messages
+    auto displayMessage = [&](std::string msg, Uint32 color)
+    {
+        flash_message = true;
+
+        message = msg;
+
+        flash_color = color;
+
+        start_ticks = SDL_GetTicks();
+    };
+
     auto done = false;
 
     auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
@@ -15024,28 +15038,16 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                             character.SpellBook[selection].Charged = true;
 
-                            message = std::string(character.SpellBook[selection].Name) + " charged!";
-
-                            flash_color = intLB;
-
-                            flash_message = true;
+                            displayMessage(std::string(character.SpellBook[selection].Name) + " charged!", intLB);
                         }
                         else
                         {
-                            message = "You cannot afford to recharge " + std::string(character.SpellBook[selection].Name) + "!";
-
-                            flash_color = intRD;
-
-                            flash_message = true;
+                            displayMessage("You cannot afford to recharge " + std::string(character.SpellBook[selection].Name) + "!", intRD);
                         }
                     }
                     else
                     {
-                        message = std::string(character.SpellBook[selection].Name) + " is charged!";
-
-                        flash_color = intRD;
-
-                        flash_message = true;
+                        displayMessage(std::string(character.SpellBook[selection].Name) + " is charged!", intRD);
                     }
                 }
 
@@ -15134,6 +15136,18 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Par
         Uint32 start_ticks = 0;
 
         Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
 
         auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
@@ -15318,13 +15332,7 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Par
                             }
                             else
                             {
-                                flash_message = true;
-
-                                message = "You can only select units from the " + std::string(Location::Description[garrison]) + " garrison!";
-
-                                flash_color = intRD;
-
-                                start_ticks = SDL_GetTicks();
+                                displayMessage("You can only select units from the " + std::string(Location::Description[garrison]) + " garrison!", intRD);
                             }
                         }
                     }
@@ -15343,24 +15351,12 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Par
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "Please complete your selection!";
-
-                            flash_color = intRD;
-
-                            start_ticks = SDL_GetTicks();
+                            displayMessage("Please complete your selection!", intRD);
                         }
                     }
                     else
                     {
-                        flash_message = true;
-
-                        message = "Please complete your selection!";
-
-                        flash_color = intRD;
-
-                        start_ticks = SDL_GetTicks();
+                        displayMessage("Please complete your selection!", intRD);
                     }
                 }
                 else if (controls[current].Type == Control::Type::BACK && !hold)
@@ -15421,6 +15417,18 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         Uint32 start_ticks = 0;
 
         Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
 
         auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
@@ -15598,13 +15606,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             {
                                 if (army[offset + current].Unique && Engine::HAS_UNIT(party, army[offset + current].Type))
                                 {
-                                    flash_message = true;
-
-                                    flash_color = intRD;
-
-                                    message = "You already command the " + std::string(army[offset + current].Name) + "!";
-
-                                    start_ticks = SDL_GetTicks();
+                                    displayMessage("You already command the " + std::string(army[offset + current].Name) + "!", intRD);
                                 }
                                 else
                                 {
@@ -15697,6 +15699,18 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         Uint32 start_ticks = 0;
 
         Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
 
         auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
@@ -15928,7 +15942,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     {
                                         learned = true;
 
-                                        message = std::string(party.Members[character].Name) + " already knows the " + std::string(learn[i].Name) + " spell!";
+                                        displayMessage(std::string(party.Members[character].Name) + " already knows the " + std::string(learn[i].Name) + " spell!", intRD);
 
                                         break;
                                     }
@@ -15936,17 +15950,11 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                 if (learned)
                                 {
-                                    flash_message = true;
-
-                                    start_ticks = SDL_GetTicks();
-
                                     done = false;
 
                                     current = -1;
 
                                     selected = false;
-
-                                    flash_color = intRD;
                                 }
                                 else
                                 {
@@ -15984,11 +15992,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     message += " COPIED to " + std::string(party.Members[character].Name) += "'s spellbook!";
 
-                                    flash_message = true;
-
-                                    flash_color = intLB;
-
-                                    start_ticks = SDL_GetTicks();
+                                    displayMessage(message, intLB);
 
                                     done = false;
 
@@ -16001,13 +16005,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             }
                             else
                             {
-                                message = std::string(party.Members[character].Name) + " is not a SpellCaster!";
-
-                                flash_message = true;
-
-                                flash_color = intRD;
-
-                                start_ticks = SDL_GetTicks();
+                                displayMessage(std::string(party.Members[character].Name) + " is not a SpellCaster!", intRD);
 
                                 done = false;
 
@@ -17366,6 +17364,18 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, i
 
         Uint32 duration = 3000;
 
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         auto marginx = (int)(Margin * SCREEN_WIDTH);
 
         auto fullwidth = SCREEN_WIDTH - 2 * marginx;
@@ -17507,11 +17517,7 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, i
                         morale_result = false;
                     }
 
-                    flash_color = intRD;
-
-                    flash_message = true;
-
-                    start_ticks = SDL_GetTicks();
+                    displayMessage(message, intRD);
 
                     morale_checked = true;
                 }
@@ -17630,6 +17636,18 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
         Uint32 start_ticks = 0;
 
         Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
 
         auto marginx = (int)(Margin * SCREEN_WIDTH);
 
@@ -17862,9 +17880,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                             flash_color = intLB;
                         }
 
-                        flash_message = true;
-
-                        start_ticks = SDL_GetTicks();
+                        displayMessage(message, flash_color);
 
                         combat_resolved = true;
                     }
@@ -18023,9 +18039,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                         flash_color = intLB;
                     }
 
-                    flash_message = true;
-
-                    start_ticks = SDL_GetTicks();
+                    displayMessage(message, flash_color);
 
                     morale_checked = true;
                 }
@@ -18568,6 +18582,18 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         Uint32 duration = 3000;
 
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         TTF_Init();
 
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
@@ -18930,13 +18956,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                 {
                                     if (party.Army[current + offset].Garrison != location)
                                     {
-                                        flash_message = true;
-
-                                        flash_color = intRD;
-
-                                        message = "You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!";
-
-                                        start_ticks = SDL_GetTicks();
+                                        displayMessage("You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!", intRD);
                                     }
                                     else
                                     {
@@ -18971,13 +18991,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                 {
                                     if (party.Army[current + offset].Garrison != location)
                                     {
-                                        flash_message = true;
-
-                                        flash_color = intRD;
-
-                                        message = "You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!";
-
-                                        start_ticks = SDL_GetTicks();
+                                        displayMessage("You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!", intRD);
                                     }
                                     else
                                     {
@@ -19012,13 +19026,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                 {
                                     if (party.Army[current + offset].Garrison != location)
                                     {
-                                        flash_message = true;
-
-                                        flash_color = intRD;
-
-                                        message = "You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!";
-
-                                        start_ticks = SDL_GetTicks();
+                                        displayMessage("You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!", intRD);
                                     }
                                     else
                                     {
