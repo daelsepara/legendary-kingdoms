@@ -14861,6 +14861,11 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
     auto selection = -1;
 
+    if (Engine::VERIFY_CODES(party, {Codes::Type::RECHARGE_COSTS_HALF}))
+    {
+        displayMessage("The Everchild will sponsor your spellcasters, allowing you to recharge your spells at half the usual cost.", intLB);
+    }
+
     while (!done)
     {
         last = offset + limit;
@@ -14878,6 +14883,9 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         {
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
+
+        putHeader(renderer, "Money", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+        putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
 
         putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -15084,9 +15092,16 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                 {
                     if (!character.SpellBook[selection].Charged)
                     {
-                        if (party.Money >= character.SpellBook[selection].Recharge)
+                        auto recharge_cost = character.SpellBook[selection].Recharge;
+
+                        if (Engine::VERIFY_CODES(party, {Codes::Type::RECHARGE_COSTS_HALF}))
                         {
-                            Engine::GAIN_MONEY(party, -character.SpellBook[selection].Recharge);
+                            recharge_cost /= 2;
+                        }
+
+                        if (party.Money >= recharge_cost)
+                        {
+                            Engine::GAIN_MONEY(party, -recharge_cost);
 
                             character.SpellBook[selection].Charged = true;
 

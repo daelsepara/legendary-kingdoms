@@ -4614,7 +4614,7 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
-            
+
             Army.clear();
 
             if (Engine::HAS_UNIT(party, Army::Type::BRONZEGUARD))
@@ -19428,6 +19428,295 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 415}; }
     };
 
+    class Story620 : public Story::Base
+    {
+    public:
+        Story620()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 620;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "The Everchild greets you warmly, and bids you stay in the palace as long as you wish. If you wish to help the Everchild in her campaign to reunite the Valley of Bones you should attend her war council.\n\nNote: Your party recovers all lost Health points. In addition, the Everchild will sponsor your spellcasters, allowing you to recharge your spells at half the usual cost.\n\nWhilst you are in the palace you have access to the Vault. You can store any number of items or amounts of money here for safe keeping. The Vault is magical and can transport things stored here from one place to another. If you gain access to the Vault anywhere, or through the magic cabinet spell, you can access all the items you have placed in the Vault whilst in the Valley of Bones.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Attend the Everchild's war council", {Book::Type::BOOK1, 189}));
+            Choices.push_back(Choice::Base("Check on the garrison", {Book::Type::BOOK1, 508}));
+            Choices.push_back(Choice::Base("Explore the palace ruins", {Book::Type::BOOK1, 543}));
+            Choices.push_back(Choice::Base("Leave the palace", {Book::Type::BOOK1, 75}));
+
+            RestPrice = 0;
+
+            CanRecharge = true;
+
+            Controls = Story::Controls::INN;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::REST(party);
+
+            Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT, Codes::Type::RECHARGE_COSTS_HALF});
+        }
+    };
+
+    class Story621 : public Story::Base
+    {
+    public:
+        Story621()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 621;
+
+            Text = "You re-enter the study, eager to see what new spells Unbraaki has discovered. You almost jolt in surprise as you see the arch-sorcerer there, waiting for you, a gang of robed monkeys surrounding him. \"Thought I was in the library?\" smiles the sorcerer. \"Fool me once, shame on you. But you'll never fool me twice. Kill them.\"";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 564}; }
+    };
+
+    class Story622 : public Story::Base
+    {
+    public:
+        Story622()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 622;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "The owner, a local magistrate, is delighted with your kindness. He promises to put in a good word with the authorities whilst you are in Chalice.\n\nNote: From now on, any time you have to make a Charisma skill check in the city of Chalice, you may pass it automatically.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::CHARISMA_SUCCESS_CHALICE});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story623 : public Story::Base
+    {
+    public:
+        Story623()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 623;
+
+            Text = "The door behind you is almost in splinters as the Bronzeguard garrison attempts to break into the tower. Kicking open a nearby window you leap into the street beyond, panting with exhaustion. Alas, the Bronzeguard will never eat the stew now they know it is poisoned. But at least you escaped with your lives!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story624 : public Story::Base
+    {
+    public:
+        Story624()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 624;
+
+            Text = "You lower yourself into the pit and check over the body, but do not uncover any additional treasure.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Climb up the far side of the pit", {Book::Type::BOOK1, 303}));
+            Choices.push_back(Choice::Base("Climb back up the way you came", {Book::Type::BOOK1, 761}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story625 : public Story::Base
+    {
+    public:
+        Story625()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 625;
+
+            Text = "You are on the eastern bank of the cold river, a few dozen miles from the religious city of Cursus. The heat is oppressive, but thanks to the ample water supply and obvious directional clues from the river, you can navigate this stretch of desert quite easily. River barges make their way lazily up and down the river, but they do so on the far side of the bank. The notorious Caves of Uranu lie to the north, and no trader will risk their stocks in that foul wasteland.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go north, to the Caves of Uranu", {Book::Type::BOOK1, 346}));
+            Choices.push_back(Choice::Base("Go south, to the city of Cursus", {Book::Type::BOOK1, 340}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story626 : public Story::Base
+    {
+    public:
+        Story626()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 626;
+
+            Location = Location::Type::CLIFFTOP;
+
+            IsCity = true;
+
+            Text = "The next morning the surviving landlords and masters of Clifftop fill the King's Hall to kneel before the Everchild. Resplendent in her yellow and blue silks and glittering silver crown, she immediately repeals the rights of the taskmasters to execute or mutilate their workers. Upstanding members of the revolution are awarded sweeping areas of land, the cruellest taskmasters are efficiently executed, and the Everchild goes amongst the workers to heal the lame and sick with her magic. Many fall in love with the queen that day, and soon her name is being chanted across city.\n\nThe Everchild award rulership of the city to Ayleta the Traveller, a mysterious mystic who has done good work in administrating the changes in Saltdad. You and your party are publicly honoured and presented with 1000 silver coins in compensation for your labours. Capturing this city has been a grand step forward for the Everchild's goals.\n\nNote: Any units that didn't rout can restore their Morale back to their starting value.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose two party members and raise their maximum, unwounded Health scores by 1 point.", {Book::Type::BOOK1, -626}, Choice::Type::TEAM_MAX_HEALTH, 2, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 1000);
+
+            Engine::REMOVE_ROUTED(party);
+
+            Engine::RESTORE_MORALE(party);
+        }
+    };
+
+    class Event626 : public Story::Base
+    {
+    public:
+        Event626()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -626;
+
+            DisplayID = 626;
+
+            Text = "The Everchild offers to escort you back to Saltdad, if you wish, or you can remain in the captured city of Clifftop.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Return to Saltdad", {Book::Type::BOOK1, 75}));
+            Choices.push_back(Choice::Base("Stay in Clifftop", {Book::Type::BOOK1, 19}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story627 : public Story::Base
+    {
+    public:
+        Story627()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 627;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "You've seen the priest's longing gazes at your body. Now all you have to do is turn that lust into love and you'll have him eating out of the palm of your hand. Soon you are engaged in many deep and meaningful chats in the dead of night, listening to the priest's worries, massaging his troubles away, whilst lamenting your own enslavement when you feel his pity upon you.\n\nOne morning the priest sends you away. He is on the verge of breaking his vows and can no longer bear to have such a beautiful creature working for him. You tell him that you will not leave without your friends, so he reluctantly frees them too.\n\nAs a parting gift he presents you with 120 silver coins and a HANDSOME BROOCH (Charisma +1) so you can always think of him in the future.";
+
+            Bye = "Giving him a chaste but meaningful kiss goodbye, you quickly flee into the city centre before he can change his mind.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 120);
+
+            Engine::REMOVE_STATUS(party, Character::Status::CAPTURED);
+
+            Engine::GET_EQUIPMENT(party, Character::Type::BRASH, {Equipment::HANDSOME_BROOCH1});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
+    };
+
+    class Story628 : public Story::Base
+    {
+    public:
+        Story628()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 628;
+
+            Text = "The sister plainly informs you that the God King is not available to be seen. The stern glare she fixes you wish suggests that it would not be easy to change her mind.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(20)}))
+            {
+                return {Book::Type::BOOK1, 641};
+            }
+            else if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::BEAUTIFUL_LETTER}))
+            {
+                return {Book::Type::BOOK1, 290};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(7)}) && !Engine::VERIFY_CODES(party, {Codes::A(28)}))
+            {
+                return {Book::Type::BOOK1, 176};
+            }
+            else
+            {
+                Bye = "It is clear that you will be unable to pay a visit and are escorted off the premises by armed kensai.";
+
+                return {Book::Type::BOOK1, 450};
+            }
+        }
+    };
+
+    class Story629 : public Story::Base
+    {
+    public:
+        Story629()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 629;
+
+            Text = "\"I am not yet at my full potency,\" admits the Everchild, running her hand through her filthy locks. \"In my eagerness to see the Iron King dethroned I sided with a certain group of revolutionaries. Sadly, we were ambushed by the king's men, and there was no opportunity for me to use my magic to turn the tide of the battle. I opted to keep my identity secret until a more appropriate juncture.\"\n\n\"But are you indeed the Everchild reborn, as the legends say?\" you insist.\n\n\"I believe so,\" she nods. \"I was born to common folk, and yet my mind is filled with memories, manners and skills from a past life. Even if I am not, I am determined to replace the Iron King's tyranny with even-handed justice. I am willing to take on the mantle of the Everchild, so why not take her name as well?\"\n\n\"Why do you not escape using your magic?\" you ask.\n\n\"It is not yet mighty enough for me to effect an escape... on my own,\" she explains. \"Besides, a queen needs followers, and mine are imprisoned here. We will leave together, or not at all.\" \n\n\"A noble sentiment,\" you admit. \"But how exactly do you plan to escape?\"";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 743}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -20099,6 +20388,17 @@ namespace Book1
     auto event617 = Event617();
     auto story618 = Story618();
     auto story619 = Story619();
+    auto story620 = Story620();
+    auto story621 = Story621();
+    auto story622 = Story622();
+    auto story623 = Story623();
+    auto story624 = Story624();
+    auto story625 = Story625();
+    auto story626 = Story626();
+    auto event626 = Event626();
+    auto story627 = Story627();
+    auto story628 = Story628();
+    auto story629 = Story629();
 
     void InitializeStories()
     {
@@ -20108,7 +20408,7 @@ namespace Book1
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
-            &event597, &event617,
+            &event597, &event617, &event626,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -20170,7 +20470,8 @@ namespace Book1
             &story580, &story581, &story582, &story583, &story584, &story585, &story586, &story587, &story588, &story589,
             &story590, &story591, &story592, &story593, &story594, &story595, &story596, &story597, &story598, &story599,
             &story600, &story601, &story602, &story603, &story604, &story605, &story606, &story607, &story608, &story609,
-            &story610, &story611, &story612, &story613, &story614, &story615, &story616, &story617, &story618, &story619};
+            &story610, &story611, &story612, &story613, &story614, &story615, &story616, &story617, &story618, &story619,
+            &story620, &story621, &story622, &story623, &story624, &story625, &story626, &story627, &story628, &story629};
     }
 }
 #endif
