@@ -1339,7 +1339,7 @@ namespace Book1
             Text = "With a dramatic flourish you unroll the DRAGON HEAD from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Lhasbreath Berserkers]: Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nNote: You gained the code A16.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -3007,7 +3007,7 @@ namespace Book1
             Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nWhen Emlyn reports her findings, the news is rather disappointing. \"We have recovered many pretty blooms,\" she admits. \"Certainly, the fragrances are quite striking... however, there are no medicinal or culinary plants, as far as I can tell. Nothing sellable.\"\n\n\"Curses!\" grumbles Sir Lawrence. \"This expedition is turning into an expensive failure.\"\n\nStill, Sir Lawrence is good to his word and presents you with a purse of 150 silver coins. Offering your consolations over the failed mission, you depart into the city.\n\nAlthough the expedition did not go perfectly you have learned a lot.\n\nNote: You gained the code A85.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -7328,7 +7328,7 @@ namespace Book1
 
             Choices.clear();
 
-            Choices.push_back(Choice::Base("Choose a party member to lose 5 Health points and 1 point of Fighting.", {Book::Type::BOOK1, 395}, Choice::Type::GAIN_HEALTH_ATTRIBUTE, {Attribute::Type::FIGHTING}, -5, -1));
+            Choices.push_back(Choice::Base("Choose a party member to lose 5 Health points and 1 point of Fighting.", {Book::Type::BOOK1, 395}, Choice::Type::GAIN_HEALTH_ATTRIBUTE, {Attribute::Type::FIGHTING}, -5, -1, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -9078,7 +9078,7 @@ namespace Book1
             Text = "he sister bows as you present her with the letter, and immediately escorts you into the chamber of the God King. The king takes the letter, glancing over it with a casual eye. Long before he could have finished reading it, he stands.\n\n\"Yes, this is the Everchild as I remember her,\" nods the God King. \"I officially place the armies of Chalice at her disposal. My kensai warriors shall attend her, a full five hundred men. An additional six hundred archers shall provide her with support. Once she is queen, we shall defer our city to her policies as they relate to all international affairs.\"\n\nYou are dumbstruck. Could the God King really have changed his mind from a quick glance at a letter? Or has he received council since your last meeting and was going to back the Everchild no matter what? You suppose you shall never know.\n\nYou thank the God King for his support, leaving the chamber in amazement at your success.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Kensai Warriors]: Strength 4, Morale 4\n[Chalice Archers]: Strength 2, Morale 3\n\nGaining the God King's support has been quite an endeavour.\n\nNote: You gained the code A20.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of CHARISMA", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1, 2));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of CHARISMA", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -10987,7 +10987,7 @@ namespace Book1
             Bye = "Waving the harbour crew goodbye you return to your ship.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 82}, Choice::Type::ROLL_ATTRIBUTE_WITH_STATUS, {Character::Status::FOUND_COGWHEEL}, {Attribute::Type::SURVIVAL}, 1, 2));
+            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 82}, Choice::Type::ROLL_ATTRIBUTE_WITH_STATUS, {Character::Status::FOUND_COGWHEEL}, {Attribute::Type::SURVIVAL}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -11979,7 +11979,7 @@ namespace Book1
             Text = "Hardly daring to breathe, your party member manages to step carefully across the chamber, avoiding every pressure plate and hidden tripwire. You may take the BLACK PRISM from the pedestal. You only hope it was worth the danger retrieving it!\n\nRetracing your steps with a heart-thumping precision, you manage to make it out of the chamber to the warm congratulations of your colleagues.\n\nNote: You gained the code A80.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 310}, Choice::Type::LASTCHARACTER_ROLLS_FOR_ATTRIBUTEINCREASE, {Attribute::Type::SURVIVAL}, 1, 2));
+            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 310}, Choice::Type::LASTCHARACTER_ROLLS_FOR_ATTRIBUTEINCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -13481,8 +13481,6 @@ namespace Book1
             ID = 432;
 
             Location = Location::Type::MORDAIN;
-
-            IsCity = true;
 
             Text = "The temples of Mordain lie in crumbled ruins, like the rest of the city. Listing above a wrecked tower in a temple of Kalu, a lone bell peals in the sea breeze. You shudder involuntarily at the sudden cold. There is nothing for you here.";
 
@@ -15448,7 +15446,7 @@ namespace Book1
             Bye = "You silently return to the ground floor of the pyramid.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of STEALTH", {Book::Type::BOOK1, 574}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, Team::Type::ZIGGURAT, {Attribute::Type::STEALTH}, 1, 2));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of STEALTH", {Book::Type::BOOK1, 574}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, Team::Type::ZIGGURAT, {Attribute::Type::STEALTH}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -15957,7 +15955,7 @@ namespace Book1
             Text = "You manage to persuade the crowd that the dead man has been honoured enough, and that the last thing he would want was violence with the state after working so selflessly for it. Reluctantly the crowd disperse, taking the casket for burial. The kensai thank you for your support and then carry on their way.\n\nThis was a sensitive situation which you have diffused.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of CHARISMA", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of CHARISMA", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1, 1, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -16017,8 +16015,6 @@ namespace Book1
             ID = 515;
 
             Location = Location::Type::MORDAIN;
-
-            IsCity = true;
 
             Image = "images/book1/city_of_mordain.png";
 
@@ -17290,7 +17286,7 @@ namespace Book1
             Text = "This battle has taught you much about combat strategy.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of FIGHTING", {Book::Type::BOOK1, 3}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of FIGHTING", {Book::Type::BOOK1, 3}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 1, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -17698,6 +17694,451 @@ namespace Book1
             Choices.push_back(Choice::Base("North, to the Salt Plains", {Book::Type::BOOK1, 460}));
 
             Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story570 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story570()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 570;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::BRASH))
+            {
+                return {Book::Type::BOOK1, 627};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You attend prayer with your master every day until he remarks upon your devotion to the faith. When the time is right you ask him free you, as fellow worshipers of Cursus. \"If souls can be brought to the light of reason, I would be willing to sacrifice my wealth by freeing you,\" says the priest, benevolently. \"However, I would have to be sure of your devotion. If you each agreed to receive ritual scarring to honour Cursus, I would have no hesitation in freeing you.\"";
+
+            Choices.clear();
+
+            if (Engine::COUNT(party, Character::Status::RITUAL_SCARRING_CURSUS) < Engine::COUNT(party))
+            {
+                PreText += "\n\nNote: If you agree to the priest's terms he will put the dreadful scars on your bodies. It is an extremely painful experience which will lower the maximum Health score of each party member by 1 point. Each party member will have Ritual Scarring (Cursus).";
+
+                Choices.push_back(Choice::Base("Agree to the priest's terms", {Book::Type::BOOK1, -570}));
+                Choices.push_back(Choice::Base("Try and break out", {Book::Type::BOOK1, 785}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 713}; }
+    };
+
+    class Event570 : public Story::Base
+    {
+    public:
+        Event570()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -570;
+
+            DisplayID = 570;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::IS_ACTIVE(party, i))
+                {
+                    if (!Engine::HAS_STATUS(party.Members[i], Character::Status::RITUAL_SCARRING_CURSUS))
+                    {
+                        party.Members[i].MaximumHealth -= 1;
+
+                        if (party.Members[i].Health > party.Members[i].MaximumHealth)
+                        {
+                            party.Members[i].Health = party.Members[i].MaximumHealth;
+                        }
+
+                        Engine::GAIN_STATUS(party.Members[i], Character::Status::RITUAL_SCARRING_CURSUS);
+                    }
+                }
+            }
+
+            return {Book::Type::BOOK1, 713};
+        }
+    };
+
+    class Story571 : public Story::Base
+    {
+    public:
+        Story571()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 571;
+
+            Text = "For weeks your diggers clear away rubble and hack at the ground. The very stones seem to recoil as you dig deeper and deeper into the earth. Above your workforce, black clouds gather, and fierce rainstorms attempt to sweep away your encampments. Your workers are terrified and want to abandon their dig.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Convince the workers (Team check: Charisma 4+, Successes: 10)", {Book::Type::BOOK1, 702}, {Book::Type::BOOK1, 515}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 10));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (!outcome)
+            {
+                Bye = "The workers down their tools and flee into the desert.";
+            }
+        }
+    };
+
+    class Story572 : public Story::Base
+    {
+    public:
+        Story572()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 572;
+
+            Text = "Neither side is willing to back down, and soon the hall dissolves into a violent scrum. Fists fly and blood is spilt as people fight like animals for a sliver of cooked flesh.\n\nNote: Health points of all Party Members are reduced by 2 points.";
+
+            Bye = "You have managed to feed, but are a mass of bruises.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -2);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 509}; }
+    };
+
+    class Story573 : public Story::Base
+    {
+    public:
+        Story573()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 573;
+
+            Text = "The thief bolts from the room and you follow in hot pursuit. He dashes into another bedroom on the far side of the house and leaps from an open window, onto the rooftops of a lower house.\n\nNote: If you think a party member won't be able to give chase (Survival score is 2 or less) you can have them hang back instead, although that means they will not be able to assist in the rest of the chase.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose which party members will chase the thief", {Book::Type::BOOK1, -573001}, Choice::Type::ASSIGN_TEAMS, {{Team::Type::CHASE, 0, 4}}, 0));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class E573_001 : public Story::Base
+    {
+    public:
+        E573_001()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -573001;
+
+            DisplayID = 573;
+
+            Text = "Each party member chasing the thief must make an individual skill check to see if they can continue.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Chase the thief (Individual check: Survival 4+, Successes: 2)", {Book::Type::BOOK1, -573002}, Choice::Type::EVERYONE_SKILL_CHECKS, Team::Type::CHASE, {Attribute::Type::SURVIVAL}, 0, 4, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::COUNT(party, Team::Type::CHASE) > 0)
+            {
+                return {Book::Type::NONE, -1};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 29};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (!outcome)
+            {
+                if (selection.size() > 0)
+                {
+                    if (Engine::IS_ACTIVE(party, selection[0]))
+                    {
+                        if (temp_string.length() > 0)
+                        {
+                            temp_string += "\n";
+                        }
+
+                        temp_string += std::string(party.Members[selection[0]].Name) + " takes a hard fall, loses 2 health and is out of the chase.";
+
+                        Engine::GAIN_HEALTH(party.Members[selection[0]], -2);
+
+                        party.Members[selection[0]].Team = Team::Type::NONE;
+
+                        Bye = temp_string.c_str();
+                    }
+                }
+            }
+        }
+    };
+
+    class E573_002 : public Story::Base
+    {
+    public:
+        E573_002()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -573002;
+
+            DisplayID = 573;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::COUNT(party, Team::Type::CHASE) > 0)
+            {
+                return {Book::Type::BOOK1, 789};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 29};
+            }
+        }
+    };
+
+    class Story574 : public Story::Base
+    {
+    public:
+        Story574()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 574;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "The inside of the ziggurat is not what you expected. Although there is a single, ceremonial religious hall for important funerals, the majority of the chambers are dedicated to running the government. Tax offices, religious regulators and financial departments are scattered across the temple, with dozens of black-robed orderlies running messages between them. Of course... the vault lies just beneath your feet as well.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Visit the keeper of the holy purse", {Book::Type::BOOK1, 323}));
+            Choices.push_back(Choice::Base("Visit the zealotry commission", {Book::Type::BOOK1, 867}));
+            Choices.push_back(Choice::Base("Attempt to rob the vault", {Book::Type::BOOK1, 281}));
+            Choices.push_back(Choice::Base("Leave the Great Ziggurat", {Book::Type::BOOK1, 340}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::CONSOLIDATE(party);
+
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::HAS_STATUS(party.Members[i], Character::Status::RITUAL_SCARRING_CURSUS))
+                {
+                    party.Members[i].Team = Team::Type::ZIGGURAT;
+                }
+            }
+        }
+    };
+
+    class Story575 : public Story::Base
+    {
+    public:
+        Story575()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 575;
+
+            Text = "You can buy salt in bulk for any ships you have moored in Cursus or Clifftop. Each cargo unit costs 450 silver pieces, and will be transported to your ships for free. Your ships must have room in their cargo holds in order for you to buy salt here.";
+
+            // TODO: There has to be smarter way to do this!
+            Choices.clear();
+            Choices.push_back(Choice::Base("Buy one cargo unit of SALT for your ship in Cursus", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CURSUS, 450));
+            Choices.push_back(Choice::Base("Buy two cargo units of SALT for your ship in Cursus", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CURSUS, 900));
+            Choices.push_back(Choice::Base("Buy three cargo units of SALT for your ship in Cursus", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CURSUS, 1350));
+            Choices.push_back(Choice::Base("Buy one cargo unit of SALT for your ship in Clifftop", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 450));
+            Choices.push_back(Choice::Base("Buy two cargo units of SALT for your ship in Clifftop", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 900));
+            Choices.push_back(Choice::Base("Buy three cargo units of SALT for your ship in Clifftop", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 1350));
+            Choices.push_back(Choice::Base("You have finished your business", {Book::Type::BOOK1, 722}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event575 : public Story::Base
+    {
+    public:
+        Event575()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -575;
+
+            DisplayID = 575;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 575}; }
+    };
+
+    class Story576 : public Story::Base
+    {
+    public:
+        Story576()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 576;
+
+            Text = "\"You couldn't afford me!\" laughs the ogre.\n\n\"How much?\" you press.\n\n\"Eight hundred silver,\" grins the ogre. \"I'd charge a thousand, but I'll give you a discount since I've been stuck in this hole for months.\"";
+
+            // TODO: Keep track of 800 paid to the ogre
+            Choices.clear();
+            Choices.push_back(Choice::Base("Pay the ogre 800 silver coins", {Book::Type::BOOK1, 245}, Choice::Type::GAIN_MONEY, -800));
+            Choices.push_back(Choice::Base("Kill the ogre", {Book::Type::BOOK1, 117}));
+            Choices.push_back(Choice::Base("Leave the ogre in peace", {Book::Type::BOOK1, 310}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story577 : public Story::Base
+    {
+    public:
+        Story577()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 577;
+
+            Location = Location::Type::MORDAIN;
+
+            Text = "The city of Mordain was a coastal port on the southern end of the Valley of Bones. Although it was rebuilt after the desolation of Abraxas, it fell prey to the infighting amongst the cities of the valley. About four hundred years ago it was entirely torn down when the cities of Cursus and Lhasbreath joined forces against it. Before that time it was a relatively prosperous place, but the religious freedoms it granted its citizens were abhorrent to the clergy in Cursus. It was said to have a grand museum which stored all kinds of artefacts from ancient times, although it is doubtful that anything remains there now.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 680}; }
+    };
+
+    class Story578 : public Story::Base
+    {
+    public:
+        Story578()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 578;
+
+            Image = "images/book1/nightmare_room.png";
+
+            Text = "The door opens into a room out of your worst nightmares. Bright silver sawblades are suspended on long, mechanical arms which jut from the side of the walls. Spear holes cover the floor at uneven intervals. You can see the dismembered bodies of orcs, literally chopped to pieces, scattered across the ground.\n\nOne orc has been impaled from his seat to his neck, and is still suspended in the air, dripping blood.\n\nAt the far end of the room you can see a pedestal, on which sits a BLACK PRISM of some kind.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Close the door on this room of horrors", {Book::Type::BOOK1, 310}));
+            Choices.push_back(Choice::Base("Have someone attempt to navigate the room", {Book::Type::BOOK1, 44}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(80)}))
+            {
+                return {Book::Type::BOOK1, 729};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story579 : public Story::Base
+    {
+    public:
+        Story579()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 579;
+
+            Text = "In the aftermath of the battle you enter the step pyramid to see if any more horrors lurk within. Fortunately the pyramid is not large, and you seem to have cleared away all the snakemen. You help yourself to 200 silver coins worth of jewels and artefacts before returning to the scholars.\n\nNow the area is safe Emlyn begins to take samples of the exotic plants growing on the temple. It is impossible to take them all, so only the most likely candidates should be picked. She asks your advice on what should be taken, also getting guidance from her fellow scholars.\n\nNote: The difficulty of this skill check depends on how many scholars died on the trip through the jungle. If no scholars died, the difficulty is 3+. If one died it is 4+, if two died it is 5+, and if three died it is 6+.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 200);
+
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR3}))
+            {
+                Choices.push_back(Choice::Base("Examine plant samples (Team check: Lore 6+, Successes: 4)", {Book::Type::BOOK1, 49}, {Book::Type::BOOK1, 90}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 6, 4));
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR2}))
+            {
+                Choices.push_back(Choice::Base("Examine plant samples (Team check: Lore 5+, Successes: 4)", {Book::Type::BOOK1, 49}, {Book::Type::BOOK1, 90}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 5, 4));
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::Type::LOST_SCHOLAR1}))
+            {
+                Choices.push_back(Choice::Base("Examine plant samples (Team check: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 49}, {Book::Type::BOOK1, 90}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 4));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Examine plant samples (Team check: Lore 3+, Successes: 4)", {Book::Type::BOOK1, 49}, {Book::Type::BOOK1, 90}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 3, 4));
+            }
         }
     };
 
@@ -18314,6 +18755,20 @@ namespace Book1
     auto story567 = Story567();
     auto story568 = Story568();
     auto story569 = Story569();
+    auto story570 = Story570();
+    auto event570 = Event570();
+    auto story571 = Story571();
+    auto story572 = Story572();
+    auto story573 = Story573();
+    auto e573_001 = E573_001();
+    auto e573_002 = E573_002();
+    auto story574 = Story574();
+    auto story575 = Story575();
+    auto event575 = Event575();
+    auto story576 = Story576();
+    auto story577 = Story577();
+    auto story578 = Story578();
+    auto story579 = Story579();
 
     void InitializeStories()
     {
@@ -18322,7 +18777,7 @@ namespace Book1
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
-            &event537, &event541, &event545, &event558,
+            &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -18379,7 +18834,8 @@ namespace Book1
             &story530, &story531, &story532, &story533, &story534, &story535, &story536, &story537, &story538, &story539,
             &story540, &story541, &story542, &story543, &story544, &story545, &story546, &story547, &story548, &story549,
             &story550, &story551, &story552, &story553, &story554, &story555, &story556, &story557, &story558, &story559,
-            &story560, &story561, &story562, &story563, &story564, &story565, &story566, &story567, &story568, &story569};
+            &story560, &story561, &story562, &story563, &story564, &story565, &story566, &story567, &story568, &story569,
+            &story570, &story571, &story572, &story573, &story574, &story575, &story576, &story577, &story578, &story579};
     }
 }
 #endif

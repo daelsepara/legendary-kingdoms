@@ -69,7 +69,8 @@ namespace Choice
         SET_PARTY_ORDER,
         ORDER_SKILL_CHECK,
         RESET_SHOP,
-        CHOOSE_CHARACTER_EXCEPT
+        CHOOSE_CHARACTER_EXCEPT,
+        EVERYONE_SKILL_CHECKS
     };
 
     class Base
@@ -532,22 +533,7 @@ namespace Choice
             Success = success;
         }
 
-        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Attribute::Type> attributes, int value, int difficulty)
-        {
-            Text = text;
-
-            Destination = destination;
-
-            Type = type;
-
-            Attributes = attributes;
-
-            Value = value;
-
-            Difficulty = difficulty;
-        }
-
-        Base(const char *text, Engine::Destination destination, Choice::Type type, Team::Type team, std::vector<Attribute::Type> attributes, int value, int difficulty)
+        Base(const char *text, Engine::Destination destination, Choice::Type type, Team::Type team, std::vector<Attribute::Type> attributes, int value, int difficulty, int success)
         {
             Text = text;
 
@@ -562,6 +548,8 @@ namespace Choice
             Value = value;
 
             Difficulty = difficulty;
+
+            Success = success;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, std::vector<Attribute::Type> attributes, int value)
@@ -641,7 +629,7 @@ namespace Choice
             Value = value;
         }
 
-        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Character::Status> status, std::vector<Attribute::Type> attributes, int value, int difficulty)
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Character::Status> status, std::vector<Attribute::Type> attributes, int value, int difficulty, int success)
         {
             Text = text;
 

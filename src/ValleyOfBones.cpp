@@ -8939,6 +8939,8 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         current = -1;
 
                         selected = false;
+
+                        selection = {};
                     }
                     else if (controls[current].Type == Control::Type::CONFIRM)
                     {
@@ -20014,6 +20016,27 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 break;
                             }
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::EVERYONE_SKILL_CHECKS)
+                        {
+                            if (Engine::COUNT(party, story->Choices[choice].Team) > 0)
+                            {
+                                for (auto i = 0; i < party.Members.size(); i++)
+                                {
+                                    if (Engine::IS_ACTIVE(party, i) && (story->Choices[choice].Team == Team::Type::NONE || party.Members[i].Team == story->Choices[choice].Team))
+                                    {
+                                        auto success = skillTestScreen(window, renderer, party, story->Choices[current].Team, {i}, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
+
+                                        story->SkillCheck(party, success, {i});
+                                    }
+                                }
+                            }
+
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::LAST_CHARACTER)
                         {
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
@@ -21060,7 +21083,10 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     party.Members[target].MaximumHealth += story->Choices[choice].Value;
 
-                                    Engine::GAIN_HEALTH(party.Members[target], story->Choices[choice].Value);
+                                    if (party.Members[target].Health > party.Members[target].MaximumHealth)
+                                    {
+                                        party.Members[target].Health = party.Members[target].MaximumHealth;
+                                    }
 
                                     Engine::GAIN_STATUS(party.Members[target], story->Choices[choice].Status[0]);
 
