@@ -8540,8 +8540,6 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                             {
                                                 if (party.Location == Location::Type::SALTDAD_ARENA)
                                                 {
-                                                    Engine::GET_CODES(party, {Codes::Type::CAST_SPELLS_INARENA});
-
                                                     Engine::GAIN_STATUS(party.Members[selection], Character::Status::USED_MAGIC_INARENA);
                                                 }
 
@@ -8850,7 +8848,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     }
                     else if (controls[current].Type == Control::Type::CONFIRM)
                     {
-                        if ((selection.size() >= team_size && selection.size() <= party.Members.size()) || (selection.size() == Engine::COUNT(party) && selection.size() < team_size))
+                        if ((selection.size() >= team_size && selection.size() <= party.Members.size()) || (selection.size() == Engine::COUNT(party, team) && selection.size() <= team_size))
                         {
                             done = true;
 

@@ -1861,6 +1861,16 @@ namespace Engine
         }
     }
 
+    void CAST_SPELL(Character::Base &character, Spells::Type spell)
+    {
+        auto found = Engine::FIND_SPELL(character, spell);
+
+        if (found >= 0 && found < character.SpellBook.size() && character.SpellBook[found].Charged)
+        {
+            character.SpellBook[found].Charged = false;
+        }
+    }
+
     bool HAS_SPELL_ANY(Party::Base &party, std::vector<Spells::Type> spells)
     {
         auto result = false;

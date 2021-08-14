@@ -52,10 +52,10 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::GET_CODES(party, {Codes::Type::STARTED_IN_BOOK1});
+            Engine::GET_CODES(party, {Codes::Type::STARTED_IN_BOOK1, Codes::Type::FIRSTTIME_SOLD_SALTDADARENA});
         }
 
-        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 641}; }
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 631}; }
     };
 
     class Story002 : public Story::Base
@@ -78,8 +78,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 478};
-
             Bye = NULL;
 
             CanFlee = true;
@@ -1956,8 +1954,6 @@ namespace Book1
         {
             Team = Team::Type::CHASE;
 
-            destination = {Book::Type::BOOK1, 391};
-
             Bye = NULL;
 
             Monsters = {Monster::Base("Thief of Royce", 5, 4, 4, 14, 0)};
@@ -2342,6 +2338,8 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Engine::LOSE_ALL(party);
+
+            Engine::GET_CODES(party, {Codes::Type::FOUGHT_IN_ARENA});
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 608}; }
@@ -3629,8 +3627,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 68};
-
             Team = Team::Type::SAR_JESSICA_DAYNE;
 
             character = Engine::FIND_CHARACTER(party, Character::Type::SAR_JESSICA_DAYNE);
@@ -3666,7 +3662,7 @@ namespace Book1
             }
             else
             {
-                Bye = "Sar Jessica is slain. You take her equipment before leaving the house in disgrace";
+                Bye = "Sar Jessica is slain. You take her equipment before leaving the house in disgrace.";
 
                 destination = {Book::Type::BOOK1, 468};
             }
@@ -4617,6 +4613,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
+            
             Army.clear();
 
             if (Engine::HAS_UNIT(party, Army::Type::BRONZEGUARD))
@@ -5139,6 +5137,10 @@ namespace Book1
 
             ID = 161;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "You make good names for yourselves in the arena, but come to be feared and envied by the professional gladiators. They arrange with the arena master to have you sold on to less heroic duties.";
 
             Choices.clear();
@@ -5151,7 +5153,7 @@ namespace Book1
     class Story162 : public Story::Base
     {
     public:
-        Engine::Destination destination = {Book::Type::BOOK1, 220};
+        Engine::Destination destination = {};
 
         Story162()
         {
@@ -5168,8 +5170,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 220};
-
             EnemyArmy.clear();
             EnemySpells.clear();
             EnemyArmyStatus.clear();
@@ -5882,6 +5882,8 @@ namespace Book1
 
             ID = 185;
 
+            Location = Location::Type::LUUTANESH;
+
             Text = "You get into a conversation with an old man named Janus about his adventurous wife, Alidale. Apparently Alidale was a great explorer of the Valley in the times before the rise of the Iron King. She had heard of the Temple of the Unbroken, the birthplace of the Cursus religion, and wanted to explore the ruins. Sadly, she never returned. It has been forty years since then, and Janus has never taken another wife. He asks for you to keep an eye out for a bronze locket if you should ever chance to venture into the temple yourself. It was a gift Janus bought his wife when they were courting, and he would like it back to member her by.\n\nYou assure him you will keep your eyes peeled before moving on.";
 
             Choices.clear();
@@ -6137,6 +6139,11 @@ namespace Book1
             {
                 return {Book::Type::NONE, -1};
             }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
         }
     };
 
@@ -8451,6 +8458,11 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_CODES(party, {Codes::Type::FIRSTTIME_SOLD_SALTDADARENA});
+        }
     };
 
     class Story272 : public Story::Base
@@ -8696,7 +8708,7 @@ namespace Book1
     class Story279 : public Story::Base
     {
     public:
-        Engine::Destination destination = {Book::Type::NONE, -1};
+        Engine::Destination destination = {};
 
         Team::Type previousTeam = Team::Type::NONE;
 
@@ -8718,8 +8730,6 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Bye = NULL;
-
-            destination = {Book::Type::NONE, -1};
 
             Team = Team::Type::AKIHIRO_OF_CHALICE;
 
@@ -8894,6 +8904,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 284;
+
+            Location = Location::Type::LUUTANESH;
 
             Image = "images/book1/cold_river_inn.png";
 
@@ -9613,7 +9625,7 @@ namespace Book1
     public:
         std::string PreText = "";
 
-        Engine::Destination destination = {Book::Type::NONE, -1};
+        Engine::Destination destination = {};
 
         Story306()
         {
@@ -9628,8 +9640,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 736};
-
             Take.clear();
 
             Limit = 0;
@@ -9956,7 +9966,7 @@ namespace Book1
     class Event316 : public Story::Base
     {
     public:
-        Engine::Destination destination = {Book::Type::BOOK1, 220};
+        Engine::Destination destination = {};
 
         Event316()
         {
@@ -9975,11 +9985,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 220};
-
             EnemyArmy.clear();
-            EnemySpells.clear();
-            EnemyArmyStatus.clear();
 
             BattleLocation = Location::Type::SALTDAD;
 
@@ -10684,6 +10690,8 @@ namespace Book1
         Story342()
         {
             BookID = Book::Type::BOOK1;
+
+            Location = Location::Type::CLIFFTOP;
 
             ID = 342;
 
@@ -11610,7 +11618,7 @@ namespace Book1
     class Story376 : public Story::Base
     {
     public:
-        Engine::Destination destination = {Book::Type::BOOK1, 670};
+        Engine::Destination destination = {};
 
         Story376()
         {
@@ -11629,11 +11637,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 670};
-
             EnemyArmy.clear();
-            EnemySpells.clear();
-            EnemyArmyStatus.clear();
 
             BattleLocation = Location::Type::LUUTANESH;
 
@@ -11986,7 +11990,7 @@ namespace Book1
     class Story386 : public Story::Base
     {
     public:
-        Engine::Destination destination = {Book::Type::BOOK1, 596};
+        Engine::Destination destination = {};
 
         Team::Type previousTeam = Team::Type::NONE;
 
@@ -12009,8 +12013,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 596};
-
             Team = Team::Type::AKIHIRO_OF_CHALICE;
 
             character = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
@@ -12785,8 +12787,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 292};
-
             Team = Team::Type::WEAPONS;
 
             Monsters = {
@@ -13374,8 +13374,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 741};
-
             EnemyFleet = {Ship::Base("PIRATE PINNACE", Ship::Type::PIRATE_PINNACE, Location::Type::NONE, 5, 6, 0)};
         }
 
@@ -14929,8 +14927,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 292};
-
             Monsters = {
                 Monster::Base("Guard", 4, 4, 4, 8, 0, {Equipment::IRON_SHORTSWORD1}),
                 Monster::Base("Guard", 3, 4, 4, 7, 0, {Equipment::IRON_SHORTSWORD1})};
@@ -15113,6 +15109,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
+
             PreText = "The Everchild nods to her generals, who reluctantly depart her company. She indicates for you to sit and joins you. \"What is on your mind?\" she asks.";
 
             if (!Engine::VERIFY_CODES(party, {Codes::A(37)}) || Engine::VERIFY_CODES(party, {Codes::A(94)}))
@@ -15478,8 +15476,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 882};
-
             Team = Team::Type::AKIHIRO_OF_CHALICE;
 
             character = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
@@ -15728,8 +15724,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 450};
-
             Team = Team::Type::AKIHIRO_OF_CHALICE;
 
             character = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
@@ -15822,6 +15816,7 @@ namespace Book1
         void Event(Party::Base &party)
         {
             //TODO: Implement codes A33 and A100 troop transfers
+            Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
         }
     };
 
@@ -16409,8 +16404,6 @@ namespace Book1
         {
             Team = Team::Type::WALL_CLIMBING;
 
-            destination = {Book::Type::BOOK1, 75};
-
             Monsters = {
                 Monster::Base("Guard", 4, 4, 4, 7, 0),
                 Monster::Base("Guard", 4, 4, 3, 9, 0),
@@ -16849,6 +16842,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
+
             Bye = NULL;
 
             Choices.clear();
@@ -17213,8 +17208,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 357};
-
             CanFlee = true;
 
             Monsters = {
@@ -18129,8 +18122,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 773};
-
             Bye = NULL;
 
             CanFlee = true;
@@ -18238,6 +18229,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 582;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "You know this brutal place well by now. The guards welcome you back with a stout beating and promise that this time you will only be leaving the arena on a corpse cart.\n\nNote: Each party member loses 2 Health points.";
 
@@ -18917,8 +18912,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            destination = {Book::Type::BOOK1, 734};
-
             Bye = NULL;
 
             if (Engine::HAS_SHIP(party, Location::Type::MORDAIN))
@@ -18943,6 +18936,10 @@ namespace Book1
                 Bye = "You flee back to the harbour, get aboard your ship, and sail off. Your crew gives you covering arrow fire.";
 
                 destination = {Book::Type::BOOK1, 851};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 734};
             }
         }
     };
@@ -19052,7 +19049,7 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (!Engine::VERIFY_CODES(party, {Codes::Type::CAST_SPELLS_INARENA}))
+            if (!Engine::HAS_STATUS(party, Character::Status::USED_MAGIC_INARENA))
             {
                 return {Book::Type::BOOK1, 792};
             }
@@ -19075,8 +19072,6 @@ namespace Book1
                     Engine::REMOVE_STATUS(party.Members[i], Character::Status::USED_MAGIC_INARENA);
                 }
             }
-
-            Engine::LOSE_CODES(party, {Codes::Type::CAST_SPELLS_INARENA});
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 792}; }
@@ -19106,6 +19101,331 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 359}; }
+    };
+
+    class Story610 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Story610()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 610;
+
+            Location = Location::Type::SALTDAD;
+
+            Image = "images/book1/march_to_clifftop.png";
+
+            Text = "And so begins your march to Clifftop.\n\nThe Everchild's banners, a blazing sun on a field of azure, flutter in the desert wind as her armies troop onwards. After several days you meet the opposing army of Lothor the Ugly just beyond the river bridge.\n\n\"Why doesn't Lothor hold us at the bridge?\" the Everchild asks Che Long.\n\n\"He fears the quality of our troops,\" says Che Long. \"Lothor wishes to use his great numbers to overwhelm us.\"\n\n\"He is a fool, with the river to his back his troops have nowhere to run,\" you laugh.\n\n\"We must beat him first,\" cautions the Everchild. \"Assemble our formations. The battle will soon be upon us.\"\n\nNote: You may choose a maximum of six units from the Saltdad barracks to commit to this battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            BattleLocation = Location::Type::SALTDAD;
+
+            EnemyArmy = {
+                Army::Base("Landsmen Cavalry", Army::Type::LANDSMEN_CAVALRY, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 2, false),
+                Army::Base("Field Overseers", Army::Type::FIELD_OVERSEERS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_SUPPORT, 2, 2, false),
+                Army::Base("Cursite Fanatics", Army::Type::CURSITE_FANATICS, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 3, 5, false),
+                Army::Base("Slave Levies", Army::Type::SLAVE_LEVIES, Location::Type::SALTDAD, Location::BattleField::CENTER_SUPPORT, 1, 1, false),
+                Army::Base("Clifftop Infantry", Army::Type::CLIFFTOP_INFANTRY, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 3, 3, false),
+                Army::Base("Thalsian Mercenaries", Army::Type::THALSIAN_MERCENARIES, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 2, 3, false)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                destination = {Book::Type::BOOK1, 342};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 48};
+            }
+        }
+    };
+
+    class Story611 : public Story::Base
+    {
+    public:
+        Story611()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 611;
+
+            Text = "The gatehouse's weapon store is open to you. You may take any of the following items:\n\nHIDE ARMOUR (Armour +1)\nSHIELD (Armour +2)\nMAUL* (Fighting +1)\nIRON SHORTSWORD (Fighting +1)\nCRUDE BLADE (Fighting +0) -- you may take up to four CRUDE BLADES.\n\nYou also grab a number of crude weapons for the Everchild and her followers, before fleeing the gatehouse, closing the door behind you.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::HIDE_ARMOUR1, Equipment::SHIELD2, Equipment::MAUL, Equipment::IRON_SHORTSWORD1, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE};
+
+            Limit = 8;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 317}; }
+    };
+
+    class Story612 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story612()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 612;
+
+            Bye = "Saddened at this loss you order your crew to sail on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The waves tower above your flimsy vessel, blinding you as your little boat is tossed and turned in the storm. Long before you reach the sailor he is swept off the rock by a palace-sized wave. Your own vessel is overturned, and you only just manage to swim back to your ship.\n\nNote: ";
+
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -3);
+
+                PreText += std::string(party.Members[party.LastSelected].Name) + " loses 3 Health points.";
+            }
+            else
+            {
+                PreText += "Your chosen party member loses 3 Health points.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 240}; }
+    };
+
+    class Story613 : public Story::Base
+    {
+    public:
+        Story613()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 613;
+
+            Text = "You spy a merchant, blundering around your camp. \"I'm most dreadfully sorry for disturbing you,\" he mumbles. \"I was hoping to find some old bits of wood from your campfire. The night is absolutely freezing.\"\n\nYou breathe a sigh of relief and greet the old merchant. You spare what tinder you can and bid him a good evening.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 840}; }
+    };
+
+    class Story614 : public Story::Base
+    {
+    public:
+        Story614()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 614;
+
+            Location = Location::Type::LUUTANESH;
+
+            Text = "You have come to the small town of Luutanesh, positioned on the crossroads that lie between three great cities of the valley. The Cold River runs near on one side of the town, flooding the nearby rice plains which are tended by hundreds of workers in wide sunhats.\n\nThe village itself is poorer than it should be, with tax agents from Chalice, Saltdad and Cursus routinely stripping it of wealth. Security is strong here, with locals armed with long spears and dragonyak hide armour standing in guard huts positioned along the road.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Stop in at the Cold River Inn", {Book::Type::BOOK1, 284}));
+            Choices.push_back(Choice::Base("Speak to the rice farmers", {Book::Type::BOOK1, 185}));
+            Choices.push_back(Choice::Base("Leave Luutanesh", {Book::Type::BOOK1, 194}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story615 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story615()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 615;
+
+            Bye = "It seems you have no choice but to fight with the bear.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You cast your spell and address the bear, pleading with it to stand down. \"Do not be a puppet for these vile men,\" you say. \"Pretend to submit to me. There is no need to fight.\"\n\n\"I will never yield to humans!\" snarls the bear. \"Though you are an animal friend I shall never show weakness, come what may!\"\n\nThe bear lunges at you, swiping you to the floor with his heavy paw.\n\nNote: ";
+
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                Engine::CAST_SPELL(party.Members[party.LastSelected], Spells::Type::ANIMAL_SPEECH);
+
+                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -3);
+
+                PreText += std::string(party.Members[party.LastSelected].Name) + " loses 3 Health points.";
+            }
+            else
+            {
+                PreText += "Your chosen party member loses 3 Health points.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 425}; }
+    };
+
+    class Story616 : public Story::Base
+    {
+    public:
+        Story616()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 616;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "You know when to take a hint. You carefully back away. As you walk through an alleyway you hear the sounds of shouting and drawn swords. Blood is being spilt and the screams resonate through the city. It seems that even in Chalice the savagery of the Valley of Bones can take hold.";
+
+            Bye = "Shaking your head sadly you move on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story617 : public Story::Base
+    {
+    public:
+        Story617()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 617;
+
+            Text = "That evening you gather in the wealthy area of the city, where taller buildings made of stone and wood stand in the shadow of the palace. Although the Bronzeguard do patrol this part of the city, most of the wealthier locals employ private guards to protect their valuables. Brekken's thieves have already dealt with the guard dogs that patrol the grounds around Chellar's house with poisoned meat. Now the way to the house is clearer.\n\n\"The front door is guarded with magical wards,\" says Brekken. \"Only Chellar or his steward can open it, unless you think you might be able to disenchant it? Otherwise there are the upper floor windows. I'll lead my team to scale the walls. You can join us, or handle the door... or maybe do both? It's up to you.\"\n\nNote: Decide how many of your party will deal with the magical door, and how many will help scaling the walls. You can assign everyone to one task or split your team between both tasks.\n\nYou gained the code A10.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Decide who will climb the walls and who deals with the front door", {Book::Type::BOOK1, -617}, Choice::Type::ASSIGN_TEAMS, {{Team::Type::MAGICAL_DOOR, 0, 4}, {Team::Type::WALL_CLIMBING, 1, 4}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(10)});
+        }
+    };
+
+    class Event617 : public Story::Base
+    {
+    public:
+        Event617()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -617;
+
+            DisplayID = 617;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::IS_ACTIVE(party, i))
+                {
+                    if (party.Members[i].Team != Team::Type::MAGICAL_DOOR)
+                    {
+                        party.Members[i].Team = Team::Type::WALL_CLIMBING;
+                    }
+                }
+            }
+
+            if (Engine::COUNT(party, Team::Type::MAGICAL_DOOR) > 0)
+            {
+                return {Book::Type::BOOK1, 322};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 728};
+            }
+        }
+    };
+
+    class Story618 : public Story::Base
+    {
+    public:
+        Story618()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 618;
+
+            Location = Location::Type::JUNGLE;
+
+            Text = "You are leaving the Lhasbreath jungle, happy to be rid of the biting insects and draining humidity in that place. Where will you venture now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North, to the Palace of Unbraaki", {Book::Type::BOOK1, 890}));
+            Choices.push_back(Choice::Base("East, to the city of Lhasbreath", {Book::Type::BOOK1, 775}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story619 : public Story::Base
+    {
+    public:
+        Story619()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 619;
+
+            Text = "The monstrous thing seems almost indestructible and sweat breaks out on your forehead. Suddenly there is a sharp slink! The statue's right foot has been sliced from its leg. The creature totters unsteadily and comes crashing to the ground, shattering into pieces. Standing behind the destruction is the young Drakehallow woman, a green longsword clutched in her hand. She looks upon you with a quizzical eyebrow.\n\n\"Thank you,\" you say, bowing. \"Your assistance is most appreciated.\"\n\n\"I'm sure it is,\" she says slyly.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 415}; }
     };
 
     auto story001 = Story001();
@@ -19768,6 +20088,17 @@ namespace Book1
     auto story607 = Story607();
     auto story608 = Story608();
     auto story609 = Story609();
+    auto story610 = Story610();
+    auto story611 = Story611();
+    auto story612 = Story612();
+    auto story613 = Story613();
+    auto story614 = Story614();
+    auto story615 = Story615();
+    auto story616 = Story616();
+    auto story617 = Story617();
+    auto event617 = Event617();
+    auto story618 = Story618();
+    auto story619 = Story619();
 
     void InitializeStories()
     {
@@ -19777,7 +20108,7 @@ namespace Book1
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
-            &event597,
+            &event597, &event617,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -19838,7 +20169,8 @@ namespace Book1
             &story570, &story571, &story572, &story573, &story574, &story575, &story576, &story577, &story578, &story579,
             &story580, &story581, &story582, &story583, &story584, &story585, &story586, &story587, &story588, &story589,
             &story590, &story591, &story592, &story593, &story594, &story595, &story596, &story597, &story598, &story599,
-            &story600, &story601, &story602, &story603, &story604, &story605, &story606, &story607, &story608, &story609};
+            &story600, &story601, &story602, &story603, &story604, &story605, &story606, &story607, &story608, &story609,
+            &story610, &story611, &story612, &story613, &story614, &story615, &story616, &story617, &story618, &story619};
     }
 }
 #endif

@@ -18,7 +18,7 @@ namespace Codes
         STARTED_IN_BOOK4,
         STARTED_IN_BOOK5,
         STARTED_IN_BOOK6,
-        FIRST_TIME_SALTAD,
+        FIRSTTIME_SOLD_SALTDADARENA,
         FOUGHT_IN_ARENA,
         BRIBE_GOLD_BULLION1,
         BRIBE_GOLD_BULLION2,
@@ -48,7 +48,7 @@ namespace Codes
         SLAVES_DAMAGE_FOR2,
         CAST_ORB,
         CAST_MAELSTROM,
-        CAST_SPELLS_INARENA
+        RECHARGE_COSTS_HALF
     };
 
     std::map<Book::Type, const char *> Prefix = {
