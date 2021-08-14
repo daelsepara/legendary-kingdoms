@@ -4627,6 +4627,7 @@ namespace Book1
                 {
                     party.Army[bronzeguard].Morale = 5;
                     party.Army[bronzeguard].Strength = 5;
+                    party.Army[bronzeguard].Garrison = Location::Type::SALTDAD;
                 }
             }
             else
