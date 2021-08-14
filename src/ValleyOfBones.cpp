@@ -6972,6 +6972,18 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
         Uint32 duration = 3000;
 
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
@@ -7196,13 +7208,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                             {
                                 if (Engine::FIND_LIST(previousTargets, selection) >= 0)
                                 {
-                                    flash_message = true;
-
-                                    message = "That opponent has been attacked before! Choose another target!";
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage("That opponent has been attacked before! Choose another target!", intRD);
                                 }
                                 else
                                 {
@@ -7228,13 +7234,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "You must select an opponent to attack this round.";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage("You must select an opponent to attack this round.", intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::ACTION)
@@ -7253,23 +7253,11 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                                 }
                                 else if (monsters[current + offset].Health > 0 && combatRound < monsters[current + offset].Round)
                                 {
-                                    flash_message = true;
-
-                                    message = std::string(monsters[current + offset].Name) + std::string(" has not joined the battle yet!");
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage(std::string(monsters[current + offset].Name) + " has not joined the battle yet!", intRD);
                                 }
                                 else
                                 {
-                                    flash_message = true;
-
-                                    message = std::string(monsters[current + offset].Name) + std::string(" is dead!");
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage(std::string(monsters[current + offset].Name) + " is dead!", intRD);
                                 }
                             }
                         }
@@ -9839,6 +9827,18 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
         Uint32 duration = 3000;
 
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
@@ -10116,13 +10116,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                             {
                                 if (party.Members[selection].Type == Character::Type::SKULLCRACKER)
                                 {
-                                    flash_message = true;
-
-                                    message = "Skullcracker refuses!";
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage("Skullcracker refuses!", intRD);
                                 }
                                 else
                                 {
@@ -10148,13 +10142,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         }
                         else
                         {
-                            flash_message = true;
-
-                            message = "You must select a party member!";
-
-                            start_ticks = SDL_GetTicks();
-
-                            flash_color = intRD;
+                            displayMessage("You must select a party member!", intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::ACTION)
@@ -10173,23 +10161,11 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                     {
                                         if (Engine::HAS_STATUS(party.Members[current + offset], Character::Status::CAPTURED))
                                         {
-                                            message = std::string(party.Members[current + offset].Name) + " has been captured!";
-
-                                            flash_message = true;
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_color = intRD;
+                                            displayMessage(std::string(party.Members[current + offset].Name) + " has been captured!", intRD);
                                         }
                                         else if (party.InCity && !party.Members[current + offset].IsCivilized)
                                         {
-                                            message = std::string(party.Members[current + offset].Name) + " is waiting outside the city!";
-
-                                            flash_message = true;
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_color = intRD;
+                                            displayMessage(std::string(party.Members[current + offset].Name) + " is waiting outside the city!", intRD);
                                         }
                                         else
                                         {
@@ -10202,27 +10178,17 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
                                         if (!Engine::IS_CHARACTER(team))
                                         {
-                                            message = std::string(party.Members[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!";
+                                            displayMessage(std::string(party.Members[current + offset].Name) + " is not part of the " + std::string(Team::Descriptions[team]) + " team!", intRD);
                                         }
                                         else
                                         {
-                                            message = "You can only choose " + std::string(Team::Descriptions[team]) + "!";
+                                            displayMessage("You can only choose " + std::string(Team::Descriptions[team]) + "!", intRD);
                                         }
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_color = intRD;
                                     }
                                 }
                                 else
                                 {
-                                    flash_message = true;
-
-                                    message = std::string(party.Members[current + offset].Name) + std::string(" is dead!");
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_color = intRD;
+                                    displayMessage(std::string(party.Members[current + offset].Name) + " is dead!", intRD);
                                 }
                             }
                         }
