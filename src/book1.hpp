@@ -4857,7 +4857,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The slaves of Clifftop are a lucky breed, compared to the citizens. Having paid money to acquire them, most masters are unwilling to whip their slaves to death, unlike the deathly ill peasants who toil in the fields.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. Remember that a party member without a weapon has their Fighting score reduced by 1 point in combat.";
+            Text = "The slaves of Clifftop are a lucky breed, compared to the citizens. Having paid money to acquire them, most masters are unwilling to whip their slaves to death, unlike the deathly ill peasants who toil in the fields.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
 
             Choices.clear();
 
@@ -10280,7 +10280,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The Saltdad slave markets sell flesh from all across the valley. Some are unfortunates who have crossed the jealous desert kings, others have been plucked, dying from dehydration, from the waterless wastes. Most are miserable-looking specimens in rags and heavy chains, but every so often a promising candidate will show up.\n\nNote: If you have fewer than four party members in your team, you may recruit some more from the slave market. It costs 200 silver coins to buy another party member, and they start with no equipment. Remember that a party member without a weapon has their Fighting score reduced by 1 point in combat.";
+            Text = "The Saltdad slave markets sell flesh from all across the valley. Some are unfortunates who have crossed the jealous desert kings, others have been plucked, dying from dehydration, from the waterless wastes. Most are miserable-looking specimens in rags and heavy chains, but every so often a promising candidate will show up.\n\nNote: If you have fewer than four party members in your team, you may recruit some more from the slave market. It costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
 
             Choices.clear();
 
@@ -10884,6 +10884,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 349;
+
+            Image = "images/book1/bathe_in_oasis.png";
 
             Choices.clear();
 
@@ -18474,6 +18476,283 @@ namespace Book1
         }
     };
 
+    class Story590 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story590()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 590;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The sweat is thick in your clothes and across your bodies as you slog on through the desert. However, there comes a sight to reward even the most jaded nomad's eyes. A shining pool of water, almost the size of a lake, comes shimmering into view as you cross the dunes. A splash of vegetation surrounds it, a riot of green amongst a tyranny of yellow sand.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(44)}))
+            {
+                PreText += "\n\nAstonishingly there are no caravaners, nomads or even herds of beasts here. Only flocks of brightly coloured birds flitter in and out of the bushes and trees ringing the oasis, taking sips of water and strutting before each other in curious mating dances. You are sore and smelly from your long desert travel.\n\nIf you would like the bathe in the oasis, you can do so. Otherwise, you can refill your waterskins and decide on your next destination.";
+
+                Choices.push_back(Choice::Base("Bathe in the oasis", {Book::Type::BOOK1, 349}));
+                Choices.push_back(Choice::Base("Go North, to the Granite Hills", {Book::Type::BOOK1, 275}));
+                Choices.push_back(Choice::Base("East, into the desert", {Book::Type::BOOK1, 202}));
+                Choices.push_back(Choice::Base("Go South, to the Mordain ruins", {Book::Type::BOOK1, 515}));
+                Choices.push_back(Choice::Base("Travel West, across the desert towards Lhasbreath", {Book::Type::BOOK1, 752}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 448}; }
+    };
+
+    class Story591 : public Story::Base
+    {
+    public:
+        Story591()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 591;
+
+            Text = "The Everchild's camp is on high alert, and her followers will give their lives to protect her. Chances are good that she will be alright even without your help.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Random Event", {{1, NULL, {Book::Type::BOOK1, 489}}, {6, NULL, {Book::Type::BOOK1, 553}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story592 : public Story::Base
+    {
+    public:
+        Story592()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 592;
+
+            Text = "You are quickly recognised as the queen's champions by the cruel arena master. Grovelling obsequiously, he apologises for your detention, and even offers you 100 silver coins by way of apology. You may also take up to four CRUDE BLADES (Fighting +0) from the armoury to replace your lost weapons.";
+
+            Bye = "Banishing the arena master with a cuff to his ear, you march smartly into the city.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE};
+
+            Limit = 4;
+
+            Engine::GAIN_MONEY(party, 100);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story593 : public Story::Base
+    {
+    public:
+        Story593()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 593;
+
+            Text = "This tunnel has been well built, with flagstone flooring and brick walls. At first you think it must have been a cargo store of some kind -- but it opens up into a bigger complex. Much bigger.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 755}; }
+    };
+
+    class Story594 : public Story::Base
+    {
+    public:
+        Story594()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 594;
+
+            Text = "After all you've been through Amelia deserves a chance to cut loose, and you watch idly as she walks away with some soldiers. She doesn't speak about what happened the next morning, but she is missing a fair quantity of money.\n\nNote: You lost 35 silver coins.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, -35);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 280}; }
+    };
+
+    class Story595 : public Story::Base
+    {
+    public:
+        Story595()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 595;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "Slaves are expensive in Cursus, and do not remain unsold for long. The auction platforms have long stood in the shadow of a lesser temple and are fortified against theft. Only strong and healthy slaves can be found here... the god of judgement will not tolerate those who cannot work.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::RECRUIT;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
+    };
+
+    class Story596 : public Story::Base
+    {
+    public:
+        Story596()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 596;
+
+            Text = "You have been beaten down, but the monks are not savages and do not deal a killing blow. \"Your dishonour has made you weak,Akihiro!\" barks one of the monks. \"Never return to this place.\"\n\n\"I shall face you all again... and win!\" you vow, but the monks merely laugh at you and walk away. Red-faced with shame you limp away from the temple.\n\nNote: Akihiro is down to 1 Health point.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GO_SOLO(party, Character::Type::AKIHIRO_OF_CHALICE);
+
+            party.CurrentCharacter = Engine::FIND_SOLO(party);
+
+            if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
+            {
+                party.Members[party.CurrentCharacter].Health = 1;
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story597 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story597()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 597;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The lift shudders and comes to a halt on the fourteenth floor.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(26)}))
+            {
+                PreText += "\n\nThe ground here is muddy, with ground water leaking through parts of the tunnel to create a salty marsh. Relatively few miners work here as so much of the salt has been dissolved, but there are a few dry parts of the level that still yield crystals. Troglodyte footprints are everywhere. It should be a simple matter of tracking the footprints back to their lair.";
+
+                Choices.push_back(Choice::Base("Follow the troglodyte prints (Team check: Stealth 3+, Successes: 6)", {Book::Type::BOOK1, 296}, {Book::Type::BOOK1, -597}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::STEALTH}, 3, 6));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 817}; }
+    };
+
+    class Event597 : public Story::Base
+    {
+    public:
+        Event597()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -597;
+
+            DisplayID = 597;
+
+            Text = "You get lost in the mines, the terrible atmosphere slowly robbing you of strength.";
+
+            Bye = "You give up your search and decide to look elsewhere.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, 135}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story598 : public Story::Base
+    {
+    public:
+        Story598()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 598;
+
+            Text = "You encounter a group of loggers from Lhasbreath, chopping trees and skinning branches. Jungle woods make poor building materials, but the jungle nonetheless provides the majority of the lumber in the dry valley.\n\nOne of the loggers is clearly not a native of the city but is instead a wiry fellow from Chalice. You ask how he fell into this work. \"I've always been a labourer,\" he admits. \"For a time I worked as a miner for the God King of Chalice. We attempted to find metals in the Caves of Uranu -- but that place is packed full of terrible monsters. Take my advice; don't venture near the caves unless you are loaded down with weapons and armour. Even amongst barbarians, it's much safer here by the jungle.\"";
+
+            Bye = "You thank the logger for his advice and move on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 618}; }
+    };
+
+    class Story599 : public Story::Base
+    {
+    public:
+        Story599()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 599;
+
+            Text = "One of the stone slabs on the floor ahead of you sticks out curiously. Crouching down with your lantern you can see the glimmer of a small lever under the slab, a trigger for some kind of vile trap, no doubt. You inform the rest of the party to avoid the slab, and cautiously step over it towards the chest.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 277}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -19113,6 +19392,17 @@ namespace Book1
     auto story588 = Story588();
     auto story589 = Story589();
     auto event589 = Event589();
+    auto story590 = Story590();
+    auto story591 = Story591();
+    auto story592 = Story592();
+    auto story593 = Story593();
+    auto story594 = Story594();
+    auto story595 = Story595();
+    auto story596 = Story596();
+    auto story597 = Story597();
+    auto event597 = Event597();
+    auto story598 = Story598();
+    auto story599 = Story599();
 
     void InitializeStories()
     {
@@ -19122,6 +19412,7 @@ namespace Book1
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
+            &event597,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -19180,7 +19471,8 @@ namespace Book1
             &story550, &story551, &story552, &story553, &story554, &story555, &story556, &story557, &story558, &story559,
             &story560, &story561, &story562, &story563, &story564, &story565, &story566, &story567, &story568, &story569,
             &story570, &story571, &story572, &story573, &story574, &story575, &story576, &story577, &story578, &story579,
-            &story580, &story581, &story582, &story583, &story584, &story585, &story586, &story587, &story588, &story589};
+            &story580, &story581, &story582, &story583, &story584, &story585, &story586, &story587, &story588, &story589,
+            &story590, &story591, &story592, &story593, &story594, &story595, &story596, &story597, &story598, &story599};
     }
 }
 #endif
