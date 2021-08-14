@@ -38,7 +38,9 @@ namespace Monster
         BEETLE_SWARM,
         IMOPPOSH_THE_MAD,
         MONKEY_WITH_SPELLS,
-        UNBRAAKI
+        UNBRAAKI,
+        NAGA,
+        CURSITE_ASSASSIN
     };
 
     class Base

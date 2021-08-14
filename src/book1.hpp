@@ -18142,6 +18142,338 @@ namespace Book1
         }
     };
 
+    class Story580 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Story580()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 580;
+
+            Text = "You have entered the cave of a terrible naga, a spirit snake of fearsome magical power. The ghastly creature splits itself into six identical copies before lunging for you.\n\nNote: You cannot make any armour saves in this battle. You can flee from the naga at the start of a combat round, but the naga will make an attack upon you before you escape.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 773};
+
+            Bye = NULL;
+
+            CanFlee = true;
+
+            Monsters = {Monster::Base("Naga", Monster::Type::NAGA, 5, 3, 6, 10, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::FLEE)
+            {
+                Bye = "The naga attacks your party as you flee!";
+
+                destination = {Book::Type::BOOK1, -580};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 773};
+            }
+        }
+    };
+
+    class Event580 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Event580()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -580;
+
+            DisplayID = 580;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            auto result = Engine::COUNT(5, 3);
+
+            Choices.clear();
+
+            if (result > 0)
+            {
+                PreText = "The naga attacks your party and deals " + std::to_string(result) + " damage to the party!";
+
+                Choices.push_back(Choice::Base("Assign damage to a party member", {Book::Type::BOOK1, 395}, Choice::Type::GAIN_HEALTH, -result));
+            }
+            else
+            {
+                PreText = "The naga's attack was ineffective!";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 395}; }
+    };
+
+    class Story581 : public Story::Base
+    {
+    public:
+        Story581()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 581;
+
+            Text = "You meet a foreigner from the county of Longport Bay, now ploughing the fields as a humble farmworker. He has many bruises across his face from the cruel whips of his overseers. \"The ironic thing is I fled from the town of Joria-by-Long because I couldn't stand the beatings from my masters in House Bailey,\" he says bitterly. \"Now I am a broke tenant farmer in Clifftop and the overseers here are even crueller. It seems the gods have it in for me.\"\n\n\"The grass is always greener on the other side,\" you say wistfully.\n\n\"Not here, it isn't,\" he grumbles.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::REGISTRY_PAPERS}))
+            {
+                return {Book::Type::BOOK1, 70};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -4);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story582 : public Story::Base
+    {
+    public:
+        Story582()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 582;
+
+            Text = "You know this brutal place well by now. The guards welcome you back with a stout beating and promise that this time you will only be leaving the arena on a corpse cart.\n\nNote: Each party member loses 2 Health points.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -2);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 223}; }
+    };
+
+    class Story583 : public Story::Base
+    {
+    public:
+        Story583()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 583;
+
+            Text = "The seas are too dangerous to risk your ship, so you will have to perform this task in the jollyboat. To get the cogwheel someone will have to dive into the rough seas around Clifftop, find and then tie a rope around the wheel. The remaining team will have to haul the heavy bronze cogwheel up. Decide who will perform the dive.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Find the cogwheel (Individual check: Lore 4+, Successes: 2)", {Book::Type::BOOK1, 129}, {Book::Type::BOOK1, 549}, {Attribute::Type::LORE}, 4, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story584 : public Story::Base
+    {
+    public:
+        Story584()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 584;
+
+            Text = "The light circles around the tent several times in the night before eventually departing. In the morning you cannot find so much as a footprint in the sand. Shivering, despite the rising heat, you pack up camp and move on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 840}; }
+    };
+
+    class Story585 : public Story::Base
+    {
+    public:
+        Story585()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 585;
+
+            Text = "In the cool hours of the early morning you awake, thanking Kopu and his slaves for their hospitality. \"Look for me in Lhasbreath,\" he says. \"I have a house there when I am not out travelling. I am always looking for exotic new languages! Seek me out if you find any!\"\n\nNote: You gained the code A19.";
+
+            Bye = "You promise to pay him a visit, and then depart into the cool desert morning.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(19)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 569}; }
+    };
+
+    class Story586 : public Story::Base
+    {
+    public:
+        Story586()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 586;
+
+            Text = "Casting a rope to your stranded teammate you heave against the ghastly magical force sucking them into the earth. You strain every sinew as your friend is pulled deeper and deeper into the sands. Suddenly the unfeeling desert loses its strength, and your teammate bursts from the sands in a shower of grit. ";
+
+            Bye = "Coughing and gasping you stagger from the cave, vowing to never return.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(19)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 395}; }
+    };
+
+    class Story587 : public Story::Base
+    {
+    public:
+        Story587()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 587;
+
+            Text = "The barbarians square up to you. Behind you, the knife-wielding assassin prepares to strike.\n\nNote: In any round where the Cursite Assassin is not injured he will backstab a party member. When backstabbing the Assassin does not need to roll to hit but inflicts 4 points of damage.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            CanFlee = false;
+
+            Monsters = {
+                Monster::Base("Berserker", 7, 4, 3, 12, 0),
+                Monster::Base("Cursite Assassin", Monster::Type::CURSITE_ASSASSIN, 4, 3, 5, 7, 0),
+                Monster::Base("Barbarian", 4, 4, 3, 9, 0),
+                Monster::Base("Barbarian", 3, 4, 3, 8, 0),
+                Monster::Base("Barbarian", 4, 4, 3, 8, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 606}; }
+    };
+
+    class Story588 : public Story::Base
+    {
+    public:
+        Story588()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 588;
+
+            Text = "Perhaps your long incarceration has ruined your looks, or perhaps you are just not the guard's type? Your offer is rudely rejected, and is accompanied by a cruel beating.\n\nNote: Each member of the distraction team loses 2 Health points.";
+
+            Bye = "You must choose something else.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, Team::Type::DISTRACTION, -2);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 169}; }
+    };
+
+    class Story589 : public Story::Base
+    {
+    public:
+        Story589()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 589;
+
+            Text = "You are walking through a dreary land, without people or landmarks. The chill penetrates your bones.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, -589}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event589 : public Story::Base
+    {
+    public:
+        Event589()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -589;
+
+            DisplayID = 589;
+
+            Text = "Where will you go?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North", {Book::Type::BOOK1, 692}));
+            Choices.push_back(Choice::Base("West", {Book::Type::BOOK1, 273}));
+            Choices.push_back(Choice::Base("South", {Book::Type::BOOK1, 886}));
+            Choices.push_back(Choice::Base("East", {Book::Type::BOOK1, 537}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -18769,6 +19101,18 @@ namespace Book1
     auto story577 = Story577();
     auto story578 = Story578();
     auto story579 = Story579();
+    auto story580 = Story580();
+    auto event580 = Event580();
+    auto story581 = Story581();
+    auto story582 = Story582();
+    auto story583 = Story583();
+    auto story584 = Story584();
+    auto story585 = Story585();
+    auto story586 = Story586();
+    auto story587 = Story587();
+    auto story588 = Story588();
+    auto story589 = Story589();
+    auto event589 = Event589();
 
     void InitializeStories()
     {
@@ -18777,7 +19121,7 @@ namespace Book1
             &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
-            &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575,
+            &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -18835,7 +19179,8 @@ namespace Book1
             &story540, &story541, &story542, &story543, &story544, &story545, &story546, &story547, &story548, &story549,
             &story550, &story551, &story552, &story553, &story554, &story555, &story556, &story557, &story558, &story559,
             &story560, &story561, &story562, &story563, &story564, &story565, &story566, &story567, &story568, &story569,
-            &story570, &story571, &story572, &story573, &story574, &story575, &story576, &story577, &story578, &story579};
+            &story570, &story571, &story572, &story573, &story574, &story575, &story576, &story577, &story578, &story579,
+            &story580, &story581, &story582, &story583, &story584, &story585, &story586, &story587, &story588, &story589};
     }
 }
 #endif

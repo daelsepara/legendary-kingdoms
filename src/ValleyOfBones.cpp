@@ -5174,6 +5174,13 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 Difficulty = 4;
             }
         }
+        else if (monsters[opponent].Type == Monster::Type::CURSITE_ASSASSIN)
+        {
+            if (!monsters[opponent].Damaged)
+            {
+                Difficulty = 1;
+            }
+        }
     }
 
     for (auto attacks = 0; attacks < num_attacks; attacks++)
@@ -5191,6 +5198,18 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 Uint32 start_ticks = 0;
 
                 Uint32 duration = 3000;
+
+                // Lambda functions for displaying flash messages
+                auto displayMessage = [&](std::string msg, Uint32 color)
+                {
+                    flash_message = true;
+
+                    message = msg;
+
+                    flash_color = color;
+
+                    start_ticks = SDL_GetTicks();
+                };
 
                 auto marginx = (int)(Margin * SCREEN_WIDTH);
 
@@ -5394,18 +5413,12 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     if (damage_scale * damage > 0)
                                     {
-                                        message = std::string(party.Members[combatant].Name) + " deals " + std::to_string(damage_scale * damage) + " to the " + std::string(monsters[opponent].Name) + "!";
-
-                                        flash_color = intLB;
+                                        displayMessage(std::string(party.Members[combatant].Name) + " deals " + std::to_string(damage_scale * damage) + " to the " + std::string(monsters[opponent].Name) + "!", intLB);
                                     }
                                     else
                                     {
-                                        message = std::string(party.Members[combatant].Name) + "'s attack was ineffective!";
-
-                                        flash_color = intRD;
+                                        displayMessage(std::string(party.Members[combatant].Name) + "'s attack was ineffective!", intRD);
                                     }
-
-                                    start_ticks = SDL_GetTicks();
                                 }
                                 else
                                 {
@@ -5413,25 +5426,13 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     if (combat_damage > 0)
                                     {
-                                        message = std::string(monsters[opponent].Name) + " deals " + std::to_string(damage) + " to the party!";
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_message = true;
-
-                                        flash_color = intRD;
+                                        displayMessage(std::string(monsters[opponent].Name) + " deals " + std::to_string(damage) + " to the party!", intRD);
                                     }
                                     else
                                     {
-                                        message = "The " + std::string(monsters[opponent].Name) + "'s attack was ineffective!";
-
-                                        start_ticks = SDL_GetTicks();
-
-                                        flash_message = true;
-
-                                        flash_color = intRD;
-
                                         assigned = true;
+
+                                        displayMessage("The " + std::string(monsters[opponent].Name) + "'s attack was ineffective!", intLB);
                                     }
                                 }
 
@@ -5445,24 +5446,12 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
                             {
-                                flash_message = true;
-
-                                flash_color = intLB;
-
-                                message = "Dazing Lights reduces " + std::string(monsters[opponent].Name) + "'s Attack score by 1.";
-
-                                start_ticks = SDL_GetTicks();
+                                displayMessage("Dazing Lights reduces " + std::string(monsters[opponent].Name) + "'s Attack score by 1.", intLB);
                             }
 
                             if (monsters[opponent].Type == Monster::Type::SKALLOS && !monsters[opponent].Damaged)
                             {
-                                flash_message = true;
-
-                                flash_color = intRD;
-
-                                message = "Skallos unleashes a roar of black magic! Each party member loses 1 Health. Skallos recovers 4 Health points!";
-
-                                start_ticks = SDL_GetTicks();
+                                displayMessage("Skallos unleashes a roar of black magic! Each party member loses 1 Health. Skallos recovers 4 Health points!", intRD);
 
                                 Engine::GAIN_HEALTH(party, -1);
 
@@ -5473,10 +5462,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::HYGLIPH_FLOWER}))
                                 {
                                     Difficulty = 5;
-
-                                    flash_message = true;
-
-                                    flash_color = intRD;
 
                                     if (monsters[opponent].Type == Monster::Type::SNAKEMAN_PRIEST)
                                     {
@@ -5492,19 +5477,13 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                         message = "The snakeman is put off by the pungent odour of the HYGLIPH FLOWER and requires a " + std::to_string(Difficulty) + "+ to his attack rolls to inflict damage during this battle.";
                                     }
 
-                                    start_ticks = SDL_GetTicks();
+                                    displayMessage(message, intLB);
                                 }
                             }
                             else if (monsters[opponent].Type == Monster::Type::IMOPPOSH_THE_MAD)
                             {
                                 if (attacks == 0)
                                 {
-                                    flash_message = true;
-
-                                    flash_color = intRD;
-
-                                    start_ticks = SDL_GetTicks();
-
                                     if (combatRound == 0)
                                     {
                                         message = "Imopposh casts a Thunderbolt spell! He makes two Fighting: 10 attacks!";
@@ -5517,17 +5496,20 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     {
                                         message = "Imopposh casts a Sandstorm spel! He makes a Fighting: 3 attack on each party member!";
                                     }
+
+                                    displayMessage(message, intRD);
+                                }
+                            }
+                            else if (monsters[opponent].Type == Monster::Type::CURSITE_ASSASSIN)
+                            {
+                                if (!monsters[opponent].Damaged)
+                                {
+                                    displayMessage("The Cursite Assassin executes a backstabbing attack!", intRD);
                                 }
                             }
 
                             if (spell != Spells::Type::NONE && attacks == 0)
                             {
-                                flash_message = true;
-
-                                flash_color = intRD;
-
-                                start_ticks = SDL_GetTicks();
-
                                 message = std::string(monsters[opponent].Name) + " casts ";
 
                                 if (spell == Spells::Type::ICE_BOLT)
@@ -5542,6 +5524,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     message += "Poison Stream! The " + std::string(monsters[opponent].Name) + " makes two Fighting: 5 attack at Difficulty: " + std::to_string(Difficulty) + "+";
                                 }
+
+                                displayMessage(message, intRD);
                             }
 
                             special_event_trigger = false;
@@ -5789,13 +5773,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                                 if (Engine::HAS_STATUS(party.Members[result], Character::Status::POTION_OF_INVULNERABILITY))
                                                 {
-                                                    message = std::string(party.Members[result].Name) + "'s Invulnerability cancels the damage!";
-
-                                                    start_ticks = SDL_GetTicks();
-
-                                                    flash_message = true;
-
-                                                    flash_color = intLB;
+                                                    displayMessage(std::string(party.Members[result].Name) + "'s Invulnerability cancels the damage!", intLB);
 
                                                     Engine::REMOVE_STATUS(party.Members[result], Character::Status::POTION_OF_INVULNERABILITY);
 
@@ -5819,15 +5797,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                                         }
                                                     }
 
-                                                    start_ticks = SDL_GetTicks();
-
-                                                    flash_message = true;
-
-                                                    flash_color = intLB;
+                                                    displayMessage(message, intLB);
 
                                                     combat_damage = 0;
                                                 }
-                                                else if (Engine::ARMOUR(party.Members[result]) > 0 && monsters[opponent].Type != Monster::Type::PAPER)
+                                                else if (Engine::ARMOUR(party.Members[result]) > 0 && monsters[opponent].Type != Monster::Type::PAPER && monsters[opponent].Type != Monster::Type::NAGA)
                                                 {
                                                     auto reduced_damage = armourSave(window, renderer, party.Members[result], combat_damage);
 
@@ -5850,12 +5824,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                                 {
                                                     message = std::string(party.Members[result].Name) + " dealt " + std::to_string(combat_damage) + " damage!";
 
-                                                    start_ticks = SDL_GetTicks();
-
-                                                    flash_message = true;
-
-                                                    flash_color = intRD;
-
                                                     Engine::GAIN_HEALTH(party.Members[result], -combat_damage);
 
                                                     if (monsters[opponent].Type == Monster::Type::UNBRAAKI && combat_damage > 0)
@@ -5872,29 +5840,19 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                                         message += ".";
                                                     }
 
+                                                    displayMessage(message, intRD);
+
                                                     combat_damage = result;
                                                 }
                                             }
                                             else
                                             {
-                                                message = std::string(party.Members[result].Name) + " was already assigned damage. Please choose another target.";
-
-                                                start_ticks = SDL_GetTicks();
-
-                                                flash_message = true;
-
-                                                flash_color = intRD;
+                                                displayMessage(std::string(party.Members[result].Name) + " was already assigned damage. Please choose another target.", intRD);
                                             }
                                         }
                                         else
                                         {
-                                            message = std::string(party.Members[result].Name) + " is already dead!";
-
-                                            start_ticks = SDL_GetTicks();
-
-                                            flash_message = true;
-
-                                            flash_color = intRD;
+                                            displayMessage(std::string(party.Members[result].Name) + " is already dead!", intRD);
                                         }
                                     }
                                 }
@@ -5902,13 +5860,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     assigned = true;
 
-                                    message = "The " + std::string(monsters[opponent].Name) + "'s attack was ineffective!";
-
-                                    start_ticks = SDL_GetTicks();
-
-                                    flash_message = true;
-
-                                    flash_color = intRD;
+                                    displayMessage("The " + std::string(monsters[opponent].Name) + "'s attack was ineffective!", intLB);
                                 }
                             }
                             else
@@ -11419,7 +11371,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                         if (free_attack > 0)
                         {
-                            if (Engine::ARMOUR(party.Members[party.LastSelected]) > 0 && monsters[0].Type != Monster::Type::PAPER)
+                            if (Engine::ARMOUR(party.Members[party.LastSelected]) > 0 && monsters[0].Type != Monster::Type::PAPER && monsters[0].Type != Monster::Type::NAGA)
                             {
                                 free_attack = std::max(0, armourSave(window, renderer, party.Members[party.LastSelected], free_attack));
                             }
