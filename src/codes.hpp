@@ -48,7 +48,8 @@ namespace Codes
         SLAVES_DAMAGE_FOR2,
         CAST_ORB,
         CAST_MAELSTROM,
-        RECHARGE_COSTS_HALF
+        RECHARGE_COSTS_HALF,
+        ENEMY_DAZING_LIGHTS
     };
 
     std::map<Book::Type, const char *> Prefix = {

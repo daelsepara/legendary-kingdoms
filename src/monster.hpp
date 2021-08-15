@@ -21,26 +21,27 @@ namespace Monster
     enum class Type
     {
         NORMAL = 0,
-        SKALLOS,
-        SNAKEMAN,
-        SNAKEMAN_PRIEST,
-        ZEALOT,
-        ZEALOT_HEALER,
-        PAPER,
-        STONE,
-        ROCK,
+        BEETLE_SWARM,
+        CURSITE_ASSASSIN,
+        IMOPPOSH_THE_MAD,
+        JUNGLE,
+        MONKEY_WITH_SPELLS,
+        NAGA,
         ORC,
         ORC_LEADER,
-        SPIDER_WITH_SWARM,
-        TOMMUL,
+        PAPER,
+        ROCK,
+        SKALLOS,
         SKELETON_ARCHERS,
-        JUNGLE,
-        BEETLE_SWARM,
-        IMOPPOSH_THE_MAD,
-        MONKEY_WITH_SPELLS,
+        SNAKEMAN,
+        SNAKEMAN_PRIEST,
+        SPIDER_WITH_SWARM,
+        STONE,
+        TOMMUL,
         UNBRAAKI,
-        NAGA,
-        CURSITE_ASSASSIN
+        ZEALOT,
+        ZEALOT_HEALER,
+        ZEALOT_SORCERER
     };
 
     class Base
