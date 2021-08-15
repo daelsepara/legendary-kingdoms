@@ -14613,9 +14613,16 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
             {
-                done = true;
+                if ((equipment_limit > -1 && !Engine::VERIFY_EQUIPMENT_LIMIT(character, equipment_limit)) || (!Engine::VERIFY_EQUIPMENT_LIMIT(character, equipment_limit)))
+                {
+                    displayMessage("You are carrying too many items! Drop or transfer excess items.", intRD);
+                }
+                else
+                {
+                    done = true;
 
-                break;
+                    break;
+                }
             }
         }
     }
