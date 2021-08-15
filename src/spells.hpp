@@ -33,7 +33,8 @@ namespace Spells
         TELEPORT_CIRCLE,
         SILVER_TONGUE,
         THUNDERBOLT,
-        SANDSTORM
+        SANDSTORM,
+        CLINGING_DREAD
     };
 
     enum class MassCombat
@@ -119,6 +120,7 @@ namespace Spells
     auto SHADOW_DOOR = Spells::Base("Shadow Door", "You can detect the secret doors installed by the penumbral lords when they ruled the land.", Spells::Scope::ADVENTURE, Spells::Type::SHADOW_DOOR, 50);
     auto SILVER_TONGUE = Spells::Base("Silver Tongue", "Your confidence grows as you summon this spell. Cast this spell when you fail a Charisma check. You gain an additional 3 automatic successes for this check only.", Spells::Scope::ADVENTURE, Spells::Type::SILVER_TONGUE, 75);
     auto SANDSTORM = Spells::Base("Sandstorm", "You whip up a blast of glassy sand to shred all your foes at once. Make an immediate attack with a Fighting score of 3 against each opponent.", Spells::Scope::COMBAT, Spells::Type::SANDSTORM, 50);
+    auto CLINGING_DREAD = Spells::Base("Clinging Dread", "Doubt and uncertainty fill the hearts of the enemy soldiers. Reduce the Morale score of an enemy unit by 1 point.", Spells::Scope::MASS_COMBAT, Spells::Type::CLINGING_DREAD, 50);
 
     std::vector<Spells::Base> BOOK1_SPELLS = {Spells::ANIMAL_SPEECH, Spells::ARMOUR_OF_HEAVEN, Spells::ICE_BOLT, Spells::POISON_STREAM, Spells::UNFAILING_STRIKE, Spells::WOLF_SPIRIT, Spells::MAGIC_CABINET};
 }

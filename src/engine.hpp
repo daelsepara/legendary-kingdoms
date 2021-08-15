@@ -2090,31 +2090,36 @@ namespace Engine
         }
     }
 
+    void LOSE_ALL(Character::Base &character, Equipment::Class Class)
+    {
+        if (character.Type != Character::Type::SKULLCRACKER)
+        {
+            auto items = std::vector<Equipment::Base>();
+
+            for (auto i = 0; i < character.Equipment.size(); i++)
+            {
+                if (character.Equipment[i].Class != Class)
+                {
+                    items.push_back(character.Equipment[i]);
+                }
+            }
+
+            if (items.size() > 0)
+            {
+                character.Equipment = items;
+            }
+            else
+            {
+                character.Equipment.clear();
+            }
+        }
+    }
+
     void LOSE_ALL(Party::Base &party, Equipment::Class Class)
     {
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Type != Character::Type::SKULLCRACKER)
-            {
-                auto items = std::vector<Equipment::Base>();
-
-                for (auto j = 0; j < party.Members[i].Equipment.size(); j++)
-                {
-                    if (party.Members[i].Equipment[j].Class != Class)
-                    {
-                        items.push_back(party.Members[i].Equipment[j]);
-                    }
-                }
-
-                if (items.size() > 0)
-                {
-                    party.Members[i].Equipment = items;
-                }
-                else
-                {
-                    party.Members[i].Equipment.clear();
-                }
-            }
+            Engine::LOSE_ALL(party.Members[i], Class);
         }
     }
 

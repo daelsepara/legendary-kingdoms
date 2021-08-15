@@ -6621,6 +6621,11 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
 
         auto selection = std::vector<int>();
 
+        if (mode == Spells::Select::UNLEARN && !Engine::VERIFY_SPELL_LIMIT(caster))
+        {
+            displayMessage("Your spellbook is holding too many spells! You must unlearn spells from your spellbook.", intRD);
+        }
+
         while (!done)
         {
             auto current = -1;
@@ -14822,9 +14827,16 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
             {
-                done = true;
+                if (!Engine::VERIFY_SPELL_LIMIT(character))
+                {
+                    displayMessage("Your spellbook is holding too many spells! You must unlearn spells from your spellbook.", intRD);
+                }
+                else
+                {
+                    done = true;
 
-                break;
+                    break;
+                }
             }
         }
     }
@@ -15926,6 +15938,8 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 text = NULL;
             }
 
+            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
@@ -15937,8 +15951,6 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     flash_message = false;
                 }
             }
-
-            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
 
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -16103,9 +16115,9 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                             for (auto i = 0; i < party.Members[character].SpellBook.size(); i++)
                                             {
-                                                if (Engine::FIND_LIST(spell_selection, spell_selection[i]) < 0)
+                                                if (Engine::FIND_LIST(spell_selection, i) < 0)
                                                 {
-                                                    newSpellBook.push_back(party.Members[character].SpellBook[spell_selection[i]]);
+                                                    newSpellBook.push_back(party.Members[character].SpellBook[i]);
                                                 }
                                             }
 
@@ -21733,18 +21745,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
-                if (flash_message)
-                {
-                    if ((SDL_GetTicks() - start_ticks) < duration)
-                    {
-                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
-                    }
-                    else
-                    {
-                        flash_message = false;
-                    }
-                }
-
                 if (!compact)
                 {
                     fillRect(renderer, controls[0].W + 2 * border_space, controls[0].H + 2 * border_space, controls[0].X - border_space, controls[0].Y - border_space, intWH);
@@ -21818,6 +21818,18 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
 
                 renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
 
                 quit = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 

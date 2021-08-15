@@ -600,7 +600,7 @@ namespace Book1
         {
             if (outcome)
             {
-                Bye = "The door pops open. You gain the code A57.\n\nYou can explore the corridor beyond.";
+                Bye = "The door pops open. You can explore the corridor beyond.\n\nNote: You gained the code A57.";
 
                 Engine::GET_CODES(party, {Codes::A(57)});
             }
@@ -1192,7 +1192,7 @@ namespace Book1
 
             ID = 34;
 
-            Text = "You return to the large burial chamber. The ghouls are long gone, and there is no more treasure to be found here. If you wish you can scribe the spell on the bronze tablet into your spellbook, if you have had reason to remove it:\n\nWisdom (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\nRecharge: 50 silver.";
+            Text = "You return to the large burial chamber. The ghouls are long gone, and there is no more treasure to be found here. If you wish you can scribe the spell on the bronze tablet into your spellbook, if you have had reason to remove it:\n\nWisdom (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\nRecharge: 50 silver";
 
             Bye = "You return to the crossroads.";
 
@@ -2698,17 +2698,19 @@ namespace Book1
 
             if (Engine::IS_ACTIVE(party, party.LastSelected))
             {
-                for (auto i = 0; i < party.Members[party.LastSelected].Equipment.size(); i++)
-                {
-                    auto item = party.Members[party.LastSelected].Equipment[i];
+                Engine::LOSE_ALL(party.Members[party.LastSelected], Equipment::Class::ARMOUR);
+                Engine::LOSE_ALL(party.Members[party.LastSelected], Equipment::Class::WEAPON);
 
-                    if (item.Class != Equipment::Class::WEAPON && item.Class != Equipment::Class::ARMOUR)
-                    {
-                        Take.push_back(item);
-                    }
-                }
+                Take = party.Members[party.LastSelected].Equipment;
 
                 Limit = Take.size();
+
+                auto deadCharacter = Engine::FIND_CHARACTER(party.Order, party.Members[party.LastSelected].Type);
+
+                if (deadCharacter >= 0 && deadCharacter < party.Order.size())
+                {
+                    party.Order.erase(party.Order.begin() + deadCharacter);
+                }
 
                 party.Members.erase(party.Members.begin() + party.LastSelected);
 
@@ -3368,7 +3370,7 @@ namespace Book1
 
             ID = 103;
 
-            Text = "You open the cage and the bird immediately flies onto a low branch. You are about to move on when the bird addresses you. \"I'm grateful,\" it says. \"Not many humans would do such a thing without promise of reward.\"\n\n\"Not many birds can talk,\" you say, surprised.\n\n\"All animals can talk -- but rarely in your language,\" admits the bird. \"I can teach you our tongue, if you have any skill in sorcery.\"\n\nIf you want to accept the bird's offer you can learn the spell below if you have any spellcasters in your party:\n\nAnimal Speech (Adventure)\n\nYou are able to communicate using the secret speech of animals.\n\nRecharge: 50 silver.";
+            Text = "You open the cage and the bird immediately flies onto a low branch. You are about to move on when the bird addresses you. \"I'm grateful,\" it says. \"Not many humans would do such a thing without promise of reward.\"\n\n\"Not many birds can talk,\" you say, surprised.\n\n\"All animals can talk -- but rarely in your language,\" admits the bird. \"I can teach you our tongue, if you have any skill in sorcery.\"\n\nIf you want to accept the bird's offer you can learn the spell below if you have any spellcasters in your party:\n\nAnimal Speech (Adventure)\n\nYou are able to communicate using the secret speech of animals.\n\nRecharge: 50 silver";
 
             Bye = "You thank the bird and watch as it flies off above the jungle canopy.";
 
@@ -5369,7 +5371,7 @@ namespace Book1
 
             ID = 168;
 
-            Text = "With the golems defeated you must decide what to do next.\n\nGain the code A92.";
+            Text = "With the golems defeated you must decide what to do next.\n\nNote: You gained the code A92.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Examine the vault door", {Book::Type::BOOK1, 215}));
@@ -7801,7 +7803,7 @@ namespace Book1
 
             ID = 245;
 
-            Text = "The ogre seems stunned that such thin and puny creatures could possess so much money. \"Beats me why you wander 'round dungeons when you have that kind of dosh lining your pockets, but well'a'day.\"\n\nThe ogre rises to his feet. \"Skullcracker's the name,\" he says. \"I don't do cities, and I don't do boats. Other than that, I'll hang around with you for a bit.\n\nSkullcracker hands you a RUSTY KEY. \"This is the key to the room I'm supposed to be guarding,\" he says. \"Why don't we loot it, instead? Just go north, then east a bit, and you'll find it.\"\n\nNote: Skullcracker can be treated just like an ordinary party member. He possesses the following skills:\n\nFighting: 8, Stealth: 1, Lore: 1, Survival: 3, Charisma: 2, Health: 12\n\nSkullcracker has a number of special rules as a party member:\n\n* He is lazy and he will not carry any equipment for you, even items that boost his skills. Skullcracker wields a CLUB, but it is nothing special. Should the party ever lose their equipment he will be able to replace the CLUB instantly with a bit of large bone, table leg or other such item. Effectively, Skullcracker is never disarmed.\n\n* He won't enter a city, which includes the following locations: Chalice, Clifftop, Cursus, Lhasbreath, Luutanesh or Saltdad. If you go to these places, Skullcracker will wait outside until you leave. Ogres aren't very popular in civilised places.\n\n* Even though he can't stay in human inns, Skullcracker will recover Health points at the same rate as your other party members when you pay to stay at an inn.\n\n* He won't board a ship. He had a queasy tummy on the orc boat and won't tolerate going aboard another. If you insist on going sailing, he will leave the party.\n\n* His contract with you ends when you travel to another land -- i.e. you begin to explore another book.\n\nAt this point, Skullcracker with take his leave and wander into the desert.\n\nYou gained the code A76.";
+            Text = "The ogre seems stunned that such thin and puny creatures could possess so much money. \"Beats me why you wander 'round dungeons when you have that kind of dosh lining your pockets, but well'a'day.\"\n\nThe ogre rises to his feet. \"Skullcracker's the name,\" he says. \"I don't do cities, and I don't do boats. Other than that, I'll hang around with you for a bit.\n\nSkullcracker hands you a RUSTY KEY. \"This is the key to the room I'm supposed to be guarding,\" he says. \"Why don't we loot it, instead? Just go north, then east a bit, and you'll find it.\"\n\nNote: Skullcracker can be treated just like an ordinary party member. He possesses the following skills:\n\nFighting: 8, Stealth: 1, Lore: 1, Survival: 3, Charisma: 2, Health: 12\n\nSkullcracker has a number of special rules as a party member:\n\n* He is lazy and he will not carry any equipment for you, even items that boost his skills. Skullcracker wields a CLUB, but it is nothing special. Should the party ever lose their equipment he will be able to replace the CLUB instantly with a bit of large bone, table leg or other such item. Effectively, Skullcracker is never disarmed.\n\n* He won't enter a city, which includes the following locations: Chalice, Clifftop, Cursus, Lhasbreath, Luutanesh or Saltdad. If you go to these places, Skullcracker will wait outside until you leave. Ogres aren't very popular in civilised places.\n\n* Even though he can't stay in human inns, Skullcracker will recover Health points at the same rate as your other party members when you pay to stay at an inn.\n\n* He won't board a ship. He had a queasy tummy on the orc boat and won't tolerate going aboard another. If you insist on going sailing, he will leave the party.\n\n* His contract with you ends when you travel to another land. At this point, Skullcracker with take his leave and wander into the desert.\n\nYou gained the code A76.";
 
             Bye = "Thanking your new companion, you return to the crossroads.";
 
@@ -11748,7 +11750,7 @@ namespace Book1
 
             ID = 379;
 
-            Text = "You make your way down the pitch-black tunnel, relying on touching the damp walls to guide you. You emerge into a small cell, through which light streams weakly from a tiny arch high in the wall. In the cell you can see Che Long, your trainer, and several other gladiator slaves.\n\n\"Welcome, my students,\" bows Che Long. He indicates Milagros. \"You come in good company, I see.\"\n\n\"I believe we can trust these warriors,\" announces Milagros. \"Tell them the plan, Che Long.\"\n\n\"Do they know what they are letting themselves in for... who they fight for?\"\n\n\"We are all slaves here,\" you assure them. \"We fight for our freedom.\"\n\n\"That, and so much more,\" says Che Long, smiling. \"This is no mere slave girl. Standing before you is the reincarnation of the Everchild. The Queen of the Valley. The supreme sorceress herself.\"\n\nYou look down at the dirty blonde waif. She speaks well, but could she really be a queen? The Everchild is a figure of legend, a story told to squires and children. Milagros sees the doubt in your eyes and places a finger in the soul bowl. She withdraws it, and paints the walls with the thick soup, drawing strange symbols and wards which begin to pulse and move as if under their own power. To your astonishment she has drawn a spell upon the walls, filled with arcane power.\n\nWith a wave of her hands Milagros bathes your bodies in healing energies. Your party's Health scores are restored to full. Any of your characters that lost limbs, tongues or other organs, are restored. Any diseases or curses you are affected by are also removed.\n\nThere can be no doubt. This young slave girl is, if not the Everchild, certainly a sorceress of great power.\n\nNote: You can learn the following spell:\n\nSoothing Touch (Adventure or Combat)\n\nYour hands glow with divine energy. Choose one of your party members; they can restore 5 Health points.\n\nRecharge: 50 silver.";
+            Text = "You make your way down the pitch-black tunnel, relying on touching the damp walls to guide you. You emerge into a small cell, through which light streams weakly from a tiny arch high in the wall. In the cell you can see Che Long, your trainer, and several other gladiator slaves.\n\n\"Welcome, my students,\" bows Che Long. He indicates Milagros. \"You come in good company, I see.\"\n\n\"I believe we can trust these warriors,\" announces Milagros. \"Tell them the plan, Che Long.\"\n\n\"Do they know what they are letting themselves in for... who they fight for?\"\n\n\"We are all slaves here,\" you assure them. \"We fight for our freedom.\"\n\n\"That, and so much more,\" says Che Long, smiling. \"This is no mere slave girl. Standing before you is the reincarnation of the Everchild. The Queen of the Valley. The supreme sorceress herself.\"\n\nYou look down at the dirty blonde waif. She speaks well, but could she really be a queen? The Everchild is a figure of legend, a story told to squires and children. Milagros sees the doubt in your eyes and places a finger in the soul bowl. She withdraws it, and paints the walls with the thick soup, drawing strange symbols and wards which begin to pulse and move as if under their own power. To your astonishment she has drawn a spell upon the walls, filled with arcane power.\n\nWith a wave of her hands Milagros bathes your bodies in healing energies. Your party's Health scores are restored to full. Any of your characters that lost limbs, tongues or other organs, are restored. Any diseases or curses you are affected by are also removed.\n\nThere can be no doubt. This young slave girl is, if not the Everchild, certainly a sorceress of great power.\n\nNote: You can learn the following spell:\n\nSoothing Touch (Adventure or Combat)\n\nYour hands glow with divine energy. Choose one of your party members; they can restore 5 Health points.\n\nRecharge: 50 silver";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Ask her how she came to be enslaved", {Book::Type::BOOK1, 629}));
@@ -15931,7 +15933,7 @@ namespace Book1
 
             ID = 513;
 
-            Text = "Thinking quickly, you point to the knife-wielding man and address the barbarians. \"Oh, dear! You're not working for Gareth the Snitch, are you? Poor fellows. He's always getting people to do his dirty work, and yet when it comes time for payment he uses clipped coins. Well... there's one born every minute, I suppose.\"\n\nThe barbarians turn angrily upon the small man. Your instinct was right. These are paid assassins, but they don't know their employer very well. The man with the knife panics and begins to flee into the crowd, pursued by the howling barbarians.\n\nYou gained the code A90.";
+            Text = "Thinking quickly, you point to the knife-wielding man and address the barbarians. \"Oh, dear! You're not working for Gareth the Snitch, are you? Poor fellows. He's always getting people to do his dirty work, and yet when it comes time for payment he uses clipped coins. Well... there's one born every minute, I suppose.\"\n\nThe barbarians turn angrily upon the small man. Your instinct was right. These are paid assassins, but they don't know their employer very well. The man with the knife panics and begins to flee into the crowd, pursued by the howling barbarians.\n\nNote: You gained the code A90.";
 
             Bye = "You take the opportunity to slip away.";
 
@@ -16020,7 +16022,7 @@ namespace Book1
 
             ID = 517;
 
-            Text = "The Temple of the Unbroken collapses into a pile of broken stones behind you, great clouds of dust bursting from the shattered chambers. You think yourselves lucky to have survived.\n\nYou gained the code A41.";
+            Text = "The Temple of the Unbroken collapses into a pile of broken stones behind you, great clouds of dust bursting from the shattered chambers. You think yourselves lucky to have survived.\n\nNote: You gained the code A41.";
 
             Bye = "After pausing to rest for a while you gather yourselves and prepare to move on.";
 
@@ -18859,7 +18861,7 @@ namespace Book1
 
             ID = 603;
 
-            Text = "To your delight you manage to find all the relevant pieces of the mural and reassemble them together. Inscribed into the stone is a most useful spell.\n\nNote: Any of your spellcasters can add this spell to their spellbooks if they wish but remember that you cannot have more than six spells in a single spellbook at any given time:\n\nSandstorm (Combat)\n\nYou whip up a blast of glassy sand to shred all your foes at once. Make an immediate attack with a Fighting score of 3 against each opponent.\n\nRecharge: 50 silver.";
+            Text = "To your delight you manage to find all the relevant pieces of the mural and reassemble them together. Inscribed into the stone is a most useful spell.\n\nNote: Any of your spellcasters can add this spell to their spellbooks if they wish but remember that you cannot have more than six spells in a single spellbook at any given time:\n\nSandstorm (Combat)\n\nYou whip up a blast of glassy sand to shred all your foes at once. Make an immediate attack with a Fighting score of 3 against each opponent.\n\nRecharge: 50 silver";
 
             Bye = "The heat is overbearing you in this desolate place, so you decide to move on.";
 
@@ -19940,7 +19942,7 @@ namespace Book1
 
             ID = 637;
 
-            Text = "You gain the sense of something obscured in the stonework. Casting your spell, a section of the wall dissolves into darkness. Shining your lanterns within reveals a circular room filled with sturdy shelves and boxes. Your heart hammers in excitement. This is a treasury room, probably one of the smaller treasuries built during the reign of the first Everchild.\n\nSadly, much of the money has already been taken, and many boxes are empty. Perhaps there was some sort of disaster in the waning years of the Everchild's reign? There is still some money to be found, however, including 600 silver coins and a bar of GOLD BULLION.\n\nNote: Gain the code A97.";
+            Text = "You gain the sense of something obscured in the stonework. Casting your spell, a section of the wall dissolves into darkness. Shining your lanterns within reveals a circular room filled with sturdy shelves and boxes. Your heart hammers in excitement. This is a treasury room, probably one of the smaller treasuries built during the reign of the first Everchild.\n\nSadly, much of the money has already been taken, and many boxes are empty. Perhaps there was some sort of disaster in the waning years of the Everchild's reign? There is still some money to be found, however, including 600 silver coins and a bar of GOLD BULLION.\n\nNote: You gained the code A97.";
 
             Bye = "Stuffing your bags with coins, you depart.";
 
@@ -20337,6 +20339,354 @@ namespace Book1
             {
                 return {Book::Type::NONE, -1};
             }
+        }
+    };
+
+    class Story650 : public Story::Base
+    {
+    public:
+        Story650()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 650;
+
+            Text = "The goblin kitchen slaves are dead. You make a search through the room, but there is nothing here of appreciable value. Shrugging, you make your way on.\n\nNote: You gained the code A61.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Leave the kitchen through the north door", {Book::Type::BOOK1, 366}));
+            Choices.push_back(Choice::Base("Leave the kitchen through the south door", {Book::Type::BOOK1, 736}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(61)});
+        }
+    };
+
+    class Story651 : public Story::Base
+    {
+    public:
+        Story651()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 651;
+
+            Text = "With the ghouls defeated you begin a grizzly search through the remains in the burial chamber. You find 125 silver coins and a strangely intact pair of SOFT BOOTS (Stealth +1).\n\nYou find a bronze tablet, set into the wall, upon which a powerful spell has been inscribed:\n\nWisdom (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\nRecharge: 50 silver.\n\nNote: You gained the code A48.";
+
+            Bye = "With nowhere else to go, you return to the crossroads.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 125);
+
+            Engine::GET_CODES(party, {Codes::A(48)});
+
+            Take = {Equipment::SOFT_BOOTS1};
+
+            Limit = 1;
+
+            Spells = {Spells::WISDOM};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 46}; }
+    };
+
+    class Story652 : public Story::Base
+    {
+    public:
+        Story652()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 652;
+
+            Location = Location::Type::CURSUS;
+
+            Text = "It costs 50 silver coins to repair one Health point on any ship you have docked in Cursus harbour. You can repair a ship up to its maximum starting health.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::HARBOUR;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Ships.clear();
+
+            Cargo.clear();
+
+            ShipRepairPrice = 50;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 703}; }
+    };
+
+    class Story653 : public Story::Base
+    {
+    public:
+        Story653()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 653;
+
+            Text = "You have returned to the old treasury room. It is filled with empty boxes. If you missed something the first time you looted it, the Everchild's agents would have taken the rest by now!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 620}; }
+    };
+
+    class Story654 : public Story::Base
+    {
+    public:
+        Story654()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 654;
+
+            Text = "You peer through the door, to be presented with the sight of two foul looking orcs playing at cards together in a small room. A pile of silver pieces are scattered across the table, no doubt for the wagers in the game. They are quite taken with their game, but it would still be rather difficult to sneak up on them in such a tiny room.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Attack the orcs", {Book::Type::BOOK1, 2}));
+            Choices.push_back(Choice::Base("Try to sneak up on one of them", {Book::Type::BOOK1, 383}));
+            Choices.push_back(Choice::Base("Leave them to their game and move on", {Book::Type::BOOK1, 350}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(56)}))
+            {
+                return {Book::Type::BOOK1, 561};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story655 : public Story::Base
+    {
+    public:
+        Story655()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 655;
+
+            Text = "You slit the wizard's throat. He silently drops to the ground, obligingly dead. Not wanting to delay and end up captured, you slip away, back to the command tent.\n\nNote: You gained the code A95.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(95)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 96}; }
+    };
+
+    class Story656 : public Story::Base
+    {
+    public:
+        Story656()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 656;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
+            Text = "The slave market of Lhasbreath contains many varied peoples from across the valley, seized in raids by the barbarian warriors that rule the town. Most will be here only temporarily; the best slaves are sold on to the richer cities of the valley for farm work, or to perish in the terrible arena in Saltdad.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::RECRUIT;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story657 : public Story::Base
+    {
+    public:
+        Story657()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 657;
+
+            Location = Location::Type::DESERT;
+
+            Text = "You are in a blazing equatorial desert, walking along the cliffside that looks across the Azure Deep to the south. You are midway, you think, between the city of Cursus and the crumbling ruins of Mordain. The heat is truly dreadful, and despite the cooling winds blowing across the sea, there is not a drop to drink except what you have brought with you.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Survive the Desert (Team check: Survival 4+, Successes: 4)", {Book::Type::BOOK1, -657}, {Book::Type::BOOK1, -657}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (!outcome)
+            {
+                temp_string = "Each party member loses 1 Health from the dreadful effects of the sun.";
+
+                Engine::GAIN_HEALTH(party, -1);
+
+                if (Engine::ROLL(1) < 3)
+                {
+                    temp_string += " You were harassed during your journey.";
+
+                    Choices[0].DestinationFailed = {Book::Type::BOOK1, 28};
+                }
+                else
+                {
+                    Choices[0].DestinationFailed = {Book::Type::BOOK1, -657};
+                }
+
+                Bye = temp_string.c_str();
+            }
+            else
+            {
+                if (Engine::ROLL(1) < 3)
+                {
+                    Bye = "You were harassed during your journey.";
+
+                    Choices[0].Destination = {Book::Type::BOOK1, 28};
+                }
+                else
+                {
+                    Bye = NULL;
+
+                    Choices[0].Destination = {Book::Type::BOOK1, -657};
+                }
+            }
+        }
+    };
+
+    class Event657 : public Story::Base
+    {
+    public:
+        Event657()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -657;
+
+            DisplayID = 657;
+
+            Location = Location::Type::DESERT;
+
+            Text = "Where will you go now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North, towards the Temple of the Unbroken", {Book::Type::BOOK1, 535}));
+            Choices.push_back(Choice::Base("East, towards the city of Cursus", {Book::Type::BOOK1, 340}));
+            Choices.push_back(Choice::Base("West, towards the Mordain Ruins", {Book::Type::BOOK1, 515}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story658 : public Story::Base
+    {
+    public:
+        Story658()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 658;
+
+            Text = "\"Whipping is so dull!\" moans Lothor. \"Except when done en-mass!\"\n\nAt a nod from the king you are grasped by the guards and stripped. Soon King Lothor and his favourite lords are striping your backs with the whip, to the jeers of his court.\n\nEventually evening comes and Lothor tires of his sport. You are cast out of his court naked, to peels of laughter from his servants.\n\nNote: Each party member must lose 3 points of Health. Any characters wearing armour discards it, but the rest of your equipment is thrown after you. You gained the code A34.";
+
+            Bye = "Vowing revenge you slink away to the marketplace to buy some new clothes.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -3);
+
+            Engine::LOSE_ALL(party, Equipment::Class::ARMOUR);
+
+            Engine::GET_CODES(party, {Codes::A(34)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 759}; }
+    };
+
+    class Story659 : public Story::Base
+    {
+    public:
+        Story659()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 659;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
+            Text = "You quietly prowl the corridors until you come to the open door of Unbraaki's study. Except for the occasional monkey, proudly strutting down the corridor in a tall hat, there is no one about. You peek inside the room. It is a treasure house of knowledge and spells, quills and ink. You may take some CALLIGRAPHY INK if you wish. You find books that contain all of the common spells of the world. Additionally, you find a very special spell indeed:\n\nClinging Dread (Mass Combat)\n\nDoubt and uncertainty fill the hearts of the enemy soldiers. Reduce the Morale score of an enemy unit by 1 point.\n\nRecharge: 50 silver.\n\nPleased with your findings you decide to quickly move on.\n\nNote: You can only cast this spell during Mass Combat (when entire armies clash). It has no effect on personal combat. You gained the code A91.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("To the library", {Book::Type::BOOK1, 459}));
+            Choices.push_back(Choice::Base("To the basement", {Book::Type::BOOK1, 67}));
+            Choices.push_back(Choice::Base("Quietly leave the palace", {Book::Type::BOOK1, 265}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(91)}))
+            {
+                return {Book::Type::BOOK1, 621};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(91)});
+
+            Take = {Equipment::CALLIGRAPHY_INK};
+
+            Limit = 1;
+
+            Spells = {Spells::ANIMAL_SPEECH, Spells::ARMOUR_OF_HEAVEN, Spells::ICE_BOLT, Spells::POISON_STREAM, Spells::UNFAILING_STRIKE, Spells::WOLF_SPIRIT, Spells::MAGIC_CABINET, Spells::CLINGING_DREAD};
         }
     };
 
@@ -21043,6 +21393,17 @@ namespace Book1
     auto story647 = Story647();
     auto story648 = Story648();
     auto story649 = Story649();
+    auto story650 = Story650();
+    auto story651 = Story651();
+    auto story652 = Story652();
+    auto story653 = Story653();
+    auto story654 = Story654();
+    auto story655 = Story655();
+    auto story656 = Story656();
+    auto story657 = Story657();
+    auto event657 = Event657();
+    auto story658 = Story658();
+    auto story659 = Story659();
 
     void InitializeStories()
     {
@@ -21052,7 +21413,7 @@ namespace Book1
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
-            &event597, &event617, &event626, &event639,
+            &event597, &event617, &event626, &event639, &event657,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -21117,7 +21478,8 @@ namespace Book1
             &story610, &story611, &story612, &story613, &story614, &story615, &story616, &story617, &story618, &story619,
             &story620, &story621, &story622, &story623, &story624, &story625, &story626, &story627, &story628, &story629,
             &story630, &story631, &story632, &story633, &story634, &story635, &story636, &story637, &story638, &story639,
-            &story640, &story641, &story642, &story643, &story644, &story645, &story646, &story647, &story648, &story649};
+            &story640, &story641, &story642, &story643, &story644, &story645, &story646, &story647, &story648, &story649,
+            &story650, &story651, &story652, &story653, &story654, &story655, &story656, &story657, &story658, &story659};
     }
 }
 #endif
