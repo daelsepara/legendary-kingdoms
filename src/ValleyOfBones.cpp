@@ -4281,6 +4281,18 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
             Uint32 duration = 3000;
 
+            // Lambda functions for displaying flash messages
+            auto displayMessage = [&](std::string msg, Uint32 color)
+            {
+                flash_message = true;
+
+                message = msg;
+
+                flash_color = color;
+
+                start_ticks = SDL_GetTicks();
+            };
+
             auto marginx = (int)(Margin * SCREEN_WIDTH);
 
             auto fullwidth = SCREEN_WIDTH - 2 * marginx;
@@ -4360,6 +4372,11 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
             auto damaged = false;
 
+            if (Engine::VERIFY_CODES(party, {Codes::Type::ENEMY_DAZING_LIGHTS}))
+            {
+                displayMessage("The enemy cast Dazing Lights. Your target is more difficult to hit!", intRD);
+            }
+
             while (!done)
             {
                 fillWindow(renderer, intWH);
@@ -4424,22 +4441,14 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
                             combat_damage = damage;
 
-                            flash_message = true;
-
                             if (damage > 0)
                             {
-                                message = std::string(party.Members[combatant].Name) + "'s " + std::string(spell.Name) + " deals " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!";
-
-                                flash_color = intLB;
+                                displayMessage(std::string(party.Members[combatant].Name) + "'s " + std::string(spell.Name) + " deals " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!", intLB);
                             }
                             else
                             {
-                                message = std::string(party.Members[combatant].Name) + "'s " + std::string(spell.Name) + " was ineffective!";
-
-                                flash_color = intRD;
+                                displayMessage(std::string(party.Members[combatant].Name) + "'s " + std::string(spell.Name) + " was ineffective!", intRD);
                             }
-
-                            start_ticks = SDL_GetTicks();
 
                             damaged = true;
                         }
@@ -13672,14 +13681,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                 break;
             }
-
-            if (flash_message)
-            {
-                if ((SDL_GetTicks() - start_ticks) > duration)
-                {
-                    start_ticks = SDL_GetTicks();
-                }
-            }
         }
     }
 
@@ -14306,14 +14307,6 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                 break;
             }
-
-            if (flash_message)
-            {
-                if ((SDL_GetTicks() - start_ticks) > duration)
-                {
-                    start_ticks = SDL_GetTicks();
-                }
-            }
         }
     }
 
@@ -14810,14 +14803,6 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
                 break;
             }
-
-            if (flash_message)
-            {
-                if ((SDL_GetTicks() - start_ticks) > duration)
-                {
-                    start_ticks = SDL_GetTicks();
-                }
-            }
         }
     }
 
@@ -15192,14 +15177,6 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                 done = true;
 
                 break;
-            }
-
-            if (flash_message)
-            {
-                if ((SDL_GetTicks() - start_ticks) > duration)
-                {
-                    start_ticks = SDL_GetTicks();
-                }
             }
         }
     }
