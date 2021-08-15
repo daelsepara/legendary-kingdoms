@@ -5357,6 +5357,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 auto result = results[i] - 1;
 
+                                if (direction == 1 && Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
+                                {
+                                    result = std::max(0, result - 1);
+                                }
+
                                 fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
 
                                 if (stage == Engine::Attack::DAMAGE)
@@ -5372,7 +5377,14 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     }
                                     else
                                     {
-                                        if (results[i] >= Difficulty)
+                                        auto attack_result = results[i];
+
+                                        if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
+                                        {
+                                            attack_result = std::max(1, attack_result - 1);
+                                        }
+
+                                        if (attack_result >= Difficulty)
                                         {
                                             thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intRD, 2);
 
@@ -5456,7 +5468,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
                             {
-                                displayMessage("Dazing Lights reduces " + std::string(monsters[opponent].Name) + "'s Attack score by 1.", intLB);
+                                displayMessage("Dazing Lights reduces " + std::string(monsters[opponent].Name) + "'s Attack results by 1.", intLB);
                             }
 
                             if (monsters[opponent].Type == Monster::Type::SKALLOS && !monsters[opponent].Damaged)
@@ -5615,11 +5627,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         else if (spell == Spells::Type::SANDSTORM)
                         {
                             attack_score = 3;
-                        }
-
-                        if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
-                        {
-                            attack_score -= 1;
                         }
 
                         if (attack_score < 0)
