@@ -20351,7 +20351,14 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 error = true;
 
-                                message = "You do not have a ship at this location!";
+                                if (location != Location::Type::NONE)
+                                {
+                                    message = "You do not have a ship at " + std::string(Location::Description[location]);
+                                }
+                                else
+                                {
+                                    message = "You do not have a ship at this location!";
+                                }
                             }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::TEAM_MAX_HEALTH)

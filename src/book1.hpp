@@ -435,10 +435,12 @@ namespace Book1
 
             ID = 13;
 
+            Location = Location::Type::MORDAIN;
+
             Text = "What do you wish to do now?";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Board your ship", {Book::Type::BOOK1, 851}, Choice::Type::SHIP));
+            Choices.push_back(Choice::Base("Board your ship", {Book::Type::BOOK1, 851}, Choice::Type::SHIP, Location::Type::MORDAIN));
             Choices.push_back(Choice::Base("Enter the wide tunnel", {Book::Type::BOOK1, 593}));
 
             Controls = Story::Controls::STANDARD;
@@ -1156,7 +1158,7 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("Return to the city centre", {Book::Type::BOOK1, 340}));
-            Choices.push_back(Choice::Base("Set sail on one of your ships", {Book::Type::BOOK1, 499}));
+            Choices.push_back(Choice::Base("Set sail on one of your ships", {Book::Type::BOOK1, 499}, Choice::Type::SHIP, Location::Type::CURSUS));
 
             Controls = Story::Controls::HARBOUR;
         }
@@ -1331,7 +1333,7 @@ namespace Book1
             Text = "With a dramatic flourish you unroll the DRAGON HEAD from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Lhasbreath Berserkers]: Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nNote: You gained the code A16.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Survival", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -1646,7 +1648,7 @@ namespace Book1
             Bye = "Thanking Sir Lawrence and Emlyn for their generosity, you depart into the city.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::SURVIVAL}, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Survival", {Book::Type::BOOK1, 775}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::SURVIVAL}, 1));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -1815,7 +1817,7 @@ namespace Book1
             Bye = "You head north, directly away from the Blackwall.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 511}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::SURVIVAL}, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Survival", {Book::Type::BOOK1, 511}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::SURVIVAL}, 1));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -2997,7 +2999,7 @@ namespace Book1
             Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nWhen Emlyn reports her findings, the news is rather disappointing. \"We have recovered many pretty blooms,\" she admits. \"Certainly, the fragrances are quite striking... however, there are no medicinal or culinary plants, as far as I can tell. Nothing sellable.\"\n\n\"Curses!\" grumbles Sir Lawrence. \"This expedition is turning into an expensive failure.\"\n\nStill, Sir Lawrence is good to his word and presents you with a purse of 150 silver coins. Offering your consolations over the failed mission, you depart into the city.\n\nAlthough the expedition did not go perfectly you have learned a lot.\n\nNote: You gained the code A85.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of SURVIVAL", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Survival", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -9080,10 +9082,10 @@ namespace Book1
 
             ID = 290;
 
-            Text = "he sister bows as you present her with the letter, and immediately escorts you into the chamber of the God King. The king takes the letter, glancing over it with a casual eye. Long before he could have finished reading it, he stands.\n\n\"Yes, this is the Everchild as I remember her,\" nods the God King. \"I officially place the armies of Chalice at her disposal. My kensai warriors shall attend her, a full five hundred men. An additional six hundred archers shall provide her with support. Once she is queen, we shall defer our city to her policies as they relate to all international affairs.\"\n\nYou are dumbstruck. Could the God King really have changed his mind from a quick glance at a letter? Or has he received council since your last meeting and was going to back the Everchild no matter what? You suppose you shall never know.\n\nYou thank the God King for his support, leaving the chamber in amazement at your success.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Kensai Warriors]: Strength 4, Morale 4\n[Chalice Archers]: Strength 2, Morale 3\n\nGaining the God King's support has been quite an endeavour.\n\nNote: You gained the code A20.";
+            Text = "The sister bows as you present her with the letter, and immediately escorts you into the chamber of the God King. The king takes the letter, glancing over it with a casual eye. Long before he could have finished reading it, he stands.\n\n\"Yes, this is the Everchild as I remember her,\" nods the God King. \"I officially place the armies of Chalice at her disposal. My kensai warriors shall attend her, a full five hundred men. An additional six hundred archers shall provide her with support. Once she is queen, we shall defer our city to her policies as they relate to all international affairs.\"\n\nYou are dumbstruck. Could the God King really have changed his mind from a quick glance at a letter? Or has he received council since your last meeting and was going to back the Everchild no matter what? You suppose you shall never know.\n\nYou thank the God King for his support, leaving the chamber in amazement at your success.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Kensai Warriors]: Strength 4, Morale 4\n[Chalice Archers]: Strength 2, Morale 3\n\nGaining the God King's support has been quite an endeavour.\n\nNote: You gained the code A20.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of CHARISMA", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1, 2, 0));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Charisma", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -10651,6 +10653,11 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            party.CurrentShip = -1;
+        }
     };
 
     class Story341 : public Story::Base
@@ -10981,7 +10988,7 @@ namespace Book1
             Bye = "Waving the harbour crew goodbye you return to your ship.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 82}, Choice::Type::ROLL_ATTRIBUTE_WITH_STATUS, {Character::Status::FOUND_COGWHEEL}, {Attribute::Type::SURVIVAL}, 1, 2, 0));
+            Choices.push_back(Choice::Base("Gain 1 point of Survival", {Book::Type::BOOK1, 82}, Choice::Type::ROLL_ATTRIBUTE_WITH_STATUS, {Character::Status::FOUND_COGWHEEL}, {Attribute::Type::SURVIVAL}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -11971,7 +11978,7 @@ namespace Book1
             Text = "Hardly daring to breathe, your party member manages to step carefully across the chamber, avoiding every pressure plate and hidden tripwire. You may take the BLACK PRISM from the pedestal. You only hope it was worth the danger retrieving it!\n\nRetracing your steps with a heart-thumping precision, you manage to make it out of the chamber to the warm congratulations of your colleagues.\n\nNote: You gained the code A80.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Gain 1 point of SURVIVAL", {Book::Type::BOOK1, 310}, Choice::Type::LASTCHARACTER_ROLLS_FOR_ATTRIBUTEINCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
+            Choices.push_back(Choice::Base("Gain 1 point of Survival", {Book::Type::BOOK1, 310}, Choice::Type::LASTCHARACTER_ROLLS_FOR_ATTRIBUTEINCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -15417,7 +15424,7 @@ namespace Book1
             Bye = "You silently return to the ground floor of the pyramid.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of STEALTH", {Book::Type::BOOK1, 574}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, Team::Type::ZIGGURAT, {Attribute::Type::STEALTH}, 1, 2, 0));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Stealth", {Book::Type::BOOK1, 574}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, Team::Type::ZIGGURAT, {Attribute::Type::STEALTH}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -15918,7 +15925,7 @@ namespace Book1
             Text = "You manage to persuade the crowd that the dead man has been honoured enough, and that the last thing he would want was violence with the state after working so selflessly for it. Reluctantly the crowd disperse, taking the casket for burial. The kensai thank you for your support and then carry on their way.\n\nThis was a sensitive situation which you have diffused.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of CHARISMA", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1, 1, 0));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Charisma", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1, 1, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -17199,6 +17206,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 554;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Text = "\"Death to the Iron King!\" you snarl, drawing your weapons. The soldiers look horrified to see such disciplined warriors before them.";
 
@@ -18534,6 +18545,11 @@ namespace Book1
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            party.CurrentShip = -1;
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 755}; }
@@ -20690,6 +20706,403 @@ namespace Book1
         }
     };
 
+    class Story660 : public Story::Base
+    {
+    public:
+        Story660()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 660;
+
+            Text = "Since the lid is so heavy two of your party members attempt to shift it. Almost as soon as you touch it the coffin lid slides aside. Inside, it's skin rotten with putrefaction, is a zombie, so worm-eaten it is impossible to tell its gender. It hisses as it rises, a hideous grey tongue extending grotesquely from its mouth. All around you the inanimate skeletons suddenly snap to attention, drawing the poles they were hung upon to use as quarterstaffs. You are surrounded and must fight.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {
+                Monster::Base("Zombie", 7, 4, 2, 20, 0),
+                Monster::Base("Skeletons", 6, 5, 4, 12, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 341}; }
+    };
+
+    class Story661 : public Story::Base
+    {
+    public:
+        Story661()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 661;
+
+            Text = "Almost casually you empty in the VIAL OF POISON as if it were nothing more than another herb or spice, before drifting away into the shadows. The cooks are blissfully unaware of your modifications, and soon begin to dish out the stew into hundreds of wooden bowls. There is nothing more you can do here, so you quietly slip away into the city.\n\nThe next morning the Bronzeguard compound is closed, and only regular guards appear to be patrolling the streets. The lack of enormous, armoured warriors is immediately obvious, and rumours and petty crime begin to sweep the city. There can be no doubt that the Bronzeguard, if not completely destroyed, have been dealt a dreadful blow.\n\nNote: You gained the code A8.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Stealth", {Book::Type::BOOK1, 75}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::STEALTH}, 1, 2, 0));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::VIAL_OF_POISON});
+
+            Engine::GET_CODES(party, {Codes::A(8)});
+        }
+    };
+
+    class Story662 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story662()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 662;
+
+            Location = Location::Type::MORDAIN;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You are in the magnificent ruins of Mordian harbour. Four hundred years of tidal forces have not yet eroded its stone dockyard, with the stone faces of Mordainian kings, carved from the cliff face, peering out to sea. Although the grand stairwell to the top of the cliff has long since collapsed, a great tunnel, carved to resemble the mouth of some gluttonous god, leads into the cliffside.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(68)}))
+            {
+                PreText += "\n\nBobbing shabbily in dock is large wooden ship, made of crudely hammered planks with sails made of animal skins. The decorations and savage glyphs on the side can mean only one thing. This is an orcish vessel. What has possessed those vile creatures to travel all the way to the Valley of Bones? The ship is abandoned but will require a crew. If you have a ship docked in Mordain harbour you may transfer your crew to the orc hulk. It has a large cargo bay, but little else to recommend its use as a sailing ship.";
+
+                if (!Engine::VERIFY_CODES(party, {Codes::A(69)}))
+                {
+                    if (Engine::HAS_SHIP(party, Location::Type::MORDAIN))
+                    {
+                        Choices.push_back(Choice::Base("Transfer your crew to the orc hulk", {Book::Type::BOOK1, 894}));
+                        Choices.push_back(Choice::Base("Board your ship", {Book::Type::BOOK1, 851}));
+                    }
+
+                    Choices.push_back(Choice::Base("Enter the wide tunnel", {Book::Type::BOOK1, 593}));
+                }
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(68)}))
+            {
+                return {Book::Type::BOOK1, 13};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 738};
+            }
+        }
+    };
+
+    class Story663 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story663()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 663;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You chat with your old partner in crime about your many adventures.";
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(11)}))
+            {
+                PreText += " After spending a splendid evening together, you retire back to the city.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(11)}))
+            {
+                return {Book::Type::BOOK1, 820};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 75};
+            }
+        }
+    };
+
+    class Story664 : public Story::Base
+    {
+    public:
+        Story664()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 664;
+
+            Text = "You call out to the orc in the friendliest voice you can summon. The orc does not so much as blink, utterly transfixed by the book.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Throw a book at the orc", {Book::Type::BOOK1, 805}));
+            Choices.push_back(Choice::Base("Sneak up on the orc", {Book::Type::BOOK1, 682}));
+            Choices.push_back(Choice::Base("Close the door and go somewhere else", {Book::Type::BOOK1, 821}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story665 : public Story::Base
+    {
+    public:
+        Story665()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 665;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "The foreign quarter is the place for merchants and travellers who do not follow the meditative teachings of the God King. It is noisier than the rest of Chalice, and the inn itself buzzes with activity from the traders and slaves who are tasked with shipping rice to the other starving cities of the valley. The inn you have found is typical of one in the foreign quarter, slightly shabby, with a mix of all races from dour Clifftop folk to the bone-clad barbarians of Lhasbreath.\n\nA chatty merchant advises you to avoid the Salt Plains, even if you are travelling on foot. \"It is the driest place in the valley and can suck the moisture from your gums quicker than the noonday sun,\" she says. \"It's not even a shortcut... the Westroad is a faster way to Clifftop. All you'll find in the Salt Plains are the bodies of the dead.\"\n\nNote: For every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
+
+            RestPrice = 5;
+            CanRecharge = true;
+
+            Choices.clear();
+
+            Controls = Story::Controls::INN;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story666 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Engine::Destination destination = {};
+
+        Story666()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 666;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters.clear();
+
+            PreText = "A pair of Lhasbreath barbarians come riding over the sands on dusty white horses.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(16)}))
+            {
+                PreText += "  You are immediately accosted.";
+
+                if (party.Money > 0)
+                {
+                    PreText += "You can hand over half your silver coins to appease them. Otherwise the barbarians will try to take your coins the old-fashioned way; through brute force!";
+
+                    if (party.Money > 1)
+                    {
+                        auto coins = party.Money / 2;
+
+                        temp_string = "Hand over " + std::to_string(coins) + " silver coin";
+
+                        if (coins > 1)
+                        {
+                            temp_string += "s";
+                        }
+
+                        Choices.push_back(Choice::Base(temp_string.c_str(), {Book::Type::BOOK1, 219}, Choice::Type::GAIN_MONEY, -coins));
+                    }
+                    else
+                    {
+                        Choices.push_back(Choice::Base("Hand over 1 silver coin", {Book::Type::BOOK1, 219}, Choice::Type::GAIN_MONEY, -1));
+                    }
+
+                    Choices.push_back(Choice::Base("Refuse to hand over your silver", {Book::Type::BOOK1, -666}));
+                }
+                else
+                {
+                    Monsters = {
+                        Monster::Base("Barbarian", 4, 4, 3, 9, 0),
+                        Monster::Base("Barbarian", 3, 4, 3, 8, 0)};
+                }
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 130};
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Engine::GAIN_MONEY(party, 20);
+
+                destination = {Book::Type::BOOK1, 219};
+            }
+        }
+    };
+
+    class Event666 : public Story::Base
+    {
+    public:
+        Event666()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -666;
+
+            Text = "The barbarians will have to take it by brute force!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {
+                Monster::Base("Barbarian", 4, 4, 3, 9, 0),
+                Monster::Base("Barbarian", 3, 4, 3, 8, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 219}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Engine::GAIN_MONEY(party, 20);
+            }
+        }
+    };
+
+    class Story667 : public Story::Base
+    {
+    public:
+        Story667()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 667;
+
+            Text = "There is no point is risking everyone on this dangerous escapade.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Rescue the Sailor (Individual check: Survival 5+, Successes: 2)", {Book::Type::BOOK1, 848}, {Book::Type::BOOK1, 612}, {Attribute::Type::SURVIVAL}, 5, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story668 : public Story::Base
+    {
+    public:
+        Story668()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 668;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Image = "images/book1/soldiers_drag_family.png";
+
+            Text = "As you are wandering the town, you hear screams from a nearby building. Running to investigate, you can see a band of the Iron King's thugs, not Bronzeguard, but regular soldiery, dragging a family from their home. The malicious sergeant informs the elderly father that his failure to pay his taxes means the entire family is to be sold into slavery. They struggle in their bonds and are beaten and kicked for their impertinence.\n\nNote: You gained the code A15.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Walk away; the laws of this city are not for you to interpret", {Book::Type::BOOK1, 75}));
+            Choices.push_back(Choice::Base("Offer to pay the sergeant to release the family", {Book::Type::BOOK1, 808}));
+            Choices.push_back(Choice::Base("Damn the Iron King! Attack the soldiers!", {Book::Type::BOOK1, 554}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(15)}))
+            {
+                return {Book::Type::BOOK1, 852};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(15)});
+        }
+    };
+
+    class Story669 : public Story::Base
+    {
+    public:
+        Story669()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 669;
+
+            Text = "With the orcs dead you move to loot the room and examine their wargear. The leader has a mighty IRON GREATAXE* (Fighting +2) and is wearing a fine suit of BONE ARMOUR (Armour +2). Three IRON SWORDS (Fighting +1) can be looted from the common warriors. Searching the room you find an iron key and a WARM CLOAK (Survival +1). Oddly, there are only 10 silver coins, not much for such a mighty leader. Where will you go now?\n\nNote: You gained the code 64.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go through the west door", {Book::Type::BOOK1, 736}));
+            Choices.push_back(Choice::Base("Go through the south door", {Book::Type::BOOK1, 566}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(64)});
+
+            Engine::GAIN_MONEY(party, 10);
+
+            Take = {Equipment::IRON_GREATAXE2, Equipment::BONE_ARMOUR2, Equipment::IRON_SWORD1, Equipment::IRON_SWORD1, Equipment::IRON_SWORD1, Equipment::IRON_KEY, Equipment::WARM_CLOAK1};
+
+            Limit = 7;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -21404,6 +21817,17 @@ namespace Book1
     auto event657 = Event657();
     auto story658 = Story658();
     auto story659 = Story659();
+    auto story660 = Story660();
+    auto story661 = Story661();
+    auto story662 = Story662();
+    auto story663 = Story663();
+    auto story664 = Story664();
+    auto story665 = Story665();
+    auto story666 = Story666();
+    auto event666 = Event666();
+    auto story667 = Story667();
+    auto story668 = Story668();
+    auto story669 = Story669();
 
     void InitializeStories()
     {
@@ -21413,7 +21837,7 @@ namespace Book1
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
-            &event597, &event617, &event626, &event639, &event657,
+            &event597, &event617, &event626, &event639, &event657, &event666,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -21479,7 +21903,8 @@ namespace Book1
             &story620, &story621, &story622, &story623, &story624, &story625, &story626, &story627, &story628, &story629,
             &story630, &story631, &story632, &story633, &story634, &story635, &story636, &story637, &story638, &story639,
             &story640, &story641, &story642, &story643, &story644, &story645, &story646, &story647, &story648, &story649,
-            &story650, &story651, &story652, &story653, &story654, &story655, &story656, &story657, &story658, &story659};
+            &story650, &story651, &story652, &story653, &story654, &story655, &story656, &story657, &story658, &story659,
+            &story660, &story661, &story662, &story663, &story664, &story665, &story666, &story667, &story668, &story669};
     }
 }
 #endif

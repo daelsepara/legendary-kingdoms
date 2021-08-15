@@ -71,7 +71,8 @@ namespace Choice
         RESET_SHOP,
         CHOOSE_CHARACTER_EXCEPT,
         EVERYONE_SKILL_CHECKS,
-        GAIN_HEART
+        GAIN_HEART,
+        SAIL
     };
 
     class Base
