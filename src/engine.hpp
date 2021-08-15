@@ -45,7 +45,8 @@ namespace Engine
         VICTORY,
         DEFEAT,
         FLEE,
-        EXCEED_LIMIT
+        EXCEED_LIMIT,
+        FAILED_ATTACK
     };
 
     enum class Attack

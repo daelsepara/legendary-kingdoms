@@ -20049,6 +20049,297 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 96}; }
     };
 
+    class Story640 : public Story::Base
+    {
+    public:
+        Story640()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 640;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
+            Text = "You approach the stone tower of Kopu and knock upon the heavy timber door. Sometime later an apologetic slave opens the door, explaining that her master is currently travelling and is not in. \"I believe he was headed to the city of Clifftop, to study the dialect of the sea traders. I'm not sure when he will be back.\"";
+
+            Bye = "You thank the slave for her time and go back to the city centre.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(19)}))
+            {
+                return {Book::Type::BOOK1, 539};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story641 : public Story::Base
+    {
+    public:
+        Story641()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 640;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "\"The God King has already pledged his forces and obedience to your mistress,\" says the sister, annoyed. \"There is nothing more he can provide for you. Please leave him to his meditations.\"";
+
+            Bye = "The firmness of the sister's voice brooks no argument. You leave.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+    };
+
+    class Story642 : public Story::Base
+    {
+    public:
+        Story642()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 642;
+
+            Location = Location::Type::CLIFFTOP;
+
+            IsCity = true;
+
+            Text = "You think twice before entering the hall of Lothor the Ugly. Last time you only narrowly escaped with your lives. You cannot bring yourself to enter, and return to the city centre.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story643 : public Story::Base
+    {
+    public:
+        Story643()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 643;
+
+            Text = "You have been asked by the harbourmaster of Clifftop to retrieve the missing cogwheel from the cargo crane from the seabed.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("You like to attend to this now", {Book::Type::BOOK1, 583}));
+            Choices.push_back(Choice::Base("It too risky", {Book::Type::BOOK1, 82}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story644 : public Story::Base
+    {
+    public:
+        Story644()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 644;
+
+            Text = "The GOLDEN CANDLESTICK looks valuable, but ordinary. You can add it to your equipment.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the bookcase", {Book::Type::BOOK1, 230}));
+            Choices.push_back(Choice::Base("Head upstairs to help the climbing team", {Book::Type::BOOK1, 92}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Team = Team::Type::MAGICAL_DOOR;
+
+            Take = {Equipment::GOLDEN_CANDLESTICK};
+
+            Limit = 1;
+        }
+    };
+
+    class Story645 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story645()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 645;
+
+            Location = Location::Type::MORDAIN;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You gaze out of the missing wall onto a terrific seascape. This dungeon room peeks out of the cliffside, with the ancient, ruined docks some fifty feet below.";
+
+            Choices.clear();
+
+            if (Engine::HAS_SHIP(party, Location::Type::MORDAIN))
+            {
+                PreText += "\n\nYou have a ship docked in Mordain harbour, you can see it here. It might be possible to climb down the cliff face and reach the harbour, though it is far from a risk-free climb.";
+
+                Choices.push_back(Choice::Base("Climb down the cliffs to the harbour", {Book::Type::BOOK1, 188}));
+            }
+
+            Choices.push_back(Choice::Base("Examine the body on the rack", {Book::Type::BOOK1, 274}));
+            Choices.push_back(Choice::Base("Leave the room and return to the crossroads", {Book::Type::BOOK1, 566}));
+
+            Text = PreText.c_str();
+        }
+    };
+
+    class Story646 : public Story::Base
+    {
+    public:
+        Story646()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 646;
+
+            Text = "You grip onto your teammate's hand, heaving with all your might. But it is as if a demon was pulling at their legs. With a cry they are pulled from your grasp and sucked into the earth, never to be seen again. You stagger from the cave in horror, fearing the same fate might befall the rest of you.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                party.Members[party.LastSelected].Health = 0;
+                party.Members[party.LastSelected].Equipment.clear();
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 395}; }
+    };
+
+    class Story647 : public Story::Base
+    {
+    public:
+        Story647()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 647;
+
+            Text = "Voices echo down the tunnel as you emerge onto the balcony of a large chamber. You wave the Everchild and her supporters down as you creep forwards to take a look. Peering over the balcony railing you see a dozen rough looking characters, armed with daggers, clubs and other simple weapons. Around them are various chests and crates, with the names of several different company brands upon them. It is clear that you have stumbled upon a thieves' hideout, their swarthy faces lit by the large central fire in the chamber.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Call out and approach them peacefully", {Book::Type::BOOK1, 187}));
+            Choices.push_back(Choice::Base("Launch a surprise attack on the rogues", {Book::Type::BOOK1, 889}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story648 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Story648()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 648;
+
+            Text = "You stick to the Everchild like glue all evening. With so much at stake the Everchild cannot sleep, and spends the entire night in preparation, touring the troops, and discussing plans. The assassination attempt is so subtle you might have missed it. During a practical discussion concerning which avenues to secure first in the attack on Cursus city, a servant approaches with a flask of wine. He is indecently close before you realise that you don't recognise his face. Acting with your gut instinct you shove the fellow away. He immediately draws a knife and tries to make for the queen.\n\nNote: The battle ends if at the end of any round you fail to inflict even a single point of damage on the Assassin.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {Monster::Base("Assassin", Monster::Type::EVERCHILD_ASSASSIN, 4, 4, 4, 7, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::FAILED_ATTACK)
+            {
+                destination = {Book::Type::BOOK1, 254};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 95};
+            }
+        }
+    };
+
+    class Story649 : public Story::Base
+    {
+    public:
+        Story649()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 649;
+
+            Text = "It won't be easy to talk these brutes down.";
+
+            Choices.clear();
+
+            Choices.push_back(Choice::Base("Talk down Tommul (Individual check: Charisma 5+, Successes: 2)", {Book::Type::BOOK1, 815}, {Book::Type::BOOK1, 291}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::CHARISMA}, 5, 2));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                if (party.Members[party.LastSelected].Type == Character::Type::BRASH)
+                {
+                    return {Book::Type::BOOK1, 697};
+                }
+                else
+                {
+                    return {Book::Type::NONE, -1};
+                }
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -20742,6 +21033,16 @@ namespace Book1
     auto story638 = Story638();
     auto story639 = Story639();
     auto event639 = Event639();
+    auto story640 = Story640();
+    auto story641 = Story641();
+    auto story642 = Story642();
+    auto story643 = Story643();
+    auto story644 = Story644();
+    auto story645 = Story645();
+    auto story646 = Story646();
+    auto story647 = Story647();
+    auto story648 = Story648();
+    auto story649 = Story649();
 
     void InitializeStories()
     {
@@ -20815,7 +21116,8 @@ namespace Book1
             &story600, &story601, &story602, &story603, &story604, &story605, &story606, &story607, &story608, &story609,
             &story610, &story611, &story612, &story613, &story614, &story615, &story616, &story617, &story618, &story619,
             &story620, &story621, &story622, &story623, &story624, &story625, &story626, &story627, &story628, &story629,
-            &story630, &story631, &story632, &story633, &story634, &story635, &story636, &story637, &story638, &story639};
+            &story630, &story631, &story632, &story633, &story634, &story635, &story636, &story637, &story638, &story639,
+            &story640, &story641, &story642, &story643, &story644, &story645, &story646, &story647, &story648, &story649};
     }
 }
 #endif

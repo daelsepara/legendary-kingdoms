@@ -11464,7 +11464,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                 }
 
-                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold, 200);
+                Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold, 200);
 
                 if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
                 {
@@ -11788,23 +11788,35 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     Engine::LOSE_CODES(party, {Codes::Type::ENEMY_DAZING_LIGHTS});
                                 }
 
-                                for (auto i = 0; i < monsters.size(); i++)
-                                {
-                                    if (monsters[i].Health > 0 && Engine::COUNT(party, team) > 0 && combatRound >= monsters[i].Round)
-                                    {
-                                        if (monsters[i].Type != Monster::Type::ZEALOT_HEALER || Engine::COUNT(monsters) == 1)
-                                        {
-                                            if ((monsters[i].Attack > 0 && monsters[i].Difficulty > 0) || monsters[i].Type == Monster::Type::MONKEY_WITH_SPELLS)
-                                            {
-                                                if (monsters[i].Type == Monster::Type::ZEALOT_SORCERER && combatRound == 1)
-                                                {
-                                                    displayMessage("The sorcerer casts a Dazing Lights spell!", intRD);
+                                auto everchild_assassin = Engine::FIND_MONSTER(monsters, Monster::Type::EVERCHILD_ASSASSIN);
 
-                                                    Engine::GET_CODES(party, {Codes::Type::ENEMY_DAZING_LIGHTS});
-                                                }
-                                                else
+                                if (everchild_assassin >= 0 && everchild_assassin < monsters.size() && monsters[everchild_assassin].Health > 0 && !monsters[everchild_assassin].Damaged)
+                                {
+                                    combatResult = Engine::Combat::FAILED_ATTACK;
+
+                                    done = true;
+                                }
+
+                                if (!done)
+                                {
+                                    for (auto i = 0; i < monsters.size(); i++)
+                                    {
+                                        if (monsters[i].Health > 0 && Engine::COUNT(party, team) > 0 && combatRound >= monsters[i].Round)
+                                        {
+                                            if (monsters[i].Type != Monster::Type::ZEALOT_HEALER || Engine::COUNT(monsters) == 1)
+                                            {
+                                                if ((monsters[i].Attack > 0 && monsters[i].Difficulty > 0) || monsters[i].Type == Monster::Type::MONKEY_WITH_SPELLS)
                                                 {
-                                                    attackScreen(window, renderer, party, team, monsters, -1, i, 1, combatRound, useEquipment);
+                                                    if (monsters[i].Type == Monster::Type::ZEALOT_SORCERER && combatRound == 1)
+                                                    {
+                                                        displayMessage("The sorcerer casts a Dazing Lights spell!", intRD);
+
+                                                        Engine::GET_CODES(party, {Codes::Type::ENEMY_DAZING_LIGHTS});
+                                                    }
+                                                    else
+                                                    {
+                                                        attackScreen(window, renderer, party, team, monsters, -1, i, 1, combatRound, useEquipment);
+                                                    }
                                                 }
                                             }
                                         }
@@ -11978,9 +11990,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 {
                     done = true;
                 }
+
+                if (roundLimit > 0 && combatRound > roundLimit)
+                {
+                    done = true;
+                }
             }
 
-            if (combatResult == Engine::Combat::FLEE)
+            if (combatResult == Engine::Combat::FLEE || combatResult == Engine::Combat::FAILED_ATTACK)
             {
                 break;
             }
@@ -12022,9 +12039,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
             {
                 combatResult = Engine::Combat::EXCEED_LIMIT;
             }
-            else
+            else if (combatResult != Engine::Combat::FAILED_ATTACK)
             {
-
                 combatResult = Engine::COUNT(party, team) > 0 ? Engine::Combat::VICTORY : Engine::Combat::DEFEAT;
             }
         }

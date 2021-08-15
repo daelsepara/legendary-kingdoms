@@ -93,7 +93,8 @@ namespace Equipment
         SCROLLS_OF_LORE3,
         SKALLOS_RUNEBLADE,
         ROYAL_LEDGER,
-        KENSAI_ROBES3
+        KENSAI_ROBES3,
+        GOLDEN_CANDLESTICK
     };
 
     class Base
@@ -256,6 +257,7 @@ namespace Equipment
     auto SKALLOS_RUNEBLADE = Equipment::Base("SKALLOS RUNEBLADE", "SKALLOS RUNEBLADE", Equipment::Class::WEAPON, Equipment::Type::SKALLOS_RUNEBLADE, Attribute::Type::FIGHTING3_LORE2, 3, false);
     auto ROYAL_LEDGER = Equipment::Base("ROYAL LEDGER", "ROYAL LEDGER", Equipment::Class::NORMAL, Equipment::Type::ROYAL_LEDGER, Attribute::Type::NONE, 0, false);
     auto KENSAI_ROBES3 = Equipment::Base("KENSAI ROBES", "KENSAI ROBES", Equipment::Class::ARMOUR, Equipment::Type::KENSAI_ROBES3, Attribute::Type::ARMOUR, 3, false);
+    auto GOLDEN_CANDLESTICK = Equipment::Base("GOLDEN CANDLESTICK", "GOLDEN CANDLESTICK", Equipment::Class::NORMAL, Equipment::Type::GOLDEN_CANDLESTICK, Attribute::Type::NONE, 0, false);
 }
 
 #endif

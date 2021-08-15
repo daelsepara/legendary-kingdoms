@@ -41,7 +41,8 @@ namespace Monster
         UNBRAAKI,
         ZEALOT,
         ZEALOT_HEALER,
-        ZEALOT_SORCERER
+        ZEALOT_SORCERER,
+        EVERCHILD_ASSASSIN
     };
 
     class Base
