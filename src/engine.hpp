@@ -2903,5 +2903,44 @@ namespace Engine
             Engine::GAIN_SCORE(party.Members[result], attribute, score);
         }
     }
+
+    void UPDATE_ARMY(std::vector<Army::Base> &army, Location::Type battlefield)
+    {
+        for (auto i = 0; i < army.size(); i++)
+        {
+            if (army[i].Morale <= 0 && (battlefield == Location::Type::NONE || army[i].Garrison == battlefield))
+            {
+                if (army[i].Position == Location::BattleField::LEFT_FLANK_FRONT)
+                {
+                    auto unit = Engine::FIND_UNIT(army, Location::BattleField::LEFT_FLANK_SUPPORT);
+
+                    if (unit >= 0 && unit < army.size())
+                    {
+                        army[unit].Position = Location::BattleField::LEFT_FLANK_FRONT;
+                    }
+                }
+                else if (army[i].Position == Location::BattleField::CENTER_FRONT)
+                {
+                    auto unit = Engine::FIND_UNIT(army, Location::BattleField::CENTER_SUPPORT);
+
+                    if (unit >= 0 && unit < army.size())
+                    {
+                        army[unit].Position = Location::BattleField::CENTER_FRONT;
+                    }
+                }
+                else if (army[i].Position == Location::BattleField::RIGHT_FLANK_FRONT)
+                {
+                    auto unit = Engine::FIND_UNIT(army, Location::BattleField::RIGHT_FLANK_SUPPORT);
+
+                    if (unit >= 0 && unit < army.size())
+                    {
+                        army[unit].Position = Location::BattleField::RIGHT_FLANK_FRONT;
+                    }
+                }
+
+                army[i].Position = Location::BattleField::NONE;
+            }
+        }
+    }
 }
 #endif
