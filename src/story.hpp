@@ -308,7 +308,7 @@ namespace Choice
             Success = success;
         }
 
-        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, std::vector<Attribute::Type> attributes, int difficulty, int success, bool useWeapon)
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, std::vector<Attribute::Type> attributes, int value, int difficulty, int success)
         {
             Text = text;
 
@@ -320,11 +320,30 @@ namespace Choice
 
             Attributes = attributes;
 
+            Value = value;
+
             Difficulty = difficulty;
 
             Success = success;
+        }
 
-            UseWeapon = useWeapon;
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, std::vector<Attribute::Type> attributes, int value, int difficulty, int success, bool useWeapon)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            DestinationFailed = destinationFailed;
+
+            Type = type;
+
+            Attributes = attributes;
+
+            Value = value;
+
+            Difficulty = difficulty;
+
+            Success = success;
         }
 
         Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, Team::Type team, std::vector<Attribute::Type> attributes, int difficulty, int success)
@@ -565,6 +584,25 @@ namespace Choice
             Success = success;
         }
 
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Attribute::Type> attributes, int value, int difficulty, int success, bool useWeapon)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Attributes = attributes;
+
+            Value = value;
+
+            Difficulty = difficulty;
+
+            Success = success;
+
+            UseWeapon = useWeapon;
+        }
+
         Base(const char *text, Engine::Destination destination, Choice::Type type, Team::Type team, std::vector<Attribute::Type> attributes, int value, int difficulty, int success)
         {
             Text = text;
@@ -627,25 +665,6 @@ namespace Choice
             Success = success;
         }
 
-        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, int value, std::vector<Attribute::Type> attributes, int difficulty, int success)
-        {
-            Text = text;
-
-            Destination = destination;
-
-            DestinationFailed = destinationFailed;
-
-            Type = type;
-
-            Value = value;
-
-            Attributes = attributes;
-
-            Difficulty = difficulty;
-
-            Success = success;
-        }
-
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Character::Status> status, std::vector<Attribute::Type> attributes, int value)
         {
             Text = text;
@@ -676,6 +695,25 @@ namespace Choice
             Value = value;
 
             Difficulty = difficulty;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Character::Status> status, std::vector<Attribute::Type> attributes, int value, int difficulty, int success, bool useWeapon)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Status = status;
+
+            Attributes = attributes;
+
+            Value = value;
+
+            Difficulty = difficulty;
+
+            UseWeapon = useWeapon;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, Character::Type character)

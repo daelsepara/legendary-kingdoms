@@ -69,6 +69,8 @@ namespace Book1
 
             ID = 2;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "The orcs snarl as they see you, lurching to attack.";
 
             Choices.clear();
@@ -318,6 +320,8 @@ namespace Book1
 
             ID = 8;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -401,6 +405,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 11;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You carefully begin to sneak out of the chamber, but you are out of luck. The orcs spot you as you attempt to climb the stairs, and leap to a savage attack.\n\nThe slaves cannot help you in this battle, as their chains are too short to attack the orcs now they are at the back of the chamber fighting you.";
 
@@ -778,6 +784,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Team = Team::Type::WALL_CLIMBING;
+
             Take = {Equipment::JEWELLERY_BOX, Equipment::CALLIGRAPHY_INK, Equipment::SILVER_IDOL, Equipment::GOLD_PORTRAIT, Equipment::BRONZE_SCORPION};
 
             Limit = 5;
@@ -794,6 +802,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 23;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You emerge into a short corridor running west to east. To the west you can make out a crossroads. To the east a flight of stairs leads upwards. There is a door in the south wall.";
 
@@ -880,6 +890,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 26;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You pour the liquid metal into the well and cross your fingers. Soon, the runes around the circle blaze into light, dousing you with brilliant coloured energies. When the glow finally wears off you feel stronger than before.";
 
@@ -975,6 +987,8 @@ namespace Book1
 
             ID = 28;
 
+            Location = Location::Type::DESERT;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -1021,6 +1035,8 @@ namespace Book1
             ID = -28;
 
             DisplayID = 28;
+
+            Location = Location::Type::DESERT;
 
             Text = "Your heretical ignorance drives them into a killer frenzy and you must fight.\n\nNote: The zealot healer will only attack if he is the last opponent standing. Otherwise he will heal each zealot 2 Health points. These additional points can take them over their starting health.";
 
@@ -1071,6 +1087,8 @@ namespace Book1
 
             ID = 30;
 
+            Location = Location::Type::WITHERED_STEPPES;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -1109,6 +1127,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 31;
+
+            Location = Location::Type::MORDAIN;
 
             Text = "As you approach the door you do not see the orcs from the nearby guardroom closing in behind you.\n\nNote: The orcs get the first combat turn, not you.";
 
@@ -1507,6 +1527,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 44;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "Tackling the room will come in two stages. Firstly, you must attempt to figure out the safest route. By examining the positions of the orc bodies you might be able to figure out which parts of the room are safe and which parts are deadly traps. Secondly, someone must attempt to carefully sneak through the room.\n\nNote: You cannot fail this test.";
 
@@ -2085,6 +2107,8 @@ namespace Book1
 
             ID = 63;
 
+            Location = Location::Type::DESERT;
+
             Text = "The zealots had a few minor talismans and some gaudy jewellery you sell at a marketplace for 25 silver coins. It seems a paltry reward for such a battle.\n\nWhere will you travel now?";
 
             Choices.clear();
@@ -2383,6 +2407,8 @@ namespace Book1
 
             ID = 72;
 
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
             Text = "You can take up to four SHIELDs (Armour +2) from the fallen snakemen if you wish. Their weapons have unusual grips and are not useable for humans.\n\nYou glance around the temple chamber. Despite the cracks and structural damage the room has been kept in good condition, regularly swept clean of dirt and filth. But why would inhuman monsters care for an old Cursus temple?\n\nYou try lifting the portcullis, but it will not shift an inch. You will have to find another way out. Glancing around the chamber you can see a door in the back wall, and an archway in which a ramp leads upwards into the ziggurat. Which direction would you like to investigate?";
 
             Choices.clear();
@@ -2613,6 +2639,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 79;
+
+            Location = Location::Type::MORDAIN;
 
             Text = "You wander the merchant sector of the city, expecting to find nothing but lonely stones and whistling wind. You are surprised, therefore, to discover signs of a recent excavation. Near the entrance you see the bodies of several decomposing humans... and the body of a single, diseased-looking orc. Strange. Orcs are not native to this part of the world and normally call the Savage Lands their home. What are they doing all the way out here?\n\nBeyond the bodies an ancient set of steps lead into the earth, the walls of the tunnel made of well-set brick, and the floors of large flagstones.";
 
@@ -3065,7 +3093,7 @@ namespace Book1
             Text = "Climbing through the window silently will take some skill.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Force open the door (Individual check: Stealth 5+, Successes: 3)", {Book::Type::BOOK1, 487}, {Book::Type::BOOK1, 724}, Choice::Type::ORDER_SKILL_CHECK, 1, {Attribute::Type::STEALTH}, 5, 3));
+            Choices.push_back(Choice::Base("Force open the door (Individual check: Stealth 5+, Successes: 3)", {Book::Type::BOOK1, 487}, {Book::Type::BOOK1, 724}, Choice::Type::ORDER_SKILL_CHECK, {Attribute::Type::STEALTH}, 1, 5, 3));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -3080,7 +3108,7 @@ namespace Book1
 
             ID = 92;
 
-            Text = "You creep up the stairs and reach a long landing. Peering out of the windows you can see Brekken and the wall- climbing team struggling to pry open the windows. With a grin you undo the latch, allowing the wall climbers easy access to the house.\n\nNote: For the rest of the break-in, when you make team checks, you can use the skills and combat abilities of your entire team, not just the wall-climbing team.";
+            Text = "You creep up the stairs and reach a long landing. Peering out of the windows you can see Brekken and the wall-climbing team struggling to pry open the windows. With a grin you undo the latch, allowing the wall climbers easy access to the house.\n\nNote: For the rest of the break-in, when you make team checks, you can use the skills and combat abilities of your entire team, not just the wall-climbing team.";
 
             Choices.clear();
 
@@ -3210,6 +3238,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 97;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You do not trust idly displayed skeletons these days. You make a point of shattering their skulls and ribcages, casting their bones about and generally demolishing their mortal remains. You feel a little bad about it afterwards, wondering if you have committed some sort of sacrilege, but there is no going back now.\n\nNote: You gained the code A75.";
 
@@ -3773,6 +3803,8 @@ namespace Book1
 
             ID = 114;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You cautiously peek into the room. Before you are four enormous orcs, armed to the teeth. Fortunately all four are dead, victims of a poisoning. It is a coward's weapon; but very effective!";
 
             Choices.clear();
@@ -3909,6 +3941,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 117;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "Battle is joined! The ogre lumbers to its feet and attacks. Unbeknownst to you, the ogre's mate, Daisy, is not far away.\n\nNote: After the second round of combat she will join in the fight.";
 
@@ -4886,6 +4920,8 @@ namespace Book1
 
             ID = 151;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You open the door into a large chamber with a glowing floor. Strange circles and runes have been carved in the middle, but it is difficult to make out exactly what has been drawn as crawling over the mystic patterns are hundreds of beetles, their shiny black carapaces reflecting the light of your lanterns. Almost as one they stop and crawl round to look at you. The effect is rather eerie. Like a tiny phalanx they begin to advance upon you.";
 
             Choices.clear();
@@ -5626,8 +5662,6 @@ namespace Book1
             if (outcome)
             {
                 Bye = "You manage to steer past the rocks and into the harbour.";
-
-                Engine::SET_LOCATION(party, Location::Type::MORDAIN);
             }
             else
             {
@@ -6401,6 +6435,8 @@ namespace Book1
 
             ID = 196;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "The tunnel ends in a door with a black triangle painted on it. Blood leaks from the gap under the door.";
 
             Choices.clear();
@@ -6881,6 +6917,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 213;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Choices.clear();
 
@@ -7535,6 +7573,8 @@ namespace Book1
 
             ID = 232;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "To your mixed delight and horror, the [SKELETONS] rise from the dead, their bones clicking and clacking as they stand up straight before you. The [SKELETONS] will be useful allies.\n\nNote: There are [SKELETONS] for each party member to control. While a party member has a [SKELETON] following them, they gain an additional 2 points to their Fighting skill, which combines with any other bonuses from weapons or other items. Additionally, your [SKELETONS] will bravely take damage for you. Each skeleton has 6 Health points. When a party member takes damage in combat (not from any other source) the skeleton will step in the way and take the damage for that character. They have no armour, and are destroyed when they are reduced to 0 Health. Skeletons cannot regain Health points. Your [SKELETONS] can only exist whilst you are in the Mordain ruins. As soon as you step outside they will crumble to dust.\n\nYou gained the code A75.";
 
             Bye = "Pleased with your new companions, you make your way back to the crossroads.";
@@ -7909,6 +7949,8 @@ namespace Book1
 
             ID = 243;
 
+            Location = Location::Type::MORDAIN;
+
             Text = "You attempt to make your way to the historic harbour of the city, but the way is blocked with piles of rubble. Mordain, like many coastal cities in the Valley of Bones, was raised on a clifftop in order to deter coastal raiders. However, with the curtain wall of the city in ruins, it is impossible now to even approach the cliffside, let alone get a view down the cliffs. Perhaps it would be easier to get there by sea?";
 
             Choices.clear();
@@ -7949,6 +7991,8 @@ namespace Book1
 
             ID = 245;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "The ogre seems stunned that such thin and puny creatures could possess so much money. \"Beats me why you wander 'round dungeons when you have that kind of dosh lining your pockets, but well'a'day.\"\n\nThe ogre rises to his feet. \"Skullcracker's the name,\" he says. \"I don't do cities, and I don't do boats. Other than that, I'll hang around with you for a bit.\n\nSkullcracker hands you a RUSTY KEY. \"This is the key to the room I'm supposed to be guarding,\" he says. \"Why don't we loot it, instead? Just go north, then east a bit, and you'll find it.\"\n\nNote: Skullcracker can be treated just like an ordinary party member. He possesses the following skills:\n\nFighting: 8, Stealth: 1, Lore: 1, Survival: 3, Charisma: 2, Health: 12\n\nSkullcracker has a number of special rules as a party member:\n\n* He is lazy and he will not carry any equipment for you, even items that boost his skills. Skullcracker wields a CLUB, but it is nothing special. Should the party ever lose their equipment he will be able to replace the CLUB instantly with a bit of large bone, table leg or other such item. Effectively, Skullcracker is never disarmed.\n\n* He won't enter a city, which includes the following locations: Chalice, Clifftop, Cursus, Lhasbreath, Luutanesh or Saltdad. If you go to these places, Skullcracker will wait outside until you leave. Ogres aren't very popular in civilised places.\n\n* Even though he can't stay in human inns, Skullcracker will recover Health points at the same rate as your other party members when you pay to stay at an inn.\n\n* He won't board a ship. He had a queasy tummy on the orc boat and won't tolerate going aboard another. If you insist on going sailing, he will leave the party.\n\n* His contract with you ends when you travel to another land. At this point, Skullcracker with take his leave and wander into the desert.\n\nYou gained the code A76.";
 
             Bye = "Thanking your new companion, you return to the crossroads.";
@@ -7984,6 +8028,10 @@ namespace Book1
 
             ID = 246;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "The king nods as he scans over the document with his eyes. \"A good reduction, and a modest bribe, this is well,\" he concedes. \"Though it pains me to sully our court with the intrigues of foreigners. Take your reward and never come in our presence again.\"\n\nThe Iron King waves to one of his councillors, who reluctantly places 350 silver pieces and an IRON GREATAXE* (Fighting +2) into your hands.";
 
             Bye = "Not wishing to tarry longer, you depart the chamber and return to the crossroads.";
@@ -8015,6 +8063,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 247;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "This small room contains a very large ogre. In fact, there is actually bedding down for two of these enormous creatures, but currently only one is here, chewing on the leg bone of a sand lizard. He eyes you lazily.";
 
@@ -8134,6 +8184,8 @@ namespace Book1
 
             ID = 251;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "With the beetles destroyed you brush them away from the mystic circle and examine it. It appears to be some kind of health boosting magic circle with a small indentation in the middle, not unlike an ink well. Indeed, the instructions for its use have been usefully painted upon the walls of the chamber. It appears that if you pour some QUICKSILVER into the central well the circle will activate and imbue you with power.\n\nNote: You gained the code A61.";
 
             Choices.clear();
@@ -8176,6 +8228,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 253;
+
+            Location = Location::Type::WITHERED_STEPPES;
 
             Text = "Although you know that the nomads make their home in the Withered Steppes, their territory covers hundreds of square miles of desert. Finding them will not be easy.";
 
@@ -9984,6 +10038,8 @@ namespace Book1
 
             ID = 310;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You have reached a crossroads, with the corridor splitting off into four directions. To the north you make out a door in the eastern wall. The western branch of the corridor has a door in the north wall. The tunnels leads off into darkness to the south and east.";
 
             Choices.clear();
@@ -10438,6 +10494,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 325;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You have entered the orc leader's war room. His body, and those of his followers, are still here.";
 
@@ -10991,6 +11049,8 @@ namespace Book1
 
             ID = 345;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "The final skeleton shatters into pieces. With the bodies so damaged it will be impossible to animate them again using the book. Musing on the inconsistent nature of necromantic magic, you return to the crossroads.\n\nNote: You gained the code A75.";
 
             Choices.clear();
@@ -11128,6 +11188,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 350;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You are in a short, well-trodden corridor with an open door in the west wall. A little beyond the door, the corridor splits, branching to the west and north. The north end of the corridor ends in a strong looking door with a red 'x' upon it. To the south, stairs lead up into brilliant daylight.";
 
@@ -11470,6 +11532,8 @@ namespace Book1
 
             ID = 361;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You open the door to discover a dark room with the bodies of four complete skeletons lying stretched out on long tables. At the back of the room is a large book, wide open, displaying a page full of strange chants and diagrams of skeletal bodies. The whole place gives you the creeps. There are no other exits from this room.";
 
             Choices.clear();
@@ -11700,6 +11764,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 371;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You look around the chamber, attempting to puzzle out what the orcs were doing here. The tunnels they have cut lead in all directions, but end in disappointing dead ends. It has the feel of an expedition that was sure it was in the right place but didn't know exactly which way to go once they got here. Shrugging your shoulders, you make your way out of the cavern and back up the stairs.";
 
@@ -12004,6 +12070,8 @@ namespace Book1
 
             ID = 380;
 
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
             Text = "The door is unlocked and leads to a priest's sanctum. There is a small altar with a block of INCENSE and 15 silver coins on it. The place is tidy, but there are no comfortable bits of furniture such as chairs or tables here.";
 
             Bye = "With no other exits available, you make your way to the archway.";
@@ -12114,6 +12182,8 @@ namespace Book1
 
             ID = 383;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "Choose a party member to perform this stealthy manoeuvre. You drop down to your belly and wriggle through the open door as quietly as possible.";
 
             Choices.clear();
@@ -12193,6 +12263,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 385;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "Hardly daring to breathe, your party member manages to step carefully across the chamber, avoiding every pressure plate and hidden tripwire. You may take the BLACK PRISM from the pedestal. You only hope it was worth the danger retrieving it!\n\nRetracing your steps with a heart-thumping precision, you manage to make it out of the chamber to the warm congratulations of your colleagues.\n\nNote: You gained the code A80.";
 
@@ -13364,6 +13436,8 @@ namespace Book1
 
             ID = 419;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You attempt to invoke the power of the book, hoping your pronunciations and somatic gestures are correct.";
 
             Choices.clear();
@@ -13422,6 +13496,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 422;
+
+            Location = Location::Type::WITHERED_STEPPES;
 
             Text = "You are not successful in your search for the nomads, but you do find trouble. Vicious Sand Drakes, tawny-brown reptilian horrors that stand some ten feet high on two scally legs, take an interest in you. You have little option but to fend them off.";
 
@@ -13674,6 +13750,8 @@ namespace Book1
 
             ID = 431;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You find 123 silver coins and a RUSTY KEY on the bodies.\n\nNote: If you paid any bribes to an ogre, you can recover that money as well.\n\nNote: You gained the code A76.";
 
             Choices.clear();
@@ -13715,7 +13793,7 @@ namespace Book1
             Controls = Story::Controls::STANDARD;
         }
 
-        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 515}; }
     };
 
     class Story433 : public Story::Base
@@ -13876,6 +13954,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 439;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "The steps lead down until you arrive at a huge cavern, ringing with the sounds of picks on rocks. Half the chamber is filled with rock detritus, chiselled from the walls by dozens of human slaves. The slaves themselves seem to be locals from the valley, a combination of slim-bodied Cursites and heavy-set men and women from Lhasbreath. Around them, half a dozen orcs whip and cajole the slaves, ordering them to work faster. One orc is dressed in heavy chainmail armour and looks to be the leader. He is roaring loudly at a terrified young woman, putting his great-tusked jaws less than an inch from her face. In the corner, several dead humans lie rotting, presumably dead from their injuries.\n\nYou are able to dive behind the rock detritus before the orcs see you. How will you proceed?";
 
@@ -14385,6 +14465,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 457;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "Something goes wrong with the invocation. The skeleton's animate, but you are unable to bind them to your control. They seem to resent being awoken from their rest and make their feelings clear as they try to gouge your eyes out with their bony claws. You must fight!\n\nNote: The skeletons will attack twice each round. You must assign the damage of the second attack to a different character from the first.";
 
@@ -14914,7 +14996,7 @@ namespace Book1
 
             ID = 473;
 
-            Location = Location::Type::DESERT;
+            Location = Location::Type::WITHERED_STEPPES;
 
             Text = "It takes great patience and skill to find the nomad camp. Little wonder, since they are despised by all the kings of the valley. They are an ancient people, who lived as desert wanderers even before the desolation of Abraxas. They greet you with some confidence, for you are in their homeland, and each nomad is a skilled warrior who can best the toughest soldier.";
 
@@ -15038,6 +15120,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 478;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "With the orcs defeated you quickly search their guard room. In total 20 silver coins lies scattered across the table. You can take either orc's CRUDE BLADE (Fighting +0) if you are short on weapons. The first orc also carried a shield (Armour +2).\n\nNote: You gained the code A56.";
 
@@ -16346,6 +16430,8 @@ namespace Book1
 
             ID = 518;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "This will be an untypical battle. Whilst it is true you can crush dozens of beetles with each stamp you will be quickly swarmed. Their nasty, biting mandibles can sheer off flesh like tiny razors.\n\nYou cannot add the Fighting bonus from your weapons in this fight -- they are less effective than simply brushing off and standing on the beetles. The beetles will not roll for an attack. Instead each round they inflict 1 point of Health damage on each party member. Armour cannot help you against this damage.";
 
             Choices.clear();
@@ -16702,7 +16788,14 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Team = Team::Type::WALL_CLIMBING;
+            if (Engine::VERIFY_CODES(party, {Codes::Type::WALL_CLIMBING_AND_DOOR}))
+            {
+                Team = Team::Type::NONE;
+            }
+            else
+            {
+                Team = Team::Type::WALL_CLIMBING;
+            }
 
             Monsters = {
                 Monster::Base("Guard", 4, 4, 4, 7, 0),
@@ -16718,17 +16811,24 @@ namespace Book1
 
             if (result == Engine::Combat::VICTORY)
             {
-                if (Engine::COUNT(party, Team::Type::WALL_CLIMBING) <= 0)
+                if (Engine::VERIFY_CODES(party, {Codes::Type::WALL_CLIMBING_AND_DOOR}))
                 {
-                    Bye = "All members of the wall-climbing team are dead.";
-
-                    Engine::LOSE_ALL(party, Team::Type::WALL_CLIMBING);
-
-                    destination = {Book::Type::BOOK1, 75};
+                    destination = {Book::Type::BOOK1, 833};
                 }
                 else
                 {
-                    destination = {Book::Type::BOOK1, 833};
+                    if (Engine::COUNT(party, Team::Type::WALL_CLIMBING) <= 0)
+                    {
+                        Bye = "All members of the wall-climbing team are dead.";
+
+                        Engine::LOSE_ALL(party, Team::Type::WALL_CLIMBING);
+
+                        destination = {Book::Type::BOOK1, 75};
+                    }
+                    else
+                    {
+                        destination = {Book::Type::BOOK1, 833};
+                    }
                 }
             }
             else
@@ -16871,6 +16971,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 535;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
             Image = "images/book1/shattered_ziggurat.png";
 
@@ -17773,6 +17875,8 @@ namespace Book1
 
             ID = 561;
 
+            Location = Location::Type::MORDAIN;
+
             Text = "You have returned to the orc guard room. Except for a pair of dead orcs there is nothing to see here. You return to the corridor.";
 
             Choices.clear();
@@ -17890,6 +17994,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 566;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You have reached a crossroads, with tunnels going off in all directions. The corridors are short to the south and west, and each contains a door. To the east the corridor stretches into darkness, though you can make out a door in the north wall. Going north you think you can make out another pair of doors, but you will have to get closer to find out.";
 
@@ -18326,6 +18432,8 @@ namespace Book1
 
             ID = 576;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "\"You couldn't afford me!\" laughs the ogre.\n\n\"How much?\" you press.\n\n\"Eight hundred silver,\" grins the ogre. \"I'd charge a thousand, but I'll give you a discount since I've been stuck in this hole for months.\"";
 
             // TODO: Keep track of 800 paid to the ogre
@@ -18369,6 +18477,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 578;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Image = "images/book1/nightmare_room.png";
 
@@ -19245,7 +19355,7 @@ namespace Book1
 
             ID = 604;
 
-            Location = Location::Type::MORDAIN;
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You have entered a comfortable looking room with a large fireplace, a table scattered with ancient art objects, and a number of straw pallets. You are just getting comfortable when the door opposite you opens and five burly looking orcs emerge. They do not hesitate to give a great roar and leap to the attack.\n\nNote: You can only escape if you have a ship in Mordain harbour.";
 
@@ -20235,6 +20345,8 @@ namespace Book1
 
             ID = 634;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You are in a long corridor that runs west to east, with a corridor that branches off the south somewhat in the middle. To the west the corridor ends in a set of stairs that lead downwards. To the east the corridor abruptly turns north. To the south lies the crossroads.";
 
             Choices.clear();
@@ -20839,6 +20951,8 @@ namespace Book1
 
             ID = 654;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You peer through the door, to be presented with the sight of two foul looking orcs playing at cards together in a small room. A pile of silver pieces are scattered across the table, no doubt for the wagers in the game. They are quite taken with their game, but it would still be rather difficult to sneak up on them in such a tiny room.";
 
             Choices.clear();
@@ -21442,6 +21556,8 @@ namespace Book1
 
             ID = 669;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "With the orcs dead you move to loot the room and examine their wargear. The leader has a mighty IRON GREATAXE* (Fighting +2) and is wearing a fine suit of BONE ARMOUR (Armour +2). Three IRON SWORDS (Fighting +1) can be looted from the common warriors. Searching the room you find an iron key and a WARM CLOAK (Survival +1). Oddly, there are only 10 silver coins, not much for such a mighty leader. Where will you go now?\n\nNote: You gained the code 64.";
 
             Choices.clear();
@@ -21489,7 +21605,7 @@ namespace Book1
 
             if (Engine::COUNT(party) > 0)
             {
-                PreText += "\n\nYou flee, turning from a distance to see the Everchild's command tent ransacked and burnt. What became of the Everchild herself you cannot say, but she is never seen in the Valley of Bones again.\n\nYou stagger away into the sands, dreams of freedom evaporating from your mind like water in the desert. The rest of the army likewise scatters to the four winds. Your men think you are dead, and your soldiers have dispersed.\n\nNote: You gained the code A4";
+                PreText += "\n\nYou flee, turning from a distance to see the Everchild's command tent ransacked and burnt. What became of the Everchild herself you cannot say, but she is never seen in the Valley of Bones again.\n\nYou stagger away into the sands, dreams of freedom evaporating from your mind like water in the desert. The rest of the army likewise scatters to the four winds. Your men think you are dead, and your soldiers have dispersed.\n\nNote: You gained the code A4.";
             }
 
             for (auto i = 0; i < party.Army.size(); i++)
@@ -21923,6 +22039,8 @@ namespace Book1
 
             ID = 685;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You have returned to the room with the magic circle. It will require quicksilver in order to operate.";
 
             Choices.clear();
@@ -22188,6 +22306,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 693;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "\"Morning,\" growls the foul ogre, to your greeting. \"What are you doing down here, then?\" \"Just looking around,\" you say airily. \"How about you?\"\n\n\"Eating,\" shrugs the ogre between mouthfuls. \"I'm supposed to be on guard, but I can't be bothered to do that.\"\n\n\"A fine work ethic,\" you nod. \"Do the orcs employ you?\"\n\n\"Yeah, but the pay is rubbish,\" he grumbles. \"So today's your lucky day. Don't let the door hit your bum on your way out.\"";
 
@@ -22560,6 +22680,8 @@ namespace Book1
 
             ID = 707;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "The slaves give a mighty cheer as the last orc falls dead. They quickly take up the orc's weapons, though you may seize the CHAIN ARMOUR (Armour +2) from the orc leader, if you wish. The slaves heap glory upon you.\n\nYou ask the slaves what the orcs were digging for, but they can tell you little. The orcs would not reveal the object of their search, but they seemed frantic to find it, whatever it was. It is certainly unusual for orcs to travel so far, with so many supplies, and with such stealth into an enemy nation. You wonder what to make of it all.\n\nThe slaves thank you again, and let you know that they intend to find their own way out of the dungeon and to find a new life for themselves.\n\nNote: You gained the code A69.";
 
             Bye = "You wish them luck, and then turn your attention back to the cavern.";
@@ -22588,6 +22710,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 708;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
             Text = "You step cautiously through a crooked black stone archway and into a wide pillared chamber. You are just taking your bearings when you head a slam of rusted metal. Spinning around you can see that you have been cut off from the exit by a large portcullis. Worse, you can hear a savage hissing from all around the temple chamber. Drawing your weapons, you are startled to see a number of hideous snakemen, serpentine creatures with the arms of men and the bodies of a giant cobra. There is no escape, you must fight!\n\nNote: Note: If you have a HYGLIPH FLOWER the snakemen are put off by its pungent odour and require a 5+ on their attack rolls to inflict damage during this battle.";
 
@@ -22679,7 +22803,7 @@ namespace Book1
 
             Location = Location::Type::SALT_PLAINS;
 
-            Text = "It is time to leave the Salt Planes.";
+            Text = "It is time to leave the Salt Plains.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Go southwest, toward Clifftop", {Book::Type::BOOK1, 12}));
@@ -22895,6 +23019,341 @@ namespace Book1
                 return {Book::Type::NONE, -1};
             }
         }
+    };
+
+    class Story720 : public Story::Base
+    {
+    public:
+        Story720()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 720;
+
+            Text = "The hairs on the back of your neck prick up. You sense a weakening in the fabric of the world in this place. Tracing mystic symbols in the air you see a patch of rock to your left fade away, revealing a small chamber containing funeral urns. A frail looking casket rests in the corner of the chamber, seeming to shudder in the feint breeze outside.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Enter the tomb", {Book::Type::BOOK1, 862}));
+            Choices.push_back(Choice::Base("Quickly leave", {Book::Type::BOOK1, 115}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(39)}))
+            {
+                return {Book::Type::BOOK1, 167};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story721 : public Story::Base
+    {
+    public:
+        Story721()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 721;
+
+            Location = Location::Type::AZURE_DEEP;
+
+            Text = "Sailing around the bend comes a frightful looking vessel, so badly made you fear for the sailors who inhabit it. As it comes closer, for indeed it seems to be sailing directly towards you, you are astounded at what you see. It is an orcish vessel, its crude decorations across its hull and sails indicating it can be nothing else. Orcs are not native to the valley, their home hundreds of miles across the Azure Deep, in the Savage lands. What in the world are they doing all the way out here?\n\nThere is no time for questions.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(68)}))
+            {
+                return {Book::Type::BOOK1, 813};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            EnemyFleet = {Ship::Base("ORK HULK", Ship::Type::ORC_HULK, Location::Type::NONE, 3, 5, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 796}; }
+    };
+
+    class Story722 : public Story::Base
+    {
+    public:
+        Story722()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 722;
+
+            Location = Location::Type::SALT_MINES;
+
+            Text = "You are leaving the salt mines. The only way to go is in a southerly direction.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Southwest, towards Saltdad", {Book::Type::BOOK1, 177}));
+            Choices.push_back(Choice::Base("Southeast, towards Luutanesh", {Book::Type::BOOK1, 614}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story723 : public Story::Base
+    {
+    public:
+        Story723()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 723;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You open the door to a gathering of large orc warriors, who turn to look at you sharply as you enter. The leader, a giant of an orc, gives a drooling snarl and commands his warriors to attack.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(64)}))
+            {
+                return {Book::Type::BOOK1, 325};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(63)}))
+            {
+                return {Book::Type::BOOK1, 114};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(61)}))
+            {
+                return {Book::Type::BOOK1, 885};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {
+                Monster::Base("Orc Leader", 7, 4, 4, 14, 0),
+                Monster::Base("Orc", 5, 4, 4, 8, 0),
+                Monster::Base("Orc", 5, 4, 4, 9, 0),
+                Monster::Base("Orc", 4, 4, 4, 11, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 669}; }
+    };
+
+    class Story724 : public Story::Base
+    {
+    public:
+        Story724()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 724;
+
+            Text = "The thief turns his head at the sudden noise. As quick as a flash he dashes forwards, long dagger in hand, to cut the rope. You need to get through the window and stop him!\n\nNote: The party member at the top of the rope make following skill check.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Tackle the thief (Individual check: Fighting 5+, Successes: 4)", {Book::Type::BOOK1, 332}, {Book::Type::BOOK1, 528}, Choice::Type::ORDER_SKILL_CHECK, {Attribute::Type::FIGHTING}, 1, 5, 4, false));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story725 : public Story::Base
+    {
+    public:
+        Story725()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 725;
+
+            Location = Location::Type::DESERT;
+
+            Text = "You are wandering the desert, somewhat south of the dilapidated town of Clifftop. The searing heat is quite unbearable, and you struggle to ration your water carefully.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Manage your water (Team check: Survival 4+, Successes: 4)", {Book::Type::BOOK1, -725}, {Book::Type::BOOK1, -725}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "You manage to conserve water by travelling mostly at night and sheltering from the worst of the sun.";
+            }
+            else
+            {
+                Bye = "Each party member loses 1 Health from heatstroke.";
+
+                Engine::GAIN_HEALTH(party, -1);
+            }
+        }
+    };
+
+    class Event725 : public Story::Base
+    {
+    public:
+        Event725()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -725;
+
+            DisplayID = 725;
+
+            Location = Location::Type::DESERT;
+
+            Text = "Which direction will you head in?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("South, to the palace of Unbraaki", {Book::Type::BOOK1, 890}));
+            Choices.push_back(Choice::Base("East, to the Tumblestones", {Book::Type::BOOK1, 137}));
+            Choices.push_back(Choice::Base("Northeast to the great Westroad", {Book::Type::BOOK1, 12}));
+            Choices.push_back(Choice::Base("Northwest to Clifftop", {Book::Type::BOOK1, 19}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story726 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story726()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 726;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "Sar Jessica turns to face Tasha, uncertainty in her eyes.";
+
+            if (Engine::IN_PARTY(party, Character::Type::AMELIA_PASS_DAYNE))
+            {
+                PreText += " Amelia clears her throat and suggests it is time to move on.";
+            }
+            else
+            {
+                PreText += "\n\nThe sound of the men having a discussion beyond the reed bank provides the privacy she needs. Sar Jessica grasps Tasha's face and kisses her, as if releasing a long-withheld desire. She kisses her back, pleased to have secured the affections of the proud knight. The men, in their loud nattering, are none-the-wiser as they kiss.\n\nThe sound of the others getting out of the water breaks the moment and they hastily separate. Once everyone has dried themselves, you continue on your way.\n\nNote: Tasha has gained another heart for Sar Jessica. Sar Jessica also gains another heart for Tasha.";
+
+                Engine::GAIN_HEARTS(party, Character::Type::TASHA, Character::Type::SAR_JESSICA_DAYNE, 1);
+                Engine::GAIN_HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::Type::TASHA, 1);
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 51}; }
+    };
+
+    class Story727 : public Story::Base
+    {
+    public:
+        Story727()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 727;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "\"Forgive me, holy ones,\" you beg. \"But I found these sacred scrolls of Cursus in a long-abandoned ruin. I knew I had to bring them to you.\"\n\nThe High Zealot raises his eyebrows and takes the SCROLLS OF CURSUS. He scans over the sheets. \"They are written in the old hand! They are original works -- not translations! Praise be!\"\n\n\"Praise be!\" chant the other zealots, abasing themselves before the scrolls.\n\nAs the High Zealot reads his face contorts in confusion... and then horror. \"No! It cannot be!\" he cries. \"Cursus? A serpent god? A foul beast deity, with no more right to occupy heaven than a dog? We are deceived, brothers! Our faith is little more than a tool of spiritual slavery!\"\n\n\"No!\" cries another. \"These are lies!\"\n\n\"But they are written in the old hand, it cannot be lies!\" insists the High Zealot.\n\nYou discreetly leave the chamber as you hear the sounds of swords being drawn in anger. You have been forgotten, and there is much 'religious dialogue' to take place in your absence. Perhaps this is the beginning of the end of the Cursus religion, perhaps not. Either way, the zealots of Cursus will destroy each other.\n\nNote: You gained the code A40.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::SCROLLS_OF_CURSUS});
+
+            Engine::GET_CODES(party, {Codes::A(40)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 574}; }
+    };
+
+    class Story728 : public Story::Base
+    {
+    public:
+        Story728()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 728;
+
+            Text = "Brekken has brought long grappling hooks which help you clamber up the walls with ease. However you soon hit a snag. The windows are proving difficult to open, with Brekken struggling to get a purchase on them. \"If only it was an exterior lock,\" he mumbles. \"I could get it open in a thrice.\"\n\nYou will have to wrench the window open with raw strength.\n\nNote: Choose a party member from the wall-climbing team to do this and make the following skill check.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::VERIFY_EQUIPMENT(party, Team::Type::WALL_CLIMBING, {Equipment::Type::PRYBAR}))
+            {
+                Choices.push_back(Choice::Base("Force open window (Individual check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 305}, {Book::Type::BOOK1, 443}, Team::Type::WALL_CLIMBING, {Attribute::Type::FIGHTING}, 4, 3, false));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Force open window (Individual check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 305}, {Book::Type::BOOK1, 443}, Team::Type::WALL_CLIMBING, {Attribute::Type::FIGHTING}, 5, 3, false));
+            }
+        }
+    };
+
+    class Story729 : public Story::Base
+    {
+    public:
+        Story729()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 729;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You have returned to the room of traps, the deadly blades still dripping with blood. Having already looted the room you have no intention of ever returning. You go back to the crossroads.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 310}; }
     };
 
     auto story001 = Story001();
@@ -23675,6 +24134,17 @@ namespace Book1
     auto story717 = Story717();
     auto story718 = Story718();
     auto story719 = Story719();
+    auto story720 = Story720();
+    auto story721 = Story721();
+    auto story722 = Story722();
+    auto story723 = Story723();
+    auto story724 = Story724();
+    auto story725 = Story725();
+    auto event725 = Event725();
+    auto story726 = Story726();
+    auto story727 = Story727();
+    auto story728 = Story728();
+    auto story729 = Story729();
 
     void InitializeStories()
     {
@@ -23684,7 +24154,7 @@ namespace Book1
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
-            &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692,
+            &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -23756,7 +24226,8 @@ namespace Book1
             &story680, &story681, &story682, &story683, &story684, &story685, &story686, &story687, &story688, &story689,
             &story690, &story691, &story692, &story693, &story694, &story695, &story696, &story697, &story698, &story699,
             &story700, &story701, &story702, &story703, &story704, &story705, &story706, &story707, &story708, &story709,
-            &story710, &story711, &story712, &story713, &story714, &story715, &story716, &story717, &story718, &story719};
+            &story710, &story711, &story712, &story713, &story714, &story715, &story716, &story717, &story718, &story719,
+            &story720, &story721, &story722, &story723, &story724, &story725, &story726, &story727, &story728, &story729};
     }
 }
 #endif

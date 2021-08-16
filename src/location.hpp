@@ -42,7 +42,9 @@ namespace Location
         VIAAN_ISLAND,
         BANDO_VILLAGE,
         AZURE_DEEP,
-        COLD_RIVER
+        COLD_RIVER,
+        TEMPLE_OFTHE_UNBROKEN,
+        MORDAIN_EXCAVATED_DUNGEONS
     };
 
     std::map<Location::Type, const char *> Description = {
@@ -81,7 +83,9 @@ namespace Location
         {Location::Type::VIAAN_ISLAND, "Viaan Island"},
         {Location::Type::BANDO_VILLAGE, "Bando Village"},
         {Location::Type::AZURE_DEEP, "Azure Deep"},
-        {Location::Type::COLD_RIVER, "Cold River"}};
+        {Location::Type::COLD_RIVER, "Cold River"},
+        {Location::Type::TEMPLE_OFTHE_UNBROKEN, "Temple of the Unbroken"},
+        {Location::Type::MORDAIN_EXCAVATED_DUNGEONS, "Mordain, Excavated Dungeons"}};
 
     enum class BattleField
     {

@@ -17,7 +17,8 @@ namespace Ship
         CARRACK,
         HULK,
         PIRATE_PINNACE,
-        WAR_CANOES
+        WAR_CANOES,
+        ORC_HULK
     };
 
     class Base
