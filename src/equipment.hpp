@@ -106,7 +106,8 @@ namespace Equipment
         IRON_SWORD1,
         IRON_KEY,
         POTION_OF_CHARISMA,
-        HEALING_POTION
+        HEALING_POTION,
+        SCROLLS_OF_CURSUS
     };
 
     class Base
@@ -274,6 +275,7 @@ namespace Equipment
     auto IRON_SWORD1 = Equipment::Base("IRON SWORD", "IRON SWORD", Equipment::Class::WEAPON, Equipment::Type::IRON_SWORD1, Attribute::Type::FIGHTING, 1, false);
     auto POTION_OF_CHARISMA = Equipment::Base("POTION OF FLUENCY (+3 Charisma successes)", "POTION OF FLUENCY (+3 Charisma successes)", Equipment::Class::NORMAL, Equipment::Type::POTION_OF_CHARISMA, Attribute::Type::NONE, 0, false);
     auto HEALING_POTION = Equipment::Base("HEALING POTION", "HEALING POTION", Equipment::Class::NORMAL, Equipment::Type::HEALING_POTION, Attribute::Type::NONE, 0, false);
+    auto SCROLLS_OF_CURSUS = Equipment::Base("SCROLLS OF CURSUS", "SCROLLS OF CURSUS", Equipment::Class::NORMAL, Equipment::Type::SCROLLS_OF_CURSUS, Attribute::Type::NONE, 0, false);
 }
 
 #endif

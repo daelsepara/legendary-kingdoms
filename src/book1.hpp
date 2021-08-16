@@ -1171,7 +1171,7 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("Return to the city centre", {Book::Type::BOOK1, 340}));
-            Choices.push_back(Choice::Base("Set sail on one of your ships", {Book::Type::BOOK1, 499}, Choice::Type::SHIP, Location::Type::CURSUS));
+            Choices.push_back(Choice::Base("Set sail on one of your ships", {Book::Type::BOOK1, 499}, Choice::Type::SAIL, Location::Type::CURSUS));
 
             Controls = Story::Controls::HARBOUR;
         }
@@ -1745,6 +1745,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 52;
+
+            Location = Location::Type::VIAAN_ISLAND;
 
             Text = "Your ship is boarded! Dozens of the Bando swamp the decks, their poisoned blow darts and spears making short work of any opposition. Surrounded, and realising the futility of your position, you surrender.\n\nYou are stripped and bound, along with the rest of your surviving crew. Your ship is looted and then sunk.\n\nAfter spending a few days with the Bando in cramped bamboo cages, the mercenary tribesmen sell you off to a passing slaver ship in return for a few gemstones and some curious-looking fabrics.";
 
@@ -3999,6 +4001,8 @@ namespace Book1
 
             ID = 121;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Text = "Concentrating tightly, you unfurl a magical spell of pure fire and roll it towards your flammable enemies. They have no defence against such terrible magic and are instantly consumed with a pitched wail. The smoke and glowing sheets force you back to the stairs for a time, but by the time their cries have subsided there is nothing left of the paper golems but ash.";
 
             Choices.clear();
@@ -5442,6 +5446,8 @@ namespace Book1
 
             ID = 168;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Text = "With the golems defeated you must decide what to do next.\n\nNote: You gained the code A92.";
 
             Choices.clear();
@@ -6513,6 +6519,10 @@ namespace Book1
 
             ID = 201;
 
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
             Text = "At first you fear you will have to stay in one of the religious hostelries that dot the city. A nightly whipping does not appeal, so fortunately you discover a single inn that caters to foreigners; The Sign of the Sand, built in the harbour district. Though it is built of stone, it reminds you of the kind of traditional inn you might find in Royce, with warm beer and comfortable rooms aplenty. It was built with the permission of the priests a hundred years ago, to encourage sea trade to the city. Its future is constantly in doubt, as hard-line priests detest its presence in the city, but so far economics has trumped religious politics.\n\nFor every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nYou get into a discussion with some travellers from Drakehallow, who seem set on exploring the ruins of Mordain. \"There are vast tunnels and dungeons located beneath the surface,\" says one, a wizard from the magical school Animus Mast. \"No one has mapped them all, but a wise explorer will try. It's easy to get turned around in those deathly arcades.\"";
 
             RestPrice = 5;
@@ -6661,6 +6671,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 206;
+
+            Location = Location::Type::BANDO_VILLAGE;
 
             Text = "You greet the Bando tribesmen like old friends, and soon there is singing and cheering across the village. As a good will offering you present the Bando with a few surplus tools and ropes from the ship, and you are presented in turn with sweet, intoxicating fruit drinks and a well-crafted SPEAR (Fighting +0).";
 
@@ -6959,6 +6971,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 215;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -9372,6 +9386,8 @@ namespace Book1
 
             ID = 293;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Text = "You utter the word 'amora' and there is a great clunk from the vault. Suddenly it swings smoothly open. You elate -- the treasures of Unbraaki are all yours!";
 
             Choices.clear();
@@ -10786,6 +10802,8 @@ namespace Book1
 
             ID = 339;
 
+            Location = Location::Type::BANDO_VILLAGE;
+
             Text = "The Bando are more sophisticated than they appear. You make a small exchange of gifts, a few coils of rope and a pair of hammers, and you are presented with flowery wreaths in exchange. The tribe holler their acceptance of you, and soon a kind of impromptu party begins, with wild dancing and sweet, fermented fruit drinks. As evening descends you are brought before the shaman.";
 
             Choices.clear();
@@ -11039,6 +11057,8 @@ namespace Book1
 
             ID = 348;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Text = "The vault door is wide open, its contents looted. There is nothing more to be found here.";
 
             Choices.clear();
@@ -11149,6 +11169,11 @@ namespace Book1
             {
                 return {Book::Type::NONE, -1};
             }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::SHADOW_DOOR);
         }
     };
 
@@ -12010,6 +12035,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 381;
+
+            Location = Location::Type::BANDO_VILLAGE;
 
             Choices.clear();
 
@@ -13256,9 +13283,11 @@ namespace Book1
 
             ID = 416;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Choices.clear();
             Choices.push_back(Choice::Base("Leave the palace", {Book::Type::BOOK1, 265}));
-            Choices.push_back(Choice::Base("Go to the room in the south", {Book::Type::BOOK1, 506}));
+            Choices.push_back(Choice::Base("Go to the room in the south", {Book::Type::BOOK1, 484}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -15686,6 +15715,8 @@ namespace Book1
 
             ID = 499;
 
+            Location = Location::Type::CURSUS;
+
             Text = "You are sailing just south of the temple city of Cursus. Long war galleys patrol the coast, black-clad priests whipping the slave rowers in time to dreadful hymns. Traders are rare here, but so are pirates, with little opportunity and considerable danger facing any that dare to raid the coast.";
 
             Choices.clear();
@@ -17956,6 +17987,10 @@ namespace Book1
 
             ID = 570;
 
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -18806,6 +18841,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 592;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "You are quickly recognised as the queen's champions by the cruel arena master. Grovelling obsequiously, he apologises for your detention, and even offers you 100 silver coins by way of apology. You may also take up to four CRUDE BLADES (Fighting +0) from the armoury to replace your lost weapons.";
 
@@ -22604,6 +22643,260 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 638}; }
     };
 
+    class Story710 : public Story::Base
+    {
+    public:
+        Story710()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 710;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
+            Text = "You have arrived at the ruined palace of Unbraaki. It is a charcoal wreck, thick with ash and forgotten sorcery. The soldiers that used to parade up and down its now weed-filled gardens haven long departed. Searching through the rubble you locate a set of stone steps leading down into a dimly lit gloom.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go down into the basement", {Book::Type::BOOK1, 67}));
+            Choices.push_back(Choice::Base("Go north, towards Clifftop", {Book::Type::BOOK1, 725}));
+            Choices.push_back(Choice::Base("Go west, to the Tumblestones", {Book::Type::BOOK1, 137}));
+            Choices.push_back(Choice::Base("Go southeast, to Lhasbreath", {Book::Type::BOOK1, 775}));
+            Choices.push_back(Choice::Base("Lhasbreath", {Book::Type::BOOK1, 775}));
+            Choices.push_back(Choice::Base("Head south, into the jungle", {Book::Type::BOOK1, 370}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story711 : public Story::Base
+    {
+    public:
+        Story711()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 711;
+
+            Location = Location::Type::SALT_PLAINS;
+
+            Text = "It is time to leave the Salt Planes.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go southwest, toward Clifftop", {Book::Type::BOOK1, 12}));
+            Choices.push_back(Choice::Base("Go southeast, towards Saltdad", {Book::Type::BOOK1, 511}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story712 : public Story::Base
+    {
+    public:
+        Story712()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 712;
+
+            Text = "It is difficult to interpret what is really going on in the mural. Shrugging, you make your way further upwards.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 77}; }
+    };
+
+    class Story713 : public Story::Base
+    {
+    public:
+        Story713()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 713;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "The priest is delighted to be surrounded by such devout followers of the faith. In a grand ceremony in front of his other slaves he publicly releases you. In a warm gesture he even offers you 50 silver coins to help you get started in your new lives. Grovelling appropriately, you depart for the city centre.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 50);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
+    };
+
+    class Story714 : public Story::Base
+    {
+    public:
+        Story714()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 714;
+
+            Text = "You believe you have pieced together the mystery of this place. \"You are a priest of Cursus, then? The god of judgement?\"\n\n\"I am!\" he hisses. \"And I was high priest of all your kind once. When the demon lord came, we slithered from our underground dwellings from the cracks in the earth he smote with his sword. We took pity on you, took you as our slaves from your ruined cities. Gave you a home and pious work to perform, building temples in the name of Cursus. So cunning you were! Joined us in the worship of Cursus, your voices singing with ours... and then betrayal! You stole our god for your own! Escaped your chains and built your own temples without us. Your monuments were so magnificent that Cursus abandoned us for your kind.\"\n\n\"So Cursus was originally... a serpent god?\" you ask unsurely.\n\nThe priest seems angry. \"How can you doubt it?\" he snarls. \"Here! Look! The scrolls of Cursus, the original documents of our faith. Take them back to the foul priests in your monument-cluttered land! No human hand wrote this! This is the work of serpents...the true folk!\"\n\nHe thrusts the SCROLLS OF CURSUS into your hands. You gaze at them in wonder. If these documents were ever presented to the followers of Cursus it could cause untold damage to the faithful. Cursites have always been an intolerant folk. What would they make of the revelation that their faith was serpent-born?\n\nThe snakeman priest has slithered away, muttering dark words of sorcery. \"All is lost! My kin... too few in number to rebuild. The temple must not fall into human hands!\" Suddenly cracks begin forming in the walls, and a dreadful rumbling can be felt through the temple.\n\nYou have to get out of here!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::SCROLLS_OF_CURSUS};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 881}; }
+    };
+
+    class Story715 : public Story::Base
+    {
+    public:
+        Story715()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 715;
+
+            Text = "\"We've met, haven't we, Emlyn?\" you ask unsurely.\n\n\"Eleven years ago, at Strongstone,\" she confirms. \"For the birth of my brother... my legitimate brother, Jeffery Ross. We were sat together at the low table with Montague Pass-Bailey. All the high lords in the county were there that night. I remember Count Spenser patting me on the head for bringing him a cup of mead, and being spat on and cuffed by your father for accidentally brushing past him.\"\n\n\"Sorry about that...\" you say guiltily.\n\n\"Why? You didn't do it,\" says Emlyn flatly.\n\n\"I think I'm always apologising for him,\" you add sheepishly. \"He's... very traditional, I suppose.\"\n\n\"It must have been tough growing up with Baron Baldwin Dayne as your father,\" she sympathises.\n\n\"I didn't grow up with him... I barely saw him,\" you mutter. \"Eighteen years I lived in Fosterly Castle. I spoke with him three times. He was ashamed of me. I don't know what it was about me that was so different from other bastard-born. Your father loves you and educated you as a scholar. Montague now serves his father as a spymaster. I scrubbed the castle floors and looked after the horses. I was treated like a peasant... and he called me such dreadful names, and never my own.\"\n\n\"Well, you're free of him now,\" says Emlyn.\n\nYou laugh. \"You're never free of your father.. not really.\"\n\nEmlyn pauses, and then searches her bag for a pair of cups in which she pours a little Almskirk wine. \"Let's do the old toast,\" she says, passing you a cup and raising hers. \"To the bastards of Strongstone!\"\n\n\"To the bastards of Strongstone,\" you smile, downing wine as bitter as your memories.\n\nNote: You gained the code A84.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(84)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 674}; }
+    };
+
+    class Story716 : public Story::Base
+    {
+    public:
+        Story716()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 716;
+
+            Location = Location::Type::VIAAN_ISLAND;
+
+            Text = "You steer your ship around Viaan Island until you come to the harbour of the Bando. The large village is a vista of brightly painted stick huts and boldly carved statues set against the wall of trees that is the Viaan Jungle. Tribes-folk swarm the edges of the harbour, pointing and chattering as your ship moors up. Immediately, blue and red painted tribesmen swarm up onto the deck, some armed, others merely curious. You get the impression that though they have certainly had visitors before, they are still making up their minds about you.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::SPEAK_BANDO}))
+            {
+                Choices.push_back(Choice::Base("Reassure the Bando (Team check: Charisma 4+, Successes: 5)", {Book::Type::BOOK1, 339}, {Book::Type::BOOK1, 52}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 4));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 206}; }
+    };
+
+    class Story717 : public Story::Base
+    {
+    public:
+        Story717()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 717;
+
+            Text = "This plain looking room is empty. There is a door in the north and south wall.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::HAS_SPELL(party, {Spells::Type::SHADOW_DOOR}))
+            {
+                Choices.push_back(Choice::Base("Cast the shadow door spell", {Book::Type::BOOK1, 351}));
+            }
+
+            Choices.push_back(Choice::Base("Go north", {Book::Type::BOOK1, 366}));
+            Choices.push_back(Choice::Base("Go south", {Book::Type::BOOK1, 494}));
+        }
+    };
+
+    class Story718 : public Story::Base
+    {
+    public:
+        Story718()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 718;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "You spot the gang of slaves led by Tommul, who fought over the food supply in the dungeons. He seems happy to again join forces with you in order to increase his chances of survival. With a group of eight fighters you easily dominate the rest of the battle, ganging up and overwhelming any brave warriors that get in your way.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 71}; }
+    };
+
+    class Story719 : public Story::Base
+    {
+    public:
+        Story719()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 719;
+
+            Text = "The door opens into a long corridor which ends in a formidable barricade. Blocks of stone, reinforced on the other side with heavy wooden beams, block the other side of the corridor. The barricade looks formidably strong.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Try and break the barricade", {Book::Type::BOOK1, 47}));
+            Choices.push_back(Choice::Base("Return to the room you just came from", {Book::Type::BOOK1, 821}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(72)}))
+            {
+                return {Book::Type::BOOK1, 180};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -23372,6 +23665,16 @@ namespace Book1
     auto story707 = Story707();
     auto story708 = Story708();
     auto story709 = Story709();
+    auto story710 = Story710();
+    auto story711 = Story711();
+    auto story712 = Story712();
+    auto story713 = Story713();
+    auto story714 = Story714();
+    auto story715 = Story715();
+    auto story716 = Story716();
+    auto story717 = Story717();
+    auto story718 = Story718();
+    auto story719 = Story719();
 
     void InitializeStories()
     {
@@ -23452,7 +23755,8 @@ namespace Book1
             &story670, &story671, &story672, &story673, &story674, &story675, &story676, &story677, &story678, &story679,
             &story680, &story681, &story682, &story683, &story684, &story685, &story686, &story687, &story688, &story689,
             &story690, &story691, &story692, &story693, &story694, &story695, &story696, &story697, &story698, &story699,
-            &story700, &story701, &story702, &story703, &story704, &story705, &story706, &story707, &story708, &story709};
+            &story700, &story701, &story702, &story703, &story704, &story705, &story706, &story707, &story708, &story709,
+            &story710, &story711, &story712, &story713, &story714, &story715, &story716, &story717, &story718, &story719};
     }
 }
 #endif
