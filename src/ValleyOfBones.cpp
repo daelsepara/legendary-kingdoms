@@ -21063,7 +21063,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     message = "You do not have enough space in your ship!";
 
-                                    error = true;                                    
+                                    error = true;
                                 }
                             }
                         }
