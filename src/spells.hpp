@@ -34,7 +34,9 @@ namespace Spells
         SILVER_TONGUE,
         THUNDERBOLT,
         SANDSTORM,
-        CLINGING_DREAD
+        CLINGING_DREAD,
+        RUNE_OF_UNMAKING,
+        HEALING_WORD
     };
 
     enum class MassCombat

@@ -600,6 +600,39 @@ namespace Engine
         return found;
     }
 
+    bool VERIFY_EQUIPMENT(Party::Base &party, Team::Type team, std::vector<Equipment::Type> equipment)
+    {
+        auto found = false;
+
+        auto result = Engine::FIND_SOLO(party);
+
+        if (result >= 0 && result < party.Members.size() && (!party.InCity || (party.InCity && party.Members[result].IsCivilized)))
+        {
+            found = Engine::VERIFY_EQUIPMENT(party.Members[result], equipment);
+        }
+        else
+        {
+            if (team == Team::Type::NONE)
+            {
+                found = Engine::VERIFY_EQUIPMENT(party, equipment);
+            }
+            else
+            {
+                for (auto i = 0; i < party.Members.size(); i++)
+                {
+                    if (Engine::VERIFY_EQUIPMENT(party.Members[i], equipment) && party.Members[i].Team == team && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+                    {
+                        found = true;
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        return found;
+    }
+
     bool VERIFY_ANY_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> equipment)
     {
         auto found = false;
@@ -1946,6 +1979,13 @@ namespace Engine
         }
 
         return result;
+    }
+
+    bool HAS_SHIP(Party::Base &party, Location::Type location, int needed_space)
+    {
+        auto result = Engine::FIND_SHIP(party, location, needed_space);
+
+        return (result >= 0 && result < party.Fleet.size());
     }
 
     bool HAS_SHIP(Party::Base &party, Location::Type location)

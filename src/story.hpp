@@ -174,6 +174,19 @@ namespace Choice
             Equipment = equipment;
         }
 
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, Team::Type team)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Equipment = equipment;
+
+            Team = team;
+        }
+
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, std::vector<Codes::Base> codes, std::vector<Codes::Type> invisibleCodes)
         {
             Text = text;

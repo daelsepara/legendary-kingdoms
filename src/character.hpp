@@ -127,6 +127,7 @@ namespace Character
         UNARMED_COMBAT,
         LOST_FINGERNAILS,
         STUNNED,
+        STUNNED_NEXT_ROUND,
         LOST_TONGUE,
         USED_MAGIC_INARENA
     };
@@ -148,8 +149,9 @@ namespace Character
         {Character::Status::ATTACK2_ENEMY0_ROUND0, "Can attack first enemy twice on Round 1"},
         {Character::Status::UNARMED_COMBAT, "Unarmed Combat"},
         {Character::Status::LOST_FINGERNAILS, "Lost fingernails"},
-        {Character::Status::LOST_TONGUE, "Lost Tongue"},
         {Character::Status::STUNNED, "Stunned"},
+        {Character::Status::STUNNED_NEXT_ROUND, "Stunned next round"},
+        {Character::Status::LOST_TONGUE, "Lost Tongue"},
         {Character::Status::USED_MAGIC_INARENA, "Used magic in Saltdad Arena"}};
 
     class Base

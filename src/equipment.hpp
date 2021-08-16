@@ -104,7 +104,9 @@ namespace Equipment
         KENSAI_ROBES3,
         GOLDEN_CANDLESTICK,
         IRON_SWORD1,
-        IRON_KEY
+        IRON_KEY,
+        POTION_OF_CHARISMA,
+        HEALING_POTION
     };
 
     class Base
@@ -270,6 +272,8 @@ namespace Equipment
     auto GOLDEN_CANDLESTICK = Equipment::Base("GOLDEN CANDLESTICK", "GOLDEN CANDLESTICK", Equipment::Class::NORMAL, Equipment::Type::GOLDEN_CANDLESTICK, Attribute::Type::NONE, 0, false);
     auto IRON_KEY = Equipment::Base("IRON KEY", "IRON KEY", Equipment::Class::NORMAL, Equipment::Type::IRON_KEY, Attribute::Type::NONE, 0, false);
     auto IRON_SWORD1 = Equipment::Base("IRON SWORD", "IRON SWORD", Equipment::Class::WEAPON, Equipment::Type::IRON_SWORD1, Attribute::Type::FIGHTING, 1, false);
+    auto POTION_OF_CHARISMA = Equipment::Base("POTION OF FLUENCY (+3 Charisma successes)", "POTION OF FLUENCY (+3 Charisma successes)", Equipment::Class::NORMAL, Equipment::Type::POTION_OF_CHARISMA, Attribute::Type::NONE, 0, false);
+    auto HEALING_POTION = Equipment::Base("HEALING POTION", "HEALING POTION", Equipment::Class::NORMAL, Equipment::Type::HEALING_POTION, Attribute::Type::NONE, 0, false);
 }
 
 #endif

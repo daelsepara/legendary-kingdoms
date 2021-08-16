@@ -673,6 +673,11 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            party.CurrentShip = -1;
+        }
     };
 
     class Story020 : public Story::Base
@@ -1481,7 +1486,7 @@ namespace Book1
             Bye = "Bidding the odd couple farewell, you resume your journey.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of LORE", {Book::Type::BOOK1, 614}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::LORE}, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Lore", {Book::Type::BOOK1, 614}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::LORE}, 1));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -3408,6 +3413,8 @@ namespace Book1
 
             ID = 103;
 
+            Location = Location::Type::JUNGLE;
+
             Text = "You open the cage and the bird immediately flies onto a low branch. You are about to move on when the bird addresses you. \"I'm grateful,\" it says. \"Not many humans would do such a thing without promise of reward.\"\n\n\"Not many birds can talk,\" you say, surprised.\n\n\"All animals can talk -- but rarely in your language,\" admits the bird. \"I can teach you our tongue, if you have any skill in sorcery.\"\n\nIf you want to accept the bird's offer you can learn the spell below if you have any spellcasters in your party:\n\nAnimal Speech (Adventure)\n\nYou are able to communicate using the secret speech of animals.\n\nRecharge: 50 silver";
 
             Bye = "You thank the bird and watch as it flies off above the jungle canopy.";
@@ -4700,6 +4707,8 @@ namespace Book1
 
             ID = 144;
 
+            Location = Location::Type::SOUTHCOAST_VALLEY_OF_BONES;
+
             Text = "You are mid-way along the south coast of the Valley of Bones. To the south is Viaan Island, occupied by the fierce Bando tribe.";
 
             Choices.clear();
@@ -5010,6 +5019,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 156;
+
+            Location = Location::Type::JUNGLE;
 
             Text = "The CRIER BIRD should fetch a tidy sum in a big city. Pleased with your find, you make your way out of the jungle.";
 
@@ -5627,6 +5638,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 176;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "\"We are emissaries sent by the Everchild,\" you say confidently. \"She wishes to discuss an important matter with the God King.\"\n\n\"The Everchild died a thousand summers ago,\" says the sister firmly. \"The God King does not deal with the emissaries of ghosts.\"\n\nThis will take some persuasion.";
 
@@ -6417,6 +6432,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 198;
+
+            Location = Location::Type::AZURE_DEEP;
 
             Text = "Your ship is crashing through the rolling waves of the Azure Deep, the near-boundless ocean that covers the valley's southern coast. To the north are high cliffs, from which blasts of gritty sand, blown from the strong coastal breezes, pour from the cliffsides. It has the appearance of sulphur-yellow rivers, dashing down into the oblivion of the sea.";
 
@@ -7231,6 +7248,10 @@ namespace Book1
 
             ID = 223;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "Soon it is time for another bloody battle in the arena. Each character is given a CRUDE BLADE (Fighting +0) and pushed out to face the current arena champions.";
 
             Choices.clear();
@@ -7263,6 +7284,10 @@ namespace Book1
             ID = -223;
 
             DisplayID = 223;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "The crowd roar -- they recognise you from your previous battles and know that this should prove an entertaining fight.";
 
@@ -9206,6 +9231,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 290;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "The sister bows as you present her with the letter, and immediately escorts you into the chamber of the God King. The king takes the letter, glancing over it with a casual eye. Long before he could have finished reading it, he stands.\n\n\"Yes, this is the Everchild as I remember her,\" nods the God King. \"I officially place the armies of Chalice at her disposal. My kensai warriors shall attend her, a full five hundred men. An additional six hundred archers shall provide her with support. Once she is queen, we shall defer our city to her policies as they relate to all international affairs.\"\n\nYou are dumbstruck. Could the God King really have changed his mind from a quick glance at a letter? Or has he received council since your last meeting and was going to back the Everchild no matter what? You suppose you shall never know.\n\nYou thank the God King for his support, leaving the chamber in amazement at your success.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Kensai Warriors]: Strength 4, Morale 4\n[Chalice Archers]: Strength 2, Morale 3\n\nGaining the God King's support has been quite an endeavour.\n\nNote: You gained the code A20.";
 
@@ -11915,6 +11944,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 379;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "You make your way down the pitch-black tunnel, relying on touching the damp walls to guide you. You emerge into a small cell, through which light streams weakly from a tiny arch high in the wall. In the cell you can see Che Long, your trainer, and several other gladiator slaves.\n\n\"Welcome, my students,\" bows Che Long. He indicates Milagros. \"You come in good company, I see.\"\n\n\"I believe we can trust these warriors,\" announces Milagros. \"Tell them the plan, Che Long.\"\n\n\"Do they know what they are letting themselves in for... who they fight for?\"\n\n\"We are all slaves here,\" you assure them. \"We fight for our freedom.\"\n\n\"That, and so much more,\" says Che Long, smiling. \"This is no mere slave girl. Standing before you is the reincarnation of the Everchild. The Queen of the Valley. The supreme sorceress herself.\"\n\nYou look down at the dirty blonde waif. She speaks well, but could she really be a queen? The Everchild is a figure of legend, a story told to squires and children. Milagros sees the doubt in your eyes and places a finger in the soul bowl. She withdraws it, and paints the walls with the thick soup, drawing strange symbols and wards which begin to pulse and move as if under their own power. To your astonishment she has drawn a spell upon the walls, filled with arcane power.\n\nWith a wave of her hands Milagros bathes your bodies in healing energies. Your party's Health scores are restored to full. Any of your characters that lost limbs, tongues or other organs, are restored. Any diseases or curses you are affected by are also removed.\n\nThere can be no doubt. This young slave girl is, if not the Everchild, certainly a sorceress of great power.\n\nNote: You can learn the following spell:\n\nSoothing Touch (Adventure or Combat)\n\nYour hands glow with divine energy. Choose one of your party members; they can restore 5 Health points.\n\nRecharge: 50 silver";
 
@@ -15917,6 +15950,8 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Engine::GET_CODES(party, {Codes::A(30)});
+
+            party.CurrentShip = -1;
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
@@ -16058,7 +16093,7 @@ namespace Book1
             Text = "Unbraaki collapses to the ground, flames still pouring from his palms, igniting the palace. You only just have time to grasp his spellbook from his hands before crashing through the windows, away from the blaze.\n\nUnbraaki's guards cry in horror and amazement as they see the home of their master consumed in flames. Seeing no reason to remain, they scatter into the desert, leaving their master and his sorcerous monkeys to burn.\n\nAs the morning light spreads across the desert you see the extent of the devastation. The palace is a scorched ruin, though curiously a single entrance to the basement remains. Looking through Unbraaki's spellbook you see it contains many interesting notes on the nature of magic, as well as an interesting spell.\n\nNote: You gained the code A88. You can learn the following spell:\n\nSilver Tongue (Adventure)\n\nYour confidence grows as you summon this spell. Cast this spell when you fail a Charisma check. You gain an additional 3 automatic successes for this check only.\n\nRecharge: 75 silver\n\nIn addition, you may raise the Lore skill of one character by a single point for reading Unbraaki's fascinating theories on magic.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of LORE", {Book::Type::BOOK1, -509}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::LORE}, 1));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Lore", {Book::Type::BOOK1, -509}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::LORE}, 1));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -16234,6 +16269,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 516;
+
+            Location = Location::Type::SOUTHCOAST_VALLEY_OF_BONES;
 
             Text = "The wind fills your sails as you glide in the straits between the shores of the valley and the jungle-filled island of Viaan.";
 
@@ -19840,6 +19877,8 @@ namespace Book1
 
             ID = 625;
 
+            Location = Location::Type::COLD_RIVER;
+
             Text = "You are on the eastern bank of the cold river, a few dozen miles from the religious city of Cursus. The heat is oppressive, but thanks to the ample water supply and obvious directional clues from the river, you can navigate this stretch of desert quite easily. River barges make their way lazily up and down the river, but they do so on the far side of the bank. The notorious Caves of Uranu lie to the north, and no trader will risk their stocks in that foul wasteland.";
 
             Choices.clear();
@@ -19945,6 +19984,10 @@ namespace Book1
 
             ID = 628;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "The sister plainly informs you that the God King is not available to be seen. The stern glare she fixes you wish suggests that it would not be easy to change her mind.";
 
             Choices.clear();
@@ -19988,6 +20031,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 629;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "\"I am not yet at my full potency,\" admits the Everchild, running her hand through her filthy locks. \"In my eagerness to see the Iron King dethroned I sided with a certain group of revolutionaries. Sadly, we were ambushed by the king's men, and there was no opportunity for me to use my magic to turn the tide of the battle. I opted to keep my identity secret until a more appropriate juncture.\"\n\n\"But are you indeed the Everchild reborn, as the legends say?\" you insist.\n\n\"I believe so,\" she nods. \"I was born to common folk, and yet my mind is filled with memories, manners and skills from a past life. Even if I am not, I am determined to replace the Iron King's tyranny with even-handed justice. I am willing to take on the mantle of the Everchild, so why not take her name as well?\"\n\n\"Why do you not escape using your magic?\" you ask.\n\n\"It is not yet mighty enough for me to effect an escape... on my own,\" she explains. \"Besides, a queen needs followers, and mine are imprisoned here. We will leave together, or not at all.\" \n\n\"A noble sentiment,\" you admit. \"But how exactly do you plan to escape?\"";
 
@@ -20699,7 +20746,7 @@ namespace Book1
 
             ID = 652;
 
-            Location = Location::Type::CURSUS;
+            Location = Location::Type::CLIFFTOP;
 
             Text = "It costs 50 silver coins to repair one Health point on any ship you have docked in Cursus harbour. You can repair a ship up to its maximum starting health.";
 
@@ -22267,9 +22314,7 @@ namespace Book1
 
             ID = 699;
 
-            Location = Location::Type::CHALICE;
-
-            IsCity = true;
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "Honnu of Chalice asked Akihiro to search for a silver idol in the Caves of Uranu. However, he has been instructed to search for the idol alone.";
 
@@ -22279,6 +22324,284 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+    };
+
+    class Story700 : public Story::Base
+    {
+    public:
+        Story700()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 700;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "You bend to help the injured Milagros, who tells you not to worry. \"I've had much worse, but you are gracious to help,\" she says, wincing as she smiles. \"Perhaps you would walk me to the kitchens? I fear my hands tremble too much to carry the soup.\"\n\nAssisting Milagros, you follow her down the poorly lit tunnel towards the kitchen. \"You are brave warriors, and you have kind hearts,\" she says. \"It is not right that you suffer and stultify here. There is... a plan, to abruptly shorten our sentence. If you would be free, follow me.\"\n\nMilagros makes an abrupt turn, down a narrow tunnel that plunges into darkness.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Follow her", {Book::Type::BOOK1, 379}));
+            Choices.push_back(Choice::Base("Avoid trouble and return to your cells", {Book::Type::BOOK1, 223}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story701 : public Story::Base
+    {
+    public:
+        Story701()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 701;
+
+            Location = Location::Type::JUNGLE;
+
+            Text = "As you wander the jungle you overhear a particularly mournful song coming through the trees. You come upon the sight of a crier bird in some distress. It has fallen into a small trap, a steel cage which has been hung up amongst the branches, no doubt left by some impoverished logger to earn a few extra coins. The poor bird warbles pitifully.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Take the bird with you", {Book::Type::BOOK1, 156}));
+            Choices.push_back(Choice::Base("Free the bird from the cage", {Book::Type::BOOK1, 103}));
+            Choices.push_back(Choice::Base("Leave the bird for the logger", {Book::Type::BOOK1, 618}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story702 : public Story::Base
+    {
+    public:
+        Story702()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 702;
+
+            Text = "With a mixture of threats and promises you keep the workers digging. Finally, after weeks more effort, and plenty of supernatural terrors, the workers break into an antique chamber. Fear seems to almost radiate from the dreadful hall, and only one worker is brave enough to accompany you inside.\n\nIn the shrouded chamber you come upon a plinth, on which you find two madshards. You eagerly scoop them up, but as you turn you realise that something is wrong. The worker who accompanied you inside has changed. His peasant garb has become tight-fitting black robes, and in his hand he holds a blade composed of pure light.\n\n\"I am Fastilon, of the Silence,\" he declares. \"You have troubled the dark one long enough. This place will be a fitting tomb for you.\"\n\n\"He shall never rise!\" you swear, drawing your weapons.\n\nFastilon murmurs, and soon his form splits into six identical copies, which swirl about, constantly changing positions. You must defeat this master assassin.\n\nNote: The first person to damage Fastilon in a combat round is stunned by a magical bolt. That party member cannot attack in the next combat round. If Fastilon takes no damage in a combat round he will cast a spell instead of attacking (see his spells below). If Fastilon has been damaged, he will make two attacks in his turn. You must assign the damage of the second attack to a different character from the first.\nFastilon casts spells in the following order:\n\n1st) Fastilon casts Rune of Unmaking. One party member takes 6 points of damage.\n\n2nd) Fastilon casts Thunderbolt. Inflict 5 points of damage on two party members.\n\n3rd) Fastilon casts Healing Word. Fastilon recovers up to 8 Health points.\n\nAfter casting all his spells, Fastilon will fight as normal, with two attacks as mentioned above.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {Monster::Base("Fastilon", Monster::Type::FASTILON, 8, 2, 6, 40, 0, 2)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 334}; }
+    };
+
+    class Story703 : public Story::Base
+    {
+    public:
+        Story703()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 703;
+
+            Location = Location::Type::CLIFFTOP;
+
+            Text = "The journey to the harbour from the city is a fraught one, the thin path barely wide enough for a single person to traverse. Sometimes you have to give way to traffic coming up the trail on creaky wooden platforms that flex and bend under your weight. The harbour itself is a series of wooden piers hammered into the sides of the cliff face, barnacle encrusted beams peeping from the crashing waves. The ships must";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Board your ship", {Book::Type::BOOK1, 82}, Choice::Type::SAIL, Location::Type::CLIFFTOP));
+            Choices.push_back(Choice::Base("Get your ship repaired", {Book::Type::BOOK1, 652}, Choice::Type::SHIP, Location::Type::CLIFFTOP));
+            Choices.push_back(Choice::Base("Buy or sell a ship", {Book::Type::BOOK1, 756}));
+            Choices.push_back(Choice::Base("Organise a cargo delivery", {Book::Type::BOOK1, 855}));
+            Choices.push_back(Choice::Base("Visit a local tavern", {Book::Type::BOOK1, 505}));
+            Choices.push_back(Choice::Base("Return to the city centre", {Book::Type::BOOK1, 19}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story704 : public Story::Base
+    {
+    public:
+        Story704()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 704;
+
+            Text = "\"A trade, for bringing me the weave,\" announces the shaman, brightly. \"I brew potions for the tribe. Choose one, and it shall be yours.\" The shaman offers you one of two potions.\n\nYou also ask for more information about the 'man with hatred in his heart' that the shaman spoke to you about before. He looks blankly at you, and then laughs. \"No doubt a piece of prophesy from my visions. Pay it no mind. My dreams are as insubstantial as air. But I do have one piece of advice for you. When the queen comes to take the bishop, bring gold to take the knights.\"\n\n\"Another one of your visions?\" you ask dryly.\n\nThe shaman shrugs. \"Take it or leave it,\" he says philosophically.\n\nNote:  The first is a HEALING POTION (restore 5 Health), which you can drink at any time, including during combat. The second is a POTION OF FLUENCY (3 Charisma successes), which you can drink during a Charisma skill check to automatically gain 3 extra successes. You can only choose one potion.";
+
+            Bye = "Thanking him for his time, you return to your ship and weigh anchor.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Take the HEALING POTION", {Book::Type::BOOK1, 144}, Choice::Type::GET_EQUIPMENT, {Equipment::HEALING_POTION}));
+            Choices.push_back(Choice::Base("Take the POTION OF FLUENCY (3 Charisma Successes)", {Book::Type::BOOK1, 144}, Choice::Type::GET_EQUIPMENT, {Equipment::POTION_OF_CHARISMA}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story705 : public Story::Base
+    {
+    public:
+        Story705()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 705;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "Animus Mast is the name of both a college of magic, and a literal magical tower in Drakehallow. It was built as part of the magical revival movement in that country some two hundred and fifty summers ago. It has a long running rivalry with Cassery Tower, another magical institution located only a few miles away. Animus Mast is an elitist organisation, accepting only proven mages into its fold. It is expensive to attend but is probably the superior college in terms of the learning facilities available. According to these scrolls, the most recent piece of research there is the rediscovery of golem construction. Golems are magical servants of stone and iron who built many of the monuments of the ancient world. Of course, these scrolls are forty summers old, so who knows what the wizards of Animus Mast are working on now!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 680}; }
+    };
+
+    class Story706 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Story706()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 706;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "You'll not back down in front of a knave like Tommul. You must fight this battle alone.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            RoundLimit = 2;
+
+            Monsters = {Monster::Base("Bronzeguard", Monster::Type::BRONZEGUARD, 8, 4, 5, 12, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::EXCEED_LIMIT)
+            {
+                destination = {Book::Type::BOOK1, 55};
+
+                Bye = "You are still fighting when a horde of guardsmen burst through the doors. You are arrested on charges of conspiracy.";
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 75};
+
+                Bye = "You manage to escape.";
+            }
+        }
+    };
+
+    class Story707 : public Story::Base
+    {
+    public:
+        Story707()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 707;
+
+            Text = "The slaves give a mighty cheer as the last orc falls dead. They quickly take up the orc's weapons, though you may seize the CHAIN ARMOUR (Armour +2) from the orc leader, if you wish. The slaves heap glory upon you.\n\nYou ask the slaves what the orcs were digging for, but they can tell you little. The orcs would not reveal the object of their search, but they seemed frantic to find it, whatever it was. It is certainly unusual for orcs to travel so far, with so many supplies, and with such stealth into an enemy nation. You wonder what to make of it all.\n\nThe slaves thank you again, and let you know that they intend to find their own way out of the dungeon and to find a new life for themselves.\n\nNote: You gained the code A69.";
+
+            Bye = "You wish them luck, and then turn your attention back to the cavern.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Charisma", {Book::Type::BOOK1, 371}, Choice::Type::RAISE_ATTRIBUTE_SCORE, {Attribute::Type::CHARISMA}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::CHAIN_ARMOUR2};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::A(69)});
+        }
+    };
+
+    class Story708 : public Story::Base
+    {
+    public:
+        Story708()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 708;
+
+            Text = "You step cautiously through a crooked black stone archway and into a wide pillared chamber. You are just taking your bearings when you head a slam of rusted metal. Spinning around you can see that you have been cut off from the exit by a large portcullis. Worse, you can hear a savage hissing from all around the temple chamber. Drawing your weapons, you are startled to see a number of hideous snakemen, serpentine creatures with the arms of men and the bodies of a giant cobra. There is no escape, you must fight!\n\nNote: Note: If you have a HYGLIPH FLOWER the snakemen are put off by its pungent odour and require a 5+ on their attack rolls to inflict damage during this battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(41)}))
+            {
+                return {Book::Type::BOOK1, 827};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 5, 4, 3, 8, 0),
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 4, 4, 3, 8, 0),
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 3, 4, 3, 7, 0),
+                Monster::Base("Snakeman", Monster::Type::SNAKEMAN, 3, 4, 3, 5, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 72}; }
+    };
+
+    class Story709 : public Story::Base
+    {
+    public:
+        Story709()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 709;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "The strength of your convictions is obvious, and you can see the firmness of the sister faulter as you speak of the great hopes that the Everchild is inspiring in the downtrodden masses of Saltdad.\n\n\"Perhaps I was too hasty,\" she concedes. \"It seems clear that this is something the God King should know about. Come with me, please.\"";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 638}; }
     };
 
     auto story001 = Story001();
@@ -23039,6 +23362,16 @@ namespace Book1
     auto story697 = Story697();
     auto story698 = Story698();
     auto story699 = Story699();
+    auto story700 = Story700();
+    auto story701 = Story701();
+    auto story702 = Story702();
+    auto story703 = Story703();
+    auto story704 = Story704();
+    auto story705 = Story705();
+    auto story706 = Story706();
+    auto story707 = Story707();
+    auto story708 = Story708();
+    auto story709 = Story709();
 
     void InitializeStories()
     {
@@ -23118,7 +23451,8 @@ namespace Book1
             &story660, &story661, &story662, &story663, &story664, &story665, &story666, &story667, &story668, &story669,
             &story670, &story671, &story672, &story673, &story674, &story675, &story676, &story677, &story678, &story679,
             &story680, &story681, &story682, &story683, &story684, &story685, &story686, &story687, &story688, &story689,
-            &story690, &story691, &story692, &story693, &story694, &story695, &story696, &story697, &story698, &story699};
+            &story690, &story691, &story692, &story693, &story694, &story695, &story696, &story697, &story698, &story699,
+            &story700, &story701, &story702, &story703, &story704, &story705, &story706, &story707, &story708, &story709};
     }
 }
 #endif

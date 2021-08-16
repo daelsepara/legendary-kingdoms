@@ -80,7 +80,10 @@ namespace Control
         FULL_RECOVERY,
         RECHARGE,
         FOLLOWERS,
-        SELECT_ORDER
+        SELECT_ORDER,
+        CARGO,
+        SAIL,
+        DRINK
     };
 
     class Base

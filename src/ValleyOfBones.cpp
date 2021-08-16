@@ -110,6 +110,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &enemyFleet, std::vector<int> previousTargets, int combatRound);
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int attacker, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets, int combatRound, Control::Type mode);
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Equipment::Base equipment, Control::Type mode);
+int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> ships, Location::Type location, std::vector<Cargo::Type> cargo, Control::Type mode);
 
 Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
 
@@ -4438,13 +4439,22 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     {
                         if (!damaged)
                         {
+                            std::string stunned = "";
+
+                            if (damage > 0 && monsters[opponent].Type == Monster::Type::FASTILON && !monsters[opponent].Damaged)
+                            {
+                                stunned = "\n\n" + std::string(party.Members[combatant].Name) + " is stunned next round!";
+
+                                Engine::GAIN_STATUS(party.Members[combatant], Character::Status::STUNNED_NEXT_ROUND);
+                            }
+
                             Engine::GAIN_HEALTH(monsters[opponent], -damage);
 
                             combat_damage = damage;
 
                             if (damage > 0)
                             {
-                                displayMessage(std::string(party.Members[combatant].Name) + "'s " + std::string(spell.Name) + " deals " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!", intLB);
+                                displayMessage(std::string(party.Members[combatant].Name) + "'s " + std::string(spell.Name) + " deals " + std::to_string(damage) + " to the " + std::string(monsters[opponent].Name) + "!" + stunned, intLB);
                             }
                             else
                             {
@@ -5164,11 +5174,15 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 spell = Spells::Type::ICE_BOLT;
 
+                num_attacks = 1;
+
                 Difficulty = 4;
             }
             else if (roll <= 4)
             {
                 spell = Spells::Type::UNFAILING_STRIKE;
+
+                num_attacks = 1;
 
                 Difficulty = 1;
             }
@@ -5186,12 +5200,27 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             if (combatRound == 0)
             {
                 spell = Spells::Type::ICE_BOLT;
+
+                num_attacks = 1;
             }
             else if (combatRound == 2)
             {
                 num_attacks = Engine::COUNT(party, team);
 
                 spell = Spells::Type::SANDSTORM;
+            }
+        }
+        else if (monsters[opponent].Type == Monster::Type::FASTILON)
+        {
+            if (combatRound == 0)
+            {
+                spell = Spells::Type::RUNE_OF_UNMAKING;
+
+                num_attacks = 1;
+            }
+            else if (combatRound == 1)
+            {
+                num_attacks = std::min(2, Engine::COUNT(party, team));
             }
         }
     }
@@ -5440,13 +5469,22 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                         }
                                     }
 
-                                    Engine::GAIN_HEALTH(monsters[opponent], -(damage_scale * damage));
-
                                     combat_damage = damage_scale * damage;
 
-                                    if (damage_scale * damage > 0)
+                                    std::string stunned = "";
+
+                                    if (combat_damage > 0 && monsters[opponent].Type == Monster::Type::FASTILON && !monsters[opponent].Damaged)
                                     {
-                                        displayMessage(std::string(party.Members[combatant].Name) + " deals " + std::to_string(damage_scale * damage) + " to the " + std::string(monsters[opponent].Name) + "!", intLB);
+                                        Engine::GAIN_STATUS(party.Members[combatant], Character::Status::STUNNED_NEXT_ROUND);
+
+                                        stunned = "\n\n" + std::string(party.Members[combatant].Name) + " is stunned next round!";
+                                    }
+
+                                    Engine::GAIN_HEALTH(monsters[opponent], -combat_damage);
+
+                                    if (combat_damage > 0)
+                                    {
+                                        displayMessage(std::string(party.Members[combatant].Name) + " deals " + std::to_string(damage_scale * damage) + " to the " + std::string(monsters[opponent].Name) + "!" + stunned, intLB);
                                     }
                                     else
                                     {
@@ -5544,6 +5582,18 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     combat_damage = 4;
                                 }
                             }
+                            else if (monsters[opponent].Type == Monster::Type::FASTILON)
+                            {
+                                if (attacks == 0)
+                                {
+                                    if (combatRound == 1)
+                                    {
+                                        message = "Fastilon casts a Thunderbolt spell! He makes two Fighting: 5 attacks!";
+                                    }
+
+                                    displayMessage(message, intRD);
+                                }
+                            }
 
                             if (spell != Spells::Type::NONE && attacks == 0)
                             {
@@ -5555,7 +5605,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 }
                                 else if (spell == Spells::Type::UNFAILING_STRIKE)
                                 {
-                                    message += "Unfailing Strike! " + std::string(monsters[opponent].Name) + " deals 3 damage to the party";
+                                    message += "Unfailing Strike! " + std::string(monsters[opponent].Name) + " deals 3 damage to the party!";
 
                                     damaged = true;
 
@@ -5564,6 +5614,18 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     stage = Engine::Attack::DAMAGE;
 
                                     combat_damage = 3;
+                                }
+                                else if (spell == Spells::Type::RUNE_OF_UNMAKING)
+                                {
+                                    message += "Rune of Unmaking! " + std::string(monsters[opponent].Name) + " deals 6 damage to the party!";
+
+                                    damaged = true;
+
+                                    assigned = false;
+
+                                    stage = Engine::Attack::DAMAGE;
+
+                                    combat_damage = 6;
                                 }
                                 else if (spell == Spells::Type::POISON_STREAM)
                                 {
@@ -5622,14 +5684,17 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 attack_score = 3;
                             }
                         }
+                        else if (monsters[opponent].Type == Monster::Type::FASTILON)
+                        {
+                            if (combatRound == 1)
+                            {
+                                attack_score = 5;
+                            }
+                        }
 
                         if (spell == Spells::Type::ICE_BOLT)
                         {
                             attack_score = 8;
-                        }
-                        else if (spell == Spells::Type::UNFAILING_STRIKE)
-                        {
-                            attack_score = 3;
                         }
                         else if (spell == Spells::Type::POISON_STREAM)
                         {
@@ -5960,7 +6025,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         takeScreen(window, renderer, party, team, monsters[opponent].Loot, monsters[opponent].Loot.size(), false);
     }
 
-    return std::max(0, combat_damage);
+    return direction == 0 ? std::max(-1, combat_damage) : std::max(0, combat_damage);
 }
 
 bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int unit, Location::Type &location, int threshold, int rolls)
@@ -7742,6 +7807,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             const char *choices_wolfspirit[2] = {"Wolf Spirit", "Done"};
             const char *choices_wisdom[2] = {"Wisdom", "Done"};
             const char *choices_silvertongue[2] = {"Silver Tongue", "Done"};
+            const char *choices_charisma_potion[2] = {"Potion of Fluency", "Done"};
+            const char *choices_silvertongue_potion[3] = {"Silver Tongue", "Potion of Fluency", "Done"};
             const char *choices_end[1] = {"Done"};
 
             SDL_Surface *dice[6];
@@ -7777,6 +7844,15 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             auto controls_silvertongue = createFixedTextButtons(choices_silvertongue, 2, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
             controls_silvertongue[0].Type = Control::Type::CONFIRM;
             controls_silvertongue[1].Type = Control::Type::BACK;
+
+            auto controls_charisma_potion = createFixedTextButtons(choices_charisma_potion, 2, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+            controls_charisma_potion[0].Type = Control::Type::DRINK;
+            controls_charisma_potion[1].Type = Control::Type::BACK;
+
+            auto controls_silvertongue_potion = createFixedTextButtons(choices_silvertongue_potion, 3, main_buttonw, main_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+            controls_silvertongue_potion[0].Type = Control::Type::CONFIRM;
+            controls_silvertongue_potion[1].Type = Control::Type::DRINK;
+            controls_silvertongue_potion[2].Type = Control::Type::BACK;
 
             auto current = -1;
 
@@ -8043,11 +8119,29 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                             controls = controls_wisdom;
                         }
-                        else if (Skill == Attribute::Type::CHARISMA && Engine::CAN_CAST(party, team_type, Spells::Type::SILVER_TONGUE) && ((success_counter + 3) >= success))
+                        else if (Skill == Attribute::Type::CHARISMA && (Engine::CAN_CAST(party, team_type, Spells::Type::SILVER_TONGUE) || Engine::VERIFY_EQUIPMENT(party, team_type, {Equipment::Type::POTION_OF_CHARISMA})) && ((success_counter + 3) >= success))
                         {
+                            auto has_spells = Engine::CAN_CAST(party, team_type, Spells::Type::SILVER_TONGUE);
+                            auto has_potion = Engine::VERIFY_EQUIPMENT(party, team_type, {Equipment::Type::POTION_OF_CHARISMA});
+
                             stage = Attribute::Test::MAGIC;
 
-                            controls = controls_silvertongue;
+                            if (has_spells && has_potion)
+                            {
+                                controls = controls_silvertongue_potion;
+                            }
+                            else if (has_spells)
+                            {
+                                controls = controls_silvertongue;
+                            }
+                            else if (has_potion)
+                            {
+                                controls = controls_charisma_potion;
+                            }
+                            else
+                            {
+                                controls = controls_end;
+                            }
                         }
                         else
                         {
@@ -8105,6 +8199,27 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         else if (Skill == Attribute::Type::CHARISMA)
                         {
                             Engine::CAST_SPELL(party, team_type, Spells::Type::SILVER_TONGUE);
+
+                            party.RecentSuccesses += 3;
+
+                            test_result = true;
+                        }
+
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+
+                        break;
+                    }
+                    else if (stage == Attribute::Test::MAGIC && controls[current].Type == Control::Type::DRINK)
+                    {
+                        stage = Attribute::Test::END;
+
+                        if (Skill == Attribute::Type::CHARISMA)
+                        {
+                            Engine::LOSE_EQUIPMENT(party, team_type, {Equipment::Type::POTION_OF_CHARISMA});
 
                             party.RecentSuccesses += 3;
 
@@ -8512,6 +8627,11 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                                                     if (target >= 0)
                                                     {
+                                                        if (monsters[target].Type == Monster::Type::FASTILON && !monsters[target].Damaged)
+                                                        {
+                                                            Engine::GAIN_STATUS(party.Members[selection], Character::Status::STUNNED_NEXT_ROUND);
+                                                        }
+
                                                         Engine::GAIN_HEALTH(monsters[target], -3);
 
                                                         cast = true;
@@ -10598,6 +10718,358 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
     return result;
 }
 
+int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> ships, Location::Type location, std::vector<Cargo::Type> cargo, Control::Type mode)
+{
+    auto result = -1;
+
+    auto title = "Legendary Kingdoms: Select Ship";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto text_space = 8;
+        auto infoh = 48;
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto offset = 0;
+        auto limit = (text_bounds - 2 * text_space) / (88);
+        auto last = offset + limit;
+
+        if (last > ships.size())
+        {
+            last = ships.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true);
+
+        auto done = false;
+
+        auto selection = -1;
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto scrollSpeed = 1;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                if (last - offset > 0)
+                {
+                    for (auto i = 0; i < last - offset; i++)
+                    {
+                        if (selection == offset + i)
+                        {
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        }
+                        else if (ships[offset + i].Health > 0)
+                        {
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
+
+                if (mode == Control::Type::COMBAT)
+                {
+                    putHeader(renderer, "Choose the ship attacking this round", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (mode == Control::Type::CARGO)
+                {
+                    putHeader(renderer, "Choose the ship to receive cargo", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (mode == Control::Type::SPELL_TARGET)
+                {
+                    putHeader(renderer, "Choose target ship for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (mode == Control::Type::GAIN_HEALTH)
+                {
+                    putHeader(renderer, "Choose the ship to repair", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (mode == Control::Type::LOSE_HEALTH)
+                {
+                    putHeader(renderer, "Choose the ship to receive damage", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else if (mode == Control::Type::SAIL)
+                {
+                    putHeader(renderer, "Choose the ship to board", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else
+                {
+                    putHeader(renderer, "Choose ship", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+
+                putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (selection >= 0 && selection < ships.size())
+                {
+                    if (ships[selection].Health > 0)
+                    {
+                        putText(renderer, ships[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    }
+                    else
+                    {
+                        putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    }
+                }
+                else
+                {
+                    putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+                {
+                    if (controls[current].Type == Control::Type::BACK)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > ships.size())
+                            {
+                                last = ships.size();
+                            }
+
+                            controls.clear();
+
+                            controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
+                    {
+                        if (ships.size() - last > 0)
+                        {
+                            if (offset < ships.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > ships.size() - limit)
+                            {
+                                offset = ships.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > ships.size())
+                            {
+                                last = ships.size();
+                            }
+
+                            controls.clear();
+
+                            controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true);
+                            ;
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                                {
+                                    current++;
+                                }
+                            }
+                        }
+
+                        if (ships.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (selection >= 0 && selection < ships.size())
+                        {
+                            done = true;
+
+                            result = selection;
+
+                            current = -1;
+
+                            selected = false;
+                        }
+                        else
+                        {
+                            displayMessage("You must select a ship!", intRD);
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION)
+                    {
+                        if (current + offset >= 0 && current + offset < ships.size())
+                        {
+                            if (selection == current + offset)
+                            {
+                                selection = -1;
+                            }
+                            else
+                            {
+                                if (ships[current + offset].Health > 0)
+                                {
+                                    if (location == Location::Type::NONE || ships[current + offset].Location == location)
+                                    {
+                                        if (mode == Control::Type::CARGO)
+                                        {
+                                            if ((ships[current + offset].MaximumCargo - ships[current + offset].Cargo.size()) >= cargo.size())
+                                            {
+                                                selection = current + offset;
+                                            }
+                                            else
+                                            {
+                                                displayMessage("This ship does not have enough space!", intRD);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            selection = current + offset;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        displayMessage("You can only choose a ship docked at " + std::string(Location::Description[location]) + "!", intRD);
+                                    }
+                                }
+                                else
+                                {
+                                    displayMessage("The " + std::string(ships[current + offset].Name) + " is destroyed!", intRD);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    return result;
+}
+
 std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Control::Type mode)
 {
     auto selected_party = std::vector<int>();
@@ -11558,6 +12030,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         auto round0_attacks = 0;
 
+        auto spells_cast = 0;
+
         auto allyAttack = std::vector<Allies::Type>();
 
         auto current_mode = Control::Type::ATTACK;
@@ -11728,7 +12202,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (Engine::FIND_LIST(hasAttacked, i) >= 0)
                             {
-                                party_string += " (A)";
+                                if (Engine::HAS_STATUS(party.Members[i], Character::Status::STUNNED))
+                                {
+                                    party_string += " (S)";
+                                }
+                                else
+                                {
+                                    party_string += " (A)";
+                                }
                             }
                         }
 
@@ -11913,7 +12394,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (Engine::FIND_LIST(hasAttacked, result) >= 0 && !(Engine::HAS_STATUS(party.Members[result], Character::Status::ATTACK2_ENEMY0_ROUND0) && combatRound == 0 && round0_attacks < 2))
                             {
-                                message = std::string(party.Members[result].Name) + " already attacked this round.";
+                                if (Engine::HAS_STATUS(party.Members[result], Character::Status::STUNNED))
+                                {
+                                    message = std::string(party.Members[result].Name) + " is stunned!";
+                                }
+                                else
+                                {
+                                    message = std::string(party.Members[result].Name) + " already attacked this round.";
+                                }
 
                                 displayMessage(message, intRD);
                             }
@@ -12085,6 +12573,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (Engine::COUNT(monsters, combatRound) > 0 && !allies_attack)
                             {
+                                Engine::REMOVE_STATUS(party, Character::Status::STUNNED);
+
                                 if (Engine::VERIFY_CODES(party, {Codes::Type::ENEMY_DAZING_LIGHTS}))
                                 {
                                     Engine::LOSE_CODES(party, {Codes::Type::ENEMY_DAZING_LIGHTS});
@@ -12114,6 +12604,28 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                         displayMessage("The sorcerer casts a Dazing Lights spell!", intRD);
 
                                                         Engine::GET_CODES(party, {Codes::Type::ENEMY_DAZING_LIGHTS});
+                                                    }
+                                                    else if (monsters[i].Type == Monster::Type::FASTILON)
+                                                    {
+                                                        if (!monsters[i].Damaged || spells_cast >= 3)
+                                                        {
+                                                            if (spells_cast == 2)
+                                                            {
+                                                                displayMessage("Fastilon a Healing Word! Fastilon recovers 8 Health points!", intRD);
+
+                                                                Engine::GAIN_HEALTH(monsters[i], 8);
+                                                            }
+                                                            else
+                                                            {
+                                                                attackScreen(window, renderer, party, team, monsters, -1, i, 1, spells_cast, useEquipment);
+                                                            }
+
+                                                            spells_cast += 1;
+                                                        }
+                                                        else
+                                                        {
+                                                            attackScreen(window, renderer, party, team, monsters, -1, i, 1, (combatRound < 3 ? 3 : combatRound), useEquipment);
+                                                        }
                                                     }
                                                     else
                                                     {
@@ -12202,6 +12714,19 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 for (auto i = 0; i < monsters.size(); i++)
                                 {
                                     monsters[i].Damaged = false;
+                                }
+
+                                // Setup stunned characters
+                                for (auto i = 0; i < party.Members.size(); i++)
+                                {
+                                    if (Engine::IS_ACTIVE(party, i) && Engine::HAS_STATUS(party.Members[i], Character::Status::STUNNED_NEXT_ROUND))
+                                    {
+                                        Engine::REMOVE_STATUS(party.Members[i], Character::Status::STUNNED_NEXT_ROUND);
+
+                                        Engine::GAIN_STATUS(party.Members[i], Character::Status::STUNNED);
+
+                                        hasAttacked.push_back(i);
+                                    }
                                 }
                             }
                         }
@@ -12363,6 +12888,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 Engine::REMOVE_STATUS(party.Members[i], Character::Status::ARMOUR3);
                 Engine::REMOVE_STATUS(party.Members[i], Character::Status::ENRAGED);
                 Engine::REMOVE_STATUS(party.Members[i], Character::Status::POTION_OF_INVULNERABILITY);
+                Engine::REMOVE_STATUS(party.Members[i], Character::Status::STUNNED);
+                Engine::REMOVE_STATUS(party.Members[i], Character::Status::STUNNED_NEXT_ROUND);
             }
         }
 
@@ -17326,6 +17853,28 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
     // Render window
     if (window && renderer)
     {
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         SDL_SetWindowTitle(window, title);
 
         auto current = 0;
@@ -17524,6 +18073,18 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 }
             }
 
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
             renderButtons(renderer, controls, current, intLB, border_space, border_pts);
 
             done = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
@@ -17666,6 +18227,41 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                             current++;
                         }
                     }
+                }
+                else if (controls[current].Type == Control::Type::BUY_SELL_SHIP && !hold)
+                {
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::BUY_SELL_CARGO && !hold)
+                {
+                    if (Engine::HAS_SHIP(party, harbour->Location))
+                    {
+                    }
+                    else
+                    {
+                        displayMessage("You do not have a ship docked at " + std::string(Location::Description[harbour->Location]) + "!", intRD);
+                    }
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::REPAIR_SHIP && !hold)
+                {
+                    if (harbour->ShipRepairPrice >= 0)
+                    {
+                        if (Engine::HAS_SHIP(party, harbour->Location))
+                        {
+                        }
+                        else
+                        {
+                            displayMessage("You do not have a ship docked at " + std::string(Location::Description[harbour->Location]) + "!", intRD);
+                        }
+                    }
+                    else
+                    {
+                        displayMessage("It is not possible to repair ships at this harbour!", intRD);
+                    }
+
+                    selected = false;
                 }
                 else if (controls[current].Type == Control::Type::BACK)
                 {
@@ -20413,6 +21009,44 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                             }
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::SAIL)
+                        {
+                            auto location = story->Choices[choice].Location;
+
+                            if (location == Location::Type::NONE)
+                            {
+                                location = party.Location;
+                            }
+
+                            if (Engine::HAS_SHIP(party, location))
+                            {
+                                auto result = selectShip(window, renderer, party.Fleet, story->Choices[choice].Location, {}, Control::Type::SAIL);
+
+                                if (result >= 0 && result < party.Fleet.size())
+                                {
+                                    party.CurrentShip = result;
+
+                                    next = findStory(story->Choices[choice].Destination);
+
+                                    done = true;
+
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                error = true;
+
+                                if (location != Location::Type::NONE)
+                                {
+                                    message = "You do not have a ship at " + std::string(Location::Description[location]);
+                                }
+                                else
+                                {
+                                    message = "You do not have a ship at this location!";
+                                }
+                            }
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::TEAM_MAX_HEALTH)
                         {
                             auto target = std::vector<int>();
@@ -21008,21 +21642,24 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::DELIVER)
                         {
-                            auto result = Engine::FIND_SHIP(party, story->Choices[choice].Location, story->Choices[choice].Cargo.size());
-
-                            if (result >= 0 && result < party.Fleet.size())
+                            if (Engine::HAS_SHIP(party, story->Choices[choice].Location, story->Choices[choice].Cargo.size()))
                             {
                                 if (party.Money >= story->Choices[choice].Value)
                                 {
-                                    Engine::GAIN_MONEY(party, -story->Choices[choice].Value);
+                                    auto result = selectShip(window, renderer, party.Fleet, story->Choices[choice].Location, story->Choices[choice].Cargo, Control::Type::CARGO);
 
-                                    party.Fleet[result].Cargo.insert(party.Fleet[result].Cargo.end(), story->Choices[choice].Cargo.begin(), story->Choices[choice].Cargo.end());
+                                    if (result >= 0 && result < party.Fleet.size())
+                                    {
+                                        Engine::GAIN_MONEY(party, -story->Choices[choice].Value);
 
-                                    next = findStory(story->Choices[choice].Destination);
+                                        party.Fleet[result].Cargo.insert(party.Fleet[result].Cargo.end(), story->Choices[choice].Cargo.begin(), story->Choices[choice].Cargo.end());
 
-                                    done = true;
+                                        next = findStory(story->Choices[choice].Destination);
 
-                                    break;
+                                        done = true;
+
+                                        break;
+                                    }
                                 }
                                 else
                                 {

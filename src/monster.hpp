@@ -42,7 +42,9 @@ namespace Monster
         ZEALOT,
         ZEALOT_HEALER,
         ZEALOT_SORCERER,
-        EVERCHILD_ASSASSIN
+        EVERCHILD_ASSASSIN,
+        FASTILON,
+        BRONZEGUARD
     };
 
     class Base
@@ -169,6 +171,27 @@ namespace Monster
             MaximumHealth = health;
 
             Auto = damage;
+        }
+
+        Base(const char *name, Monster::Type type, int attack, int difficulty, int defence, int health, int damage, int attacks)
+        {
+            Name = name;
+
+            Type = type;
+
+            Attack = attack;
+
+            Difficulty = difficulty;
+
+            Defence = defence;
+
+            Health = health;
+
+            MaximumHealth = health;
+
+            Auto = damage;
+
+            Attacks = attacks;
         }
     };
 }

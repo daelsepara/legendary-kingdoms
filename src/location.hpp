@@ -35,11 +35,14 @@ namespace Location
         GRANITE_HILLS,
         UNDERGROUND_TUNNELS,
         NORTHWESTCOAST_VALLEY_OF_BONES,
+        SOUTHCOAST_VALLEY_OF_BONES,
         SHADED_GATE,
         BEYOND_SHADED_GATE,
         SHADOW_LANDS,
         VIAAN_ISLAND,
-        BANDO_VILLAGE
+        BANDO_VILLAGE,
+        AZURE_DEEP,
+        COLD_RIVER
     };
 
     std::map<Location::Type, const char *> Description = {
@@ -71,11 +74,14 @@ namespace Location
         {Location::Type::GRANITE_HILLS, "Granite Hills"},
         {Location::Type::UNDERGROUND_TUNNELS, "Underground Tunnels"},
         {Location::Type::NORTHWESTCOAST_VALLEY_OF_BONES, "Northwest coast, Valley of Bones"},
+        {Location::Type::SOUTHCOAST_VALLEY_OF_BONES, "South coast, Valley of Bones"},
         {Location::Type::SHADED_GATE, "Shaded Gate"},
         {Location::Type::BEYOND_SHADED_GATE, "Land beyond the Shaded Gate"},
         {Location::Type::SHADOW_LANDS, "Shadow Lands"},
         {Location::Type::VIAAN_ISLAND, "Viaan Island"},
-        {Location::Type::BANDO_VILLAGE, "Bando Village"}};
+        {Location::Type::BANDO_VILLAGE, "Bando Village"},
+        {Location::Type::AZURE_DEEP, "Azure Deep"},
+        {Location::Type::COLD_RIVER, "Cold River"}};
 
     enum class BattleField
     {
