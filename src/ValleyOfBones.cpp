@@ -21008,7 +21008,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::DELIVER)
                         {
-                            auto result = Engine::FIND_SHIP(party, story->Choices[choice].Location, story->Choices[choice].Delivery.size());
+                            auto result = Engine::FIND_SHIP(party, story->Choices[choice].Location, story->Choices[choice].Cargo.size());
 
                             if (result >= 0 && result < party.Fleet.size())
                             {
@@ -21016,7 +21016,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     Engine::GAIN_MONEY(party, -story->Choices[choice].Value);
 
-                                    party.Fleet[result].Cargo.insert(party.Fleet[result].Cargo.end(), story->Choices[choice].Delivery.begin(), story->Choices[choice].Delivery.end());
+                                    party.Fleet[result].Cargo.insert(party.Fleet[result].Cargo.end(), story->Choices[choice].Cargo.begin(), story->Choices[choice].Cargo.end());
 
                                     next = findStory(story->Choices[choice].Destination);
 
@@ -21043,6 +21043,28 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
 
                                 error = true;
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::GAIN_CARGO)
+                        {
+                            if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
+                            {
+                                if (((party.Fleet[party.CurrentShip].MaximumCargo - party.Fleet[party.CurrentShip].Cargo.size()) - story->Choices[choice].Cargo.size()) >= 0)
+                                {
+                                    party.Fleet[party.CurrentShip].Cargo.insert(party.Fleet[party.CurrentShip].Cargo.end(), story->Choices[choice].Cargo.begin(), story->Choices[choice].Cargo.end());
+
+                                    next = findStory(story->Choices[choice].Destination);
+
+                                    done = true;
+
+                                    break;
+                                }
+                                else
+                                {
+                                    message = "You do not have enough space in your ship!";
+
+                                    error = true;                                    
+                                }
                             }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::CODES)

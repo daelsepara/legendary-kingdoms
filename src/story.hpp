@@ -73,7 +73,8 @@ namespace Choice
         EVERYONE_SKILL_CHECKS,
         GAIN_HEART,
         SAIL,
-        EVERYONE_LOSES_EQUIPMENT
+        EVERYONE_LOSES_EQUIPMENT,
+        GAIN_CARGO
     };
 
     class Base
@@ -103,7 +104,7 @@ namespace Choice
 
         std::vector<Engine::TeamAssignment> Teams = {};
 
-        std::vector<Cargo::Type> Delivery = {};
+        std::vector<Cargo::Type> Cargo = {};
 
         Location::Type Location = Location::Type::NONE;
 
@@ -460,7 +461,7 @@ namespace Choice
             Location = location;
         }
 
-        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Cargo::Type> delivery, Location::Type location, int value)
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Cargo::Type> cargo, Location::Type location, int value)
         {
             Text = text;
 
@@ -468,11 +469,22 @@ namespace Choice
 
             Type = type;
 
-            Delivery = delivery;
+            Cargo = cargo;
 
             Location = location;
 
             Value = value;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Cargo::Type> cargo)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Cargo = cargo;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Character::Status> status)

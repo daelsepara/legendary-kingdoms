@@ -115,6 +115,8 @@ namespace Book1
 
             ID = 3;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Text = "The treasure chest contains 200 silver coins and a BLUESTONE. Take what you wish.\n\nNote: You gained the code A45.";
 
             Bye = "Not wishing to tarry longer, you depart the chamber and return to the crossroads.";
@@ -808,9 +810,7 @@ namespace Book1
 
             ID = 24;
 
-            Location = Location::Type::CHALICE;
-
-            IsCity = true;
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "You have entered a chamber which is well furnished with flags and banners. It has the feel of a Chalice temple, although there is no sign that anyone actually worships here. A statue of a kneeling monk sits at the far end of the room. There are two exits from the chamber, each of them leading to a tunnel with stairs ascending.\n\nSuddenly you see a light coming down the left-hand stairwell. Something is coming... but it is walking softly, as you cannot make out the sound of footsteps.\n\nNote: You gained the code A77.";
 
@@ -1202,6 +1202,8 @@ namespace Book1
 
             ID = 34;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Text = "You return to the large burial chamber. The ghouls are long gone, and there is no more treasure to be found here. If you wish you can scribe the spell on the bronze tablet into your spellbook, if you have had reason to remove it:\n\nWisdom (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\nRecharge: 50 silver";
 
             Bye = "You return to the crossroads.";
@@ -1319,6 +1321,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 39;
+
+            Location = Location::Type::NORTH_ROAD;
 
             Text = "You join the disorganised caravan guards, barking orders at them to form a defensive line and protect their archers.";
 
@@ -1825,6 +1829,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 56;
+
+            Location = Location::Type::SHADOW_LANDS;
 
             Text = "You kiss the burning, rich-yellow sands as you emerge from the shadow lands. You are free from the tyranny of the monochrome world.\n\nNote: You gained the code A23.";
 
@@ -2398,6 +2404,8 @@ namespace Book1
 
             ID = 73;
 
+            Location = Location::Type::SHADED_GATE;
+
             Text = "You come upon the Shaded Gate. You feel diminished, as if you were not real.";
 
             Choices.clear();
@@ -2417,6 +2425,8 @@ namespace Book1
             ID = -73;
 
             DisplayID = 73;
+
+            Location = Location::Type::SHADED_GATE;
 
             Text = "Where will you go?";
 
@@ -2557,6 +2567,8 @@ namespace Book1
 
             ID = 78;
 
+            Location = Location::Type::CAVES_OF_URANU;
+
             Text = "This cave appears to be empty, but for the heaps of sand piled into it. Suddenly one of your party members begins to abruptly sink into the sand.";
 
             Choices.clear();
@@ -2654,6 +2666,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 82;
+
+            Location = Location::Type::NORTHWESTCOAST_VALLEY_OF_BONES;
 
             Text = "You are sailing along the northwest coast of the Valley of Bones. A steady sea breeze counters what would otherwise be an unbearably hot sun. Great cliffs line the coast. Atop them sits a ramshackle city of crude adobe buildings and assorted ruins. A harbour juts dangerously from the cliff face, moored ships bobbing like corks against the pounding waves. Drenched harbourside taverns sit squalidly amongst the docks.";
 
@@ -2930,6 +2944,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 88;
+
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "You dash after Yu Yan, the thief frantically attempting to negotiate the ledge, which you navigate with the skill of a mountain goat. She stumbles, and only just manages to catch the ledge before falling. You dash to her side.\n\n\"Need a hand?\" you ask.\n\n\"Let me guess... you want the damn SILVER IDOL, yes?\"\n\n\"I think I'll need all the treasure; it's only weighing you down,\" you respond smartly.\n\nYu Yan groans, but throws her loot bag up to you. It contains not only the SILVER IDOL, but 200 silver pieces as well. Grinning, you give her a hand up on to the ledge. She grasps the sides of the wall, breathing heavily as you lean casually against the hillside.\n\n\"Make yourself scarce, Yu Yan,\" you say to her. \"Up here, in the hills, this is my domain.\"\n\nShe thanks you for your mercy and shuffles away, dashing over the hillside as soon as she is on safer ground. You make your way back along the ledge, hoping to find the beautiful vista again, but you cannot find it. Perhaps it is the time of night, but the surroundings no longer look so beautiful and peaceful as they were before. You shrug, but you are pleased with your victory.";
 
@@ -3336,7 +3352,9 @@ namespace Book1
 
             ID = 102;
 
-            Text = "This KEY has certainly travelled a long way from its lock -- but it fits! You hear a loud clang as you turn the KEY, its triple locks unbolting one by one. The KEY seems to be absorbed into the door mechanism itself and is pulled out of your hand. You step into a vast chamber beyond, filled with urns brimming with treasure. A stone sarcophagus of a mighty king dominates the middle of the enormous room, raised up on a high platform surmountable only by a long set of stairs.\n\nFrom the corners of the chamber you see something terrible. Two giant skeletons, clad in bronze armour, suddenly animate, blazing balefire in their eyes. They heft enormous swords, ten feet long each.\n\nIf you wish you can flee the chamber now -- but you can never return. The door will slam shut behind you.";
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
+            Text = "This key has certainly travelled a long way from its lock -- but it fits! You hear a loud clang as you turn the key, its triple locks unbolting one by one. The key seems to be absorbed into the door mechanism itself and is pulled out of your hand. You step into a vast chamber beyond, filled with urns brimming with treasure. A stone sarcophagus of a mighty king dominates the middle of the enormous room, raised up on a high platform surmountable only by a long set of stairs.\n\nFrom the corners of the chamber you see something terrible. Two giant skeletons, clad in bronze armour, suddenly animate, blazing balefire in their eyes. They heft enormous swords, ten feet long each.\n\nIf you wish you can flee the chamber now -- but you can never return. The door will slam shut behind you.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Flee the chamber", {Book::Type::BOOK1, 46}));
@@ -3361,6 +3379,8 @@ namespace Book1
             ID = -102;
 
             DisplayID = 102;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
 
             Text = "You have chosen to fight for your treasure.";
 
@@ -3724,6 +3744,8 @@ namespace Book1
 
             ID = 113;
 
+            Location = Location::Type::NORTH_ROAD;
+
             Text = "You are travelling along the Northroad that stretches between Cursus and Luutanesh. Armed convoys from the mystical city of Chalice roll by, along with scores of travellers. Watering stops dot the ragged highway, with merchants paying a few silver coins a time to feed their labouring dragonyaks.";
 
             Choices.clear();
@@ -3759,9 +3781,9 @@ namespace Book1
         {
             BookID = Book::Type::BOOK1;
 
-            Location = Location::Type::WITHERED_STEPPES;
-
             ID = 115;
+
+            Location = Location::Type::WITHERED_STEPPES;
 
             Image = "images/book1/rocky_desert.png";
 
@@ -3799,6 +3821,8 @@ namespace Book1
 
             DisplayID = 115;
 
+            Location = Location::Type::WITHERED_STEPPES;
+
             Image = "images/book1/rocky_desert.png";
 
             Text = "You manage to get your bearings enough to explore your surroundings.";
@@ -3828,6 +3852,8 @@ namespace Book1
             ID = -115002;
 
             DisplayID = 115;
+
+            Location = Location::Type::WITHERED_STEPPES;
 
             Choices.clear();
 
@@ -4245,6 +4271,8 @@ namespace Book1
 
             ID = 129;
 
+            Location = Location::Type::CLIFFTOP;
+
             Text = "You have found the great bronze cogwheel, lying almost buried in the wet sand. The wheel is quite heavy, and it will take many attempts to tie a strong knot around it, and in some dreadful currents.\n\nNote: Only the party member who made the last skill check can make the attempt.";
 
             Choices.clear();
@@ -4334,6 +4362,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 132;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
 
             Text = "The only item of interest in the tomb is the SILVER SKULL, which seems to have stopped chanting.\n\nThe sarcophagus itself is empty.";
 
@@ -4925,9 +4955,7 @@ namespace Book1
 
             ID = 154;
 
-            Location = Location::Type::CHALICE;
-
-            IsCity = true;
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "You bid your companions farewell, assuring them you will be alright and that you must face the coming trial alone. Reluctantly they agree to leave you, saying that they will stay in Chalice until your exploration of the caves is complete.\n\nYou wander the hills for many hours, passing many small and empty caves, pondering where exactly you should be going. After a while you sit upon a rock and enter a deep meditation.\n\nNote: Until you return to Chalice you cannot call on any of your other party members to make skill checks, fight battles or carry or transfer equipment. Akihiro is completely alone.\n\nNote: If Akihiro dies, eventually the rest of the party will realise he isn't coming back and continue their adventure. Any items of equipment he was carrying at the time of his death will also be lost.";
 
@@ -5008,6 +5036,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 157;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "The sound of drums and crowds roaring echo in your ears as you are once again lined up in the gatehouse in preparation for your latest bout. Up to four CRUDE BLADES (Fighting +0) can be equipped by your characters. Again, one character may be armed with a SHIELD (Armour +2), and another with a two-handed MAUL* (Fighting +1).\n\nEquip your characters as you wish.";
 
@@ -5638,6 +5670,8 @@ namespace Book1
 
             ID = 178;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Text = "The final giant skeleton topples with a mighty crash. The treasures of the ancients are now yours to seize! There are 2250 silver coins to take. You also find a GOLDWAX CANDLE, a bar of GOLD BULLION and a CLOAK OF PROTECTION (Survival +3). In the coffin of the king, you prise a MAGICAL SHORTSWORD (Fighting +4) from his grasp.";
 
             Bye = "Pleased with your finds you stride out of the chamber with your treasures, the curious door slamming shut behind you as you leave.";
@@ -5878,6 +5912,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 184;
+
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "You are almost sad as Yu Yan sprawls to the ground. The woman fought well, and it was a shame such talent should go to waste. You search her, her STONECUTTER SWORD (Fighting +2) is the most interesting possession she has. This weapon inflicts two points of Health damage for each success you score against rocky or stony opponents.\n\nShe also carries 135 silver pieces and, to your delight, a SILVER IDOL. You shake your head in amazement. You almost let the object of your quest slip through your fingers!";
 
@@ -6270,6 +6306,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 193;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "You twist sharply and slip from Tommul's grasp. He crashes to the floor, his companion clumsily tripping over him. With a laugh you quickly dash away, back to the safety of your companions.";
 
@@ -6991,6 +7031,8 @@ namespace Book1
 
             ID = 217;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -7671,6 +7713,10 @@ namespace Book1
 
             ID = 239;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "You'll not back down in front of a knave like Tommul. You must fight this battle alone.";
 
             Choices.clear();
@@ -7842,6 +7888,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 244;
+
+            Location = Location::Type::WEST_ROAD;
 
             Text = "Once again you leave the labyrinth that is the shadow land. Feeling weak and drained you head north towards civilisation.";
 
@@ -8241,6 +8289,8 @@ namespace Book1
 
             ID = 259;
 
+            Location = Location::Type::BLACKWALL;
+
             Text = "After days of monotony, you finally come upon an arch in the wall. It is the Shaded Gate, though how you knew its name is a mystery to you. Beyond the arch the desert continues... except the land is a shadowy haze, a dark reflection of the real world.";
 
             Choices.clear();
@@ -8592,6 +8642,8 @@ namespace Book1
 
             ID = 273;
 
+            Location = Location::Type::BEYOND_SHADED_GATE;
+
             Text = "The only sound is your boots as you crunch across a gravel-strewn plain. You feel so lonely you fear you might die.";
 
             Choices.clear();
@@ -8786,6 +8838,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 279;
+
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "You make your way up the stairs, Yu Yan eying the route cautiously. She suddenly puts an arm in front of you and tells you to stop. She draws her green-bladed sword and presses down on a step before you. A blade flashes across the higher step, at what would have been head height, with enough force to ensure decapitation. Instead, it sails harmlessly over your head.\n\nYou smile and nod at Yu Yan, before continuing onwards. You emerge into a stale smelling chamber, roughly oval in shape, with more stairs leading upwards ahead. Within the room you can see an impressive pile of treasure, but also something more troublesome. Rising from his crude mattress comes a Dragonyakman, a scaly, bull headed man, some nine feet tall, hefting a great iron axe.\n\nYou nod to Yu Yan to flank, as you go in for the kill.\n\nNote: After you attack, Yu Yan will also make an attack using 5 attack dice. She is very agile, so the dragonyakman will focus all his attacks just on you.";
 
@@ -9021,6 +9075,10 @@ namespace Book1
 
             ID = 285;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "You turn a corner to see Tommul, one of the thugs you bullied in the dungeon on your very first day. He is accompanied by another muscular man, armed with a club. \"I told you I would get even with you, scum!\" he snarls, advancing menacingly towards you.";
 
             Choices.clear();
@@ -9186,6 +9244,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 291;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Choices.clear();
 
@@ -9591,6 +9653,10 @@ namespace Book1
 
             ID = 302;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -9992,6 +10058,8 @@ namespace Book1
 
             ID = 315;
 
+            Location = Location::Type::BLACKWALL;
+
             Text = "You walk along the featureless black stone wall, your reflections on the mirror-bright surface following you. The wall seems endless, ahead and behind, and you feel as if you have been walking for days.";
 
             Choices.clear();
@@ -10281,6 +10349,8 @@ namespace Book1
 
             ID = 324;
 
+            Location = Location::Type::BEYOND_SHADED_GATE;
+
             Text = "The textureless sands swirl like dust on your boots. You feel cold and drained.";
 
             Choices.clear();
@@ -10300,6 +10370,8 @@ namespace Book1
             ID = -324;
 
             DisplayID = 324;
+
+            Location = Location::Type::BEYOND_SHADED_GATE;
 
             Text = "Where will you go?";
 
@@ -11197,6 +11269,8 @@ namespace Book1
 
             ID = 356;
 
+            Location = Location::Type::CAVES_OF_URANU;
+
             Text = "You enter a stale smelling cave with a heavy overhang, which plunges the tunnel beyond into darkness. Lighting your lanterns, you illuminate a pack of giant sand lizards shielding themselves from the noonday sun. With alien speed they bolt at you, eager for a good meal.";
 
             Choices.clear();
@@ -11622,7 +11696,9 @@ namespace Book1
 
             ID = 373;
 
-            Text = "You have returned to the sinister chamber where you found the silver skull. However, that grim artefact is now missing from its pedestal. There is nothing more to be found here, so you make your way back to the crossroads.";
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
+            Text = "You have returned to the sinister chamber where you found the SILVER SKULL. However, that grim artefact is now missing from its pedestal. There is nothing more to be found here, so you make your way back to the crossroads.";
 
             Choices.clear();
 
@@ -13009,6 +13085,8 @@ namespace Book1
 
             ID = 410;
 
+            Location = Location::Type::SHADED_GATE;
+
             Text = "You step through the Shaded Gate, becoming engulfed in cool shadow. The land here is different, and you cannot make out the Granite Hills that should lie beyond the wall. The chill nags at you, but you resolve to carry on.";
 
             Controls = Story::Controls::STANDARD;
@@ -13119,6 +13197,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 415;
+
+            Location = Location::Type::CAVES_OF_URANU;
 
             Image = "images/book1/yu_yuan.png";
 
@@ -13468,6 +13548,8 @@ namespace Book1
 
             ID = 429;
 
+            Location = Location::Type::CAPE_PORTA;
+
             Text = "Just as you feared a dreadful pirate pinnace comes swooping around the bay. They seem keen on plundering your ship and crew.";
 
             Choices.clear();
@@ -13583,9 +13665,7 @@ namespace Book1
 
             ID = 433;
 
-            Location = Location::Type::CHALICE;
-
-            IsCity = true;
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "You chase after her but stumble up the steps as you run. The stairs lead out onto the side of the hilltop, but by the time you emerge you have lost sight of her. You curse loudly. It is unlikely she will be found now. Perhaps there is some other way of finding a SILVER IDOL? Musing on your failure, you return to Chalice.";
 
@@ -14104,6 +14184,8 @@ namespace Book1
 
             ID = 451;
 
+            Location = Location::Type::NORTH_ROAD;
+
             Text = "The caravan guards sense the uncertainty in your voice as the nomads crash upon them. The line breaks and soon there is chaos. In the fighting and looting that follows you are captured and clad in chains. Because you are such healthy specimens the nomads decide to sell you as slaves.";
 
             Choices.clear();
@@ -14176,6 +14258,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 454;
+
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "\"What if we worked together?\" you offer. \"In exchange you may have all the treasure we find, except for the silver idol. It is all I am interested in.\"\n\nShe looks you up and down, as if judging you. \"So be it, Akihiro of Chalice,\" she says, smiling. \"This place is quite dangerous, and you look like you can handle yourself. There is nothing to be found in the passage I have just explored. Our only way onwards is up the west side steps. Shall we go together?\"";
 
@@ -14871,11 +14955,13 @@ namespace Book1
 
             ID = 477;
 
+            Location = Location::Type::NORTH_ROAD;
+
             Text = "Where will you travel now?";
 
             Choices.clear();
             Choices.push_back(Choice::Base("North, to Luutanesh", {Book::Type::BOOK1, 614}));
-            Choices.push_back(Choice::Base("West, to the Withered", {Book::Type::BOOK1, 115}));
+            Choices.push_back(Choice::Base("West, to the Withered Steppes", {Book::Type::BOOK1, 115}));
             Choices.push_back(Choice::Base("South, towards Cursus", {Book::Type::BOOK1, 822}));
 
             Controls = Story::Controls::STANDARD;
@@ -14988,6 +15074,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 481;
+
+            Location = Location::Type::SHADED_GATE;
 
             Text = "The WAYFINDER ROD seems to hum and vibrate in your pack. Pulling it out you see that the strength of the vibrations lead in a south-easterly direction. You follow it for some time, every so often the rod bidding you to change direction, and you walk through the strange, cool, sunless desert for many hours.\n\nFinally, you arrive at an obelisk, carved with mystic runes. The WAYFINDER ROD crumbles away in your hands. Examining the obelisk you find a strange spell carved into its surface.\n\nOddly, the Shaded Gate has appeared again, the rich colour of the real world blazing through the aperture\n\nNote: You can learn the following spell:\n\nShadow Door (Adventure)\n\nYou can detect the secret doors installed by the penumbral lords when they ruled the land.\n\nRecharge: 50 silver";
 
@@ -15378,6 +15466,8 @@ namespace Book1
 
             ID = 493;
 
+            Location = Location::Type::CAVES_OF_URANU;
+
             Text = "The area is seemingly pockmarked with caves. You decide to search one at random.";
 
             Choices.clear();
@@ -15441,6 +15531,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 495;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "During your evening meal, one of your characters has wandered off.";
 
@@ -15843,6 +15937,8 @@ namespace Book1
 
             ID = 506;
 
+            Location = Location::Type::CAVES_OF_URANU;
+
             Text = "\"No, Yu Yan,\" you say. \"I cannot allow that.\"\n\n\"A pity,\" she says. \"So be it.\" She draws a long green blade, and goes into a crouch, her sword held high.\n\nThe duel is on.";
 
             Choices.clear();
@@ -16005,6 +16101,8 @@ namespace Book1
 
             ID = 510;
 
+            Location = Location::Type::CAVES_OF_URANU;
+
             Text = "You find you are unable to reach a state of deep mediation, your trials pressing upon your mind. It was this lack of clarity that caused you to fail in your first attempts at becoming kensai. Shaking your head at your own inadequacies, you decide to leave the matter to fate, you stroll towards the hill in front of you and enter the first cave you come across.";
 
             Choices.clear();
@@ -16043,6 +16141,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 512;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "You manage to persuade the crowd that the dead man has been honoured enough, and that the last thing he would want was violence with the state after working so selflessly for it. Reluctantly the crowd disperse, taking the casket for burial. The kensai thank you for your support and then carry on their way.\n\nThis was a sensitive situation which you have diffused.";
 
@@ -16659,6 +16761,8 @@ namespace Book1
 
             ID = 533;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Text = "You have already looted this chamber of its funeral goods. It would serve no point to disturb the dead further.";
 
             Bye = "You return to the crossroads.";
@@ -16761,6 +16865,8 @@ namespace Book1
 
             ID = 537;
 
+            Location = Location::Type::BEYOND_SHADED_GATE;
+
             Text = "There is not even a breath of wind in this silent hell. There is nothing to see for miles around. Your limbs ache.";
 
             Choices.clear();
@@ -16780,6 +16886,8 @@ namespace Book1
             ID = -537;
 
             DisplayID = 537;
+
+            Location = Location::Type::BEYOND_SHADED_GATE;
 
             Text = "Where will you go?";
 
@@ -16941,6 +17049,8 @@ namespace Book1
 
             ID = 542;
 
+            Location = Location::Type::NORTH_ROAD;
+
             Text = "Your marshal tone cannot be denied. You form an impenetrable thicket of soldiers against the cavalry charge. Your archers pepper the hesitating nomads with arrows. Realising that their shock tactics have failed, the nomads flee back into the desert rather than face a long, bloody combat for a few barrels of salt.\n\nA great cheer goes up from the caravan guards. The merchants, delighted with your brave actions, reward you with 100 silver coins.";
 
             Bye = "After a brief rest you continue on your way.";
@@ -17002,6 +17112,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 544;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "Discretion is the better part of valour. You attempt to bolt, Tommul diving to make a grab for you. You must use the Stealth ability of the character you have chosen.";
 
@@ -17152,6 +17266,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 549;
+
+            Location = Location::Type::CLIFFTOP;
 
             Choices.clear();
             Choices.push_back(Choice::Base("Make another attempt", {Book::Type::BOOK1, 583}));
@@ -18256,6 +18372,8 @@ namespace Book1
 
             ID = 580;
 
+            Location = Location::Type::CAVES_OF_URANU;
+
             Text = "You have entered the cave of a terrible naga, a spirit snake of fearsome magical power. The ghastly creature splits itself into six identical copies before lunging for you.\n\nNote: You cannot make any armour saves in this battle. You can flee from the naga at the start of a combat round, but the naga will make an attack upon you before you escape.";
 
             Choices.clear();
@@ -18400,6 +18518,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 583;
+
+            Location = Location::Type::CLIFFTOP;
 
             Text = "The seas are too dangerous to risk your ship, so you will have to perform this task in the jollyboat. To get the cogwheel someone will have to dive into the rough seas around Clifftop, find and then tie a rope around the wheel. The remaining team will have to haul the heavy bronze cogwheel up. Decide who will perform the dive.";
 
@@ -18548,6 +18668,8 @@ namespace Book1
 
             ID = 589;
 
+            Location = Location::Type::BEYOND_SHADED_GATE;
+
             Text = "You are walking through a dreary land, without people or landmarks. The chill penetrates your bones.";
 
             Choices.clear();
@@ -18567,6 +18689,8 @@ namespace Book1
             ID = -589;
 
             DisplayID = 589;
+
+            Location = Location::Type::BEYOND_SHADED_GATE;
 
             Text = "Where will you go?";
 
@@ -20045,9 +20169,7 @@ namespace Book1
 
             ID = 635;
 
-            Location = Location::Type::CHALICE;
-
-            IsCity = true;
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "You manage to slay the bulky creature, its thick blood leaking into the stones. Yu Yan nods to you. \"Impressive swordsmanship,\" she says. \"I'm pleased I made this partnership. Speaking of which, I have some treasure to gather.\"\n\nYou watch idly as she begins to pile the silver coins and jewellery into her sack. Curious, you look inside, only to see the SILVER IDOL you have been searching for peeking out of her sack. The devious looter has already found the object of your quest!\n\n\"Yu Yan! That silver idol is mine, by the terms of our agreement!\" you protest. \"Hand it over, now!\"\n\n\"I found it before we made that agreement, it's mine!\" she insists.\n\n\"Don't let this come to blows, Yu Yan,\" you threaten.\n\n\"The idol! Now!\"\n\nYu Yan looks crestfallen. She nods slowly, reaching into her bag. Suddenly a shower of silver coins are hurled into your face, sending you staggering back. Yu Yan giggles, and dashes up the stairs. Snarling, you go in pursuit.";
 
@@ -20303,6 +20425,8 @@ namespace Book1
 
             ID = 643;
 
+            Location = Location::Type::CLIFFTOP;
+
             Text = "You have been asked by the harbourmaster of Clifftop to retrieve the missing cogwheel from the cargo crane from the seabed.";
 
             Choices.clear();
@@ -20473,6 +20597,10 @@ namespace Book1
 
             ID = 649;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "It won't be easy to talk these brutes down.";
 
             Choices.clear();
@@ -20534,6 +20662,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 651;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
 
             Text = "With the ghouls defeated you begin a grizzly search through the remains in the burial chamber. You find 125 silver coins and a strangely intact pair of SOFT BOOTS (Stealth +1).\n\nYou find a bronze tablet, set into the wall, upon which a powerful spell has been inscribed:\n\nWisdom (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\nRecharge: 50 silver.\n\nNote: You gained the code A48.";
 
@@ -21329,6 +21459,10 @@ namespace Book1
 
             ID = 672;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "These people are going to get themselves killed if they oppose the fanatical kensai. You beg the mourners to let the matter drop before there is violence.";
 
             Choices.clear();
@@ -21426,6 +21560,8 @@ namespace Book1
 
             ID = 676;
 
+            Location = Location::Type::BEYOND_SHADED_GATE;
+
             Text = "You stroll through a featureless terrain of grey. The colour continues to fade from your companions.";
 
             Choices.clear();
@@ -21445,6 +21581,8 @@ namespace Book1
             ID = -676;
 
             DisplayID = 676;
+
+            Location = Location::Type::BEYOND_SHADED_GATE;
 
             Text = "Where will you go?";
 
@@ -21634,7 +21772,7 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("Kill the orc whilst he is reading", {Book::Type::BOOK1, 38}));
-            Choices.push_back(Choice::Base("Snatch the black book from the orc’s hands", {Book::Type::BOOK1, 160}));
+            Choices.push_back(Choice::Base("Snatch the black book from the orc's hands", {Book::Type::BOOK1, 160}));
             Choices.push_back(Choice::Base("Close the door and go somewhere else", {Book::Type::BOOK1, 821}));
 
             Controls = Story::Controls::STANDARD;
@@ -21650,9 +21788,7 @@ namespace Book1
 
             ID = 683;
 
-            Location = Location::Type::CHALICE;
-
-            IsCity = true;
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "You attempt to clear your mind of all distractions and exist in a state of blessed emptiness. You remember your temple teachings when you were but a boy. \"The treasures of the mind outweigh any fortune of silver,\" you murmur.\n\nYou have relaxed completely. Your meditations have cleared your mind, but not given you specific inspiration as to where to go. Deciding to leave the matter to fate, you stroll towards the hill in front of you and enter the first cave you come across.";
 
@@ -21719,6 +21855,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 686;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
 
             Text = "The tunnel opens into a humble tomb, with a single stone sarcophagus in it. Above the sarcophagus is a silver skull, human sized, mounted on a pedestal. You cannot help but notice that the sarcophagus is open. You have an uneasy sense about the place, and your survival instincts are telling you to go back the way you came.";
 
@@ -21838,6 +21976,309 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 115}; }
+    };
+
+    class Story690 : public Story::Base
+    {
+    public:
+        Story690()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 690;
+
+            Location = Location::Type::CAPE_PORTA;
+
+            Text = "A ballista shot holes the pinnace below the waterline, and with a sudden jerk it begins its decent to the bottom of the sea. The pirate crew jump overboard, pleading for rescue. If you have space in your cargo hold you may take the pirates as one unit of Slaves, if you wish. Alternatively, you can let the knaves sink to the bottom of the ocean.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Take pirates as slaves", {Book::Type::BOOK1, -690}, Choice::Type::GAIN_CARGO, {Cargo::Type::SLAVES}));
+            Choices.push_back(Choice::Base("Let the pirates sink with their ship", {Book::Type::BOOK1, -690}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event690 : public Story::Base
+    {
+    public:
+        Event690()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -690;
+
+            DisplayID = 690;
+
+            Location = Location::Type::CAPE_PORTA;
+
+            Text = "You have decided it is time to sail on.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Sail north", {Book::Type::BOOK1, 82}));
+            Choices.push_back(Choice::Base("Sail east", {Book::Type::BOOK1, 814}));
+            Choices.push_back(Choice::Base("(Savage Lands) Sail west towards the Savage Lands", {Book::Type::BOOK5, 75}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story691 : public Story::Base
+    {
+    public:
+        Story691()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 691;
+
+            Location = Location::Type::BLACKWALL;
+
+            Image = "images/book1/blackwall.png";
+
+            Text = "Emerging from the swimming haze ahead comes one of the most curious constructions in all the world. A long, unbroken wall of reflective black stone stretches for miles in an east-west direction. Beyond the wall lies the hard-stone Granite Hills -- and yet it is a trivial matter to simply walk around the side of the wall to reach them. What the wall guards, or why it was built, is a mystery, but many who have walked along it have not returned.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Walk along the length of the Blackwall", {Book::Type::BOOK1, 315}));
+            Choices.push_back(Choice::Base("Go northeast, into the desert", {Book::Type::BOOK1, 858}));
+            Choices.push_back(Choice::Base("Go around the wall to the Granite Hills", {Book::Type::BOOK1, 275}));
+            Choices.push_back(Choice::Base("Go west to the Tumblestones", {Book::Type::BOOK1, 137}));
+            Choices.push_back(Choice::Base("Go northwest, and join the Westroad", {Book::Type::BOOK1, 511}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story692 : public Story::Base
+    {
+    public:
+        Story692()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 692;
+
+            Location = Location::Type::BEYOND_SHADED_GATE;
+
+            Text = "You approach what looks like a building, but as you get closer you realise it is just a web of shadows cast from a lifeless tree. Your companions appear almost transparent.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, -692}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event692 : public Story::Base
+    {
+    public:
+        Event692()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -692;
+
+            DisplayID = 73;
+
+            Location = Location::Type::BEYOND_SHADED_GATE;
+
+            Text = "Where will you go?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North", {Book::Type::BOOK1, 273}));
+            Choices.push_back(Choice::Base("West", {Book::Type::BOOK1, 886}));
+            Choices.push_back(Choice::Base("South", {Book::Type::BOOK1, 537}));
+            Choices.push_back(Choice::Base("East", {Book::Type::BOOK1, 589}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story693 : public Story::Base
+    {
+    public:
+        Story693()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 693;
+
+            Text = "\"Morning,\" growls the foul ogre, to your greeting. \"What are you doing down here, then?\" \"Just looking around,\" you say airily. \"How about you?\"\n\n\"Eating,\" shrugs the ogre between mouthfuls. \"I'm supposed to be on guard, but I can't be bothered to do that.\"\n\n\"A fine work ethic,\" you nod. \"Do the orcs employ you?\"\n\n\"Yeah, but the pay is rubbish,\" he grumbles. \"So today's your lucky day. Don't let the door hit your bum on your way out.\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Ask what the orcs are doing here", {Book::Type::BOOK1, 776}));
+            Choices.push_back(Choice::Base("Try to convince the ogre to change sides", {Book::Type::BOOK1, 576}));
+            Choices.push_back(Choice::Base("Kill the ogre", {Book::Type::BOOK1, 117}));
+            Choices.push_back(Choice::Base("Leave the ogre in peace", {Book::Type::BOOK1, 310}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story694 : public Story::Base
+    {
+    public:
+        Story694()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 694;
+
+            Location = Location::Type::NORTH_ROAD;
+
+            Text = "Nomad raiders come howling out of the Withered Steppes, brandishing their bright steel scimitars and thundering towards you on their horses. Around you the merchant caravans halt, their guards drawing bows and swords to make a desperate defence.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(37)}))
+            {
+                Choices.push_back(Choice::Base("Look to your own defences", {Book::Type::BOOK1, 901}));
+                Choices.push_back(Choice::Base("Attempt to organise the defence of the caravans", {Book::Type::BOOK1, 39}));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 764}; }
+    };
+
+    class Story695 : public Story::Base
+    {
+    public:
+        Story695()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 695;
+
+            Text = "With the curse broken, the black book lies on the floor, its back pages open. You notice that a spell has been inked there. It is the Unfailing Strike spell. Any of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time.:\n\nUnfailing Strike (Combat)\n\nA pillar of energy sizzles into a single foe. Choose an opponent to lose 3 Health.\n\nRecharge: 50 silver";
+
+            Bye = "You return to the room outside.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Spells = {Spells::UNFAILING_STRIKE};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 821}; }
+    };
+
+    class Story696 : public Story::Base
+    {
+    public:
+        Story696()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 696;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "You stroll along the temple districts, expecting to find only peace and tranquillity. To your surprise you hear sounds of angry shouting. Moving to investigate you can see a crowd of mourners bearing a woven casket. They are arguing with a group of kensai, the sword-saint warriors of the God King, and protectors of the peace in Chalice.\n\nFrom what you can gather the mourners want to process the body past the temple towers, as the dead man was a great architect who maintained and repaired many of Chalice's mightiest structures. However, the kensai are firmly against this, claiming it is a violation of holy law to have more than one temple perform a funeral celebration. As far as they are concerned the procession violates this law, as the man has already received his funeral rites from the monks of the lower temples. What do you do?\n\nNote: You gained the code A55.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Intercede on the mourners behalf", {Book::Type::BOOK1, 730}));
+            Choices.push_back(Choice::Base("Intercede on the kensai's behalf", {Book::Type::BOOK1, 672}));
+            Choices.push_back(Choice::Base("Decline to get involved in such a delicate matter", {Book::Type::BOOK1, 450}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(55)}))
+            {
+                return {Book::Type::BOOK1, 225};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(55)});
+        }
+    };
+
+    class Story697 : public Story::Base
+    {
+    public:
+        Story697()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 697;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "You shake your head and agree with the slaves that your companions are uncultured brutes who do not understand the meaning of respect. You claim to be their well-beaten servant, bitter about your long service to them.\n\n\"The worst part about my companions is that they are all fully trained assassins from the House of Silence in Drakehallow,\" you say sadly. \"They have bitter and vengeful spirits. Indeed, those that slight them die in the most dreadful ways.\"\n\nTommul goes pale, and blathers that his threat to beat you was merely a poor jest. It is difficult to conceal your smirk as he slinks away.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 157}; }
+    };
+
+    class Story698 : public Story::Base
+    {
+    public:
+        Story698()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 698;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "Dashing into the narrow alleyways around a temple, you manage to pull some drying black priest robes from a washing line. Strolling nonchalantly into the city streets the guards rush right past you, failing to penetrate your disguise. Exhaling with relief you gaze about the city, wandering what you should do now you are penniless.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
+    };
+
+    class Story699 : public Story::Base
+    {
+    public:
+        Story699()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 699;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "Honnu of Chalice asked Akihiro to search for a silver idol in the Caves of Uranu. However, he has been instructed to search for the idol alone.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Let Akihiro undertake this quest now", {Book::Type::BOOK1, 154}));
+            Choices.push_back(Choice::Base("You would rather stay together for the moment", {Book::Type::BOOK1, 493}));
+
+            Controls = Story::Controls::STANDARD;
+        }
     };
 
     auto story001 = Story001();
@@ -22586,6 +23027,18 @@ namespace Book1
     auto story687 = Story687();
     auto story688 = Story688();
     auto story689 = Story689();
+    auto story690 = Story690();
+    auto event690 = Event690();
+    auto story691 = Story691();
+    auto story692 = Story692();
+    auto event692 = Event692();
+    auto story693 = Story693();
+    auto story694 = Story694();
+    auto story695 = Story695();
+    auto story696 = Story696();
+    auto story697 = Story697();
+    auto story698 = Story698();
+    auto story699 = Story699();
 
     void InitializeStories()
     {
@@ -22595,7 +23048,7 @@ namespace Book1
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
-            &event597, &event617, &event626, &event639, &event657, &event666, &event676,
+            &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -22664,7 +23117,8 @@ namespace Book1
             &story650, &story651, &story652, &story653, &story654, &story655, &story656, &story657, &story658, &story659,
             &story660, &story661, &story662, &story663, &story664, &story665, &story666, &story667, &story668, &story669,
             &story670, &story671, &story672, &story673, &story674, &story675, &story676, &story677, &story678, &story679,
-            &story680, &story681, &story682, &story683, &story684, &story685, &story686, &story687, &story688, &story689};
+            &story680, &story681, &story682, &story683, &story684, &story685, &story686, &story687, &story688, &story689,
+            &story690, &story691, &story692, &story693, &story694, &story695, &story696, &story697, &story698, &story699};
     }
 }
 #endif

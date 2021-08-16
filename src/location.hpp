@@ -25,13 +25,21 @@ namespace Location
         PALACE_OF_UNBRAAKI,
         SALTDAD_ARENA,
         SALT_MINES,
+        NORTH_ROAD,
         WEST_ROAD,
         EAST_ROAD,
         BLACKWALL,
         SALT_PLAINS,
         CROSSROADS,
         LHASBREATH_OASIS,
-        GRANITE_HILLS
+        GRANITE_HILLS,
+        UNDERGROUND_TUNNELS,
+        NORTHWESTCOAST_VALLEY_OF_BONES,
+        SHADED_GATE,
+        BEYOND_SHADED_GATE,
+        SHADOW_LANDS,
+        VIAAN_ISLAND,
+        BANDO_VILLAGE
     };
 
     std::map<Location::Type, const char *> Description = {
@@ -53,13 +61,21 @@ namespace Location
         {Location::Type::PALACE_OF_UNBRAAKI, "Palace of Unbraaki"},
         {Location::Type::SALTDAD_ARENA, "Saltdad Arena"},
         {Location::Type::SALT_MINES, "Saltdad Salt Mines"},
+        {Location::Type::NORTH_ROAD, "North Road"},
         {Location::Type::WEST_ROAD, "Great West Road"},
         {Location::Type::EAST_ROAD, "Great East Road"},
         {Location::Type::BLACKWALL, "Blackwall"},
         {Location::Type::SALT_PLAINS, "Salt Plains"},
         {Location::Type::CROSSROADS, "Crossroads"},
         {Location::Type::LHASBREATH_OASIS, "Lhasbreath Oasis"},
-        {Location::Type::GRANITE_HILLS, "Granite Hills"}};
+        {Location::Type::GRANITE_HILLS, "Granite Hills"},
+        {Location::Type::UNDERGROUND_TUNNELS, "Underground Tunnels"},
+        {Location::Type::NORTHWESTCOAST_VALLEY_OF_BONES, "Northwest coast, Valley of Bones"},
+        {Location::Type::SHADED_GATE, "Shaded Gate"},
+        {Location::Type::BEYOND_SHADED_GATE, "Land beyond the Shaded Gate"},
+        {Location::Type::SHADOW_LANDS, "Shadow Lands"},
+        {Location::Type::VIAAN_ISLAND, "Viaan Island"},
+        {Location::Type::BANDO_VILLAGE, "Bando Village"}};
 
     enum class BattleField
     {
