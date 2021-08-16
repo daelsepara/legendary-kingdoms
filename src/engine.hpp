@@ -1583,6 +1583,16 @@ namespace Engine
         return Engine::FIND_CHARACTER(party.Members, type);
     }
 
+    void GAIN_HEALTH(Party::Base &party, Character::Type character, int health)
+    {
+        auto result = Engine::FIND_CHARACTER(party, character);
+
+        if (Engine::IS_ACTIVE(party, result))
+        {
+            Engine::GAIN_HEALTH(party.Members[result], health);
+        }
+    }
+
     void GAIN_HEARTS(Party::Base &party, Character::Type from, Character::Type to, int heart)
     {
         Character::Romance romance = {from, to};

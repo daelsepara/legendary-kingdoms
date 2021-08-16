@@ -10,7 +10,6 @@ namespace Location
         NONE = -1,
         DESERT,
         JUNGLE,
-        WILDERNESS,
         CLIFFTOP,
         SALTDAD,
         CURSUS,
@@ -24,14 +23,21 @@ namespace Location
         WITHERED_STEPPES,
         CAVES_OF_URANU,
         PALACE_OF_UNBRAAKI,
-        SALTDAD_ARENA
+        SALTDAD_ARENA,
+        SALT_MINES,
+        WEST_ROAD,
+        EAST_ROAD,
+        BLACKWALL,
+        SALT_PLAINS,
+        CROSSROADS,
+        LHASBREATH_OASIS,
+        GRANITE_HILLS
     };
 
     std::map<Location::Type, const char *> Description = {
         {Location::Type::NONE, "Unknown"},
         {Location::Type::DESERT, "Desert"},
         {Location::Type::JUNGLE, "Jungle"},
-        {Location::Type::WILDERNESS, "Wilderness"},
         {Location::Type::CLIFFTOP, "Clifftop"},
         {Location::Type::SALTDAD, "Saltdad"},
         {Location::Type::CURSUS, "Cursus"},
@@ -45,7 +51,15 @@ namespace Location
         {Location::Type::WITHERED_STEPPES, "Withered Steppes"},
         {Location::Type::CAVES_OF_URANU, "Caves of Uranu"},
         {Location::Type::PALACE_OF_UNBRAAKI, "Palace of Unbraaki"},
-        {Location::Type::SALTDAD_ARENA, "Saltdad Arena"}};
+        {Location::Type::SALTDAD_ARENA, "Saltdad Arena"},
+        {Location::Type::SALT_MINES, "Saltdad Salt Mines"},
+        {Location::Type::WEST_ROAD, "Great West Road"},
+        {Location::Type::EAST_ROAD, "Great East Road"},
+        {Location::Type::BLACKWALL, "Blackwall"},
+        {Location::Type::SALT_PLAINS, "Salt Plains"},
+        {Location::Type::CROSSROADS, "Crossroads"},
+        {Location::Type::LHASBREATH_OASIS, "Lhasbreath Oasis"},
+        {Location::Type::GRANITE_HILLS, "Granite Hills"}};
 
     enum class BattleField
     {

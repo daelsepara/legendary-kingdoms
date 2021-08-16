@@ -417,6 +417,8 @@ namespace Book1
         {
             BookID = Book::Type::BOOK1;
 
+            Location = Location::Type::WEST_ROAD;
+
             ID = 12;
 
             Text = "You are making your way across the Westroad, an ancient highway built-up to resist the burying sands of the Valley. Travellers and soldiers pass intermittently, making their way between the cities of Saltdad and Clifftop.";
@@ -806,6 +808,10 @@ namespace Book1
 
             ID = 24;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "You have entered a chamber which is well furnished with flags and banners. It has the feel of a Chalice temple, although there is no sign that anyone actually worships here. A statue of a kneeling monk sits at the far end of the room. There are two exits from the chamber, each of them leading to a tunnel with stairs ascending.\n\nSuddenly you see a light coming down the left-hand stairwell. Something is coming... but it is walking softly, as you cannot make out the sound of footsteps.\n\nNote: You gained the code A77.";
 
             Choices.clear();
@@ -832,7 +838,7 @@ namespace Book1
 
             ID = 25;
 
-            Location = Location::Type::SALTDAD;
+            Location = Location::Type::SALT_MINES;
 
             Image = "images/book1/salt_mines.png";
 
@@ -1586,6 +1592,8 @@ namespace Book1
 
             ID = 46;
 
+            Location = Location::Type::CROSSROADS;
+
             Text = "You have returned to the crossroads. Above you daylight streams through the exit shaft.";
 
             Choices.clear();
@@ -1678,6 +1686,8 @@ namespace Book1
 
             ID = 50;
 
+            Location = Location::Type::WEST_ROAD;
+
             Text = "You manage to translate the brightly painted calendar, to the delight of Kopu. He is impressed with your work and presents you with a BLUESTONE as a reward. You ask what the stone is for.\n\n\"It is sacred to our priesthood,\" admits Kopu. \"You can exchange it for blessings at our temples.\"\n\n\"I thought you said Kalu had no temples anymore?\" you press.\n\n\"Well,\" he says. \"It's the thought that counts.\"\n\nGrumbling somewhat, you get some sleep whilst you wait out the storm.";
 
             Choices.clear();
@@ -1703,6 +1713,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 51;
+
+            Location = Location::Type::LHASBREATH_OASIS;
 
             Text = "Where will you travel next?";
 
@@ -2620,7 +2632,9 @@ namespace Book1
 
             ID = 81;
 
-            Location = Location::Type::LONGPORT_BAY;
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "Longport Bay is a county in the kingdom of Royce. It is famed for its steelwork, good agricultural land and the dreadful rivalry of its noble houses. The county is fiercely feudal, with commoners unable to travel freely without a lord's consent. It is also famous for its jousts and fairs, and in good years the locals can grow fat on the rich foodstuffs served at these frequent celebrations. According to the scroll, the county is currently ruled by House Bailey, who were once mere stewards of their rivals House Dayne. That house has seen something of a fall in fortunes lately, and now stand in lower esteem than the Baileys. However, the scroll warns you that all sorts could have changed since the time it was written, as the politics in Longport Bay is both bloody and unpredictable.";
 
@@ -4051,6 +4065,8 @@ namespace Book1
 
             ID = 125;
 
+            Location = Location::Type::DESERT;
+
             Text = "Sand surrounds you in all directions, though you can make out some hills to the north.";
 
             Choices.clear();
@@ -4386,6 +4402,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 135;
+
+            Location = Location::Type::SALT_MINES;
 
             Text = "Which level of the mines will you explore now?";
 
@@ -4907,10 +4925,14 @@ namespace Book1
 
             ID = 154;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "You bid your companions farewell, assuring them you will be alright and that you must face the coming trial alone. Reluctantly they agree to leave you, saying that they will stay in Chalice until your exploration of the caves is complete.\n\nYou wander the hills for many hours, passing many small and empty caves, pondering where exactly you should be going. After a while you sit upon a rock and enter a deep meditation.\n\nNote: Until you return to Chalice you cannot call on any of your other party members to make skill checks, fight battles or carry or transfer equipment. Akihiro is completely alone.\n\nNote: If Akihiro dies, eventually the rest of the party will realise he isn't coming back and continue their adventure. Any items of equipment he was carrying at the time of his death will also be lost.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Meditate on your destiny (Individual check: Lore 4+, Successes: 2)", {Book::Type::BOOK1, 684}, {Book::Type::BOOK1, 510}, {Attribute::Type::LORE}, 4, 2));
+            Choices.push_back(Choice::Base("Meditate on your destiny (Individual check: Lore 4+, Successes: 2)", {Book::Type::BOOK1, 683}, {Book::Type::BOOK1, 510}, {Attribute::Type::LORE}, 4, 2));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -5062,6 +5084,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 159;
+
+            Location = Location::Type::DESERT;
 
             Text = "As you cross a dune you come upon a strange sight. A monkey, just an arms-length tall, lies in the sand, breathing heavily, almost dehydrated. Such beasts are never seen outside the Lhasbreath jungles, and yet here is one apparently wandering the desert like a nomad. It is in a dreadful state.\n\nNote: You gained the code A42.";
 
@@ -5476,6 +5500,10 @@ namespace Book1
 
             ID = 172;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "You find lodging at a large inn, The Iron Crown, which serves coffee and warm beer in a courtyard surrounded by rentable rooms. For every 5 silver coins you spend, each party member can recover 1 Health point. Spellcasters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nDuring your stay you ask about the nearby landmarks. \"The Blackwall is a place of ill reputation,\" confides a serving wench. \"No one knows why it was built, or what it is walling off, since it is easy to go around it. Still, those who become obsessed with it tend to disappear, never to be seen again!\" Frightening stuff!";
 
             RestPrice = 5;
@@ -5586,6 +5614,8 @@ namespace Book1
 
             ID = 177;
 
+            Location = Location::Type::EAST_ROAD;
+
             Text = "You are travelling on the Great Westroad, the western branch of a magnificent highway made in the elder times. The entire road is raised on a bank of earth some twenty feet high, and great sand dunes have piled up over the years on either side. It is busy with traffic, and with flatulent dragonyaks hauling many tons of goods in massive wagons between the great cities of the valley. To the north the Stonewalls act as a barrier between the consuming deserts of the south and the mysterious and powerful nation of Drakehallow.";
 
             Choices.clear();
@@ -5639,6 +5669,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 179;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Choices.clear();
 
@@ -6480,6 +6514,8 @@ namespace Book1
 
             DisplayID = 202;
 
+            Location = Location::Type::DESERT;
+
             Choices.clear();
 
             Controls = Story::Controls::NONE;
@@ -7036,6 +7072,8 @@ namespace Book1
 
             ID = 219;
 
+            Location = Location::Type::WEST_ROAD;
+
             Text = "Where do you wish to go from here?";
 
             Choices.clear();
@@ -7114,6 +7152,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 222;
+
+            Location = Location::Type::SALT_MINES;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -7450,8 +7490,10 @@ namespace Book1
 
             ID = 233;
 
+            Location = Location::Type::SALT_MINES;
+
             Choices.clear();
-            Choices.push_back(Choice::Base("Return to the mine to hunt more troglodytes", {Book::Type::BOOK1, 644}));
+            Choices.push_back(Choice::Base("Return to the mine to hunt more troglodytes", {Book::Type::BOOK1, 681}));
             Choices.push_back(Choice::Base("Make your excuses and leave the mine", {Book::Type::BOOK1, 722}));
 
             Controls = Story::Controls::STANDARD;
@@ -7497,6 +7539,10 @@ namespace Book1
 
             ID = 235;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "You invoke your spell, concentrating on hard on your destination. You can feel the portal links that connect to this location. Where will you travel?";
 
             Choices.clear();
@@ -7509,6 +7555,11 @@ namespace Book1
             Choices.push_back(Choice::Base("(Drakehallow) Animus Mast", {Book::Type::BOOK6, 600}));
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::TELEPORT_CIRCLE);
         }
     };
 
@@ -7996,7 +8047,7 @@ namespace Book1
 
             ID = 251;
 
-            Text = "With the beetles destroyed you brush them away from the mystic circle and examine it. It appears to be some kind of health boosting magic circle with a small indentation in the middle, not unlike an ink well. Indeed, the instructions for its use have been usefully painted upon the walls of the chamber. It appears that if you pour some QUICKSILVER into the central well the circle will activate and imbue you with power.\n\nNote: You gained the code A61.\n\n";
+            Text = "With the beetles destroyed you brush them away from the mystic circle and examine it. It appears to be some kind of health boosting magic circle with a small indentation in the middle, not unlike an ink well. Indeed, the instructions for its use have been usefully painted upon the walls of the chamber. It appears that if you pour some QUICKSILVER into the central well the circle will activate and imbue you with power.\n\nNote: You gained the code A61.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("You have some QUICKSILVER and want to try it out", {Book::Type::BOOK1, 26}, {Equipment::QUICKSILVER}));
@@ -8124,6 +8175,8 @@ namespace Book1
 
             ID = 257;
 
+            Location = Location::Type::DESERT;
+
             Text = "Skittering across the desert sands at unbelievable speed come a pair of giant sand lizards. These beasts alternate between lazily sitting in the sun or hunting prey with energetic intensity. These ones are obviously hungry, and scuttle forwards, their mouths as wide as crocodiles.";
 
             Choices.clear();
@@ -8244,6 +8297,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 262;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "Saint Elias is considered the holiest man in the world, a spokesman from the celestial court who has lived on the world for two thousand years. He is a silver elf, a faerie given human form, who rejected his fey heritage to study the majesty of the gods. He resides in a mighty tower called Tier Mundus, the last of the great towers of the elder time (all the rest were destroyed by Abraxas during the desolation). It is believed that he is personally responsible for the banishment of Abraxas into the centre of the earth at the climax of the desolation, and that he is therefore not merely the vicar of the gods, but also a powerful sorcerer in his own right. He still lives today, and grants blessings to pilgrims. Sometimes he advises the world's mightiest rulers, if they will hear his wisdom, but he has always remained neutral in all political affairs.";
 
@@ -8612,7 +8669,7 @@ namespace Book1
 
             ID = 275;
 
-            Location = Location::Type::WILDERNESS;
+            Location = Location::Type::GRANITE_HILLS;
 
             Image = "images/book1/wilderness.png";
 
@@ -9318,6 +9375,8 @@ namespace Book1
 
             ID = 296;
 
+            Location = Location::Type::SALT_MINES;
+
             Text = "Long before you reach their lair the troglodytes intercept you. There are five of them... fierce odds, given the accuracy of their snatching claws. You gird yourselves for battle.";
 
             Choices.clear();
@@ -9771,6 +9830,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 309;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Image = "images/book1/victory_over_ironking.png";
 
@@ -10788,6 +10851,8 @@ namespace Book1
 
             ID = 344;
 
+            Location = Location::Type::SALT_MINES;
+
             Text = "You have returned to the dragon's lair, now long since looted. The tunnel the dragon made into the lands of Drakehallow is still here.";
 
             Choices.clear();
@@ -10893,6 +10958,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 349;
+
+            Location = Location::Type::LHASBREATH_OASIS;
 
             Image = "images/book1/bathe_in_oasis.png";
 
@@ -11440,6 +11507,8 @@ namespace Book1
 
             ID = 368;
 
+            Location = Location::Type::TUMBLESTONES;
+
             Text = "The stone blocks are so withered and aged it is impossible to get an exact fit between the blocks. After several failed attempts you give up, the inscribed spell making no sense to you. Perhaps you could try again later, when your magical knowledge has increased?";
 
             Choices.clear();
@@ -11522,6 +11591,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 372;
+
+            Location = Location::Type::SALT_MINES;
 
             Text = "You step off the lift onto the top floor of the mine.";
 
@@ -11870,7 +11941,7 @@ namespace Book1
 
             ID = 382;
 
-            Location = Location::Type::CURSUS;
+            Location = Location::Type::SALTDAD;
 
             IsCity = true;
 
@@ -12108,6 +12179,8 @@ namespace Book1
 
             ID = 388;
 
+            Location = Location::Type::SALT_MINES;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -12188,6 +12261,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 390;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -12363,6 +12440,8 @@ namespace Book1
 
             ID = 396;
 
+            Location = Location::Type::WEST_ROAD;
+
             Text = "There is no shelter and the storm lashes you cruelly.";
 
             Choices.clear();
@@ -12394,6 +12473,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 397;
+
+            Location = Location::Type::WEST_ROAD;
 
             Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful. All prices are in silver coins.\n\nIf you have a ship docked in Clifftop, you can also buy up to three cargo units of Salt from the merchants for 500 silver coins each. They will deliver this cargo straight to your ship provided there is room for it.";
 
@@ -13321,6 +13402,8 @@ namespace Book1
 
             ID = 426;
 
+            Location = Location::Type::CROSSROADS;
+
             Text = "It's time to move on. Where will you go from here?";
 
             Choices.clear();
@@ -13560,6 +13643,8 @@ namespace Book1
         Story436()
         {
             BookID = Book::Type::BOOK1;
+
+            Location = Location::Type::SALT_PLAINS;
 
             ID = 436;
 
@@ -13841,6 +13926,8 @@ namespace Book1
         {
             BookID = Book::Type::BOOK1;
 
+            Location = Location::Type::SALT_MINES;
+
             ID = 446;
 
             Text = "It was not easy to find them, but finally you discover a band of troglodytes in their lair. They hiss at you and leap to the attack.";
@@ -14042,6 +14129,10 @@ namespace Book1
 
             ID = 452;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "The Everchild was the immortal ruler of the valley before the desolation of Abraxas. She ruled from the magnificent city of Saltdad in a fantastic palace which was said to hold many wonders of the world. She was eternally young in appearance, although exactly how young is subject to debate.\n\nSome records put her at only seven summers, others twelve, a few even suggest fifteen or eighteen. She possessed powerful magical abilities, so mighty that she had need of very few soldiers, since her magic could annihilate armies and disperse crowds.\n\nMost stories present her as a benevolent but single-minded ruler, who would be inflexible in her judgements once she had made up her mind.\n\nExactly how she died is unclear, but most tales assume that she was slain by Abraxas when the demon lord walked the valley.";
 
             Choices.clear();
@@ -14215,6 +14306,8 @@ namespace Book1
 
             ID = 460;
 
+            Location = Location::Type::SALT_PLAINS;
+
             Image = "images/book1/driest_place.png";
 
             Text = "You have entered the driest place in the Valley of Bones.\n\nThe still, brown-yellow sands glitter with salt crystals, and within an hour your throats are as dry as parchment. Your skin and eyes begin to sting, even as you rapidly drain your water supplies.";
@@ -14369,6 +14462,8 @@ namespace Book1
         Story466()
         {
             BookID = Book::Type::BOOK1;
+
+            Location = Location::Type::WEST_ROAD;
 
             ID = 466;
 
@@ -15929,6 +16024,8 @@ namespace Book1
 
             ID = 511;
 
+            Location = Location::Type::WEST_ROAD;
+
             Text = "The sun crawls over the horizon, spreading a grey haze across the boundless desert. You are pleased to be raised above the sands on a built-up highway, even if the road itself is in dreadful condition. To the east the crowded city of Saltdad beckons, its decaying palace looming over it like a gnarled hag.";
 
             Choices.clear();
@@ -17179,6 +17276,8 @@ namespace Book1
 
             ID = 552;
 
+            Location = Location::Type::DESERT;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -17678,6 +17777,8 @@ namespace Book1
 
             ID = 569;
 
+            Location = Location::Type::WEST_ROAD;
+
             Text = "You are on the Westroad, somewhat near to Clifftop. Where will you travel now?";
 
             Choices.clear();
@@ -17991,6 +18092,8 @@ namespace Book1
 
             ID = 575;
 
+            Location = Location::Type::SALT_MINES;
+
             Text = "You can buy salt in bulk for any ships you have moored in Cursus or Clifftop. Each cargo unit costs 450 silver pieces, and will be transported to your ships for free. Your ships must have room in their cargo holds in order for you to buy salt here.";
 
             // TODO: There has to be smarter way to do this!
@@ -18056,7 +18159,9 @@ namespace Book1
 
             ID = 577;
 
-            Location = Location::Type::MORDAIN;
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "The city of Mordain was a coastal port on the southern end of the Valley of Bones. Although it was rebuilt after the desolation of Abraxas, it fell prey to the infighting amongst the cities of the valley. About four hundred years ago it was entirely torn down when the cities of Cursus and Lhasbreath joined forces against it. Before that time it was a relatively prosperous place, but the religious freedoms it granted its citizens were abhorrent to the clergy in Cursus. It was said to have a grand museum which stored all kinds of artefacts from ancient times, although it is doubtful that anything remains there now.";
 
@@ -18333,6 +18438,8 @@ namespace Book1
 
             ID = 585;
 
+            Location = Location::Type::WEST_ROAD;
+
             Text = "In the cool hours of the early morning you awake, thanking Kopu and his slaves for their hospitality. \"Look for me in Lhasbreath,\" he says. \"I have a house there when I am not out travelling. I am always looking for exotic new languages! Seek me out if you find any!\"\n\nNote: You gained the code A19.";
 
             Bye = "You promise to pay him a visit, and then depart into the cool desert morning.";
@@ -18483,6 +18590,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 590;
+
+            Location = Location::Type::LHASBREATH_OASIS;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -18670,6 +18779,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 597;
+
+            Location = Location::Type::SALT_MINES;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -18903,6 +19014,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 603;
+
+            Location = Location::Type::TUMBLESTONES;
 
             Text = "To your delight you manage to find all the relevant pieces of the mural and reassemble them together. Inscribed into the stone is a most useful spell.\n\nNote: Any of your spellcasters can add this spell to their spellbooks if they wish but remember that you cannot have more than six spells in a single spellbook at any given time:\n\nSandstorm (Combat)\n\nYou whip up a blast of glassy sand to shred all your foes at once. Make an immediate attack with a Fighting score of 3 against each opponent.\n\nRecharge: 50 silver";
 
@@ -20209,6 +20322,8 @@ namespace Book1
 
             ID = 644;
 
+            Location = Location::Type::SALT_MINES;
+
             Text = "The GOLDEN CANDLESTICK looks valuable, but ordinary. You can add it to your equipment.";
 
             Choices.clear();
@@ -21404,7 +21519,7 @@ namespace Book1
 
             ID = 679;
 
-            Text = "You watch with mounting concern as dozens of small boats round the corner of Viaan Island and make their way directly towards you. They are war canoes, filled with tribal Bando warriors. Your crew man the ballista's (catapults are useless here against these small boats) and prepare to repel boarders.\n\nNote: Note: Because you cannot use all your ship’s weapons you must lower the Fighting value of your ship by 1 point for this battle.";
+            Text = "You watch with mounting concern as dozens of small boats round the corner of Viaan Island and make their way directly towards you. They are war canoes, filled with tribal Bando warriors. Your crew man the ballista's (catapults are useless here against these small boats) and prepare to repel boarders.\n\nNote: Note: Because you cannot use all your ship's weapons you must lower the Fighting value of your ship by 1 point for this battle.";
 
             Choices.clear();
 
@@ -21431,6 +21546,298 @@ namespace Book1
                 destination = {Book::Type::BOOK1, 52};
             }
         }
+    };
+
+    class Story680 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story680()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 680;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The library of Chalice has a grand marble f loor, decorated in unusual arcane patterns. Around the walls, so high they are accessible only by ladders, are numerous scrolls and even a few books. Whilst this library cannot compete with the shelves in Animus Mast, it is still an impressive store of knowledge.";
+
+            Choices.clear();
+
+            if (Engine::SPELLCASTERS(party) > 0)
+            {
+                PreText += "\n\nYou notice that the marble floor is a gigantic teleportation circle. If you had the means you could use this circle to transport your entire party to a different land.";
+
+                if (Engine::HAS_SPELL(party, {Spells::Type::TELEPORT_CIRCLE}))
+                {
+                    Choices.push_back(Choice::Base("Cast Teleportation Circle spell", {Book::Type::BOOK1, 235}));
+                }
+            }
+
+            PreText += "\n\nThere are many subjects you could research here.";
+
+            Choices.push_back(Choice::Base("The Mordain Ruins", {Book::Type::BOOK1, 577}));
+            Choices.push_back(Choice::Base("The Reign of the Everchild", {Book::Type::BOOK1, 452}));
+            Choices.push_back(Choice::Base("Animus Mast", {Book::Type::BOOK1, 705}));
+            Choices.push_back(Choice::Base("Longport Bay", {Book::Type::BOOK1, 81}));
+            Choices.push_back(Choice::Base("Politics of the Splintered Isles", {Book::Type::BOOK1, 794}));
+            Choices.push_back(Choice::Base("Saint Elias", {Book::Type::BOOK1, 262}));
+            Choices.push_back(Choice::Base("Leave the library", {Book::Type::BOOK1, 560}));
+
+            Text = PreText.c_str();
+        }
+    };
+
+    class Story681 : public Story::Base
+    {
+    public:
+        Story681()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 681;
+
+            Location = Location::Type::SALT_MINES;
+
+            IsCity = true;
+
+            Text = "You have entered the salt mines, a place of stygian hell where slaves work tirelessly under the lash to extract glittering salt rock from the chamber walls. The air itself is dry and salty, and seems to rob your mouth of moisture with each breath. Your way is lit miserly by a lamp you have borrowed from the overseer.\n\n\"The troglodyte infestation is on the twelfth, thirteenth and fourteenth levels,\" he advises. \"Avoid the lowest level, it's uninhabitable.\"\n\n\"Why shouldn't I search the lowest level?\" you ask.\n\n\"It sounds like a breeding ground for troglodytes.\"\n\nThe overseer grimaces. \"Dragon trouble,\" he says.\n\nWhich level of the mines will you explore?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("The twelfth level", {Book::Type::BOOK1, 739}));
+            Choices.push_back(Choice::Base("The thirteenth level", {Book::Type::BOOK1, 388}));
+            Choices.push_back(Choice::Base("The fourteenth level", {Book::Type::BOOK1, 597}));
+            Choices.push_back(Choice::Base("The lowest level", {Book::Type::BOOK1, 222}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story682 : public Story::Base
+    {
+    public:
+        Story682()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 682;
+
+            Text = "You carefully sneak up on the orc, being as quiet as possible. You need not have tried so hard, the orc is entirely engrossed in his reading. You stand directly in front of him, and even prod him to get his attention. He does not move a muscle.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Kill the orc whilst he is reading", {Book::Type::BOOK1, 38}));
+            Choices.push_back(Choice::Base("Snatch the black book from the orc’s hands", {Book::Type::BOOK1, 160}));
+            Choices.push_back(Choice::Base("Close the door and go somewhere else", {Book::Type::BOOK1, 821}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story683 : public Story::Base
+    {
+    public:
+        Story683()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 683;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "You attempt to clear your mind of all distractions and exist in a state of blessed emptiness. You remember your temple teachings when you were but a boy. \"The treasures of the mind outweigh any fortune of silver,\" you murmur.\n\nYou have relaxed completely. Your meditations have cleared your mind, but not given you specific inspiration as to where to go. Deciding to leave the matter to fate, you stroll towards the hill in front of you and enter the first cave you come across.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, Character::Type::AKIHIRO_OF_CHALICE, 1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 24}; }
+    };
+
+    class Story684 : public Story::Base
+    {
+    public:
+        Story684()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 684;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "The Everchild asked you to poison the Bronzeguard in their compound.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Do this now", {Book::Type::BOOK1, 847}));
+            Choices.push_back(Choice::Base("You'd better be on your way", {Book::Type::BOOK1, 75}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story685 : public Story::Base
+    {
+    public:
+        Story685()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 685;
+
+            Text = "You have returned to the room with the magic circle. It will require quicksilver in order to operate.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Pour some QUICKSILVER into the circle", {Book::Type::BOOK1, 26}, {Equipment::QUICKSILVER}));
+            Choices.push_back(Choice::Base("Return to the crossroads", {Book::Type::BOOK1, 566}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story686 : public Story::Base
+    {
+    public:
+        Story686()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 686;
+
+            Text = "The tunnel opens into a humble tomb, with a single stone sarcophagus in it. Above the sarcophagus is a silver skull, human sized, mounted on a pedestal. You cannot help but notice that the sarcophagus is open. You have an uneasy sense about the place, and your survival instincts are telling you to go back the way you came.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Enter the chamber", {Book::Type::BOOK1, 778}));
+            Choices.push_back(Choice::Base("Go back to the crossroads", {Book::Type::BOOK1, 46}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(47)}))
+            {
+                return {Book::Type::BOOK1, 373};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story687 : public Story::Base
+    {
+    public:
+        Story687()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 687;
+
+            Text = "The sigils fade as you complete your counterspell... but you have been tricked. The wards around the tent are still active, and a magical flash blinds you. You stagger back, light continuing to pour from the tent like a beacon. Soon the army of Cursus have captured the assassination team. What happens to them now is up to you. If you capture the city of Cursus you can free them from prison. If your army is defeated, the party members will be executed. Either way, the captured party members can take no further part in the battle until rescued.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
+                {
+                    Engine::GAIN_STATUS(party.Members[i], Character::Status::CAPTURED);
+                }
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 96}; }
+    };
+
+    class Story688 : public Story::Base
+    {
+    public:
+        Story688()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 688;
+
+            Location = Location::Type::GRANITE_HILLS;
+
+            Text = "Perhaps the miners and sorcerers of old left something valuable in their wake? You begin to explore the hillsides for something of interest.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Explore the Granite Hills (Team check: Survival 4+, Successes: 5)", {Book::Type::BOOK1, 751}, {Book::Type::BOOK1, 426}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 5));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            Bye = NULL;
+
+            if (!outcome)
+            {
+                Bye = "Each Party Member loses 2 Health.";
+
+                Engine::GAIN_HEALTH(party, -2);
+            }
+        }
+    };
+
+    class Story689 : public Story::Base
+    {
+    public:
+        Story689()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 689;
+
+            Location = Location::Type::WITHERED_STEPPES;
+
+            Text = "There are innumerable cracks in the earth, small gullies in a broken land baked by the relentless sun. You wander a number of places, unsure of what you are looking for.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            Choices.clear();
+
+            if (Engine::HAS_SPELL(party, {Spells::Type::SHADOW_DOOR}))
+            {
+                Choices.push_back(Choice::Base("Cast Shadow Door", {Book::Type::BOOK1, 720}));
+                Choices.push_back(Choice::Base("Give up", {Book::Type::BOOK1, 115}));
+            }
+            else
+            {
+                Bye = "You wander the area for days but discover nothing of interest.";
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 115}; }
     };
 
     auto story001 = Story001();
@@ -22169,6 +22576,16 @@ namespace Book1
     auto story677 = Story677();
     auto story678 = Story678();
     auto story679 = Story679();
+    auto story680 = Story680();
+    auto story681 = Story681();
+    auto story682 = Story682();
+    auto story683 = Story683();
+    auto story684 = Story684();
+    auto story685 = Story685();
+    auto story686 = Story686();
+    auto story687 = Story687();
+    auto story688 = Story688();
+    auto story689 = Story689();
 
     void InitializeStories()
     {
@@ -22246,7 +22663,8 @@ namespace Book1
             &story640, &story641, &story642, &story643, &story644, &story645, &story646, &story647, &story648, &story649,
             &story650, &story651, &story652, &story653, &story654, &story655, &story656, &story657, &story658, &story659,
             &story660, &story661, &story662, &story663, &story664, &story665, &story666, &story667, &story668, &story669,
-            &story670, &story671, &story672, &story673, &story674, &story675, &story676, &story677, &story678, &story679};
+            &story670, &story671, &story672, &story673, &story674, &story675, &story676, &story677, &story678, &story679,
+            &story680, &story681, &story682, &story683, &story684, &story685, &story686, &story687, &story688, &story689};
     }
 }
 #endif
