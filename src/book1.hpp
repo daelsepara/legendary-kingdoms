@@ -15617,7 +15617,7 @@ namespace Book1
 
             if (Engine::IS_ACTIVE(party, party.LastSelected))
             {
-                Engine::GET_EQUIPMENT(party.Members[i], {Equipment::HANDSOME_BROOCH1});
+                Engine::GET_EQUIPMENT(party.Members[party.LastSelected], {Equipment::HANDSOME_BROOCH1});
             }
             else
             {
