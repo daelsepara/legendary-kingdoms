@@ -78,7 +78,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
 bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge);
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
-bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Equipment::Base> equipment, int LoseLimit, bool back_button);
+bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Type character, Team::Type team, std::vector<Equipment::Base> equipment, std::vector<Equipment::Class> exceptions, int LoseLimit, bool back_button);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, int combatRound);
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
@@ -4946,6 +4946,16 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         putHeader(renderer, party.Fleet[party.CurrentShip].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                         attack_score = party.Fleet[party.CurrentShip].Fighting;
+
+                        if (Engine::VERIFY_CODES(party, {Codes::Type::CANNOT_USE_SHIPWEAPONS}))
+                        {
+                            attack_score -= 1;
+
+                            if (attack_score < 0)
+                            {
+                                attack_score = 0;
+                            }
+                        }
 
                         attacker_string = "Fighting: " + std::to_string(attack_score);
                         attacker_string += "\nHealth: " + std::to_string(party.Fleet[party.CurrentShip].Health);
@@ -11443,6 +11453,11 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
         Engine::LOSE_CODES(party, {Codes::Type::LAST_IN_COMBAT});
     }
 
+    if (Engine::VERIFY_CODES(party, {Codes::Type::CANNOT_USE_SHIPWEAPONS}))
+    {
+        Engine::LOSE_CODES(party, {Codes::Type::CANNOT_USE_SHIPWEAPONS});
+    }
+
     if (combatResult != Engine::Combat::NONE)
     {
         Engine::LOSE_CODES(party, {Codes::Type::NO_COMBAT_SPELLS});
@@ -14409,9 +14424,9 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         selection = -1;
 
                         current = -1;
-
-                        selected = false;
                     }
+
+                    selected = false;
                 }
             }
             else if (controls[current].Type == Control::Type::DROP && !hold)
@@ -14613,7 +14628,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
             {
-                if ((equipment_limit > -1 && !Engine::VERIFY_EQUIPMENT_LIMIT(character, equipment_limit)) || (!Engine::VERIFY_EQUIPMENT_LIMIT(character, equipment_limit)))
+                if ((equipment_limit > -1 && !Engine::VERIFY_EQUIPMENT_LIMIT(character, equipment_limit)) || !Engine::VERIFY_EQUIPMENT_LIMIT(character))
                 {
                     displayMessage("You are carrying too many items! Drop or transfer excess items.", intRD);
                 }
@@ -16811,7 +16826,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return done;
 }
 
-bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Equipment::Base> equipment, int LoseLimit, bool back_button)
+bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Type character, Team::Type team, std::vector<Equipment::Base> equipment, std::vector<Equipment::Class> exceptions, int LoseLimit, bool back_button)
 {
     auto done = false;
 
@@ -17046,7 +17061,25 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                         {
                             if (selection.size() < LoseLimit)
                             {
-                                selection.push_back(offset + current);
+                                if (exceptions.size() > 0)
+                                {
+                                    if (Engine::FIND_LIST(exceptions, equipment[offset + current].Class) < 0)
+                                    {
+                                        selection.push_back(offset + current);
+                                    }
+                                    else
+                                    {
+                                        error = true;
+
+                                        message = "You cannot drop this item!";
+
+                                        start_ticks = SDL_GetTicks();
+                                    }
+                                }
+                                else
+                                {
+                                    selection.push_back(offset + current);
+                                }
                             }
                         }
                     }
@@ -17066,7 +17099,19 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                             items.push_back(equipment[selection[i]].Type);
                         }
 
-                        Engine::LOSE_EQUIPMENT(party, team, items);
+                        if (character != Character::Type::NONE)
+                        {
+                            Engine::LOSE_EQUIPMENT(party, team, items);
+                        }
+                        else
+                        {
+                            auto find_character = Engine::FIND_CHARACTER(party, character);
+
+                            if (Engine::IS_ACTIVE(party, find_character))
+                            {
+                                Engine::LOSE_EQUIPMENT(party.Members[find_character], items);
+                            }
+                        }
 
                         done = true;
 
@@ -21541,7 +21586,50 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                             else
                             {
-                                loseItems(window, renderer, party, story->Choices[choice].Team, equipment, story->Choices[choice].Value, false);
+                                loseItems(window, renderer, party, Character::Type::NONE, story->Choices[choice].Team, equipment, story->Choices[choice].EquipmentExceptions, story->Choices[choice].Value, false);
+                            }
+
+                            next = findStory(story->Choices[choice].Destination);
+
+                            done = true;
+
+                            break;
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::EVERYONE_LOSES_EQUIPMENT)
+                        {
+                            auto equipmentClasses = std::vector<Equipment::Class>();
+
+                            if (story->Choices[choice].EquipmentExceptions.size() > 0)
+                            {
+                                for (auto i = 0; i < Equipment::Classes.size(); i++)
+                                {
+                                    if (Engine::FIND_LIST(story->Choices[choice].EquipmentExceptions, Equipment::Classes[i]) < 0)
+                                    {
+                                        equipmentClasses.push_back(Equipment::Classes[i]);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                equipmentClasses = Equipment::Classes;
+                            }
+
+                            for (auto i = 0; i < party.Members.size(); i++)
+                            {
+                                if (Engine::IS_ACTIVE(party, i) && party.Members[i].Equipment.size() > 0)
+                                {
+                                    if (Engine::COUNT_EQUIPMENT(party.Members[i], equipmentClasses) < story->Choices[choice].Value)
+                                    {
+                                        for (auto j = 0; j < equipmentClasses.size(); j++)
+                                        {
+                                            Engine::LOSE_ALL(party.Members[i], equipmentClasses[j]);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        loseItems(window, renderer, party, party.Members[i].Type, story->Choices[choice].Team, party.Members[i].Equipment, story->Choices[choice].EquipmentExceptions, story->Choices[choice].Value, false);
+                                    }
+                                }
                             }
 
                             next = findStory(story->Choices[choice].Destination);

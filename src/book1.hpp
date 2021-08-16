@@ -172,6 +172,8 @@ namespace Book1
 
             ID = 5;
 
+            Location = Location::Type::LHASBREATH;
+
             Text = "You meet up with the lead scholar, Emlyn Pass-Ross, who is already loading supplies onto the mules. She is joined by three other young scholars who look fresh out of university. They don't look the type who could handle themselves in a dangerous jungle.\n\n\"We'll follow our established route into the jungle, and then branch off south once we reach the checkpoint,\" says Emlyn. \"We've discovered all sorts of interesting plants, but so far surprisingly little that is edible.\"\n\n\"What kind of dangers will we face?\" you ask.\n\n\"Most of the jungle beasts leave us alone... to be honest, the monkeys are the most dangerous things you'll find. They travel in huge packs. They're intelligent, thieving sorts. You should watch out for them.\"\n\nSir Lawrence emerges from his tent to kiss his daughter goodbye and to wish you luck. Soon you have emerged from the wooden gates of Lhasbreath and are making your way towards the wall of trees that is the Lhasbreath jungle. Within the canopy of the jungle it is hot and humid. The ground is moist and seems to be the nest of thousands of tiny, biting insects. It must have rained recently, for the path ahead is flooded. Emlyn curses. She intended to take that route through the jungle to reach the checkpoint.";
 
             Choices.clear();
@@ -7729,6 +7731,10 @@ namespace Book1
 
             ID = 241;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "You report your failure to retrieve the SILVER IDOL but speak instead of the revelation you had on the hilltop. \"Excellent!\" claps Honnu. \"Well, I think we can skip he bit about you bringing me the SILVER IDOL.\"\n\nYou flinch. \"But surely if I am to pass the test...?\" \"What do I need of a silver idol, anyway?\" snaps Honnu. \"You will not find your kensai spirit stamped on the base of an idol. Let the thief be pleased with herself. Your spiritual reward will last longer than her reward in coin, I promise you that.\"\n\nYou smile at the cunning old man. Clearly there is more to these tests than meets the eye.";
 
             Choices.clear();
@@ -8999,6 +9005,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 287;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "Honnu has nothing more to say to you.";
 
@@ -11101,7 +11111,7 @@ namespace Book1
         {
             Choices.clear();
 
-            if (Engine::VERIFY_CODES_ANY(party, {Codes::A(1), Codes::A(17)}))
+            if (Engine::VERIFY_CODES_ANY(party, {Codes::A(1), Codes::A(7)}))
             {
                 Choices.push_back(Choice::Base("Talk politics with the king", {Book::Type::BOOK1, 826}));
             }
@@ -11204,6 +11214,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 359;
+
+            Location = Location::Type::JUNGLE;
 
             Text = "Your trek through the jungle continues, moisture dripping from the long-leafed and hairy trees around you. Peering at her water-logged map, Emlyn Pass-Ross leads the way through the chittering rainforest. Eventually you become aware of movement above you. As you gaze upwards you see hundreds of small monkeys, each less than a foot high, leaping and howling through the treetops.\n\n\"Uh oh... trouble,\" mutters Emlyn as she beholds them.";
 
@@ -14242,6 +14254,8 @@ namespace Book1
 
             ID = 462;
 
+            Location = Location::Type::JUNGLE;
+
             Text = "You become dreadfully lost, wandering through the jungle aimlessly, trying to find a familiar landmark. Suddenly, behind you, you hear a terrible cry. You spin around to see that one of the scholars has fallen into a hidden pit. Dashing to the edge of the pit you move to help but see that the poor woman has been impaled on sharpened stakes which have been hammered into the bottom. This was clearly no accident!\n\nYou have lost one scholar. Emlyn refrains from cursing you out loud, but you see the disappointment and fear in her eyes.";
 
             Bye = "After several hours more fruitless wandering you eventually emerge back onto the path, now clear of water.";
@@ -15597,9 +15611,20 @@ namespace Book1
         {
             Engine::GAIN_MONEY(party, 40);
 
-            Take = {Equipment::HANDSOME_BROOCH1};
+            Take.clear();
 
-            Limit = 1;
+            Limit = 0;
+
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                Engine::GET_EQUIPMENT(party.Members[i], {Equipment::HANDSOME_BROOCH1});
+            }
+            else
+            {
+                Take = {Equipment::HANDSOME_BROOCH1};
+
+                Limit = 1;
+            }
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 523}; }
@@ -16458,6 +16483,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 530;
+
+            Location = Location::Type::CHALICE;
 
             Text = "\"Now it is time to demonstrate your bladecraft,\" nods Honnu. \"And it must be against a foe that can test you spiritually as well as physically. It is known that somewhere in the central deserts of the valley dwells a revenant -- the undead spirit of a man who failed his kensai trials so disastrously he is doomed to walk the earth forever. You must find this spirit and defeat it in single combat.\"\n\nYou feel no fear. \"I shall,\" you vow. \n\n\"This task will not be easy,\" says Honnu. \"Get yourself a good sword, and train yourself to the highest standard before you track down your foe. It will be the duel that defines your family's fate forever. When you have slain it, return to me.\"\n\nNote: You gained the code A51.";
 
@@ -19102,6 +19129,8 @@ namespace Book1
 
             ID = 609;
 
+            Location = Location::Type::JUNGLE;
+
             Text = "You wade waist-deep through the cloudy, muddy water. Leeches latch onto your skin and the insanitary conditions take their toll on your health.\n\nNote: Each party member loses 2 Health points.";
 
             Bye = "However, by following the trail you have not gotten lost. Eventually the path leads to higher, drier grounds.";
@@ -21103,6 +21132,307 @@ namespace Book1
         }
     };
 
+    class Story670 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story670()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 670;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            auto loss = Engine::ROLL(1);
+
+            Engine::GAIN_HEALTH(party, -loss);
+
+            PreText = "You can only watch in horror as the Iron King's forces break the power of the Everchild's armies. You plead with the queen to retreat with you, but she refuses to yield even in the face of defeat. You stagger away, bloodied from the field. Each member of your party loses " + std::to_string(loss) + " health points.";
+
+            if (Engine::COUNT(party) > 0)
+            {
+                PreText += "\n\nYou flee, turning from a distance to see the Everchild's command tent ransacked and burnt. What became of the Everchild herself you cannot say, but she is never seen in the Valley of Bones again.\n\nYou stagger away into the sands, dreams of freedom evaporating from your mind like water in the desert. The rest of the army likewise scatters to the four winds. Your men think you are dead, and your soldiers have dispersed.\n\nNote: You gained the code A4";
+            }
+
+            for (auto i = 0; i < party.Army.size(); i++)
+            {
+                if (party.Army[i].Garrison == Location::Type::LUUTANESH)
+                {
+                    party.Army[i].Morale = 0;
+                }
+            }
+
+            Engine::REMOVE_ROUTED(party);
+
+            Engine::LOSE_CODES(party, {Codes::A(6), Codes::A(7)});
+
+            Engine::GET_CODES(party, {Codes::A(4)});
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 858}; }
+    };
+
+    class Story671 : public Story::Base
+    {
+    public:
+        Story671()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 671;
+
+            Location = Location::Type::JUNGLE;
+
+            Text = "The monkeys mob you, their hands reaching into your pockets and packs, attempting to pull away items from you. \n\nThey eventually depart with their ill-gotten gains. Cursing the thieving monkeys, you make your way onwards.\n\nNote: Each character loses one item of equipment (not armour -- the monkeys aren't that good at stealing things!). In addition, you lose up to 170 silver coins. If you do not have that much, you lose all the silver coins you have.";
+            Choices.clear();
+            Choices.push_back(Choice::Base("Lose one item from each party member", {Book::Type::BOOK1, 740}, Choice::Type::EVERYONE_LOSES_EQUIPMENT, {Equipment::Class::ARMOUR}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, -170);
+        }
+    };
+
+    class Story672 : public Story::Base
+    {
+    public:
+        Story672()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 672;
+
+            Text = "These people are going to get themselves killed if they oppose the fanatical kensai. You beg the mourners to let the matter drop before there is violence.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Persuade the crowd (Team check: Charisma 4+, Successes: 6)", {Book::Type::BOOK1, 512}, {Book::Type::BOOK1, 843}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 6));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story673 : public Story::Base
+    {
+    public:
+        Story673()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 673;
+
+            Text = "As soon as you touch the handle of the front door a great bolt of energy engulfs you. The lightning bolt has scarred your faces. Staggering back from the door you retire, hoping that the wall-climbing team may have better luck.\n\nNote: All members of the door-opening team lose 3 Health points and 1 point of Charisma.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, Team::Type::MAGICAL_DOOR, -3);
+
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::IS_ACTIVE(party, i) && Engine::IN_TEAM(party, party.Members[i].Type, Team::Type::MAGICAL_DOOR))
+                {
+                    Engine::GAIN_SCORE(party.Members[i], Attribute::Type::CHARISMA, -1);
+                }
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 728}; }
+    };
+
+    class Story674 : public Story::Base
+    {
+    public:
+        Story674()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 674;
+
+            Text = "You rise early the next morning to the sounds of cawing birds. You make good progress during the day and arrive at the checkpoint by early evening. The checkpoint is little more than a collection of empty huts built by the previous expedition, but it keeps the rain off your heads and the worst of the insects away. The way onwards is treacherous, so you leave the mules tethered here until your return.\n\n\"In the morning we'll head south,\" says Emlyn, pouring over her map. \"We built a raft in the last expedition to do just that, but my father came down with jungle fever before we could use it. It should still be moored by the riverbank. Alternatively, we could hack our way through the jungle, but there are no trails and the going will be hard. What do you suggest?\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Take the raft", {Book::Type::BOOK1, 105}));
+            Choices.push_back(Choice::Base("Go overland", {Book::Type::BOOK1, 501}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story675 : public Story::Base
+    {
+    public:
+        Story675()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 675;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "Honnu nods as you hand over the SILVER IDOL. He looks at it briefly, and then tosses it to a nearby beggar in meditation. The astonished old beggar thanks the monk and dashes off to the marketplace to turn his donation into coins.\n\n\"Well, that's the tedious part of your tests complete,\" shrugs Honnu. The whole matter has been rather an anti-climax, but you seem to have passed.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::SILVER_IDOL});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 530}; }
+    };
+
+    class Story676 : public Story::Base
+    {
+    public:
+        Story676()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 676;
+
+            Text = "You stroll through a featureless terrain of grey. The colour continues to fade from your companions.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, -676}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event676 : public Story::Base
+    {
+    public:
+        Event676()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -676;
+
+            DisplayID = 676;
+
+            Text = "Where will you go?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North", {Book::Type::BOOK1, 589}));
+            Choices.push_back(Choice::Base("West", {Book::Type::BOOK1, 692}));
+            Choices.push_back(Choice::Base("South", {Book::Type::BOOK1, 324}));
+            Choices.push_back(Choice::Base("East", {Book::Type::BOOK1, 273}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story677 : public Story::Base
+    {
+    public:
+        Story677()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 677;
+
+            Text = "You are quick and strong, and the bear cannot get a grasp on you. You even manage to pinion its head for a few moments before it shakes you away. The barbarians above you roar with delight as you demonstrate your mastery over the beast. Eventually the bear tires of fighting you. It grumbles loudly and lollops into a corner away from you, rolling onto its back. The barbarians cheer and throw you down a rope to climb up.\n\nThe king slaps you on the back and congratulates your skill. \"You've fought hard to get my attention,\" he smiles, several teeth missing from his wide grin. \"What brings you to my city, foreigner?\"\n\nNote: You gained the code A82.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(82)});
+
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES_ANY(party, {Codes::A(1), Codes::A(7)}))
+            {
+                Choices.push_back(Choice::Base("Speak to the king about political matters", {Book::Type::BOOK1, 826}));
+            }
+
+            Choices.push_back(Choice::Base("Ask for a reward for your feat of strength", {Book::Type::BOOK1, 844}));
+        }
+    };
+
+    class Story678 : public Story::Base
+    {
+    public:
+        Story678()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 678;
+
+            Text = "You wade into the still, cold water, holding your torch aloft as you make your way down the slippery passageway. Eventually the water level gets too high. To proceed, you will have to dive into the water and swim down -- but who knows where the pitch-black tunnel will lead?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Swim down the tunnel (Individual check: Survival 4+, Successes: 2)", {Book::Type::BOOK1, 503}, {Book::Type::BOOK1, 825}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::SURVIVAL}, 4, 2));
+            Choices.push_back(Choice::Base("You don't want to risk it: wade back to the Everchild and take the other tunnel", {Book::Type::BOOK1, 523}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story679 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Story679()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 679;
+
+            Text = "You watch with mounting concern as dozens of small boats round the corner of Viaan Island and make their way directly towards you. They are war canoes, filled with tribal Bando warriors. Your crew man the ballista's (catapults are useless here against these small boats) and prepare to repel boarders.\n\nNote: Note: Because you cannot use all your ship’s weapons you must lower the Fighting value of your ship by 1 point for this battle.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::CANNOT_USE_SHIPWEAPONS});
+
+            EnemyFleet = {Ship::Base("WAR CANOES", Ship::Type::WAR_CANOES, Location::Type::NONE, 3, 10, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                destination = {Book::Type::BOOK1, 774};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 52};
+            }
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -21828,6 +22158,17 @@ namespace Book1
     auto story667 = Story667();
     auto story668 = Story668();
     auto story669 = Story669();
+    auto story670 = Story670();
+    auto story671 = Story671();
+    auto story672 = Story672();
+    auto story673 = Story673();
+    auto story674 = Story674();
+    auto story675 = Story675();
+    auto story676 = Story676();
+    auto event676 = Event676();
+    auto story677 = Story677();
+    auto story678 = Story678();
+    auto story679 = Story679();
 
     void InitializeStories()
     {
@@ -21837,7 +22178,7 @@ namespace Book1
             &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
-            &event597, &event617, &event626, &event639, &event657, &event666,
+            &event597, &event617, &event626, &event639, &event657, &event666, &event676,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -21904,7 +22245,8 @@ namespace Book1
             &story630, &story631, &story632, &story633, &story634, &story635, &story636, &story637, &story638, &story639,
             &story640, &story641, &story642, &story643, &story644, &story645, &story646, &story647, &story648, &story649,
             &story650, &story651, &story652, &story653, &story654, &story655, &story656, &story657, &story658, &story659,
-            &story660, &story661, &story662, &story663, &story664, &story665, &story666, &story667, &story668, &story669};
+            &story660, &story661, &story662, &story663, &story664, &story665, &story666, &story667, &story668, &story669,
+            &story670, &story671, &story672, &story673, &story674, &story675, &story676, &story677, &story678, &story679};
     }
 }
 #endif

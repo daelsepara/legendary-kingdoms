@@ -72,7 +72,8 @@ namespace Choice
         CHOOSE_CHARACTER_EXCEPT,
         EVERYONE_SKILL_CHECKS,
         GAIN_HEART,
-        SAIL
+        SAIL,
+        EVERYONE_LOSES_EQUIPMENT
     };
 
     class Base
@@ -86,13 +87,15 @@ namespace Choice
 
         Engine::Destination DestinationFailed = {Book::Type::NONE, -1};
 
-        std::vector<Attribute::Type> Attributes = std::vector<Attribute::Type>();
+        std::vector<Attribute::Type> Attributes = {};
 
-        std::vector<Equipment::Base> Equipment = std::vector<Equipment::Base>();
+        std::vector<Equipment::Base> Equipment = {};
+
+        std::vector<Equipment::Class> EquipmentExceptions = {};
 
         std::vector<Codes::Base> Codes = std::vector<Codes::Base>();
 
-        std::vector<Codes::Type> InvisibleCodes = std::vector<Codes::Type>();
+        std::vector<Codes::Type> InvisibleCodes = {};
 
         std::vector<Engine::RandomDestination> RandomDestinations = {};
 
@@ -685,6 +688,19 @@ namespace Choice
             Character = character;
 
             SecondCharacter = secondCharacter;
+
+            Value = value;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Class> equipmentExceptions, int value)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            EquipmentExceptions = equipmentExceptions;
 
             Value = value;
         }

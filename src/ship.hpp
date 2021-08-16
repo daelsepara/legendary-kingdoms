@@ -16,7 +16,8 @@ namespace Ship
         WAR_GALLEY,
         CARRACK,
         HULK,
-        PIRATE_PINNACE
+        PIRATE_PINNACE,
+        WAR_CANOES
     };
 
     class Base

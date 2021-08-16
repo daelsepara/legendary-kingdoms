@@ -49,7 +49,8 @@ namespace Codes
         CAST_ORB,
         CAST_MAELSTROM,
         RECHARGE_COSTS_HALF,
-        ENEMY_DAZING_LIGHTS
+        ENEMY_DAZING_LIGHTS,
+        CANNOT_USE_SHIPWEAPONS
     };
 
     std::map<Book::Type, const char *> Prefix = {

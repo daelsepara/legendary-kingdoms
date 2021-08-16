@@ -2942,5 +2942,58 @@ namespace Engine
             }
         }
     }
+
+    int FIND_LIST(std::vector<Equipment::Class> selection, Equipment::Class equipment_class)
+    {
+        auto found = -1;
+
+        for (auto i = 0; i < selection.size(); i++)
+        {
+            if (selection[i] == equipment_class)
+            {
+                found = i;
+
+                break;
+            }
+        }
+
+        return found;
+    }
+
+    int COUNT_EQUIPMENT(Character::Base &character, std::vector<Equipment::Class> equipmentClasses)
+    {
+        auto count = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            auto found = Engine::FIND_LIST(equipmentClasses, character.Equipment[i].Class);
+
+            if (found >= 0 && found < character.Equipment.size())
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    int FIRST_EQUIPMENT(Character::Base &character, std::vector<Equipment::Class> equipmentClasses)
+    {
+        auto found = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            auto first = Engine::FIND_LIST(equipmentClasses, character.Equipment[i].Class);
+
+            if (first >= 0 && first < character.Equipment.size())
+            {
+                found = first;
+
+                break;
+            }
+        }
+
+        return found;
+    }
 }
 #endif

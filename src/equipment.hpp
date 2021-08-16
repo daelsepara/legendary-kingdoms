@@ -15,6 +15,14 @@ namespace Equipment
         SHIELD
     };
 
+    std::vector<Equipment::Class> Classes = {
+        Equipment::Class::NORMAL,
+        Equipment::Class::WEAPON,
+        Equipment::Class::ARMOUR,
+        Equipment::Class::ROBE,
+        Equipment::Class::SHIELD
+    };
+
     enum class Type
     {
         NONE = 0,
