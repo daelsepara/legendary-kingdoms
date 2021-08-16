@@ -14364,8 +14364,20 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     auto item = party.Vault[selection];
 
-                    if (item.Type == Equipment::Type::SCROLL_OF_RAGE)
+                    if (item.Type == Equipment::Type::HEALING_POTION)
                     {
+                        if (character.Health < character.MaximumHealth)
+                        {
+                            displayMessage(std::string(character.Name) + " recovers up to 5 Health points!", intLB);
+
+                            Engine::GAIN_HEALTH(character, 5);
+
+                            used_up = true;
+                        }
+                        else
+                        {
+                            displayMessage(std::string(character.Name) + " is not injured!", intRD);
+                        }
                     }
 
                     if (used_up)
@@ -14922,6 +14934,21 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         else
                         {
                             displayMessage("You cannot use the " + std::string(item.Name) + " when not in combat!", intRD);
+                        }
+                    }
+                    else if (item.Type == Equipment::Type::HEALING_POTION)
+                    {
+                        if (character.Health < character.MaximumHealth)
+                        {
+                            displayMessage(std::string(character.Name) + " recovers up to 5 Health points!", intLB);
+
+                            Engine::GAIN_HEALTH(character, 5);
+
+                            used_up = true;
+                        }
+                        else
+                        {
+                            displayMessage(std::string(character.Name) + " is not injured!", intRD);
                         }
                     }
 
