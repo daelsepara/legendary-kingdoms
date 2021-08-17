@@ -1381,6 +1381,10 @@ namespace Book1
 
             ID = 40;
 
+            Location = Location::Type::LUUTANESH;
+
+            IsCity = true;
+
             Text = "With a dramatic flourish you unroll the DRAGON HEAD from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou may add the following soldiers to the Luutanesh barracks:\n\n[Lhasbreath Berserkers]: Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nNote: You gained the code A16.";
 
             Choices.clear();
@@ -1521,6 +1525,8 @@ namespace Book1
 
             Location = Location::Type::LUUTANESH;
 
+            IsCity = true;
+
             Text = "Janus is overjoyed to see the LOCKET. You hand it over to him and he cradles it in his hands. \"Now I can remember Alidale always!\" he sighs. He opens the LOCKET to have a look inside, when suddenly there is a flash and a profusion of smoke.\n\nStepping out of the smoke comes a young woman, a wizard by the looks of her, coughing and waving the smoke away from her face. \"Alidale?\" gasps Janus. \"Why! You don't look a day older than when you left for that temple!\"\n\n\"Janus!\" she cries overjoyed. \"You... do look a bit older, if I'm honest. I must have been in that locket for a long time.\"\n\nAlidale explains that she was surrounded by hideous serpent men and was forced to transport herself inside her locket for protection. The snake men assumed she had teleported away, but in fact she has been trapped in the locket for all these years. She never expected a rescue would take forty summers. She has little to reward you with but shares with you some of her many discoveries and insights into the ancient world that she has uncovered in her travels.\n\nNote: You gained the code A29.";
 
             Bye = "Bidding the odd couple farewell, you resume your journey.";
@@ -1569,6 +1575,8 @@ namespace Book1
             ID = -44;
 
             DisplayID = 44;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "Next, pick someone to try and sneak through the room.";
 
@@ -1708,6 +1716,10 @@ namespace Book1
 
             ID = 49;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are restored to maximum Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive 600 silver coins as a reward. In addition, he presents you with a SEAL OF HOUSE ROSS. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nNote: You gained the code A85.";
 
             Bye = "Thanking Sir Lawrence and Emlyn for their generosity, you depart into the city.";
@@ -1820,6 +1832,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 53;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
 
             Text = "There is no point in risking everyone at once.";
 
@@ -2205,6 +2219,8 @@ namespace Book1
             ID = 66;
 
             Location = Location::Type::LUUTANESH;
+
+            IsCity = true;
 
             Text = "You spend several days in the handsomely appointed Cold River Inn.\n\nNote: For every 5 silver coins you spend, each party member can recover 1 Health point.\n\nSpell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
 
@@ -2857,6 +2873,10 @@ namespace Book1
 
             ID = 86;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "You go amongst the king's councillors, trying to find one who might be able to arrange an appointment for you.";
 
             Choices.clear();
@@ -3103,6 +3123,8 @@ namespace Book1
 
             Location = Location::Type::LHASBREATH;
 
+            IsCity = true;
+
             Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nWhen Emlyn reports her findings, the news is rather disappointing. \"We have recovered many pretty blooms,\" she admits. \"Certainly, the fragrances are quite striking... however, there are no medicinal or culinary plants, as far as I can tell. Nothing sellable.\"\n\n\"Curses!\" grumbles Sir Lawrence. \"This expedition is turning into an expensive failure.\"\n\nStill, Sir Lawrence is good to his word and presents you with a purse of 150 silver coins. Offering your consolations over the failed mission, you depart into the city.\n\nAlthough the expedition did not go perfectly you have learned a lot.\n\nNote: You gained the code A85.";
 
             Choices.clear();
@@ -3192,6 +3214,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 94;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
 
             Text = "You carefully lower yourself into the pit, being careful to avoid the spikes. Moving aside the timbers you check over the body. You find 15 silver coins spilling from a rotten pouch and a still intact DRAGONYAK HORN.\n\nNote: You gained the code A46.";
 
@@ -4525,6 +4549,10 @@ namespace Book1
 
             ID = 134;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "You manage to find one fellow, a young and dynamic looking man, who claims he can arrange an appointment for you. However, it will cost 600 silver coins in administrative fees.";
 
             Choices.clear();
@@ -4636,6 +4664,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 138;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
 
             Text = "You make your way to the Expeditionary Guild but find the area empty. The blue tents of House Ross have been packed away and there is no sign of Sir Lawrence or Emlyn Pass-Ross. Shrugging, you return to the city centre.";
 
@@ -4909,6 +4941,10 @@ namespace Book1
 
             ID = 148;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "Sir Lawrence pours you a bottle of fine Almskirk wine, and bids you sit upon velvet cushioned chairs in his plush marquee. \"We are here to find spices,\" admits Sir Lawrence. \"House Ross has always been more interested in trade than the petty wars of Longport Bay. Let the Dayne's and the Bailey's fight like dogs -- we are interested in the larger world. We have expeditions elsewhere, but this one is all about exploring the jungles that lie to the west of Lhasbreath. If we can find enough interesting herbs or spices it might be profitable enough to set up a trade post or colony.\"\n\nSir Lawrence frowns. \"Unfortunately, we've hit a snag,\" he admits. \"The knights who were going to escort our scholars into the jungle have perished. They engaged in an honour duel with several barbarian locals... and came out of the battle poorly. Until I can find guards I can trust, I cannot send our scholars in. You seem cultured and capable folk. Perhaps you would be willing to act as expedition leaders? There would be an ample reward on offer!\"";
 
             Choices.clear();
@@ -4965,6 +5001,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 150;
+
+            Location = Location::Type::LHASBREATH_PYRAMID;
 
             Text = "You must fight!";
 
@@ -5647,6 +5685,10 @@ namespace Book1
 
             ID = 171;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "The young man takes you to a small side room and asks you to wait while he organises introductions. You take a seat anxiously, hoping the young man is not some devious con artist who has just run off with your money.";
 
             Choices.clear();
@@ -6099,6 +6141,8 @@ namespace Book1
 
             Location = Location::Type::LUUTANESH;
 
+            IsCity = true;
+
             Text = "You get into a conversation with an old man named Janus about his adventurous wife, Alidale. Apparently Alidale was a great explorer of the Valley in the times before the rise of the Iron King. She had heard of the Temple of the Unbroken, the birthplace of the Cursus religion, and wanted to explore the ruins. Sadly, she never returned. It has been forty years since then, and Janus has never taken another wife. He asks for you to keep an eye out for a bronze locket if you should ever chance to venture into the temple yourself. It was a gift Janus bought his wife when they were courting, and he would like it back to member her by.\n\nYou assure him you will keep your eyes peeled before moving on.";
 
             Choices.clear();
@@ -6378,6 +6422,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 190;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
 
             Text = "At first you are unsure if the rumours are true. Can there really be an Expeditionary Guild in a city as raucous and illiterate as Lhasbreath? You find the 'guild' in the tent city, a collection of gloriously decorated marquees embroidered with the heraldic crest of House Ross (a stag's head on a field of blue and gold). This noble house of Royce is based in the county of Longport Bay, which means they are a long way from home.\n\nYou are soon spotted by the leader of the guild, Sir Lawrence Ross, uncle to Baroness Carissa, the head of the house. He is overjoyed to see some cultured travellers in Lhasbreath and immediately invites you into his tent for a drink.";
 
@@ -6894,6 +6942,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 208;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
 
             Choices.clear();
 
@@ -7749,6 +7799,10 @@ namespace Book1
 
             ID = 234;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "The man is a devious con artist who has just run off with your money. Eventually a surprised looking servant enters the room and sadly tells you that the king has retired to his chambers, and that all foreigners must now leave the hall until morning. Upon interrogation the servant reveals that the man you gave money to had never been seen in the hall until today. Cursing your naivety, you storm out of the hall.";
 
             Choices.clear();
@@ -7956,9 +8010,9 @@ namespace Book1
                 target = party.LastSelected;
             }
 
-            if (target >= 0 && target < party.Members.size())
+            if (Engine::IS_ACTIVE(party, target))
             {
-                party.Members[target].Team = previousTeam;
+                Engine::SET_TEAM(party.Members[target], previousTeam);
             }
 
             if (result == Engine::Combat::EXCEED_LIMIT)
@@ -7969,7 +8023,7 @@ namespace Book1
                 {
                     temp_string += " You have defeated Tommul.";
 
-                    if (target >= 0 && target < party.Members.size())
+                    if (Engine::IS_ACTIVE(party, target))
                     {
                         auto result = Engine::ROLL(1);
 
@@ -8239,6 +8293,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 249;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
 
             Text = "You seek out the father of Garon the Bloody Mouthed. He is still sitting sadly upon his doorstep when you return, bearing his son's body in your arms. The father gives a great howl and clasps his son's body.\n\n\"It is as I feared,\" he weeps. \"I thank you for returning his body so it may be buried with honour. I was to present my son with his grandfather's magical amulet upon his successful return -- but now I have no sons left to inherit. I wish you to have it. It is what Garon would have wanted.\"\n\nThe old man presents you with an AMULET OF HEALTH (Health +1). It would be churlish to refuse it. You leave the old man to his sorrows.\n\nNote: You gained the code A86.";
 
@@ -8583,6 +8641,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             Location = Location::Type::LUUTANESH;
+
+            IsCity = true;
 
             ID = 263;
 
@@ -8971,6 +9031,8 @@ namespace Book1
 
             Location = Location::Type::LHASBREATH;
 
+            IsCity = true;
+
             Text = "The inns are a little unusual in Lhasbreath. Rather than being solid structures, inns are vast canvas tents without separate rooms. Here you rub shoulders with many young and old barbarians who are not successful enough to own their own houses. They are known as 'doss tents', and great casks and tables occupy the centre of the tent where ale and food is served. Loud music and singing make sleep difficult, and you must stay constantly vigilant for thieves. For every 3 silver coins you spend, each party member can recover 1 Health point. However, spellcasters cannot recharge their spells here, as there is not enough privacy to attain the necessary meditative state. You are warned by a hairy barbarian not to venture into the Salt Plains. \"The lack of moisture there will suck the water right from your bones and leave you as dry as a husk,\" he roars, spittle drooling from his chin. \"Only the most experienced ranger stands a chance of survival.\"";
 
             RestPrice = 3;
@@ -9249,6 +9311,8 @@ namespace Book1
 
             Location = Location::Type::LUUTANESH;
 
+            IsCity = true;
+
             Image = "images/book1/cold_river_inn.png";
 
             Choices.clear();
@@ -9319,6 +9383,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 286;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
 
             Text = "You believe you have already found this man... stretched out on a rack in an orcish prison. Tears form in the old man's eyes. \"Oh! Return his body -- I beg you!\" he pleads. \"My son's spirit cannot rest unless he is buried with his ancestors.\" The thought of dragging a six-foot barbarian across the desert does not exactly appeal, but you say you will do what you can.\n\nNote: You gained the code A67.";
 
@@ -9816,6 +9884,8 @@ namespace Book1
 
             ID = 299;
 
+            Location = Location::Type::LHASBREATH_PYRAMID;
+
             Text = "You follow the scholars and Emlyn Pass-Ross up the steps of the pyramid. They are astonished by their discovery, chattering to themselves excitedly about the interesting blooms and fragrances. It all happens so fast... secret doors in the sides of the pyramids open, and terrible snakemen come slithering through. Most your party manage to intercept them, but one scholar has her head cut clean off before you can leap to her defence.";
 
             Bye = "Pushing the remaining scholars behind you, you draw your weapons and prepare to hold off the attack.";
@@ -9946,6 +10016,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 303;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
 
             Text = "You climb back out of the pit on the far side. Why risk crossing a rickety plank when a little caution can keep life and limb intact? You smartly continue down the tunnel.";
 
@@ -10091,6 +10163,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 308;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
 
             Text = "The door opens and you get to your feet, expecting to see the king and his councillors. Instead, five burly barbarians enter the room with weapons drawn. They quietly close the door behind them. \"Sorry, foreigners,\" apologises the tallest. \"But we've been paid three hundred silver coins to ensure you come to a sticky end. No offence. It's just business.\"\n\n\"None taken,\" you snarl, drawing your own weapons.";
 
@@ -10774,6 +10850,8 @@ namespace Book1
             ID = 330;
 
             Location = Location::Type::LUUTANESH;
+
+            IsCity = true;
 
             Text = "You present the Everchild with CALLIGRAPHY INK and ask her to write a letter to the God King of Chalice. She spends a full day working on her note, pleading for aid in a beautiful hand. The resultant BEAUTIFUL LETTER from the Everchild is a work of art.\n\n\"Let us hope that he likes what he sees,\" muses the Everchild. \"Thank you for pursuing this matter. I shall pray for your success.\"";
 
@@ -11529,6 +11607,10 @@ namespace Book1
 
             ID = 355;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "The mood is quiet and professional in the king's hall today. King Scarrenden acknowledges your arrival with a curt nod as he finishes his business with another councillor and asks your business in the hall.";
 
             Choices.clear();
@@ -11741,6 +11823,8 @@ namespace Book1
             ID = 362;
 
             Location = Location::Type::LUUTANESH;
+
+            IsCity = true;
 
             Text = "A senior priest steps forward and puts a hand on the shoulder of the taxman. \"Are you deranged?\" he asks. \"Can you not see that these are the agents of the queen?\"";
 
@@ -12729,6 +12813,10 @@ namespace Book1
 
             ID = 392;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "You make your way to the king's hall, a vast timber and stone structure which displays the heads and horns of terrible beasts. The hall is the living space of the King Scarrenden and his most trusted berserkers, and you are rudely shoved about by passing housecarls and beer wenches in the crowded space. The king himself is peering over the edge of a pit, where one of his warriors is being mauled to death by an angry sand bear. The king toasts the bear's victory with a flagon of frothy beer, much to the laughter of the assembled barbarians.\n\n\"What was his crime?\" you ask a passing wench.\n\n\"No crime, we don't feed criminals to bears,\" she laughs. \"He chose to fight the bear to impress the king. You can petition the king for aid if you display a great feat of strength.\"";
 
             Choices.clear();
@@ -13186,6 +13274,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 404;
+
+            Location = Location::Type::LHASBREATH_PYRAMID;
 
             Text = "Something isn't right here. You don't know a lot about growing flowers, but something must be tending those blooms. And until you find out what that is, those scholars are going to stay out of sight! Stepping cautiously into the gloom your worst fears are confirmed. Dreadful snakemen, their curved swords already drawn, come hissing into the gateway to intercept you.";
 
@@ -13790,6 +13880,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 425;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
 
             Text = "You step forward and loudly declare your challenge. There is a great cheer from the audience, including the king. Someone gives you a hearty shove, and you are hurled into the pit. The sand bear snarls at you, showing its teeth.\n\nNote: You cannot use any bonuses from your weapon with this check.";
 
@@ -15790,7 +15884,7 @@ namespace Book1
                 }
                 else if (party.Members[party.LastSelected].Type == Character::Type::AMELIA_PASS_DAYNE)
                 {
-                    return {Book::Type::BOOK1, 470};
+                    return {Book::Type::BOOK1, 163};
                 }
                 else
                 {
@@ -16127,6 +16221,8 @@ namespace Book1
 
             ID = 501;
 
+            Location = Location::Type::LHASBREATH_JUNGLE;
+
             Text = "Making your way through the jungle is tiring work. The area is particularly thick with vegetation, and you must hack and hew your way through the dense rainforest to make any progress at all.\n\nNote: Treat the jungle as if it were an opponent. The jungle does not attack, as such. Instead, each party member takes 1 point of Health damage each time they attack the jungle. This is from scrapes, exhaustion, etc, and you cannot use armour to save against this damage. A party member low on Health can skip their attack if you like, as long as at least one party member attacks each round.";
 
             Bye = "You hack your way through the jungle.";
@@ -16138,7 +16234,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-
             Monsters = {Monster::Base("Jungle", Monster::Type::JUNGLE, 0, 0, 4, 25, 0)};
         }
 
@@ -16552,6 +16647,10 @@ namespace Book1
 
             ID = 513;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "Thinking quickly, you point to the knife-wielding man and address the barbarians. \"Oh, dear! You're not working for Gareth the Snitch, are you? Poor fellows. He's always getting people to do his dirty work, and yet when it comes time for payment he uses clipped coins. Well... there's one born every minute, I suppose.\"\n\nThe barbarians turn angrily upon the small man. Your instinct was right. These are paid assassins, but they don't know their employer very well. The man with the knife panics and begins to flee into the crowd, pursued by the howling barbarians.\n\nNote: You gained the code A90.";
 
             Bye = "You take the opportunity to slip away.";
@@ -16850,6 +16949,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 524;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Text = "In the dead of night you approach Dulcimer's house, in the rich quarter of the city. It is a red-roofed cubical block of stone and rough cement, with lacklustre guard patrols orbiting the estate at uneven intervals. You spy what looks to be the outdoor entrance to the basement; a large trapdoor wide enough to roll barrels into.\n\nWaiting for the right moment, you dash to the basement doors, some of you keeping watch whilst another attempts to break the padlock on the basement.";
 
@@ -17358,7 +17461,11 @@ namespace Book1
 
             ID = 539;
 
-            Text = "Kopu is delighted to see you again and beckons you inside his comfortably furnished tower. Open books are spread across his table, and he beckons his slaves to remove them as he fetches some wine. Kopu is interested in all kinds of languages. If you have been taught any of the languages below, you can teach him the rudiments.";
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
+            Text = "Kopu is delighted to see you again and beckons you inside his comfortably furnished tower. Open books are spread across his table, and he beckons his slaves to remove them as he fetches some wine. Kopu is interested in all kinds of languages. If you have been taught any of the languages Bando, Orc, and Drear, you can teach him the rudiments.";
 
             Choices.clear();
 
@@ -18160,6 +18267,8 @@ namespace Book1
 
             Location = Location::Type::LUUTANESH;
 
+            IsCity = true;
+
             Choices.clear();
 
             Controls = Story::Controls::NONE;
@@ -18780,6 +18889,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 579;
+
+            Location = Location::Type::LHASBREATH_PYRAMID;
 
             Text = "In the aftermath of the battle you enter the step pyramid to see if any more horrors lurk within. Fortunately the pyramid is not large, and you seem to have cleared away all the snakemen. You help yourself to 200 silver coins worth of jewels and artefacts before returning to the scholars.\n\nNow the area is safe Emlyn begins to take samples of the exotic plants growing on the temple. It is impossible to take them all, so only the most likely candidates should be picked. She asks your advice on what should be taken, also getting guidance from her fellow scholars.\n\nNote: The difficulty of this skill check depends on how many scholars died on the trip through the jungle. If no scholars died, the difficulty is 3+. If one died it is 4+, if two died it is 5+, and if three died it is 6+.";
 
@@ -19721,6 +19832,10 @@ namespace Book1
 
             ID = 606;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "You quickly examine the bodies before the housecarls arrive on the scene. You find a little money, 20 silver coins. Most damningly you find a RING OF THE PATRIARCH. These rings are only given out to the most loyal servants of Cursus. Clearly your allegiance to the Everchild will mean you shall be hounded by these fanatics until the end of your days! Shaking your head, you quickly flee the scene.\n\nNote: You gained the code A90.";
 
             Choices.clear();
@@ -19996,6 +20111,8 @@ namespace Book1
 
             Location = Location::Type::LUUTANESH;
 
+            IsCity = true;
+
             Text = "You have come to the small town of Luutanesh, positioned on the crossroads that lie between three great cities of the valley. The Cold River runs near on one side of the town, flooding the nearby rice plains which are tended by hundreds of workers in wide sunhats.\n\nThe village itself is poorer than it should be, with tax agents from Chalice, Saltdad and Cursus routinely stripping it of wealth. Security is strong here, with locals armed with long spears and dragonyak hide armour standing in guard huts positioned along the road.";
 
             Choices.clear();
@@ -20017,6 +20134,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 615;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
 
             Bye = "It seems you have no choice but to fight with the bear.";
 
@@ -22012,6 +22133,8 @@ namespace Book1
 
             ID = 674;
 
+            Location = Location::Type::LHASBREATH_JUNGLE;
+
             Text = "You rise early the next morning to the sounds of cawing birds. You make good progress during the day and arrive at the checkpoint by early evening. The checkpoint is little more than a collection of empty huts built by the previous expedition, but it keeps the rain off your heads and the worst of the insects away. The way onwards is treacherous, so you leave the mules tethered here until your return.\n\n\"In the morning we'll head south,\" says Emlyn, pouring over her map. \"We built a raft in the last expedition to do just that, but my father came down with jungle fever before we could use it. It should still be moored by the riverbank. Alternatively, we could hack our way through the jungle, but there are no trails and the going will be hard. What do you suggest?\"";
 
             Choices.clear();
@@ -23082,7 +23205,6 @@ namespace Book1
             Choices.push_back(Choice::Base("Go north, towards Clifftop", {Book::Type::BOOK1, 725}));
             Choices.push_back(Choice::Base("Go west, to the Tumblestones", {Book::Type::BOOK1, 137}));
             Choices.push_back(Choice::Base("Go southeast, to Lhasbreath", {Book::Type::BOOK1, 775}));
-            Choices.push_back(Choice::Base("Lhasbreath", {Book::Type::BOOK1, 775}));
             Choices.push_back(Choice::Base("Head south, into the jungle", {Book::Type::BOOK1, 370}));
 
             Controls = Story::Controls::STANDARD;
@@ -24076,6 +24198,10 @@ namespace Book1
 
             ID = 742;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -24210,7 +24336,7 @@ namespace Book1
             {
                 if (Engine::IS_ACTIVE(party, party.LastSelected))
                 {
-                    party.Members[party.LastSelected].Team = previousTeam;
+                    Engine::SET_TEAM(party.Members[party.LastSelected], previousTeam);
                 }
 
                 destination = {Book::Type::BOOK1, 418};
@@ -24250,6 +24376,8 @@ namespace Book1
             ID = 746;
 
             Location = Location::Type::LUUTANESH;
+
+            IsCity = true;
 
             Text = "\"The God King wishes to see my handwriting?\" says the Everchild aghast. \"Whatever for?\"\n\n\"He believes that through your hand he may glimpse the honesty of your soul,\" you explain sheepishly. \"He will not be moved otherwise.\"\n\nThe Everchild sighs and closes her eyes. \"Such a letter will require the finest components. I will need some CALLIGRAPHY INK. This is not easily found in the Valley of Bones.\"\n\n\"Any suggestions where we could find some?\" you ask.\n\n\"Powerful sorcerers might own such a thing,\" suggests the Everchild. \"Otherwise the markets of the sea cities might have it for sale, though it would cost a fortune.\"\n\nWhy is nothing simple?";
 
@@ -24378,6 +24506,8 @@ namespace Book1
             ID = 750;
 
             Location = Location::Type::LUUTANESH;
+
+            IsCity = true;
 
             Image = "images/book1/the_everchild.png";
 
@@ -24694,6 +24824,383 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
+    };
+
+    class Story760 : public Story::Base
+    {
+    public:
+        Story760()
+        {
+            BookID = Book::Type::BOOK1;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
+            ID = 760;
+
+            Text = "The temple of Krom is a tall, timber building made to resemble the maw of a mighty beast. Inside hang weapons and armour made of bone. Krom is the god of war and athleticism in Lhasbreath, the patron of warriors and those who take what they wish by right of strength. Initiates of the temple wrestle in a circular pit set into the floor, scratches and deep gouges marring their bodies.\n\nIf you have a GREY TALISMAN you may exchange one for a blessing from the priests. Find the party member with the lowest Fighting score in the team and increase their Fighting by 1 point.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
+            {
+                Choices.push_back(Choice::Base("(GREY TALISMAN) Select party member with lowest Fighting score", {Book::Type::BOOK1, -760}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::GREY_TALISMAN}, {Attribute::Type::FIGHTING}, 1));
+            }
+
+            Choices.push_back(Choice::Base("You are done here", {Book::Type::BOOK1, 775}));
+        }
+    };
+
+    class Event760 : public Story::Base
+    {
+    public:
+        Event760()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -760;
+
+            DisplayID = 760;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 760}; }
+    };
+
+    class Story761 : public Story::Base
+    {
+    public:
+        Story761()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 761;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
+            Text = "The passageway continues for some time before being interrupted by a large pit. Examining the pit, you can see the skeletal remains of a human impaled on spikes, fragile timbers surrounding his body. You deduce that this unfortunate creature fell afoul of a pit trap, and that the thin timbers were the cover of the pit that he walked across. Evidently someone else has been this way before, as a stronger looking plank has been laid across the pit allowing further access down the tunnel.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Climb down into the pit and search the skeletal remains", {Book::Type::BOOK1, 94}));
+            Choices.push_back(Choice::Base("Tiptoe across the wooden plank", {Book::Type::BOOK1, 53}));
+            Choices.push_back(Choice::Base("Return to the crossroads", {Book::Type::BOOK1, 46}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story762 : public Story::Base
+    {
+    public:
+        Story762()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 762;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "You cannot encourage the other slaves to join in the fight, meaning that the guards in the water queue are able to handle your disruptive behaviour. You are thrown into your cells and are forced to abandon your attempt on the weapons today. That night you gather together and try to make a new plan. You can reorganize your distraction and weapon stealing teams if you wish. What strategy will you attempt now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Attempt to seduce the guards", {Book::Type::BOOK1, 7}));
+            Choices.push_back(Choice::Base("Pretend to be a messenger, and say that their captain needs them urgently", {Book::Type::BOOK1, 875}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story763 : public Story::Base
+    {
+    public:
+        Story763()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 763;
+
+            Location = Location::Type::LHASBREATH_PYRAMID;
+
+            Text = "The trees thin as you wander, and soon you emerge into a clearing in which a fantastic structure stands. It is a step pyramid, built into the side of the earth. A stream runs down from above and feeds into many stone boxes, in which many bright and strange flowers blossom. Butterflies and other curious insects dart in and out of the blooms. A gaping entrance in the pyramid yawns darkly before you.\n\n\"This is astonishing!\" cries Emlyn. \"I've never seen any of these varieties! We must gather samples at once!\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Ask to check out the pyramid first", {Book::Type::BOOK1, 404}));
+            Choices.push_back(Choice::Base("Guard the scholars as they gather flower samples", {Book::Type::BOOK1, 299}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story764 : public Story::Base
+    {
+    public:
+        Story764()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 764;
+
+            Location = Location::Type::NORTH_ROAD;
+
+            Text = "The nomads pull up their horses as they see you, letting out a cry of friendship. The caravaners look on uncertainly as several nomads dismount to embrace you. \"Why, it is the friends of Milagros,\" laughs the leader. \"How fares the queen? Is she still as dreadful on a horse as ever?\"\n\nYou chat briefly with the nomads, exchanging pleasantries for a few minutes. Rather than embarrass you by murdering the caravan guards and stealing their cargo, they agree to depart and rob another caravan down the road. Thanking them for their understanding you continue on your way.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 477}; }
+    };
+
+    class Story765 : public Story::Base
+    {
+    public:
+        Story765()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 765;
+
+            Location = Location::Type::NORTH_ROAD;
+
+            Text = "Choose someone to leave the tent and confront the strange light.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose party member", {Book::Type::BOOK1, 491}, Choice::Type::CHOOSE_PARTY_MEMBER));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                return {Book::Type::BOOK1, 491};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story766 : public Story::Base
+    {
+    public:
+        Story766()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 766;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "You clamber into the basement, closing the trap behind you. Within the underground chamber you can see a middle-aged woman chained to a hook in the ceiling. Tormenting her is a large, fat guard armed with a curved blade.\n\n\"Release her, villain,\" you spit, drawing your weapons.\n\nThe fat fellow draws his scimitar with overweening confidence, spinning the blade in his hands. \"Yield? No! Death first!\" he laughs. \"You have met your match, rogues!\"\n\nNote: Lotor will attack twice each round. You must assign the damage of the second attack to a different character from the first.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            Take.clear();
+
+            Limit = 0;
+
+            Monsters = {Monster::Base("Lotor the Blademaster", 5, 3, 4, 18, 0, 0, 2)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 68}; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                Bye = "You swiftly release Akini's aunt and dash into the night";
+
+                Take = {Equipment::STEEL_SCIMITAR2};
+
+                Limit = 1;
+            }
+        }
+    };
+
+    class Story767 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Engine::Destination destination = {};
+
+        Story767()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 767;
+
+            Location = Location::Type::BANDO_VILLAGE;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The chief ululates in pleasure as he produces the MAGICAL WEAVE from your pack and presents it to the shaman.";
+
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::MAGICAL_WEAVE});
+
+            Engine::Destination destination = {Book::Type::BOOK1, 704};
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::SPEAK_BANDO}))
+            {
+                PreText += "\n\n\"The shaman closes his eyes and casts more fragrant seeds and powders into the fire. Soon you are hallucinating vividly, imagining going on a hunt with the Bando, armed with nothing but spear and loincloth. Brightly painted snakes slither about you as you stalk past hairy and long-leafed trees. You chatter to your fellow tribesman as you hunt, hiding behind trees and crouching to avoid sight of your prey. The celebration afterwards blends into the celebrations in the real world, and eventually you come around.\n\n\"Was your hunt successful?\" asks the shaman, smiling.\n\n\"Yes,\" you respond, but not in your own tongue. Somehow you have learned the language of the Bando during your hallucinations. It is an astonishing revelation, as you suddenly hear the chatter all about you meld into understandable phrases. You can now speak the language of the Bando.\n\n\"Careful, spirit walkers,\" advises the shaman, sleepily. \"You are not the only one who has awoken. He stirs from his rest. A man with only hatred in his heart...\"\n\nThe shaman drifts off to sleep and cannot be awoken. There seems to be nothing else for you in the village, so you quietly slip back to your ship and weigh anchor.";
+
+                Engine::GET_CODES(party, {Codes::Type::SPEAK_BANDO});
+
+                destination = {Book::Type::BOOK1, 144};
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+    };
+
+    class Story768 : public Story::Base
+    {
+    public:
+        Story768()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 768;
+
+            Location = Location::Type::WITHERED_STEPPES;
+
+            Text = "The nomads crowd around you, offering you goods gleaned from ruined temples and lifted from rich travellers.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::SHOP;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Shop = {
+                {Equipment::CRUDE_BLADE, 25, 10, -1, {}},
+                {Equipment::MAUL, 50, 25, -1, {}},
+                {Equipment::IRON_SHORTSWORD1, -1, 100, -1, {}},
+                {Equipment::IRON_GREATAXE2, -1, 150, -1, {}},
+                {Equipment::STEEL_SCIMITAR2, 800, 400, -1, {}},
+                {Equipment::SHIELD2, 50, 25, -1, {}},
+                {Equipment::HIDE_ARMOUR1, -1, 35, -1, {}},
+                {Equipment::SOFT_BOOTS1, 500, 250, -1, {}},
+                {Equipment::REFERENCE_BOOK1, 500, 250, -1, {}},
+                {Equipment::TOME_OF_KNOWLEDGE2, 1250, 625, -1, {}},
+                {Equipment::WARM_CLOAK1, 500, 250, -1, {}},
+                {Equipment::HANDSOME_BROOCH1, 500, 250, -1, {}}};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 473}; }
+    };
+
+    class Story769 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story769()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 769;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Make another attempt", {Book::Type::BOOK1, 44}));
+            Choices.push_back(Choice::Base("Abandon this madness and return to the crossroads", {Book::Type::BOOK1, 310}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "It only takes the slightest misstep, and the blades descend. There is a bloodcurdling scream as blades and spears descend as one upon ";
+
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                PreText += std::string(party.Members[party.LastSelected].Name);
+            }
+            else
+            {
+                PreText += "your party member";
+            }
+
+            PreText += "'s defenceless body. ";
+
+            auto loss = Engine::ROLL(1);
+
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                PreText += std::string(party.Members[party.LastSelected].Name) + " loses";
+
+                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -loss);
+
+                PreText += " " + std::to_string(loss) + " health point";
+
+                if (loss > 1)
+                {
+                    PreText += "s. ";
+                }
+
+                if (!Engine::IS_ACTIVE(party, party.LastSelected))
+                {
+                    PreText += std::string(party.Members[party.LastSelected].Name) + " is dismembered gorily, limbs flaying across the chamber in a shower of blood and is killed.";
+
+                    party.Members[party.LastSelected].Equipment.clear();
+                }
+                else
+                {
+                    PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " staggers bleeding back through the door. You comfort them as best as you can and try and bind their wounds.";
+                }
+            }
+            else
+            {
+                PreText += "They lose " + std::to_string(loss) + " health point";
+
+                if (loss > 1)
+                {
+                    PreText += "s.";
+                }
+
+                PreText += "\n\nThey stagger bleeding back through the door. You comfort them as best as you can and try and bind their wounds.";
+            }
+
+            Text = PreText.c_str();
+        }
     };
 
     auto story001 = Story001();
@@ -25516,6 +26023,17 @@ namespace Book1
     auto story757 = Story757();
     auto story758 = Story758();
     auto story759 = Story759();
+    auto story760 = Story760();
+    auto event760 = Event760();
+    auto story761 = Story761();
+    auto story762 = Story762();
+    auto story763 = Story763();
+    auto story764 = Story764();
+    auto story765 = Story765();
+    auto story766 = Story766();
+    auto story767 = Story767();
+    auto story768 = Story768();
+    auto story769 = Story769();
 
     void InitializeStories()
     {
@@ -25526,7 +26044,7 @@ namespace Book1
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
             &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725,
-            &event744,
+            &event744, &event760,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -25602,7 +26120,8 @@ namespace Book1
             &story720, &story721, &story722, &story723, &story724, &story725, &story726, &story727, &story728, &story729,
             &story730, &story731, &story732, &story733, &story734, &story735, &story736, &story737, &story738, &story739,
             &story740, &story741, &story742, &story743, &story744, &story745, &story746, &story747, &story748, &story749,
-            &story750, &story751, &story752, &story753, &story754, &story755, &story756, &story757, &story758, &story759};
+            &story750, &story751, &story752, &story753, &story754, &story755, &story756, &story757, &story758, &story759,
+            &story760, &story761, &story762, &story763, &story764, &story765, &story766, &story767, &story768, &story769};
     }
 }
 #endif

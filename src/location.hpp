@@ -45,7 +45,8 @@ namespace Location
         COLD_RIVER,
         TEMPLE_OFTHE_UNBROKEN,
         MORDAIN_EXCAVATED_DUNGEONS,
-        LHASBREATH_RAPIDS
+        LHASBREATH_RAPIDS,
+        LHASBREATH_PYRAMID
     };
 
     std::map<Location::Type, const char *> Description = {
@@ -87,7 +88,8 @@ namespace Location
         {Location::Type::COLD_RIVER, "Cold River"},
         {Location::Type::TEMPLE_OFTHE_UNBROKEN, "Temple of the Unbroken"},
         {Location::Type::MORDAIN_EXCAVATED_DUNGEONS, "Mordain, Excavated Dungeons"},
-        {Location::Type::LHASBREATH_RAPIDS, "Lhasbreath, The Rapids"}};
+        {Location::Type::LHASBREATH_RAPIDS, "Lhasbreath, The Rapids"},
+        {Location::Type::LHASBREATH_PYRAMID, "Pyramid beyond Lhasbreath"}};
 
     enum class BattleField
     {
