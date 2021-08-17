@@ -9,7 +9,7 @@ namespace Location
     {
         NONE = -1,
         DESERT,
-        JUNGLE,
+        LHASBREATH_JUNGLE,
         CLIFFTOP,
         SALTDAD,
         CURSUS,
@@ -44,13 +44,14 @@ namespace Location
         AZURE_DEEP,
         COLD_RIVER,
         TEMPLE_OFTHE_UNBROKEN,
-        MORDAIN_EXCAVATED_DUNGEONS
+        MORDAIN_EXCAVATED_DUNGEONS,
+        LHASBREATH_RAPIDS
     };
 
     std::map<Location::Type, const char *> Description = {
         {Location::Type::NONE, "Unknown"},
         {Location::Type::DESERT, "Desert"},
-        {Location::Type::JUNGLE, "Jungle"},
+        {Location::Type::LHASBREATH_JUNGLE, "Lhastbreath Jungle"},
         {Location::Type::CLIFFTOP, "Clifftop"},
         {Location::Type::SALTDAD, "Saltdad"},
         {Location::Type::CURSUS, "Cursus"},
@@ -85,7 +86,8 @@ namespace Location
         {Location::Type::AZURE_DEEP, "Azure Deep"},
         {Location::Type::COLD_RIVER, "Cold River"},
         {Location::Type::TEMPLE_OFTHE_UNBROKEN, "Temple of the Unbroken"},
-        {Location::Type::MORDAIN_EXCAVATED_DUNGEONS, "Mordain, Excavated Dungeons"}};
+        {Location::Type::MORDAIN_EXCAVATED_DUNGEONS, "Mordain, Excavated Dungeons"},
+        {Location::Type::LHASBREATH_RAPIDS, "Lhasbreath, The Rapids"}};
 
     enum class BattleField
     {

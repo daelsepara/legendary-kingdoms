@@ -11142,6 +11142,17 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
             {
                 putHeader(renderer, "Choose targets for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
+            else if (mode == Control::Type::SKILL)
+            {
+                if (team_size > 1)
+                {
+                    putHeader(renderer, "Choose party members to perform skill check", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else
+                {
+                    putHeader(renderer, "Choose party member to perform skill check", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+            }
             else if (mode == Control::Type::RAISE_MAX_HEALTH)
             {
                 putHeader(renderer, "Choose party members to raise maximum health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -20613,11 +20624,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 selection = {party.CurrentCharacter};
 
-                                success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
+                                success = skillTestScreen(window, renderer, party, story->Choices[choice].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
                             }
                             else
                             {
-                                success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
+                                success = skillCheck(window, renderer, party, story->Choices[choice].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
                             }
 
                             if (selection.size() == 1)
@@ -20644,7 +20655,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     if (Engine::IS_ACTIVE(party, i) && (story->Choices[choice].Team == Team::Type::NONE || party.Members[i].Team == story->Choices[choice].Team))
                                     {
-                                        auto success = skillTestScreen(window, renderer, party, story->Choices[current].Team, {i}, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
+                                        auto success = skillTestScreen(window, renderer, party, story->Choices[choice].Team, {i}, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
 
                                         story->SkillCheck(party, success, {i});
                                     }
@@ -20674,16 +20685,16 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     selection.push_back(party.LastSelected);
 
-                                    success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
+                                    success = skillTestScreen(window, renderer, party, story->Choices[choice].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
                                 }
                                 else
                                 {
-                                    success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
+                                    success = skillCheck(window, renderer, party, story->Choices[choice].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
                                 }
                             }
                             else
                             {
-                                success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
+                                success = skillCheck(window, renderer, party, story->Choices[choice].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
                             }
 
                             if (selection.size() == 1)
@@ -20726,11 +20737,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 selection.push_back(party.LastSelected);
 
-                                success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
+                                success = skillTestScreen(window, renderer, party, story->Choices[choice].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
                             }
                             else
                             {
-                                success = skillCheck(window, renderer, party, story->Choices[current].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
+                                success = skillCheck(window, renderer, party, story->Choices[choice].Team, 1, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, selection, story->Choices[choice].UseWeapon);
                             }
 
                             if (selection.size() == 1)
@@ -20769,6 +20780,62 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
 
                                 done = true;
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::PARTY_EXCEPT_WITHSTATUS)
+                        {
+                            auto with_status = Engine::COUNT(party, story->Choices[choice].Status[0]);
+                            auto party_count = Engine::COUNT(party, story->Choices[choice].Team);
+
+                            auto team_size = std::min(2, party_count - with_status);
+
+                            if (team_size > 0)
+                            {
+                                auto selection = selectPartyMembers(window, renderer, party, story->Choices[choice].Team, team_size, Control::Type::SKILL);
+
+                                if (selection.size() >= team_size)
+                                {
+                                    auto valid = true;
+
+                                    for (auto i = 0; i < selection.size(); i++)
+                                    {
+                                        if (Engine::HAS_STATUS(party.Members[selection[i]], story->Choices[choice].Status[0]))
+                                        {
+                                            valid = false;
+                                        }
+                                    }
+
+                                    if (valid)
+                                    {
+                                        auto success = skillTestScreen(window, renderer, party, story->Choices[choice].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
+
+                                        story->SkillCheck(party, success, selection);
+
+                                        if (success)
+                                        {
+                                            next = findStory(story->Choices[choice].Destination);
+                                        }
+                                        else
+                                        {
+                                            next = findStory(story->Choices[choice].DestinationFailed);
+                                        }
+
+                                        done = true;
+                                    }
+                                    else
+                                    {
+                                        error = true;
+
+                                        if (selection.size() == 1)
+                                        {
+                                            message = "The party member selected is not valid";
+                                        }
+                                        else
+                                        {
+                                            message = "One of the party members selected is not valid";
+                                        }
+                                    }
+                                }
                             }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::EQUIPMENT)
@@ -21158,7 +21225,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            auto team = story->Choices[current].Team;
+                            auto team = story->Choices[choice].Team;
 
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
@@ -21168,18 +21235,18 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 team = party.Members[party.CurrentCharacter].Team;
                             }
-                            else if (Engine::COUNT(party, story->Choices[current].Team) == 1)
+                            else if (Engine::COUNT(party, story->Choices[choice].Team) == 1)
                             {
-                                target = Engine::FIRST(party, story->Choices[current].Team);
+                                target = Engine::FIRST(party, story->Choices[choice].Team);
                             }
                             else
                             {
-                                target = selectPartyMember(window, renderer, party, story->Choices[current].Team, Equipment::NONE, Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE);
+                                target = selectPartyMember(window, renderer, party, story->Choices[choice].Team, Equipment::NONE, Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE);
                             }
 
                             if (target >= 0 && target < party.Members.size())
                             {
-                                auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[current].Attributes[0], story->Choices[current].Value, story->Choices[current].Difficulty);
+                                auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Value, story->Choices[choice].Difficulty);
 
                                 if (increase >= 0)
                                 {
@@ -21193,7 +21260,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (Engine::IS_ACTIVE(party, party.LastSelected))
                             {
-                                auto increase = gainAttributeScore(window, renderer, party.Members[party.LastSelected], story->Choices[current].Attributes[0], story->Choices[current].Value, story->Choices[current].Difficulty);
+                                auto increase = gainAttributeScore(window, renderer, party.Members[party.LastSelected], story->Choices[choice].Attributes[0], story->Choices[choice].Value, story->Choices[choice].Difficulty);
 
                                 if (increase >= 0)
                                 {
@@ -21227,7 +21294,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (target >= 0 && target < party.Members.size())
                             {
-                                auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[current].Attributes[0], story->Choices[current].Value, story->Choices[current].Difficulty);
+                                auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Value, story->Choices[choice].Difficulty);
 
                                 if (increase >= 0)
                                 {
@@ -21258,7 +21325,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (target >= 0 && target < party.Members.size())
                             {
-                                auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[current].Attributes[0], story->Choices[current].Value, 0);
+                                auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Value, 0);
 
                                 if (increase >= 0)
                                 {
@@ -21766,7 +21833,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 if (Engine::IS_ACTIVE(party, target))
                                 {
-                                    success = skillTestScreen(window, renderer, party, story->Choices[current].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
+                                    success = skillTestScreen(window, renderer, party, story->Choices[choice].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
                                 }
                                 else
                                 {
@@ -21823,7 +21890,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (Engine::SCORE(party.Members[target], story->Choices[choice].Attributes[0]) == attribute_min)
                                 {
-                                    auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[current].Attributes[0], story->Choices[current].Value, 0);
+                                    auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Value, 0);
 
                                     if (increase >= 0)
                                     {
@@ -21869,7 +21936,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     {
                                         if (Engine::SCORE(party.Members[target], story->Choices[choice].Attributes[0]) < story->Choices[choice].Difficulty)
                                         {
-                                            auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[current].Attributes[0], story->Choices[current].Success, 0);
+                                            auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Success, 0);
 
                                             if (increase >= 0)
                                             {
@@ -21884,7 +21951,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                         {
                                             error = true;
 
-                                            message = "This blessing will have no effect on " + std::string(party.Members[target].Name) + "'s " + std::string(Attribute::Descriptions[story->Choices[current].Attributes[0]]) + "!";
+                                            message = "This blessing will have no effect on " + std::string(party.Members[target].Name) + "'s " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + "!";
                                         }
                                     }
                                     else

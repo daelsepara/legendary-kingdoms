@@ -74,7 +74,8 @@ namespace Choice
         GAIN_HEART,
         SAIL,
         EVERYONE_LOSES_EQUIPMENT,
-        GAIN_CARGO
+        GAIN_CARGO,
+        PARTY_EXCEPT_WITHSTATUS
     };
 
     class Base
@@ -766,6 +767,46 @@ namespace Choice
             EquipmentExceptions = equipmentExceptions;
 
             Value = value;
+        }
+
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, std::vector<Character::Status> status, std::vector<Attribute::Type> attributes, int difficulty, int success)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            DestinationFailed = destinationFailed;
+
+            Type = type;
+
+            Status = status;
+
+            Attributes = attributes;
+
+            Difficulty = difficulty;
+
+            Success = success;
+        }
+
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, std::vector<Character::Status> status, std::vector<Attribute::Type> attributes, int difficulty, int success, bool useWeapon)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            DestinationFailed = destinationFailed;
+
+            Type = type;
+
+            Status = status;
+
+            Attributes = attributes;
+
+            Difficulty = difficulty;
+
+            Success = success;
+
+            UseWeapon = useWeapon;
         }
     };
 

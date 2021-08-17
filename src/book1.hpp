@@ -236,6 +236,10 @@ namespace Book1
 
             ID = 7;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -511,6 +515,8 @@ namespace Book1
 
             ID = 16;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You have chosen to battle one of the dark knights of Abraxas. Good luck!\n\nNote: On any round when Skallos does not take damage, he will unleash a roar of black magic. Each party member must lose 1 point of Health, and Skallos will restore 4 points of Health, up to his maximum of 20 Health points.";
 
             Choices.clear();
@@ -698,6 +704,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 20;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
             Choices.clear();
 
@@ -1405,6 +1413,10 @@ namespace Book1
 
             ID = 41;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -1503,6 +1515,8 @@ namespace Book1
 
             ID = 43;
 
+            Location = Location::Type::LUUTANESH;
+
             Text = "Janus is overjoyed to see the LOCKET. You hand it over to him and he cradles it in his hands. \"Now I can remember Alidale always!\" he sighs. He opens the LOCKET to have a look inside, when suddenly there is a flash and a profusion of smoke.\n\nStepping out of the smoke comes a young woman, a wizard by the looks of her, coughing and waving the smoke away from her face. \"Alidale?\" gasps Janus. \"Why! You don't look a day older than when you left for that temple!\"\n\n\"Janus!\" she cries overjoyed. \"You... do look a bit older, if I'm honest. I must have been in that locket for a long time.\"\n\nAlidale explains that she was surrounded by hideous serpent men and was forced to transport herself inside her locket for protection. The snake men assumed she had teleported away, but in fact she has been trapped in the locket for all these years. She never expected a rescue would take forty summers. She has little to reward you with but shares with you some of her many discoveries and insights into the ancient world that she has uncovered in her travels.\n\nNote: You gained the code A29.";
 
             Bye = "Bidding the odd couple farewell, you resume your journey.";
@@ -1593,6 +1607,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 45;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "Timing it just right, you begin to shove one another in the water queue. To make it convincing, you start to exchange a few hard blows, attempting to drag other slaves in the queue into your rumble.\n\nEach party member involved in the fight loses 1 Health point.\n\nNote: Only party members assigned to the DISTRACTION TEAM can contribute to the check.";
 
@@ -1816,6 +1834,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 54;
+
+            Location = Location::Type::LHASBREATH_RAPIDS;
 
             Text = "There are a number of close shaves, and even minor impacts, but the raft holds steady as you correct its course through the sloping rapids. Eventually the waters calm, and you ride the current downstream at a good speed. Looking at the densely packed jungle on either side you are glad to your soul that you didn't have to hack your way through all that vegetation. Eventually the jungle clears somewhat, and a wide, muddy bank comes into view. Emlyn thinks you have gone far enough, and you beach the raft onto the bank.\n\n\"Skilfully done,\" smiles Emlyn as you help her and the other scholars to shore. \"Let's explore the unknown, shall we?\"";
 
@@ -2585,6 +2605,8 @@ namespace Book1
 
             ID = 77;
 
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
             Text = "About halfway up the ramp you come to an archway. Through the archway you can see nothing; your lanterns cannot penetrate the darkness. You try experimentally poking a weapon through the archway, but it seems to come out unharmed.";
 
             Choices.clear();
@@ -2664,6 +2686,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 80;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "Holding your torches high you begin to make your way into the crevice, carefully watching your feet in the dancing firelight as they crunch near the eggs. A giant spider above you crawls along the ceiling, as if tracking your progress through her nursery.\n\n\"Step where we step,\" you advise the Everchild's followers as you move carefully forwards.";
 
@@ -3136,6 +3162,8 @@ namespace Book1
 
             ID = 93;
 
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
             Text = "The ramp continues to wind upwards until you reach a small room with statues of hideous snakemen in alcoves along the walls. Here your way divides.";
 
             Choices.clear();
@@ -3269,6 +3297,8 @@ namespace Book1
 
             ID = 98;
 
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
             Text = "The tunnel is extremely narrow, and you must proceed down it single file. Decide which party member is at the front of the group and which is at the back.";
 
             Choices.clear();
@@ -3290,6 +3320,8 @@ namespace Book1
             ID = -98;
 
             DisplayID = 98;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
             Choices.clear();
 
@@ -3451,7 +3483,7 @@ namespace Book1
 
             ID = 103;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "You open the cage and the bird immediately flies onto a low branch. You are about to move on when the bird addresses you. \"I'm grateful,\" it says. \"Not many humans would do such a thing without promise of reward.\"\n\n\"Not many birds can talk,\" you say, surprised.\n\n\"All animals can talk -- but rarely in your language,\" admits the bird. \"I can teach you our tongue, if you have any skill in sorcery.\"\n\nIf you want to accept the bird's offer you can learn the spell below if you have any spellcasters in your party:\n\nAnimal Speech (Adventure)\n\nYou are able to communicate using the secret speech of animals.\n\nRecharge: 50 silver";
 
@@ -3503,6 +3535,8 @@ namespace Book1
 
             ID = 105;
 
+            Location = Location::Type::LHASBREATH_RAPIDS;
+
             Text = "You make your way down to the riverbank, and eventually find the raft with Emlyn's help, covered over with weeds and bushes. Two long poles can be used to pilot the craft, and soon you are punting down the river, the sun shimmering through the canopy of trees onto the glittering water.\n\nThe raft begins to pick up speed, and as you round a corner you can see why. There are rapids ahead, the water splashing with thick foam against scattered rocks that peek through the surface of the river. If you were in canoes it would be easily navigable. On your raft it will take all your skill to avoid danger.";
 
             Choices.clear();
@@ -3520,6 +3554,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 106;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "You pretend to offer aid; anything to get out of sight of the Everchild's rebellious followers. At the first opportunity you inform the guards about the rebel's intentions. A few days later Che Long, Milagros and her followers have vanished from the arena. Word reaches you about a bloody struggle in the cells, but there are few details. Not long after, the arena master releases you under orders of the Iron King. \"His majesty is most pleased with your loyalty; the identity of the rebel leaders has been a well-kept secret. He offers you this reward and asks you to attend him at his palace if you seek further remunerating work.\"\n\nThe arena master presents you with 200 silver pieces.\n\nNote: You gained the code A4.";
 
@@ -4374,6 +4412,10 @@ namespace Book1
 
             ID = 131;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Bye = "You carry on down the tunnel.";
 
             Choices.clear();
@@ -4436,6 +4478,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 133;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "In such a dangerous place battle appears inevitable. You confer with the Everchild, who agrees with your plan to strike first. She raises her hands and unleashes a terrible blast of power that jolts all the giant spiders clinging on the roof. They come tumbling down, but quickly regain their feet to rush to an attack.";
 
@@ -4773,6 +4819,8 @@ namespace Book1
 
             ID = 145;
 
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
             Text = "You manage to recall the correct incantations to dispel darkness of this kind, and suddenly your lanterns illuminate the room. Within you can see strange coffers, some of which have loose piles of coin scattered over them. Opening the coffers you find a good deal more, some 200 silver coins in total, and a set of ornate BONE ARMOUR (Armour +2).";
 
             Bye = "Unsure if your reward was worth the dreadful battle to get it, you move on.";
@@ -4821,6 +4869,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 147;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "With perfect timing you slip into the room, jemmy open the overseer's table drawer and grab the key. You emerge just in time, ducking into a darkened corner as a pair of guards wander by. Once they have passed, you creep back to the gatehouse door, unlocking it and entering.";
 
@@ -5066,7 +5118,7 @@ namespace Book1
 
             ID = 156;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "The CRIER BIRD should fetch a tidy sum in a big city. Pleased with your find, you make your way out of the jungle.";
 
@@ -5396,6 +5448,8 @@ namespace Book1
 
             ID = 165;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You are in a short corridor that twists to the west. A locked door is set in the nearby western wall. Around the bend the corridor terminates in another door with a large red 'x' painted across it. You try the nearby door but find it securely locked.";
 
             Choices.clear();
@@ -5514,6 +5568,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 169;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "Your distraction team must divert the guard's attention from their posts at the gatehouses. What tactic do you think is best?";
 
@@ -5807,6 +5865,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 180;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You are in a long corridor, the remains of the barricade you dismantled spread thinly along its length. To the west, stone steps descend further into the complex. To the east is a simple wooden door.";
 
@@ -6136,6 +6196,10 @@ namespace Book1
 
             ID = 187;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "The rogues react with surprise and alarm as you stand up and make your way down the ladder that links the balcony to the ground floor. Evidently they have never received visitors before. You attempt to calm them, letting them know that you mean them no harm.";
 
             Choices.clear();
@@ -6323,6 +6387,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 191;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "In order to get the weapons, you will need to split up your party. Choose up to three party members to perform a distraction, and up to two party members to steal the weapons. You must have at least one party member performing each mission.";
 
@@ -6842,6 +6910,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 209;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You return to the excavated cavern dug out by the invading orcs. The short tunnels lead to nothing but dead ends. After giving the chamber one last look, you make your way back up the stairs.";
 
@@ -7942,6 +8012,10 @@ namespace Book1
 
             ID = 242;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "After a short journey the tunnel leads to an old door, long since smashed to pieces. Beyond lie empty racks and armour stands, the chamber having been looted long ago, and a tunnel continues into the darkness beyond. Only one weapon remains, clutched in the hand of a dusty skeleton. The sword is carved of dark blue metal, with spidery runes engraved across its blade.\n\n\"I sense some enchantments, but also a strong curse,\" notes the Everchild. \"I would advise you to leave the blade and continue.\"";
 
             Choices.clear();
@@ -8415,6 +8489,10 @@ namespace Book1
 
             ID = 260;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "The flickering torch deceives your eyes, shadows from your companions making it look like your foot is in a safe place. There is an audible crunch as you step upon a juicy egg. Tiny spiderlings emerge in their hundreds. Suddenly the giant spiders move as one, descending upon your companions and the Everchild's followers. Eggs crack open as careless feet release more baby spiders.";
 
             Choices.clear();
@@ -8434,7 +8512,7 @@ namespace Book1
 
             ID = 261;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "\"I'm glad I found you. I must tell you some sad news,\" you say gravely. \"I met one of your kind in the desert. An apprentice of Unbraaki. Alas, he perished. He did not return to you because he feared Unbraaki would harm you if he found him hiding here. I am sorry to bring you such sad news.\"\n\nThe chattering in the treetops instantly stops, to be replaced by mournful howls. \"Curse you for bringing such dreadful tidings!\" cries one of the monkeys. \"For you speak of my own son! Oh! Misery! Misery!\"\n\nThe monkeys depart solemnly above you, their howls rending your ears. Emlyn looks on in wonder as the monkeys vanish. \"What did you say to them?\" she asks, astonished.\n\n\"I haven't the heart to tell you,\" you say sadly, wiping a tear from your eye.";
 
@@ -8551,6 +8629,10 @@ namespace Book1
 
             ID = 266;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "You have only just begun your negotiations when one of the thieves shouts out, \"They're agents of the Iron King! Slay them before they get away!\" The thieves draw their weapons, the Everchild rising with her allies to lend you aid.";
 
             Choices.clear();
@@ -8609,6 +8691,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 269;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "As you round the corner of the corridor you come face to face with a hideous female ogre. She hefts her club to attack, when she suddenly sees Skullcracker lollop into view.\n\n\"Oi! What's going on 'ere then?\" she asks, confused.\n\n\"I've ganged up with this lot,\" growls Skullcracker. \"Can't be bothered to work for the orcs anymore.\"\n\n\"What am I supposed to do, then?\" snaps the female ogre.\n\n\"What 'yer like,\" shrugs Skullcracker. \"It would be impertinent of me to suggest a course of action that influences your sense of agency one way or the other. And you smell.\"\n\n\"Git,\" snaps the lady ogre. \"I suppose I'll sod off myself then.\"\n\n\"Good idea,\" grumbles Skullcracker.\n\nYou are almost teary at this sad parting, but eventually Daisy the ogre shambles away.";
 
@@ -8879,6 +8963,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 277;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
             Text = "You examine the coffer carefully, but it does not seem to be trapped. Inside are 125 silver coins and a BRONZE LOCKET.";
 
@@ -9295,6 +9381,8 @@ namespace Book1
 
             ID = 289;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You return to the treasure chamber in the hopes of finding some more treasure. Alas, a full search reveals nothing more. Disappointed, you return to the corridor.";
 
             Choices.clear();
@@ -9416,6 +9504,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 292;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Choices.clear();
 
@@ -9652,6 +9744,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 298;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
             Choices.clear();
 
@@ -10301,6 +10395,10 @@ namespace Book1
 
             ID = 317;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Image = "images/book1/water_filled_archways.png";
 
             Text = "Time is of the essence. You quickly regroup with your companions and make your way down darkened tunnels to the dig-site. A tiny crawlspace has been painstakingly carved out of the wall, concealed by a few broken barrels. The Everchild, Che Long, and three other conspirators are here, delighted to see you as you come bearing armfuls of weapons. They have not been idle, securing torches and packs stuffed with waterskins and food supplies.\n\n\"What follows will not be easy,\" she warns. \"The tunnels are far from safe, but with your help we might just stand a chance.\"\n\nAt a nod from the Everchild, Che Long descends into the tunnel first, with you following tight behind. The flames from your torches lick the low roof of the hand-dug tunnel, and the space is claustrophobic in the extreme. To your delight the tunnel eventually breaks through into an ancient chamber, half-flooded, with two arched exits. The walls are painted in old flecks of colour, displaying an ancient city dominated by a tall palace.\n\n\"The palace of my ancestor still stands,\" notes the Everchild as she examines the decaying mural with you. \"Much of the rest of the city is little better than mud-brick hovels now. There is much work to be done.\"\n\nYou examine the exits from the chamber, one at the back of the water-logged chamber, which seems to descend down into yet more murky water.\n\n\"The dry exit looks the most logical -- but I wonder where the water-filled one leads?\" muses the Everchild.";
@@ -10574,6 +10672,10 @@ namespace Book1
 
             ID = 328;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "The aftermath of the battle is bloody indeed. A dozen thieves, as well as one of the Everchild's men, lie dead. Reasoning that you might as well take the thieves' ill-gotten gains, you open the chests and crates to examine what kind of goods they had stolen. You count 75 silver coins, a REFERENCE BOOK (Lore +1), an ENGAGEMENT RING, as well as large amounts of clothes. Thinking quickly, you strip off your slave rags and change into more common garb, the Everchild and her followers doing the same.\n\nYou slip out of the thieves' hideaway and into the storm drains beneath the city.";
 
             Bye = "After an hour's wandering you eventually come to a ladder, leading up to a drain cover. You cautiously make your way upwards.";
@@ -10622,6 +10724,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 330;
+
+            Location = Location::Type::LUUTANESH;
 
             Text = "You present the Everchild with CALLIGRAPHY INK and ask her to write a letter to the God King of Chalice. She spends a full day working on her note, pleading for aid in a beautiful hand. The resultant BEAUTIFUL LETTER from the Everchild is a work of art.\n\n\"Let us hope that he likes what he sees,\" muses the Everchild. \"Thank you for pursuing this matter. I shall pray for your success.\"";
 
@@ -10819,6 +10923,8 @@ namespace Book1
 
             ID = 337;
 
+            Location = Location::Type::LHASBREATH_RAPIDS;
+
             Text = "You punt hard to avoid some oncoming rocks, but overcompensate, sending the raft splintering onto a jagged rock just beyond. You leap aside into the frothy waters, gasping and splashing as you attempt to gain purchase. You watch in horror as one of the scholars is pulled under the water and does not emerge. It takes all your strength just to pull yourselves onto the heavily forested bank.\n\nYou have lost a scholar. Each party member loses 1 Health point.";
 
             Bye = "Bedraggled, you stagger into the thick jungle. You'll be on foot from here!";
@@ -10991,7 +11097,7 @@ namespace Book1
 
             ID = 343;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "You didn't think you went so far into the jungle... but when you tried to find your way out, you realised you had no idea where you were. You've become disorientated, and your supplies are getting low.";
 
@@ -11113,6 +11219,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 347;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "You emerge into a tunnel that soon splits in two. One route leads down slightly, the other slopes up. Ancient writing crosses the walls, and the Everchild calls for more light as she examines it. \"The downward slope led to an old armoury,\" she comments. \"Upwards was a changing room. There is no indication which route leads out, however.\"";
 
@@ -11488,7 +11598,7 @@ namespace Book1
 
             ID = 359;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "Your trek through the jungle continues, moisture dripping from the long-leafed and hairy trees around you. Peering at her water-logged map, Emlyn Pass-Ross leads the way through the chittering rainforest. Eventually you become aware of movement above you. As you gaze upwards you see hundreds of small monkeys, each less than a foot high, leaping and howling through the treetops.\n\n\"Uh oh... trouble,\" mutters Emlyn as she beholds them.";
 
@@ -11625,6 +11735,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 364;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "The eager guards take your distraction team away to a more private location. Hopefully this should give the other team enough time to carry out their task!";
 
@@ -12599,6 +12713,10 @@ namespace Book1
 
             ID = 393;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "The overseer is not present, but guards and servants walk by the door frequently. You need to be in and out as quickly as possible.\n\nNote: Multiple people might be spotted, so only one party member in the weapon stealing team can be chosen for this task.";
 
             Controls = Story::Controls::STANDARD;
@@ -13064,6 +13182,10 @@ namespace Book1
 
             ID = 406;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "Picking up a nearby bench you attempt to ram the gatehouse door.\n\nNote: Only members of the weapon stealing team may help in this test.";
 
             Controls = Story::Controls::STANDARD;
@@ -13293,7 +13415,7 @@ namespace Book1
 
             ID = 412;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "The monkeys paw over the item you give them, hauling it up into the trees. One monkey snatches it from another, and soon the entire pack storm through the trees, howling after the thief, shaking down a rain of leaves as they scramble away.\n\n\"Let's get out of here while we still can!\" smiles Emlyn, urging you down the path.";
 
@@ -13633,7 +13755,7 @@ namespace Book1
                 Choices.push_back(Choice::Base("Cast Animal Speech", {Book::Type::BOOK1, 615}));
             }
 
-            Choices.push_back(Choice::Base("Wrestle the Bear (Individual check: Fighting 5+, Successes: 2)", {Book::Type::BOOK1, 677}, {Book::Type::BOOK1, 752}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::FIGHTING}, 5, 2, false));
+            Choices.push_back(Choice::Base("Wrestle the Bear (Individual check: Fighting 5+, Successes: 2)", {Book::Type::BOOK1, 677}, {Book::Type::BOOK1, 742}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::FIGHTING}, 5, 2, false));
         }
     };
 
@@ -13749,6 +13871,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 430;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "You convince the thieves that you are not dangerous, nor are you agents of the Iron King. Your slave garb assures them you are speaking the truth, and instead you are even offered some decent hospitality in the form of beer and bread. The thief's leader, Brekken, reveals that they are downtrodden citizens of Saltdad, and that they only prey on the merchants and nobles who support the king's rule. \"But slaves have nothing to fear from us,\" he assures you. \"If you wish, we can provide you with some spare clothing to help conceal your identity in the city.\"\n\n\"That would be most kind, thank you, Brekken,\" nods the Everchild. \"You show greater civility than your monarch.\"\n\n\"A plague-ridden dragonyak shows more grace than our king,\" laughs Brekken. \"But thank you, girl, for the compliment.\"\n\nYou can see that the Everchild would dearly love to share her secret with Brekken, but wisely holds her tongue, instead asking if the thieves could show you all a safe route out of the ruined tunnels. Brekken agrees, escorting you into the old storm drains that lie beneath the city, and to a drain cover that leads to an isolated alleyway.\n\nYou have gained a useful ally.\n\nNote: Each party member recovers 2 Health points.  You gained the code A5.";
 
@@ -13923,6 +14049,8 @@ namespace Book1
 
             ID = 437;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You climb up the stairs a good distance, reaching another tunnel which appears to be blocked by a crude but well-made barricade. Large wooden struts hold up a barrier of rock and timber. With sufficient strength you might be able to pull down the barricade, if you wished.";
 
             Choices.clear();
@@ -13953,6 +14081,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 438;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Choices.clear();
 
@@ -14228,6 +14360,8 @@ namespace Book1
 
             ID = 447;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "Realising your peril, you raise the talisman high in front of you. The green skeletons let out a terrible screech as blue light burns away the scummy slime from their bones, causing them to collapse in a heap. Skallos, roars with hatred, unleashing a great blast of energy from his mouth. The light from the amulet dims for a moment, before shining back into pure radiance. The undead knight cannot stand against its power, igniting into white flames. Soon his body and possessions have turned to dust, all that is left is his sword and a whispered cry for vengeance.\n\nYou may take the SKALLOS RUNEBLADE (Fighting +3, Lore +2) if you wish. Whatever else the black knight might have possessed is now naught but ash.\n\nNote: You gained the code A79.";
 
             Bye = "There are no additional exits from this room, so you return to the corridor outside.";
@@ -14473,6 +14607,10 @@ namespace Book1
 
             ID = 456;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "The door to the gatehouse is now unguarded, and your weapon-stealing team can now approach. The only obstacle is the gate-house door, which is locked at all times.";
 
             Choices.clear();
@@ -14582,6 +14720,10 @@ namespace Book1
 
             ID = 461;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "The spiders seem unsure about attacking such large, fire-wielding prey, especially those that are respecting the integrity of their nests. Heart in your mouth, you move around the egg clusters carefully, not breaking a single one, before clambering out of the crevice along a rubble-scattered ramp. Another chamber beckons on the other side.";
 
             Choices.clear();
@@ -14601,7 +14743,7 @@ namespace Book1
 
             ID = 462;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "You become dreadfully lost, wandering through the jungle aimlessly, trying to find a familiar landmark. Suddenly, behind you, you hear a terrible cry. You spin around to see that one of the scholars has fallen into a hidden pit. Dashing to the edge of the pit you move to help but see that the poor woman has been impaled on sharpened stakes which have been hammered into the bottom. This was clearly no accident!\n\nYou have lost one scholar. Emlyn refrains from cursing you out loud, but you see the disappointment and fear in her eyes.";
 
@@ -15295,6 +15437,10 @@ namespace Book1
 
             ID = 483;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "You emerge with key in hand and must stifle a cry of shock as you stroll right in front of a pair of armed guards.\n\nNote: Any party members in the weapon stealing team can leap to your defence.";
 
             Choices.clear();
@@ -15732,7 +15878,7 @@ namespace Book1
 
             ID = 496;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -15767,6 +15913,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 497;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
             Text = "You step through the archway, the chamber as black as pitch. You carefully shuffle your feet as you walk, nervous of stepping on anything unpleasant, such as trap. You join hands to keep track of where you are, eventually getting the idea of the shape of the room. The jingle of coins through your fingers as you come to a few flat surfaces suggest that something valuable is here. Sadly, you are not alone. Two snakemen are hiding, weapons drawn, in the corners of the room. Though they are blind like you, they can smell you with their tongues and feel an impression of your body heat. You cannot be certain of where the exit is and must fight to the death!\n\nNote: The snakemen strike first in this battle because they are ambushing you. If you have a HYGLIPH FLOWER the snakemen are put off by its pungent odour and require a 6+ on their attack rolls to inflict damage during this battle.";
 
@@ -16617,6 +16765,10 @@ namespace Book1
 
             ID = 523;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "You emerge into a large chamber, filled with cobwebs which incinerate at the touch of your torches. The floor of this chamber has half collapsed, and in a small crevice you can make out the eggs of giant spiders, heaped upon one another. The adult spiders lurk in the ceiling corners of the chamber, waiting patiently for a chance to strike. You could make your way carefully through the crevice, since sloped rubble is piled up on either side of the drop -- but you would have to carefully navigate past the eggs. You also spy a narrow ledge around the crevice which might allow you to avoid the crevice completely, provided you could all make it across without falling. Or perhaps it would be wiser to attack the spiders whilst you are on firm ground, and get a battle out of the way?";
 
             Choices.clear();
@@ -17112,6 +17264,8 @@ namespace Book1
 
             ID = 538;
 
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
             Text = "The tunnel emerges into a larger temple room, in which snakemen appear to be at worship by a flat-black altar. They hiss in alarm as you enter, reaching for their wickedly curved swords. You narrow your eyes in concentration as their swaying bodies slither towards you.\n\nNote: If you have a HYGLIPH FLOWER the snakemen are put off by its pungent odour and require a 5+ on their attack rolls to inflict damage during this battle.";
 
             Choices.clear();
@@ -17200,6 +17354,8 @@ namespace Book1
 
             ID = 541;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You get to work attempting to rip the barricade down.";
 
             Controls = Story::Controls::STANDARD;
@@ -17232,6 +17388,8 @@ namespace Book1
             ID = -541;
 
             DisplayID = 541;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You strain yourselves.";
 
@@ -17930,6 +18088,8 @@ namespace Book1
 
             ID = 562;
 
+            Location = Location::Type::LUUTANESH;
+
             Choices.clear();
 
             Controls = Story::Controls::NONE;
@@ -18083,6 +18243,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 568;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You have returned to the chamber of Skallos, the dark knight. This champion of evil has been destroyed, and you have no wish to remain in his haunted chamber any longer than you need to.";
 
@@ -18860,6 +19022,10 @@ namespace Book1
 
             ID = 588;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "Perhaps your long incarceration has ruined your looks, or perhaps you are just not the guard's type? Your offer is rudely rejected, and is accompanied by a cruel beating.\n\nNote: Each member of the distraction team loses 2 Health points.";
 
             Bye = "You must choose something else.";
@@ -19588,7 +19754,7 @@ namespace Book1
 
             ID = 609;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "You wade waist-deep through the cloudy, muddy water. Leeches latch onto your skin and the insanitary conditions take their toll on your health.\n\nNote: Each party member loses 2 Health points.";
 
@@ -19665,6 +19831,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 611;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "The gatehouse's weapon store is open to you. You may take any of the following items:\n\nHIDE ARMOUR (Armour +1)\nSHIELD (Armour +2)\nMAUL* (Fighting +1)\nIRON SHORTSWORD (Fighting +1)\nCRUDE BLADE (Fighting +0) -- you may take up to four CRUDE BLADES.\n\nYou also grab a number of crude weapons for the Everchild and her followers, before fleeing the gatehouse, closing the door behind you.";
 
@@ -19901,7 +20071,7 @@ namespace Book1
 
             ID = 618;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "You are leaving the Lhasbreath jungle, happy to be rid of the biting insects and draining humidity in that place. Where will you venture now?";
 
@@ -20239,6 +20409,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 630;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You prise out the supports of the barricade and soon the whole thing come crumbling down. You sweep the rubble onto one side of the tunnel to allow easy access.\n\nPast the ruins of the barricade the tunnel continues east for a while before ending at a wooden door.\n\nNote: You gained the code A72.";
 
@@ -20773,6 +20945,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 647;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "Voices echo down the tunnel as you emerge onto the balcony of a large chamber. You wave the Everchild and her supporters down as you creep forwards to take a look. Peering over the balcony railing you see a dozen rough looking characters, armed with daggers, clubs and other simple weapons. Around them are various chests and crates, with the names of several different company brands upon them. It is clear that you have stumbled upon a thieves' hideout, their swarthy faces lit by the large central fire in the chamber.";
 
@@ -21677,7 +21853,7 @@ namespace Book1
 
             ID = 671;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "The monkeys mob you, their hands reaching into your pockets and packs, attempting to pull away items from you. \n\nThey eventually depart with their ill-gotten gains. Cursing the thieving monkeys, you make your way onwards.\n\nNote: Each character loses one item of equipment (not armour -- the monkeys aren't that good at stealing things!). In addition, you lose up to 170 silver coins. If you do not have that much, you lose all the silver coins you have.";
             Choices.clear();
@@ -22557,7 +22733,7 @@ namespace Book1
 
             ID = 701;
 
-            Location = Location::Type::JUNGLE;
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "As you wander the jungle you overhear a particularly mournful song coming through the trees. You come upon the sight of a crier bird in some distress. It has fallen into a small trap, a steel cage which has been hung up amongst the branches, no doubt left by some impoverished logger to earn a few extra coins. The poor bird warbles pitifully.";
 
@@ -22908,6 +23084,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 714;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
             Text = "You believe you have pieced together the mystery of this place. \"You are a priest of Cursus, then? The god of judgement?\"\n\n\"I am!\" he hisses. \"And I was high priest of all your kind once. When the demon lord came, we slithered from our underground dwellings from the cracks in the earth he smote with his sword. We took pity on you, took you as our slaves from your ruined cities. Gave you a home and pious work to perform, building temples in the name of Cursus. So cunning you were! Joined us in the worship of Cursus, your voices singing with ours... and then betrayal! You stole our god for your own! Escaped your chains and built your own temples without us. Your monuments were so magnificent that Cursus abandoned us for your kind.\"\n\n\"So Cursus was originally... a serpent god?\" you ask unsurely.\n\nThe priest seems angry. \"How can you doubt it?\" he snarls. \"Here! Look! The scrolls of Cursus, the original documents of our faith. Take them back to the foul priests in your monument-cluttered land! No human hand wrote this! This is the work of serpents...the true folk!\"\n\nHe thrusts the SCROLLS OF CURSUS into your hands. You gaze at them in wonder. If these documents were ever presented to the followers of Cursus it could cause untold damage to the faithful. Cursites have always been an intolerant folk. What would they make of the revelation that their faith was serpent-born?\n\nThe snakeman priest has slithered away, muttering dark words of sorcery. \"All is lost! My kin... too few in number to rebuild. The temple must not fall into human hands!\" Suddenly cracks begin forming in the walls, and a dreadful rumbling can be felt through the temple.\n\nYou have to get out of here!";
 
@@ -23723,6 +23901,382 @@ namespace Book1
         }
     };
 
+    class Story740 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story740()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 740;
+
+            Location = Location::Type::LHASBREATH_JUNGLE;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "Night falls and you make camp in a clearing under the stars. Emlyn Pass-Ross tends to her scratches and wounds by firelight as you begin cooking something tasty from the ration bags.";
+
+            if (!Engine::IN_PARTY(party, Character::Type::AMELIA_PASS_DAYNE))
+            {
+                PreText += "\n\n\"So, what made you want to take up the life of an explorer?\" you ask idly. She shrugs. \"I suppose for the opportunity,\" she says, the fire reflecting in her eyes. \"I am bastard-born, so there is nothing to inherit at home. Fortunately, we Ross's have a strong adventurous streak in us, so when my father was asked to lead this expedition he was happy to bring me along.\"\n\n\"You seem close to your father,\" you say. \"Does he acknowledge you in court?\"\n\n\"A bit,\" she smiles. \"As much as can be expected. He can show more affection out here in the barbarian lands. But when I go home it will be much as is ever was, I suppose. As long as I don't embarrass the baroness I am welcome in Strongstone. That's better than most illegitimate children get.\"\n\nIt is late. Wishing Emlyn a good evening you settle down to sleep.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 674}; }
+    };
+
+    class Story741 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story741()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 741;
+
+            Location = Location::Type::CLIFFTOP;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("See your fate", {{2, "You are sold to the Saltdad Arena", {Book::Type::BOOK1, 631}}, {4, "You are sold to the taskmasters of Clifftop", {Book::Type::BOOK1, 866}}, {6, "You are sold to the priests of Cursus", {Book::Type::BOOK1, 531}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::SINK_SHIP(party);
+
+            PreText = "Your mast is split, and many of your crew are dead. The pirates swarm your vessel, cutlasses to your throats. You have been captured and your future looks bleak. You are stripped of all the equipment and money you are carrying, and brutally scourged and abused by the pirates.\n\nThe pirates sail up the coast to Clifftop, where you are sold publicly at the slave market.\n\nNote: Each party member loses ";
+
+            party.Money = 0;
+
+            Engine::LOSE_ALL(party);
+
+            auto loss = Engine::ROLL(1);
+
+            PreText += std::to_string(loss) + " health point";
+
+            if (loss > 1)
+            {
+                PreText += "s";
+            }
+
+            PreText += ".";
+
+            Engine::GAIN_HEALTH(party, -loss);
+
+            Text = PreText.c_str();
+        }
+    };
+
+    class Story742 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story742()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 742;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "Fighting a bear without weapons is a recipe for disaster. The bear mauls you dreadfully before the barbarians mercifully throw you down a rope for your rescue.\n\n";
+
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -5);
+
+                PreText += std::string(party.Members[party.LastSelected].Name) + " loses 5 health points.";
+            }
+
+            PreText += "\n\nKing Scarrenden and his chosen warriors soon lose interest in you, and you skulk away to lick your wounds.";
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story743 : public Story::Base
+    {
+    public:
+        Story743()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 743;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "Che Long steps forward, giving his seat to the Everchild. \"The arena is ancient and was once much bigger. There are vaults and tunnels that lead deep into the earth. We have, in secret, excavated one such tunnel. We cannot be sure that it leads to the surface, but we are willing to chance it.\"\n\n\"Why have you not gone already?\" you ask.\n\n\"We have no weapons, and there are... creatures down there in the dark,\" mutters Che Long. \"We were driven back in our last venture. It is too dangerous to proceed unarmed. Unfortunately, the guards keep the weapons very well secured. They are not keen on allowing slave gladiators unfettered access to arms.\"\n\n\"How can we help?\" you ask.\n\n\"We need to get the weapons out of the gatehouses and into our hands,\" says Che Long. \"To do that we will need stealth and a good distraction.\"";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Volunteer to get the weapons", {Book::Type::BOOK1, 191}));
+            Choices.push_back(Choice::Base("Back out of this risky escape plan", {Book::Type::BOOK1, 223}));
+            Choices.push_back(Choice::Base("Inform the guards of the Everchild's plans", {Book::Type::BOOK1, 106}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story744 : public Story::Base
+    {
+    public:
+        Story744()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 744;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "The sister is not worldly and has not heard the rumours of the Everchild's resurrection. Fortunately, one of her kensai is more knowledgeable of current affairs, and takes you aside.\n\n\"I have seen the young girl you speak of,\" he confides. \"I too believe she is the Everchild of legend. You will never persuade sister Emiko to let you see the God King. But you may enter if you challenge one of the God King's champions to a duel. I would be willing to duel one of you. The battle must be to the death, and I must fight with all my skill if I am to keep my oath to the God King.\"\n\n";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to to duel the kensai", {Book::Type::BOOK1, -744}, Choice::Type::CHOOSE_PARTY_MEMBER));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event744 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Engine::Destination destination = {};
+
+        Team::Type previousTeam = Team::Type::NONE;
+
+        Event744()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -744;
+
+            DisplayID = 744;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 502};
+
+            Team = Team::Type::NONE;
+
+            previousTeam = Team::Type::NONE;
+
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                Team = Engine::GET_TEAM(party.Members[party.LastSelected]);
+
+                previousTeam = party.Members[party.LastSelected].Team;
+
+                Engine::SET_TEAM(party.Members[party.LastSelected]);
+
+                Monsters = {Monster::Base("Kensai", 6, 4, 4, 9, 0)};
+            }
+            else
+            {
+                Monsters.clear();
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                if (Engine::IS_ACTIVE(party, party.LastSelected))
+                {
+                    party.Members[party.LastSelected].Team = previousTeam;
+                }
+
+                destination = {Book::Type::BOOK1, 418};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 502};
+            }
+        }
+    };
+
+    class Story745 : public Story::Base
+    {
+    public:
+        Story745()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 745;
+
+            Text = "The rope is tied. Now the rest of the party must try to haul it aboard whilst it is guided into place by the diver.\n\nNote: Your diver cannot help in the following skill check.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Haul up the cogwheel (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 352}, {Book::Type::BOOK1, 807}, Choice::Type::PARTY_EXCEPT_WITHSTATUS, {Character::Status::FOUND_COGWHEEL}, {Attribute::Type::FIGHTING}, 5, 3, false));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story746 : public Story::Base
+    {
+    public:
+        Story746()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 746;
+
+            Location = Location::Type::LUUTANESH;
+
+            Text = "\"The God King wishes to see my handwriting?\" says the Everchild aghast. \"Whatever for?\"\n\n\"He believes that through your hand he may glimpse the honesty of your soul,\" you explain sheepishly. \"He will not be moved otherwise.\"\n\nThe Everchild sighs and closes her eyes. \"Such a letter will require the finest components. I will need some CALLIGRAPHY INK. This is not easily found in the Valley of Bones.\"\n\n\"Any suggestions where we could find some?\" you ask.\n\n\"Powerful sorcerers might own such a thing,\" suggests the Everchild. \"Otherwise the markets of the sea cities might have it for sale, though it would cost a fortune.\"\n\nWhy is nothing simple?";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::CALLIGRAPHY_INK}))
+            {
+                return {Book::Type::BOOK1, 330};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 263}; }
+    };
+
+    class Story747 : public Story::Base
+    {
+    public:
+        Story747()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 747;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You make your way down the long stairwell for quite some time. You must have descended at least fifty feet into the earth. Eventually the stairs terminate at another tunnel.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 23}; }
+    };
+
+    class Story748 : public Story::Base
+    {
+    public:
+        Story748()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 748;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
+            Text = "You wonder how many more snakemen can fit into this temple! In the devastation you find plenty of religious silverwork worth 250 silver coins. A HANDSOME BROOCH (Charisma +1) lies amongst the chalices and statuettes you loot. There is a way onwards, your torchlight reflecting some bronze plating ahead. Intrigued you make your way down the passageway.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::HANDSOME_BROOCH1};
+
+            Limit = 1;
+
+            Engine::GAIN_MONEY(party, 250);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 20}; }
+    };
+
+    class Story749 : public Story::Base
+    {
+    public:
+        Story749()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 749;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "As you round the corner of the corridor you come face to face with a hideous female ogre. She hefts her club to attack. Unknown to you, the ogre's mate is in a room not far away.\n\nNote: At the end of the second round of combat he will join the attack.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::SKULLCRACKER))
+            {
+                return {Book::Type::BOOK1, 269};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(76)}))
+            {
+                return {Book::Type::BOOK1, 165};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {
+                Monster::Base("Daisy", 9, 4, 4, 13, 0),
+                Monster::Base("Skullcracker", 8, 4, 4, 12, 0, 2)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 431}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -24522,6 +25076,17 @@ namespace Book1
     auto story737 = Story737();
     auto story738 = Story738();
     auto story739 = Story739();
+    auto story740 = Story740();
+    auto story741 = Story741();
+    auto story742 = Story742();
+    auto story743 = Story743();
+    auto story744 = Story744();
+    auto event744 = Event744();
+    auto story745 = Story745();
+    auto story746 = Story746();
+    auto story747 = Story747();
+    auto story748 = Story748();
+    auto story749 = Story749();
 
     void InitializeStories()
     {
@@ -24532,6 +25097,7 @@ namespace Book1
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
             &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725,
+            &event744,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -24605,7 +25171,8 @@ namespace Book1
             &story700, &story701, &story702, &story703, &story704, &story705, &story706, &story707, &story708, &story709,
             &story710, &story711, &story712, &story713, &story714, &story715, &story716, &story717, &story718, &story719,
             &story720, &story721, &story722, &story723, &story724, &story725, &story726, &story727, &story728, &story729,
-            &story730, &story731, &story732, &story733, &story734, &story735, &story736, &story737, &story738, &story739};
+            &story730, &story731, &story732, &story733, &story734, &story735, &story736, &story737, &story738, &story739,
+            &story740, &story741, &story742, &story743, &story744, &story745, &story746, &story747, &story748, &story749};
     }
 }
 #endif
