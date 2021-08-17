@@ -12762,7 +12762,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     done = true;
                 }
 
-                if (roundLimit > 0 && combatRound > roundLimit)
+                if (roundLimit > 0 && combatRound >= roundLimit)
                 {
                     done = true;
                 }
