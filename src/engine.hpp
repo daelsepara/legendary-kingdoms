@@ -420,6 +420,11 @@ namespace Engine
         return (character >= 0 && character < party.Members.size() && !Engine::HAS_STATUS(party.Members[character], Character::Status::CAPTURED) && !Engine::HAS_STATUS(party.Members[character], Character::Status::ENCHANTED_CURSED) && Engine::SCORE(party.Members[character], Attribute::Type::HEALTH) > 0 && (!party.InCity || (party.InCity && party.Members[character].IsCivilized)));
     }
 
+    bool IS_ACTIVE(Party::Base &party, Character::Base &character)
+    {
+        return (!Engine::HAS_STATUS(character, Character::Status::CAPTURED) && !Engine::HAS_STATUS(character, Character::Status::ENCHANTED_CURSED) && Engine::SCORE(character, Attribute::Type::HEALTH) > 0 && (!party.InCity || (party.InCity && character.IsCivilized)));
+    }
+
     void LOSE_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> items)
     {
         for (auto i = 0; i < items.size(); i++)

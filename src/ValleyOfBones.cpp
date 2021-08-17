@@ -1505,6 +1505,10 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         party_string += " (D)";
                     }
+                    else if (Engine::HAS_STATUS(party.Members[i], Character::Status::ENCHANTED_CURSED))
+                    {
+                        party_string += " (C)";
+                    }
 
                     count++;
                 }
@@ -2024,6 +2028,10 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                         {
                             party_string += " (D)";
                         }
+                        else if (Engine::HAS_STATUS(party.Members[i], Character::Status::ENCHANTED_CURSED))
+                        {
+                            party_string += " (C)";
+                        }
 
                         count++;
                     }
@@ -2358,7 +2366,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                 }
                 else if (controls[current].Type == Control::Type::EQUIPMENT && !hold)
                 {
-                    if (character >= 0 && character < party.Members.size())
+                    if (Engine::IS_ACTIVE(party, character))
                     {
                         inventoryScreen(window, renderer, party, party.Members[character], -1, inCombat);
                     }
@@ -8520,7 +8528,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     {
                         if (selection >= 0 && selection < party.Members.size())
                         {
-                            if (party.Members[selection].SpellCaster && !Engine::HAS_STATUS(party.Members[selection], Character::Status::LOST_TONGUE) && !Engine::HAS_STATUS(party.Members[selection], Character::Status::CAPTURED))
+                            if (party.Members[selection].SpellCaster && !Engine::HAS_STATUS(party.Members[selection], Character::Status::LOST_TONGUE) && !Engine::HAS_STATUS(party.Members[selection], Character::Status::CAPTURED) && !Engine::HAS_STATUS(party.Members[selection], Character::Status::ENCHANTED_CURSED))
                             {
                                 if (hasAttacked.size() > 0 && Engine::FIND_LIST(hasAttacked, selection) >= 0 && magicRound0(party.Members[selection], combatRound))
                                 {
@@ -8558,7 +8566,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                     target = selectPartyMember(window, renderer, party, team, Equipment::NONE, Control::Type::SPELL_TARGET);
                                                 }
 
-                                                if (target >= 0 && target < party.Members.size())
+                                                if (Engine::IS_ACTIVE(party, target))
                                                 {
                                                     if (Engine::HAS_STATUS(party.Members[target], Character::Status::ARMOUR3))
                                                     {
@@ -8570,6 +8578,10 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                                                         cast = true;
                                                     }
+                                                }
+                                                else
+                                                {
+                                                    displayMessage(std::string(party.Members[target].Name) + " is an invalid target!", intRD);
                                                 }
                                             }
                                             else if (party.Members[selection].SpellBook[i].Type == Spells::Type::SOOTHING_TOUCH)
@@ -8611,9 +8623,16 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                     }
                                                     else
                                                     {
-                                                        Engine::GAIN_HEALTH(party.Members[target], 5);
+                                                        if (Engine::IS_ACTIVE(party, target))
+                                                        {
+                                                            Engine::GAIN_HEALTH(party.Members[target], 5);
 
-                                                        cast = true;
+                                                            cast = true;
+                                                        }
+                                                        else
+                                                        {
+                                                            displayMessage(std::string(party.Members[target].Name) + " is an invalid target!", intRD);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -10686,6 +10705,10 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                     {
                                         displayMessage(std::string(party.Members[current + offset].Name) + " has been captured!", intRD);
                                     }
+                                    else if (Engine::HAS_STATUS(party.Members[current + offset], Character::Status::ENCHANTED_CURSED))
+                                    {
+                                        displayMessage(std::string(party.Members[current + offset].Name) + " is cursed!", intRD);
+                                    }
                                     else if (party.InCity && !party.Members[current + offset].IsCivilized)
                                     {
                                         displayMessage(std::string(party.Members[current + offset].Name) + " is waiting outside the city!", intRD);
@@ -11282,6 +11305,10 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                     {
                         party_string += " (D)";
                     }
+                    else if (Engine::HAS_STATUS(party.Members[i], Character::Status::ENCHANTED_CURSED))
+                    {
+                        party_string += " (C)";
+                    }
                 }
 
                 putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
@@ -11426,6 +11453,10 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                                     if (Engine::HAS_STATUS(party.Members[current + offset], Character::Status::CAPTURED))
                                     {
                                         displayMessage(std::string(party.Members[current + offset].Name) + " has been captured!", intRD);
+                                    }
+                                    else if (Engine::HAS_STATUS(party.Members[current + offset], Character::Status::ENCHANTED_CURSED))
+                                    {
+                                        displayMessage(std::string(party.Members[current + offset].Name) + " is cursed!", intRD);
                                     }
                                     else if (Engine::SCORE(party.Members[current + offset], Attribute::Type::HEALTH) <= 0)
                                     {
@@ -12249,6 +12280,10 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 if (Engine::HAS_STATUS(party.Members[i], Character::Status::STUNNED))
                                 {
                                     party_string += " (S)";
+                                }
+                                else if (Engine::HAS_STATUS(party.Members[i], Character::Status::ENCHANTED_CURSED))
+                                {
+                                    party_string += " (C)";
                                 }
                                 else
                                 {
@@ -13580,7 +13615,10 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
             else if (controls[current].Type == Control::Type::EQUIPMENT && !hold)
             {
-                inventoryScreen(window, renderer, party, character, -1, false);
+                if (Engine::IS_ACTIVE(party, character))
+                {
+                    inventoryScreen(window, renderer, party, character, -1, false);
+                }
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
             {
@@ -17342,7 +17380,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                     }
                                 }
 
-                                if (character >= 0 && character < party.Members.size() && party.Members[character].Type != Character::Type::SKULLCRACKER)
+                                if (Engine::IS_ACTIVE(party, character) && party.Members[character].Type != Character::Type::SKULLCRACKER)
                                 {
                                     Engine::GET_EQUIPMENT(party.Members[character], {equipment[selection[i]]});
 
@@ -17970,6 +18008,10 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                     if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) <= 0)
                     {
                         party_string += " (D)";
+                    }
+                    else if (Engine::HAS_STATUS(party.Members[i], Character::Status::ENCHANTED_CURSED))
+                    {
+                        party_string += " (C)";
                     }
 
                     count++;
@@ -20434,6 +20476,10 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             party_string += " (D)";
                         }
+                        else if (Engine::HAS_STATUS(party.Members[i], Character::Status::ENCHANTED_CURSED))
+                        {
+                            party_string += " (C)";
+                        }
 
                         count++;
                     }
@@ -22668,6 +22714,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             {
                                 party_string += " (D)";
                             }
+                            else if (Engine::HAS_STATUS(party.Members[i], Character::Status::ENCHANTED_CURSED))
+                            {
+                                party_string += " (C)";
+                            }
 
                             count++;
                         }
@@ -23095,9 +23145,12 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             {
                                 for (auto i = 0; i < party.Members.size(); i++)
                                 {
-                                    while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[i]))
+                                    if (Engine::IS_ACTIVE(party, i))
                                     {
-                                        inventoryScreen(window, renderer, party, party.Members[i], -1, false);
+                                        while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[i]))
+                                        {
+                                            inventoryScreen(window, renderer, party, party.Members[i], -1, false);
+                                        }
                                     }
                                 }
                             }
