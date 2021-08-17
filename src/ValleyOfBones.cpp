@@ -21382,7 +21382,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             for (auto i = 0; i < story->Choices[choice].RandomDestinations.size(); i++)
                             {
-                                if (sum <= std::get<0>(story->Choices[choice].RandomDestinations[i]))
+                                if (sum <= std::get<0>(story->Choices[choice].RandomDestinations[i]) && !done)
                                 {
                                     story->Bye = std::get<1>(story->Choices[choice].RandomDestinations[i]);
 
