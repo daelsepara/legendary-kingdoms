@@ -24097,6 +24097,8 @@ namespace Book1
 
             if (Engine::IS_ACTIVE(party, party.LastSelected))
             {
+                PreText = std::string(party.Members[party.LastSelected].Name) + " will duel with the Kensai to the death.";
+
                 Team = Engine::GET_TEAM(party.Members[party.LastSelected]);
 
                 previousTeam = party.Members[party.LastSelected].Team;
@@ -24107,8 +24109,12 @@ namespace Book1
             }
             else
             {
+                PreText = "No one was brave enough to duel with the Kensai.";
+
                 Monsters.clear();
             }
+
+            Text = PreText.c_str();
         }
 
         Engine::Destination Continue(Party::Base &party) { return destination; }
