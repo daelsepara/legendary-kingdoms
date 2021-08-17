@@ -50,7 +50,9 @@ namespace Codes
         CAST_MAELSTROM,
         RECHARGE_COSTS_HALF,
         ENEMY_DAZING_LIGHTS,
-        CANNOT_USE_SHIPWEAPONS
+        CANNOT_USE_SHIPWEAPONS,
+        CAST_WITHER,
+        CAST_STINGTAIL_RUNE
     };
 
     std::map<Book::Type, const char *> Prefix = {

@@ -36,7 +36,9 @@ namespace Spells
         SANDSTORM,
         CLINGING_DREAD,
         RUNE_OF_UNMAKING,
-        HEALING_WORD
+        HEALING_WORD,
+        WITHER,
+        STINGTAIL_RUNE
     };
 
     enum class MassCombat

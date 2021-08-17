@@ -1308,6 +1308,10 @@ namespace Book1
 
             ID = 37;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "The Lhasbreath barbarian suddenly jolts, a blade sticking out of his chest. He falls away, to reveal a smirking Tash, her crude sword dripping with blood.\n\n\"Thanks, Tash,\" smiles Jessica, helped to her feet by the clever thief. Sar Jessica won't soon forget this.\n\nNote: Jessica has gained a heart for Tasha. Tasha also gains a heart for Sar Jessica.";
 
             Choices.clear();
@@ -1998,6 +2002,10 @@ namespace Book1
 
             ID = 59;
 
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
             Text = "You knock the guards down into the dirt and surge forwards. There is nowhere to hide but in the city itself so you dash into the streets whilst the guards roar behind you.";
 
             Choices.clear();
@@ -2334,6 +2342,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 69;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You enter a small alchemical laboratory. A rack where potion bottles are stored is empty, presumably already looted by the orcs. However, two potions seem to be in the process of being brewed, an open book listing the instructions on a table which shares space with many alembics and beakers. There are two doors in this room, one to the west, and another to the east.";
 
@@ -3587,6 +3597,10 @@ namespace Book1
 
             ID = 107;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Choices.clear();
 
             Controls = Story::Controls::NONE;
@@ -4553,6 +4567,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 136;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You complete the finishing touches, grinding the components to the necessary fineness, and sprinkling them with confidence into the brew. Soon you have completed two POTIONS OF INVULNERABILITY. Pleased with your new finds, you store them in your pack.\n\nNote: When a party member drinks this potion at the start of a combat round, they can ignore any amount of damage they take from the next attack that hits them. The potion wears off after absorbing the first hit, or if the combat ends.\n\nYou gained the code A73.";
 
@@ -5713,6 +5729,8 @@ namespace Book1
 
             ID = 175;
 
+            Location = Location::Type::MORDAIN;
+
             Text = "It will take skill and judgement to navigate the deadly shoals around Mordain. The city doesn't have a dire reputation for nothing!";
 
             Choices.clear();
@@ -6220,6 +6238,8 @@ namespace Book1
 
             ID = 188;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You tie a few ropes together and bind them strongly to the most intact parts of the remaining wall, and then begin to abseil down the cliffside.";
 
             Choices.clear();
@@ -6271,6 +6291,8 @@ namespace Book1
             ID = -188;
 
             DisplayID = 188;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -6726,6 +6748,8 @@ namespace Book1
 
             ID = 203;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "Hacking your way through the library you at last manage to break through the swarm of bashing, flapping books. When the last party member has escaped you slam the door shut, the thud of books impacting on the door shuddering through your body. Eventually the noise stops, and you presume the books have returned to their shelves. Hoping you will have no more book-related perils you make your way onwards.";
 
             Choices.clear();
@@ -6763,6 +6787,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 205;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
 
             Text = "Your decent is relatively straightforward, though you are compelled to light your lanterns to see anything more than the entry shaft. Tunnels lead off in four directions, carved out of the antique sandstone.";
 
@@ -8382,6 +8408,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 256;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You have entered a small, cramped library, with bookstacks lining the walls and standing in rows before you. Several books are on the floor, apparently hacked apart with swords. Besides this crude vandalism, the books seem in good condition.";
 
@@ -10250,11 +10278,31 @@ namespace Book1
 
             ID = 314;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You utter your spell. In an instant the beetle swarm keels over and dies, destroyed utterly by your spell. Feeling overmighty, you stroll into the room, crushing the dead beetles underfoot as you go.";
 
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::Type::CAST_WITHER}))
+            {
+                Engine::LOSE_CODES(party, {Codes::Type::CAST_WITHER});
+
+                Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::WITHER);
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::Type::CAST_STINGTAIL_RUNE}))
+            {
+                Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::STINGTAIL_RUNE);
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::Type::CAST_MAELSTROM}))
+            {
+                Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::MAELSTROM);
+            }
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 251}; }
@@ -12892,6 +12940,8 @@ namespace Book1
 
             ID = 398;
 
+            Location = Location::Type::MORDAIN;
+
             Text = "Water gushes in through the ripped hole in your vessel. Your crew give a great cry and abandon ship, leaping into the frothing waves with a wail. You have scant seconds to prepare yourself to dive into the ocean.\n\nThere is nowhere to swim but the harbour.\n\nNote: Any character wearing or carrying a suit of armour or robes must discard it. In addition, you can carry no more than four items each before leaping into the sea -- any remaining items are lost (there is no time to conjure a magic cabinet). Each party member loses 2 Health points.";
 
             Bye = "After an exhausting swim, you manage to pull yourself onto the harbourside. Of your ship crew there is no sign.";
@@ -14947,6 +14997,8 @@ namespace Book1
 
             ID = 467;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Choices.clear();
             Choices.push_back(Choice::Base("Pass through the door in the western wall", {Book::Type::BOOK1, 256}));
             Choices.push_back(Choice::Base("Return to the corridor through the east door", {Book::Type::BOOK1, 755}));
@@ -15417,6 +15469,8 @@ namespace Book1
 
             ID = 482;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You consult the instructions and check the ingredients. This should be possible, but you can see why a less talented alchemist might struggle to complete the potions.";
 
             Choices.clear();
@@ -15516,6 +15570,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 485;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Choices.clear();
 
@@ -16519,6 +16577,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 514;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "The fighting is chaotic, and more slaves come to join the battle as the fight rages on. Sar Jessica is separated during the scrum. After slaying an opponent, she is suddenly bull-rushed to the ground by an enormous Lhasbreath barbarian, her weapon scattering from her grasp. The barbarian hefts his axe high above the helpless knight. You must rescue her!";
 
@@ -17675,6 +17737,10 @@ namespace Book1
 
             ID = 550;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -17943,6 +18009,8 @@ namespace Book1
 
             ID = 558;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You browse the selection, with many interesting tomes on philosophy, war and architecture on display. Disturbingly, you also come across the bodies of two orcs, lying dead on the floor. They seem to have been bludgeoned to death. Your eyes flick to a blood-stained tome that seems to be pulling itself off the shelves. To your horror it is joined by a veritable swarm of books. They fly off the shelves, bashing into the sides of your faces, flapping their heavy leather and wooden pages like aggressive pigeons before your startled eyes.\n\nYou attempt to hold your ground for a few moments, but as more and more books fly off the shelf, you realise your task is hopeless. You must fight your way to the exit!\n\nNote:  Each party member loses 1 Health point.";
 
             Choices.clear();
@@ -17977,6 +18045,8 @@ namespace Book1
             ID = -558;
 
             DisplayID = 558;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Choices.clear();
 
@@ -19188,6 +19258,8 @@ namespace Book1
 
             ID = 593;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "This tunnel has been well built, with flagstone flooring and brick walls. At first you think it must have been a cargo store of some kind -- but it opens up into a bigger complex. Much bigger.";
 
             Choices.clear();
@@ -19707,6 +19779,8 @@ namespace Book1
             ID = 608;
 
             Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "Because some of your party members used magic spells while in the arena, they are taken away by the guards to a small room where their tongues are cut out and then sealed with branding irons.\n\nNote: Each magic-using character loses 3 Health and cannot cast spells unless they can find a way to regrow their tongues!";
 
@@ -21258,39 +21332,46 @@ namespace Book1
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
         {
+            Engine::Destination destination = {Book::Type::BOOK1, -1};
+
+            auto result = (Engine::ROLL(1) < 3);
+
+            if (result)
+            {
+                destination.second = 28;
+            }
+            else
+            {
+                destination.second = -657;
+            }
+
             if (!outcome)
             {
                 temp_string = "Each party member loses 1 Health from the dreadful effects of the sun.";
 
                 Engine::GAIN_HEALTH(party, -1);
 
-                if (Engine::ROLL(1) < 3)
+                if (result)
                 {
                     temp_string += " You were harassed during your journey.";
+                }
 
-                    Choices[0].DestinationFailed = {Book::Type::BOOK1, 28};
-                }
-                else
-                {
-                    Choices[0].DestinationFailed = {Book::Type::BOOK1, -657};
-                }
+                Choices[0].DestinationFailed = destination;
 
                 Bye = temp_string.c_str();
             }
             else
             {
-                if (Engine::ROLL(1) < 3)
+                if (result)
                 {
                     Bye = "You were harassed during your journey.";
-
-                    Choices[0].Destination = {Book::Type::BOOK1, 28};
                 }
                 else
                 {
                     Bye = NULL;
-
-                    Choices[0].Destination = {Book::Type::BOOK1, -657};
                 }
+
+                Choices[0].Destination = destination;
             }
         }
     };
@@ -23733,6 +23814,10 @@ namespace Book1
 
             ID = 735;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "Akihiro summersaults over an intervening foe, landing in front of Sar Jessica just as the axe blade falls. Clang! With one swift move he knocks aside the axe blade, sweeping his sword across the barbarian's throat in a single motion. The dumbstruck barbarian stumbles back, blood pouring from his neck, before collapsing in a heap.\n\nSar Jessica, astonished at this peerless swordplay, gapes wordlessly.\n\n\"Come, Sar Jessica,\" says Akihiro softly. \"It is too soon to die, yet.\"\n\nTaking his hand, Sar Jessica rejoins the fight -- but she will not forget this moment.\n\nNote: Jessica has gained a heart for Akihiro. Akihiro also gains a heart for Jessca.";
 
             Choices.clear();
@@ -24281,6 +24366,334 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 431}; }
+    };
+
+    class Story750 : public Story::Base
+    {
+    public:
+        Story750()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 750;
+
+            Location = Location::Type::LUUTANESH;
+
+            Image = "images/book1/the_everchild.png";
+
+            Text = "You encounter Che Long waiting by the inn's desk. He nods to you and takes you to the back of the inn, into a beautiful chamber of yellow silks and handsome blue tapestries. Perched cross-legged on a cushion is the Everchild, no longer a ragged waif, but a beautiful golden-haired girl with piercing blue eyes, dressed in flowing robes of Chalice silk.\n\n\"My champions,\" she smiles warmly. \"I had hoped you would come. I presume that your presence here means that you are willing to assist me in my claims on the throne of Saltdad? By now you will have seen the Iron King's cruelty firsthand, and perhaps even encountered the savage zealotry of the true ruler of the valley, the patriarch of Cursus? These vile men must be deposed if we are to have any hope of restoring justice and civilisation to the valley.\"\n\nThe Everchild indicates a map of the Valley of Bones that lies spread out in front of her. \"First things first,\" she says. \"Historically the Everchild has always ruled from Saltdad, so that is our first target. To take Saltdad we must defeat the army of the Iron King in battle. I have begun the process of raising my own army in secret, from amongst the downtrodden and oppressed in his kingdom. Alas, I still have only half as many men as the king has. I must have more if I am to be successful. The cities of Chalice, and even Lhasbreath, might be willing to lend us aid if they could be convinced. I would like you to speak with them on my behalf and ask them to send soldiers to aid my revolution.\"\n\nThe Everchild clears her throat. \"Of course, I would not need as many troops if the forces of the Iron King were depleted.\" She clicks her fingers and Che Long steps forwards to present you with a small bottle. It is a VIAL OF POISON, the pale-yellow liquid promising death to any who drink it. Take it, if you wish.\n\n\"The Bronzeguard are the elite force of the Iron King, wearing enchanted armour that makes them almost invulnerable in battle,\" explains the Everchild. \"In order to foster a sense of brotherhood, the Bronzeguard all live in a single barracks in the centre of Saltdad. This leaves them vulnerable to... accidents. If they were to be removed from the king's forces, I would need fewer reinforcements.\"\n\n\"Lastly, all attempts on the Iron King's life have failed thanks to the attentions of his golem bodyguard, Malronac the Deathengine,\" says the Everchild. \"We believe he acquired this monstrosity from the ruins of the palace. It has since acted as both his personal guard and a crude assassin of the Iron King's enemies. The villain will often be found wandering the streets on some bloody errand. If you can get him alone, and end him, our victory would be all the more likely.\"\n\nThe Everchild rises from her cushions.\n\n\"Come,\" she says. \"Let me show you my soldiers.\"\n\nNote: You gained the code A7.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::VIAL_OF_POISON};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::A(7)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 360}; }
+    };
+
+    class Story751 : public Story::Base
+    {
+    public:
+        Story751()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 751;
+
+            Location = Location::Type::GRANITE_HILLS;
+
+            Text = "You come upon a curious trapdoor, set into the top of a hillside. A large red 'X' has been painted on it, and yet it contains no lock or bar and opens easily. Looking down you can see that a rough ladder has been chiselled into the sides of the wall to allow easy decent. Curious.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Climb down the trap door", {Book::Type::BOOK1, 205}));
+            Choices.push_back(Choice::Base("Or close it and move on", {Book::Type::BOOK1, 426}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story752 : public Story::Base
+    {
+    public:
+        Story752()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 752;
+
+            Location = Location::Type::DESERT;
+
+            Text = "You are crossing a vast expanse of desert, that alternates between rocky Badlands and sweeping dunes of rich yellow sand. The heat is oppressive. Few things live in this barren place.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Manage your water (Team check: Survival 4+, Successes: 4)", {Book::Type::BOOK1, 752}, {Book::Type::BOOK1, 752}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            Engine::Destination destination = {Book::Type::BOOK1, -1};
+
+            auto result = Engine::ROLL(1);
+
+            if (result <= 2)
+            {
+                destination.second = 108;
+            }
+            else if (result <= 3)
+            {
+                destination.second = 534;
+            }
+            else
+            {
+                destination.second = 840;
+            }
+
+            if (!outcome)
+            {
+                Bye = "Each party member loses 1 Health from heatstroke.";
+
+                Engine::GAIN_HEALTH(party, -1);
+
+                Choices[0].DestinationFailed = destination;
+            }
+            else
+            {
+                Bye = "You manage to conserve water by travelling mostly at night and sheltering from the worst of the sun.";
+
+                Choices[0].Destination = destination;
+            }
+        }
+    };
+
+    class Story753 : public Story::Base
+    {
+    public:
+        Story753()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 753;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "The arena is a swirl of swords and axe blades, the crowd jeering as blood is spilt and bodies fall. In the centre the greatest fighters have gathered into a spectacular melee, while on the outskirts the cowardly and the injured seek momentary respite.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Leap into the central battle, fearlessly", {Book::Type::BOOK1, 101}));
+            Choices.push_back(Choice::Base("Hang back until the fight comes to you", {Book::Type::BOOK1, 550}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story754 : public Story::Base
+    {
+    public:
+        Story754()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 754;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You will need to deal with hundreds of creatures at once.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::HAS_SPELL(party, {Spells::Type::WITHER}))
+            {
+                Choices.push_back(Choice::Base("Cast Wither", {Book::Type::BOOK1, 314}, Choice::Type::GET_CODES, {Codes::Type::CAST_WITHER}));
+            }
+            else if (Engine::HAS_SPELL(party, {Spells::Type::STINGTAIL_RUNE}))
+            {
+                Choices.push_back(Choice::Base("Cast Stingtail Rune", {Book::Type::BOOK1, 314}, Choice::Type::GET_CODES, {Codes::Type::CAST_STINGTAIL_RUNE}));
+            }
+            else if (Engine::HAS_SPELL(party, {Spells::Type::MAELSTROM}))
+            {
+                Choices.push_back(Choice::Base("Cast Maelstrom", {Book::Type::BOOK1, 314}, Choice::Type::GET_CODES, {Codes::Type::CAST_MAELSTROM}));
+            }
+
+            Choices.push_back(Choice::Base("Attempt to crush the beetles underfoot", {Book::Type::BOOK1, 518}));
+            Choices.push_back(Choice::Base("Slam the door shut and flee to the crossroads", {Book::Type::BOOK1, 566}));
+        }
+    };
+
+    class Story755 : public Story::Base
+    {
+    public:
+        Story755()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 755;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You are in a short corridor with two doors in the western wall. To the south, daylight streams through a wide tunnel-mouth. You hear the roar of the sea and the haunting cries of gulls beyond.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Open the southwest door", {Book::Type::BOOK1, 69}));
+            Choices.push_back(Choice::Base("Open the northwest door", {Book::Type::BOOK1, 604}));
+            Choices.push_back(Choice::Base("Go south, through the tunnel mouth", {Book::Type::BOOK1, 662}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story756 : public Story::Base
+    {
+    public:
+        Story756()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 756;
+
+            Location = Location::Type::CLIFFTOP;
+
+            Text = "There is only a single ship for sale here, a battered old Cog, available for 500 silver coins.\n\n\"Why so cheap?\" you ask the harbourmaster.\n\n\"It's barely seaworthy,\" he explains. \"The crew are desperate for a new captain to lead them away from this dump. But it's a toss of the coin as to whether she'll even make it out of harbour.\"\n\n\"You're the worst salesman in the world,\" you respond.\n\nYou can sell a Cog here for 250 silver coins, a Cursite War Galley for 500 silver coins and a Carrack for 1500 silver coins. You cannot sell other kinds of ship here.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::HARBOUR;
+        }
+
+        void Event(Party::Base &party)
+        {
+            // TODO: Carrack Stats
+            Ships = {
+                {Ship::Base("COG", Ship::Type::COG, Location::Type::CLIFFTOP, 4, 7, 2), 500, 250},
+                {Ship::Base("CURSITE WAR GALLEY", Ship::Type::CURSITE_WAR_GALLEY, Location::Type::CLIFFTOP, 6, 9, 1), -1, 500},
+                {Ship::Base("CARRACK", Ship::Type::CARRACK, Location::Type::CURSUS, 6, 9, 1), -1, 1500}};
+
+            Cargo.clear();
+
+            ShipRepairPrice = -1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 703}; }
+    };
+
+    class Story757 : public Story::Base
+    {
+    public:
+        Story757()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 757;
+
+            Location = Location::Type::CAVES_OF_URANU;
+
+            Text = "You wait boldly in the entrance until the stranger arrives. You watch as a young woman dressed in black, armed with a sword and lantern, makes her way into the chamber. She has the sharp features of a woman from Drakehallow, and she eyes you with some surprise.\n\n\"Are you here to kill me?\" she asks directly.\n\n\"No,\" you say honestly. \"Is this how you address all strangers?\"\n\n\"Most of them,\" she smiles.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 415}; }
+    };
+
+    class Story758 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story758()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 758;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("See your fate", {{3, "You are sold to the Saltdad Arena", {Book::Type::BOOK1, 631}}, {6, "You are sold to the taskmasters of Clifftop", {Book::Type::BOOK1, 866}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The guards manage to get a grip on you, and soon you are cast to the ground and beaten. Dragged back to your master he decides to sell you on cheap rather than have you executed -- you are far too much trouble for him!\n\nNote: Each party member loses ";
+
+            auto loss = Engine::ROLL(1);
+
+            PreText += std::to_string(loss) + " health point";
+
+            if (loss > 1)
+            {
+                PreText += "s";
+            }
+
+            PreText += ".";
+
+            Engine::GAIN_HEALTH(party, -loss);
+
+            Text = PreText.c_str();
+        }
+    };
+
+    class Story759 : public Story::Base
+    {
+    public:
+        Story759()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 759;
+
+            Location = Location::Type::CLIFFTOP;
+
+            IsCity = true;
+
+            Text = "Clifftop marketplace is a sad and dishevelled affair. Most stalls are given over to the agricultural goods Clifftop is famous for. You browse the empty stands, looking for something of interest.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::SHOP;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Shop = {
+                {Equipment::CRUDE_BLADE, 25, 10, -1, {}},
+                {Equipment::MAUL, 50, 25, -1, {}},
+                {Equipment::IRON_SHORTSWORD1, -1, 100, -1, {}},
+                {Equipment::IRON_GREATAXE2, -1, 150, -1, {}},
+                {Equipment::STEEL_LONGSWORD2, 800, 400, -1, {}},
+                {Equipment::SHIELD2, 50, 25, -1, {}},
+                {Equipment::HIDE_ARMOUR1, -1, 30, -1, {}},
+                {Equipment::SOFT_BOOTS1, -1, 250, -1, {}},
+                {Equipment::REFERENCE_BOOK1, -1, 250, -1, {}},
+                {Equipment::WARM_CLOAK1, 500, 250, -1, {}},
+                {Equipment::HANDSOME_BROOCH1, -1, 250, -1, {}},
+                {Equipment::PRYBAR, -1, 50, -1, {}}};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
     };
 
     auto story001 = Story001();
@@ -25093,6 +25506,16 @@ namespace Book1
     auto story747 = Story747();
     auto story748 = Story748();
     auto story749 = Story749();
+    auto story750 = Story750();
+    auto story751 = Story751();
+    auto story752 = Story752();
+    auto story753 = Story753();
+    auto story754 = Story754();
+    auto story755 = Story755();
+    auto story756 = Story756();
+    auto story757 = Story757();
+    auto story758 = Story758();
+    auto story759 = Story759();
 
     void InitializeStories()
     {
@@ -25178,7 +25601,8 @@ namespace Book1
             &story710, &story711, &story712, &story713, &story714, &story715, &story716, &story717, &story718, &story719,
             &story720, &story721, &story722, &story723, &story724, &story725, &story726, &story727, &story728, &story729,
             &story730, &story731, &story732, &story733, &story734, &story735, &story736, &story737, &story738, &story739,
-            &story740, &story741, &story742, &story743, &story744, &story745, &story746, &story747, &story748, &story749};
+            &story740, &story741, &story742, &story743, &story744, &story745, &story746, &story747, &story748, &story749,
+            &story750, &story751, &story752, &story753, &story754, &story755, &story756, &story757, &story758, &story759};
     }
 }
 #endif
