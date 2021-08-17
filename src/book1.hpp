@@ -4467,7 +4467,7 @@ namespace Book1
 
             if (Engine::IS_ACTIVE(party, party.LastSelected))
             {
-                if (Engine::SCORE(party.Members[party.LastSelected], Attribute::Type::HEALTH) > 0)
+                if (Engine::IS_ALIVE(party.Members[party.LastSelected]))
                 {
                     PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses 1 Health point.";
 
@@ -7608,7 +7608,7 @@ namespace Book1
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
+                if (Engine::IS_ALIVE(party.Members[i]) && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
                 {
                     Engine::GAIN_STATUS(party.Members[i], Character::Status::CAPTURED);
                 }
@@ -7746,7 +7746,7 @@ namespace Book1
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
+                if (Engine::IS_ALIVE(party.Members[i]))
                 {
                     Engine::GAIN_FOLLOWERS(party.Members[i], {Follower::Base("Skeleton", Follower::Type::MORDAIN_SKELETONS, 6)});
                 }
@@ -9584,7 +9584,7 @@ namespace Book1
 
                 Engine::GAIN_HEALTH(party.Members[target], -3);
 
-                if (Engine::SCORE(party.Members[target], Attribute::Type::HEALTH) > 0)
+                if (Engine::IS_ALIVE(party.Members[target]))
                 {
                     Bye = "You nurse your wounds grudgingly, muttering words of revenge under your breath.";
                 }
@@ -9822,7 +9822,7 @@ namespace Book1
 
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (party.Members[i].SpellCaster && Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
+                if (party.Members[i].SpellCaster && Engine::IS_ALIVE(party.Members[i]))
                 {
                     Engine::GAIN_STATUS(party.Members[i], Character::Status::EXTRA_MAGIC_ROUND0);
                 }
@@ -10002,7 +10002,7 @@ namespace Book1
 
                 Engine::GAIN_HEALTH(party.Members[target], -3);
 
-                if (Engine::SCORE(party.Members[target], Attribute::Type::HEALTH) > 0)
+                if (Engine::IS_ALIVE(party.Members[target]))
                 {
                     Bye = "You nurse your wounds grudgingly, muttering words of revenge under your breath.";
                 }
@@ -10117,7 +10117,7 @@ namespace Book1
 
                 for (auto i = 0; i < party.Members.size(); i++)
                 {
-                    if (party.Members[i].SpellCaster && Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
+                    if (party.Members[i].SpellCaster && Engine::IS_ALIVE(party.Members[i]))
                     {
                         Engine::GAIN_STATUS(party.Members[i], Character::Status::UNLIMITED_MAGIC_ROUND0);
                     }
@@ -14312,7 +14312,7 @@ namespace Book1
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
+                if (Engine::IS_ALIVE(party.Members[i]) && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
                 {
                     Engine::GAIN_STATUS(party.Members[i], Character::Status::CAPTURED);
                 }
@@ -15717,7 +15717,7 @@ namespace Book1
             {
                 Engine::GAIN_HEALTH(party.Members[jessica], -3);
 
-                if (Engine::SCORE(party.Members[jessica], Attribute::Type::HEALTH) > 0)
+                if (Engine::IS_ALIVE(party.Members[jessica]))
                 {
                     PreText += "\n\nYou haul Sar Jessica to her feet and spin around to face the rest of your opponents.";
                 }
@@ -22534,7 +22534,7 @@ namespace Book1
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
+                if (Engine::IS_ALIVE(party.Members[i]) && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
                 {
                     Engine::GAIN_STATUS(party.Members[i], Character::Status::CAPTURED);
                 }

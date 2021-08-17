@@ -145,6 +145,11 @@ namespace Engine
         return result;
     }
 
+    bool CAPTURED(Character::Base &character)
+    {
+        return Engine::HAS_STATUS(character, Character::Status::CAPTURED);
+    }
+
     int FIND_SOLO(Party::Base &party)
     {
         auto result = -1;
@@ -164,7 +169,7 @@ namespace Engine
 
     void GET_EQUIPMENT(Character::Base &character, std::vector<Equipment::Base> equipment)
     {
-        if (!Engine::HAS_STATUS(character, Character::Status::CAPTURED) && character.Type != Character::Type::SKULLCRACKER)
+        if (!Engine::CAPTURED(character) && character.Type != Character::Type::SKULLCRACKER)
         {
             character.Equipment.insert(character.Equipment.end(), equipment.begin(), equipment.end());
         }
@@ -211,7 +216,7 @@ namespace Engine
 
     void LOSE_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> items)
     {
-        if (character.Equipment.size() > 0 && items.size() > 0 && !Engine::HAS_STATUS(character, Character::Status::CAPTURED) && character.Type != Character::Type::SKULLCRACKER)
+        if (character.Equipment.size() > 0 && items.size() > 0 && !Engine::CAPTURED(character) && character.Type != Character::Type::SKULLCRACKER)
         {
             for (auto i = 0; i < items.size(); i++)
             {
@@ -415,14 +420,34 @@ namespace Engine
         return score;
     }
 
+    int HEALTH(Character::Base &character)
+    {
+        return Engine::SCORE(character, Attribute::Type::HEALTH);
+    }
+
+    bool IS_ALIVE(Character::Base &character)
+    {
+        return (Engine::SCORE(character, Attribute::Type::HEALTH) > 0);
+    }
+
+    bool IS_DEAD(Character::Base &character)
+    {
+        return (Engine::SCORE(character, Attribute::Type::HEALTH) <= 0);
+    }
+
+    bool IS_INJURED(Character::Base &character)
+    {
+        return (Engine::SCORE(character, Attribute::Type::HEALTH) < character.MaximumHealth);
+    }
+
     bool IS_ACTIVE(Party::Base &party, int character)
     {
-        return (character >= 0 && character < party.Members.size() && !Engine::HAS_STATUS(party.Members[character], Character::Status::CAPTURED) && !Engine::HAS_STATUS(party.Members[character], Character::Status::ENCHANTED_CURSED) && Engine::SCORE(party.Members[character], Attribute::Type::HEALTH) > 0 && (!party.InCity || (party.InCity && party.Members[character].IsCivilized)));
+        return (character >= 0 && character < party.Members.size() && !Engine::HAS_STATUS(party.Members[character], Character::Status::CAPTURED) && !Engine::HAS_STATUS(party.Members[character], Character::Status::ENCHANTED_CURSED) && IS_ALIVE(party.Members[character]) && (!party.InCity || (party.InCity && party.Members[character].IsCivilized)));
     }
 
     bool IS_ACTIVE(Party::Base &party, Character::Base &character)
     {
-        return (!Engine::HAS_STATUS(character, Character::Status::CAPTURED) && !Engine::HAS_STATUS(character, Character::Status::ENCHANTED_CURSED) && Engine::SCORE(character, Attribute::Type::HEALTH) > 0 && (!party.InCity || (party.InCity && character.IsCivilized)));
+        return (!Engine::CAPTURED(character) && !Engine::HAS_STATUS(character, Character::Status::ENCHANTED_CURSED) && IS_ALIVE(character) && (!party.InCity || (party.InCity && character.IsCivilized)));
     }
 
     void LOSE_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> items)
@@ -2370,7 +2395,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::IS_ACTIVE(party, i) && Engine::HAS_STATUS(party.Members[i], status))
+            if (Engine::IS_ALIVE(party.Members[i]) && Engine::HAS_STATUS(party.Members[i], status))
             {
                 result = i;
 
