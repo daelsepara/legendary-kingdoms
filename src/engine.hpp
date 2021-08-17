@@ -361,28 +361,51 @@ namespace Engine
         return score;
     }
 
-    int FIGHTING_SCORE(Character::Base &character)
+    bool HAS_WEAPON(Character::Base &character)
     {
-        auto max = -1;
-
-        auto score = Engine::SCORE(character, Attribute::Type::FIGHTING);
+        auto result = false;
 
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
             if (character.Equipment[i].Class == Equipment::Class::WEAPON && (character.Equipment[i].Attribute == Attribute::Type::FIGHTING || character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2))
             {
-                if (character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    int MAX_WEAPON(Character::Base &character)
+    {
+        auto max = -1;
+
+        if (Engine::HAS_WEAPON(character))
+        {
+            for (auto i = 0; i < character.Equipment.size(); i++)
+            {
+                if (character.Equipment[i].Class == Equipment::Class::WEAPON && (character.Equipment[i].Attribute == Attribute::Type::FIGHTING || character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2))
                 {
-                    max = std::max(max, 3);
-                }
-                else
-                {
-                    max = std::max(max, character.Equipment[i].Modifier);
+                    if (character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                    {
+                        max = std::max(max, 3);
+                    }
+                    else
+                    {
+                        max = std::max(max, character.Equipment[i].Modifier);
+                    }
                 }
             }
         }
 
-        score = max >= 0 ? (score + max) : (Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT) ? score : (score - 1));
+        return max;
+    }
+
+    int FIGHTING_SCORE(Character::Base &character)
+    {
+        auto score = Engine::SCORE(character, Attribute::Type::FIGHTING);
+
+        score = Engine::HAS_WEAPON(character) ? (score + Engine::MAX_WEAPON(character)) : (Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT) ? score : (score - 1));
 
         if (score < 0)
         {
@@ -394,7 +417,7 @@ namespace Engine
 
     bool IS_ACTIVE(Party::Base &party, int character)
     {
-        return (character >= 0 && character < party.Members.size() && !Engine::HAS_STATUS(party.Members[character], Character::Status::CAPTURED) && Engine::SCORE(party.Members[character], Attribute::Type::HEALTH) > 0 && (!party.InCity || (party.InCity && party.Members[character].IsCivilized)));
+        return (character >= 0 && character < party.Members.size() && !Engine::HAS_STATUS(party.Members[character], Character::Status::CAPTURED) && !Engine::HAS_STATUS(party.Members[character], Character::Status::ENCHANTED_CURSED) && Engine::SCORE(party.Members[character], Attribute::Type::HEALTH) > 0 && (!party.InCity || (party.InCity && party.Members[character].IsCivilized)));
     }
 
     void LOSE_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> items)

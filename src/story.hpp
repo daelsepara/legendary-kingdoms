@@ -309,6 +309,25 @@ namespace Choice
             Success = success;
         }
 
+        Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, std::vector<Attribute::Type> attributes, int difficulty, int success, bool useWeapon)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            DestinationFailed = destinationFailed;
+
+            Type = type;
+
+            Attributes = attributes;
+
+            Difficulty = difficulty;
+
+            Success = success;
+
+            UseWeapon = useWeapon;
+        }
+
         Base(const char *text, Engine::Destination destination, Engine::Destination destinationFailed, Choice::Type type, std::vector<Attribute::Type> attributes, int value, int difficulty, int success)
         {
             Text = text;

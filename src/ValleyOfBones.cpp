@@ -5360,6 +5360,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
+                    putHeader(renderer, (std::string("Focus: " + std::to_string(focus))).c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+
                     if (stage != Engine::Attack::START)
                     {
                         if (stage == Engine::Attack::ATTACK)
@@ -5644,7 +5646,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
                         else
                         {
-                            attack_score = Engine::RAW_SCORE(party.Members[combatant], Attribute::Type::FIGHTING, true) - (focus * 5);
+                            attack_score = Engine::SCORE(party.Members[combatant], Attribute::Type::FIGHTING) - (focus * 5);
                         }
 
                         attacker_string = "Fighting: " + std::to_string(attack_score);
@@ -5714,7 +5716,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     if (direction == 0)
                     {
                         putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
-                        defender_string = "Defence: " + std::to_string(Defence) + "+";
+                        defender_string = "Defence: " + std::to_string(Defence - focus) + "+";
                         defender_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
                     }
                     else
@@ -5812,6 +5814,38 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             selected = false;
 
                             combat_damage = 100;
+                        }
+                        else if (stage == Engine::Attack::START && controls[current].Type == Control::Type::PLUS)
+                        {
+                            if (direction == 0)
+                            {
+                                if ((attack_score - 5) > 0)
+                                {
+                                    focus += 1;
+                                }
+                                else
+                                {
+                                    displayMessage("You cannot add more focus points!", intRD);
+                                }
+                            }
+
+                            selected = false;
+                        }
+                        else if (stage == Engine::Attack::START && controls[current].Type == Control::Type::MINUS)
+                        {
+                            if (direction == 0)
+                            {
+                                if (focus > 0)
+                                {
+                                    focus -= 1;
+                                }
+                                else
+                                {
+                                    displayMessage("All focus points have been removed!", intRD);
+                                }
+                            }
+
+                            selected = false;
                         }
                         else if (stage == Engine::Attack::START && controls[current].Type == Control::Type::CONFIRM)
                         {
@@ -7741,6 +7775,18 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
             Uint32 duration = 3000;
 
+            // Lambda functions for displaying flash messages
+            auto displayMessage = [&](std::string msg, Uint32 color)
+            {
+                flash_message = true;
+
+                message = msg;
+
+                flash_color = color;
+
+                start_ticks = SDL_GetTicks();
+            };
+
             auto marginx = (int)(Margin * SCREEN_WIDTH);
 
             auto fullwidth = SCREEN_WIDTH - 2 * marginx;
@@ -7841,43 +7887,13 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
             auto skill_score = 0;
 
-            for (auto i = 0; i < team.size(); i++)
-            {
-                if (useEquipment)
-                {
-                    if (Skill == Attribute::Type::FIGHTING)
-                    {
-                        skill_score += (Engine::FIGHTING_SCORE(party.Members[team[i]]) - (focus * 5));
-                    }
-                    else
-                    {
-                        skill_score += (Engine::SCORE(party.Members[team[i]], Skill) - (focus * 5));
-                    }
-                }
-                else
-                {
-                    if (Skill == Attribute::Type::FIGHTING)
-                    {
-                        auto fight_score = Engine::SCORE(party.Members[team[i]], Attribute::Type::FIGHTING);
+            auto score1 = 0;
 
-                        if (fight_score < 0)
-                        {
-                            fight_score = 0;
-                        }
+            auto score2 = 0;
 
-                        skill_score += (fight_score - (focus * 5));
-                    }
-                    else
-                    {
-                        skill_score += (Engine::RAW_SCORE(party.Members[team[i]], Skill, true) - (focus * 5));
-                    }
-                }
-            }
+            auto computed_score1 = false;
 
-            if (skill_score > 20)
-            {
-                skill_score = 20;
-            }
+            auto computed_score2 = false;
 
             auto size_dice = 64;
 
@@ -7951,70 +7967,76 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     {
                         if (!skill_checked)
                         {
-                            flash_message = true;
-
                             party.RecentSuccesses = success_counter;
 
                             if (success_counter >= success)
                             {
-                                message = "Skill Check PASSED!";
-
-                                flash_color = intLB;
+                                displayMessage("Skill Check PASSED!", intLB);
 
                                 test_result = true;
                             }
                             else
                             {
-                                message = "Skill Check FAILED!";
-
-                                flash_color = intRD;
+                                displayMessage("Skill Check FAILED!", intRD);
 
                                 test_result = false;
                             }
-
-                            start_ticks = SDL_GetTicks();
 
                             skill_checked = true;
                         }
                     }
                 }
 
-                std::string test_string = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(difficulty) + "+, Success: " + (success > 0 ? std::to_string(success) : std::string("Special"));
+                std::string test_string = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(difficulty - focus) + "+, Success: " + (success > 0 ? std::to_string(success) : std::string("Special"));
 
-                putHeader(renderer, test_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+                test_string += ", Focus: " + std::to_string(focus);
+
+                putHeader(renderer, test_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                 putHeader(renderer, party.Members[team[0]].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
-                auto score1 = 0;
-
-                if (useEquipment)
+                if (!computed_score1)
                 {
-                    if (Skill == Attribute::Type::FIGHTING)
+                    if (useEquipment)
                     {
-                        score1 = Engine::FIGHTING_SCORE(party.Members[team[0]]) - (focus * 5);
-                    }
-                    else
-                    {
-                        score1 = Engine::SCORE(party.Members[team[0]], Skill) - (focus * 5);
-                    }
-                }
-                else
-                {
-                    if (Skill == Attribute::Type::FIGHTING)
-                    {
-                        score1 = Engine::SCORE(party.Members[team[0]], Attribute::Type::FIGHTING) - (focus * 5);
-
-                        if (score1 < 0)
+                        if (Skill == Attribute::Type::FIGHTING)
                         {
-                            score1 = 0;
+                            score1 = Engine::SCORE(party.Members[team[0]], Attribute::Type::FIGHTING);
+
+                            if (Engine::HAS_WEAPON(party.Members[team[0]]))
+                            {
+                                score1 += Engine::MAX_WEAPON(party.Members[team[0]]);
+                            }
+
+                            score1 -= (focus * 5);
+                        }
+                        else
+                        {
+                            score1 = Engine::SCORE(party.Members[team[0]], Skill) - (focus * 5);
                         }
                     }
                     else
                     {
-                        score1 = Engine::RAW_SCORE(party.Members[team[0]], Skill, true) - (focus * 5);
+                        if (Skill == Attribute::Type::FIGHTING)
+                        {
+                            score1 = Engine::SCORE(party.Members[team[0]], Attribute::Type::FIGHTING) - (focus * 5);
+                        }
+                        else
+                        {
+                            score1 = Engine::RAW_SCORE(party.Members[team[0]], Skill, true) - (focus * 5);
+                        }
                     }
+
+                    if (score1 < 0)
+                    {
+                        score1 = 0;
+                    }
+
+                    computed_score1 = true;
+
+                    skill_score = score1;
                 }
 
                 std::string adventurer1 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score1);
@@ -8027,39 +8049,56 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                     fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
 
-                    auto score2 = 0;
-
-                    if (useEquipment)
+                    if (!computed_score2)
                     {
-                        if (Skill == Attribute::Type::FIGHTING)
+                        if (useEquipment)
                         {
-                            score2 = Engine::FIGHTING_SCORE(party.Members[team[1]]) - (focus * 5);
-                        }
-                        else
-                        {
-                            score2 = Engine::SCORE(party.Members[team[1]], Skill) - (focus * 5);
-                        }
-                    }
-                    else
-                    {
-                        if (Skill == Attribute::Type::FIGHTING)
-                        {
-                            score2 = Engine::SCORE(party.Members[team[1]], Attribute::Type::FIGHTING) - (focus * 5);
-
-                            if (score2 < 0)
+                            if (Skill == Attribute::Type::FIGHTING)
                             {
-                                score2 = 0;
+                                score2 = Engine::SCORE(party.Members[team[0]], Attribute::Type::FIGHTING);
+
+                                if (Engine::HAS_WEAPON(party.Members[team[1]]))
+                                {
+                                    score2 += Engine::MAX_WEAPON(party.Members[team[1]]);
+                                }
+
+                                score2 -= (focus * 5);
+                            }
+                            else
+                            {
+                                score2 = Engine::SCORE(party.Members[team[1]], Skill) - (focus * 5);
                             }
                         }
                         else
                         {
-                            score2 = Engine::RAW_SCORE(party.Members[team[1]], Skill, true) - (focus * 5);
+                            if (Skill == Attribute::Type::FIGHTING)
+                            {
+                                score2 = Engine::SCORE(party.Members[team[1]], Attribute::Type::FIGHTING) - (focus * 5);
+                            }
+                            else
+                            {
+                                score2 = Engine::RAW_SCORE(party.Members[team[1]], Skill, true) - (focus * 5);
+                            }
                         }
+
+                        if (score2 < 0)
+                        {
+                            score2 = 0;
+                        }
+
+                        computed_score2 = true;
+
+                        skill_score += score2;
                     }
 
                     std::string adventurer2 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score2);
 
                     putText(renderer, adventurer2.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+                }
+
+                if (skill_score > 20)
+                {
+                    skill_score = 20;
                 }
 
                 if (stage == Attribute::Test::START)
@@ -8142,6 +8181,56 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     if (stage == Attribute::Test::START && controls[current].Type == Control::Type::CONFIRM)
                     {
                         stage = Attribute::Test::CONFIRM;
+                    }
+                    else if (stage == Attribute::Test::START && controls[current].Type == Control::Type::PLUS)
+                    {
+                        if (team.size() > 1)
+                        {
+                            if ((score1 - 5) > 0 && (score2 - 5) > 0)
+                            {
+                                computed_score1 = false;
+
+                                computed_score2 = false;
+
+                                focus += 1;
+                            }
+                            else
+                            {
+                                displayMessage("You cannot add more focus points!", intRD);
+                            }
+                        }
+                        else
+                        {
+                            if ((score1 - 5) > 0)
+                            {
+                                computed_score1 = false;
+
+                                focus += 1;
+                            }
+                            else
+                            {
+                                displayMessage("You cannot add more focus points!", intRD);
+                            }
+                        }
+
+                        selected = false;
+                    }
+                    else if (stage == Attribute::Test::START && controls[current].Type == Control::Type::MINUS)
+                    {
+                        if (focus > 0)
+                        {
+                            focus -= 1;
+
+                            computed_score1 = false;
+
+                            computed_score2 = false;
+                        }
+                        else
+                        {
+                            displayMessage("All focus points have been removed!", intRD);
+                        }
+
+                        selected = false;
                     }
                     else if (stage == Attribute::Test::CONFIRM && controls[current].Type == Control::Type::CONFIRM)
                     {

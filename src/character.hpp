@@ -129,7 +129,8 @@ namespace Character
         STUNNED,
         STUNNED_NEXT_ROUND,
         LOST_TONGUE,
-        USED_MAGIC_INARENA
+        USED_MAGIC_INARENA,
+        ENCHANTED_CURSED
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;
@@ -152,7 +153,8 @@ namespace Character
         {Character::Status::STUNNED, "Stunned"},
         {Character::Status::STUNNED_NEXT_ROUND, "Stunned next round"},
         {Character::Status::LOST_TONGUE, "Lost Tongue"},
-        {Character::Status::USED_MAGIC_INARENA, "Used magic in Saltdad Arena"}};
+        {Character::Status::USED_MAGIC_INARENA, "Used magic in Saltdad Arena"},
+        {Character::Status::ENCHANTED_CURSED, "Enchanted (Cursed)"}};
 
     class Base
     {

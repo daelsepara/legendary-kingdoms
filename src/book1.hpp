@@ -608,11 +608,11 @@ namespace Book1
 
             if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PRYBAR}))
             {
-                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 4, 3, false));
+                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 4, 3));
             }
             else
             {
-                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 5, 3, false));
+                Choices.push_back(Choice::Base("Force open the door (Individual check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 350}, {Book::Type::BOOK1, -18}, {Attribute::Type::FIGHTING}, 5, 3));
             }
 
             Choices.push_back(Choice::Base("Consider other exits from the room", {Book::Type::BOOK1, 494}));
@@ -1637,11 +1637,11 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::WEAPON_AND_DISTRACTION}))
             {
-                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3, false));
+                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3));
             }
             else
             {
-                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::DISTRACTION, {Attribute::Type::FIGHTING}, 4, 3, false));
+                Choices.push_back(Choice::Base("Stage a convincing fight (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 837}, {Book::Type::BOOK1, 762}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::DISTRACTION, {Attribute::Type::FIGHTING}, 4, 3));
             }
         }
     };
@@ -7059,7 +7059,7 @@ namespace Book1
             Text = "Puffing yourselves up, you and your companions put on a brave show before the slaves, shoving them hard and roaring bold threats. This will require a good deal of bravery and force.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Threaten greedy slaves (Team check: Fighting 4+, Successes: 4)", {Book::Type::BOOK1, 526}, {Book::Type::BOOK1, 572}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 4, false));
+            Choices.push_back(Choice::Base("Threaten greedy slaves (Team check: Fighting 4+, Successes: 4)", {Book::Type::BOOK1, 526}, {Book::Type::BOOK1, 572}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 4));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -8745,6 +8745,16 @@ namespace Book1
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
+            {
+                Engine::REMOVE_STATUS(party.Members[party.LastSelected], Character::Status::ENCHANTED_CURSED);
+                
+                Engine::KILL(party, party.Members[party.LastSelected].Type);
+            }
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 821}; }
@@ -13337,11 +13347,11 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::WEAPON_AND_DISTRACTION}))
             {
-                Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 3, false));
+                Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 3));
             }
             else
             {
-                Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::WEAPONS, {Attribute::Type::FIGHTING}, 5, 3, false));
+                Choices.push_back(Choice::Base("Bashing open the door (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 611}, {Book::Type::BOOK1, -406}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::WEAPONS, {Attribute::Type::FIGHTING}, 5, 3));
             }
         }
 
@@ -16967,11 +16977,11 @@ namespace Book1
 
             if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PRYBAR}))
             {
-                Choices.push_back(Choice::Base("Break into the basement (Individual check: Fighting 4+, Successes: 2)", {Book::Type::BOOK1, 766}, {Book::Type::BOOK1, 468}, {Attribute::Type::FIGHTING}, 4, 2, false));
+                Choices.push_back(Choice::Base("Break into the basement (Individual check: Fighting 4+, Successes: 2)", {Book::Type::BOOK1, 766}, {Book::Type::BOOK1, 468}, {Attribute::Type::FIGHTING}, 4, 2));
             }
             else
             {
-                Choices.push_back(Choice::Base("Break into the basement (Individual check: Fighting 5+, Successes: 2)", {Book::Type::BOOK1, 766}, {Book::Type::BOOK1, 468}, {Attribute::Type::FIGHTING}, 5, 2, false));
+                Choices.push_back(Choice::Base("Break into the basement (Individual check: Fighting 5+, Successes: 2)", {Book::Type::BOOK1, 766}, {Book::Type::BOOK1, 468}, {Attribute::Type::FIGHTING}, 5, 2));
             }
         }
 
@@ -17536,11 +17546,11 @@ namespace Book1
 
             if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PRYBAR}))
             {
-                Choices.push_back(Choice::Base("Pull down the barricade (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 630}, {Book::Type::BOOK1, -541}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3, false));
+                Choices.push_back(Choice::Base("Pull down the barricade (Team check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 630}, {Book::Type::BOOK1, -541}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 3));
             }
             else
             {
-                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 630}, {Book::Type::BOOK1, -541}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 3, false));
+                Choices.push_back(Choice::Base("Open the vault (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 630}, {Book::Type::BOOK1, -541}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 5, 3));
             }
 
             Choices.push_back(Choice::Base("Make your way back down the stairs", {Book::Type::BOOK1, 23}));
@@ -18121,7 +18131,7 @@ namespace Book1
             Text = "You browse the selection, with many interesting tomes on philosophy, war and architecture on display. Disturbingly, you also come across the bodies of two orcs, lying dead on the floor. They seem to have been bludgeoned to death. Your eyes flick to a blood-stained tome that seems to be pulling itself off the shelves. To your horror it is joined by a veritable swarm of books. They fly off the shelves, bashing into the sides of your faces, flapping their heavy leather and wooden pages like aggressive pigeons before your startled eyes.\n\nYou attempt to hold your ground for a few moments, but as more and more books fly off the shelf, you realise your task is hopeless. You must fight your way to the exit!\n\nNote:  Each party member loses 1 Health point.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Fight your way out of the library (Team check: Fighting 4+, Successes: 4)", {Book::Type::BOOK1, 203}, {Book::Type::BOOK1, -558}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 4, false));
+            Choices.push_back(Choice::Base("Fight your way out of the library (Team check: Fighting 4+, Successes: 4)", {Book::Type::BOOK1, 203}, {Book::Type::BOOK1, -558}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 4));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -23596,7 +23606,7 @@ namespace Book1
             Text = "The thief turns his head at the sudden noise. As quick as a flash he dashes forwards, long dagger in hand, to cut the rope. You need to get through the window and stop him!\n\nNote: The party member at the top of the rope make following skill check.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Tackle the thief (Individual check: Fighting 5+, Successes: 4)", {Book::Type::BOOK1, 332}, {Book::Type::BOOK1, 528}, Choice::Type::ORDER_SKILL_CHECK, {Attribute::Type::FIGHTING}, 1, 5, 4, false));
+            Choices.push_back(Choice::Base("Tackle the thief (Individual check: Fighting 5+, Successes: 4)", {Book::Type::BOOK1, 332}, {Book::Type::BOOK1, 528}, Choice::Type::ORDER_SKILL_CHECK, {Attribute::Type::FIGHTING}, 1, 5, 4));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -23749,11 +23759,11 @@ namespace Book1
 
             if (Engine::VERIFY_EQUIPMENT(party, Team::Type::WALL_CLIMBING, {Equipment::Type::PRYBAR}))
             {
-                Choices.push_back(Choice::Base("Force open window (Individual check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 305}, {Book::Type::BOOK1, 443}, Team::Type::WALL_CLIMBING, {Attribute::Type::FIGHTING}, 4, 3, false));
+                Choices.push_back(Choice::Base("Force open window (Individual check: Fighting 4+, Successes: 3)", {Book::Type::BOOK1, 305}, {Book::Type::BOOK1, 443}, Team::Type::WALL_CLIMBING, {Attribute::Type::FIGHTING}, 4, 3));
             }
             else
             {
-                Choices.push_back(Choice::Base("Force open window (Individual check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 305}, {Book::Type::BOOK1, 443}, Team::Type::WALL_CLIMBING, {Attribute::Type::FIGHTING}, 5, 3, false));
+                Choices.push_back(Choice::Base("Force open window (Individual check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 305}, {Book::Type::BOOK1, 443}, Team::Type::WALL_CLIMBING, {Attribute::Type::FIGHTING}, 5, 3));
             }
         }
     };
