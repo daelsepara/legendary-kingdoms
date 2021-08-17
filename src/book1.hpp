@@ -8752,7 +8752,7 @@ namespace Book1
             if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
             {
                 Engine::REMOVE_STATUS(party.Members[party.LastSelected], Character::Status::ENCHANTED_CURSED);
-                
+
                 Engine::KILL(party, party.Members[party.LastSelected].Type);
             }
         }
