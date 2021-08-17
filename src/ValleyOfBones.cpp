@@ -17966,6 +17966,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
             {
                 putHeader(renderer, "Ship Prices", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
+                fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
+
                 if (harbour->Ships.size() == 0)
                 {
                     putText(renderer, "\nYou cannot buy nor sell ships here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
@@ -17975,6 +17977,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
             {
                 putHeader(renderer, "Repair Costs", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
+                fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
+
                 if (harbour->ShipRepairPrice > 0)
                 {
                     std::string repair_string = "You can repair any ship you have here. It costs " + std::to_string(harbour->ShipRepairPrice) + " silver coins to restore each Health point. You can restore your ship up to its starting Health value.";
@@ -17983,24 +17987,24 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 }
                 else
                 {
-                    putText(renderer, "\nShip repair services are not available here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                    putText(renderer, "Ship repair services are not available here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
             }
             else if (current_mode == Control::Type::BUY_SELL_CARGO)
             {
                 putHeader(renderer, "Cargo Prices", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
+                fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
+
                 if (harbour->Cargo.size() == 0)
                 {
-                    putText(renderer, "\nYou cannot buy nor sell cargo here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                    putText(renderer, "You cannot buy nor sell cargo here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
             }
             else
             {
                 fillRect(renderer, textwidth, infoh, textx, texty, intBR);
             }
-
-            fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
             for (auto i = offset; i < last; i++)
             {
