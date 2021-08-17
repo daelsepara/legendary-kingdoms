@@ -151,7 +151,7 @@ namespace Book1
 
             ID = 4;
 
-            Text = "You swoop Amelia up into your arms just before she reaches the wine barrel. She shrieks in delight and throws an arm around your neck.\n\n\"Is it my prinsh charming?\" she slurs, nuzzling into your chest.\n\n\"Well... if by prince you meant castle pot-washer, then yes,\" you smile, carrying her over to her quarters in the palace.\n\n\"Tell me something,\" says Amelia dreamily, between snoozes, as you bear her through the palace. \"Why are you so charming to everyone except me?\"\n\n\"Charming is another word for lying,\" you say in a rare moment of honesty. \"I'd never lie to you, Amelia...\"\n\nHer snores cut off a potentially romantic moment. Tucking her into bed you go to join the rest of your companions.\n\nNote: Amelia has gained a HEART for Brash. Brash also gains a HEART for Amelia.";
+            Text = "You swoop Amelia up into your arms just before she reaches the wine barrel. She shrieks in delight and throws an arm around your neck.\n\n\"Is it my prinsh charming?\" she slurs, nuzzling into your chest.\n\n\"Well... if by prince you meant castle pot-washer, then yes,\" you smile, carrying her over to her quarters in the palace.\n\n\"Tell me something,\" says Amelia dreamily, between snoozes, as you bear her through the palace. \"Why are you so charming to everyone except me?\"\n\n\"Charming is another word for lying,\" you say in a rare moment of honesty. \"I'd never lie to you, Amelia...\"\n\nHer snores cut off a potentially romantic moment. Tucking her into bed you go to join the rest of your companions.\n\nNote: Amelia has gained a heart for Brash. Brash also gains a heart for Amelia.";
 
             Choices.clear();
 
@@ -572,6 +572,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 18;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "The door in front of you is stuck. To get it open you will have to force it.";
 
@@ -1900,6 +1902,8 @@ namespace Book1
 
             ID = 57;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -2080,7 +2084,7 @@ namespace Book1
 
             ID = 62;
 
-            Text = "That night, you stroll along the terrace, the night a canopy of stars, reflected in the watery rice paddies that surround the house. You need some fresh air. Being treated as a hero all day and night can be exhausting.\n\nYou spy Brash leaning back on a chair, his feet up on the railings, a cup of rice wine in hand. He stares out over the still landscape.\n\n\"Silver for your thoughts,\" you say, causing Brash to yelp in surprise, fall off his chair and crash to ground.\n\n\"Ah! Akihiro! Always catching me at my best!\" Brash says sheepishly. You offer him a hand up, the fair lad accepting, pulled almost into an embrace. He blushes and backs away.\n\n\"Not like you to lose your tongue, my friend,\" you smile. \"You've been avoiding me, I sense.\"\n\n\"A bit,\" he says. \"I just don't know what to do with myself these days...\"\n\n\"How so?\" you ask. When he doesn't respond you flick him a silver coin, which he catches with his quick reflexes. He looks at it in his hand and realises he has been fooled.\n\n\"I've been thinking about you,\" he admits. \"Quite a bit. I don't know what to do about it. The kind of feelings I have aren't allowed in Royce.\"\n\n\"They are not allowed anywhere,\" you say, joining him at the railings. \"There are many men who would rather kill than love. And more who would kill to stop love, no matter how earnest. I will never hurry you, Brash, but I do not accept uncertainty. If you feel for me what I feel for you, you must be sure. Once done, we cannot undo it.\"\n\nYou are disturbed by a creak on the floorboards. You turn to see your sister arriving on the terrace. \"Come, Akihiro, you are asked for! Do not keep the people from their hero!\"\n\n\"The price of fame,\" you smile. \"Come, Brash. Walking out on a party is not done.\"\n\nYou offer him your hand, and he accepts, squeezing before releasing.\n\nNote: Akihiro has gained a HEART for Brash. Brash also gains a HEART for Akihiro. You gained the code A98.";
+            Text = "That night, you stroll along the terrace, the night a canopy of stars, reflected in the watery rice paddies that surround the house. You need some fresh air. Being treated as a hero all day and night can be exhausting.\n\nYou spy Brash leaning back on a chair, his feet up on the railings, a cup of rice wine in hand. He stares out over the still landscape.\n\n\"Silver for your thoughts,\" you say, causing Brash to yelp in surprise, fall off his chair and crash to ground.\n\n\"Ah! Akihiro! Always catching me at my best!\" Brash says sheepishly. You offer him a hand up, the fair lad accepting, pulled almost into an embrace. He blushes and backs away.\n\n\"Not like you to lose your tongue, my friend,\" you smile. \"You've been avoiding me, I sense.\"\n\n\"A bit,\" he says. \"I just don't know what to do with myself these days...\"\n\n\"How so?\" you ask. When he doesn't respond you flick him a silver coin, which he catches with his quick reflexes. He looks at it in his hand and realises he has been fooled.\n\n\"I've been thinking about you,\" he admits. \"Quite a bit. I don't know what to do about it. The kind of feelings I have aren't allowed in Royce.\"\n\n\"They are not allowed anywhere,\" you say, joining him at the railings. \"There are many men who would rather kill than love. And more who would kill to stop love, no matter how earnest. I will never hurry you, Brash, but I do not accept uncertainty. If you feel for me what I feel for you, you must be sure. Once done, we cannot undo it.\"\n\nYou are disturbed by a creak on the floorboards. You turn to see your sister arriving on the terrace. \"Come, Akihiro, you are asked for! Do not keep the people from their hero!\"\n\n\"The price of fame,\" you smile. \"Come, Brash. Walking out on a party is not done.\"\n\nYou offer him your hand, and he accepts, squeezing before releasing.\n\nNote: Akihiro has gained a heart for Brash. Brash also gains a heart for Akihiro. You gained the code A98.";
 
             Choices.clear();
 
@@ -3303,6 +3307,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 99;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "The goblins chitter to each other in their native tongue, unsure of what to do. Such indecisive beasts!";
 
@@ -4588,7 +4594,7 @@ namespace Book1
 
             ID = 139;
 
-            Text = "After washing yourselves you sit upon the bank. Amelia has washed her long hair and is beginning to re-braid it, gazing into her own reflection in the oasis. On a whim Tasha offers to help her, and soon she is twisting her hair into tight braids in a style reminiscent of a Splintered Isle buccaneer. It is a moment of tender kindness, which have been rare since you came to the savage Valley of Bones. Amelia accepts Tasha's help, occasionally checking her progress by glancing into the water.\n\n\"You're going to make me look like a pirate!\" Amelia laughs. \"I quite like it.\"\n\n\"We can take it out if you have to meet any fine lords or ladies,\" Tasha says idly, continuing to braid.\n\n\"If it makes me look more like you, I don't care if some noble doesn't like it,\" shrugs Amelia. \"I'm a bastard girl. No one in Royce see's past my name. Not even my own father.\"\n\n\"Strange customs in your land,\" Tasha muses. \n\n\"Perhaps we'll sail to the Splintered Isles, next. That's true freedom. There's no kings or queens there.\"\n\n\"Or laws,\" laughs Amelia. \"Maybe they're better off for it.\"\n\nThis has been a kindly encounter.\n\nNote: Tasha has gained a HEART for Amelia Pass-Dayne. Amelia Pass-Dayne also gains a HEART for Tasha.";
+            Text = "After washing yourselves you sit upon the bank. Amelia has washed her long hair and is beginning to re-braid it, gazing into her own reflection in the oasis. On a whim Tasha offers to help her, and soon she is twisting her hair into tight braids in a style reminiscent of a Splintered Isle buccaneer. It is a moment of tender kindness, which have been rare since you came to the savage Valley of Bones. Amelia accepts Tasha's help, occasionally checking her progress by glancing into the water.\n\n\"You're going to make me look like a pirate!\" Amelia laughs. \"I quite like it.\"\n\n\"We can take it out if you have to meet any fine lords or ladies,\" Tasha says idly, continuing to braid.\n\n\"If it makes me look more like you, I don't care if some noble doesn't like it,\" shrugs Amelia. \"I'm a bastard girl. No one in Royce see's past my name. Not even my own father.\"\n\n\"Strange customs in your land,\" Tasha muses. \n\n\"Perhaps we'll sail to the Splintered Isles, next. That's true freedom. There's no kings or queens there.\"\n\n\"Or laws,\" laughs Amelia. \"Maybe they're better off for it.\"\n\nThis has been a kindly encounter.\n\nNote: Tasha has gained a heart for Amelia Pass-Dayne. Amelia Pass-Dayne also gains a heart for Tasha.";
 
             Choices.clear();
 
@@ -5537,7 +5543,7 @@ namespace Book1
 
             ID = 170;
 
-            Image = "images/book1/malronac_the_deathengine.png";
+            Image = "images/book1/ironking_and_malronac.png";
 
             Text = "You step out into broiling heat, the sun scorching the sands under your bare feet. You are the first competitors into the arena and receive a roaring cheer from the crowd as you appear. High above you the Iron King gazes down impassively, Malronac the Deathengine standing unflinching by his side. You look across the heat-swept arena as the far gate is opened. You cannot help but swallow as a pair of shaggy-haired desert lions come snarling out of the gate. Their manes are stained red with the blood of other victims, and they roar at you with filthy yellow teeth. You must fight for your lives.";
 
@@ -6409,6 +6415,10 @@ namespace Book1
 
             ID = 195;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "You point out that the definition of a religious ceremony and a funeral observance are quite different things in Chalice law. Simply passing by a temple is not a ceremony in itself, and therefore no law is broken. The kensai pause a moment to consult a monk in a nearby temple, but soon realise that you are correct in the most literal sense. In deference to the dead man's life of selfless service to the state they allow the casket to pass.\n\nThe mourners give a most impious cheer before continuing their wake. The monk who advised the kensai congratulates you. \"Young men are good at war, but poor in wisdom,\" he says. \"With the exception of the young people I see before me. Thank you for avoiding bloodshed. Perhaps this gift will aid you in gaining even greater wisdom?\"\n\nThe monk presents you with a block of INCENSE.";
 
             Choices.clear();
@@ -6851,6 +6861,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 210;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
 
             Image = "images/book1/attic_bunkbeds.png";
 
@@ -8422,6 +8434,8 @@ namespace Book1
 
             ID = 261;
 
+            Location = Location::Type::JUNGLE;
+
             Text = "\"I'm glad I found you. I must tell you some sad news,\" you say gravely. \"I met one of your kind in the desert. An apprentice of Unbraaki. Alas, he perished. He did not return to you because he feared Unbraaki would harm you if he found him hiding here. I am sorry to bring you such sad news.\"\n\nThe chattering in the treetops instantly stops, to be replaced by mournful howls. \"Curse you for bringing such dreadful tidings!\" cries one of the monkeys. \"For you speak of my own son! Oh! Misery! Misery!\"\n\nThe monkeys depart solemnly above you, their howls rending your ears. Emlyn looks on in wonder as the monkeys vanish. \"What did you say to them?\" she asks, astonished.\n\n\"I haven't the heart to tell you,\" you say sadly, wiping a tear from your eye.";
 
             Choices.clear();
@@ -9870,6 +9884,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 306;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Choices.clear();
 
@@ -11649,6 +11665,8 @@ namespace Book1
 
             ID = 366;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You find yourselves in a long corridor that runs east-west. Three doors present themselves as ways onwards.";
 
             Choices.clear();
@@ -12439,6 +12457,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 389;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You curse as three of the goblins bolt past you out of the south door. The other three goblins bear their teeth and lunge at you.";
 
@@ -13273,6 +13293,8 @@ namespace Book1
 
             ID = 412;
 
+            Location = Location::Type::JUNGLE;
+
             Text = "The monkeys paw over the item you give them, hauling it up into the trees. One monkey snatches it from another, and soon the entire pack storm through the trees, howling after the thief, shaking down a rain of leaves as they scramble away.\n\n\"Let's get out of here while we still can!\" smiles Emlyn, urging you down the path.";
 
             Choices.clear();
@@ -13310,6 +13332,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 414;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "The coffin is made of stone, and its lid looks heavy. There are scrape marks on the lip of the lid that makes it look like it was opened quite recently. It has a name: 'Sar Wilmot Fairbrother'.";
 
@@ -13525,6 +13549,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 423;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You have returned to the goblin kitchen. The goblins greet you with friendly chitters and offer you some food.\n\nNote: Any party members on less than 4 Health restore themselves to 4 Health points by eating here.";
 
@@ -15404,6 +15430,8 @@ namespace Book1
 
             ID = 486;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "It's kind of an old trick, but you suggest to the goblins that they might want to poison the orc leader's food with the handy vial of poison you have on you. The goblins eagerly agree, cackling wickedly as they sprinkle liberal drops of the venom across the orc's dinner. Several of the braver goblins vanish, dropping off their deadly meals, only to come scurrying back a few minutes later.\n\nThey are too cowardly to check the results of their poisoning. It looks like you will have to do that for them!\n\nThere's no more to do here. Where will you go now?\n\nNote: You gained the code A63.";
 
             Choices.clear();
@@ -15644,6 +15672,8 @@ namespace Book1
 
             ID = 494;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You are in a large, rectangular chamber which features a number of complete skeletons which have been carefully assembled and hung up on frames. The centre of the room is dominated by a large stone coffin, whose lid has been carved to resemble a knight.\n\nThere are three doors in the chamber, one in the north wall, a strong looking door in the south wall, and a flimsier looking door in the southwest corner.";
 
             Choices.clear();
@@ -15701,6 +15731,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 496;
+
+            Location = Location::Type::JUNGLE;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -17524,6 +17556,8 @@ namespace Book1
 
             ID = 551;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You open the door into a busy looking kitchen. Goblins, slaves by the look of their garb, are busy cooking a surprisingly decent looking broth in a large cauldron. Even through the thick clouds of steam they spot you, mouths open in surprise.";
 
             Choices.clear();
@@ -17946,6 +17980,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 564;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
 
             Text = "You are about to battle the foremost wizard of the Valley of Bones. His colourful robe blazes with light, making him hard to see as he commands his monkeys to attack. To your horror the monkeys do not attack with teeth and nails, but with blasts of magic. You are not just fighting one sorcerer -- but a whole pack of them!\n\nNote: Unbraaki fights with blasts of black flames from his hands. These flames leech your life into his. For every Health point you lose, Unbraaki gains a Health point, even if this takes him over his starting Health. The monkeys do not attack physically, but each will cast a spell from the following list:\n\nIce Bolt: Make a Fighting: 8 attack at 4+ difficulty\n\nUnfailing Strike: Inflict 3 damage on one party member\n\nPoison Stream: Make two Fighting: 5 attacks at 4+ difficulty";
 
@@ -20837,6 +20873,8 @@ namespace Book1
 
             ID = 650;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "The goblin kitchen slaves are dead. You make a search through the room, but there is nothing here of appreciable value. Shrugging, you make your way on.\n\nNote: You gained the code A61.";
 
             Choices.clear();
@@ -21188,6 +21226,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 660;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "Since the lid is so heavy two of your party members attempt to shift it. Almost as soon as you touch it the coffin lid slides aside. Inside, it's skin rotten with putrefaction, is a zombie, so worm-eaten it is impossible to tell its gender. It hisses as it rises, a hideous grey tongue extending grotesquely from its mouth. All around you the inanimate skeletons suddenly snap to attention, drawing the poles they were hung upon to use as quarterstaffs. You are surrounded and must fight.";
 
@@ -22948,6 +22988,8 @@ namespace Book1
 
             ID = 717;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "This plain looking room is empty. There is a door in the north and south wall.";
 
             Controls = Story::Controls::STANDARD;
@@ -23354,6 +23396,331 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 310}; }
+    };
+
+    class Story730 : public Story::Base
+    {
+    public:
+        Story730()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 730;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "You side with the mourners and attempt to persuade the kensai to let the matter drop. The kensai will only be persuaded by strong theological arguments.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::IN_PARTY(party, Character::Type::AKIHIRO_OF_CHALICE))
+            {
+                Choices.push_back(Choice::Base("Convince the kensai (Team check: Lore 4+, Successes: 6)", {Book::Type::BOOK1, 195}, {Book::Type::BOOK1, 843}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 5));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Convince the kensai (Team check: Lore 4+, Successes: 5)", {Book::Type::BOOK1, 195}, {Book::Type::BOOK1, 843}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 6));
+            }
+        }
+    };
+
+    class Story731 : public Story::Base
+    {
+    public:
+        Story731()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 731;
+
+            Location = Location::Type::SALT_PLAINS;
+
+            Text = "You spy a body in the distance, little more than a pile of bones. Approaching you can see it is the remains of a Lhasbreath warrior, his grim BONE ARMOUR glistening in the waterless waste. The poor devil has no use for his things now. You can take his BONE ARMOUR (Armour +2), his IRON SHORTSWORD (Fighting +1) and 30 silver coins. Lamenting that he died so close to water, you look to leave the savage wasteland.\n\nNote: You gained the code A18.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::BONE_ARMOUR2, Equipment::IRON_SHORTSWORD1};
+
+            Limit = 2;
+
+            Engine::GET_CODES(party, {Codes::A(18)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 711}; }
+    };
+
+    class Story732 : public Story::Base
+    {
+    public:
+        Story732()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 732;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
+            Text = "You wait for another monkey to pass and cast your spell, the surprised looking ape gazing at you in wonder as you address it in its own tongue.\n\n\"My friend, can you help us through the window?\" you ask.\n\n\"Why do you want to come in?\" asks the monkey, scratching its behind.\n\nAnimals are honest creatures, and it is impossible to lie in their own language. \"We want to rob Unbraaki's palace,\" you say, appalled at your own frankness.\n\nThe monkey laughs. \"Sounds like fun!\" he chitters back. \"Hang on a moment.\"\n\nThe monkey sits upon the window ledge, and, to your amazement, scratches away the runes without activating their curse.\n\n\"How did you...?\" you ask.\n\n\"We're Unbraaki's apprentices,\" laughs the monkey.\n\n\"We are all sorcerers here! Still, Unbraaki can be mean sometimes, so I don't mind if you rob him. Have a good evening!\"";
+
+            Bye = "The monkey scampers away, and you lose no time scrambling through the window into the attic.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 210}; }
+    };
+
+    class Story733 : public Story::Base
+    {
+    public:
+        Story733()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 733;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Image = "images/book1/malronac_the_deathengine.png";
+
+            Text = "It is several days before you catch sight of the fearsome golem, but eventually the iron body of Malronac comes clanking out of the palace doors, its glittering steel greatsword gripped openly in hand. Malronac moves swiftly through the city streets, and you follow at a distance, eager to put as much distance between the city guards and him as possible.\n\nEventually the Deathengine stops outside the house of a beloved healer. He kicks in the door, loudly announcing his arrival. \"Garrick of Luutanesh! I am charged by the king to execute you under suspicion of conspiracy!\n\nThis is your moment. You follow Malronac into the house, just as he is gripping the throat of a helpless looking old man.\n\n\"Drop him, you metal cur!\" you snarl, drawing your weapons. Malronac raises a single metallic eyebrow, casting the old man into the corner. He grips his sword, eyes flashing with power.\n\n\"More traitors to execute!\" he growls. \"You merely save me time, fools!\"\n\nYou cannot flee from Malronac, he will chase you until the end of the world.\n\nNote: Malronac will attack twice each round. You must assign the damage of the second attack to a different character from the first.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {Monster::Base("Malronac the Deathengine", 6, 3, 4, 30, 0, 0, 2)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 777}; }
+    };
+
+    class Story734 : public Story::Base
+    {
+    public:
+        Story734()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 734;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You have slain the orcs, their blood weeping into the ancient flagstones. You found five CRUDE BLADES (Fighting +0). Turning your attention to the table you examine the artefacts that the orcs seem to have dug up from the earth. Is this what the orc expedition is about? Simple treasure hunting?\n\nSome of the artefacts are simple bits of pottery with no real value, but you do find a HANDSOME BROOCH (Charisma +1) and several other pieces of jewellery you can sell for 350 silver coins.\n\nThere are two exits from the chamber.\n\nNote: You gained the code A74.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go through the north door", {Book::Type::BOOK1, 23}));
+            Choices.push_back(Choice::Base("Go through the east door", {Book::Type::BOOK1, 755}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::HANDSOME_BROOCH1};
+
+            Limit = 6;
+
+            Engine::GET_CODES(party, {Codes::A(74)});
+
+            Engine::GAIN_MONEY(party, 350);
+        }
+    };
+
+    class Story735 : public Story::Base
+    {
+    public:
+        Story735()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 735;
+
+            Text = "Akihiro summersaults over an intervening foe, landing in front of Sar Jessica just as the axe blade falls. Clang! With one swift move he knocks aside the axe blade, sweeping his sword across the barbarian's throat in a single motion. The dumbstruck barbarian stumbles back, blood pouring from his neck, before collapsing in a heap.\n\nSar Jessica, astonished at this peerless swordplay, gapes wordlessly.\n\n\"Come, Sar Jessica,\" says Akihiro softly. \"It is too soon to die, yet.\"\n\nTaking his hand, Sar Jessica rejoins the fight -- but she will not forget this moment.\n\nNote: Jessica has gained a heart for Akihiro. Akihiro also gains a heart for Jessca.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEARTS(party, Character::Type::SAR_JESSICA_DAYNE, Character::Type::AKIHIRO_OF_CHALICE, 1);
+            Engine::GAIN_HEARTS(party, Character::Type::AKIHIRO_OF_CHALICE, Character::Type::SAR_JESSICA_DAYNE, 1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 753}; }
+    };
+
+    class Story736 : public Story::Base
+    {
+    public:
+        Story736()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 736;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You are in a long corridor, that runs north-south. A heavy looking door is in the west wall bearing a large lock. In the east wall is a more ordinary looking door. To the north is a door from which pleasant food smells waft. You think you see a crossroads to the south.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Unlock the west door with the IRON KEY", {Book::Type::BOOK1, 306}, {Equipment::IRON_KEY}));
+            Choices.push_back(Choice::Base("Go through the east door", {Book::Type::BOOK1, 723}));
+            Choices.push_back(Choice::Base("Go through the north door", {Book::Type::BOOK1, 551}));
+            Choices.push_back(Choice::Base("Go south to the crossroads", {Book::Type::BOOK1, 566}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story737 : public Story::Base
+    {
+    public:
+        Story737()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 737;
+
+            Location = Location::Type::WITHERED_STEPPES;
+
+            Text = "You broach the subject of the queen, and her requirement for more soldiers to prosecute her war against the patriarch of Cursus. He laughs as you extol her virtues as a ruler. \"You do not have to tell me what she is like, why, she is my own daughter,\" he laughs.\n\n\"You are the Everchild's father?\" you gasp.\n\n\"I am Milagros's father,\" he chides. \"This tale about her being the eternal queen is just so much nonsense. The girl was too easily led by her aunt, who was a fabulous storyteller, but didn't have an ounce of wit about her.\"\n\n\"But surely her magical powers are enough to convince...\" you begin.\n\n\"She can cast a spell or two, to be sure, but no more than she has learnt from the hedge wizards of her own tribe,\" he smiles indulgently. \"The Everchild of legend could raise mountains and turn seas to fire. Have you ever seen Milagros do that?\"\n\nYou are silent, suddenly filled with doubt.\n\n\"Mark my words, many in the valley will meet their deaths before my child is done with her ambitions, and you'll not see a whit of change for the better,\" he warns.\n\nYou rise, now uncertain that you have backed the right monarch, but the nomad chief calls you back. \"She is still family,\" he shrugs. \"Tell her she shall have my finest horsemen, but bid her remember where she comes from. It is not out of the pages of a story book, that is for certain.\"\n\nNote: These soldiers are added to your Saltdad barracks:\n\n[Nomad Horsemen]: Strength 4, Morale 3\n\nYou gained the code A37.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            party.Army.push_back(Army::Base("Nomad Horsemen", Army::Type::NOMAD_HORSEMEN, Location::Type::SALTDAD, 4, 3, false));
+
+            Engine::GET_CODES(party, {Codes::A(37)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 473}; }
+    };
+
+    class Story738 : public Story::Base
+    {
+    public:
+        Story738()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 738;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "The slaves you rescued from the dungeons of Mordain are here. They have already boarded the ship and made it seaworthy. They urge you to become their new captain and lead them to fame and riches.\n\nNote: You gained the code A68.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Agree to their request and set sail", {Book::Type::BOOK1, 112}));
+            Choices.push_back(Choice::Base("Decline, gifting them the ship and wishing them luck", {Book::Type::BOOK1, 800}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(68)});
+        }
+    };
+
+    class Story739 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Engine::Destination destination = {};
+
+        Story739()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 739;
+
+            Location = Location::Type::SALT_MINES;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take.clear();
+
+            Monsters.clear();
+
+            Limit = 0;
+
+            PreText = "The mine lift comes shuddering to a halt as you emerge onto the twelfth level of the mines.";
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(24)}))
+            {
+                PreText += "\n\nIt does not take long to find trouble. A horde of fleeing miners barge past you, pursued tightly by a gang of three scaly troglodytes. Trapped between the fleeing miners and the aggressive troglodytes you have little option but to fight.";
+
+                Monsters = {
+                    Monster::Base("Troglodyte", 2, 3, 4, 4, 0),
+                    Monster::Base("Troglodyte", 3, 3, 4, 3, 0),
+                    Monster::Base("Troglodyte", 2, 3, 4, 3, 0)};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 817};
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            destination = {Book::Type::BOOK1, 135};
+
+            Bye = NULL;
+
+            if (result == Engine::Combat::VICTORY)
+            {
+                Take = {Equipment::TROGLODYTE_HEAD, Equipment::TROGLODYTE_HEAD, Equipment::TROGLODYTE_HEAD};
+
+                Limit = 3;
+
+                Engine::GET_CODES(party, {Codes::A(24)});
+
+                if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::TROGLODYTE_HEAD}) > 0)
+                {
+                    Bye = "You take up the troglodyte heads from the unlucky beasts.\n\nNote: You gained the code A24.";
+                }
+                else
+                {
+                    Bye = "You gained the code A24.";
+                }
+            }
+        }
     };
 
     auto story001 = Story001();
@@ -24145,6 +24512,16 @@ namespace Book1
     auto story727 = Story727();
     auto story728 = Story728();
     auto story729 = Story729();
+    auto story730 = Story730();
+    auto story731 = Story731();
+    auto story732 = Story732();
+    auto story733 = Story733();
+    auto story734 = Story734();
+    auto story735 = Story735();
+    auto story736 = Story736();
+    auto story737 = Story737();
+    auto story738 = Story738();
+    auto story739 = Story739();
 
     void InitializeStories()
     {
@@ -24227,7 +24604,8 @@ namespace Book1
             &story690, &story691, &story692, &story693, &story694, &story695, &story696, &story697, &story698, &story699,
             &story700, &story701, &story702, &story703, &story704, &story705, &story706, &story707, &story708, &story709,
             &story710, &story711, &story712, &story713, &story714, &story715, &story716, &story717, &story718, &story719,
-            &story720, &story721, &story722, &story723, &story724, &story725, &story726, &story727, &story728, &story729};
+            &story720, &story721, &story722, &story723, &story724, &story725, &story726, &story727, &story728, &story729,
+            &story730, &story731, &story732, &story733, &story734, &story735, &story736, &story737, &story738, &story739};
     }
 }
 #endif

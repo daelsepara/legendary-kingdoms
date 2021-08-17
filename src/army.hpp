@@ -41,6 +41,7 @@ namespace Army
         MERCENARY_MEN_AT_ARMS,
         MERCENARY_SPEARS,
         MERCENARY_SWORDS,
+        NOMAD_HORSEMEN,
         PEASANT_LEVIES,
         SLAVE_LEVIES,
         SPEARMEN_OF_SALTDAD,

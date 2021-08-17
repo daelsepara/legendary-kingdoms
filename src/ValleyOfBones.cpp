@@ -3816,6 +3816,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
             auto reduced = false;
 
             final_damage = combat_damage;
+
             auto reduced_damage = 0;
 
             while (!done)
@@ -5900,15 +5901,19 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                                     combat_damage = std::max(0, reduced_damage);
 
-                                                    done = true;
-
                                                     selected = false;
 
                                                     current = -1;
 
-                                                    if (monsters[opponent].Type == Monster::Type::UNBRAAKI && combat_damage > 0)
+                                                    if (monsters[opponent].Type == Monster::Type::UNBRAAKI && reduced_damage > 0)
                                                     {
-                                                        Engine::GAIN_HEALTH(monsters[opponent], combat_damage);
+                                                        Engine::GAIN_HEALTH(monsters[opponent], reduced_damage);
+
+                                                        displayMessage("Unbraaki gains " + std::to_string(reduced_damage) + " health!", intRD);
+                                                    }
+                                                    else
+                                                    {
+                                                        done = true;
                                                     }
                                                 }
                                                 else
@@ -5932,8 +5937,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                                     }
 
                                                     displayMessage(message, intRD);
-
-                                                    combat_damage = result;
                                                 }
                                             }
                                             else
