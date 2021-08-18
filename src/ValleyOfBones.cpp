@@ -8087,7 +8087,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         {
                             if (Skill == Attribute::Type::FIGHTING)
                             {
-                                score2 = Engine::SCORE(party.Members[team[0]], Attribute::Type::FIGHTING);
+                                score2 = Engine::SCORE(party.Members[team[1]], Attribute::Type::FIGHTING);
 
                                 if (Engine::HAS_WEAPON(party.Members[team[1]]))
                                 {
