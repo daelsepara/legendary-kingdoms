@@ -18,7 +18,7 @@ namespace Codes
         STARTED_IN_BOOK4,
         STARTED_IN_BOOK5,
         STARTED_IN_BOOK6,
-        FIRSTTIME_SOLD_SALTDADARENA,
+        SOLD_SALTDAD_ARENA,
         FOUGHT_IN_ARENA,
         BRIBE_GOLD_BULLION1,
         BRIBE_GOLD_BULLION2,
@@ -57,7 +57,8 @@ namespace Codes
         FIGHT_TO_KILL,
         NO_WEAPONS,
         BRIBE_OGRE_100,
-        BRIBE_OGRE_200
+        BRIBE_OGRE_200,
+        LAST_ENEMY_ATTACK_ROUND0
     };
 
     std::map<Book::Type, const char *> Prefix = {

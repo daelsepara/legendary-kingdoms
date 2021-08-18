@@ -193,6 +193,8 @@ namespace Character
 
         bool IsCivilized = true;
 
+        bool Damaged = false;
+
         Base()
         {
         }

@@ -44,7 +44,8 @@ namespace Monster
         ZEALOT_SORCERER,
         EVERCHILD_ASSASSIN,
         FASTILON,
-        BRONZEGUARD
+        BRONZEGUARD,
+        SALT_DRAGON
     };
 
     class Base

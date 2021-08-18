@@ -902,6 +902,8 @@ namespace Engine
 
     void GAIN_HEALTH(Character::Base &character, int health)
     {
+        auto initial = character.Health;
+
         character.Health += health;
 
         if (character.Health < 0)
@@ -912,6 +914,15 @@ namespace Engine
         if (character.Health > character.MaximumHealth)
         {
             character.Health = character.MaximumHealth;
+        }
+
+        if (character.Health < initial)
+        {
+            character.Damaged = true;            
+        }
+        else
+        {
+            character.Damaged = false;
         }
     }
 
@@ -3127,6 +3138,34 @@ namespace Engine
         }
 
         return found;
+    }
+
+    void CLEAR_DAMAGES(Party::Base &party)
+    {
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (Engine::IS_ALIVE(party.Members[i]))
+            {
+                party.Members[i].Damaged = false;
+            }
+        }
+    }
+
+    bool IS_DAMAGED(Party::Base &party)
+    {
+        auto damaged = false;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (party.Members[i].Damaged)
+            {
+                damaged = true;
+
+                break;
+            }
+        }
+
+        return damaged;
     }
 }
 #endif

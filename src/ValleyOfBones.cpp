@@ -12127,37 +12127,46 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         auto canFlee = storyFlee;
 
+        auto done = false;
+
+        auto current = -1;
+
+        auto selected = false;
+
+        auto scrollUp = false;
+
+        auto scrollDown = false;
+
+        auto hold = false;
+
+        auto scrollSpeed = 1;
+
+        auto space = 8;
+
+        Engine::CLEAR_DAMAGES(party);
+
         while (Engine::COUNT(monsters) > 0 && Engine::COUNT(party, team) > 0 && (roundLimit == -1 || (roundLimit > 0 && combatRound < roundLimit)))
         {
-            auto done = false;
-
-            auto current = -1;
-
-            auto selected = false;
-
-            auto scrollUp = false;
-
-            auto scrollDown = false;
-
-            auto hold = false;
-
-            auto scrollSpeed = 1;
-
-            auto space = 8;
-
             while (!done)
             {
-                if (combatRound == 0 && Engine::VERIFY_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0}))
+                if (combatRound == 0 && Engine::VERIFY_CODES_ANY(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0, Codes::Type::LAST_ENEMY_ATTACK_ROUND0}))
                 {
                     if (Engine::IS_ACTIVE(party, party.LastSelected) && monsters.size() > 0)
                     {
-                        auto free_attack = Engine::COUNT(monsters[0].Attack, monsters[0].Difficulty);
+                        auto monster_attacking = 0;
 
-                        message = "The " + std::string(monsters[0].Name);
+                        if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_ENEMY_ATTACK_ROUND0}))
+                        {
+                            monster_attacking = monsters.size() - 1;
+                        }
+
+                        auto free_attack = Engine::COUNT(monsters[monster_attacking].Attack, monsters[monster_attacking].Difficulty);
+
+                        message = "The " + std::string(monsters[monster_attacking].Name);
 
                         if (free_attack > 0)
                         {
-                            if (Engine::ARMOUR(party.Members[party.LastSelected]) > 0 && monsters[0].Type != Monster::Type::PAPER && monsters[0].Type != Monster::Type::NAGA)
+                            if (Engine::ARMOUR(party.Members[party.LastSelected]) > 0 && monsters[monster_attacking].Type != Monster::Type::PAPER && monsters[monster_attacking].Type != Monster::Type::NAGA)
                             {
                                 free_attack = std::max(0, armourSave(window, renderer, party.Members[party.LastSelected], free_attack));
                             }
@@ -12185,7 +12194,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                     }
 
-                    Engine::LOSE_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0});
+                    if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_ENEMY_ATTACK_ROUND0}))
+                    {
+                        Engine::LOSE_CODES(party, {Codes::Type::LAST_ENEMY_ATTACK_ROUND0});
+                    }
+                    else
+                    {
+                        Engine::LOSE_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0});
+                    }
                 }
 
                 auto last = offset + limit;
@@ -12786,12 +12802,23 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                         }
                                     }
                                 }
+                                else if (Engine::HAS_MONSTER(monsters, Monster::Type::SALT_DRAGON))
+                                {
+                                    if (!Engine::IS_DAMAGED(party))
+                                    {
+                                        Engine::GAIN_HEALTH(party, -3);
+
+                                        displayMessage("The Salt Dragon is enraged and breathes out a blast of fire. Each member of the party is damaged for 3!", intRD);
+                                    }
+                                }
 
                                 Engine::LOSE_CODES(party, {Codes::Type::DAZING_LIGHTS});
 
                                 allyAttack.clear();
 
                                 hasAttacked.clear();
+
+                                Engine::CLEAR_DAMAGES(party);
 
                                 canFlee = storyFlee;
 
