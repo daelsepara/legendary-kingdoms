@@ -160,13 +160,18 @@ namespace Engine
         return !Engine::HAS_STATUS(character, Character::Status::LOST_TONGUE);
     }
 
+    bool IS_CIVILIZED(Party::Base &party, Character::Base &character)
+    {
+        return (!party.InCity || (party.InCity && character.IsCivilized));
+    }
+
     int FIND_SOLO(Party::Base &party)
     {
         auto result = -1;
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Team == Team::Type::SOLO && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (party.Members[i].Team == Team::Type::SOLO && Engine::IS_CIVILIZED(party, party.Members[i]))
             {
                 result = i;
 
@@ -213,7 +218,7 @@ namespace Engine
         {
             auto result = Engine::FIND_EQUIPMENT(party.Members[i], item);
 
-            if (result >= 0 && result < party.Members[i].Equipment.size() && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (result >= 0 && result < party.Members[i].Equipment.size() && Engine::IS_CIVILIZED(party, party.Members[i]))
             {
                 found = i;
 
@@ -437,27 +442,32 @@ namespace Engine
 
     bool IS_ALIVE(Character::Base &character)
     {
-        return (Engine::SCORE(character, Attribute::Type::HEALTH) > 0);
+        return (character.Health > 0 && Engine::HEALTH(character) > 0);
+    }
+
+    bool IS_ALIVE(Party::Base &party, int character)
+    {
+        return (character >= 0 && character < party.Members.size() && Engine::IS_ALIVE(party.Members[character]));
     }
 
     bool IS_DEAD(Character::Base &character)
     {
-        return (Engine::SCORE(character, Attribute::Type::HEALTH) <= 0);
+        return (Engine::HEALTH(character) <= 0 || character.Health <= 0);
     }
 
     bool IS_INJURED(Character::Base &character)
     {
-        return (Engine::SCORE(character, Attribute::Type::HEALTH) < character.MaximumHealth);
+        return (character.Health < character.MaximumHealth);
     }
 
     bool IS_ACTIVE(Party::Base &party, int character)
     {
-        return (character >= 0 && character < party.Members.size() && !Engine::IS_CAPTURED(party.Members[character]) && !Engine::IS_CURSED(party.Members[character]) && IS_ALIVE(party.Members[character]) && (!party.InCity || (party.InCity && party.Members[character].IsCivilized)));
+        return (character >= 0 && character < party.Members.size() && !Engine::IS_CAPTURED(party.Members[character]) && !Engine::IS_CURSED(party.Members[character]) && IS_ALIVE(party.Members[character]) && Engine::IS_CIVILIZED(party, party.Members[character]));
     }
 
     bool IS_ACTIVE(Party::Base &party, Character::Base &character)
     {
-        return (!Engine::IS_CAPTURED(character) && !Engine::IS_CURSED(character) && IS_ALIVE(character) && (!party.InCity || (party.InCity && character.IsCivilized)));
+        return (!Engine::IS_CAPTURED(character) && !Engine::IS_CURSED(character) && IS_ALIVE(character) && Engine::IS_CIVILIZED(party, character));
     }
 
     void LOSE_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> items)
@@ -603,7 +613,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if ((!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (Engine::IS_CIVILIZED(party, party.Members[i]))
             {
                 found += Engine::COUNT_EQUIPMENT(party.Members[i], equipment);
             }
@@ -643,7 +653,7 @@ namespace Engine
 
         auto result = Engine::FIND_SOLO(party);
 
-        if (result >= 0 && result < party.Members.size() && (!party.InCity || (party.InCity && party.Members[result].IsCivilized)))
+        if (result >= 0 && result < party.Members.size() && Engine::IS_CIVILIZED(party, party.Members[result]))
         {
             found = Engine::VERIFY_EQUIPMENT(party.Members[result], equipment);
         }
@@ -651,7 +661,7 @@ namespace Engine
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (Engine::VERIFY_EQUIPMENT(party.Members[i], equipment) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+                if (Engine::VERIFY_EQUIPMENT(party.Members[i], equipment) && Engine::IS_CIVILIZED(party, party.Members[i]))
                 {
                     found = true;
 
@@ -669,7 +679,7 @@ namespace Engine
 
         auto result = Engine::FIND_SOLO(party);
 
-        if (result >= 0 && result < party.Members.size() && (!party.InCity || (party.InCity && party.Members[result].IsCivilized)))
+        if (result >= 0 && result < party.Members.size() && Engine::IS_CIVILIZED(party, party.Members[result]))
         {
             found = Engine::VERIFY_EQUIPMENT(party.Members[result], equipment);
         }
@@ -683,7 +693,7 @@ namespace Engine
             {
                 for (auto i = 0; i < party.Members.size(); i++)
                 {
-                    if (Engine::VERIFY_EQUIPMENT(party.Members[i], equipment) && party.Members[i].Team == team && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+                    if (Engine::VERIFY_EQUIPMENT(party.Members[i], equipment) && party.Members[i].Team == team && Engine::IS_CIVILIZED(party, party.Members[i]))
                     {
                         found = true;
 
@@ -710,7 +720,7 @@ namespace Engine
         {
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (Engine::VERIFY_ANY_EQUIPMENT(party.Members[i], equipment) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+                if (Engine::VERIFY_ANY_EQUIPMENT(party.Members[i], equipment) && Engine::IS_CIVILIZED(party, party.Members[i]))
                 {
                     found = true;
 
@@ -734,14 +744,7 @@ namespace Engine
 
     void GAIN_HEALTH(Character::Base &character, int health)
     {
-        auto score = Engine::SCORE(character, Attribute::Type::HEALTH);
-
-        if (score > 0)
-        {
-            score += health;
-        }
-
-        character.Health += (score - Engine::SCORE(character, Attribute::Type::HEALTH));
+        character.Health += health;
 
         if (character.Health < 0)
         {
@@ -758,7 +761,7 @@ namespace Engine
     {
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (!party.InCity || (party.InCity && party.Members[i].IsCivilized))
+            if (Engine::IS_CIVILIZED(party, party.Members[i]))
             {
                 Engine::GAIN_HEALTH(party.Members[i], health);
             }
@@ -769,7 +772,7 @@ namespace Engine
     {
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (party.Members[i].Team == team && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (party.Members[i].Team == team && Engine::IS_CIVILIZED(party, party.Members[i]))
             {
                 Engine::GAIN_HEALTH(party.Members[i], health);
             }
@@ -802,7 +805,7 @@ namespace Engine
     {
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0)
+            if (Engine::IS_ALIVE(party.Members[i]))
             {
                 party.Members[i].MaximumHealth += value;
 
@@ -1102,7 +1105,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::HAS_STATUS(party.Members[i], status) && (!party.InCity || (party.InCity && party.Members[i].IsCivilized)))
+            if (Engine::HAS_STATUS(party.Members[i], status) && Engine::IS_CIVILIZED(party, party.Members[i]))
             {
                 result = true;
 
@@ -1149,7 +1152,7 @@ namespace Engine
 
     void GAIN_FOLLOWERS(Character::Base &character, std::vector<Follower::Base> followers)
     {
-        if (Engine::SCORE(character, Attribute::Type::HEALTH) > 0 && followers.size() > 0)
+        if (Engine::IS_ALIVE(character))
         {
             for (auto i = 0; i < followers.size(); i++)
             {
@@ -1165,7 +1168,7 @@ namespace Engine
 
     void LOSE_FOLLOWERS(Character::Base &character, std::vector<Follower::Type> followers)
     {
-        if (Engine::SCORE(character, Attribute::Type::HEALTH) > 0 && followers.size() > 0)
+        if (Engine::IS_ALIVE(character) && followers.size() > 0)
         {
             for (auto i = 0; i < followers.size(); i++)
             {
@@ -1640,13 +1643,13 @@ namespace Engine
         }
     }
 
-    int FIND_CHARACTER(std::vector<Character::Type> &party, Character::Type type)
+    int FIND_CHARACTER(std::vector<Character::Type> &party, Character::Type character)
     {
         auto result = -1;
 
         for (auto i = 0; i < party.size(); i++)
         {
-            if (party[i] == type)
+            if (party[i] == character)
             {
                 result = i;
 
@@ -1657,13 +1660,13 @@ namespace Engine
         return result;
     }
 
-    int FIND_CHARACTER(std::vector<Character::Base> &party, Character::Type type)
+    int FIND_CHARACTER(std::vector<Character::Base> &party, Character::Type character)
     {
         auto result = -1;
 
         for (auto i = 0; i < party.size(); i++)
         {
-            if (party[i].Type == type)
+            if (party[i].Type == character)
             {
                 result = i;
 
@@ -1674,9 +1677,14 @@ namespace Engine
         return result;
     }
 
-    int FIND_CHARACTER(Party::Base &party, Character::Type type)
+    int FIND_CHARACTER(Party::Base &party, Character::Type character)
     {
-        return Engine::FIND_CHARACTER(party.Members, type);
+        return Engine::FIND_CHARACTER(party.Members, character);
+    }
+
+    bool IS_ALIVE(Party::Base &party, Character::Type character)
+    {
+        return Engine::IS_ALIVE(party, Engine::FIND_CHARACTER(party, character));
     }
 
     void GAIN_HEALTH(Party::Base &party, Character::Type character, int health)
@@ -1902,7 +1910,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0)
+            if (Engine::IS_ALIVE(party.Members[i]) && Engine::CAN_SPEAK(party.Members[i]) && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0)
             {
                 result = Engine::VERIFY_SPELL(party.Members[i], spells);
 
@@ -1920,7 +1928,7 @@ namespace Engine
     {
         auto result = false;
 
-        if (Engine::SCORE(character, Attribute::Type::HEALTH) > 0 && character.SpellCaster && character.SpellBook.size() > 0)
+        if (Engine::IS_ALIVE(character) && Engine::CAN_SPEAK(character) && character.SpellCaster && character.SpellBook.size() > 0)
         {
             result = Engine::VERIFY_SPELL(character, spells);
         }
@@ -1954,7 +1962,7 @@ namespace Engine
     {
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::IS_ACTIVE(party, i) && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0 && (team == Team::Type::NONE || party.Members[i].Team == team))
+            if (Engine::IS_ACTIVE(party, i) && Engine::CAN_SPEAK(party.Members[i]) && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0 && (team == Team::Type::NONE || party.Members[i].Team == team))
             {
                 auto found = Engine::FIND_SPELL(party.Members[i], spell);
 
@@ -1984,7 +1992,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (Engine::SCORE(party.Members[i], Attribute::Type::HEALTH) > 0 && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0)
+            if (Engine::IS_ALIVE(party.Members[i]) && Engine::CAN_SPEAK(party.Members[i]) && party.Members[i].SpellCaster && party.Members[i].SpellBook.size() > 0)
             {
                 result = Engine::VERIFY_SPELL_ANY(party.Members[i], spells);
 
@@ -2101,12 +2109,9 @@ namespace Engine
 
         auto result = Engine::FIND_CHARACTER(party, character);
 
-        if (result >= 0 && result < party.Members.size())
+        if (Engine::IS_ALIVE(party, result) && (party.Members[result].Team == team || team == Team::Type::NONE))
         {
-            if (party.Members[result].Team == team || team == Team::Type::NONE)
-            {
-                found = true;
-            }
+            found = true;
         }
 
         return found;
@@ -2997,13 +3002,13 @@ namespace Engine
         return result;
     }
 
-    void GET_EQUIPMENT(Party::Base &party, Character::Type type, std::vector<Equipment::Base> equipment)
+    void GET_EQUIPMENT(Party::Base &party, Character::Type character, std::vector<Equipment::Base> equipment)
     {
-        auto character = Engine::FIND_CHARACTER(party, type);
+        auto found = Engine::FIND_CHARACTER(party, character);
 
-        if (Engine::IS_ACTIVE(party, character))
+        if (Engine::IS_ACTIVE(party, found))
         {
-            Engine::GET_EQUIPMENT(party.Members[character], equipment);
+            Engine::GET_EQUIPMENT(party.Members[found], equipment);
         }
     }
 

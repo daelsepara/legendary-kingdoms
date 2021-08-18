@@ -8356,13 +8356,6 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 party.LastSelected = team[0];
             }
-
-            party.Order.clear();
-
-            for (auto i = 0; i < team.size(); i++)
-            {
-                party.Order.push_back(party.Members[team[i]].Type);
-            }
         }
     }
 
@@ -10771,7 +10764,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         }
     }
 
-    if (result >= 0 && result < party.Members.size() & mode != Control::Type::EQUIPMENT)
+    if (result >= 0 && result < party.Members.size() & mode == Control::Type::PARTY)
     {
         party.LastSelected = result;
     }
@@ -11252,30 +11245,23 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
 
             if (mode == Control::Type::SPELL_TARGET)
             {
-                putHeader(renderer, "Choose targets for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose target(s) for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::SKILL)
             {
-                if (team_size > 1)
-                {
-                    putHeader(renderer, "Choose party members to perform skill check", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
-                else
-                {
-                    putHeader(renderer, "Choose party member to perform skill check", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
+                putHeader(renderer, "Choose party member(s) to perform skill check", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::RAISE_MAX_HEALTH)
             {
-                putHeader(renderer, "Choose party members to raise maximum health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member(s) to raise maximum health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::GAIN_HEALTH)
             {
-                putHeader(renderer, "Choose party members to recover health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member(s) to recover health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::LOSE_HEALTH)
             {
-                putHeader(renderer, "Choose party members to lose health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member(s) to lose health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::SELECT_ORDER)
             {
@@ -11283,7 +11269,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
             }
             else
             {
-                putHeader(renderer, "Choose Party Members", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose Party Member(s)", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
 
             putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
@@ -11524,9 +11510,12 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
         }
     }
 
-    party.LastSelection = selected_party;
+    if (mode == Control::Type::PARTY)
+    {
+        party.LastSelection = selected_party;
+    }
 
-    if (selected_party.size() > 0)
+    if (selected_party.size() > 0 && mode == Control::Type::SELECT_ORDER)
     {
         party.Order.clear();
 
@@ -11536,12 +11525,9 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
         }
     }
 
-    if (selected_party.size() == 1)
+    if (selected_party.size() == 1 && Engine::IS_ALIVE(party, selected_party[0]) && mode == Control::Type::PARTY)
     {
-        if (selected_party[0] >= 0 && selected_party[0] < party.Members.size())
-        {
-            party.LastSelected = selected_party[0];
-        }
+        party.LastSelected = selected_party[0];
     }
 
     return selected_party;
@@ -14082,7 +14068,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                         }
                         else
                         {
-                            character = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::PARTY);
+                            character = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::ANY);
                         }
 
                         if (Engine::IS_ACTIVE(party, character))
@@ -21796,7 +21782,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                                 else
                                 {
-                                    selected = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::PARTY);
+                                    selected = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::ANY);
                                 }
                             }
 
@@ -21901,7 +21887,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                             else
                             {
-                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::PARTY);
+                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::ANY);
                             }
 
                             if (target >= 0 && target < party.Members.size())
@@ -23120,9 +23106,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                         deadInventory.insert(deadInventory.end(), party.Members[i].Equipment.begin(), party.Members[i].Equipment.end());
                                     }
 
-                                    // TODO: Consolidate party.LastSection and party.Order
-
-                                    // FOR NOW: Remove characer from the ordered list
                                     auto deadCharacter = Engine::FIND_CHARACTER(party.Order, party.Members[i].Type);
 
                                     if (deadCharacter >= 0 && deadCharacter < party.Order.size())
