@@ -421,6 +421,164 @@ namespace Engine
         return max;
     }
 
+    int FIND_CODE(Party::Base &party, Codes::Base code)
+    {
+        auto found = -1;
+
+        if (party.Codes.size() > 0)
+        {
+            for (auto i = 0; i < party.Codes.size(); i++)
+            {
+                if (party.Codes[i].Type == code.Type && party.Codes[i].Code == code.Code)
+                {
+                    found = i;
+
+                    break;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    int FIND_CODES(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        auto found = 0;
+
+        if (party.Codes.size() > 0 && codes.size() > 0)
+        {
+            for (auto i = 0; i < codes.size(); i++)
+            {
+                auto result = Engine::FIND_CODE(party, codes[i]);
+
+                if (result >= 0)
+                {
+                    found += 1;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    bool VERIFY_CODES_ANY(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        return Engine::FIND_CODES(party, codes) > 0;
+    }
+
+    bool VERIFY_CODES_ALL(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        return Engine::FIND_CODES(party, codes) == codes.size();
+    }
+
+    bool VERIFY_CODES(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        return Engine::VERIFY_CODES_ALL(party, codes);
+    }
+
+    void GET_CODES(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        for (auto i = 0; i < codes.size(); i++)
+        {
+            if (!Engine::VERIFY_CODES(party, {codes[i]}))
+            {
+                party.Codes.push_back(codes[i]);
+            }
+        }
+    }
+
+    int FIND_CODE(Party::Base &party, Codes::Type code)
+    {
+        auto found = -1;
+
+        if (party.InvisibleCodes.size() > 0)
+        {
+            for (auto i = 0; i < party.InvisibleCodes.size(); i++)
+            {
+                if (party.InvisibleCodes[i] == code)
+                {
+                    found = i;
+
+                    break;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    int FIND_CODES(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        auto found = 0;
+
+        if (party.InvisibleCodes.size() > 0 && codes.size() > 0)
+        {
+            for (auto i = 0; i < codes.size(); i++)
+            {
+                auto result = Engine::FIND_CODE(party, codes[i]);
+
+                if (result >= 0)
+                {
+                    found += 1;
+                }
+            }
+        }
+
+        return found;
+    }
+
+    void LOSE_CODES(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        for (auto i = 0; i < codes.size(); i++)
+        {
+            auto result = Engine::FIND_CODE(party, codes[i]);
+
+            if (result >= 0 && result < party.InvisibleCodes.size())
+            {
+                party.InvisibleCodes.erase(party.InvisibleCodes.begin() + result);
+            }
+        }
+    }
+
+    void LOSE_CODES(Party::Base &party, std::vector<Codes::Base> codes)
+    {
+        for (auto i = 0; i < codes.size(); i++)
+        {
+            auto result = Engine::FIND_CODE(party, codes[i]);
+
+            if (result >= 0 && result < party.Codes.size())
+            {
+                party.Codes.erase(party.Codes.begin() + result);
+            }
+        }
+    }
+
+    bool VERIFY_CODES_ANY(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        return Engine::FIND_CODES(party, codes) > 0;
+    }
+
+    bool VERIFY_CODES_ALL(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        return Engine::FIND_CODES(party, codes) == codes.size();
+    }
+
+    bool VERIFY_CODES(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        return Engine::VERIFY_CODES_ALL(party, codes);
+    }
+
+    void GET_CODES(Party::Base &party, std::vector<Codes::Type> codes)
+    {
+        for (auto i = 0; i < codes.size(); i++)
+        {
+            if (!Engine::VERIFY_CODES(party, {codes[i]}))
+            {
+                party.InvisibleCodes.push_back(codes[i]);
+            }
+        }
+    }
+
     int FIGHTING_SCORE(Character::Base &character)
     {
         auto score = Engine::SCORE(character, Attribute::Type::FIGHTING);
@@ -1344,6 +1502,21 @@ namespace Engine
         return result;
     }
 
+    int ALIVE(Party::Base &party)
+    {
+        auto result = 0;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (Engine::IS_ALIVE(party, i))
+            {
+                result += 1;
+            }
+        }
+
+        return result;
+    }
+
     int OUTSIDE(Party::Base &party)
     {
         auto result = 0;
@@ -1483,164 +1656,6 @@ namespace Engine
         }
 
         return result;
-    }
-
-    int FIND_CODE(Party::Base &party, Codes::Base code)
-    {
-        auto found = -1;
-
-        if (party.Codes.size() > 0)
-        {
-            for (auto i = 0; i < party.Codes.size(); i++)
-            {
-                if (party.Codes[i].Type == code.Type && party.Codes[i].Code == code.Code)
-                {
-                    found = i;
-
-                    break;
-                }
-            }
-        }
-
-        return found;
-    }
-
-    int FIND_CODES(Party::Base &party, std::vector<Codes::Base> codes)
-    {
-        auto found = 0;
-
-        if (party.Codes.size() > 0 && codes.size() > 0)
-        {
-            for (auto i = 0; i < codes.size(); i++)
-            {
-                auto result = Engine::FIND_CODE(party, codes[i]);
-
-                if (result >= 0)
-                {
-                    found += 1;
-                }
-            }
-        }
-
-        return found;
-    }
-
-    bool VERIFY_CODES_ANY(Party::Base &party, std::vector<Codes::Base> codes)
-    {
-        return Engine::FIND_CODES(party, codes) > 0;
-    }
-
-    bool VERIFY_CODES_ALL(Party::Base &party, std::vector<Codes::Base> codes)
-    {
-        return Engine::FIND_CODES(party, codes) == codes.size();
-    }
-
-    bool VERIFY_CODES(Party::Base &party, std::vector<Codes::Base> codes)
-    {
-        return Engine::VERIFY_CODES_ALL(party, codes);
-    }
-
-    void GET_CODES(Party::Base &party, std::vector<Codes::Base> codes)
-    {
-        for (auto i = 0; i < codes.size(); i++)
-        {
-            if (!Engine::VERIFY_CODES(party, {codes[i]}))
-            {
-                party.Codes.push_back(codes[i]);
-            }
-        }
-    }
-
-    int FIND_CODE(Party::Base &party, Codes::Type code)
-    {
-        auto found = -1;
-
-        if (party.InvisibleCodes.size() > 0)
-        {
-            for (auto i = 0; i < party.InvisibleCodes.size(); i++)
-            {
-                if (party.InvisibleCodes[i] == code)
-                {
-                    found = i;
-
-                    break;
-                }
-            }
-        }
-
-        return found;
-    }
-
-    int FIND_CODES(Party::Base &party, std::vector<Codes::Type> codes)
-    {
-        auto found = 0;
-
-        if (party.InvisibleCodes.size() > 0 && codes.size() > 0)
-        {
-            for (auto i = 0; i < codes.size(); i++)
-            {
-                auto result = Engine::FIND_CODE(party, codes[i]);
-
-                if (result >= 0)
-                {
-                    found += 1;
-                }
-            }
-        }
-
-        return found;
-    }
-
-    void LOSE_CODES(Party::Base &party, std::vector<Codes::Type> codes)
-    {
-        for (auto i = 0; i < codes.size(); i++)
-        {
-            auto result = Engine::FIND_CODE(party, codes[i]);
-
-            if (result >= 0 && result < party.InvisibleCodes.size())
-            {
-                party.InvisibleCodes.erase(party.InvisibleCodes.begin() + result);
-            }
-        }
-    }
-
-    void LOSE_CODES(Party::Base &party, std::vector<Codes::Base> codes)
-    {
-        for (auto i = 0; i < codes.size(); i++)
-        {
-            auto result = Engine::FIND_CODE(party, codes[i]);
-
-            if (result >= 0 && result < party.Codes.size())
-            {
-                party.Codes.erase(party.Codes.begin() + result);
-            }
-        }
-    }
-
-    bool VERIFY_CODES_ANY(Party::Base &party, std::vector<Codes::Type> codes)
-    {
-        return Engine::FIND_CODES(party, codes) > 0;
-    }
-
-    bool VERIFY_CODES_ALL(Party::Base &party, std::vector<Codes::Type> codes)
-    {
-        return Engine::FIND_CODES(party, codes) == codes.size();
-    }
-
-    bool VERIFY_CODES(Party::Base &party, std::vector<Codes::Type> codes)
-    {
-        return Engine::VERIFY_CODES_ALL(party, codes);
-    }
-
-    void GET_CODES(Party::Base &party, std::vector<Codes::Type> codes)
-    {
-        for (auto i = 0; i < codes.size(); i++)
-        {
-            if (!Engine::VERIFY_CODES(party, {codes[i]}))
-            {
-                party.InvisibleCodes.push_back(codes[i]);
-            }
-        }
     }
 
     int FIND_CHARACTER(std::vector<Character::Type> &party, Character::Type character)

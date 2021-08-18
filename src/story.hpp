@@ -44,7 +44,8 @@ namespace Choice
         ADD_MAX_HEALTH,
         TEAM_MAX_HEALTH,
         GAIN_HEALTH,
-        BRIBE_CODEWORD,
+        BRIBE_CODEWORD_ITEM,
+        BRIBE_CODEWORD_AMOUNT,
         LASTCHARACTER_ROLLS_FOR_ATTRIBUTEINCREASE,
         ROLL_FOR_ATTRIBUTE_INCREASE,
         ROLL_ATTRIBUTE_WITH_STATUS,
@@ -437,6 +438,19 @@ namespace Choice
             Type = type;
 
             InvisibleCodes = codes;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Codes::Type> codes, int value)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            InvisibleCodes = codes;
+
+            Value = value;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, int value)

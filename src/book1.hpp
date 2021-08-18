@@ -759,13 +759,9 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Engine::Random.UniformIntDistribution(1, 6);
-
-            auto result = Engine::Random.NextInt();
-
             Choices.clear();
 
-            if (result != 1)
+            if (Engine::ROLL(1) != 1)
             {
                 Choices.push_back(Choice::Base("Sail north towards Clifftop", {Book::Type::BOOK1, 82}));
                 Choices.push_back(Choice::Base("Sail east towards Cursus", {Book::Type::BOOK1, 814}));
@@ -936,9 +932,9 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Choices.clear();
-            Choices.push_back(Choice::Base("Give the mercenaries a GOLD BULLION bar", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION1}, 1));
-            Choices.push_back(Choice::Base("Give the mercenaries two GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 2));
-            Choices.push_back(Choice::Base("Give the mercenaries three GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 3));
+            Choices.push_back(Choice::Base("Give the mercenaries a GOLD BULLION bar", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION1}, 1));
+            Choices.push_back(Choice::Base("Give the mercenaries two GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 2));
+            Choices.push_back(Choice::Base("Give the mercenaries three GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 3));
             Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::MERCENARY, {Attribute::Type::CHARISMA}, 6, 7));
 
             Take = {Equipment::GOLD_BULLION};
@@ -4732,6 +4728,8 @@ namespace Book1
 
             ID = 141;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "\"All right, then,\" nods the ogre. \"I hate them orcies anyway.\"\n\n\"It's madshards. That's what they're after,\" he says simply.\n\n\"What are madshards?\" you ask.\n\n\"You know... madshards,\" says the ogre, performing some kind of indistinct mime. \"Little bits of metal. From that broken talisman, thing? You know. It's what the whole orc uprising is about.\"\n\n\"And what is the orc uprising about?\" you press.\n\n\"Don't ask me,\" shrugs the ogre. \"I was hoping you could tell me.\"";
 
             Choices.clear();
@@ -7948,6 +7946,8 @@ namespace Book1
     public:
         Team::Type previousTeam = Team::Type::NONE;
 
+        int character = -1;
+
         Story239()
         {
             BookID = Book::Type::BOOK1;
@@ -7979,19 +7979,20 @@ namespace Book1
 
             if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
             {
-                previousTeam = party.Members[party.CurrentCharacter].Team;
-
-                Engine::SET_TEAM(party.Members[party.CurrentCharacter]);
-
-                Team = party.Members[party.CurrentCharacter].Team;
+                character = party.CurrentCharacter;
             }
             else if (Engine::IS_ACTIVE(party, party.LastSelected))
             {
-                previousTeam = party.Members[party.LastSelected].Team;
+                character = party.LastSelected;
+            }
 
-                Engine::SET_TEAM(party.Members[party.LastSelected]);
+            if (Engine::IS_ALIVE(party, character))
+            {
+                previousTeam = party.Members[character].Team;
 
-                Team = party.Members[party.LastSelected].Team;
+                Engine::SET_TEAM(party.Members[character]);
+
+                Team = party.Members[character].Team;
             }
         }
 
@@ -7999,20 +8000,9 @@ namespace Book1
 
         void AfterCombat(Party::Base &party, Engine::Combat result)
         {
-            auto target = -1;
-
-            if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
+            if (Engine::IS_ACTIVE(party, character))
             {
-                target = party.CurrentCharacter;
-            }
-            else if (Engine::IS_ACTIVE(party, party.LastSelected))
-            {
-                target = party.LastSelected;
-            }
-
-            if (Engine::IS_ACTIVE(party, target))
-            {
-                Engine::SET_TEAM(party.Members[target], previousTeam);
+                Engine::SET_TEAM(party.Members[character], previousTeam);
             }
 
             if (result == Engine::Combat::EXCEED_LIMIT)
@@ -8023,15 +8013,15 @@ namespace Book1
                 {
                     temp_string += " You have defeated Tommul.";
 
-                    if (Engine::IS_ACTIVE(party, target))
+                    if (Engine::IS_ACTIVE(party, character))
                     {
                         auto result = Engine::ROLL(1);
 
-                        if (result > Engine::SCORE(party.Members[target], Attribute::Type::FIGHTING))
+                        if (result > Engine::SCORE(party.Members[character], Attribute::Type::FIGHTING))
                         {
-                            Engine::GAIN_SCORE(party.Members[target], Attribute::Type::FIGHTING, 1);
+                            Engine::GAIN_SCORE(party.Members[character], Attribute::Type::FIGHTING, 1);
 
-                            temp_string += "\n\n" + std::string(party.Members[target].Name) + "'s Fighting skill improved by 1.";
+                            temp_string += "\n\n" + std::string(party.Members[character].Name) + "'s Fighting skill improved by 1.";
                         }
                     }
                 }
@@ -8749,11 +8739,13 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            if (party.LastSelected >= 0 && party.LastSelected < party.Members.size())
-            {
-                Engine::REMOVE_STATUS(party.Members[party.LastSelected], Character::Status::ENCHANTED_CURSED);
+            auto cursed = Engine::FIRST(party, Character::Status::ENCHANTED_CURSED);
 
-                Engine::KILL(party, party.Members[party.LastSelected].Type);
+            if (Engine::IS_ALIVE(party, cursed))
+            {
+                Engine::REMOVE_STATUS(party.Members[cursed], Character::Status::ENCHANTED_CURSED);
+
+                Engine::KILL(party, party.Members[cursed].Type);
             }
         }
 
@@ -9578,7 +9570,7 @@ namespace Book1
 
             PreText = "Tommul replies with a punch to your jaw, which sends you crashing to the ground. This is followed by savage kicks from his companion.\n\n";
 
-            if (target >= 0 && target < party.Members.size())
+            if (Engine::IS_ALIVE(party, target))
             {
                 PreText += std::string(party.Members[target].Name) + " loses 3 Health points.";
 
@@ -9697,7 +9689,7 @@ namespace Book1
 
             PreText = "The rest of the party think you mad, but you are resolved that this peasant should not suffer because of you. The man is released, desperately pleading his thanks, before fleeing from the hall.\n\nLothor is a sadistic man and makes you suffer. ";
 
-            if (target >= 0 && target < party.Members.size())
+            if (Engine::IS_ALIVE(party, target))
             {
                 PreText += std::string(party.Members[target].Name) + " loses";
 
@@ -9728,6 +9720,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 295;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "\"Nah, I won't tell you nothin',\" says the ogre. \"In fact -- I think I'll bash your heads in, just to be on the safe side.\" It seems diplomacy is over ...";
 
@@ -9996,7 +9990,7 @@ namespace Book1
 
             PreText = "You are grabbed and pulled to the floor. Tommul and his brutish friend beat you with clubs until the shouts of the guards chase them away.\n\n";
 
-            if (target >= 0 && target < party.Members.size())
+            if (Engine::IS_ALIVE(party, target))
             {
                 PreText += std::string(party.Members[target].Name) + " loses 3 Health points.";
 
@@ -17785,6 +17779,8 @@ namespace Book1
 
             ID = 548;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Text = "You recite every blessing and counterspell you know. You are not sure which incantation was the correct one, but suddenly the spell breaks, and the skull stops its infernal murmuring.";
 
             Choices.clear();
@@ -22289,6 +22285,8 @@ namespace Book1
 
             ID = 679;
 
+            Location = Location::Type::VIAAN_ISLAND;
+
             Text = "You watch with mounting concern as dozens of small boats round the corner of Viaan Island and make their way directly towards you. They are war canoes, filled with tribal Bando warriors. Your crew man the ballista's (catapults are useless here against these small boats) and prepare to repel boarders.\n\nNote: Note: Because you cannot use all your ship's weapons you must lower the Fighting value of your ship by 1 point for this battle.";
 
             Choices.clear();
@@ -25186,7 +25184,7 @@ namespace Book1
                     PreText += "s. ";
                 }
 
-                if (!Engine::IS_ACTIVE(party, party.LastSelected))
+                if (!Engine::IS_ALIVE(party, party.LastSelected))
                 {
                     PreText += std::string(party.Members[party.LastSelected].Name) + " is dismembered gorily, limbs flaying across the chamber in a shower of blood and is killed.";
 
@@ -25211,6 +25209,421 @@ namespace Book1
 
             Text = PreText.c_str();
         }
+    };
+
+    class Story770 : public Story::Base
+    {
+    public:
+        Story770()
+        {
+            BookID = Book::Type::BOOK1;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            ID = 770;
+
+            Text = "The temple of Cursus in Saltdad is a flat-topped, black stone ziggurat some three stories high. Inside its cool depths incense burns and the ragged poor beg for mercy from the hard-faced priests of Cursus, god of Judgement.\n\nNote: If you have any INCENSE you may exchange some for a blessing from the priests. Find the party member with the lowest Stealth score in the team and increase their Stealth by 1 point.\n\nYou may also receive some ritual scarring; these are runes sacred to Cursus carved across your chest. The priests are bound to perform this service for any who request it. If one of your party members wants some ritual scarring, they must lose 1 point of Health permanently.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
+            {
+                Choices.push_back(Choice::Base("(INCENSE) Select party member with lowest Stealth score", {Book::Type::BOOK1, -770}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::INCENSE}, {Attribute::Type::STEALTH}, 1));
+            }
+
+            Choices.push_back(Choice::Base("Receive some Ritual Scarring (Cursus)", {Book::Type::BOOK1, -770}, Choice::Type::PAYFORSTATUS_WITH_HEALTH, {Character::Status::RITUAL_SCARRING_CURSUS}, -1));
+            Choices.push_back(Choice::Base("You are finished here", {Book::Type::BOOK1, 75}));
+        }
+    };
+
+    class Event770 : public Story::Base
+    {
+    public:
+        Event770()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -770;
+
+            DisplayID = 770;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 770}; }
+    };
+
+    class Story771 : public Story::Base
+    {
+    public:
+        Story771()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 771;
+
+            Text = "You cannot just leave your companion here. Steeling yourselves for violence, you snatch away the book from your friend's grasp. They immediately enter a berserk rage, drawing their weapon and slashing at you!\n\nNotes: Fight a battle against your enchanted party member. All Defence scores are 4+ in this battle. During their turn, their berserk rage causes them to attack twice, each attack damaging a different party member. If you wish to knock out, rather than slay, the cursed party member you cannot use your weapons. This will mean your Fighting score will be 1 point lower than usual, and you cannot gain any bonuses from your weapons. You also cannot use spells that inflict damage, as these are fatal. The cursed party member will use their most effective weapon but is too enraged to be able to concentrate on casting spells.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Fight to kill", {Book::Type::BOOK1, -771}, Choice::Type::GET_CODES, {Codes::Type::FIGHT_TO_KILL}));
+            Choices.push_back(Choice::Base("Fight to stun", {Book::Type::BOOK1, -771}, Choice::Type::GET_CODES, {Codes::Type::FIGHT_TO_STUN}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event771 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Engine::Destination destination = {};
+
+        Event771()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -771;
+
+            DisplayID = 771;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters.clear();
+
+            if (Engine::IS_ALIVE(party, party.LastSelected))
+            {
+                Engine::GAIN_STATUS(party.Members[party.LastSelected], Character::Status::ENCHANTED_CURSED);
+            }
+            else
+            {
+                Engine::Random.UniformIntDistribution(0, party.Members.size() - 1);
+
+                party.LastSelected = Engine::Random.NextInt();
+
+                Engine::GAIN_STATUS(party.Members[party.LastSelected], Character::Status::ENCHANTED_CURSED);
+            }
+
+            if (Engine::IS_ALIVE(party, party.LastSelected) && Engine::IS_CURSED(party.Members[party.LastSelected]))
+            {
+                temp_string = std::string(party.Members[party.LastSelected].Name) + " (Cursed)";
+
+                auto fighting_score = Engine::FIGHTING_SCORE(party.Members[party.LastSelected]);
+                auto health = Engine::SCORE(party.Members[party.LastSelected], Attribute::Type::HEALTH);
+
+                Monsters = {Monster::Base(temp_string.c_str(), fighting_score, 4, 4, health, 0, 0, 2)};
+
+                if (Engine::VERIFY_CODES(party, {Codes::Type::FIGHT_TO_KILL}))
+                {
+                    PreText = "You will fight " + std::string(party.Members[party.LastSelected].Name) + " to the death.";
+                }
+                else
+                {
+                    Engine::GET_CODES(party, {Codes::Type::NO_WEAPONS, Codes::Type::NO_COMBAT_SPELLS});
+
+                    PreText = "You will attemp to stun " + std::string(party.Members[party.LastSelected].Name) + ".";
+                }
+            }
+            else
+            {
+                Monsters = {Monster::Base("Cursed One", 5, 4, 8, 0, 0, 2)};
+
+                if (Engine::VERIFY_CODES(party, {Codes::Type::FIGHT_TO_KILL}))
+                {
+                    PreText = "You will fight them to the death.";
+                }
+                else
+                {
+                    Engine::GET_CODES(party, {Codes::Type::NO_WEAPONS, Codes::Type::NO_COMBAT_SPELLS});
+
+                    PreText += "You will attempt to stun them.";
+                }
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+
+        void AfterCombat(Party::Base &party, Engine::Combat result)
+        {
+            if (result == Engine::Combat::VICTORY)
+            {
+                if (Engine::VERIFY_CODES(party, {Codes::Type::FIGHT_TO_KILL}))
+                {
+                    Engine::LOSE_CODES(party, {Codes::Type::FIGHT_TO_KILL});
+
+                    destination = {Book::Type::BOOK1, 267};
+                }
+                else
+                {
+                    Engine::LOSE_CODES(party, {Codes::Type::FIGHT_TO_STUN});
+
+                    destination = {Book::Type::BOOK1, 850};
+                }
+            }
+            else
+            {
+                Engine::LOSE_CODES(party, {Codes::Type::FIGHT_TO_KILL, Codes::Type::FIGHT_TO_STUN});
+
+                destination = {Book::Type::BOOK1, 321};
+            }
+        }
+    };
+
+    class Story772 : public Story::Base
+    {
+    public:
+        Story772()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 772;
+
+            Text = "You march into the chamber, expecting trouble. You are not disappointed. As you suspected the skeletal remains leap to their feet, many other skeletons joining them from the open caskets around the room.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 264}; }
+    };
+
+    class Story773 : public Story::Base
+    {
+    public:
+        Story773()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 773;
+
+            Location = Location::Type::CAVES_OF_URANU;
+
+            Text = "The naga has no treasure, but you may take a MAGICAL WEAVE from its skin before you leave the cave.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::MAGICAL_WEAVE};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 395}; }
+    };
+
+    class Story774 : public Story::Base
+    {
+    public:
+        Story774()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 774;
+
+            Location = Location::Type::VIAAN_ISLAND;
+
+            Text = "It is a rather more desperate struggle to repel the Bando than your crew thought, and many have been injured by poisoned darts. Fortunately, the tribesmen failed to get a proper grip upon your vessel, and were repelled before they could make a full boarding action. It saddens you to see so many broken bodies and vessels upon the sea, and you order the helm plot a course onwards.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 144}; }
+    };
+
+    class Story775 : public Story::Base
+    {
+    public:
+        Story775()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 775;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
+            Image = "images/book1/city_of_lhasbreath.png";
+
+            Text = "You have arrived at Lhasbreath, city of Barbarians. No roads lead to Lhasbreath, for it is a city merchants do not travel to, unless they wish to be robbed of their goods. Insular and outrageous, the city gets its living from raiding, scavenging and bullying. Its appearance is suitably fierce, surrounded by a wall of thick, iron-topped timbers. The buildings within are constructed of weak jungle woods and scavenged stone. Many structures within the walls are mere tents, the ancestral homes of barbarian clans who compete endlessly in feats of strength of valour. Darting about the rough neighbourhoods are scavenging monkeys and brightly coloured birds from the jungle to the west. It is a dangerous place, but rich in adventure.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Visit the marketplace", {Book::Type::BOOK1, 158}));
+            Choices.push_back(Choice::Base("Find an inn", {Book::Type::BOOK1, 276}));
+            Choices.push_back(Choice::Base("Go to the King's Hall", {Book::Type::BOOK1, 392}));
+            Choices.push_back(Choice::Base("Visit the temple of Krom", {Book::Type::BOOK1, 760}));
+            Choices.push_back(Choice::Base("Visit the slave market", {Book::Type::BOOK1, 656}));
+            Choices.push_back(Choice::Base("Visit Kopu, the linguist", {Book::Type::BOOK1, 640}));
+            Choices.push_back(Choice::Base("Visit the Expeditionary Guild", {Book::Type::BOOK1, 190}));
+            Choices.push_back(Choice::Base("Explore the city", {Book::Type::BOOK1, 182}));
+            Choices.push_back(Choice::Base("Leave the city north, to the Tumblestones", {Book::Type::BOOK1, 137}));
+            Choices.push_back(Choice::Base("Leave the city east, into the desert", {Book::Type::BOOK1, 752}));
+            Choices.push_back(Choice::Base("Go west, into the jungle", {Book::Type::BOOK1, 137}));
+            Choices.push_back(Choice::Base("Go northwest, to the Palace of Unbraaki", {Book::Type::BOOK1, 890}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            party.CurrentShip = -1;
+        }
+    };
+
+    class Story776 : public Story::Base
+    {
+    public:
+        Story776()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 776;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "\"I dunno if I should tell you that,\" rumbles the ogre. \"I have a responsibility of discretion towards my employers.\"\n\n\"Do you accept bribes?\" you ask innocently.\n\n\"Only in the form of money,\" he responds.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Convince the ogre to talk (Team check: Charisma 5+, Successes: 4)", {Book::Type::BOOK1, 141}, {Book::Type::BOOK1, 295}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 4));
+            Choices.push_back(Choice::Base("Give the ogre 100 silver coins", {Book::Type::BOOK1, -776}, Choice::Type::BRIBE_CODEWORD_AMOUNT, {Codes::Type::BRIBE_OGRE_100}, 100));
+            Choices.push_back(Choice::Base("Give the ogre 100 silver coins", {Book::Type::BOOK1, -776}, Choice::Type::BRIBE_CODEWORD_AMOUNT, {Codes::Type::BRIBE_OGRE_200}, 100));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event776 : public Story::Base
+    {
+    public:
+        Event776()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -776;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_OGRE_100}))
+            {
+                Text = "You gave the ogre a bribe of 100 silver coins";
+
+                Choices.push_back(Choice::Base("Convince the ogre to talk (Team check: Charisma 4+, Successes: 4)", {Book::Type::BOOK1, 141}, {Book::Type::BOOK1, 295}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 4));
+            }
+            else
+            {
+                Text = "You gave the ogre a bribe of 200 silver coins";
+
+                Choices.push_back(Choice::Base("Convince the ogre to talk (Team check: Charisma 3+, Successes: 4)", {Book::Type::BOOK1, 141}, {Book::Type::BOOK1, 295}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 4));
+            }
+        }
+    };
+
+    class Story777 : public Story::Base
+    {
+    public:
+        Story777()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 777;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "The mighty metal horror comes crashing to the floor, the lights in his eyes fading. You may take his STEEL GREATSWORD (Fighting +3)* if you wish. Garrick the healer thanks you profusely for saving his life. He restores your entire party to their starting Health before quickly packing up to leave the city forever.\n\nYou have achieved a mighty feat of arms here today.\n\nNote: You gained the code A13.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of FIGHTING", {Book::Type::BOOK1, 75}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 2, 0));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::REST(party);
+
+            Take = {Equipment::STEEL_GREATSWORD3};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::A(13)});
+        }
+    };
+
+    class Story778 : public Story::Base
+    {
+    public:
+        Story778()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 778;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
+            Text = "As you enter the chamber you can hear a murmuring coming from the silver skull. Although you do not know the language being spoken, you understand its intent. It wants you to lie in the open sarcophagus and close your eyes. You can feel your feet shuffling towards the sarcophagus, even against your will. Clearly this is some sort of magical trickery! You must try and break this grim spell if you hope to survive.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Break the skull's enchantment (Team check: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 548}, {Book::Type::BOOK1, 891}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story779 : public Story::Base
+    {
+    public:
+        Story779()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 779;
+
+            Location = Location::Type::LHASBREATH_JUNGLE;
+
+            Text = "With skill and astute judgement you manage to weave through the trees, sticking to higher, drier grounds. Soon you manage to reconnect with the path as it emerges from the flood. Emlyn pats you on the shoulder.\n\n\"I see now why my father employed you,\" she smiles.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 359}; }
     };
 
     auto story001 = Story001();
@@ -26044,6 +26457,19 @@ namespace Book1
     auto story767 = Story767();
     auto story768 = Story768();
     auto story769 = Story769();
+    auto story770 = Story770();
+    auto event770 = Event770();
+    auto story771 = Story771();
+    auto event771 = Event771();
+    auto story772 = Story772();
+    auto story773 = Story773();
+    auto story774 = Story774();
+    auto story775 = Story775();
+    auto story776 = Story776();
+    auto event776 = Event776();
+    auto story777 = Story777();
+    auto story778 = Story778();
+    auto story779 = Story779();
 
     void InitializeStories()
     {
@@ -26054,7 +26480,7 @@ namespace Book1
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
             &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725,
-            &event744, &event760,
+            &event744, &event760, &event770, &event771, &event776,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -26131,7 +26557,8 @@ namespace Book1
             &story730, &story731, &story732, &story733, &story734, &story735, &story736, &story737, &story738, &story739,
             &story740, &story741, &story742, &story743, &story744, &story745, &story746, &story747, &story748, &story749,
             &story750, &story751, &story752, &story753, &story754, &story755, &story756, &story757, &story758, &story759,
-            &story760, &story761, &story762, &story763, &story764, &story765, &story766, &story767, &story768, &story769};
+            &story760, &story761, &story762, &story763, &story764, &story765, &story766, &story767, &story768, &story769,
+            &story770, &story771, &story772, &story773, &story774, &story775, &story776, &story777, &story778, &story779};
     }
 }
 #endif

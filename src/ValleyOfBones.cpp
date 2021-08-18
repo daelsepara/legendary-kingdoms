@@ -1486,7 +1486,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
-            if (Engine::COUNT(party) > 0)
+            if (Engine::ALIVE(party) > 0)
             {
                 std::string party_string = "";
 
@@ -2009,7 +2009,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
 
                 putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
-                if (Engine::COUNT(party) > 0)
+                if (Engine::ALIVE(party) > 0)
                 {
                     std::string party_string = "";
 
@@ -4196,7 +4196,14 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     if (team == Team::Type::NONE || party.Members[current + offset].Team == team)
                                     {
-                                        selection = current + offset;
+                                        if (Engine::IS_CURSED(party.Members[current + offset]))
+                                        {
+                                            displayMessage("You cannot assign the damage to " + std::string(party.Members[current + offset].Name) + "!", intRD);
+                                        }
+                                        else
+                                        {
+                                            selection = current + offset;
+                                        }
                                     }
                                     else
                                     {
@@ -5138,6 +5145,13 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     auto Defence = monsters[opponent].Defence;
 
+    if (Engine::VERIFY_CODES_ANY(party, {Codes::Type::FIGHT_TO_KILL, Codes::Type::FIGHT_TO_STUN}))
+    {
+        Difficulty = 4;
+
+        Defence = 4;
+    }
+
     std::vector<int> target_damage = {};
 
     auto spell = Spells::Type::NONE;
@@ -5253,8 +5267,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
 
-    auto headerw = (int)(boxwidth * 0.75);
-
     auto infoh = 48;
 
     auto boxh = (int)(0.125 * SCREEN_HEIGHT);
@@ -5364,7 +5376,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     fillWindow(renderer, intWH);
 
-                    putHeader(renderer, "Attack Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                    putHeader(renderer, "Attack Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + boxh + box_space);
 
                     fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -5646,11 +5658,23 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, party.Members[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                        putHeader(renderer, party.Members[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
 
                         if (useEquipment)
                         {
-                            attack_score = Engine::FIGHTING_SCORE(party.Members[combatant]) - (focus * 5);
+                            if (Engine::VERIFY_CODES_ANY(party, {Codes::Type::FIGHT_TO_STUN, Codes::Type::NO_WEAPONS}))
+                            {
+                                attack_score = Engine::SCORE(party.Members[combatant], Attribute::Type::FIGHTING) - (focus * 5) - 1;
+
+                                if (attack_score < 0)
+                                {
+                                    attack_score = 0;
+                                }
+                            }
+                            else
+                            {
+                                attack_score = Engine::FIGHTING_SCORE(party.Members[combatant]) - (focus * 5);
+                            }
                         }
                         else
                         {
@@ -5662,7 +5686,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                     else
                     {
-                        putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                        putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
 
                         attack_score = monsters[opponent].Attack;
 
@@ -5723,7 +5747,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Defence: " + std::to_string(Defence - focus) + "+";
                         defender_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
                     }
@@ -5731,11 +5755,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if (combatant == -1)
                         {
-                            putHeader(renderer, "To be determined", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                            putHeader(renderer, "To be determined", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
                         }
                         else
                         {
-                            putHeader(renderer, party.Members[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                            putHeader(renderer, party.Members[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
                             defender_string = "Health: " + std::to_string(Engine::HEALTH(party.Members[combatant]));
                         }
                     }
@@ -10451,6 +10475,10 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                 thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
                             }
                         }
+                        else if (Engine::IS_CURSED(party.Members[offset + i]))
+                        {
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
+                        }
                         else
                         {
                             drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
@@ -12261,15 +12289,15 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else
                         {
-                            if (Engine::FIND_LIST(hasAttacked, i) >= 0)
+                            if (Engine::HAS_STATUS(party.Members[i], Character::Status::STUNNED))
+                            {
+                                party_string += " (S)";
+                            }
+                            else if (Engine::FIND_LIST(hasAttacked, i) >= 0)
                             {
                                 if (Engine::HAS_STATUS(party.Members[i], Character::Status::STUNNED))
                                 {
                                     party_string += " (S)";
-                                }
-                                else if (Engine::IS_CURSED(party.Members[i]))
-                                {
-                                    party_string += " (C)";
                                 }
                                 else
                                 {
@@ -12936,27 +12964,17 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         }
     }
 
-    // Clear temporary status, e.g. magic effects
-    if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}))
-    {
-        Engine::LOSE_CODES(party, {Codes::Type::LAST_IN_COMBAT});
-    }
-
     if (combatResult != Engine::Combat::NONE)
     {
-        for (auto i = 0; i < party.Members.size(); i++)
-        {
-            if (team == Team::Type::NONE || party.Members[i].Team == team || party.Members[i].Team == Team::Type::SOLO)
-            {
-                Engine::REMOVE_STATUS(party.Members[i], Character::Status::ARMOUR3);
-                Engine::REMOVE_STATUS(party.Members[i], Character::Status::ENRAGED);
-                Engine::REMOVE_STATUS(party.Members[i], Character::Status::POTION_OF_INVULNERABILITY);
-                Engine::REMOVE_STATUS(party.Members[i], Character::Status::STUNNED);
-                Engine::REMOVE_STATUS(party.Members[i], Character::Status::STUNNED_NEXT_ROUND);
-            }
-        }
+        Engine::REMOVE_STATUS(party, Character::Status::ARMOUR3);
+        Engine::REMOVE_STATUS(party, Character::Status::ENRAGED);
+        Engine::REMOVE_STATUS(party, Character::Status::POTION_OF_INVULNERABILITY);
+        Engine::REMOVE_STATUS(party, Character::Status::STUNNED);
+        Engine::REMOVE_STATUS(party, Character::Status::STUNNED_NEXT_ROUND);
 
-        Engine::LOSE_CODES(party, {Codes::Type::NO_COMBAT_SPELLS});
+        Engine::LOSE_CODES(party, {Codes::Type::NO_COMBAT_SPELLS,
+                                   Codes::Type::NO_WEAPONS,
+                                   Codes::Type::LAST_IN_COMBAT});
     }
 
     return combatResult;
@@ -21306,7 +21324,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             done = true;
                         }
-                        else if (story->Choices[choice].Type == Choice::Type::BRIBE_CODEWORD || story->Choices[choice].Type == Choice::Type::PAY_WITH)
+                        else if (story->Choices[choice].Type == Choice::Type::BRIBE_CODEWORD_ITEM || story->Choices[choice].Type == Choice::Type::PAY_WITH)
                         {
                             auto equipment = std::vector<Equipment::Type>();
 
@@ -21321,7 +21339,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 Engine::LOSE_EQUIPMENT(party, equipment[0], story->Choices[choice].Value);
 
-                                if (story->Choices[choice].Type == Choice::Type::BRIBE_CODEWORD)
+                                if (story->Choices[choice].Type == Choice::Type::BRIBE_CODEWORD_ITEM)
                                 {
                                     Engine::GET_CODES(party, story->Choices[choice].InvisibleCodes);
                                 }
@@ -22234,6 +22252,28 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                             }
                         }
+                        else if (story->Choices[choice].Type == Choice::Type::BRIBE_CODEWORD_AMOUNT)
+                        {
+                            if (party.Money >= story->Choices[choice].Value)
+                            {
+                                Engine::GAIN_MONEY(party, -story->Choices[choice].Value);
+
+                                if (story->Choices[choice].InvisibleCodes.size() > 0)
+                                {
+                                    Engine::GET_CODES(party, story->Choices[choice].InvisibleCodes);
+                                }
+
+                                next = findStory(story->Choices[choice].Destination);
+
+                                done = true;
+                            }
+                            else
+                            {
+                                error = true;
+
+                                message = "You do not have " + std::to_string(story->Choices[choice].Value) + " silver coins!";
+                            }
+                        }
                         else if (story->Choices[choice].Type == Choice::Type::LOSE_EQUIPMENT)
                         {
                             auto equipment = std::vector<Equipment::Base>();
@@ -22594,7 +22634,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             controls = Story::ExitControls(compact);
         }
 
-        if (story->Type != Story::Type::NORMAL || (Engine::COUNT(party) + Engine::OUTSIDE(party)) <= 0)
+        if (story->Type != Story::Type::NORMAL || (Engine::ALIVE(party) + Engine::OUTSIDE(party)) <= 0)
         {
             controls = Story::ExitControls(compact);
         }
@@ -22844,7 +22884,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 {
                     putText(renderer, "This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
-                else if ((Engine::COUNT(party) + Engine::OUTSIDE(party)) <= 0)
+                else if ((Engine::ALIVE(party) + Engine::OUTSIDE(party)) <= 0)
                 {
                     putText(renderer, "Your party has died. This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
@@ -23014,7 +23054,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             }
                         }
 
-                        if (Engine::COUNT(party) > 0)
+                        if (Engine::ALIVE(party) > 0)
                         {
                             if (story->Take.size() > 0 && story->Limit > 0)
                             {
@@ -23198,7 +23238,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                                 transition = true;
                             }
-                            else if (Engine::COUNT(party) <= 0)
+                            else if (Engine::ALIVE(party) <= 0)
                             {
                                 controls = Story::ExitControls(compact);
                             }

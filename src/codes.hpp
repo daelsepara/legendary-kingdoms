@@ -52,7 +52,12 @@ namespace Codes
         ENEMY_DAZING_LIGHTS,
         CANNOT_USE_SHIPWEAPONS,
         CAST_WITHER,
-        CAST_STINGTAIL_RUNE
+        CAST_STINGTAIL_RUNE,
+        FIGHT_TO_STUN,
+        FIGHT_TO_KILL,
+        NO_WEAPONS,
+        BRIBE_OGRE_100,
+        BRIBE_OGRE_200
     };
 
     std::map<Book::Type, const char *> Prefix = {
