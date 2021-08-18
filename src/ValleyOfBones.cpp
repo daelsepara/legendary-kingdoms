@@ -10764,7 +10764,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         }
     }
 
-    if (result >= 0 && result < party.Members.size() & mode == Control::Type::PARTY)
+    if (Engine::IS_ALIVE(party, result) && mode == Control::Type::PARTY)
     {
         party.LastSelected = result;
     }
