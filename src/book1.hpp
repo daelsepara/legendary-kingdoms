@@ -3711,7 +3711,6 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 458}; }
     };
 
-    // TODO: Characters with Ritual Scarring who entered the Ziggurat will be in Team Zigurrat until they return to town
     class Story110 : public Story::Base
     {
     public:
@@ -6377,6 +6376,10 @@ namespace Book1
 
             ID = 189;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "You meet with the Everchild in the war room at the palace. She and her generals are pouring over a huge map of the valley, with a particular focus on the city of Clifftop. \"Welcome back, my friends,\" she smiles. \"As you can see, we are planning our attack on Clifftop. Due to the relative fertility of the land, and reinforcements from Cursus, Clifftop possesses a large, if undisciplined army. I would feel confident going into battle against them with six units from the Saltdad garrison. Any less than that would be... risky. However, you've been stalwart commanders of my forces, and you got me this city. So tell me.\n\nAre we ready to launch an attack on Clifftop?\"";
 
             Choices.clear();
@@ -6474,6 +6477,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 192;
+
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "You believe you have deciphered the clever code in the writing. You find a narrow knothole in the rock and plunge your arm inside. You pull out a magnificent silver chalice, which you can sell in town for 100 silver coins.";
 
@@ -7642,6 +7647,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 228;
+
+            Location = Location::Type::CAVES_OF_URANU;
 
             Text = "You believe you have deciphered the clever code in the writing. You find a narrow knothole in the rock and plunge your arm inside. You cry out in shock as a savage blade slices into your hand. Pulling it out you are astonished you did not lose the whole thing.";
 
@@ -12306,7 +12313,6 @@ namespace Book1
         {
             Spells = {Spells::SOOTHING_TOUCH};
 
-            //TODO: Cure lost limbs, diseases
             Engine::REST(party);
 
             Engine::REMOVE_STATUS(party, Character::Status::LOST_FINGERNAILS);
@@ -15788,6 +15794,10 @@ namespace Book1
 
             ID = 488;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Bye = "You thank her for her time and leave.";
 
             Choices.clear();
@@ -18830,7 +18840,6 @@ namespace Book1
 
             Text = "\"You couldn't afford me!\" laughs the ogre.\n\n\"How much?\" you press.\n\n\"Eight hundred silver,\" grins the ogre. \"I'd charge a thousand, but I'll give you a discount since I've been stuck in this hole for months.\"";
 
-            // TODO: Keep track of 800 paid to the ogre
             Choices.clear();
             Choices.push_back(Choice::Base("Pay the ogre 800 silver coins", {Book::Type::BOOK1, 245}, Choice::Type::GAIN_MONEY, -800));
             Choices.push_back(Choice::Base("Kill the ogre", {Book::Type::BOOK1, 117}));
@@ -24126,7 +24135,7 @@ namespace Book1
                 }
                 else
                 {
-                    Bye = "You gained the code A24.";
+                    Bye = "Note: You gained the code A24.";
                 }
             }
         }
@@ -26040,6 +26049,320 @@ namespace Book1
         }
     };
 
+    class Story790 : public Story::Base
+    {
+    public:
+        Story790()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 790;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "With the largest spiders dispatched, the eggs are at your mercy. You cast a couple of lit torches into the crevice containing the spider eggs, and the flames consume them almost in moments. Only a few tiny survivors scurry into the cracks of the walls. With the way clear you are able to cross the chamber safely.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 347}; }
+    };
+
+    class Story791 : public Story::Base
+    {
+    public:
+        Story791()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 791;
+
+            Text = "With expert knife strokes, you mar the runes in just the right order to prevent any magical blowback. With the defences down, you crawl through the window and into the attic.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 210}; }
+    };
+
+    class Story792 : public Story::Base
+    {
+    public:
+        Story792()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 792;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "As arena champions your quarters are improved a little. You now have your own cell to sleep in, half the size of an inn room, with a dirty straw mattress. In addition, you are given some basic training from an experienced gladiator called Che Long, who claims to be a sword saint from the nearby city of Chalice. The meals are slightly better, too, with Milagros, the slave girl, serving you rice and cooked meat as well as your water ration.\n\nBetween training bouts you have many talks with Che Long, who is damning of the Iron King's rulership of Saltdad. \"I care not who hears it, the man is a tyrant,\" he exhorts. \"Life is hard in the valley, but wonton cruelty such as his is uncalled for. It sticks in my throat that I fight for his pleasure.\"\n\n\"I had heard that all the kings of the valley are petty tyrants,\" you say between mouthfuls of water.\n\n\"It was not always so,\" mutters Che Long. \"In times past we were ruled by a noble queen, the immortal Everchild, who cared more for her people than her comfort. After the destruction left by the demon lord Abraxas all that was left was ruins, and without her leadership the people of the valley became little better than barbarians. Only Chalice has a glimmer of civilization left.\"\n\nAfter a hard day of training you make your way back to your cell. You have another bout in the arena tomorrow and will need all your strength.\n\nYour party recovers 4 Health points.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, 4);
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(2)}))
+            {
+                return {Book::Type::BOOK1, 495};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 157};
+            }
+        }
+    };
+
+    class Story793 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story793()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 793;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(79)}))
+            {
+                return {Book::Type::BOOK1, 568};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You have entered a large chamber that appears to be roughly carved out of the rock. Seawater rests in deep puddles across the floor, and ruined banners are hung high across the room. A noise of grinding stone alerts you to the back of the room, where a rocky coffin lid is pushed roughly aside. A skeletal figure, clad in ancient, black plate armour, emerges from his tomb. In his hands he grips a dreadful runeblade. Balefire burns in his eyes. From the briny pools rise skeletons, green slime dripping from their bodies, gargling cries emerging from their throats.";
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::TALISMAN_OF_ST_ELIAS}))
+            {
+                PreText += "\n\n\"Run, mortals,\" hisses the armoured skeleton. \"For you face Skallos, the dark knight.\" Quite an impressive entry!";
+
+                Choices.push_back(Choice::Base("Run back to the corridor, as Skallos suggests", {Book::Type::BOOK1, 165}));
+                Choices.push_back(Choice::Base("Face this undead horror", {Book::Type::BOOK1, 16}));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 447}; }
+    };
+
+    class Story794 : public Story::Base
+    {
+    public:
+        Story794()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 794;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "The Splintered Isles is native to a handsome, dark-skinned people, who have lived on the islands since before the written records of the ancients. Considered merely a stop-off by the peoples of the elder civilization, it is now one of the most important trading zones in the world. It grows spices, sugars and exotic foods of all sorts, and as the kingdoms of Royce and Drakehallow have recovered from the desolation, their desire for its luxuries have grown and grown. Both nations have attempted to colonise the islands, but with only limited success. The people of Thalsia are not easily tamed, and quickly united under the authority of a Suzerain once it became apparent that foreigners wished to divest them of their lands. At first considered technologically backward, they have proven extremely adaptable and now build some of the finest ships in the world. They have set up centres of learning that rival the schools of Pendrilor. Further, they have proven skilled at playing the rival kingdoms against each other and have allowed themselves to become a haven for pirates, buccaneers and marauders to further reduce the control of their would-be colonisers.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 680}; }
+    };
+
+    class Story795 : public Story::Base
+    {
+    public:
+        Story795()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 795;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "\"I met with your father, Milagros,\" you say. \"He ...\"\n\n\"... told you I wasn't the Everchild,\" she finishes.\n\nYou look at her firmly. \"Since we first met... you've grown an inch, you've matured, little-by-little. I was under the impression that the Everchild was immortal, and ever-young.\"\n\n\"I'm still young,\" she protests.\n\n\"For how long?\" you ask pointedly. \"Milagros, be honest with me. Are you the Everchild?\"\n\nThe young queen gets up and goes to the window, gazing out at the city below.\n\n\"Of course, I'm not,\" she admits at last. \"How could I be? She's dead. She died a thousand years ago, and the valley has been a desert ever since.\"\n\n\"I see,\" you say.\n\n\"I couldn't stand by... I couldn't stand by and watch,\" she says, her voice warbling. \"I was free in the tribe. I could travel the desert, go where I wished. But wherever I wandered I saw suffering. Thousands upon thousands of people without hope. I'm a sorceress. Magic flows through me, as it did with my aunt. Perhaps I cannot raise mountains or part seas, but I can cure the sick... and I can cure the sickness in this land, if you'll let me.\"\n\nShe turns, tearful. \"Please, don't tell anyone,\" she begs.\n\n\"Of course I won't,\" you assure her. \"But if I found out, others will too. What do you think will happen to you if your people discover you've been lying to them?\"\n\n\"Is it a lie, though? Is it really?\" she demands. \"I am a girl, who wears a crown, who rules in Saltdad by virtue of my magic and my reason. Who was the Everchild, if not who I am? Who is to say she was any better than me? My father shall always call me Milagros. But he does not get to decide what my people call me.\"\n\nThere is a knock at the door, and Milagros hastily dries her tears. \"Yes... enter!\"\n\nA servant enters and bows. \"Your majesty, Lord Chellar is here to see you, by your appointment.\"\n\n\"Of course, I shall attend him straight,\" she replies. The Everchild turns to you. \"We'll discuss this matter another time, shall we?\" she says.\n\nNote: You gained the code A94.";
+
+            Bye = "You bow as she leaves, feeling more conflicted than ever.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(94)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 620}; }
+    };
+
+    class Story796 : public Story::Base
+    {
+    public:
+        Story796()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 796;
+
+            Location = Location::Type::AZURE_DEEP;
+
+            Text = "One of your catapult stones inflicts a direct hit on the deck of the orc hulk. You watch as a great spurt of water blasts through the hole, suggesting the stone has crashed through the hull and made a sizable breech. The orc hulk sinks with alarming speed, the nasty raiders roaring with surprise and apparently unable to swim. Soon the unseaworthy ship has sunk to the bottom of the Azure Deep with all hands. Shaking your head at the orc's audacity, and the dreadful condition of their ship, you sail on.\n\nNote: You gained the code A68.";
+
+            Bye = "You bow as she leaves, feeling more conflicted than ever.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(68)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 851}; }
+    };
+
+    class Story797 : public Story::Base
+    {
+    public:
+        Story797()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 797;
+
+            Location = Location::Type::CAVES_OF_URANU;
+
+            Text = "You venture into a dark cave full of strange writing. It seems to be indicating where some hidden treasure is located, but warns that searching in the wrong place will trigger a deadly trap.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Search for hidden treasure (Team check: Lore 4+, Successes: 8)", {Book::Type::BOOK1, 192}, {Book::Type::BOOK1, 228}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 8));
+            Choices.push_back(Choice::Base("You would rather leave this menacing cave alone", {Book::Type::BOOK1, 395}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story798 : public Story::Base
+    {
+    public:
+        Story798()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 798;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "The marketplace of Saltdad stretches along the Westroad and is a cacophony of sound. Merchants flail their arms, sometimes physically grabbing you to look upon their wares.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::SHOP;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Shop = {
+                {Equipment::CRUDE_BLADE, 25, 10, -1, {}},
+                {Equipment::MAUL, 50, 25, -1, {}},
+                {Equipment::IRON_SHORTSWORD1, 200, 100, -1, {}},
+                {Equipment::IRON_GREATAXE2, -1, 150, -1, {}},
+                {Equipment::STEEL_LONGSWORD2, -1, 400, -1, {}},
+                {Equipment::STEEL_GREATSWORD3, -1, 800, -1, {}},
+                {Equipment::SHIELD2, 50, 25, -1, {}},
+                {Equipment::HIDE_ARMOUR1, 70, 35, -1, {}},
+                {Equipment::BONE_ARMOUR2, -1, 150, -1, {}},
+                {Equipment::BRONZE_ARMOUR4, -1, 2000, -1, {}},
+                {Equipment::SOFT_BOOTS1, 500, 250, -1, {}},
+                {Equipment::REFERENCE_BOOK1, -1, 250, -1, {}},
+                {Equipment::WARM_CLOAK1, 500, 250, -1, {}},
+                {Equipment::HANDSOME_BROOCH1, -1, 250, -1, {}},
+                {Equipment::PRYBAR, 100, 50, -1, {}},
+                {Equipment::INCENSE, -1, 90, -1, {}},
+                {Equipment::BLUESTONE, -1, 45, -1, {}},
+                {Equipment::ENGAGEMENT_RING, -1, 65, -1, {}},
+                {Equipment::VIAL_OF_POISON, -1, 50, -1, {}},
+                {Equipment::DRAGONYAK_HORN, -1, 35, -1, {}},
+                {Equipment::LIZARD_HIDE, -1, 25, -1, {}}};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story799 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story799()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 799;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "Your foot crunches on a knuckle bone as you step over a large skeleton. A skeletal hand suddenly grabs your ankle, its bony claws digging into your flesh. You kick it away, but the damage has been done.";
+
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses 1 Health point.";
+
+                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -1);
+            }
+
+            PreText += "\n\nAll about you the bones begin to animate, snapping back into human form. Your friends leap to your defence as caskets break open and more skeletons appear.";
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 264}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -26896,6 +27219,16 @@ namespace Book1
     auto event788 = Event788();
     auto story789 = Story789();
     auto event789 = Event789();
+    auto story790 = Story790();
+    auto story791 = Story791();
+    auto story792 = Story792();
+    auto story793 = Story793();
+    auto story794 = Story794();
+    auto story795 = Story795();
+    auto story796 = Story796();
+    auto story797 = Story797();
+    auto story798 = Story798();
+    auto story799 = Story799();
 
     void InitializeStories()
     {
@@ -26985,7 +27318,8 @@ namespace Book1
             &story750, &story751, &story752, &story753, &story754, &story755, &story756, &story757, &story758, &story759,
             &story760, &story761, &story762, &story763, &story764, &story765, &story766, &story767, &story768, &story769,
             &story770, &story771, &story772, &story773, &story774, &story775, &story776, &story777, &story778, &story779,
-            &story780, &story781, &story782, &story783, &story784, &story785, &story786, &story787, &story788, &story789};
+            &story780, &story781, &story782, &story783, &story784, &story785, &story786, &story787, &story788, &story789,
+            &story790, &story791, &story792, &story793, &story794, &story795, &story796, &story797, &story798, &story799};
     }
 }
 #endif
