@@ -6117,22 +6117,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Take.clear();
-
-            Limit = 0;
-
-            auto akihiro = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
-
-            if (Engine::IS_ACTIVE(party, akihiro))
-            {
-                Engine::GET_EQUIPMENT(party.Members[akihiro], {Equipment::STONECUTTER_SWORD2, Equipment::SILVER_IDOL});
-            }
-            else
-            {
-                Take = {Equipment::STONECUTTER_SWORD2, Equipment::SILVER_IDOL};
-
-                Limit = 2;
-            }
+            Engine::GET_EQUIPMENT(party, Character::Type::AKIHIRO_OF_CHALICE, {Equipment::STONECUTTER_SWORD2, Equipment::SILVER_IDOL});
 
             Engine::GAIN_MONEY(party, 135);
         }
@@ -16483,6 +16468,13 @@ namespace Book1
             }
             else
             {
+                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size())
+                {
+                    Bye = "Akihiro is slain.";
+
+                    party.Members[party.CurrentCharacter].Equipment.clear();
+                }
+
                 destination = {Book::Type::BOOK1, 450};
             }
         }
