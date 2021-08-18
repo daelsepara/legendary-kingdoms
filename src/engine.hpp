@@ -918,7 +918,7 @@ namespace Engine
 
         if (character.Health < initial)
         {
-            character.Damaged = true;            
+            character.Damaged = true;
         }
         else
         {
@@ -1373,18 +1373,27 @@ namespace Engine
 
     void GAIN_SCORE(Character::Base &character, Attribute::Type type, int score)
     {
-        for (auto i = 0; i < character.Attributes.size(); i++)
+        if (type == Attribute::Type::HEALTH)
         {
-            if (character.Attributes[i].Type == type)
+            character.MaximumHealth += score;
+
+            Engine::GAIN_HEALTH(character, score);
+        }
+        else
+        {
+            for (auto i = 0; i < character.Attributes.size(); i++)
             {
-                character.Attributes[i].Value += score;
-
-                if (character.Attributes[i].Value < 0)
+                if (character.Attributes[i].Type == type)
                 {
-                    character.Attributes[i].Value = 0;
-                }
+                    character.Attributes[i].Value += score;
 
-                break;
+                    if (character.Attributes[i].Value < 0)
+                    {
+                        character.Attributes[i].Value = 0;
+                    }
+
+                    break;
+                }
             }
         }
     }

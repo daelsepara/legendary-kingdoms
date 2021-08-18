@@ -5670,6 +5670,10 @@ namespace Book1
 
             ID = 170;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Image = "images/book1/ironking_and_malronac.png";
 
             Text = "You step out into broiling heat, the sun scorching the sands under your bare feet. You are the first competitors into the arena and receive a roaring cheer from the crowd as you appear. High above you the Iron King gazes down impassively, Malronac the Deathengine standing unflinching by his side. You look across the heat-swept arena as the far gate is opened. You cannot help but swallow as a pair of shaggy-haired desert lions come snarling out of the gate. Their manes are stained red with the blood of other victims, and they roar at you with filthy yellow teeth. You must fight for your lives.";
@@ -7864,6 +7868,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 236;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "The cheers from the crowd resound across the arena as the final lion falls dead. You cannot help but stifle a tear at the death of the noble beasts, cruelly plucked from the wild to fight for the entertainment of the savage crowd.\n\nFeeling more bestial than even a lion, you are taken from the arena and disarmed again, eager for another bowl of water to slake your aching thirst. You come upon a sight of even greater cruelty. Poor Milagros is being shouted at and struck by an angry guard, enraged at receiving a splash of soup across his armour. The poor girl is on the ground, in his shadow, nursing a bruise on her cheek as the guard pulls out his whip to punish her further.";
 
@@ -17384,6 +17392,8 @@ namespace Book1
 
             ID = 536;
 
+            Location = Location::Type::AZURE_DEEP;
+
             Text = "As you sail along the coast you come upon the sight of a colossal wreck. A Drakehallow greatship, a four-master from the looks of her, has dashed herself on the rocks. Powerful winds buffet the cliff face, and you are already on half sails to ride out the winds. A little way off the wreck, on a tall rock against the cliffside, you can see a lone figure desperately clinging on for life. The spray and powerful waves threaten to engulf him at any moment.\n\nNote: You gained the code A99.";
 
             Choices.clear();
@@ -26642,6 +26652,333 @@ namespace Book1
         }
     };
 
+    class Story810 : public Story::Base
+    {
+    public:
+        Story810()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 810;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
+            Text = "It might be possible to dispel this enchanted darkness with the right techniques.\n\nNote: For this skill check only spellcasters can contribute their Lore skill.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Dispel the darkness (Team check: Lore 5+, Successes: 3)", {Book::Type::BOOK1, 145}, {Book::Type::BOOK1, 93}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::SPELLCASTERS, {Attribute::Type::LORE}, 5, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Bakground(Party::Base &party)
+        {
+            if (Engine::SPELLCASTERS(party) <= 0)
+            {
+                return {Book::Type::BOOK1, 298};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::CONSOLIDATE(party);
+
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::IS_ALIVE(party.Members[i]) && party.Members[i].SpellCaster)
+                {
+                    party.Members[i].Team = Team::Type::SPELLCASTERS;
+                }
+            }
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "The darkness remains absolute. You manage to scavenge 15 silver coins from the chamber before groping your way to the exit.";
+
+                Engine::GAIN_MONEY(party, 15);
+            }
+        }
+    };
+
+    class Story811 : public Story::Base
+    {
+    public:
+        Story811()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 811;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "Skallos collapses with a whispered cry of vengeance. There is silence in the chamber at last. Skallos was a well-equipped champion of darkness. You may claim his BLACK PLATE ARMOUR (Armour +3) and take the SKALLOS RUNEBLADE (Fighting +3, Lore +2). In addition, he wears a RUGGED CLOAK (Survival +2) and has 750 silver pieces in jewellery about his body.\n\nThis was a mighty battle.\n\nNote: You gained the code A79.";
+
+            Bye = "As there are no more exits from this chamber, you leave the way you came.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of HEALTH", {Book::Type::BOOK1, 165}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::HEALTH}, 1, 2, 0));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::SKALLOS_RUNEBLADE, Equipment::RUGGED_CLOAK2, Equipment::BLACK_PLATE_ARMOUR3};
+
+            Limit = 3;
+
+            Engine::GET_CODES(party, {Codes::A(79)});
+
+            Engine::GAIN_MONEY(party, 750);
+        }
+    };
+
+    class Story812 : public Story::Base
+    {
+    public:
+        Story812()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 812;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "You rush the guard, pulling him to the ground, and kicking his whip away. Alas, more guards are never far away and soon the room is filled with sweating, swearing soldiers who restrain and beat you as the other slaves look on.\n\nThe guards will not beat you to death... this time.";
+
+            Bye = "Eventually you are released, bloodied but not unbowed.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -2);
+
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (party.Members[i].Health < 1)
+                {
+                    party.Members[i].Health = 1;
+                }
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 700}; }
+    };
+
+    class Story813 : public Story::Base
+    {
+    public:
+        Story813()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 813;
+
+            Location = Location::Type::AZURE_DEEP;
+
+            Image = "images/book1/castle_decked_carrack.png";
+
+            Text = "You pass a fine castle-decked carrack, flying the colours of House Mauntell, a powerful family that rules the dutchy of Pendrilor in Royce. The officers cautiously hail you as they pass, though they wisely stand ready for any treachery.\n\n\"What brings you out so far?\" you call out as you pass.\n\n\"We are selling steel for salt,\" replies the captain. \"Though this is not our normal route. We hear that the cargo crane in Clifftop is damaged, so we have sailed the long way 'round to Cursus...\"";
+
+            Bye = "The wind swallows up the rest of the captain's words as he sails by.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 851}; }
+    };
+
+    class Story814 : public Story::Base
+    {
+    public:
+        Story814()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 814;
+
+            Location = Location::Type::AZURE_DEEP;
+
+            Text = "Fresh sea breezes blast through your hair as you stand proudly at the helm of your ship. To the north lie the impenetrable Lhasbreath jungles, monkeys leaping from tree to tree above the perilous clifftops, scaring bright-plumed birds from their resting places.\n\nThe Azure Deep stretches in all other directions as far as the eye can see.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            auto result = Engine::ROLL(1);
+
+            if (result > 2)
+            {
+                Choices.push_back(Choice::Base("Steer the ship west", {Book::Type::BOOK1, 21}));
+                Choices.push_back(Choice::Base("Steer the ship east", {Book::Type::BOOK1, 516}));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 536}; }
+    };
+
+    class Story815 : public Story::Base
+    {
+    public:
+        Story815()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 815;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "Your threat about the guards unnerves Tommul.\n\nA distant sound of whipping and the crash of a cell door make him jump. Swearing to savour his revenge at a more opportune time, he quickly slips away. You breathe a sigh of relief and make your way back to your companions.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 157}; }
+    };
+
+    class Story816 : public Story::Base
+    {
+    public:
+        Story816()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 816;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "With the hounds dead you rifle though the crates. There is a good deal of spare clothing and foodstuffs here, as well as a large crate that holds a few shovels. Evidently most of the shovels have already been removed. There are certainly enough supplies here for three or four dozen orcs for quite some time...\n\nFortunately, there are also some valuables, including 400 silver coins a GREY TALISMAN and some SOFT BOOTS (Stealth +1).\n\nYou gained the code A65.";
+
+            Bye = "You leave once you have looted your fill.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::GREY_TALISMAN, Equipment::SOFT_BOOTS1};
+
+            Limit = 2;
+
+            Engine::GAIN_MONEY(party, 400);
+
+            Engine::GET_CODES(party, {Codes::A(65)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 736}; }
+    };
+
+    class Story817 : public Story::Base
+    {
+    public:
+        Story817()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 817;
+
+            Location = Location::Type::SALT_MINES;
+
+            Text = "This level of the mines appears untroubled, and the miners have experienced no new attacks since you visited last. It is time to move on.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 135}; }
+    };
+
+    class Story818 : public Story::Base
+    {
+    public:
+        Story818()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 818;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
+            Text = "Unbraaki's eyes rise in astonishment as you produce the BLACK PRISM. He eagerly snatches it from your grasp. \"You have done well... very well indeed,\" he purrs, almost seeming to stroke the prism with his thin hands. \"The Everchild shall have my soldiers. She may dispose of them as she wishes.\"\n\nUnbraaki's soldiers are dependable, professional soldiers, who obey orders well.\n\nNote: The following soldiers are added to the Saltdad barracks:\n\n[Spears of Unbraaki]: Strength 3, Morale 4\n\nYou gained the code A89.";
+
+            Bye = "Thanking the dread sorcerer for his time, you depart.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Lore", {Book::Type::BOOK1, 265}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::LORE}, 1, 2, 0));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            party.Army.push_back(Army::Base("Spears of Unbraaki", Army::Type::SPEARS_OF_UNBRAAKI, Location::Type::SALTDAD, 3, 4, false));
+
+            Engine::LOSE_EQUIPMENT(party, {Equipment::Type::BLACK_PRISM});
+
+            Engine::GET_CODES(party, {Codes::A(89)});
+        }
+    };
+
+    class Story819 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story819()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 819;
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "Brash is almost in range of the thief, when the murderous fellow pulls a throwing knife from his belt and hurls it straight towards Brash!";
+
+            Choices.clear();
+
+            if (Engine::TEAM_SIZE(party, Team::Type::CHASE) == 1)
+            {
+                PreText += "\n\nBrash loses 3 Health points.";
+
+                Engine::GAIN_HEALTH(party, Character::Type::BRASH, -3);
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Save Brash", {Book::Type::BOOK1, 463}, Choice::Type::CHOOSE_PARTY_MEMBER));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 60}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -27518,6 +27855,16 @@ namespace Book1
     auto story807 = Story807();
     auto story808 = Story808();
     auto story809 = Story809();
+    auto story810 = Story810();
+    auto story811 = Story811();
+    auto story812 = Story812();
+    auto story813 = Story813();
+    auto story814 = Story814();
+    auto story815 = Story815();
+    auto story816 = Story816();
+    auto story817 = Story817();
+    auto story818 = Story818();
+    auto story819 = Story819();
 
     void InitializeStories()
     {
@@ -27609,7 +27956,8 @@ namespace Book1
             &story770, &story771, &story772, &story773, &story774, &story775, &story776, &story777, &story778, &story779,
             &story780, &story781, &story782, &story783, &story784, &story785, &story786, &story787, &story788, &story789,
             &story790, &story791, &story792, &story793, &story794, &story795, &story796, &story797, &story798, &story799,
-            &story800, &story801, &story802, &story803, &story804, &story805, &story806, &story807, &story808, &story809};
+            &story800, &story801, &story802, &story803, &story804, &story805, &story806, &story807, &story808, &story809,
+            &story810, &story811, &story812, &story813, &story814, &story815, &story816, &story817, &story818, &story819};
     }
 }
 #endif

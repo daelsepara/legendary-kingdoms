@@ -108,7 +108,8 @@ namespace Equipment
         POTION_OF_CHARISMA,
         HEALING_POTION,
         SCROLLS_OF_CURSUS,
-        STEEL_SCIMITAR2
+        STEEL_SCIMITAR2,
+        BLACK_PLATE_ARMOUR3
     };
 
     class Base
@@ -278,6 +279,7 @@ namespace Equipment
     auto HEALING_POTION = Equipment::Base("HEALING POTION", "HEALING POTION", Equipment::Class::NORMAL, Equipment::Type::HEALING_POTION, Attribute::Type::NONE, 0, false);
     auto SCROLLS_OF_CURSUS = Equipment::Base("SCROLLS OF CURSUS", "SCROLLS OF CURSUS", Equipment::Class::NORMAL, Equipment::Type::SCROLLS_OF_CURSUS, Attribute::Type::NONE, 0, false);
     auto STEEL_SCIMITAR2 = Equipment::Base("STEEL SCIMITAR", "STEEL SCIMITAR", Equipment::Class::WEAPON, Equipment::Type::STEEL_SCIMITAR2, Attribute::Type::FIGHTING, 2, false);
+    auto BLACK_PLATE_ARMOUR3 = Equipment::Base("BLACK PLATE ARMOUR", "BLACK PLATE ARMOUR", Equipment::Class::ARMOUR, Equipment::Type::BLACK_PLATE_ARMOUR3, Attribute::Type::ARMOUR, 3, false);
 }
 
 #endif

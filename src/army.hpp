@@ -46,7 +46,8 @@ namespace Army
         SLAVE_LEVIES,
         SPEARMEN_OF_SALTDAD,
         TEMPLE_GUARD,
-        THALSIAN_MERCENARIES
+        THALSIAN_MERCENARIES,
+        SPEARS_OF_UNBRAAKI
     };
 
     class Base
