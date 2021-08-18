@@ -1,2 +1,2 @@
 #!/bin/bash
-cat *.hpp *.cpp | sed '/^\s*$/d' | wc -l
+./printlines | wc -l

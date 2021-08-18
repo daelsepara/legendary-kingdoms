@@ -3545,6 +3545,8 @@ namespace Book1
 
             ID = 104;
 
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
             Text = "You cannot be certain, but the mural appears to be telling some sort of story. An image of a terrible demon, possibly Abraxas from legend, rises from the earth and demolishes a number of cities. From cracks in the ground come snakemen, slithering around the survivors and rounding them up. The humans are turned into slaves, building the snakemen a mighty temple, but soon even the slaves begin to worship at the altars of the temple as well. Here the mural ends abruptly. Make of it what you will.\n\nNote: You gained the code A41.";
 
             Choices.clear();
@@ -4691,6 +4693,8 @@ namespace Book1
 
             ID = 139;
 
+            Location = Location::Type::LHASBREATH_OASIS;
+
             Text = "After washing yourselves you sit upon the bank. Amelia has washed her long hair and is beginning to re-braid it, gazing into her own reflection in the oasis. On a whim Tasha offers to help her, and soon she is twisting her hair into tight braids in a style reminiscent of a Splintered Isle buccaneer. It is a moment of tender kindness, which have been rare since you came to the savage Valley of Bones. Amelia accepts Tasha's help, occasionally checking her progress by glancing into the water.\n\n\"You're going to make me look like a pirate!\" Amelia laughs. \"I quite like it.\"\n\n\"We can take it out if you have to meet any fine lords or ladies,\" Tasha says idly, continuing to braid.\n\n\"If it makes me look more like you, I don't care if some noble doesn't like it,\" shrugs Amelia. \"I'm a bastard girl. No one in Royce see's past my name. Not even my own father.\"\n\n\"Strange customs in your land,\" Tasha muses. \n\n\"Perhaps we'll sail to the Splintered Isles, next. That's true freedom. There's no kings or queens there.\"\n\n\"Or laws,\" laughs Amelia. \"Maybe they're better off for it.\"\n\nThis has been a kindly encounter.\n\nNote: Tasha has gained a heart for Amelia Pass-Dayne. Amelia Pass-Dayne also gains a heart for Tasha.";
 
             Choices.clear();
@@ -5532,6 +5536,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 166;
+
+            Location = Location::Type::DESERT;
 
             Text = "The sand shifts beneath your feet. Bursting from the desert come three giant desert scorpions, each as large as a war hound. The scuttle forwards, their stingers tensing and claws open to catch you.";
 
@@ -7715,6 +7721,8 @@ namespace Book1
 
             ID = 231;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Text = "Choose a party member to sneak into the chamber.";
 
             Choices.clear();
@@ -8661,6 +8669,8 @@ namespace Book1
 
             ID = 264;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Text = "This will be a fraught battle.\n\nNote: The skeleton archers do not attack in hand-to-hand combat, but will try and shoot party members if they are not kept busy. If, at the end of the combat turn, the skeleton archers have not taken any damage, they unleash their arrows. Choose two party members to lose 2 Health points -- armour cannot reduce this damage.";
 
             Choices.clear();
@@ -9086,6 +9096,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 278;
+
+            Location = Location::Type::DESERT;
 
             Text = "Clearly your allegiance to the Everchild has not gone unnoticed. You search the zealots, finding three CRUDE BLADES (Fighting +0), 60 silver coins and the Sorcerer's spell book! Sadly, the book has been badly damaged in the battle, but at least one interesting spell has survived:\n\nDazing Lights (Combat)\n\nSwirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.\n\nRecharge: 50 silver\n\nAny of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time.\n\nNote: You gained the code A22.";
 
@@ -11492,6 +11504,8 @@ namespace Book1
 
             ID = 352;
 
+            Location = Location::Type::CLIFFTOP;
+
             Text = "Heaving with steady progress, you eventually pull the great cogwheel from the sea and roll it into the boat. Your jollyboat floats low in the water, and you waste no time rowing it to shore. There is a great cheer from the harbour crew as you moor up. The harbourmaster gratefully presents you with a purse of 300 silver coins. Soon the cogwheel is cleaned up and reinstalled into the crane.\n\nNote: You gained the code A31.";
 
             Bye = "Waving the harbour crew goodbye you return to your ship.";
@@ -13164,6 +13178,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 401;
+
+            Location = Location::Type::LHASBREATH_OASIS;
 
             Text = "Sar Jessica has a lingering strain in her arm from her last battle and is struggling to wash her back. Tasha volunteers to help, perhaps a little too eagerly. The knight is beautiful, noble-born with strong limbs and an air of authority. Tasha has often glanced at her across an inn room, when deep in her cups, with admiration and desire. Now Tasha is washing her, she cannot resist cradling her against her body, feeling her flesh against hers. Jessica acts as if nothing is going on, but surely she cannot be so blind to Tasha's affections?\n\nNote: Tasha has gained a heart for Sar Jessica. Sar Jessica also gains a heart for Tasha.";
 
@@ -18053,6 +18069,8 @@ namespace Book1
 
             ID = 555;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Text = "This battle has taught you much about combat strategy.";
 
             Choices.clear();
@@ -20822,6 +20840,8 @@ namespace Book1
 
             ID = 636;
 
+            Location = Location::Type::DESERT;
+
             Text = "In the depths of a freezing desert night your ears pick up the sound of crunching on the desert sands. Stirring your colleagues awake you scan the desert with your torch. Three warriors, stripped to the waist, bearing the ritual scars of Cursus, stand before you, their swords drawn. Behind them stands a tall priest of Cursus, the stench of sorcery about him. \"Heretics!\" he hisses. \"Your damned queen will never rule the hearts of the virtuous. Death to the Everchild and her apostate followers!\"\n\nA battle is inevitable.\n\nNote: The Sorcerer, instead of attacking, will cast the following spells each turn, as long as he is still alive:\n\n1st turn: The sorcerer casts an Ice Bolt spell. He makes an Fighting: 8 attack.\n\n2nd turn: The sorcerer casts a Dazing Lights spell. On the next combat round, each party member requires a 5+ to hit, rather than 4+\n\n3rd turn: The sorcerer casts a Sandstorm spell. The sorcerer makes a Fighting: 3 attack on each party member.\n\n4th turn onwards: The sorcerer makes a standard attack.";
 
             Choices.clear();
@@ -23274,6 +23294,8 @@ namespace Book1
 
             ID = 712;
 
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
             Text = "It is difficult to interpret what is really going on in the mural. Shrugging, you make your way further upwards.";
 
             Choices.clear();
@@ -23485,6 +23507,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 720;
+
+            Location = Location::Type::WITHERED_STEPPES;
 
             Text = "The hairs on the back of your neck prick up. You sense a weakening in the fabric of the world in this place. Tracing mystic symbols in the air you see a patch of rock to your left fade away, revealing a small chamber containing funeral urns. A frail looking casket rests in the corner of the chamber, seeming to shudder in the feint breeze outside.";
 
@@ -23704,6 +23728,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 726;
+
+            Location = Location::Type::LHASBREATH_OASIS;
 
             Choices.clear();
 
@@ -24389,6 +24415,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 745;
+
+            Location = Location::Type::CLIFFTOP;
 
             Text = "The rope is tied. Now the rest of the party must try to haul it aboard whilst it is guided into place by the diver.\n\nNote: Your diver cannot help in the following skill check.";
 
@@ -25423,6 +25451,8 @@ namespace Book1
 
             ID = 772;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Text = "You march into the chamber, expecting trouble. You are not disappointed. As you suspected the skeletal remains leap to their feet, many other skeletons joining them from the open caskets around the room.";
 
             Choices.clear();
@@ -26243,8 +26273,6 @@ namespace Book1
 
             Text = "One of your catapult stones inflicts a direct hit on the deck of the orc hulk. You watch as a great spurt of water blasts through the hole, suggesting the stone has crashed through the hull and made a sizable breech. The orc hulk sinks with alarming speed, the nasty raiders roaring with surprise and apparently unable to swim. Soon the unseaworthy ship has sunk to the bottom of the Azure Deep with all hands. Shaking your head at the orc's audacity, and the dreadful condition of their ship, you sail on.\n\nNote: You gained the code A68.";
 
-            Bye = "You bow as she leaves, feeling more conflicted than ever.";
-
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -26339,6 +26367,8 @@ namespace Book1
 
             ID = 799;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -26361,6 +26391,255 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 264}; }
+    };
+
+    class Story800 : public Story::Base
+    {
+    public:
+        Story800()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 800;
+
+            Location = Location::Type::MORDAIN;
+
+            Text = "The slaves are disappointed that their saviours will not be joining them but thank you once again for their freedom. With a cheer the crew unmoor their ship and head out into the ocean depths. You wish them luck.\n\nNote: You gained the code A70.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(70)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 662}; }
+    };
+
+    class Story801 : public Story::Base
+    {
+    public:
+        Story801()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 801;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
+            Text = "The tunnel continues until it ends at an archway. Clearly a door used to fill the void, but the petrified remains lie in pieces on the floor. Beyond the archway is a tomb where an ancient battle took place. Skeletons lie across the floor, their blades little more than rust. Caskets for the dead stand on plinths lining the walls. At the far end is an open chest, glittering with funerary gifts to the long departed. Was this what was fought over? And if so, why didn't winners of the battle leave with their prize?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Sneak into the chamber", {Book::Type::BOOK1, 231}));
+            Choices.push_back(Choice::Base("Enter the chamber, weapons drawn", {Book::Type::BOOK1, 772}));
+            Choices.push_back(Choice::Base("Go back to the crossroads", {Book::Type::BOOK1, 46}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(45)}))
+            {
+                return {Book::Type::BOOK1, 533};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story802 : public Story::Base
+    {
+    public:
+        Story802()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 802;
+
+            Location = Location::Type::LHASBREATH_OASIS;
+
+            Text = "Tasha bathes alone, scrubbing herself clean before dressing and meeting with the others.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::SAR_JESSICA_DAYNE))
+            {
+                return {Book::Type::BOOK1, 401};
+            }
+            else if (Engine::IN_PARTY(party, Character::Type::AMELIA_PASS_DAYNE))
+            {
+                return {Book::Type::BOOK1, 139};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 51}; }
+    };
+
+    class Story803 : public Story::Base
+    {
+    public:
+        Story803()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 803;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
+            Text = "You are in an oval chamber surrounded by scattered bits of paper. A vault door lies to the north. To the south is a room filled with strange, glowing runes. Stairs lead up to the west.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the vault door", {Book::Type::BOOK1, 215}));
+            Choices.push_back(Choice::Base("Check out the room to the south", {Book::Type::BOOK1, 484}));
+            Choices.push_back(Choice::Base("Leave the palace", {Book::Type::BOOK1, 265}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story804 : public Story::Base
+    {
+    public:
+        Story804()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 804;
+
+            Location = Location::Type::DESERT;
+
+            Text = "Where will you travel now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North, to Saltdad", {Book::Type::BOOK1, 75}));
+            Choices.push_back(Choice::Base("Northwest, to join the Westroad to Clifftop", {Book::Type::BOOK1, 511}));
+            Choices.push_back(Choice::Base("West, to the Blackwall", {Book::Type::BOOK1, 691}));
+            Choices.push_back(Choice::Base("South to the Granite Hills", {Book::Type::BOOK1, 275}));
+            Choices.push_back(Choice::Base("East to the Withered Steppes", {Book::Type::BOOK1, 115}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story805 : public Story::Base
+    {
+    public:
+        Story805()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 805;
+
+            Text = "You hurl a mouldy book at the orc's head. It is a direct hit, but except to brush to hurled book from the pages of the black book he is reading, the orc does not respond at all.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Kill the orc whilst he is reading", {Book::Type::BOOK1, 38}));
+            Choices.push_back(Choice::Base("Snatch the black book from the orc's hands", {Book::Type::BOOK1, 160}));
+            Choices.push_back(Choice::Base("Close the door and go somewhere else", {Book::Type::BOOK1, 821}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story806 : public Story::Base
+    {
+    public:
+        Story806()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 806;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
+            Text = "You follow along the ramp as it spirals higher and higher into the ziggurat. Along the walls is a carved mural featuring snakes and men in joint worship. A number of figures seem significant, but the carvings are rather difficult to understand.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Decipher the mural (Team check: Lore 4+, Successes: 7)", {Book::Type::BOOK1, 104}, {Book::Type::BOOK1, 712}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 7));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story807 : public Story::Base
+    {
+    public:
+        Story807()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 807;
+
+            Location = Location::Type::CLIFFTOP;
+
+            Text = "The wheel is heavy, and you strain hard to haul it upwards. No sooner has it peeked above the waterline when the knot on the rope gives way and the wheel splashes back into the deep. You curse in frustration.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("You would like to try again to get the cogwheel", {Book::Type::BOOK1, 583}));
+            Choices.push_back(Choice::Base("Give up in disgust", {Book::Type::BOOK1, 82}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story808 : public Story::Base
+    {
+    public:
+        Story808()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 808;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "The family owe the Iron King 200 silver pieces, with an additional 50 silver collection tax.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Pay the family's tax (250 silver coins)", {Book::Type::BOOK1, 358}, Choice::Type::GAIN_MONEY, -250));
+            Choices.push_back(Choice::Base("Save money by slaying the guards", {Book::Type::BOOK1, 554}));
+            Choices.push_back(Choice::Base("Simply leave", {Book::Type::BOOK1, 75}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story809 : public Story::Base
+    {
+    public:
+        Story809()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 809;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You are in a kitchen chamber filled with dead goblins. The broth has gone cold.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Leave the kitchen through the north door", {Book::Type::BOOK1, 366}));
+            Choices.push_back(Choice::Base("Leave the kitchen through the south door", {Book::Type::BOOK1, 736}));
+
+            Controls = Story::Controls::STANDARD;
+        }
     };
 
     auto story001 = Story001();
@@ -27229,6 +27508,16 @@ namespace Book1
     auto story797 = Story797();
     auto story798 = Story798();
     auto story799 = Story799();
+    auto story800 = Story800();
+    auto story801 = Story801();
+    auto story802 = Story802();
+    auto story803 = Story803();
+    auto story804 = Story804();
+    auto story805 = Story805();
+    auto story806 = Story806();
+    auto story807 = Story807();
+    auto story808 = Story808();
+    auto story809 = Story809();
 
     void InitializeStories()
     {
@@ -27319,7 +27608,8 @@ namespace Book1
             &story760, &story761, &story762, &story763, &story764, &story765, &story766, &story767, &story768, &story769,
             &story770, &story771, &story772, &story773, &story774, &story775, &story776, &story777, &story778, &story779,
             &story780, &story781, &story782, &story783, &story784, &story785, &story786, &story787, &story788, &story789,
-            &story790, &story791, &story792, &story793, &story794, &story795, &story796, &story797, &story798, &story799};
+            &story790, &story791, &story792, &story793, &story794, &story795, &story796, &story797, &story798, &story799,
+            &story800, &story801, &story802, &story803, &story804, &story805, &story806, &story807, &story808, &story809};
     }
 }
 #endif
