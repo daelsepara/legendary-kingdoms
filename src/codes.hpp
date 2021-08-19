@@ -60,7 +60,9 @@ namespace Codes
         BRIBE_OGRE_200,
         LAST_ENEMY_ATTACK_ROUND0,
         RECEIVED_LHASBREATH_BERSERKERS,
-        RECEIVED_LHASBREATH_BARBARIANS
+        RECEIVED_LHASBREATH_BARBARIANS,
+        WARNED_ABOUT_ARENA_MAGIC,
+        BEEN_TO_PALACE_BEFORE
     };
 
     std::map<Book::Type, const char *> Prefix = {

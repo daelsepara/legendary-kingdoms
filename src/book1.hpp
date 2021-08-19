@@ -10342,6 +10342,8 @@ namespace Book1
 
             ID = 311;
 
+            Location = Location::Type::TOMB_OF_IMOPPOSH;
+
             Text = "Imopposh gives an unearthly howl before collapsing into piles of dust. You are relieved that the foul sorcerer has finally met his end.\n\nYour rewards are considerable. A MASTERWORK BLADE (Fighting +3) and some CHAIN ARMOUR (Armour +2) are stuffed into an urn, along with 900 silver coins. In an ancient wooden box stuffed underneath rotten funeral garbs you discover a GLITTERING NECKLACE (Charisma +2). You may also take a MAGICAL WEAVE from Imopposh's funeral bandages.\n\nNote: You gained the code A39.";
 
             Bye = "When you have finished your looting, you return to the desert.";
@@ -10373,6 +10375,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 312;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
 
             Text = "You quickly show the High Zealot your ring, before he can summon the guards. The zealot snarls and sits back down. \"I find it distasteful that the patriarch sees fit to employ such godless servants -- but his will be done. You may leave.\"";
 
@@ -11006,7 +11012,7 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("Chase the thief", {Book::Type::BOOK1, 573}));
-            Choices.push_back(Choice::Base("Rifle through the bag left by the thief", {Book::Type::BOOK1, 868}));
+            Choices.push_back(Choice::Base("Rifle through the bag left by the thief", {Book::Type::BOOK1, 878}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -11020,6 +11026,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 333;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Text = "The guards grunt and uncross their spears. \"Go through, but we'll be watching you...\" they snarl. Nodding, you pass through into the cool palace.";
 
@@ -13496,6 +13506,8 @@ namespace Book1
 
             ID = 407;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Text = "The power of St. Elias should be effective against intelligent undead, even these slavering lunatics. You brandish the talisman, the ghouls hissing in pain as you present it. You can actually see their flesh begin to wither and disintegrate in the holy glow that pours from the artefact. Soon you have boxed the ghouls into a corner, their bodies withering before the talisman. In moments they have become little more than bleached bones, cleansed entirely by the power of the holy man who crafted the talisman.";
 
             Choices.clear();
@@ -14228,6 +14240,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 434;
+
+            Location = Location::Type::TOMB_OF_IMOPPOSH;
 
             Text = "You hold aloft the talisman and Imopposh screams. He casts a bolt of roaring fire that would surely incinerate you, but the impact merely makes you stagger back towards the daylight. Imopposh cannot oppose the power of the living saint himself, for in times past the two of them were rivals -- but neither can you gain ground against him. Imopposh draws the fragments of his casket around him, returning to his rest. The shadow door slams shut in front of you.";
 
@@ -18428,6 +18442,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 563;
+
+            Location = Location::Type::TOMB_OF_IMOPPOSH;
 
             Text = "This unnatural monster cannot be allowed to live. Drawing your weapons with a grimace, you advance.\n\nNote: Imopposh, instead of attacking, will cast the following spells each turn, as long as he is still alive:\n\n1st turn: Imopposh casts a Thunderbolt spell. He makes two Fighting: 10 attacks.\n\n2nd turn: Imopposh casts an Orb of Annihilation spell. He makes a single Fighting: 13 attack.\n\n3rd turn: Imopposh casts a Sandstorm spell. He makes a Fighting: 3 attack on each party member.\n\n4th turn onwards: Imopposh makes a standard attack.";
 
@@ -27244,8 +27260,6 @@ namespace Book1
             if (outcome)
             {
                 Bye = "You manage to run across the bridge and jump clear onto the far bank, just before the rope bridge collapses into the raging river.";
-
-                Engine::GAIN_MONEY(party, 15);
             }
         }
     };
@@ -28552,6 +28566,418 @@ namespace Book1
         }
     };
 
+    class Story860 : public Story::Base
+    {
+    public:
+        Story860()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 860;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
+            Text = "You are not sorry to be leaving the Temple of the Unbroken. Where will you go now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go north, into the Withered Steppes", {Book::Type::BOOK1, 115}));
+            Choices.push_back(Choice::Base("West, into the desert", {Book::Type::BOOK1, 202}));
+            Choices.push_back(Choice::Base("South, towards the coast", {Book::Type::BOOK1, 657}));
+            Choices.push_back(Choice::Base("East, towards the Northroad", {Book::Type::BOOK1, 822}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story861 : public Story::Base
+    {
+    public:
+        Story861()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 861;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You have returned to the comfortable room with the fireplace. There are exits in the north and east walls.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go through the north door", {Book::Type::BOOK1, 23}));
+            Choices.push_back(Choice::Base("Go through the east door", {Book::Type::BOOK1, 755}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story862 : public Story::Base
+    {
+    public:
+        Story862()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 862;
+
+            Location = Location::Type::TOMB_OF_IMOPPOSH;
+
+            Image = "images/book1/imopposh_the_mad.png";
+
+            Text = "You cautiously enter the chamber, tiptoeing around the fragile urns, the casket beyond seeming to crumble merely from the vibrations of your footsteps. Suddenly the casket explodes, sending showers of wicker and dust across the room. Emerging comes a figure of nightmare, a ghastly undead shade composed of shadow, bone and choking dust.\n\nHe ululates a mystic cry, a hideous rune appearing in the air, before shattering over your party, stinging your flesh as if a thousand hornets had stung you.\n\n\"Who dares disturb Imopposh the Mad?\" he roars, witchlights burning in his eyes.\n\nNote: Each party member loses 3 Health points.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Repel the spirit with a TALISMAN of St. Elias", {Book::Type::BOOK1, 434}, {Equipment::TALISMAN_OF_ST_ELIAS}));
+            Choices.push_back(Choice::Base("Engage the undead horror in battle", {Book::Type::BOOK1, 563}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -3);
+        }
+    };
+
+    class Story863 : public Story::Base
+    {
+    public:
+        Story863()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 863;
+
+            Location = Location::Type::LHASBREATH_JUNGLE;
+
+            Text = "It takes a confident explorer to blaze a new trail through an unfamiliar jungle.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Navigate the jungle (Team check: Survival 4+, Successes: 6)", {Book::Type::BOOK1, 779}, {Book::Type::BOOK1, 462}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 6));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story864 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story864()
+        {
+            BookID = Book::Type::BOOK1;
+
+            Location = Location::Type::SALT_PLAINS;
+
+            ID = 864;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Random Event", {{2, NULL, {Book::Type::BOOK1, 307}}, {4, NULL, {Book::Type::BOOK1, 120}}, {6, NULL, {Book::Type::BOOK1, 479}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            auto loss = Engine::ROLL(1);
+
+            Engine::GAIN_HEALTH(party, -loss);
+
+            PreText = "Lost and dehydrated, you wander helplessly through the Salt Plains, desperate for water or civilisation.\n\nNote: Each party member loses " + std::to_string(loss) + " health point";
+
+            if (loss > 1)
+            {
+                PreText += "s";
+            }
+
+            PreText += ".";
+
+            Text = PreText.c_str();
+        }
+    };
+
+    class Story865 : public Story::Base
+    {
+    public:
+        Story865()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 865;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Image = "images/book1/milagros.png";
+
+            Text = "You are almost relieved when the cruel overseers of the arena call you out of the filthy living hall for your first battle. You are fed water by children wearing neck chains in a narrow, dusty chamber, who present it to you in deep bowls from which you are expected to slurp. One of the children, a pretty blonde girl called Milagros, quietly advises you to keep to the edge of the arena and not to engage in the central melee.\n\n\"Don't use magic,\" she hisses. \"They'll take your tongue...\"\n\nGuards push you on before you can question her further. You are unchained and shoved into one of the gate-rooms. Through the heavy portcullis you can hear the crowd muttering in anticipation. You can see a number of crude weapons laid out for selection.\n\nNote: Any party member may take a single CRUDE BLADE (Fighting +0). In addition, a single WOODEN SHIELD (Armour +2), and a MAUL* (Fighting +1) are here to be taken. Remember that the MAUL is a two handed weapon and the party member wielding it cannot use a shield at the same time.";
+
+            Bye = "All too soon the portcullis opens to a roar from the crowd. Blinking in the glare of the sun, you emerge into the deadly arena.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take.clear();
+
+            Limit = 0;
+
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                Limit += 1;
+
+                Take.push_back(Equipment::CRUDE_BLADE);
+            }
+
+            Take.push_back(Equipment::MAUL);
+
+            Take.push_back(Equipment::WOODEN_SHIELD2);
+
+            Limit += 2;
+
+            Engine::GET_CODES(party, {Codes::Type::WARNED_ABOUT_ARENA_MAGIC});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 835}; }
+    };
+
+    class Story866 : public Story::Base
+    {
+    public:
+        Story866()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 866;
+
+            Location = Location::Type::CLIFFTOP;
+
+            IsCity = true;
+
+            Text = "You are labouring on a weed-filled crop farm in Clifftop, the whips of a dozen overseers caressing your backs should you waver in the slightest. Your treatment is appalling, and malnutrition and dehydration take their tolls on your whip-streaked bodies.\n\nYou will not be whipped to death... yet.\n\nNote: Each party member loses 4 Health points. Health points do not drop below 1 for now.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -4);
+
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (party.Members[i].Health < 1)
+                {
+                    party.Members[i].Health = 1;
+                }
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, -866001}; }
+    };
+
+    class E866_001 : public Story::Base
+    {
+    public:
+        E866_001()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -866001;
+
+            DisplayID = 866;
+
+            Location = Location::Type::CLIFFTOP;
+
+            IsCity = true;
+
+            Text = "Clearly you will die if you cannot escape. Biding your time, you attempt to steal some chain cutters from the overseers while they are whipping some other slaves.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Steal some chain cutters (Individual check: Stealth 4+, Successes: 3)", {Book::Type::BOOK1, 725}, {Book::Type::BOOK1, -866002}, {Attribute::Type::STEALTH}, 4, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "You manage to cut off the chains from your companions and slip away into the desert.";
+            }
+            else
+            {
+                temp_string = "You are caught and lashed for your impusence. " + std::string(party.Members[selection[0]].Name) + " loses 2 Health points. There's no alternative but to try again another day. It is possible to be whipped to death -- escaping slaves receive no mercy!";
+
+                Bye = temp_string.c_str();
+
+                Engine::GAIN_HEALTH(party.Members[selection[0]], -2);
+            }
+        }
+    };
+
+    class E866_002 : public Story::Base
+    {
+    public:
+        E866_002()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -866002;
+
+            DisplayID = 866;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, -866001}; }
+    };
+
+    class Story867 : public Story::Base
+    {
+    public:
+        Story867()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 867;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "You catch the zealots deep in arguments over the proper punishment for a foreigner who has shown distaste towards a Cursite temple. Some moderates suggest merely the removal of a toe would be appropriate. Various forms of grizzly death are suggested by the majority. As you enter the High Zealot himself rises in fury. \"You'd better have a good reason for disturbing a meeting of the Zealotry Commission! Or it's a hundred strokes of the whip across your back!\"";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(40)}))
+            {
+                return {Book::Type::BOOK1, 574};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::SCROLLS_OF_CURSUS}))
+            {
+                return {Book::Type::BOOK1, 727};
+            }
+            else if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::RING_OF_THE_PATRIARCH}))
+            {
+                return {Book::Type::BOOK1, 312};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 521};
+            }
+        }
+    };
+
+    class Story868 : public Story::Base
+    {
+    public:
+        Story868()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 868;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "The Iron King sits upon a stone throne, a jagged iron crown perched upon his wide head. He is surrounded by bronze-plated bodyguards and long-robed councillors, who constantly whisper in his ear even as he speaks. You are pushed onto your knees by his guards as he surveys you coldly.\n\n\"I have use for people like you,\" he concedes.\n\n\"The treasury of Saltdad pays heavy tithes to the priests of Cursus. We are a vassal state and must pay our dues. However, the amount of our tithe varies with each year, and there is room for negotiation as to exactly how much the state should pay. I wish you to speak with Mannus, keeper of the holy purse in Cursus. Let him know that the Iron King understands he is under-appreciated in the church, and that he would stand to gain much if he became our friend. Gift him with this, to demonstrate our goodwill, and negotiate a good tithe on our behalf. Do this, and you will earn my friendship.\"\n\nOne of the king's councillors presents you with an IRON SCEPTRE.\n\n\"Go now,\" intones the king. \"And do not return without good news.\"";
+
+            Bye = "Bowing all the way out, you leave the king's presence.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::Type::BEEN_TO_PALACE_BEFORE}))
+            {
+                return {Book::Type::BOOK1, 17};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::Type::BEEN_TO_PALACE_BEFORE});
+
+            Take = {Equipment::IRON_SCEPTRE};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story869 : public Story::Base
+    {
+    public:
+        Engine::Destination destination = {};
+
+        Story869()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 869;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
+            Text = "The tunnel continues until it comes to a door, which is slightly ajar. Creaking it open you emerge onto a walkway around a large burial chamber. Flights of stone steps descend onto the lower level, from which a crunching and munching sound can be heard. Feeding on dry bones you can see a pack of ghouls at work among the skeletal remains of the ancient dead. They have broken open the green stone tombs and are munching on prince and pauper alike. They gaze up at you with hungry eyes. Living flesh will fill their bellies just as well.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            destination = {Book::Type::BOOK1, 651};
+
+            Monsters.clear();
+
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::TALISMAN_OF_ST_ELIAS}))
+            {
+                Monsters = {
+                    Monster::Base("Ghoul", 6, 4, 4, 13, 0),
+                    Monster::Base("Ghoul", 5, 4, 4, 13, 0),
+                    Monster::Base("Ghoul", 5, 4, 4, 14, 0)};
+            }
+            else
+            {
+                destination = {Book::Type::BOOK1, 407};
+            }
+
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return destination; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -29480,6 +29906,18 @@ namespace Book1
     auto story857 = Story857();
     auto story858 = Story858();
     auto story859 = Story859();
+    auto story860 = Story860();
+    auto story861 = Story861();
+    auto story862 = Story862();
+    auto story863 = Story863();
+    auto story864 = Story864();
+    auto story865 = Story865();
+    auto story866 = Story866();
+    auto e866_001 = E866_001();
+    auto e866_002 = E866_002();
+    auto story867 = Story867();
+    auto story868 = Story868();
+    auto story869 = Story869();
 
     void InitializeStories()
     {
@@ -29490,7 +29928,8 @@ namespace Book1
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
             &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725,
-            &event744, &event760, &event770, &event771, &event776, &event788, &event789, &event824, &event841,
+            &event744, &event760, &event770, &event771, &event776, &event788, &event789, &event824, &event841, &e866_001,
+            &e866_002,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -29576,7 +30015,8 @@ namespace Book1
             &story820, &story821, &story822, &story823, &story824, &story825, &story826, &story827, &story828, &story829,
             &story830, &story831, &story832, &story833, &story834, &story835, &story836, &story837, &story838, &story839,
             &story840, &story841, &story842, &story843, &story844, &story845, &story846, &story847, &story848, &story849,
-            &story850, &story851, &story852, &story853, &story854, &story855, &story856, &story857, &story858, &story859};
+            &story850, &story851, &story852, &story853, &story854, &story855, &story856, &story857, &story858, &story859,
+            &story860, &story861, &story862, &story863, &story864, &story865, &story866, &story867, &story868, &story869};
     }
 }
 #endif

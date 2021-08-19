@@ -8826,7 +8826,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                                             if (cast)
                                             {
-                                                if (party.Location == Location::Type::SALTDAD_ARENA)
+                                                if (party.Location == Location::Type::SALTDAD_ARENA && Engine::VERIFY_CODES(party, {Codes::Type::WARNED_ABOUT_ARENA_MAGIC}))
                                                 {
                                                     Engine::GAIN_STATUS(party.Members[selection], Character::Status::USED_MAGIC_INARENA);
                                                 }
@@ -13310,7 +13310,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         Engine::LOSE_CODES(party, {Codes::Type::NO_COMBAT_SPELLS,
                                    Codes::Type::NO_WEAPONS,
-                                   Codes::Type::LAST_IN_COMBAT});
+                                   Codes::Type::LAST_IN_COMBAT,
+                                   Codes::Type::WARNED_ABOUT_ARENA_MAGIC});
     }
 
     return combatResult;

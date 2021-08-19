@@ -109,7 +109,8 @@ namespace Equipment
         HEALING_POTION,
         SCROLLS_OF_CURSUS,
         STEEL_SCIMITAR2,
-        BLACK_PLATE_ARMOUR3
+        BLACK_PLATE_ARMOUR3,
+        WOODEN_SHIELD2
     };
 
     class Base
@@ -280,6 +281,7 @@ namespace Equipment
     auto SCROLLS_OF_CURSUS = Equipment::Base("SCROLLS OF CURSUS", "SCROLLS OF CURSUS", Equipment::Class::NORMAL, Equipment::Type::SCROLLS_OF_CURSUS, Attribute::Type::NONE, 0, false);
     auto STEEL_SCIMITAR2 = Equipment::Base("STEEL SCIMITAR", "STEEL SCIMITAR", Equipment::Class::WEAPON, Equipment::Type::STEEL_SCIMITAR2, Attribute::Type::FIGHTING, 2, false);
     auto BLACK_PLATE_ARMOUR3 = Equipment::Base("BLACK PLATE ARMOUR", "BLACK PLATE ARMOUR", Equipment::Class::ARMOUR, Equipment::Type::BLACK_PLATE_ARMOUR3, Attribute::Type::ARMOUR, 3, false);
+    auto WOODEN_SHIELD2 = Equipment::Base("WOODEN SHIELD", "WOODEN SHIELD", Equipment::Class::SHIELD, Equipment::Type::WOODEN_SHIELD2, Attribute::Type::ARMOUR, 2, false);
 }
 
 #endif
