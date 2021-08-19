@@ -358,6 +358,10 @@ namespace Book1
 
             ID = 9;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "With a high kick you send the final monk sprawling. The other monks in the temple lower their eyes and return to their duties, unwilling to block your progress further. You retrieve your weapon and march smartly into the temple.\n\nHonnu is waiting for you, cross-legged on the floor. You join him in meditation for an hour or so, your companions venturing elsewhere in the city now they can see you are safe. \"It is rare for a supplicant to be granted the trials of perfection twice, but you are an unusual man, Akihiro. You must know that your father never returned from the trials. But I sense in you a steel he never had.\"\n\n\"Thank you, Honnu,\" you say, bowing your head.\n\n\"There would be little point in having you study at the temple, you are already skilled in your craft,\" shrugs Honnu. \"Instead I shall send you straight onto your tasks. Two must be completed before you are deemed worthy. It is traditional to send an applicant to retrieve some trifling artefact as proof of dedication; a tedious matter, since the only item of true worth is enlightenment. Therefore, I bid you find me a SILVER IDOL. Find yourself, Akihiro, whilst you are at it.\"\n\n\"Where can I find a SILVER IDOL?\" you ask unsurely.\n\n\"I'm sure more than one exists, but a man of open mind and willing to embrace his destiny might find one in the caves of Uranu,\" suggests Honnu. \"That place has tested, and slain, many a kensai aspirant. Go wisely, Akihiro. I shall see you soon.\"\n\nNote: You gained the code A50.";
 
             Bye = "You rise, bow, and go to re-join your companions.";
@@ -1407,6 +1411,8 @@ namespace Book1
             Army = {Army::Base("Lhasbreath Berserkers", Army::Type::LHASBREATH_BERSERKERS, location, 5, 2)};
 
             Engine::GET_CODES(party, {Codes::A(16)});
+
+            Engine::GET_CODES(party, {Codes::Type::RECEIVED_LHASBREATH_BERSERKERS});
         }
     };
 
@@ -7698,7 +7704,7 @@ namespace Book1
 
             Choices.clear();
 
-            Choices.push_back(Choice::Base("Choose a party member to lose 5 Health points and 1 point of Fighting.", {Book::Type::BOOK1, 395}, Choice::Type::GAIN_HEALTH_ATTRIBUTE, {Attribute::Type::FIGHTING}, -5, -1, 0));
+            Choices.push_back(Choice::Base("Choose a party member to lose 5 Health points and 1 point of Fighting", {Book::Type::BOOK1, 395}, Choice::Type::GAIN_HEALTH_ATTRIBUTE, {Attribute::Type::FIGHTING}, -5, -1, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -8430,6 +8436,10 @@ namespace Book1
 
             ID = 252;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "You are greeted by Honnu and the other monks, and go into meditation with them for a few days. There is nothing more Honnu can teach a fully trained kensai, so after a few days of peace you make your way onwards.";
 
             Choices.clear();
@@ -9027,6 +9037,8 @@ namespace Book1
 
             ID = 274;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -9253,7 +9265,7 @@ namespace Book1
 
             ID = 280;
 
-            Text = "Over the next few days the Everchild consolidates her rule. All your soldiers in the Luutanesh barracks are transferred to the Saltdad barracks. The morale of all your soldiers is restored to maximum. The Everchild presents you with 1250 silver coins for your labours to gain her the throne.\n\n\"Our next target is Clifftop,\" says the Everchild as you attend her war council. \"I need access to a good port if I am to take full control of the valley. Their King, Lothor the Ugly, is a zealous follower of Cursus so he cannot be swayed. Lothor has more troops than the Iron King, so I am reluctant to attack straight away.\"\n\n\"Is there anyone else who can reinforce us?\" you ask.\n\n\"It's possible that Unbraaki might,\" she says. \"He is a sorcerer of some power who lives in a palace just south of Clifftop. He would never have considered sending soldiers to me whilst I was a revolutionary, but he might be willing to do so now I am a queen. Ask him what he wants in exchange for support and see if he can be accommodated. You might also have some luck with the nomads of the desert. I have some connection with these people so they might be swayed. Good fortune to you, friends.\"";
+            Text = "Over the next few days the Everchild consolidates her rule. The Everchild presents you with 1250 silver coins for your labours to gain her the throne.\n\n\"Our next target is Clifftop,\" says the Everchild as you attend her war council. \"I need access to a good port if I am to take full control of the valley. Their King, Lothor the Ugly, is a zealous follower of Cursus so he cannot be swayed. Lothor has more troops than the Iron King, so I am reluctant to attack straight away.\"\n\n\"Is there anyone else who can reinforce us?\" you ask.\n\n\"It's possible that Unbraaki might,\" she says. \"He is a sorcerer of some power who lives in a palace just south of Clifftop. He would never have considered sending soldiers to me whilst I was a revolutionary, but he might be willing to do so now I am a queen. Ask him what he wants in exchange for support and see if he can be accommodated. You might also have some luck with the nomads of the desert. I have some connection with these people so they might be swayed. Good fortune to you, friends.\"\n\nNote:  All your soldiers in the Luutanesh barracks are transferred to the Saltdad barracks. The morale of all your soldiers is restored to maximum.";
 
             Bye = "You bow and leave the palace.";
 
@@ -12628,6 +12640,10 @@ namespace Book1
 
             ID = 386;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Image = "images/book1/akihiro_battles_monk.png";
 
             Text = "You inform your companions to stand aside.\n\nGazing directly into the eyes of the opposing monks you strip away your weapon belt and throw it to the side. Armed only with your fists you approach, the monks adopting fighting stances.\n\nNote: Because you have no weapon for this fight, you cannot add any Fighting bonus a weapon can give you. However, because you are familiar with the unarmed combat style of the monks, you do not lose a point of Fighting for having no weapon.\n\nNote: Only Akihiro may engage in this battle.";
@@ -12668,6 +12684,8 @@ namespace Book1
                 if (Engine::IS_ACTIVE(party, character))
                 {
                     Engine::SET_TEAM(party.Members[character], previousTeam);
+
+                    Engine::REMOVE_STATUS(party.Members[character], Character::Status::UNARMED_COMBAT);
                 }
 
                 destination = {Book::Type::BOOK1, 9};
@@ -12677,6 +12695,8 @@ namespace Book1
                 if (character >= 0 && character < party.Members.size())
                 {
                     party.Members[character].Health = 1;
+
+                    Engine::REMOVE_STATUS(party.Members[character], Character::Status::UNARMED_COMBAT);
                 }
 
                 destination = {Book::Type::BOOK1, 596};
@@ -15747,7 +15767,7 @@ namespace Book1
                 Choices.push_back(Choice::Base("Cast Teleport Circle", {Book::Type::BOOK1, 859}));
             }
 
-            Choices.push_back(Choice::Base("There is nothing you can do here but leave through the only exit.", {Book::Type::BOOK1, 67}));
+            Choices.push_back(Choice::Base("There is nothing you can do here but leave through the only exit", {Book::Type::BOOK1, 67}));
         }
     };
 
@@ -16044,7 +16064,7 @@ namespace Book1
             Text = "The area is seemingly pockmarked with caves. You decide to search one at random.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Search randomly", {{1, NULL, {Book::Type::BOOK1, 797}}, {2, NULL, {Book::Type::BOOK1, 580}}, {3, NULL, {Book::Type::BOOK1, 78}}, {4, NULL, {Book::Type::BOOK1, 855}}, {6, NULL, {Book::Type::BOOK1, 356}}}, 1));
+            Choices.push_back(Choice::Base("Search randomly", {{1, NULL, {Book::Type::BOOK1, 797}}, {2, NULL, {Book::Type::BOOK1, 580}}, {3, NULL, {Book::Type::BOOK1, 78}}, {4, NULL, {Book::Type::BOOK1, 854}}, {6, NULL, {Book::Type::BOOK1, 356}}}, 1));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -17911,7 +17931,7 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("Make another attempt", {Book::Type::BOOK1, 583}));
-            Choices.push_back(Choice::Base("Abandon the attempt for the moment.", {Book::Type::BOOK1, 82}));
+            Choices.push_back(Choice::Base("Abandon the attempt for the moment", {Book::Type::BOOK1, 82}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -19560,6 +19580,10 @@ namespace Book1
 
             ID = 596;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "You have been beaten down, but the monks are not savages and do not deal a killing blow. \"Your dishonour has made you weak,Akihiro!\" barks one of the monks. \"Never return to this place.\"\n\n\"I shall face you all again... and win!\" you vow, but the monks merely laugh at you and walk away. Red-faced with shame you limp away from the temple.\n\nNote: Akihiro is down to 1 Health point.";
 
             Choices.clear();
@@ -20581,7 +20605,7 @@ namespace Book1
             Text = "The next morning the surviving landlords and masters of Clifftop fill the King's Hall to kneel before the Everchild. Resplendent in her yellow and blue silks and glittering silver crown, she immediately repeals the rights of the taskmasters to execute or mutilate their workers. Upstanding members of the revolution are awarded sweeping areas of land, the cruellest taskmasters are efficiently executed, and the Everchild goes amongst the workers to heal the lame and sick with her magic. Many fall in love with the queen that day, and soon her name is being chanted across city.\n\nThe Everchild award rulership of the city to Ayleta the Traveller, a mysterious mystic who has done good work in administrating the changes in Saltdad. You and your party are publicly honoured and presented with 1000 silver coins in compensation for your labours. Capturing this city has been a grand step forward for the Everchild's goals.\n\nNote: Any units that didn't rout can restore their Morale back to their starting value.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose two party members and raise their maximum, unwounded Health scores by 1 point.", {Book::Type::BOOK1, -626}, Choice::Type::TEAM_MAX_HEALTH, 2, 1));
+            Choices.push_back(Choice::Base("Choose two party members and raise their maximum, unwounded Health scores by 1 point", {Book::Type::BOOK1, -626}, Choice::Type::TEAM_MAX_HEALTH, 2, 1));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -21208,7 +21232,7 @@ namespace Book1
 
             ID = 645;
 
-            Location = Location::Type::MORDAIN;
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -21582,7 +21606,7 @@ namespace Book1
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
         {
-            Engine::Destination destination = {Book::Type::BOOK1, -1};
+            Engine::Destination destination = {Book::Type::NONE, -1};
 
             auto result = (Engine::ROLL(1) < 3);
 
@@ -24737,7 +24761,7 @@ namespace Book1
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
         {
-            Engine::Destination destination = {Book::Type::BOOK1, -1};
+            Engine::Destination destination = {Book::Type::NONE, -1};
 
             auto result = Engine::ROLL(1);
 
@@ -25432,6 +25456,8 @@ namespace Book1
 
             ID = 771;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You cannot just leave your companion here. Steeling yourselves for violence, you snatch away the book from your friend's grasp. They immediately enter a berserk rage, drawing their weapon and slashing at you!\n\nNotes: Fight a battle against your enchanted party member. All Defence scores are 4+ in this battle. During their turn, their berserk rage causes them to attack twice, each attack damaging a different party member. If you wish to knock out, rather than slay, the cursed party member you cannot use your weapons. This will mean your Fighting score will be 1 point lower than usual, and you cannot gain any bonuses from your weapons. You also cannot use spells that inflict damage, as these are fatal. The cursed party member will use their most effective weapon but is too enraged to be able to concentrate on casting spells.";
 
             Choices.clear();
@@ -25456,6 +25482,8 @@ namespace Book1
             ID = -771;
 
             DisplayID = 771;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Choices.clear();
 
@@ -28138,6 +28166,392 @@ namespace Book1
         }
     };
 
+    class Story850 : public Story::Base
+    {
+    public:
+        Story850()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 850;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "Your companion sprawls to the floor unconscious. You kick the book away and drag your fellow into the room outside. Binding their hands, in case of further madness, you gently wake them.\n\nWhen they have come around they are in a considerable state of confusion, but they seem to have recovered their wits. You vow never to look at the book again!\n\nNote: The cursed party member is down to 2 Health points.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            auto cursed = Engine::FIRST(party, Character::Status::ENCHANTED_CURSED);
+
+            if (Engine::IS_ALIVE(party, cursed))
+            {
+                Engine::REMOVE_STATUS(party.Members[cursed], Character::Status::ENCHANTED_CURSED);
+
+                party.Members[cursed].Health = 2;
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 821}; }
+    };
+
+    class Story851 : public Story::Base
+    {
+    public:
+        Story851()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 851;
+
+            Location = Location::Type::MORDAIN;
+
+            Text = "You are sailing south of the ruined city of Mordain. The faces of its ancient kings are carved into the cliff walls, seeming to leer out to sea. To your surprise the harbour still looks relatively intact, though the rocky shoals around the bay would make any attempt to pull into the dead city hazardous.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Attempt to dock in Mordain's harbour", {Book::Type::BOOK1, 175}));
+            Choices.push_back(Choice::Base("Sail west along the coast", {Book::Type::BOOK1, 516}));
+            Choices.push_back(Choice::Base("Sail east towards Cursus", {Book::Type::BOOK1, 499}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story852 : public Story::Base
+    {
+    public:
+        Story852()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 852;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "Although the people live in fear the city is quiet. Perhaps this is the calm before the storm?";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
+    };
+
+    class Story853 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story853()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 853;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
+            Bye = "You thank the king for his time and service to the Everchild, and then depart.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You talk to the king about the Everchild's current progress in retaking the valley. He asks after his men, and whether they are serving with honour.";
+
+            auto location = Location::Type::LUUTANESH;
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::QUEEN_IN_SALTDAD}))
+            {
+                location = Location::Type::SALTDAD;
+            }
+
+            if (Engine::VERIFY_CODES(party, {Codes::Type::RECEIVED_LHASBREATH_BERSERKERS, Codes::Type::RECEIVED_LHASBREATH_BARBARIANS}))
+            {
+                PreText += "\n\n";
+
+                if (!Engine::HAS_UNIT(party, Army::Type::LHASBREATH_BARBARIANS))
+                {
+                    PreText += "The queen was carless enough to lose the Lhasbreath Barbarians as well. ";
+                }
+
+                PreText += "The surly king can no longer provide any reinforcements.";
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::Type::RECEIVED_LHASBREATH_BERSERKERS}))
+            {
+                Engine::GET_CODES(party, {Codes::Type::RECEIVED_LHASBREATH_BARBARIANS});
+
+                if (Engine::HAS_UNIT(party, Army::Type::LHASBREATH_BERSERKERS))
+                {
+                    PreText += "\n\nYou replace the Berserkers with some:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
+
+                    auto berserkers = Engine::FIND_UNIT(party.Army, Army::Type::LHASBREATH_BERSERKERS);
+
+                    if (berserkers >= 0 && berserkers < party.Army.size())
+                    {
+                        party.Army[berserkers] = Army::Base("Lhasbreath Barbarians", Army::Type::LHASBREATH_BARBARIANS, party.Army[berserkers].Garrison, 3, 2);
+                    }
+                    else
+                    {
+                        PreText += "\n\nYou may replace the Berserkers with some:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
+
+                        Army = {Army::Base("Lhasbreath Barbarians", Army::Type::LHASBREATH_BARBARIANS, location, 3, 2)};
+                    }
+                }
+                else
+                {
+                    PreText += "\n\nYou may replace the Berserkers with some:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
+
+                    Army = {Army::Base("Lhasbreath Barbarians", Army::Type::LHASBREATH_BARBARIANS, location, 3, 2)};
+                }
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::Type::RECEIVED_LHASBREATH_BARBARIANS}))
+            {
+                PreText += "\n\nThe surly king can no longer provide any reinforcements.";
+            }
+            else
+            {
+                PreText += "\n\nYou add following unit to your " + std::string(Location::Description[location]) + " barracks:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
+
+                party.Army.push_back(Army::Base("Lhasbreath Barbarians", Army::Type::LHASBREATH_BARBARIANS, location, 3, 2));
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story854 : public Story::Base
+    {
+    public:
+        Story854()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 854;
+
+            Location = Location::Type::CAVES_OF_URANU;
+
+            Text = "You enter a filthy looking cave, filled with broken pottery, dead spiders, cobwebs and other detritus. It looks to have been well looted. The only way to see if anything has been missed would be to rummage through the remains.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Rummage through the remains", {Book::Type::BOOK1, 405}));
+            Choices.push_back(Choice::Base("Make your way onwards", {Book::Type::BOOK1, 395}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story855 : public Story::Base
+    {
+    public:
+        Story855()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 855;
+
+            Location = Location::Type::CLIFFTOP;
+
+            Text = "The harbourmaster is looking depressed as you locate him in his shack. \"Don't ask about cargo transfers,\" he grumbles. \"The crane broke a few weeks ago. Without it, it's impossible to load cargo to and from the city. The large bronze cogwheel slipped its bearings and rolled down the cliff into the sea. And no, we can't make another one. Not without the original to make a mould out of.\"\n\n\"Where did it fall into the sea?\" you ask. \"Maybe it can be retrieved.\"\n\nThe harbourmaster takes you to the end of one of the piers and points at a location some distance off. \"It bounced off the jetty and into the sea. You'll need a ship to find it.\"\n\nNote: You gained the code A32.";
+
+            Bye = "You grumble in frustration at the primitive facilities here.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(31)}))
+            {
+                return {Book::Type::BOOK1, 403};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(32)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 703}; }
+    };
+
+    class Story856 : public Story::Base
+    {
+    public:
+        Story856()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 856;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "It has been many years since you set foot in a temple in Chalice. Last time you were here you pledged your spirit to become a kensai, a sword-saint. However, just like your father and his father before him your soul was found wanting, and you were cast out of the temple in disgrace. You were unable to achieve enlightenment, a vital step to becoming a holy warrior. There is said to be a curse on your family, that prevents the first-born son in your line from achieving perfection.\n\nYou see a gang of monks, recognising you, move to block your approach to the temple. You feel shame rising in your throat, and make ready to leave, when a familiar old man bustles his way between the young monks. \"So quick to leave us, Akihiro? Surely you have not travelled the world merely to shun your home?\" It is Honnu, a wise old monk, and once a kensai himself.\n\n\"I'm not welcome here,\" you say, eying the other monks.\n\n\"If you are ever to throw off your family's curse you must be stronger than that,\" says Honnu, making his way back up the steps to the temple. \"If you can reach me, alone, I am ready to begin your training anew. If it is not important to you, then leave.\"\n\nYou see the monks snarl, clenching their fists. They seem unwilling to part.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Fight your way past the monks", {Book::Type::BOOK1, 386}));
+            Choices.push_back(Choice::Base("Depart", {Book::Type::BOOK1, 450}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(53)}))
+            {
+                return {Book::Type::BOOK1, 252};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(52)}))
+            {
+                return {Book::Type::BOOK1, 600};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(51)}))
+            {
+                return {Book::Type::BOOK1, 786};
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(50)}))
+            {
+                return {Book::Type::BOOK1, 287};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story857 : public Story::Base
+    {
+    public:
+        Story857()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 857;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You open the door into a grizzly chamber, whose south wall is open to the air. A large rack has been built here, and the stretched-out body of a Lhasbreath barbarian is upon it. The fellow is quite dead, clearly he has been tortured to death.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the body", {Book::Type::BOOK1, 274}));
+            Choices.push_back(Choice::Base("Examine the missing south wall", {Book::Type::BOOK1, 645}));
+            Choices.push_back(Choice::Base("Return to the crossroads", {Book::Type::BOOK1, 566}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(87)}))
+            {
+                return {Book::Type::BOOK1, 283};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+    };
+
+    class Story858 : public Story::Base
+    {
+    public:
+        Story858()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 858;
+
+            Location = Location::Type::DESERT;
+
+            Text = "You are in a blistering wilderness of desert sands, far to the south of the city of Saltdad. Keeping track of direction in the desert is a formidable challenge, as the hazy heat tortures the horizon into swirls of shimmering air.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Navigate the desert (Team check: Survival 4+, Successes: 4)", {Book::Type::BOOK1, 858}, {Book::Type::BOOK1, 858}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 4));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            Engine::Destination destination = {Book::Type::NONE, -1};
+
+            auto result = Engine::ROLL(1);
+
+            if (result <= 2)
+            {
+                destination.second = 166;
+            }
+            else
+            {
+                destination.second = 804;
+            }
+
+            if (!outcome)
+            {
+                Bye = "You drain your water supplies as you go round and round in circles. Each party member loses 1 Health from heatstroke.";
+
+                Engine::GAIN_HEALTH(party, -1);
+
+                Choices[0].DestinationFailed = destination;
+            }
+            else
+            {
+                Choices[0].Destination = destination;
+            }
+        }
+    };
+
+    class Story859 : public Story::Base
+    {
+    public:
+        Story859()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 859;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
+            Text = "You invoke your spell, concentrating on hard on your destination. You can feel the portal links that connect to this location. Where will you travel?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("The Library of Chalice", {Book::Type::BOOK1, 680}));
+            Choices.push_back(Choice::Base("(Crown and Tower) The city of Longport", {Book::Type::BOOK2, 321}));
+            Choices.push_back(Choice::Base("(Drakehallow) Dagon", {Book::Type::BOOK6, 230}));
+            Choices.push_back(Choice::Base("(Drakehallow) Animus Mast", {Book::Type::BOOK6, 600}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::TELEPORT_CIRCLE);
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -29056,6 +29470,16 @@ namespace Book1
     auto story847 = Story847();
     auto story848 = Story848();
     auto story849 = Story849();
+    auto story850 = Story850();
+    auto story851 = Story851();
+    auto story852 = Story852();
+    auto story853 = Story853();
+    auto story854 = Story854();
+    auto story855 = Story855();
+    auto story856 = Story856();
+    auto story857 = Story857();
+    auto story858 = Story858();
+    auto story859 = Story859();
 
     void InitializeStories()
     {
@@ -29151,7 +29575,8 @@ namespace Book1
             &story810, &story811, &story812, &story813, &story814, &story815, &story816, &story817, &story818, &story819,
             &story820, &story821, &story822, &story823, &story824, &story825, &story826, &story827, &story828, &story829,
             &story830, &story831, &story832, &story833, &story834, &story835, &story836, &story837, &story838, &story839,
-            &story840, &story841, &story842, &story843, &story844, &story845, &story846, &story847, &story848, &story849};
+            &story840, &story841, &story842, &story843, &story844, &story845, &story846, &story847, &story848, &story849,
+            &story850, &story851, &story852, &story853, &story854, &story855, &story856, &story857, &story858, &story859};
     }
 }
 #endif

@@ -58,7 +58,9 @@ namespace Codes
         NO_WEAPONS,
         BRIBE_OGRE_100,
         BRIBE_OGRE_200,
-        LAST_ENEMY_ATTACK_ROUND0
+        LAST_ENEMY_ATTACK_ROUND0,
+        RECEIVED_LHASBREATH_BERSERKERS,
+        RECEIVED_LHASBREATH_BARBARIANS
     };
 
     std::map<Book::Type, const char *> Prefix = {

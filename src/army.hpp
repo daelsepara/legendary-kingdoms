@@ -35,6 +35,7 @@ namespace Army
         KENSAI_WARRIORS,
         LANDSMEN_CAVALRY,
         LHASBREATH_BERSERKERS,
+        LHASBREATH_BARBARIANS,
         LUUTANESH_SPEARS,
         MERCENARY_CROSSBOWS,
         MERCENARY_KNIGHTS,
@@ -45,9 +46,9 @@ namespace Army
         PEASANT_LEVIES,
         SLAVE_LEVIES,
         SPEARMEN_OF_SALTDAD,
+        SPEARS_OF_UNBRAAKI,
         TEMPLE_GUARD,
-        THALSIAN_MERCENARIES,
-        SPEARS_OF_UNBRAAKI
+        THALSIAN_MERCENARIES
     };
 
     class Base
