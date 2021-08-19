@@ -628,6 +628,18 @@ namespace Engine
         return (!Engine::IS_CAPTURED(character) && !Engine::IS_CURSED(character) && IS_ALIVE(character) && Engine::IS_CIVILIZED(party, character));
     }
 
+    bool HAS_WEAPON(Party::Base &party)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            result |= (Engine::IS_ACTIVE(party, i) && Engine::HAS_WEAPON(party.Members[i]));
+        }
+
+        return result;
+    }
+
     void LOSE_EQUIPMENT(Party::Base &party, std::vector<Equipment::Type> items)
     {
         for (auto i = 0; i < items.size(); i++)

@@ -2203,6 +2203,8 @@ namespace Book1
 
             ID = 65;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "The party member reading the book is standing immobile, lost in the mystic words of the cursed book.\n\nWhat does the rest of the party do?";
 
             Choices.clear();
@@ -4917,6 +4919,8 @@ namespace Book1
 
             ID = 146;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "Somewhere, deep within your subconscious, you realise that something is wrong. The book is constantly building to point, but never satisfying you. For pages and pages you have been utterly unenlightened, nor can you seem break away from reading it. Slowly, painfully, as if in a dream, you grasp the edge of a page and tear it out. The curse is instantly broken, and you continue to rip out pages until your consciousness clears. Your companions are relieved to see you have woken from your reverie. You have been standing immobile for a full ten minutes!";
 
             Choices.clear();
@@ -5762,6 +5766,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 173;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You frown. This book is nothing but a pack of well-written lies. The truth in the world can only be found from within, not from the idle rantings of some long-dead scholar. You tear out a number of offending pages, the world coming back into focus again. Your companions are relieved to see you have woken from your reverie. You have been standing immobile for a full ten minutes!";
 
@@ -27435,6 +27441,386 @@ namespace Book1
         }
     };
 
+    class Story830 : public Story::Base
+    {
+    public:
+        Story830()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 830;
+
+            Text = "Something goes wrong with your counter-spell. The runes suddenly flash brilliantly and you are knocked unconscious.\n\nNote: Each party member must lose 2 Health as they tumble off the roof and onto the ground.";
+
+            Bye = "The guards, alerted by the bright light, swarm round and capture you.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -2);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 55}; }
+    };
+
+    class Story831 : public Story::Base
+    {
+    public:
+        Story831()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 831;
+
+            Text = "Amelia raises her hand and makes a pushing motion in the air. Suddenly the dagger flies off target and thuds into a laundry basket. \"Thanks!\" smiles Brash, continuing his dash. \"Welcome,\" pants Amelia, low on breath after her magical effort. Brash will not forget this.\n\nNote: Brash has gained a heart for Amelia Pass-Dayne. Amelia Pass-Dayne also gains a heart for Brash.has gained a heart for Amelia Pass-Dayne.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEARTS(party, Character::Type::BRASH, Character::Type::AMELIA_PASS_DAYNE, 1);
+            Engine::GAIN_HEARTS(party, Character::Type::AMELIA_PASS_DAYNE, Character::Type::BRASH, 1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 60}; }
+    };
+
+    class Story832 : public Story::Base
+    {
+    public:
+        Story832()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 832;
+
+            Text = "The mercenaries thank you for your offer, but politely decline. They have no ill will towards the Everchild, but they did not come all this way not to fight. \"You are outnumbered,\" the captain says flatly. \"The odds sit in our favour. In the long run we shall make more money through service than through treachery.\"\n\nYou are escorted safely back to the Everchild's camp. At least the mercenaries are honourable. You only hope they are not as fearsome as they seem.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 301}; }
+    };
+
+    class Story833 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story833()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 833;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Stealth", {Book::Type::BOOK1, 75}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::STEALTH}, 1, 2, 0));
+
+            Controls = Story::Controls::SHOP;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "";
+
+            auto has_silver_idol = Engine::FIND_BEARER(party, Equipment::Type::SILVER_IDOL);
+
+            if (Engine::IS_ACTIVE(party, has_silver_idol))
+            {
+                PreText += "Alas, this idol has been cursed! ";
+
+                Engine::GAIN_SCORE(party.Members[has_silver_idol], Attribute::Type::SURVIVAL, -1);
+
+                PreText += std::string(party.Members[has_silver_idol].Name) + " loses 1 point of Survival skill permanently.\n\n";
+            }
+
+            PreText += "You rendezvous in the storm drains of Saltdad with your ill-gotten gains. You lay out your valuables, which Brekken will estimate into a cash value:\n\nBronze Scorpion: 25\n\nCalligraphy Ink: 100\n\nGold Portrait: 125\n\nGolden Candlestick: 75\n\nJewellery Box: 250\n\nPrecious Tomes: 150\n\nSilver Idol: 50";
+
+            Shop = {
+                {Equipment::BRONZE_SCORPION, 25, -1, 1, {}},
+                {Equipment::CALLIGRAPHY_INK, 50, -1, 1, {}},
+                {Equipment::GOLD_PORTRAIT, 125, -1, 1, {}},
+                {Equipment::GOLDEN_CANDLESTICK, 75, -1, 1, {}},
+                {Equipment::JEWELLERY_BOX, 250, -1, 1, {}},
+                {Equipment::PRECIOUS_TOMES, 150, -1, 1, {}},
+                {Equipment::SILVER_IDOL, 50, -1, 1, {}}};
+
+            auto goods_stolen = 0;
+
+            for (auto i = 0; i < Shop.size(); i++)
+            {
+                if (Engine::VERIFY_EQUIPMENT(party, {std::get<0>(Shop[i]).Type}))
+                {
+                    goods_stolen += std::get<1>(Shop[i]);
+                }
+
+                Engine::LOSE_EQUIPMENT(party, {std::get<0>(Shop[i]).Type});
+            }
+
+            goods_stolen /= 2;
+
+            PreText += "\n\nBrekken's gang has found 500 silver pieces worth of goods. You are presented with 250 silver pieces.";
+
+            if (goods_stolen > 0)
+            {
+                PreText += " Your party stole about " + std::to_string(goods_stolen) + " silver coins worth of goods.";
+            }
+
+            Engine::GAIN_MONEY(party, 250 + goods_stolen);
+
+            PreText += " In total, you made " + std::to_string(250 + goods_stolen) + " silver coins extra money on the heist.\n\nYou have learned much on this mission.\n\nNote: If there are any items on the list that you wish to own after selling them, you can buy them here at the listed price.";
+
+            Text = PreText.c_str();
+        }
+    };
+
+    class Story834 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story834()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 834;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
+            Bye = "Thanking the king for his mercy, you bow and depart.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "The king is generous to those who impress him.\n\n";
+
+            bool benefited = false;
+
+            if (party.Money < 100)
+            {
+                PreText += " The king tops up your money to 100 silver coins. ";
+
+                party.Money = 100;
+
+                benefited = true;
+            }
+
+            Take.clear();
+
+            Limit = 0;
+
+            if (!Engine::HAS_WEAPON(party))
+            {
+                PreText += "He gifts each party member with a CRUDE BLADE (Fighting +0).";
+
+                for (auto i = 0; i < party.Members.size(); i++)
+                {
+                    Limit += 1;
+
+                    Take.push_back(Equipment::CRUDE_BLADE);
+                }
+
+                benefited = true;
+            }
+
+            if (benefited)
+            {
+                PreText += " The merciful king also provides one suit of BONE ARMOUR (Armour +2).";
+
+                Take.push_back(Equipment::BONE_ARMOUR2);
+
+                Limit += 1;
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story835 : public Story::Base
+    {
+    public:
+        Story835()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 835;
+
+            Image = "images/book1/saltdad_arena.png";
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "There is an almost full crowd in the huge arena, with rich and poor alike rubbing shoulders on long wooden benches. On the sandy and bloodstained floor of the arena are a number of bones and skulls, artfully left to bleach in the sun. You can see that all ten gatehouses have opened, disgorging teams of poorly armed slaves. Some are fearless men and women from Chalice, who do not so much as flinch as the crowd roars for their blood. Bold barbarians of Lhasbreath hold their arms and weapons high as they seek endorsement from the bloody-minded crowd. Most of the 'warriors', however, look more like frightened peasants, mere fodder for the skilled warriors of the arena.\n\nSitting high above the arena, upon a throne-like seat, is the Iron King himself, a black-bearded middle-aged man, his jagged iron crown sitting proudly on his skull. Next to him stands his bodyguard, the fearsome Malronac the Deathengine. The solid-metal golem was cast in the elder age of sorcery and has turned aside the blades of a dozen assassins. At a cold and distant motion from the king, the battle begins.\n\nOne team of excitable youths from the gate adjacent to you make a sudden rush, hoping to catch you off-guard. The crowd roar in joy -- the bloodshed is about to begin. You  must fight.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {
+                Monster::Base("Slaves", 4, 5, 3, 15, 0),
+                Monster::Base("Leader", 3, 5, 4, 5, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 107}; }
+    };
+
+    class Story836 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story836()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 836;
+
+            Location = Location::Type::MORDAIN;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "There is a ghastly scraping sound as the hull of your ship is ripped by the hidden rocks. Your ship loses 9 Health points.";
+
+            if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
+            {
+                Engine::GAIN_HEALTH(party.Fleet[party.CurrentShip], -9);
+
+                if (party.Fleet[party.CurrentShip].Health > 0)
+                {
+                    PreText += "\n\nYour crew desperately attempt to repair the nasty gash in the side of your ship. You hastily change course away from the harbour.";
+                }
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size() && party.Fleet[party.CurrentShip].Health > 0)
+            {
+                return {Book::Type::BOOK1, 851};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 398};
+            }
+        }
+    };
+
+    class Story837 : public Story::Base
+    {
+    public:
+        Story837()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 837;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "The other slaves in the line, bloodthirsty gladiators, throw themselves into the fight, outraged that newcomers have dared laid hands on them. The guards have to call on considerable reinforcements to quell the riot, including the guards watching the gatehouse. You have given the other team the opportunity they need. Now it's their turn!";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 456}; }
+    };
+
+    class Story838 : public Story::Base
+    {
+    public:
+        Story838()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 838;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "You project just the right balance of confidence and deference to convince the hungry slaves. Between you the goat is divided up, ensuring a handsome meal that will keep up your strength in this terrible place. In addition, Tommul, the gang leader, agrees to maintain your alliance in the struggles to come.\n\nNote: You gained the code A3.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(3)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 865}; }
+    };
+
+    class Story839 : public Story::Base
+    {
+    public:
+        Story839()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 839;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "The book is extremely interesting. It begins with a preface that hints at the reason for the existence of evil, and from that, the very purpose of life itself. It is written in an attractive vernacular that is very similar to your own speech, each page providing just the tiniest clue to the solutions of all humanity's problems. The read is so engrossing you have stopped hearing the shouts and screams of your companions to close the book.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::IS_ACTIVE(party, party.LastSelected) && party.Members[party.LastSelected].Type == Character::Type::AKIHIRO_OF_CHALICE)
+            {
+                Choices.push_back(Choice::Base("Akihiro has achieved Enlightenment", {Book::Type::BOOK1, 173}));
+
+                Engine::GAIN_STATUS(party.Members[party.LastSelected], Character::Status::ENLIGHTENED);
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Break off from the book (Individual check: Lore 5+, Successes: 2)", {Book::Type::BOOK1, 146}, {Book::Type::BOOK1, 65}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::LORE}, 5, 2));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 865}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -28332,6 +28718,16 @@ namespace Book1
     auto story827 = Story827();
     auto story828 = Story828();
     auto story829 = Story829();
+    auto story830 = Story830();
+    auto story831 = Story831();
+    auto story832 = Story832();
+    auto story833 = Story833();
+    auto story834 = Story834();
+    auto story835 = Story835();
+    auto story836 = Story836();
+    auto story837 = Story837();
+    auto story838 = Story838();
+    auto story839 = Story839();
 
     void InitializeStories()
     {
@@ -28425,7 +28821,8 @@ namespace Book1
             &story790, &story791, &story792, &story793, &story794, &story795, &story796, &story797, &story798, &story799,
             &story800, &story801, &story802, &story803, &story804, &story805, &story806, &story807, &story808, &story809,
             &story810, &story811, &story812, &story813, &story814, &story815, &story816, &story817, &story818, &story819,
-            &story820, &story821, &story822, &story823, &story824, &story825, &story826, &story827, &story828, &story829};
+            &story820, &story821, &story822, &story823, &story824, &story825, &story826, &story827, &story828, &story829,
+            &story830, &story831, &story832, &story833, &story834, &story835, &story836, &story837, &story838, &story839};
     }
 }
 #endif
