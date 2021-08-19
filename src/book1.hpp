@@ -2770,14 +2770,21 @@ namespace Book1
 
             Text = "You are sailing along the northwest coast of the Valley of Bones. A steady sea breeze counters what would otherwise be an unbearably hot sun. Great cliffs line the coast. Atop them sits a ramshackle city of crude adobe buildings and assorted ruins. A harbour juts dangerously from the cliff face, moored ships bobbing like corks against the pounding waves. Drenched harbourside taverns sit squalidly amongst the docks.";
 
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
             Choices.clear();
             Choices.push_back(Choice::Base("Pull into Clifftop harbour", {Book::Type::BOOK1, 703}));
             Choices.push_back(Choice::Base("(Drakehallow) Sail north, past the Stonewalls", {Book::Type::BOOK6, 420}));
             Choices.push_back(Choice::Base("(Crown and Tower) Sail west into the Bayswater Channel", {Book::Type::BOOK2, 392}));
             Choices.push_back(Choice::Base("Sail south to Cape Porta", {Book::Type::BOOK1, 21}));
-            Choices.push_back(Choice::Base("(Code: A32) Consider doing something else", {Book::Type::BOOK1, 643}, {Codes::A(32)}));
 
-            Controls = Story::Controls::STANDARD;
+            if (Engine::VERIFY_CODES(party, {Codes::A(32)}))
+            {
+                Choices.push_back(Choice::Base("Consider doing something else", {Book::Type::BOOK1, 643}));
+            }
         }
     };
 
@@ -8090,6 +8097,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 240;
+
+            Location = Location::Type::AZURE_DEEP;
 
             Text = "You are sailing just south of the Lhasbreath Jungle.";
 
@@ -20162,6 +20171,8 @@ namespace Book1
 
             ID = 612;
 
+            Location = Location::Type::AZURE_DEEP;
+
             Bye = "Saddened at this loss you order your crew to sail on.";
 
             Choices.clear();
@@ -22040,6 +22051,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 667;
+
+            Location = Location::Type::AZURE_DEEP;
 
             Text = "There is no point is risking everyone on this dangerous escapade.";
 
@@ -28086,6 +28099,8 @@ namespace Book1
 
             ID = 848;
 
+            Location = Location::Type::AZURE_DEEP;
+
             Text = "Steering the boat in the howling winds and crashing waves is an exercise in strength and judgement. Yet miraculously you manage to navigate the random currents and reach the base of the rock. The man, dressed in what must have once been a fine gown, leaps from the rock into the back of the boat, too exhausted to even raise an oar.\n\nAfter an equally tiring return trip you are hoisted back aboard. The man eventually regains his wits and thanks you. \"I was the resident sorcerer aboard the Hungry Echo, a greatship out of Dagon in Drakehallow,\" he explains. \"We were after salt, but the cargo crane in Clifftop no longer functions, so we diverted to Cursus. Alas, we were caught off guard by the high winds off the cape and ran aground. I fear I am the only survivor.\"\n\nYou confirm, sadly, that you have found no one else alive. Indeed, even the wreck of the greatship has been dragged off the rocks and sunk to the sea floor. \"I have nothing to give you, unless any of you are also students of magic? I was a competent naval sorcerer, skilled at sinking enemy boats. If you wish I can teach you a few tricks of the trade?\"\n\nNote: Any of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time. This spell can only be cast during sea combat:\n\nWarp Wood (Sea Combat)\n\nYou utter a spell to twist and split the hull of an enemy ship. Choose an enemy ship to lose 3 Health.\n\nRecharge: 50 silver";
 
             Bye = "The wizard will travel with you until you reach your next port.";
@@ -28112,10 +28127,12 @@ namespace Book1
 
             ID = 849;
 
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
             Text = "You proceed down the tunnel which winds like the coils of a serpent. Ahead of you there is an old coffer, decorated with serpents carved in silver. You are wary, though.\n\nNote: Only the party member at the front of the team can make the skill check.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Check for traps (Team check: Stealth 4+, Successes: 2)", {Book::Type::BOOK1, 599}, {Book::Type::BOOK1, 546}, Choice::Type::INDIVIDUAL_WITH_STATUS, {Character::Status::FOUND_COGWHEEL}, {Attribute::Type::STEALTH}, 4, 2, false));
+            Choices.push_back(Choice::Base("Check for traps (Team check: Stealth 4+, Successes: 2)", {Book::Type::BOOK1, 599}, {Book::Type::BOOK1, 546}, Choice::Type::INDIVIDUAL_WITH_STATUS, {Character::Status::FRONT}, {Attribute::Type::STEALTH}, 4, 2));
 
             Controls = Story::Controls::STANDARD;
         }
