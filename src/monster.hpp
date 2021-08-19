@@ -22,7 +22,11 @@ namespace Monster
     {
         NORMAL = 0,
         BEETLE_SWARM,
+        BRONZEGUARD,
         CURSITE_ASSASSIN,
+        EVERCHILD_ASSASSIN,
+        FASTILON,
+        GOBLIN_ARCHERS,
         IMOPPOSH_THE_MAD,
         JUNGLE,
         MONKEY_WITH_SPELLS,
@@ -31,6 +35,7 @@ namespace Monster
         ORC_LEADER,
         PAPER,
         ROCK,
+        SALT_DRAGON,
         SKALLOS,
         SKELETON_ARCHERS,
         SNAKEMAN,
@@ -41,11 +46,7 @@ namespace Monster
         UNBRAAKI,
         ZEALOT,
         ZEALOT_HEALER,
-        ZEALOT_SORCERER,
-        EVERCHILD_ASSASSIN,
-        FASTILON,
-        BRONZEGUARD,
-        SALT_DRAGON
+        ZEALOT_SORCERER
     };
 
     class Base

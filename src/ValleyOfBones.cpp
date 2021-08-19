@@ -133,6 +133,7 @@ std::string monsterString(Monster::Base &monster);
 std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> army, Location::Type garrison, int num_limit);
 std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Location::Type garrison, int num_limit);
 std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Control::Type mode);
+std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> ships, Location::Type harbour, int num_limit, bool back_button);
 std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Character::Base &caster, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
 
 void addBye(Story::Base *story, std::string bye);
@@ -9214,6 +9215,280 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
     return result;
 }
 
+int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Ship::Base> &enemyFleet, int combatRound)
+{
+    auto result = -1;
+
+    auto title = "Legendary Kingdoms: Cast Spell";
+
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto text_space = 8;
+        auto infoh = 48;
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto offset = 0;
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto last = offset + limit;
+
+        if (last > party.Members.size())
+        {
+            last = party.Members.size();
+        }
+
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+        auto controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+
+        auto done = false;
+
+        auto selection = -1;
+
+        while (!done)
+        {
+            auto current = -1;
+
+            auto selected = false;
+
+            auto scrollUp = false;
+
+            auto scrollDown = false;
+
+            auto hold = false;
+
+            auto space = 8;
+
+            while (!done)
+            {
+                fillWindow(renderer, intWH);
+
+                if (splash)
+                {
+                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+
+                if (last - offset > 0)
+                {
+                    for (auto i = 0; i < last - offset; i++)
+                    {
+                        if (selection == offset + i)
+                        {
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        }
+                        else if (Engine::IS_ALIVE(party.Members[offset + i]))
+                        {
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        }
+                    }
+                }
+
+                renderButtons(renderer, controls, current, intLB, space, border_pts);
+
+                putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (selection >= 0 && selection < party.Members.size())
+                {
+                    putText(renderer, party.Members[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+                else
+                {
+                    putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (selected && current >= 0 && current < controls.size())
+                {
+                    if (controls[current].Type == Control::Type::BACK)
+                    {
+                        done = true;
+
+                        current = -1;
+
+                        selected = false;
+
+                        result = -1;
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM)
+                    {
+                        if (selection >= 0 && selection < party.Members.size())
+                        {
+                            if (party.Members[selection].SpellCaster && Engine::CAN_SPEAK(party.Members[selection]) && !Engine::IS_CAPTURED(party.Members[selection]))
+                            {
+                                auto spell = selectSpell(window, renderer, party.Members[selection], party.Members[selection].SpellBook, 1, Spells::Select::CAST_SPELL);
+
+                                if (spell.size() > 0)
+                                {
+                                    auto i = spell[0];
+
+                                    if (party.Members[selection].SpellBook[i].Scope == Spells::Scope::SEA_COMBAT)
+                                    {
+                                        auto cast = false;
+
+                                        if (party.Members[selection].SpellBook[i].Type == Spells::Type::WARP_WOOD)
+                                        {
+                                            if (Engine::COUNT(enemyFleet) > 0)
+                                            {
+                                                auto target = selectShip(window, renderer, enemyFleet, Location::Type::NONE, {}, Control::Type::SPELL_TARGET);
+
+                                                if (target >= 0 && target < enemyFleet.size())
+                                                {
+                                                    Engine::GAIN_HEALTH(enemyFleet[target], -3);
+
+                                                    cast = true;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                displayMessage("There are no targets for " + std::string(party.Members[selection].SpellBook[i].Name) + "!", intRD);
+                                            }
+                                        }
+
+                                        if (cast)
+                                        {
+                                            party.Members[selection].SpellBook[i].Charged = false;
+
+                                            result = selection;
+
+                                            done = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        displayMessage(std::string(party.Members[selection].Name) + " cannot cast " + std::string(party.Members[selection].SpellBook[spell[0]].Name) + " during combat!", intRD);
+                                    }
+                                }
+                                else
+                                {
+                                    selected = false;
+
+                                    current = -1;
+                                }
+                            }
+                            else
+                            {
+                                displayMessage(std::string(party.Members[selection].Name) + " cannot cast spells!", intRD);
+                            }
+                        }
+                        else
+                        {
+                            displayMessage("You must select the adventurer to cast a spell.", intRD);
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION)
+                    {
+                        if (current + offset >= 0 && current + offset < party.Members.size())
+                        {
+                            if (Engine::IS_ACTIVE(party, current + offset))
+                            {
+                                if (Engine::CAN_SPEAK(party.Members[current + offset]))
+                                {
+                                    selection = current + offset;
+                                }
+                                else
+                                {
+                                    displayMessage(std::string(party.Members[current + offset].Name) + " cannot cast spells", intRD);
+                                }
+                            }
+                            else if (Engine::IS_ALIVE(party.Members[current + offset]))
+                            {
+                                displayMessage(std::string(party.Members[current + offset].Name) + " has been captured!", intRD);
+                            }
+                            else
+                            {
+                                displayMessage(std::string(party.Members[current + offset].Name) + " is dead!", intRD);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
+        }
+    }
+
+    return result;
+}
+
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection, bool useEquipment)
 {
     if (skill == Attribute::Type::CHARISMA && Engine::VERIFY_CODES(party, {Codes::Type::CHARISMA_SUCCESS_CHALICE}) && party.Location == Location::Type::CHALICE && party.InCity == true)
@@ -11923,7 +12198,15 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                                     }
                                     else
                                     {
-                                        // TODO: Sea combat spell
+                                        auto result = castSeaCombatSpell(window, renderer, party, enemyFleet, combatRound);
+                                        
+                                        if (result >= 0 && result < party.Members.size())
+                                        {
+                                            hasAttacked = true;
+
+                                            displayMessage(std::string(party.Members[result].Name) + " casts a spell!", intLB);
+                                        }
+
                                         selected = false;
 
                                         current = -1;
@@ -12784,7 +13067,35 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                         if (selection.size() > 0)
                                         {
-                                            message = "Skeleton Archers deal 2 damage to: ";
+                                            message = "The Skeleton Archers deal 2 damage to: ";
+
+                                            for (auto i = 0; i < selection.size(); i++)
+                                            {
+                                                if (i > 0)
+                                                {
+                                                    message += ", ";
+                                                }
+
+                                                message += party.Members[selection[i]].Name;
+
+                                                Engine::GAIN_HEALTH(party.Members[selection[i]], -2);
+                                            }
+
+                                            displayMessage(message, intRD);
+                                        }
+                                    }
+                                }
+                                else if (Engine::HAS_MONSTER(monsters, Monster::Type::GOBLIN_ARCHERS))
+                                {
+                                    auto result = Engine::FIND_MONSTER(monsters, Monster::Type::GOBLIN_ARCHERS);
+
+                                    if (result >= 0 && result < monsters.size() && !monsters[result].Damaged)
+                                    {
+                                        auto selection = selectPartyMembers(window, renderer, party, team, 2, Control::Type::LOSE_HEALTH);
+
+                                        if (selection.size() > 0)
+                                        {
+                                            message = "The Goblin Archers deal 2 damage to: ";
 
                                             for (auto i = 0; i < selection.size(); i++)
                                             {
@@ -12895,9 +13206,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                 }
                                             }
 
-                                            message = std::string(party.Members[result].Name) + " casts a spell!";
-
-                                            displayMessage(message, intLB);
+                                            displayMessage(std::string(party.Members[result].Name) + " casts a spell!", intLB);
                                         }
 
                                         selected = false;
@@ -16485,6 +16794,288 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Par
 {
     return selectArmyUnits(window, renderer, party.Army, garrison, num_limit);
 }
+
+std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> ships, Location::Type harbour, int num_limit, bool back_button)
+{
+    auto selected_units = std::vector<int>();
+
+    if (ships.size() > 0)
+    {
+        auto font_size = 28;
+        auto text_space = 8;
+        auto scrollSpeed = 1;
+        auto offset = 0;
+        auto infoh = 48;
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto last = offset + limit;
+
+        if (last > ships.size())
+        {
+            last = ships.size();
+        }
+
+        std::string message = "";
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
+        auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+
+        auto controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, back_button);
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto selected = false;
+        auto current = -1;
+        auto scrollUp = false;
+        auto scrollDown = false;
+        auto hold = false;
+
+        auto selection = std::vector<int>();
+
+        auto done = false;
+
+        while (!done)
+        {
+            last = offset + limit;
+
+            if (last > ships.size())
+            {
+                last = ships.size();
+            }
+
+            SDL_SetWindowTitle(window, "Legendary Kingdoms: Select Ships");
+
+            fillWindow(renderer, intWH);
+
+            std::string fleet_string = "";
+
+            if (selection.size() > 0)
+            {
+                for (auto i = 0; i < selection.size(); i++)
+                {
+                    if (i > 0)
+                    {
+                        fleet_string += ", ";
+                    }
+
+                    std::string description = ships[selection[i]].Name;
+
+                    fleet_string += description;
+                }
+            }
+
+            putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putText(renderer, selection.size() > 0 ? fleet_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+
+            putHeader(renderer, "Select ships", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+
+            fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+
+            if (last - offset > 0)
+            {
+                for (auto i = 0; i < last - offset; i++)
+                {
+                    if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                    {
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    }
+                }
+            }
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+
+            Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (offset > 0)
+                    {
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > ships.size())
+                        {
+                            last = ships.size();
+                        }
+
+                        controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, back_button);
+
+                        SDL_Delay(50);
+                    }
+
+                    if (offset <= 0)
+                    {
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
+                {
+                    if (ships.size() - last > 0)
+                    {
+                        if (offset < ships.size() - limit)
+                        {
+                            offset += scrollSpeed;
+                        }
+
+                        if (offset > ships.size() - limit)
+                        {
+                            offset = ships.size() - limit;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > ships.size())
+                        {
+                            last = ships.size();
+                        }
+
+                        controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, back_button);
+
+                        SDL_Delay(50);
+
+                        if (offset > 0)
+                        {
+                            if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                            {
+                                current++;
+                            }
+                        }
+                    }
+
+                    if (ships.size() - last <= 0)
+                    {
+                        selected = false;
+
+                        current = -1;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    auto result = Engine::FIND_LIST(selection, offset + current);
+
+                    if (result >= 0 && result < ships.size())
+                    {
+                        selection.erase(selection.begin() + result);
+                    }
+                    else
+                    {
+                        if (offset + current >= 0 && offset + current < ships.size())
+                        {
+                            if (harbour == Location::Type::NONE || ships[offset + current].Location == harbour)
+                            {
+                                if (selection.size() < num_limit)
+                                {
+                                    selection.push_back(offset + current);
+                                }
+                            }
+                            else
+                            {
+                                displayMessage("You can only select ships docked at " + std::string(Location::Description[harbour]) + " !", intRD);
+                            }
+                        }
+                    }
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                {
+                    if (selection.size() > 0)
+                    {
+                        if (selection.size() >= num_limit || selection.size() >= Engine::COUNT(ships, harbour))
+                        {
+                            selected_units = selection;
+
+                            done = true;
+                        }
+                        else
+                        {
+                            displayMessage("Please complete your selection!", intRD);
+                        }
+                    }
+                    else
+                    {
+                        displayMessage("Please complete your selection!", intRD);
+                    }
+                }
+                else if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    selected_units = {};
+
+                    done = true;
+                }
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        TTF_Quit();
+    }
+
+    return selected_units;
+}
+
 
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army)
 {
@@ -22031,6 +22622,78 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
 
                                 done = true;
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::INDIVIDUAL_WITH_STATUS)
+                        {
+                            auto selection = std::vector<int>();
+
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
+
+                            if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
+                            {
+                                selection.push_back(party.CurrentCharacter);
+                            }
+                            else if (Engine::COUNT(party, story->Choices[choice].Status[0]) > 1)
+                            {
+                                auto result = selectPartyMember(window, renderer, party, story->Choices[choice].Team, Equipment::NONE, Control::Type::SKILL);
+
+                                if (result >= 0 && result < party.Members.size())
+                                {
+                                    selection.push_back(result);
+                                }
+                            }
+                            else if (Engine::COUNT(party, story->Choices[choice].Status[0]) > 0)
+                            {
+                                selection.push_back(Engine::FIRST(party, story->Choices[choice].Status[0]));
+                            }
+
+                            auto success = false;
+
+                            bool with_status = false;
+
+                            if (selection.size() == 1)
+                            {
+                                auto target = selection[0];
+
+                                if (Engine::IS_ACTIVE(party, target) && Engine::HAS_STATUS(party.Members[target], story->Choices[choice].Status[0]))
+                                {
+                                    success = skillTestScreen(window, renderer, party, story->Choices[choice].Team, selection, story->Choices[choice].Attributes[0], story->Choices[choice].Difficulty, story->Choices[choice].Success, story->Choices[choice].UseWeapon);
+
+                                    with_status = true;
+                                }
+                            }
+
+                            if (selection.size() == 1 && with_status)
+                            {
+                                story->SkillCheck(party, success, selection);
+
+                                if (success)
+                                {
+                                    next = findStory(story->Choices[choice].Destination);
+                                }
+                                else
+                                {
+                                    next = findStory(story->Choices[choice].DestinationFailed);
+                                }
+
+                                done = true;
+                            }
+                            else if (selection.size() == 1)
+                            {
+                                error = true;
+
+                                message = "You do not have the required status: ";
+
+                                for (auto i = 0; i < story->Choices[choice].Status.size(); i++)
+                                {
+                                    if (i > 0)
+                                    {
+                                        message += ", ";
+                                    }
+
+                                    message += std::string(Character::StatusDescriptions[story->Choices[choice].Status[i]]);
+                                }
                             }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::RAISE_LOWEST_ATTRIBUTE)

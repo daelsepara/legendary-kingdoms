@@ -38,7 +38,8 @@ namespace Spells
         RUNE_OF_UNMAKING,
         HEALING_WORD,
         WITHER,
-        STINGTAIL_RUNE
+        STINGTAIL_RUNE,
+        WARP_WOOD
     };
 
     enum class MassCombat
@@ -125,6 +126,7 @@ namespace Spells
     auto SILVER_TONGUE = Spells::Base("Silver Tongue", "Your confidence grows as you summon this spell. Cast this spell when you fail a Charisma check. You gain an additional 3 automatic successes for this check only.", Spells::Scope::ADVENTURE, Spells::Type::SILVER_TONGUE, 75);
     auto SANDSTORM = Spells::Base("Sandstorm", "You whip up a blast of glassy sand to shred all your foes at once. Make an immediate attack with a Fighting score of 3 against each opponent.", Spells::Scope::COMBAT, Spells::Type::SANDSTORM, 50);
     auto CLINGING_DREAD = Spells::Base("Clinging Dread", "Doubt and uncertainty fill the hearts of the enemy soldiers. Reduce the Morale score of an enemy unit by 1 point.", Spells::Scope::MASS_COMBAT, Spells::Type::CLINGING_DREAD, 50);
+    auto WARP_WOOD = Spells::Base("Warp Wood", "You utter a spell to twist and split the hull of an enemy ship. Choose an enemy ship to lose 3 Health.", Spells::Scope::SEA_COMBAT, Spells::Type::WARP_WOOD, 50);
 
     std::vector<Spells::Base> BOOK1_SPELLS = {Spells::ANIMAL_SPEECH, Spells::ARMOUR_OF_HEAVEN, Spells::ICE_BOLT, Spells::POISON_STREAM, Spells::UNFAILING_STRIKE, Spells::WOLF_SPIRIT, Spells::MAGIC_CABINET};
 }

@@ -76,7 +76,8 @@ namespace Choice
         SAIL,
         EVERYONE_LOSES_EQUIPMENT,
         GAIN_CARGO,
-        PARTY_EXCEPT_WITHSTATUS
+        PARTY_EXCEPT_WITHSTATUS,
+        INDIVIDUAL_WITH_STATUS
     };
 
     class Base

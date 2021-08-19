@@ -491,6 +491,8 @@ namespace Book1
 
             ID = 15;
 
+            Location = Location::Type::CAVES_OF_URANU;
+
             Text = "There are few valuables amongst the goblins, though you manage to scavenge 15 silver coins from the entire horde. Pleased to have survived you make your way onwards.";
 
             Choices.clear();
@@ -5483,6 +5485,8 @@ namespace Book1
 
             ID = 163;
 
+            Location = Location::Type::DESERT;
+
             Text = "Swallowing your fear you crawl out of the tent and approach the strange light. You see it coalesce into a familiar figure. \"Mother...\" you say sadly.\n\n\"Aye, Amelia, it is I,\" responds your mother, her ghostly form wavering before you. \"I have travelled far from the Savage Lands to give you this warning. Beware Ashdain, lord of the third circle. He has fallen under the power of the dark one and is not your friend. Accept no quest or task he might give you.\"\n\n\"But... I have never heard of this man...\" you whisper. \"And who is this dark one you speak of...?\"\n\n\"I have said more than I should,\" responds the ghostly figure. \"Even your father, Baldwin, never treated me as wickedly as Ashdain. Find my bones... then you shall find the answers you seek.\"\n\n\"Where shall I find them?\" you ask desperately. \"Mother! Mother!\"\n\nBut it is too late. Your mother's image fades like moonlight and vanishes into the black sky. You are sobbing as you return to the tent, and your companions comfort you as best they can. If your mother is indeed dead, you will swear a vengeance upon her killer... if the ghost can be trusted.\n\nNote: You gained the code A49";
 
             Choices.clear();
@@ -6672,6 +6676,8 @@ namespace Book1
 
             ID = 199;
 
+            Location = Location::Type::DESERT;
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -7821,6 +7827,8 @@ namespace Book1
 
             PreText = "You received " + std::to_string(count * 25) + " silver coins for the TROGLODYTE HEADs.\n\n\"Keep up the good work,\" he enthuses. \"I'm sure the slaves appreciate your valiant efforts.\"";
 
+            Engine::LOSE_EQUIPMENT(party, Equipment::Type::TROGLODYTE_HEAD, count);
+
             Text = PreText.c_str();
         }
     };
@@ -7953,6 +7961,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 238;
+
+            Location = Location::Type::DESERT;
 
             Text = "You must fend them off!";
 
@@ -10616,6 +10626,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 320;
+
+            Location = Location::Type::DESERT;
 
             Text = "You emerge from the tent the next morning to a sad scene. Akihiro, your friend, lies dead in the sands -- his sword across his chest. You were unable, with raw terror, to leave the tent and assist him. You can only pray that he has found his peace at last. After burying him in the sands you move on.";
 
@@ -15251,6 +15263,8 @@ namespace Book1
 
             ID = 470;
 
+            Location = Location::Type::DESERT;
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -17076,6 +17090,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 525;
+
+            Location = Location::Type::DESERT;
 
             Text = "This is harder than it looks. Sand is tricky stuff and it is easy to accidentally leave a limb uncovered.";
 
@@ -19191,6 +19207,8 @@ namespace Book1
 
             ID = 584;
 
+            Location = Location::Type::DESERT;
+
             Text = "The light circles around the tent several times in the night before eventually departing. In the morning you cannot find so much as a footprint in the sand. Shivering, despite the rising heat, you pack up camp and move on.";
 
             Choices.clear();
@@ -20180,6 +20198,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 613;
+
+            Location = Location::Type::DESERT;
 
             Text = "You spy a merchant, blundering around your camp. \"I'm most dreadfully sorry for disturbing you,\" he mumbles. \"I was hoping to find some old bits of wood from your campfire. The night is absolutely freezing.\"\n\nYou breathe a sigh of relief and greet the old merchant. You spare what tinder you can and bid him a good evening.";
 
@@ -22335,6 +22355,10 @@ namespace Book1
 
             ID = 677;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "You are quick and strong, and the bear cannot get a grasp on you. You even manage to pinion its head for a few moments before it shakes you away. The barbarians above you roar with delight as you demonstrate your mastery over the beast. Eventually the bear tires of fighting you. It grumbles loudly and lollops into a corner away from you, rolling onto its back. The barbarians cheer and throw you down a rope to climb up.\n\nThe king slaps you on the back and congratulates your skill. \"You've fought hard to get my attention,\" he smiles, several teeth missing from his wide grin. \"What brings you to my city, foreigner?\"\n\nNote: You gained the code A82.";
 
             Choices.clear();
@@ -22894,7 +22918,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "With the curse broken, the black book lies on the floor, its back pages open. You notice that a spell has been inked there. It is the Unfailing Strike spell. Any of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time.:\n\nUnfailing Strike (Combat)\n\nA pillar of energy sizzles into a single foe. Choose an opponent to lose 3 Health.\n\nRecharge: 50 silver";
+            Text = "With the curse broken, the black book lies on the floor, its back pages open. You notice that a spell has been inked there. It is the Unfailing Strike spell. Any of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time:\n\nUnfailing Strike (Combat)\n\nA pillar of energy sizzles into a single foe. Choose an opponent to lose 3 Health.\n\nRecharge: 50 silver";
 
             Bye = "You return to the room outside.";
 
@@ -27821,6 +27845,282 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 865}; }
     };
 
+    class Story840 : public Story::Base
+    {
+    public:
+        Story840()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 840;
+
+            Location = Location::Type::DESERT;
+
+            Text = "You'll not find much in this bleak desert. Where will you travel now?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("West, to Lhasbreath", {Book::Type::BOOK1, 775}));
+            Choices.push_back(Choice::Base("North, to the Tumblestones", {Book::Type::BOOK1, 137}));
+            Choices.push_back(Choice::Base("Northeast, to the Granite Hills", {Book::Type::BOOK1, 275}));
+            Choices.push_back(Choice::Base("East, to Lhasbreath Oasis", {Book::Type::BOOK1, 590}));
+            Choices.push_back(Choice::Base("Southeast, towards the Mordain Ruins", {Book::Type::BOOK1, 515}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story841 : public Story::Base
+    {
+    public:
+        Story841()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 841;
+
+            Location = Location::Type::SALT_MINES;
+
+            Text = "You drop to your knees in exhaustion. The battle is won and you are triumphant. You eagerly sift through the dragon's treasure. Although much of it is merely old bones, you still manage to find 1000 silver pieces, a GLITTERING NECKLACE (Charisma +2), and a STEEL LONGSWORD (Fighting +2).\n\nThis was a mighty battle.\n\nNote: Feel free to take the DRAGON HEAD as a memento of your glorious struggle. You gained the code A27.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of FIGHTING", {Book::Type::BOOK1, -841}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 2, 0));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::DRAGON_HEAD, Equipment::GLITTERING_NECKLACE2, Equipment::STEEL_LONGSWORD2};
+
+            Limit = 3;
+
+            Engine::GAIN_MONEY(party, -1000);
+
+            Engine::GET_CODES(party, {Codes::A(27)});
+        }
+    };
+
+    class Event841 : public Story::Base
+    {
+    public:
+        Event841()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -841;
+
+            DisplayID = 841;
+
+            Location = Location::Type::DESERT;
+
+            Text = "Peering deeper into the chamber you can make out where the dragon came from. It has dug a tunnel under the mountains, that looks like it is so long it might go all the way to Drakehallow in the north.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("(Drakehallow) Follow this tunnel", {Book::Type::BOOK1, 33}));
+            Choices.push_back(Choice::Base("You dare not enter that strange land: return to the mine lift", {Book::Type::BOOK1, 135}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story842 : public Story::Base
+    {
+    public:
+        Story842()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 842;
+
+            Location = Location::Type::LHASBREATH_JUNGLE;
+
+            Text = "Screaming in anger you wrench the monkeys away, throwing them into bushes or kicking them into the air. The howl and scratch at you, but do not manage to get their hands on any of your valuables.\n\nFinally, the monkeys break and scatter, chittering and scowling at you all the way. Bleeding and scratched you make your way onwards.\n\nNote: Each party member loses 1 point of Health.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEALTH(party, -1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 740}; }
+    };
+
+    class Story843 : public Story::Base
+    {
+    public:
+        Story843()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 843;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "The kensai are unimpressed with your amateur philosophising. They half-draw their blades to show they are serious. Still the mourners will not disperse.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Slowly back away", {Book::Type::BOOK1, 616}));
+            Choices.push_back(Choice::Base("Defend the mourners, even if it risks your lives", {Book::Type::BOOK1, 367}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story844 : public Story::Base
+    {
+    public:
+        Story844()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 844;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
+            Text = "The king nods and snaps his fingers. A purse of 250 silver coins is presented into your hands. At this the king barges past you to continue his revelries elsewhere. You bow and leave the merry monarch to it.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, 250);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
+    };
+
+    class Story845 : public Story::Base
+    {
+    public:
+        Story845()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 845;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You have returned to the room with the skeletons and the animation book. However, there are no skeletons here in a good enough condition to animate. There is nothing more to be done in this room.";
+
+            Bye = "You return to the crossroads";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 310}; }
+    };
+
+    class Story846 : public Story::Base
+    {
+    public:
+        Story846()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 846;
+
+            Location = Location::Type::CAVES_OF_URANU;
+
+            Text = "Goblins live in swarms in the caves, and it is not long until a large band of them track you down. At least three dozen of the little swines holler down the mountainside, screaming a war cry. You must fight!\n\nNote: The goblin archers do not attack in hand-to-hand combat but will try and shoot party members if they are not kept busy. If, at the end of the combat turn, the goblin archers have not taken any damage, they unleash their arrows. Choose two party members to lose 2 Health points -- armour cannot reduce this damage.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+
+            Monsters = {
+                Monster::Base("Nasty Goblins", 7, 5, 4, 10, 0),
+                Monster::Base("Ugly Goblins", 6, 5, 4, 11, 0),
+                Monster::Base("Vicious Goblins", 8, 5, 4, 9, 0),
+                Monster::Base("Goblin Archers", Monster::Type::GOBLIN_ARCHERS, 0, 0, 4, 8, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 15}; }
+    };
+
+    class Story847 : public Story::Base
+    {
+    public:
+        Story847()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 847;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "Clearly, fighting your way inside is impossible. There are two likely ways in.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Dress as servants and try to bluff your way into the compound", {Book::Type::BOOK1, 902}));
+            Choices.push_back(Choice::Base("Wait until nightfall, climb the walls and sneak inside", {Book::Type::BOOK1, 780}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story848 : public Story::Base
+    {
+    public:
+        Story848()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 848;
+
+            Text = "Steering the boat in the howling winds and crashing waves is an exercise in strength and judgement. Yet miraculously you manage to navigate the random currents and reach the base of the rock. The man, dressed in what must have once been a fine gown, leaps from the rock into the back of the boat, too exhausted to even raise an oar.\n\nAfter an equally tiring return trip you are hoisted back aboard. The man eventually regains his wits and thanks you. \"I was the resident sorcerer aboard the Hungry Echo, a greatship out of Dagon in Drakehallow,\" he explains. \"We were after salt, but the cargo crane in Clifftop no longer functions, so we diverted to Cursus. Alas, we were caught off guard by the high winds off the cape and ran aground. I fear I am the only survivor.\"\n\nYou confirm, sadly, that you have found no one else alive. Indeed, even the wreck of the greatship has been dragged off the rocks and sunk to the sea floor. \"I have nothing to give you, unless any of you are also students of magic? I was a competent naval sorcerer, skilled at sinking enemy boats. If you wish I can teach you a few tricks of the trade?\"\n\nNote: Any of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time. This spell can only be cast during sea combat:\n\nWarp Wood (Sea Combat)\n\nYou utter a spell to twist and split the hull of an enemy ship. Choose an enemy ship to lose 3 Health.\n\nRecharge: 50 silver";
+
+            Bye = "The wizard will travel with you until you reach your next port.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Spells = {Spells::WARP_WOOD};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 240}; }
+    };
+
+    class Story849 : public Story::Base
+    {
+    public:
+        Story849()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 849;
+
+            Text = "You proceed down the tunnel which winds like the coils of a serpent. Ahead of you there is an old coffer, decorated with serpents carved in silver. You are wary, though.\n\nNote: Only the party member at the front of the team can make the skill check.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Check for traps (Team check: Stealth 4+, Successes: 2)", {Book::Type::BOOK1, 599}, {Book::Type::BOOK1, 546}, Choice::Type::INDIVIDUAL_WITH_STATUS, {Character::Status::FOUND_COGWHEEL}, {Attribute::Type::STEALTH}, 4, 2, false));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -28728,6 +29028,17 @@ namespace Book1
     auto story837 = Story837();
     auto story838 = Story838();
     auto story839 = Story839();
+    auto story840 = Story840();
+    auto story841 = Story841();
+    auto event841 = Event841();
+    auto story842 = Story842();
+    auto story843 = Story843();
+    auto story844 = Story844();
+    auto story845 = Story845();
+    auto story846 = Story846();
+    auto story847 = Story847();
+    auto story848 = Story848();
+    auto story849 = Story849();
 
     void InitializeStories()
     {
@@ -28738,7 +29049,7 @@ namespace Book1
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
             &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725,
-            &event744, &event760, &event770, &event771, &event776, &event788, &event789, &event824,
+            &event744, &event760, &event770, &event771, &event776, &event788, &event789, &event824, &event841,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -28822,7 +29133,8 @@ namespace Book1
             &story800, &story801, &story802, &story803, &story804, &story805, &story806, &story807, &story808, &story809,
             &story810, &story811, &story812, &story813, &story814, &story815, &story816, &story817, &story818, &story819,
             &story820, &story821, &story822, &story823, &story824, &story825, &story826, &story827, &story828, &story829,
-            &story830, &story831, &story832, &story833, &story834, &story835, &story836, &story837, &story838, &story839};
+            &story830, &story831, &story832, &story833, &story834, &story835, &story836, &story837, &story838, &story839,
+            &story840, &story841, &story842, &story843, &story844, &story845, &story846, &story847, &story848, &story849};
     }
 }
 #endif
