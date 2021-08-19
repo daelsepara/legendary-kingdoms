@@ -13310,8 +13310,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         Engine::LOSE_CODES(party, {Codes::Type::NO_COMBAT_SPELLS,
                                    Codes::Type::NO_WEAPONS,
-                                   Codes::Type::LAST_IN_COMBAT,
-                                   Codes::Type::WARNED_ABOUT_ARENA_MAGIC});
+                                   Codes::Type::LAST_IN_COMBAT});
     }
 
     return combatResult;
