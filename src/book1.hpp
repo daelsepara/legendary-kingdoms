@@ -1333,6 +1333,8 @@ namespace Book1
 
             ID = 38;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You kill the orc in a single stroke. He keels over, the book slipping from his grasp.\n\nNote: You gained the code A71.";
 
             Choices.clear();
@@ -1377,7 +1379,7 @@ namespace Book1
 
             ID = 40;
 
-            Location = Location::Type::LUUTANESH;
+            Location = Location::Type::LHASBREATH;
 
             IsCity = true;
 
@@ -1674,6 +1676,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 47;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You gather round and attempt to pull apart the barrier, but despite its crude appearance it is actually very well built. Even sledgehammers and mules couldn't pull this barricade down from this side. Is this as far as the orcs have penetrated into the complex?\n\nGrumbling with irritation, you head back east towards the small room you came from.";
 
@@ -2806,6 +2810,8 @@ namespace Book1
 
             ID = 84;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "It is all too obvious what has happened. Your companion is doomed for all time to read that cursed book -- but to disturb them would invoke such a terrible wrath you might not survive. You carefully remove the items and money your companions was carrying. After this you say your sorry farewells, hoping that some part of your friend is still aware deep down inside.\n\nNote: This party member is lost forever. Curiously, if you ever return to this room, the party member will have vanished.";
 
             Choices.clear();
@@ -2854,6 +2860,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 85;
+
+            Location = Location::Type::COLD_RIVER;
 
             Text = "Only paupers use the rope bridges... as they have a tendency to suddenly break.";
 
@@ -3674,6 +3682,8 @@ namespace Book1
 
             ID = 109;
 
+            Location = Location::Type::NORTH_ROAD;
+
             Text = "There are no exceptions. With dozens of guards at their command the priests strip you of all your taxable items (items that provide a +2 or greater bonus, except for shields). For good measure you are scourged with the whip as well. Each party member must lose 1 Health point.";
 
             Bye = "Appalled at this daylight robbery you make your way on.";
@@ -4081,6 +4091,8 @@ namespace Book1
 
             ID = 119;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "Pick a party member to read the book.";
 
             Choices.clear();
@@ -4472,12 +4484,9 @@ namespace Book1
 
             if (Engine::IS_ACTIVE(party, party.LastSelected))
             {
-                if (Engine::IS_ALIVE(party.Members[party.LastSelected]))
-                {
-                    PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses 1 Health point.";
+                PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses 1 Health point.";
 
-                    Engine::GAIN_HEALTH(party.Members[party.LastSelected], -1);
-                }
+                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -1);
             }
 
             Take = {Equipment::RUNESWORD3};
@@ -5346,6 +5355,8 @@ namespace Book1
             ID = -160;
 
             DisplayID = 160;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "The rest of your party manage to drag the orc away and stab him to death as he violently thrashes. The change over the orc seemed unbelievable. You didn't even realise orcs could read!\n\nNote: You gained the code A71.";
 
@@ -7232,6 +7243,10 @@ namespace Book1
 
             ID = 216;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -8751,6 +8766,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 267;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You cannot help but shed a tear as your bloodied companion sprawls to the ground, dead by your hand. They were too dangerous to be left alive, but that doesn't mean your actions will not haunt your dreams for weeks to come. You may take any possessions from the dead party member that you wish. Kicking away the black book, you exit the chamber.";
 
@@ -10637,6 +10654,10 @@ namespace Book1
 
             ID = 322;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "You approach the door carefully, examining the mystic runes carved around its edge.\n\nNote: Only those party members assigned to the door may contribute to this check.";
 
             Choices.clear();
@@ -10841,6 +10862,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 329;
+
+            Location = Location::Type::COLD_RIVER;
 
             Text = "The bridge creaks alarmingly as you put your weight on it. Nearby rice farmers shake their heads sadly before returning to their work.";
 
@@ -11840,9 +11863,7 @@ namespace Book1
 
             ID = 362;
 
-            Location = Location::Type::LUUTANESH;
-
-            IsCity = true;
+            Location = Location::Type::NORTH_ROAD;
 
             Text = "A senior priest steps forward and puts a hand on the shoulder of the taxman. \"Are you deranged?\" he asks. \"Can you not see that these are the agents of the queen?\"";
 
@@ -13118,7 +13139,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The plaza in the temple district is full. Soldiers and diplomats from across the valley fill it, from sweaty Lhasbreath Barbarians to dignified Chalice scholars. Ayleta the Traveller leads a delegation from Clifftop, sun-bronzed peasants and sailors from that poorest of cities following in her wake. King Scarrenden of Lhasbreath grins widely, missing teeth on show, his housecarls and berserkers drinking deeply and cheering. The innkeep from Luutanesh engages Che Long in animated discussion. Priests of Cursus, grumbling under their breath, kneel before the throne.\n\nJoining the Everchild on the raised stage comes the God King of Chalice, elegant, eternally young and fit. The lord of that city kneels and bows before the small child who ascends a throne made of wood and bronze -- the final homage that acknowledges to all who the ruler of the valley truly is.\n\nThe Everchild sits and motions with her hand. A silence falls. \"The scholars tell us that there is no such thing as victory,\" she says, her voice amplifying by some sorcerous means. \"There are battles to be won and wars to be fought. But no vision of even the humblest ruler is ever truly realised. But there is such a thing as change. The Valley of Bones is now mine. Every city and every living being within them is my subject. From today we are no longer competitors, but brothers and sisters, driven not to exceed or dominate the others, but to strive to make our family strong. I see a vision of flourishing cities; I see the casting down of whips. I see a time when Royce and Drakehallow shall look with envy on our shores and say, 'if only our lands were as fair as those in the valley'. And well they might. No people are as vigorous or determined as ours. We shall be the crucible of new learning. Our many cultures shall create a land of beauty and flowers, and in time, the sun itself shall cease its scorching, and instead caress a land of meadows and rivers. I am the Everchild. And I shall be your ruler forever!\"\n\nThere is a mighty cheer, which resounds across the city and its dark mausoleums. A new day has come, and the Everchild is finally secure on her throne.\n\nNote: You have achieved a mighty feat in restoring the valley to the authority of the Everchild. Each party member increases their Health scores by 1 point.\n\nAny troops that were not routed returns to the Saltdad barracks. Their Morale and Strength scores to maximum.\n\nYou gained the code A100.";
+            Text = "The plaza in the temple district is full. Soldiers and diplomats from across the valley fill it, from sweaty Lhasbreath Barbarians to dignified Chalice scholars. Ayleta the Traveller leads a delegation from Clifftop, sun-bronzed peasants and sailors from that poorest of cities following in her wake. King Scarrenden of Lhasbreath grins widely, missing teeth on show, his housecarls and berserkers drinking deeply and cheering. The innkeep from Luutanesh engages Che Long in animated discussion. Priests of Cursus, grumbling under their breath, kneel before the throne.\n\nJoining the Everchild on the raised stage comes the God King of Chalice, elegant, eternally young and fit. The lord of that city kneels and bows before the small child who ascends a throne made of wood and bronze -- the final homage that acknowledges to all who the ruler of the valley truly is.\n\nThe Everchild sits and motions with her hand. A silence falls. \"The scholars tell us that there is no such thing as victory,\" she says, her voice amplifying by some sorcerous means. \"There are battles to be won and wars to be fought. But no vision of even the humblest ruler is ever truly realised. But there is such a thing as change. The Valley of Bones is now mine. Every city and every living being within them is my subject. From today we are no longer competitors, but brothers and sisters, driven not to exceed or dominate the others, but to strive to make our family strong. I see a vision of flourishing cities; I see the casting down of whips. I see a time when Royce and Drakehallow shall look with envy on our shores and say, 'if only our lands were as fair as those in the valley'. And well they might. No people are as vigorous or determined as ours. We shall be the crucible of new learning. Our many cultures shall create a land of beauty and flowers, and in time, the sun itself shall cease its scorching, and instead caress a land of meadows and rivers. I am the Everchild. And I shall be your ruler forever!\"\n\nThere is a mighty cheer, which resounds across the city and its dark mausoleums. A new day has come, and the Everchild is finally secure on her throne. You have achieved a mighty feat in restoring the valley to the authority of the Everchild.\n\nNote: Each party member increases their Health scores by 1 point.\n\nAny troops that were not routed returns to the Saltdad barracks. Their Morale and Strength scores to maximum.\n\nYou gained the code A100.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -14388,6 +14409,8 @@ namespace Book1
 
             ID = 442;
 
+            Location = Location::Type::COLD_RIVER;
+
             Text = "You have come to the banks of a wide river that separates the city of Chalice from the rest of the valley. The Cold River pours from the craggy mountain tops of the Stonewalls and bisects the desert like a sword blade. Spanning this river is an ancient bridge, built shortly after the demon lord Abraxas destroyed the elder civilisation. Originally built as an act of faith to restart society, its designers could not hold back the wave of savagery left in the demon's wake as the fine cities of the elders were brought to ruin.\n\nThe bridge, however, still stands, wide and strong. Dozens of heavy wagons ply its ancient length and without it the city of Chalice would be entirely cut off. A fee of 40 silver coins is required to cross it, a steep price normally paid only by merchants. You notice that slimmer, flimsier bridges made of rope and wood also cross the river, through few people seem willing to use them. There is no toll for their use.";
 
             Choices.clear();
@@ -14839,6 +14862,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 458;
+
+            Location = Location::Type::NORTH_ROAD;
 
             Text = "Where will you travel now?";
 
@@ -15372,6 +15397,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 474;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You have re-entered the ruined library. A dead orc lies here, decaying amongst the ruined pages.";
 
@@ -16523,6 +16550,8 @@ namespace Book1
 
             ID = 507;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You open the door into a musty library, the air thick with dust and damp, rotting pages. The floor is covered in mouldering books. Around the walls are wooden shelves, some still packed with ruined books.\n\nSitting in the middle of the room, facing away from you, is a burly orc who appears to be reading a black- bound book. A glowing lantern is positioned next to him to enable him to see. He seems completely engrossed in his reading, and does not appear to have noticed your entrance.";
 
             Choices.clear();
@@ -16842,6 +16871,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 519;
+
+            Location = Location::Type::COLD_RIVER;
 
             Text = "The bridge holds, much to your relief, and you have soon crossed to the other side in safety.";
 
@@ -20257,6 +20288,10 @@ namespace Book1
 
             ID = 617;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "That evening you gather in the wealthy area of the city, where taller buildings made of stone and wood stand in the shadow of the palace. Although the Bronzeguard do patrol this part of the city, most of the wealthier locals employ private guards to protect their valuables. Brekken's thieves have already dealt with the guard dogs that patrol the grounds around Chellar's house with poisoned meat. Now the way to the house is clearer.\n\n\"The front door is guarded with magical wards,\" says Brekken. \"Only Chellar or his steward can open it, unless you think you might be able to disenchant it? Otherwise there are the upper floor windows. I'll lead my team to scale the walls. You can join us, or handle the door... or maybe do both? It's up to you.\"\n\nNote: Decide how many of your party will deal with the magical door, and how many will help scaling the walls. You can assign everyone to one task or split your team between both tasks.\n\nYou gained the code A10.";
 
             Choices.clear();
@@ -21775,6 +21810,10 @@ namespace Book1
 
             ID = 663;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -21813,6 +21852,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 664;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You call out to the orc in the friendliest voice you can summon. The orc does not so much as blink, utterly transfixed by the book.";
 
@@ -22453,6 +22494,8 @@ namespace Book1
 
             ID = 682;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You carefully sneak up on the orc, being as quiet as possible. You need not have tried so hard, the orc is entirely engrossed in his reading. You stand directly in front of him, and even prod him to get his attention. He does not move a muscle.";
 
             Choices.clear();
@@ -22842,6 +22885,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 695;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "With the curse broken, the black book lies on the floor, its back pages open. You notice that a spell has been inked there. It is the Unfailing Strike spell. Any of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time.:\n\nUnfailing Strike (Combat)\n\nA pillar of energy sizzles into a single foe. Choose an opponent to lose 3 Health.\n\nRecharge: 50 silver";
 
@@ -23487,6 +23532,8 @@ namespace Book1
 
             ID = 719;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "The door opens into a long corridor which ends in a formidable barricade. Blocks of stone, reinforced on the other side with heavy wooden beams, block the other side of the corridor. The barricade looks formidably strong.";
 
             Choices.clear();
@@ -23806,6 +23853,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 728;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Text = "Brekken has brought long grappling hooks which help you clamber up the walls with ease. However you soon hit a snag. The windows are proving difficult to open, with Brekken struggling to get a purchase on them. \"If only it was an exterior lock,\" he mumbles. \"I could get it open in a thrice.\"\n\nYou will have to wrench the window open with raw strength.\n\nNote: Choose a party member from the wall-climbing team to do this and make the following skill check.";
 
@@ -26555,6 +26606,8 @@ namespace Book1
 
             ID = 805;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You hurl a mouldy book at the orc's head. It is a direct hit, but except to brush to hurled book from the pages of the black book he is reading, the orc does not respond at all.";
 
             Choices.clear();
@@ -26977,6 +27030,409 @@ namespace Book1
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 60}; }
+    };
+
+    class Story820 : public Story::Base
+    {
+    public:
+        Story820()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 820;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "You mention the heavy vault door you couldn't open in the Palace of Unbraaki, and ask if Brekken might be able to help you. \"For the usual split of fifty-fifty, I don't see why not,\" he muses.\n\nIf you would like to accept his help, Brekken will make his own way separately to the palace and meet you there for the heist.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Accept Brekken's help", {Book::Type::BOOK1, 75}, Choice::Type::GET_CODES, {Codes::A(12)}));
+            Choices.push_back(Choice::Base("Go back to the city centre", {Book::Type::BOOK1, 75}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story821 : public Story::Base
+    {
+    public:
+        Story821()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 821;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You have entered a small, empty room, with two doors in the western wall, and a single door in the east.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Go through the northwest door", {Book::Type::BOOK1, 719}));
+            Choices.push_back(Choice::Base("Go through the southwest door", {Book::Type::BOOK1, 507}));
+            Choices.push_back(Choice::Base("Go through the east door", {Book::Type::BOOK1, 366}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story822 : public Story::Base
+    {
+    public:
+        Story822()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 822;
+
+            Location = Location::Type::NORTH_ROAD;
+
+            Text = "You are travelling along the Northroad, a built-up highway that links the main cities of the valley. In the distance the slab-like black temples of Cursus can be seen, dominating the horizon like thugs. Priests of Cursus are common here, and they move up and down the caravans collecting their taxes as they go. Soon you are approached. They intend to levy a 'luxuries' tax upon you.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            auto tax = 0;
+
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                for (auto j = 0; j < party.Members[i].Equipment.size(); j++)
+                {
+                    if (party.Members[i].Equipment[j].Class != Equipment::Class::SHIELD && ((party.Members[i].Equipment[j].Attribute != Attribute::Type::NONE && party.Members[i].Equipment[j].Modifier > 1) || (party.Members[i].Equipment[j].Attribute == Attribute::Type::FIGHTING3_LORE2)))
+                    {
+                        tax += 100;
+                    }
+                }
+            }
+
+            if (tax > 0)
+            {
+                temp_string = "Pay the Cursite taxmen " + std::to_string(tax) + " silver coins";
+
+                Choices.push_back(Choice::Base(temp_string.c_str(), {Book::Type::BOOK1, 458}, Choice::Type::GAIN_MONEY, -tax, "Grumbling at the greed of priests you march on having paid the extortionate tax"));
+                Choices.push_back(Choice::Base("You cannot or will not pay the taxmen", {Book::Type::BOOK1, 109}));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("You do not have any taxable 'luxuries'", {Book::Type::BOOK1, 458}));
+            }
+        }
+    };
+
+    class Story823 : public Story::Base
+    {
+    public:
+        Story823()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 823;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
+            Text = "The Grand Ziggurat is now under the control of the Everchild. Although priests of Cursus still administer the city, slowly the restrictive laws and cruelty of the old regime are being undone. The fabled vault of Cursus has been emptied into the Saltdad treasury, and the zealotry commission has been closed.";
+
+            Bye = "No longer the centre of power that it was, there is very little for you to do now in the Grand Ziggurat. You leave.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
+    };
+
+    class Story824 : public Story::Base
+    {
+    public:
+        Story824()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 824;
+
+            Location = Location::Type::COLD_RIVER;
+
+            Text = "There is a terrible groan from the rope bridge as you reach the midway point. On the far bank you can see one of the wooden posts pull itself out of the earth.\n\nYou have only moments to escape.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Dash to the far side (Team check: Survival 5+, Successes: 3)", {Book::Type::BOOK1, 450}, {Book::Type::BOOK1, -824}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 5, 3));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "You manage to run across the bridge and jump clear onto the far bank, just before the rope bridge collapses into the raging river.";
+
+                Engine::GAIN_MONEY(party, 15);
+            }
+        }
+    };
+
+    class Event824 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Event824()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -824;
+
+            DisplayID = 824;
+
+            Location = Location::Type::COLD_RIVER;
+
+            Bye = "You finally manage to drag yourself onto the riverbank, sodden and dejected. But where are you?";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You plunge into the river and are instantly swept violently downstream.\n\nNote: Each party member loses 3 Health points.";
+
+            Engine::GAIN_HEALTH(party, -3);
+
+            auto lost = 0;
+
+            std::string lost_items = "";
+
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (!Engine::IS_ALIVE(party, i))
+                {
+                    party.Members[i].Equipment.clear();
+                }
+
+                auto not_lost = std::vector<Equipment::Base>();
+
+                for (auto j = 0; j < party.Members[i].Equipment.size(); j++)
+                {
+                    auto odds = Engine::ROLL(1);
+
+                    if (odds < 4)
+                    {
+                        if (lost > 0)
+                        {
+                            lost_items += ", ";
+                        }
+
+                        lost_items += std::string(party.Members[i].Equipment[j].Name);
+
+                        lost++;
+                    }
+                    else
+                    {
+                        not_lost.push_back(party.Members[i].Equipment[j]);
+                    }
+                }
+
+                if (not_lost.size() > 0)
+                {
+                    party.Members[i].Equipment = not_lost;
+                }
+                else
+                {
+                    party.Members[i].Equipment.clear();
+                }
+            }
+
+            if (party.Money > 0)
+            {
+                PreText += " Half your silver coins have been washed away.";
+
+                Engine::GAIN_MONEY(party, -(party.Money / 2));
+            }
+
+            if (lost > 0)
+            {
+                if (lost > 1)
+                {
+                    PreText += " These items have";
+                }
+                else
+                {
+                    PreText += " This item has";
+                }
+
+                PreText += " fallen into the river: " + lost_items + ".";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 346}; }
+    };
+
+    class Story825 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story825()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 825;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Bye = "Your comrades console you as you make your way through the dry tunnel.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You swim uncertainly through the pitch dark tunnel, but become concerned that you are merely plunging further into an airless void. You turn back, your lungs bursting. By the time you re-emerge out of the tunnel you are coughing out water painfully.";
+
+            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            {
+                PreText += "\n\n" + std::string(party.Members[party.LastSelected].Name) + " loses 2 Health points.";
+
+                Engine::GAIN_HEALTH(party.Members[party.LastSelected], -2);
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 523}; }
+    };
+
+    class Story826 : public Story::Base
+    {
+    public:
+        Story826()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 826;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
+            Text = "At your mention of the Everchild the king calls for quiet. He summons his most trusted advisors and retreats to a large throne made of dark jungle wood. Drinks are brought for you, and Scarrenden sees to it that you are made comfortable before the negotiations begin.\n\n\"I know this girl,\" confirms King Scarrenden, glugging wine from a dragonyak horn. \"She called herself Milagros then. About a year ago the treacherous forces of Cursus attempted to ambush and burn my city to the ground. That young girl tried to warn me, but I had her enslaved and sent to work on the fields. She held no malice, and in the aftermath of a bitter battle against the patriarch's forces she saved my life with her healing magics. As she tended me, she spoke of her vision of a united valley, free from the arbitrary tyranny of the desert kings.\"\n\nScarrenden laughs and shakes his head. \"To my face, she called me a tyrant and an ogre. Yet still... the girl's vision was a powerful one. I gave the girl her freedom for saving me, and yet it seemed too small a reward for such a virtuous act. However... I cannot support her in this rebellion. Her followers are ex-slaves and pacifists. Her gentleness does her credit, but it is force and iron that rules the valley. I will not strip soldiers from my realm with Cursus at my back.\"\n\n\"Much has changed since then,\" you insist. \"The Everchild's army is growing. Her followers include great warriors and strategists. If you ally with her, you may present a united front against Cursus. You do not have to fight alone anymore.\"\n\nThe king thinks for a few moments, addressing his councillors whilst you are presented with more drink. Eventually he rises, ready to make his judgement. \"If the Everchild has become so mighty,\" he decrees, \"she must prove it. It is strength my people respect. Bring me the head of a terrible monster -- the most dreadful that can be found in the land. If it is impressive enough, I shall not only swear my soldiers to her, but also my crown.\"";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(16)}))
+            {
+                return {Book::Type::BOOK1, 853};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::DRAGON_HEAD}))
+            {
+                return {Book::Type::BOOK1, 40};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 775};
+            }
+        }
+    };
+
+    class Story827 : public Story::Base
+    {
+    public:
+        Story827()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 827;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
+            Text = "All that is left of the Temple of the Unbroken is a pile of shattered stones. Musing that its name might have to be changed you make your way onwards.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 860}; }
+    };
+
+    class Story828 : public Story::Base
+    {
+    public:
+        Story828()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 828;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "Eventually you manage to get the goblins on your side. They are being enslaved by the orcs, whose leader resides in a room to the south. The orc leader is a very fierce warrior, by all accounts, and the goblins greatly fear him. However, he does possess the key to the tribe's storage cave. The goblins would be delighted if the orcs would conveniently disappear.\n\nNote: You gained the code A62.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("You have a VIAL OF POISON and would like to use it", {Book::Type::BOOK1, 486}, {Equipment::VIAL_OF_POISON}));
+            Choices.push_back(Choice::Base("Leave the kitchen through the north door", {Book::Type::BOOK1, 366}, "You bid the goblins farewell and move on."));
+            Choices.push_back(Choice::Base("Leave the kitchen through the south door", {Book::Type::BOOK1, 736}, "You bid the goblins farewell and move on."));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_CODES(party, {Codes::A(62)});
+        }
+    };
+
+    class Story829 : public Story::Base
+    {
+    public:
+        Story829()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 829;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "The girl is Akini, a serving girl for Lady Kiros in the wealthy part of the city. She is crying because she has fallen in love with a nobleman called Dulcimer. Apparently she stole a dress from her lady to go dancing at the Feast of Cursus. Entranced by her beauty and the good manners she learned from her service, Dulcimer fell in love with Akini. It should have ended there, but Akini, flattered by the attention, continued to borrow dresses from her lady so that she could appear at other social gatherings before him.\n\nAt the last meeting he proposed to her, offering her a valuable engagement ring. Foolishly she accepted, and after that everything went disastrously wrong. Agents from Dulcimer's family investigated Akini, discovering her humble origins. Dulcimer was furious at being tricked and demanded the return of the ring. Alas, Akini's house was robbed, and the engagement ring went missing. Naturally Dulcimer presumes that Akini sold the ring, so his rage deepened.\n\nDulcimer has demanded that Akini present herself at his house to be tortured and killed. To apply pressure he has kidnapped her beloved aunt, who now lies in chains in Dulcimer's dungeon. A prickly situation indeed!";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Offer to negotiate with Dulcimer on Akini's behalf", {Book::Type::BOOK1, 384}));
+            Choices.push_back(Choice::Base("Attempt to rescue Akini's aunt from the dungeon", {Book::Type::BOOK1, 524}));
+            Choices.push_back(Choice::Base("Challenge Dulcimer to a duel for his knavish behaviour", {Book::Type::BOOK1, 872}));
+            Choices.push_back(Choice::Base("You have no intention of getting involved", {Book::Type::BOOK1, 75}));
+
+            Controls = Story::Controls::STANDARD;
+        }
     };
 
     auto story001 = Story001();
@@ -27865,6 +28321,17 @@ namespace Book1
     auto story817 = Story817();
     auto story818 = Story818();
     auto story819 = Story819();
+    auto story820 = Story820();
+    auto story821 = Story821();
+    auto story822 = Story822();
+    auto story823 = Story823();
+    auto story824 = Story824();
+    auto event824 = Event824();
+    auto story825 = Story825();
+    auto story826 = Story826();
+    auto story827 = Story827();
+    auto story828 = Story828();
+    auto story829 = Story829();
 
     void InitializeStories()
     {
@@ -27875,7 +28342,7 @@ namespace Book1
             &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
             &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725,
-            &event744, &event760, &event770, &event771, &event776, &event788, &event789,
+            &event744, &event760, &event770, &event771, &event776, &event788, &event789, &event824,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -27957,7 +28424,8 @@ namespace Book1
             &story780, &story781, &story782, &story783, &story784, &story785, &story786, &story787, &story788, &story789,
             &story790, &story791, &story792, &story793, &story794, &story795, &story796, &story797, &story798, &story799,
             &story800, &story801, &story802, &story803, &story804, &story805, &story806, &story807, &story808, &story809,
-            &story810, &story811, &story812, &story813, &story814, &story815, &story816, &story817, &story818, &story819};
+            &story810, &story811, &story812, &story813, &story814, &story815, &story816, &story817, &story818, &story819,
+            &story820, &story821, &story822, &story823, &story824, &story825, &story826, &story827, &story828, &story829};
     }
 }
 #endif

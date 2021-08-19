@@ -22379,6 +22379,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             done = true;
                         }
 
+                        if (story->Choices[choice].Bye)
+                        {
+                            addBye(story, story->Choices[choice].Bye);
+                        }
+
                         if (error)
                         {
                             if (SDL_GetTicks() - start_ticks > duration)

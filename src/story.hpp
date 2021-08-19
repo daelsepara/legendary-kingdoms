@@ -84,6 +84,8 @@ namespace Choice
     public:
         const char *Text = NULL;
 
+        const char *Bye = NULL;
+
         Choice::Type Type = Choice::Type::NORMAL;
 
         Engine::Destination Destination = {Book::Type::NONE, -1};
@@ -134,6 +136,17 @@ namespace Choice
             Type = Choice::Type::NORMAL;
         }
 
+        Base(const char *text, Engine::Destination destination, const char* bye)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = Choice::Type::NORMAL;
+
+            Bye = bye;
+        }
+
         Base(const char *text, Engine::Destination destination, Choice::Type type)
         {
             Text = text;
@@ -141,6 +154,17 @@ namespace Choice
             Destination = destination;
 
             Type = type;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, const char* bye)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Bye = bye;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, Team::Type team)
@@ -462,6 +486,19 @@ namespace Choice
             Type = type;
 
             Value = value;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, int value, const char* bye)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Value = value;
+
+            Bye = bye;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Equipment::Base> equipment, std::vector<Codes::Type> codes, int value)
