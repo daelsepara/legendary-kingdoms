@@ -137,7 +137,7 @@ namespace Choice
             Type = Choice::Type::NORMAL;
         }
 
-        Base(const char *text, Engine::Destination destination, const char* bye)
+        Base(const char *text, Engine::Destination destination, const char *bye)
         {
             Text = text;
 
@@ -157,7 +157,7 @@ namespace Choice
             Type = type;
         }
 
-        Base(const char *text, Engine::Destination destination, Choice::Type type, const char* bye)
+        Base(const char *text, Engine::Destination destination, Choice::Type type, const char *bye)
         {
             Text = text;
 
@@ -489,7 +489,7 @@ namespace Choice
             Value = value;
         }
 
-        Base(const char *text, Engine::Destination destination, Choice::Type type, int value, const char* bye)
+        Base(const char *text, Engine::Destination destination, Choice::Type type, int value, const char *bye)
         {
             Text = text;
 
@@ -970,7 +970,7 @@ namespace Story
         std::vector<Army::Base> EnemyArmy = {};
         std::vector<Engine::BattlefieldSpells> EnemySpells = {};
         std::vector<Engine::ArmyStatus> EnemyArmyStatus = {};
-        Location::Type BattleLocation = Location::Type::NONE;
+        Location::Type Barracks = Location::Type::NONE;
 
         // temporary string
         std::string temp_string = "";

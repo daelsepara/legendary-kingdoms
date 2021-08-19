@@ -151,6 +151,10 @@ namespace Book1
 
             ID = 4;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "You swoop Amelia up into your arms just before she reaches the wine barrel. She shrieks in delight and throws an arm around your neck.\n\n\"Is it my prinsh charming?\" she slurs, nuzzling into your chest.\n\n\"Well... if by prince you meant castle pot-washer, then yes,\" you smile, carrying her over to her quarters in the palace.\n\n\"Tell me something,\" says Amelia dreamily, between snoozes, as you bear her through the palace. \"Why are you so charming to everyone except me?\"\n\n\"Charming is another word for lying,\" you say in a rare moment of honesty. \"I'd never lie to you, Amelia...\"\n\nHer snores cut off a potentially romantic moment. Tucking her into bed you go to join the rest of your companions.\n\nNote: Amelia has gained a heart for Brash. Brash also gains a heart for Amelia.";
 
             Choices.clear();
@@ -930,6 +934,8 @@ namespace Book1
 
             ID = 27;
 
+            Location = Location::Type::CURSUS;
+
             Text = "The Everchild presents you with a bar of GOLD BULLION to help convince the mercenaries to change sides. Ayleta has been in private communication with the mercenaries for some time and has already negotiated a safe path between the mercenary encampment and the Everchild's forces.\n\nYou are received coolly by the unit captain, who cautiously welcomes you into his tent with his officers and bodyguards around him. You state your opinion that the Everchild's victory in the coming conflict is all but certain, and that she is willing to let mercenary companies that co-operate with her depart safely. Matters soon turn to money, with the mercenary captain suggesting that quite a lot of additional money will be coming his way should the patriarch win the battle, and Saltdad and other cities need to be supressed. He is also worried about his reputation if he plays turncoat without fighting even a single battle for his employer.\n\nNote: Only party members assigned to the MERCENARY TEAM may assist with this skill check.\n\nIf you give the mercenaries a bar of GOLD BULLION, the DC of this check becomes 5+. If you give them two bars, the DC becomes 4+. If you give them three bars the DC becomes 2+.";
 
             Controls = Story::Controls::STANDARD;
@@ -959,6 +965,8 @@ namespace Book1
             ID = -27;
 
             DisplayID = 27;
+
+            Location = Location::Type::CURSUS;
 
             Text = "Only party members assigned to the MERCENARY TEAM may assist with this skill check.";
 
@@ -1078,6 +1086,10 @@ namespace Book1
 
             ID = 29;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "You curse as the thief fades from view. You cannot face the owner of the house for shame, and instead slip away into the city.";
 
             Choices.clear();
@@ -1178,6 +1190,8 @@ namespace Book1
 
             ID = 32;
 
+            Location = Location::Type::CURSUS;
+
             Text = "You quietly utter the correct counter spells to render the arcane wards passive. Slipping inside you can see Descantos himself, an elderly wizard, in deep meditation -- no doubt preparing his spells for tomorrow's conflict.";
 
             Choices.clear();
@@ -1266,6 +1280,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 35;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "\"You say the captain wishes to see us? And he mentioned a promotion?\" presses the guard.\n\n\"Apparently his current lieutenant is not up to scratch,\" shrugs Brash. \"He's asked to see other guards as well. I imagine the first to see the captain will probably get the promotion.\"\n\nThe guards push past you in their eagerness to get to the captain's office.\n\nNote: Your DISTRACTION TEAM can join up with the WEAPONS TEAM for all future checks.";
 
@@ -1706,6 +1724,8 @@ namespace Book1
 
             ID = 48;
 
+            Location = Location::Type::DESERT;
+
             Text = "The enemy are too numerous. Horns are sounded, and your forces begin a general retreat. Fortunately, you have the open desert to scatter into and a rearward base to reform at, but casualties are almost inevitable.\n\nThe queen is appalled at her loss but marshals her forces with a mother's tenderness. \"This is not the end,\" she vows. \"We must rebuild our forces and gather new allies. Clifftop isn't going anywhere, and neither am I.\"";
 
             Choices.clear();
@@ -1873,6 +1893,7 @@ namespace Book1
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 763}; }
     };
 
+    // Note: This sections gets referenced a lot. The location is whatever the party's last was...
     class Story055 : public Story::Base
     {
     public:
@@ -1892,6 +1913,10 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Location = party.Location;
+
+            IsCity = party.InCity;
+
             party.Money = 0;
 
             Engine::LOSE_ALL(party);
@@ -2052,6 +2077,10 @@ namespace Book1
 
             ID = 60;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "The thief is almost in grabbing range. He turns a corner only to find himself in a dead-end alley. He curses and draws his sword. \"You've bitten off more than you can chew, foreigners!\" he spits.\n\nNote: Only party members still in the chase can fight in this battle.";
 
             Choices.clear();
@@ -2095,6 +2124,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 61;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Text = "You carry Amelia to bed after a few feeble protestations. Once she is safely tucked-in the rest of the party retire as well.";
 
@@ -2344,6 +2377,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 68;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Text = "Akini is delighted as you return her aunt to the family home. She thanks you profusely. \"I do not understand why strangers would perform such a kindness for me, but you have my eternal thanks,\" she smiles. She presents you with some FINE BOOTS (Stealth +2). \"These were cast out by my lady because one has a tiny scuff on the heel,\" says Akini. \"I shall never wear noble garments again. Let them be worn by those of noble heart, such as you.\"";
 
@@ -3177,6 +3214,10 @@ namespace Book1
 
             ID = 91;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "Climbing through the window silently will take some skill.";
 
             Choices.clear();
@@ -3284,6 +3325,8 @@ namespace Book1
 
             ID = 95;
 
+            Location = Location::Type::CURSUS;
+
             Text = "The assassin falls, his dagger clattering to the ground. You quickly escort the Everchild to a safer location. \"I'm alright! I promise! I knew you would protect me,\" she smiles. \"You always have.\"\n\nThe Everchild looks unflustered and calm as the morning sun illuminates the horizon, and her presence on the field, astride a nomad steed, causes your army to cheer wildly. Confidence is high. Now it is time to see if your preparations for the coming battle have been enough.";
 
             Choices.clear();
@@ -3302,6 +3345,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 96;
+
+            Location = Location::Type::CURSUS;
 
             Choices.clear();
 
@@ -3807,6 +3852,10 @@ namespace Book1
 
             ID = 111;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "Sar Jessica is the first-born daughter of a baron of Royce. It is impossible for a nobleman such as Dulcimer to refuse the challenge and keep face in court. He emerges from the house, accompanied by his house guards, an Ozury rapier in his hand. His family, an endless procession of cousins, grandparents, brothers and sisters, gather in a circle to watch the duel.\n\nNote: Only Sar Jessica may engage in this battle.";
 
             Choices.clear();
@@ -4185,6 +4234,8 @@ namespace Book1
 
             ID = 122;
 
+            Location = Location::Type::CURSUS;
+
             Text = "After strenuous negotiations the mercenaries finally agree to be discreetly absent during the battle tomorrow. Changing sides altogether would be a step too far for their precious reputations. This will have an enormous impact on the forthcoming battle.\n\nNote: You gained the code A96.";
 
             Bye = "Wishing them a speedy journey to their homelands you return triumphant.";
@@ -4229,6 +4280,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 124;
+
+            Location = Location::Type::CURSUS;
 
             Text = "The command tent contains half a dozen agents; men and women from Lhasbreath and Chalice rub shoulders with freed slaves from Saltdad and Clifftop. You stand by the Everchild's side as she offers commissions.\n\n\"There are three tasks that must be done tonight,\" she says quietly. \"The assassination of Descantos, the hired wizard of Cursus. Convincing the mercenaries to abandon the patriarch's cause. And lastly, seeing to my personal security tonight. Each is important.\"\n\nShe turns to you. \"Which of these missions, my friends, will you undertake?\"\n\nYou must now decide how many missions your party will undertake, and who will go on each mission. Any missions you don't undertake will be performed by the Everchild's other agents -- although they have a slimmer chance of success. You can choose to undertake all three missions if you wish, or just one or two.";
 
@@ -4295,6 +4348,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 127;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "The door opens into a small room which contains a bookcase and a broken reading chair. Searching the shelves is an unpleasant experience, as the books are damp and fall to pieces on contact with your fingers. You do manage to find a magic scroll which seems undamaged. It is a SCROLL OF RAGE. You can use it in combat to increase the Fighting score of each of your party members by 1 point until the end of the combat. After one use it will vanish.";
 
@@ -4838,7 +4893,11 @@ namespace Book1
 
             ID = 143;
 
-            Text = "You spend a full month with Che Long training up the Bronzeguard. They are a formidable sight in their gleaming bronze armour and powerful steel weapons. Only the best recruits are permitted to stay in training, and soon you have a unit of the Everchild's fiercest supporters dressed in enchanted armour. The unit's morale is exceptional, and they are sure to make a powerful impression on the battlefield.\n\nYou may add the following unit to the Saltdad garrison:\n\n[Bronzeguard]: Strength 5, Morale 5\n\nYou cannot have more than one unit of [Bronzeguard] in existence at any given time as their equipment is irreplaceable. If the [Bronzeguard] are ever destroyed, you can train new recruits to use their equipment by spending another two GOLD BULLION bars. Feeling nigh indestructible, you return to the palace.";
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "You spend a full month with Che Long training up the Bronzeguard. They are a formidable sight in their gleaming bronze armour and powerful steel weapons. Only the best recruits are permitted to stay in training, and soon you have a unit of the Everchild's fiercest supporters dressed in enchanted armour. The unit's morale is exceptional, and they are sure to make a powerful impression on the battlefield.\n\nYou add the following unit to the Saltdad garrison:\n\n[Bronzeguard]: Strength 5, Morale 5\n\nYou cannot have more than one unit of [Bronzeguard] in existence at any given time as their equipment is irreplaceable. If the [Bronzeguard] are ever destroyed, you can train new recruits to use their equipment by spending another two GOLD BULLION bars. Feeling nigh indestructible, you return to the palace.";
 
             Choices.clear();
 
@@ -4864,7 +4923,7 @@ namespace Book1
             }
             else
             {
-                Army = {Army::Base("Bronzeguard", Army::Type::BRONZEGUARD, Location::Type::SALTDAD, 5, 5, true)};
+                party.Army.push_back(Army::Base("Bronzeguard", Army::Type::BRONZEGUARD, Location::Type::SALTDAD, 5, 5, true));
             }
         }
 
@@ -5425,6 +5484,8 @@ namespace Book1
 
             ID = 162;
 
+            Location = Location::Type::CURSUS;
+
             Text = "It is the morning of battle. About you the soldiers of the Everchild ready their weapons and armour, looking down the gentle incline towards the city. You doubt the soldiers of Cursus will oblige you by fighting you on the slopes -- you will have to go down to meet them.\n\nYou may choose a maximum of six units from the Saltdad barracks to commit to this battle.";
 
             Choices.clear();
@@ -5438,16 +5499,16 @@ namespace Book1
             EnemySpells.clear();
             EnemyArmyStatus.clear();
 
-            BattleLocation = Location::Type::SALTDAD;
+            Barracks = Location::Type::SALTDAD;
 
             if (Engine::VERIFY_CODES(party, {Codes::A(40)}))
             {
-                EnemyArmy.push_back(Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 4, false));
+                EnemyArmy.push_back(Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 4, 4, false));
             }
             else
             {
-                EnemyArmy.push_back(Army::Base("Curzite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 5, false));
-                EnemyArmy.push_back(Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_SUPPORT, 4, 4, false));
+                EnemyArmy.push_back(Army::Base("Curzite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 4, 5, false));
+                EnemyArmy.push_back(Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_SUPPORT, 4, 4, false));
             }
 
             if (!Engine::VERIFY_CODES(party, {Codes::A(95)}))
@@ -5460,17 +5521,17 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::A(96)}))
             {
-                EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 2, 4, false));
-                EnemyArmy.push_back(Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false));
+                EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CURSUS, Location::BattleField::CENTER_FRONT, 2, 4, false));
+                EnemyArmy.push_back(Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false));
             }
             else
             {
                 EnemyArmyStatus.push_back({Army::Status::STRENGTH1, EnemyArmy.size(), 0, 1});
 
-                EnemyArmy.push_back(Army::Base("Mercenary Knights", Army::Type::MERCENARY_KNIGHTS, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 5, 3, false));
-                EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::SALTDAD, Location::BattleField::CENTER_SUPPORT, 2, 4, false));
-                EnemyArmy.push_back(Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false));
-                EnemyArmy.push_back(Army::Base("Mercenary Spears", Army::Type::MERCENARY_SPEARS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 3, 2, false));
+                EnemyArmy.push_back(Army::Base("Mercenary Knights", Army::Type::MERCENARY_KNIGHTS, Location::Type::CURSUS, Location::BattleField::CENTER_FRONT, 5, 3, false));
+                EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CURSUS, Location::BattleField::CENTER_SUPPORT, 2, 4, false));
+                EnemyArmy.push_back(Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false));
+                EnemyArmy.push_back(Army::Base("Mercenary Spears", Army::Type::MERCENARY_SPEARS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_SUPPORT, 3, 2, false));
             }
         }
 
@@ -5999,6 +6060,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 181;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Text = "The normally straight-laced Amelia has enjoyed rather too much wine this evening. She is visibly tottering over to the wine barrel for more, to the raucous laughter of nearby soldiers.";
 
@@ -7719,10 +7784,12 @@ namespace Book1
 
             ID = 229;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Text = "You furrow your brow as you attempt to mar the runes on the window frame.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Dispel the runes (Team check: Lore 4+, Successes: 5)", {Book::Type::BOOK1, 791}, {Book::Type::BOOK1, 831}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 5));
+            Choices.push_back(Choice::Base("Dispel the runes (Team check: Lore 4+, Successes: 5)", {Book::Type::BOOK1, 791}, {Book::Type::BOOK1, 830}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::LORE}, 4, 5));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -8382,6 +8449,10 @@ namespace Book1
 
             ID = 250;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "It's not your city. You shoulder the loot bag and slide back down the rope. Once you are a few neighbourhoods away you stroll along as if nothing had happened.";
 
             Choices.clear();
@@ -8479,6 +8550,8 @@ namespace Book1
 
             ID = 254;
 
+            Location = Location::Type::CURSUS;
+
             Text = "You cannot ward the assassin away. He ducks under your blade and stabs the Everchild in the leg. She squeals and kicks him away, and you impale the knave through the back. Casting his body aside you rush to the Everchild. \"It's not bad!\" she assures you, gripping her bleeding thigh. A quick examination of the assassin's dagger tells you otherwise... it has been poisoned.\n\nSoon she in a critical condition, unable to stand, her flesh looking as grey as stone. In her fevered delirium she insists on leading the troops into battle, but this is clearly impossible. You command her to concentrate on getting better, and to focus all her healing energies on herself.\n\nWord soon gets around about the Everchild's condition. Each army unit in the Saltdad barracks must lose 1 point of Morale. You dread the coming of the dawn, but you realise you cannot escape now. You must face what comes with as much courage as you can muster.";
 
             Choices.clear();
@@ -8504,6 +8577,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 255;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Image = "images/book1/roughly_dressed_man.png";
 
@@ -8834,6 +8911,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 268;
+
+            Location = Location::Type::DESERT;
 
             Text = "Through the desert haze, the legions of the Everchild go on the march. Dust rises on the Northroad as the combined forces of the valley descend upon the defiant city of Cursus. The Everchild calls a halt on a raised perch of land where the city and its harbour can be clearly seen. In the blood-red light of the setting sun you can see that the harbour of Cursus is packed with cogs, hulks and carracks of many nations and heraldry. The patriarch has emptied his treasury to gain followers for his last stand. Spies loyal to the Everchild report that the high priest of Cursus might have access to as many as six thousand fighting men.\n\n\"They do not have space for such a large deployment in the field,\" observes Che Long. \"Or, if they did, such numbers would be unmanageable.\"\n\n\"Are those knights? Has the patriarch brought foreign knights here?\" asks the Everchild, peering into the gloom.\n\n\"They will not be able to wear their heavy armour in the desert,\" says Che Long. \"Unlike the Bronzeguard, their armour is not enchanted and does not keep them cool in the sun.\"\n\nLady Ayleta approaches the Everchild and bows. \"My lady, your agents are assembled in the command tent.\"\n\nThe Everchild bids you follow her as she approaches the tent. \"I have many agents who follow me now, but none are as experienced as you. I shall give you priority over which missions you wish to undertake. All are hazardous, so do not stretch yourselves too thinly.\"";
 
@@ -9995,6 +10074,8 @@ namespace Book1
 
             ID = 301;
 
+            Location = Location::Type::CURSUS;
+
             Choices.clear();
 
             Controls = Story::Controls::NONE;
@@ -10103,6 +10184,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 304;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
 
             Text = "It will be no easy matter to sneak into the palace. Unbraaki is well-guarded and probably protects himself with powerful sorcery. You wait until nightfall to give you cover. The palace is dark except for a single light in the library. Now is your chance, and you scamper through the garden, ducking behind bushes and fountains on your way to the palace.";
 
@@ -10488,6 +10571,8 @@ namespace Book1
 
             ID = 316;
 
+            Location = Location::Type::CURSUS;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -10525,6 +10610,8 @@ namespace Book1
 
             DisplayID = 316;
 
+            Location = Location::Type::CURSUS;
+
             Text = "Now you fight again. You can choose up to six units from the Saltdad garrison. These can be units you used before, or fresh troops, or a combination of both. Descantos, if he is still alive, can cast no more spells -- so at least that is in your favour.";
 
             Choices.clear();
@@ -10536,35 +10623,35 @@ namespace Book1
         {
             EnemyArmy.clear();
 
-            BattleLocation = Location::Type::SALTDAD;
+            Barracks = Location::Type::SALTDAD;
 
             if (Engine::VERIFY_CODES(party, {Codes::A(96)}))
             {
-                EnemyArmy.push_back(Army::Base("Cursite Citizens", Army::Type::CURSITE_CITIZENS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 2, 3, false));
+                EnemyArmy.push_back(Army::Base("Cursite Citizens", Army::Type::CURSITE_CITIZENS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 2, 3, false));
 
                 if (!Engine::VERIFY_CODES(party, {Codes::A(40)}))
                 {
-                    EnemyArmy.push_back(Army::Base("Cursite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 4, 5, false));
+                    EnemyArmy.push_back(Army::Base("Cursite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 4, 5, false));
                 }
             }
             else
             {
-                EnemyArmy.push_back(Army::Base("Mercenary Men-at-Arms", Army::Type::MERCENARY_MEN_AT_ARMS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 2, false));
-                EnemyArmy.push_back(Army::Base("Cursite Citizens", Army::Type::CURSITE_CITIZENS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_SUPPORT, 2, 3, false));
+                EnemyArmy.push_back(Army::Base("Mercenary Men-at-Arms", Army::Type::MERCENARY_MEN_AT_ARMS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 4, 2, false));
+                EnemyArmy.push_back(Army::Base("Cursite Citizens", Army::Type::CURSITE_CITIZENS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_SUPPORT, 2, 3, false));
 
                 if (!Engine::VERIFY_CODES(party, {Codes::A(40)}))
                 {
-                    EnemyArmy.push_back(Army::Base("Cursite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 4, 5, false));
-                    EnemyArmy.push_back(Army::Base("Mercenary Crossbows", Army::Type::MERCENARY_CROSSBOWS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 2, 2, false));
+                    EnemyArmy.push_back(Army::Base("Cursite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 4, 5, false));
+                    EnemyArmy.push_back(Army::Base("Mercenary Crossbows", Army::Type::MERCENARY_CROSSBOWS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_SUPPORT, 2, 2, false));
                 }
                 else
                 {
-                    EnemyArmy.push_back(Army::Base("Mercenary Crossbows", Army::Type::MERCENARY_CROSSBOWS, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 2, 2, false));
+                    EnemyArmy.push_back(Army::Base("Mercenary Crossbows", Army::Type::MERCENARY_CROSSBOWS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 2, 2, false));
                 }
             }
 
-            EnemyArmy.push_back(Army::Base("Temple Guard", Army::Type::TEMPLE_GUARD, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 5, 4, false));
-            EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::SALTDAD, Location::BattleField::CENTER_SUPPORT, 2, 4, false));
+            EnemyArmy.push_back(Army::Base("Temple Guard", Army::Type::TEMPLE_GUARD, Location::Type::CURSUS, Location::BattleField::CENTER_FRONT, 5, 4, false));
+            EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CURSUS, Location::BattleField::CENTER_SUPPORT, 2, 4, false));
         }
 
         Engine::Destination Continue(Party::Base &party) { return destination; }
@@ -11008,6 +11095,10 @@ namespace Book1
 
             ID = 332;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "You launch yourself through the window and tackle the thief to the ground, just before he reaches the rope. He kicks you away and begins to dash out of the door. The second party member who climbed the rope has now joined you in the room.";
 
             Choices.clear();
@@ -11090,6 +11181,10 @@ namespace Book1
 
             ID = 335;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "Akihiro draws his sword and hurls it at the thrown dagger. There is a clang of steel as the sword knocks the dagger off target. Brash snatches Akihiro's sword as it deflects off the dagger, throwing it smoothly back to Akihiro who catches it by the hilt.\n\nBrash will not forget this.\n\nNote: Brash has gained a heart for Akihiro. Akihiro also gains a heart for Brash.";
 
             Choices.clear();
@@ -11114,6 +11209,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 336;
+
+            Location = Location::Type::CURSUS;
 
             Text = "There is only room for one person in the team to make this attempt... careful now!";
 
@@ -12021,6 +12118,10 @@ namespace Book1
 
             ID = 367;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "You draw your weapons. \"We will not let you harm grieving people,\" you say sharply. The kensai bow to you and draw their swords as one. This will be a tough fight.";
 
             Choices.clear();
@@ -12276,7 +12377,7 @@ namespace Book1
         {
             EnemyArmy.clear();
 
-            BattleLocation = Location::Type::LUUTANESH;
+            Barracks = Location::Type::LUUTANESH;
 
             if (Engine::VERIFY_CODES(party, {Codes::A(8)}))
             {
@@ -12315,6 +12416,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 377;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "The thief reluctantly hands over 100 silver coins. When the rest of your party climb through the window, he also decides to throw in a HANDSOME BROOCH (Charisma +1) to discourage any further extortion.";
 
@@ -14412,6 +14517,8 @@ namespace Book1
 
             ID = 440;
 
+            Location = Location::Type::CURSUS;
+
             Text = "You lunge for the wizard's throat, but he dives aside at the last moment, yelling for aid. You are not given another chance. Between the wizard's magic which forces you away and the dozens of guards that swarm you your capture is inevitable. The assassination team have been captured. What happens to them now is up to you. If you capture the city of Cursus you can free them from prison. If your army is defeated, the party members will be executed. Either way, the captured party members can take no further part in the battle until rescued.";
 
             Choices.clear();
@@ -15039,6 +15146,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 463;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "You are not quite in position to save Brash. He immediately loses 3 Health points. You continue the pursuit.";
 
@@ -15887,6 +15998,10 @@ namespace Book1
 
             ID = 487;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "Quiet as a mouse you step towards the thief, drawing your weapon silently. The thief pauses in the middle of his rifling, and spins around. He is a man of Royce, handsome in a roguish kind of way. \"Well, you're a silent one,\" he grins. \"I'll split the takings in this house fifty-fifty with you if you promise not to make trouble.\"";
 
             Choices.clear();
@@ -15955,7 +16070,7 @@ namespace Book1
 
             ID = 489;
 
-            Location = Location::Type::SALTDAD;
+            Location = Location::Type::CURSUS;
 
             Text = "You are not sure how it happened. Foul sorcery? Assassins from the House of Silence? Either way, a lone assassin managed to penetrate the defences around the Everchild and stab her with a poisoned dagger. By the time your team have returned you find her in a critical condition, unable to stand, her flesh looking as grey as stone. In her fevered delirium she insists on leading the troops into battle, but this is clearly impossible. You command her to concentrate on getting better, and to focus all her healing energies on herself.\n\nWord soon gets around about the Everchild's condition.\n\nNote: Each army unit in the Saltdad barracks must lose 1 point of Morale.";
 
@@ -16646,6 +16761,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 508;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Text = "You make your way to the training grounds, where you see the soldiers of the Everchild at practice. All the troops you have gathered for her can be found here, their armour and weapons glinting in the unforgiving sun.\n\n\"We can always use more soldiers,\" comments general Che Long. \"I know the Everchild has asked you to find some more from the leaders in the valley, but we can also muster more troops here if we can find the money.\"\n\n\"How much will it cost to levy more troops?\" you ask, checking your purse.\n\n\"More than any number of silver coins!\" laughs Che Long. \"We are talking about hundreds of soldiers, including weapons and supplies. You would need bars of GOLD BULLION to fully pay for the cost.\"\n\nYou ponder Che Long's request. \"If I found some, what kind of soldiers could we raise?\"\n\n\"For one bar of GOLD BULLION we could raise a decent troop of light infantry,\" says Che Long. \"But ideally, we would want two GOLD BULLION bars. With that we could retrain and equip the Bronzeguard. We still have their armour and equipment -- but teaching men to fight to that standard is a long and expensive process.\"\n\nIf you have any bars of GOLD BULLION you can purchase additional troops for the Everchild.";
 
@@ -17647,6 +17766,10 @@ namespace Book1
 
             ID = 540;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "Representatives from all the settlements in the valley, bar Cursus, now fill the Everchild's war room. A map of the valley, carved onto the wall behind the throne, illuminates the Everchild's many lands and legions. A hush descends as the girl queen enters the chamber and climbs the platform which raises her seat above all others. She clicks her fingers, and Che Long, her guardian, presents her with a long, steel sword. She points it at the map, right above Cursus.\n\n\"There is now only one obstacle that stands between us and the unity of the valley,\" says the Everchild boldly. \"Cursus has not been idle. The patriarch has hired mercenaries from Royce and Thalsia to bolster his armies of fanatics. Despite sorcery being forbidden in their religion, they have employed the dark wizard Descantos to fortify their defences. The Cursites have skilled warriors. The Cursites have loyal warriors. But they do not have warriors who are both skilled and loyal. Something must give, and it is this miss-match between their forces that I intend to exploit.\"\n\n\"To bolster our chances,\" she continues, returning the sword to Che Long, \"I intend to rob the patriarch of some of these advantages. My agents will either dispose of Descantos or pay-off the mercenaries to abandon the patriarch's cause. I believe that without either of these advantages, the patriarch cannot hold against us.\"\n\n\"What of your safety, majesty?\" prompts one of her generals. \"The attempts against your life have increased in intensity since you took Clifftop. We have reason to believe another attempt will be made on the eve of battle.\"\n\n\"My personal security is peerless, and my followers loyal, do not fear for me,\" rebuts the Everchild. \"All I require of you is that you look to your legions.\"\n\nShe turns to you with expectation. \"And you, my friends, tell me: Is now the time to make the attack?\"";
 
             Choices.clear();
@@ -17749,6 +17872,10 @@ namespace Book1
 
             ID = 543;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "The palace of Saltdad has vast underground chambers which are still in the process of being unearthed. In one of the vaults the Iron King discovered the weapons and armour for his Bronzeguard. In another was found Malronac the Deathengine. Who knows what still awaits to be found within the cold earth?\n\nYou spend some time exploring the ancient arcades and hallways, looking for secret passages or forgotten routes.";
 
             Controls = Story::Controls::STANDARD;
@@ -17807,6 +17934,8 @@ namespace Book1
 
             ID = 545;
 
+            Location = Location::Type::CURSUS;
+
             Text = "Some of the Everchild's agents are skilled negotiators... still, they might lack the authority needed to get the mercenaries to co-operate.";
 
             Choices.clear();
@@ -17826,6 +17955,8 @@ namespace Book1
             ID = -545;
 
             DisplayID = 545;
+
+            Location = Location::Type::CURSUS;
 
             Text = "The agents are successful and convince some of the mercenaries to abandon the patriarch.\n\nNote: You gained the code A96.";
 
@@ -18108,6 +18239,8 @@ namespace Book1
 
             ID = 553;
 
+            Location = Location::Type::CURSUS;
+
             Text = "A lone assassin does make an attempt on the Everchild's life, but her alert agents manage to foil the attack. The Everchild looks unflustered and calm as the morning sun illuminates the horizon, and her presence on the field, astride a nomad steed, causes your army to cheer wildly. Confidence is high. Now it is time to see if your preparations for the coming battle have been enough.";
 
             Choices.clear();
@@ -18217,6 +18350,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 557;
+
+            Location = Location::Type::CLIFFTOP;
+
+            IsCity = true;
 
             Text = "You enter the hall of Lothor the Ugly, brutal king of Clifftop. He is currently in the process of torturing one of his servants, his lords urging him on to greater acts of cruelty. The hideous, scarred king looks up at you as you enter. \"What's this?\" he gargles. \"More petitioners for my favour? If you would be my friend, tell me what kind of punishment I should inflict on this man? Don't be too lenient, or you will share his fate!\"\n\nDozens of guards close in around you as you consider your answer.";
 
@@ -18547,6 +18684,8 @@ namespace Book1
 
             ID = 567;
 
+            Location = Location::Type::CURSUS;
+
             Text = "With your missions assigned the Everchild wishes you good luck as you vanish under the cover of night.";
 
             Choices.clear();
@@ -18767,6 +18906,10 @@ namespace Book1
 
             ID = 573;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "The thief bolts from the room and you follow in hot pursuit. He dashes into another bedroom on the far side of the house and leaps from an open window, onto the rooftops of a lower house.\n\nNote: If you think a party member won't be able to give chase (Survival score is 2 or less) you can have them hang back instead, although that means they will not be able to assist in the rest of the chase.";
 
             Choices.clear();
@@ -18786,6 +18929,10 @@ namespace Book1
             ID = -573001;
 
             DisplayID = 573;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "Each party member chasing the thief must make an individual skill check to see if they can continue.";
 
@@ -18850,6 +18997,10 @@ namespace Book1
             ID = -573002;
 
             DisplayID = 573;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Choices.clear();
 
@@ -19471,6 +19622,8 @@ namespace Book1
 
             ID = 591;
 
+            Location = Location::Type::CURSUS;
+
             Text = "The Everchild's camp is on high alert, and her followers will give their lives to protect her. Chances are good that she will be alright even without your help.";
 
             Choices.clear();
@@ -19548,6 +19701,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 594;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Text = "After all you've been through Amelia deserves a chance to cut loose, and you watch idly as she walks away with some soldiers. She doesn't speak about what happened the next morning, but she is missing a fair quantity of money.\n\nNote: You lost 35 silver coins.";
 
@@ -19801,6 +19958,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 601;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Choices.clear();
 
@@ -20131,7 +20292,7 @@ namespace Book1
 
             ID = 610;
 
-            Location = Location::Type::SALTDAD;
+            Location = Location::Type::DESERT;
 
             Image = "images/book1/march_to_clifftop.png";
 
@@ -20144,15 +20305,15 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            BattleLocation = Location::Type::SALTDAD;
+            Barracks = Location::Type::SALTDAD;
 
             EnemyArmy = {
-                Army::Base("Landsmen Cavalry", Army::Type::LANDSMEN_CAVALRY, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_FRONT, 4, 2, false),
-                Army::Base("Field Overseers", Army::Type::FIELD_OVERSEERS, Location::Type::SALTDAD, Location::BattleField::LEFT_FLANK_SUPPORT, 2, 2, false),
-                Army::Base("Cursite Fanatics", Army::Type::CURSITE_FANATICS, Location::Type::SALTDAD, Location::BattleField::CENTER_FRONT, 3, 5, false),
-                Army::Base("Slave Levies", Army::Type::SLAVE_LEVIES, Location::Type::SALTDAD, Location::BattleField::CENTER_SUPPORT, 1, 1, false),
-                Army::Base("Clifftop Infantry", Army::Type::CLIFFTOP_INFANTRY, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_FRONT, 3, 3, false),
-                Army::Base("Thalsian Mercenaries", Army::Type::THALSIAN_MERCENARIES, Location::Type::SALTDAD, Location::BattleField::RIGHT_FLANK_SUPPORT, 2, 3, false)};
+                Army::Base("Landsmen Cavalry", Army::Type::LANDSMEN_CAVALRY, Location::Type::DESERT, Location::BattleField::LEFT_FLANK_FRONT, 4, 2, false),
+                Army::Base("Field Overseers", Army::Type::FIELD_OVERSEERS, Location::Type::DESERT, Location::BattleField::LEFT_FLANK_SUPPORT, 2, 2, false),
+                Army::Base("Cursite Fanatics", Army::Type::CURSITE_FANATICS, Location::Type::DESERT, Location::BattleField::CENTER_FRONT, 3, 5, false),
+                Army::Base("Slave Levies", Army::Type::SLAVE_LEVIES, Location::Type::DESERT, Location::BattleField::CENTER_SUPPORT, 1, 1, false),
+                Army::Base("Clifftop Infantry", Army::Type::CLIFFTOP_INFANTRY, Location::Type::DESERT, Location::BattleField::RIGHT_FLANK_FRONT, 3, 3, false),
+                Army::Base("Thalsian Mercenaries", Army::Type::THALSIAN_MERCENARIES, Location::Type::DESERT, Location::BattleField::RIGHT_FLANK_SUPPORT, 2, 3, false)};
         }
 
         Engine::Destination Continue(Party::Base &party) { return destination; }
@@ -20848,6 +21009,8 @@ namespace Book1
 
             ID = 632;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Text = "You are spotted as you dash across the grounds. The alarm is called and soon the grounds are heaving with hundreds of soldiers, some on horseback. Escape is impossible. You are seized by Unbraaki's guards.";
 
             Choices.clear();
@@ -20992,6 +21155,10 @@ namespace Book1
 
             ID = 637;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "You gain the sense of something obscured in the stonework. Casting your spell, a section of the wall dissolves into darkness. Shining your lanterns within reveals a circular room filled with sturdy shelves and boxes. Your heart hammers in excitement. This is a treasury room, probably one of the smaller treasuries built during the reign of the first Everchild.\n\nSadly, much of the money has already been taken, and many boxes are empty. Perhaps there was some sort of disaster in the waning years of the Everchild's reign? There is still some money to be found, however, including 600 silver coins and a bar of GOLD BULLION.\n\nNote: You gained the code A97.";
 
             Bye = "Stuffing your bags with coins, you depart.";
@@ -21066,6 +21233,8 @@ namespace Book1
 
             ID = 639;
 
+            Location = Location::Type::CURSUS;
+
             Text = "Attempting to assassinate an archwizard is a task only the mightiest heroes could perform. The Everchild's agents have only a slim hope of completing it.";
 
             Choices.clear();
@@ -21085,6 +21254,8 @@ namespace Book1
             ID = -639;
 
             DisplayID = 639;
+
+            Location = Location::Type::CURSUS;
 
             Text = "The Everchild's agents are successful, killing Descantos as he sleeps.\n\nNote: You gained the code A95.";
 
@@ -21335,6 +21506,8 @@ namespace Book1
 
             ID = 648;
 
+            Location = Location::Type::CURSUS;
+
             Text = "You stick to the Everchild like glue all evening. With so much at stake the Everchild cannot sleep, and spends the entire night in preparation, touring the troops, and discussing plans. The assassination attempt is so subtle you might have missed it. During a practical discussion concerning which avenues to secure first in the attack on Cursus city, a servant approaches with a flask of wine. He is indecently close before you realise that you don't recognise his face. Acting with your gut instinct you shove the fellow away. He immediately draws a knife and tries to make for the queen.\n\nNote: The battle ends if at the end of any round you fail to inflict even a single point of damage on the Assassin.";
 
             Choices.clear();
@@ -21505,6 +21678,10 @@ namespace Book1
 
             ID = 653;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "You have returned to the old treasury room. It is filled with empty boxes. If you missed something the first time you looted it, the Everchild's agents would have taken the rest by now!";
 
             Choices.clear();
@@ -21562,6 +21739,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 655;
+
+            Location = Location::Type::CURSUS;
 
             Text = "You slit the wizard's throat. He silently drops to the ground, obligingly dead. Not wanting to delay and end up captured, you slip away, back to the command tent.\n\nNote: You gained the code A95.";
 
@@ -22702,6 +22881,8 @@ namespace Book1
 
             ID = 687;
 
+            Location = Location::Type::CURSUS;
+
             Text = "The sigils fade as you complete your counterspell... but you have been tricked. The wards around the tent are still active, and a magical flash blinds you. You stagger back, light continuing to pour from the tent like a beacon. Soon the army of Cursus have captured the assassination team. What happens to them now is up to you. If you capture the city of Cursus you can free them from prison. If your army is defeated, the party members will be executed. Either way, the captured party members can take no further part in the battle until rescued.";
 
             Choices.clear();
@@ -23790,6 +23971,10 @@ namespace Book1
 
             ID = 724;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "The thief turns his head at the sudden noise. As quick as a flash he dashes forwards, long dagger in hand, to cut the rope. You need to get through the window and stop him!\n\nNote: The party member at the top of the rope make following skill check.";
 
             Choices.clear();
@@ -24065,6 +24250,11 @@ namespace Book1
             Controls = Story::Controls::STANDARD;
         }
 
+        void Event(Party::Base &party)
+        {
+            Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::ANIMAL_SPEECH);
+        }
+
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 210}; }
     };
 
@@ -24297,15 +24487,27 @@ namespace Book1
 
                 Limit = 3;
 
-                Engine::GET_CODES(party, {Codes::A(24)});
-
                 if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::TROGLODYTE_HEAD}) > 0)
                 {
-                    Bye = "You take up the troglodyte heads from the unlucky beasts.\n\nNote: You gained the code A24.";
+                    if (!Engine::VERIFY_CODES(party, {Codes::A(24)}))
+                    {
+                        Engine::GET_CODES(party, {Codes::A(24)});
+
+                        Bye = "You take up the troglodyte heads from the unlucky beasts. Note: You gained the code A24.";
+                    }
+                    else
+                    {
+                        Bye = "You take up the troglodyte heads from the unlucky beasts.";
+                    }
                 }
                 else
                 {
-                    Bye = "Note: You gained the code A24.";
+                    if (!Engine::VERIFY_CODES(party, {Codes::A(24)}))
+                    {
+                        Engine::GET_CODES(party, {Codes::A(24)});
+
+                        Bye = "Note: You gained the code A24.";
+                    }
                 }
             }
         }
@@ -26145,6 +26347,10 @@ namespace Book1
 
             ID = 789;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "You dash across the rooftops, your hair lifting as you leap from roof to roof. You are slowly gaining on the thief when he leaps into a crowd of worshipers on their way to temple, elbowing his way through manically.\n\nNote: Only party members still in the chase must each make the skill check as you try and slip through the crowd.";
 
             Choices.clear();
@@ -26209,6 +26415,10 @@ namespace Book1
 
             DisplayID = 789;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Choices.clear();
 
             Controls = Story::Controls::NONE;
@@ -26258,6 +26468,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 791;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
 
             Text = "With expert knife strokes, you mar the runes in just the right order to prevent any magical blowback. With the defences down, you crawl through the window and into the attic.";
 
@@ -26763,7 +26975,7 @@ namespace Book1
             Text = "The family owe the Iron King 200 silver pieces, with an additional 50 silver collection tax.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Pay the family's tax (250 silver coins)", {Book::Type::BOOK1, 358}, Choice::Type::GAIN_MONEY, -250));
+            Choices.push_back(Choice::Base("Pay the family's tax (250 silver coins)", {Book::Type::BOOK1, 357}, Choice::Type::GAIN_MONEY, -250));
             Choices.push_back(Choice::Base("Save money by slaying the guards", {Book::Type::BOOK1, 554}));
             Choices.push_back(Choice::Base("Simply leave", {Book::Type::BOOK1, 75}));
 
@@ -27092,6 +27304,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 819;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -27529,6 +27745,8 @@ namespace Book1
 
             ID = 830;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Text = "Something goes wrong with your counter-spell. The runes suddenly flash brilliantly and you are knocked unconscious.\n\nNote: Each party member must lose 2 Health as they tumble off the roof and onto the ground.";
 
             Bye = "The guards, alerted by the bright light, swarm round and capture you.";
@@ -27555,6 +27773,10 @@ namespace Book1
 
             ID = 831;
 
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
             Text = "Amelia raises her hand and makes a pushing motion in the air. Suddenly the dagger flies off target and thuds into a laundry basket. \"Thanks!\" smiles Brash, continuing his dash. \"Welcome,\" pants Amelia, low on breath after her magical effort. Brash will not forget this.\n\nNote: Brash has gained a heart for Amelia Pass-Dayne. Amelia Pass-Dayne also gains a heart for Brash.has gained a heart for Amelia Pass-Dayne.";
 
             Choices.clear();
@@ -27579,6 +27801,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 832;
+
+            Location = Location::Type::CURSUS;
 
             Text = "The mercenaries thank you for your offer, but politely decline. They have no ill will towards the Everchild, but they did not come all this way not to fight. \"You are outnumbered,\" the captain says flatly. \"The odds sit in our favour. In the long run we shall make more money through service than through treachery.\"\n\nYou are escorted safely back to the Everchild's camp. At least the mercenaries are honourable. You only hope they are not as fearsome as they seem.";
 
@@ -28972,10 +29196,310 @@ namespace Book1
             {
                 destination = {Book::Type::BOOK1, 407};
             }
-
         }
 
         Engine::Destination Continue(Party::Base &party) { return destination; }
+    };
+
+    class Story870 : public Story::Base
+    {
+    public:
+        Story870()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 870;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "You stroll towards Amelia just in time to swat a soldier's hand away from her bottom. \"She didn't ask,\" you say dryly, pushing him away. \"Come on Amelia, wine's off.\"\n\nYou haul her up into your arms, Amelia practically snoozing as soon as she is in your embrace. You carry her through the palace, towards her chambers, Amelia reaching up to cradle your face. \"You're kind to me,\" she slurs. \"No one was kind to me in Fosterly Castle.\"\n\n\"They're idiots in Fosterly Castle,\" you grunt.\n\nYou tuck Amelia Pass-Dayne into her bed, but she holds onto your hair clumsily. \"You're so beautiful...\"\n\n\"You're so drunk,\" you reply, smiling.\n\nAmelia suddenly looks serious. \"Will you always look after me, Tash?\"\n\nYou blink, finding it hard not to stare at Amelia's shapely body. \"Good night, Amelia,\" you say, swallowing, untangling her hand from your hair.\n\nNote: Amelia has gained a heart for Tasha. Tasha also gains a heart for Amelia.";
+
+            Bye = "Shaking your head to clear it, you make your way back to the party.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEARTS(party, Character::Type::AMELIA_PASS_DAYNE, Character::Type::TASHA, 1);
+            Engine::GAIN_HEARTS(party, Character::Type::TASHA, Character::Type::AMELIA_PASS_DAYNE, 1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 280}; }
+    };
+
+    class Story871 : public Story::Base
+    {
+    public:
+        Story871()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 871;
+
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
+            Text = "You dash to the foot of the palace, staying low and quiet as guards patrol in the garden behind you. The windows on the ground floor are all securely shut, and you dare not break them and alert the guards. You hear a skittering sound above you. Looking upwards you see the astonishing sight of dozens of tiny monkeys scampering out of an open window in the roof of the palace. It looks to be a permanently open space for them to come and go as they please.\n\nThe fine ornamentation of the woodwork aids your climb up towards the window. Around the outside of the window frame, soft magical runes glow in the darkness. You surmise that the runes are designed to allow monkeys to pass through, but keep anything else out.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            Choices.push_back(Choice::Base("Try and dispel the runes", {Book::Type::BOOK1, 229}));
+
+            if (Engine::HAS_SPELL(party, {Spells::Type::ANIMAL_SPEECH}))
+            {
+                Choices.push_back(Choice::Base("Cast Animal Speech", {Book::Type::BOOK1, 732}));
+            }
+
+            Choices.push_back(Choice::Base("Abandon your attempt on the palace", {Book::Type::BOOK1, 265}));
+        }
+    };
+
+    class Story872 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story872()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 872;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "You march boldly to the house of Dulcimer, demanding that the rogue come out and fight an honourable duel with you.";
+
+            if (!Engine::IN_PARTY(party, Character::Type::SAR_JESSICA_DAYNE))
+            {
+                PreText += "\n\nYour offer of a duel is rudely refused by the guards. \"Dulcimer will not sully his hands by fighting commoners and witches,\" they say plainly. Despite hurling insults at his window you cannot make Dulcimer appear, and soon a patrol of the Iron King's guards move you on.";
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::SAR_JESSICA_DAYNE))
+            {
+                return {Book::Type::BOOK1, 111};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 468};
+            }
+        }
+    };
+
+    class Story873 : public Story::Base
+    {
+    public:
+        Story873()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 873;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You have returned to the alchemical laboratory. There are no more potion ingredients here, so there is nothing you can do but move on.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Pass through the door in the western wall", {Book::Type::BOOK1, 256}));
+            Choices.push_back(Choice::Base("Return to the corridor through the east door", {Book::Type::BOOK1, 755}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story874 : public Story::Base
+    {
+    public:
+        Story874()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 874;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "The mourners are shocked that anyone would so brazenly fight and kill a kensai. They disperse before you, abandoning the casket on the ground. The kensai master had a well-made STEEL LONGSWORD (Fighting +2) which you can take, if you wish.\n\nThis has been a tough fight against many skilled opponents.";
+
+            Bye = "You flee the scene before more guards arrive.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of FIGHTING", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 1, 0));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::STEEL_LONGSWORD2};
+
+            Limit = 1;
+        }
+    };
+
+    class Story875 : public Story::Base
+    {
+    public:
+        std::string PreText = "";
+
+        Story875()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 875;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            PreText = "Only the most consummate liar could get away with this one.";
+
+            if (!Engine::IN_PARTY(party, Character::Type::BRASH))
+            {
+                PreText += " The guards flatly refuse to believe you. You are given the customary harsh beating and sent on your way.\n\nNote: Each member of the distraction team loses 2 Health points.";
+
+                Engine::GAIN_HEALTH(party, Team::Type::DISTRACTION, -2);
+            }
+
+            Text = PreText.c_str();
+        }
+
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::BRASH))
+            {
+                return {Book::Type::BOOK1, 35};
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 169};
+            }
+        }
+    };
+
+    class Story876 : public Story::Base
+    {
+    public:
+        Story876()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 876;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "Cautiously you poke a hung-up skeleton. It falls to the ground and shatters. It appears to be inanimate.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Examine the coffin", {Book::Type::BOOK1, 414}));
+            Choices.push_back(Choice::Base("Go through the north door", {Book::Type::BOOK1, 717}));
+            Choices.push_back(Choice::Base("Go through the south door", {Book::Type::BOOK1, 18}));
+            Choices.push_back(Choice::Base("Go through the south-west door", {Book::Type::BOOK1, 127}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story877 : public Story::Base
+    {
+    public:
+        Story877()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 877;
+
+            Location = Location::Type::CURSUS;
+
+            Text = "The wizard's eyes flick open as you approach. He attempts to yell for aid. You have only one chance to save the war and yourselves.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Slay the wizard (Individual check: Fighting 4+, Successes: 5)", {Book::Type::BOOK1, 655}, {Book::Type::BOOK1, 440}, Team::Type::ASSASSINATION_DESCANTOS, {Attribute::Type::FIGHTING}, 4, 5));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story878 : public Story::Base
+    {
+    public:
+        Story878()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 878;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
+
+            Text = "There are 200 silver coins and a HANDSOME BROOCH (Charisma +1) in the bag. But can you really keep such stolen property?";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (!Engine::IN_PARTY(party, Character::Type::AKIHIRO_OF_CHALICE))
+            {
+                Choices.push_back(Choice::Base("Keep the loot", {Book::Type::BOOK1, 250}));
+                Choices.push_back(Choice::Base("Return the loot to its owners", {Book::Type::BOOK1, 622}));
+            }
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 622}; }
+    };
+
+    class Story879 : public Story::Base
+    {
+    public:
+        Story879()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 879;
+
+            Location = Location::Type::LHASBREATH_JUNGLE;
+
+            Text = "You dash through the trees, attempting to batter away any monkeys that get close to you. Your mules bray, and the scholars desperately attempt to push monkeys off saddle bags and crafty hands from baggage straps. Soon the monkeys begin grabbing your faces and tangling your hair. They are biting too. This is getting out of hand!";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Fight off the monkey pack (Team check: Fighting 4+, Successes: 7)", {Book::Type::BOOK1, 842}, {Book::Type::BOOK1, 671}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::FIGHTING}, 4, 7));
+
+            Controls = Story::Controls::STANDARD;
+        }
     };
 
     auto story001 = Story001();
@@ -29918,6 +30442,16 @@ namespace Book1
     auto story867 = Story867();
     auto story868 = Story868();
     auto story869 = Story869();
+    auto story870 = Story870();
+    auto story871 = Story871();
+    auto story872 = Story872();
+    auto story873 = Story873();
+    auto story874 = Story874();
+    auto story875 = Story875();
+    auto story876 = Story876();
+    auto story877 = Story877();
+    auto story878 = Story878();
+    auto story879 = Story879();
 
     void InitializeStories()
     {
@@ -30016,7 +30550,8 @@ namespace Book1
             &story830, &story831, &story832, &story833, &story834, &story835, &story836, &story837, &story838, &story839,
             &story840, &story841, &story842, &story843, &story844, &story845, &story846, &story847, &story848, &story849,
             &story850, &story851, &story852, &story853, &story854, &story855, &story856, &story857, &story858, &story859,
-            &story860, &story861, &story862, &story863, &story864, &story865, &story866, &story867, &story868, &story869};
+            &story860, &story861, &story862, &story863, &story864, &story865, &story866, &story867, &story868, &story869,
+            &story870, &story871, &story872, &story873, &story874, &story875, &story876, &story877, &story878, &story879};
     }
 }
 #endif

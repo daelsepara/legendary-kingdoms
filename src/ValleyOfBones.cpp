@@ -23724,7 +23724,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         if (story->EnemyArmy.size() > 0)
                         {
-                            auto result = deploymentScreen(window, renderer, story->BattleLocation, party, story->EnemyArmy, story->EnemySpells, story->EnemyArmyStatus);
+                            auto result = deploymentScreen(window, renderer, story->Barracks, party, story->EnemyArmy, story->EnemySpells, story->EnemyArmyStatus);
 
                             if (result != Engine::Combat::NONE)
                             {
