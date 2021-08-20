@@ -2633,6 +2633,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::CONSOLIDATE(party);
+
             Engine::LOSE_CODES(party, {Codes::Type::TWO_HANDED_DISABLED, Codes::Type::ARMOUR_DISABLED});
         }
     };
@@ -4272,6 +4274,11 @@ namespace Book1
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::CONSOLIDATE(party);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 717}; }
@@ -20392,6 +20399,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::CONSOLIDATE(party);
+
             Take = {Equipment::HIDE_ARMOUR1, Equipment::SHIELD2, Equipment::MAUL, Equipment::IRON_SHORTSWORD1, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE};
 
             Limit = 8;

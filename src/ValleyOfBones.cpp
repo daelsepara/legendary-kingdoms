@@ -74,7 +74,7 @@ void thickRect(SDL_Renderer *renderer, int w, int h, int x, int y, int color, in
 // game screens
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army);
 bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::TeamAssignment> teams, int min_teams);
-bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int equipment_limit, bool InCombat);
+bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Character::Base &character, int equipment_limit, bool InCombat);
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
 bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge);
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
@@ -87,7 +87,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int unit, Location::Type &location, int threshold, int rolls);
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
 bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Engine::TeamAssignment> teams);
-bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::EquipmentPrice> &shop, Character::Base &character);
+bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Engine::EquipmentPrice> &shop, Character::Base &character);
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection, bool useEquipment);
 bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team_type, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
 bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int spells_limit);
@@ -96,7 +96,7 @@ bool storyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Equipment::Base> equipment, int TakeLimit, bool back_button);
 bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
 bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character);
-bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, bool inCombat);
+bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, bool inCombat);
 
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
 int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int combat_damage);
@@ -1861,7 +1861,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     return false;
 }
 
-bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, bool inCombat)
+bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, bool inCombat)
 {
     SDL_Surface *adventurer = NULL;
     SDL_Texture *adventurerTexture = NULL;
@@ -2369,7 +2369,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, b
                 {
                     if (Engine::IS_ACTIVE(party, character))
                     {
-                        inventoryScreen(window, renderer, party, party.Members[character], -1, inCombat);
+                        inventoryScreen(window, renderer, party, team, party.Members[character], -1, inCombat);
                     }
 
                     selected = false;
@@ -12782,7 +12782,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::PARTY && !hold)
                     {
-                        viewParty(window, renderer, party, true);
+                        viewParty(window, renderer, party, team, true);
 
                         selected = false;
 
@@ -13451,7 +13451,7 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     return controls;
 }
 
-bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::EquipmentPrice> &shop, Character::Base &character)
+bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Engine::EquipmentPrice> &shop, Character::Base &character)
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
@@ -13876,7 +13876,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                             while (!Engine::VERIFY_EQUIPMENT_LIMIT(character))
                             {
-                                inventoryScreen(window, renderer, party, character, -1, false);
+                                inventoryScreen(window, renderer, party, team, character, -1, false);
                             }
 
                             displayMessage(message, intLB);
@@ -13986,7 +13986,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (Engine::IS_ACTIVE(party, character))
                 {
-                    inventoryScreen(window, renderer, party, character, -1, false);
+                    inventoryScreen(window, renderer, party, team, character, -1, false);
                 }
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
@@ -15020,7 +15020,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     return false;
 }
 
-bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int equipment_limit, bool InCombat)
+bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Character::Base &character, int equipment_limit, bool InCombat)
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
@@ -15482,7 +15482,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                                 if (target >= 0 && target < party.Members.size())
                                 {
-                                    if (party.Members[target].Type != character.Type && party.Members[target].Type != Character::Type::SKULLCRACKER)
+                                    if (party.Members[target].Type != character.Type && party.Members[target].Type != Character::Type::SKULLCRACKER && (team == Team::Type::NONE || party.Members[target].Team == team))
                                     {
                                         character.Equipment.erase(character.Equipment.begin() + selection);
 
@@ -15520,7 +15520,14 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                                     {
                                         if (party.Members[target].Type != Character::Type::SKULLCRACKER)
                                         {
-                                            displayMessage("You can only transfer to another party member!", intRD);
+                                            if (party.Members[target].Team != team)
+                                            {
+                                                displayMessage("You can only transfer to another party member!", intRD);
+                                            }
+                                            else
+                                            {
+                                                displayMessage("You can only transfer to another party member within the same team!", intRD);
+                                            }
                                         }
                                         else
                                         {
@@ -18040,7 +18047,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                                     while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[character]))
                                     {
-                                        inventoryScreen(window, renderer, party, party.Members[character], -1, false);
+                                        inventoryScreen(window, renderer, party, team, party.Members[character], -1, false);
                                     }
                                 }
                             }
@@ -23137,7 +23144,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
                 else if (controls[current].Type == Control::Type::PARTY && !hold)
                 {
-                    viewParty(window, renderer, party, false);
+                    viewParty(window, renderer, party, story->Team, false);
 
                     current = -1;
 
@@ -23708,7 +23715,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::PARTY && !hold)
                     {
-                        viewParty(window, renderer, party, false);
+                        viewParty(window, renderer, party, story->Team, false);
 
                         current = -1;
 
@@ -23745,7 +23752,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         if (result >= 0 && result < party.Members.size())
                         {
-                            shopScreen(window, renderer, party, story->Shop, party.Members[result]);
+                            shopScreen(window, renderer, party, story->Team, story->Shop, party.Members[result]);
                         }
 
                         current = -1;
@@ -23936,7 +23943,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                     {
                                         while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[i]))
                                         {
-                                            inventoryScreen(window, renderer, party, party.Members[i], -1, false);
+                                            inventoryScreen(window, renderer, party, story->Team, party.Members[i], -1, false);
                                         }
                                     }
                                 }
