@@ -2630,6 +2630,11 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Engine::LOSE_CODES(party, {Codes::Type::TWO_HANDED_DISABLED, Codes::Type::ARMOUR_DISABLED});
+        }
     };
 
     class Story076 : public Story::Base
@@ -7657,6 +7662,8 @@ namespace Book1
 
             ID = 224;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "Perhaps it would be wiser if only a few people entered the room? Decide who is passing through the shadow door and who is staying behind. You can send your whole party in if you wish, or change your mind and close off the shadow door.";
 
             Choices.clear();
@@ -7677,6 +7684,8 @@ namespace Book1
             ID = -224;
 
             DisplayID = 224;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Choices.clear();
 
@@ -11661,6 +11670,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 351;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You invoke the shadow door, and soon enough a dark portal opens up in the west wall. The chamber beyond looks as empty as the first, with no exits except for the shadow door you just conjured. A circular tunnel, about three feet wide, is raised four feet from the ground on the far wall. It seems to turn sharply upwards. Strange.";
 
@@ -30271,6 +30282,215 @@ namespace Book1
         }
     };
 
+    class Story900 : public Story::Base
+    {
+    public:
+        Story900()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 900;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "You spend the next several weeks helping to equip and train just over five hundred soldiers for the Everchild's army. They are well equipped with hide armour, a shield and good iron shortswords. The following unit was added to the Saltdad garrison::\n\n[Saltdad Infantry]: Strength 2, Morale 3\n\nNote: You can hire as many units of Saltdad Infantry as you wish, though each unit costs one bar of GOLD BULLION.";
+
+            Bye = "Pleased with your new troops, you return to the palace.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            party.Army.push_back(Army::Base("Saltdad Infantry", Army::Type::NOMAD_HORSEMEN, Location::Type::SALTDAD, 2, 3, false));
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 620}; }
+    };
+
+    class Story901 : public Story::Base
+    {
+    public:
+        Story901()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 901;
+
+            Location = Location::Type::NORTH_ROAD;
+
+            Text = "You draw your swords and prepare to grimly hold off the nomads.";
+
+            Bye = "You manage to slip away from the great bulk of the nomad horde, the sounds of caravan guards screaming behind you.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {
+                Monster::Base("Nomad", 3, 4, 4, 7, 0),
+                Monster::Base("Nomad", 4, 4, 4, 8, 0),
+                Monster::Base("Nomad", 4, 4, 4, 6, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 477}; }
+    };
+
+    class Story902 : public Story::Base
+    {
+    public:
+        Story902()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 902;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
+            Text = "You hire a room in a local inn and change into humble garb.\n\nAs early evening approaches you pretend to be cooks, joining a queue of servants as they shamble into the compound. This won't be easy. Security is tight, and the Bronzeguard know their servants well.\n\nNote: You lose 5 silver coins. During this mission you will not be wearing your armour or carrying any two-handed weapons. They are not removed, but you cannot use them until you have left the compound.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Fool the Bronzeguard (Team check: Charisma 4+, Successes: 6)", {Book::Type::BOOK1, 164}, {Book::Type::BOOK1, 706}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 6));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_MONEY(party, -5);
+
+            Engine::GET_CODES(party, {Codes::Type::TWO_HANDED_DISABLED, Codes::Type::ARMOUR_DISABLED});
+        }
+    };
+
+    class Story903 : public Story::Base
+    {
+    public:
+        Story903()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 903;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "You enter the room, examining the tunnel curiously. Suddenly there is a loud crunch! Spinning around you see that a stone block has fallen to block off the shadow door. There is a fearful gurgling sound and suddenly water is pouring out of the tunnel with incredible force. It is not all bad news.\n\nA RING OF HEALTH (Health +2) comes washing out with the torrent of water. You may take it if you wish.\n\nNote: You gained the code A60.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::RING_OF_HEALTH2};
+
+            Limit = 1;
+
+            Engine::GET_CODES(party, {Codes::A(60)});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, -903001}; }
+    };
+
+    class E903_001 : public Story::Base
+    {
+    public:
+        E903_001()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -903001;
+
+            DisplayID = 903;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "Your thoughts soon turn to escape, the water is already waist deep, and is getting deeper by the second! You try to lift up the stone block to allow you to get back to the shadow door.\n\nNote: Only party members who entered the room may make this skill check; the shadow door’s strange field makes it impossible for your friends outside to help.";
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Choices.clear();
+
+            if (Engine::VERIFY_EQUIPMENT(party, Team::Type::SHADOW_ROOM, {Equipment::Type::PRYBAR}))
+            {
+                Choices.push_back(Choice::Base("Lift the stone block (Team check: Fighting 5+, Successes: 3)", {Book::Type::BOOK1, 123}, {Book::Type::BOOK1, -903002}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::SHADOW_ROOM, {Attribute::Type::FIGHTING}, 5, 3));
+            }
+            else
+            {
+                Choices.push_back(Choice::Base("Lift the stone block (Team check: Fighting 5+, Successes: 4)", {Book::Type::BOOK1, 123}, {Book::Type::BOOK1, -903002}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::SHADOW_ROOM, {Attribute::Type::FIGHTING}, 5, 4));
+            }
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "You manage to open the door before perishing.";
+            }
+            else
+            {
+                temp_string = "Everyone inside the room loses 2 Health points.";
+
+                Engine::GAIN_HEALTH(party, Team::Type::SHADOW_ROOM, -2);
+
+                if (Engine::COUNT(party, Team::Type::SHADOW_ROOM) <= 0)
+                {
+                    temp_string += " Everyone inside the room dies. The rest of the party venture on.";
+
+                    Choices[0].DestinationFailed = {Book::Type::BOOK1, 717};
+
+                    for (auto i = 0; i < party.Members.size(); i++)
+                    {
+                        if (party.Members[i].Team == Team::Type::SHADOW_ROOM)
+                        {
+                            party.Members[i].Equipment.clear();
+                        }
+                    }
+                }
+                else
+                {
+                    Choices[0].DestinationFailed = {Book::Type::BOOK1, -903002};
+                }
+
+                Bye = temp_string.c_str();
+            }
+        }
+    };
+
+    class E903_002 : public Story::Base
+    {
+    public:
+        E903_002()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -903002;
+
+            DisplayID = 903;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Choices.clear();
+
+            Controls = Story::Controls::NONE;
+        }
+
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, -903001}; }
+    };
+
     auto story001 = Story001();
     auto story002 = Story002();
     auto story003 = Story003();
@@ -31244,6 +31464,12 @@ namespace Book1
     auto story897 = Story897();
     auto story898 = Story898();
     auto story899 = Story899();
+    auto story900 = Story900();
+    auto story901 = Story901();
+    auto story902 = Story902();
+    auto story903 = Story903();
+    auto e903_001 = E903_001();
+    auto e903_002 = E903_002();
 
     void InitializeStories()
     {
@@ -31255,7 +31481,7 @@ namespace Book1
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
             &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725,
             &event744, &event760, &event770, &event771, &event776, &event788, &event789, &event824, &event841, &e866_001,
-            &e866_002, &event886, &event891, &event896,
+            &e866_002, &event886, &event891, &event896, &e903_001, &e903_002,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -31345,7 +31571,8 @@ namespace Book1
             &story860, &story861, &story862, &story863, &story864, &story865, &story866, &story867, &story868, &story869,
             &story870, &story871, &story872, &story873, &story874, &story875, &story876, &story877, &story878, &story879,
             &story880, &story881, &story882, &story883, &story884, &story885, &story886, &story887, &story888, &story889,
-            &story890, &story891, &story892, &story893, &story894, &story895, &story896, &story897, &story898, &story899};
+            &story890, &story891, &story892, &story893, &story894, &story895, &story896, &story897, &story898, &story899,
+            &story900, &story901, &story902, &story903};
     }
 }
 #endif

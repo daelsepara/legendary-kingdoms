@@ -63,7 +63,8 @@ namespace Codes
         RECEIVED_LHASBREATH_BARBARIANS,
         WARNED_ABOUT_ARENA_MAGIC,
         BEEN_TO_PALACE_BEFORE,
-        TWO_HANDED_DISABLED
+        TWO_HANDED_DISABLED,
+        ARMOUR_DISABLED
     };
 
     std::map<Book::Type, const char *> Prefix = {

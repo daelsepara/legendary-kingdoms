@@ -5682,7 +5682,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     attack_score = Engine::FIGHTING_SCORE_ONE_HANDED(party.Members[combatant]) - (focus * 5);
                                 }
-                                
                             }
                         }
                         else
@@ -5970,7 +5969,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                                     combat_damage = 0;
                                                 }
-                                                else if (Engine::ARMOUR(party.Members[result]) > 0 && monsters[opponent].Type != Monster::Type::PAPER && monsters[opponent].Type != Monster::Type::NAGA)
+                                                else if (Engine::ARMOUR(party.Members[result]) > 0 && monsters[opponent].Type != Monster::Type::PAPER && monsters[opponent].Type != Monster::Type::NAGA && !Engine::VERIFY_CODES(party, {Codes::Type::ARMOUR_DISABLED}))
                                                 {
                                                     auto reduced_damage = armourSave(window, renderer, party.Members[result], combat_damage);
 
@@ -12231,7 +12230,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                                     else
                                     {
                                         auto result = castSeaCombatSpell(window, renderer, party, enemyFleet, combatRound);
-                                        
+
                                         if (result >= 0 && result < party.Members.size())
                                         {
                                             hasAttacked = true;
@@ -12481,7 +12480,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                         if (free_attack > 0)
                         {
-                            if (Engine::ARMOUR(party.Members[party.LastSelected]) > 0 && monsters[monster_attacking].Type != Monster::Type::PAPER && monsters[monster_attacking].Type != Monster::Type::NAGA)
+                            if (Engine::ARMOUR(party.Members[party.LastSelected]) > 0 && monsters[monster_attacking].Type != Monster::Type::PAPER && monsters[monster_attacking].Type != Monster::Type::NAGA && !Engine::VERIFY_CODES(party, {Codes::Type::ARMOUR_DISABLED}))
                             {
                                 free_attack = std::max(0, armourSave(window, renderer, party.Members[party.LastSelected], free_attack));
                             }
@@ -17107,7 +17106,6 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     return selected_units;
 }
-
 
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army)
 {

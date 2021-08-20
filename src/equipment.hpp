@@ -112,7 +112,8 @@ namespace Equipment
         BLACK_PLATE_ARMOUR3,
         WOODEN_SHIELD2,
         MASTERWORK_LONGSWORD3,
-        IRON_BATTLEAXE2
+        IRON_BATTLEAXE2,
+        RING_OF_HEALTH2
     };
 
     class Base
@@ -286,6 +287,7 @@ namespace Equipment
     auto WOODEN_SHIELD2 = Equipment::Base("WOODEN SHIELD", "WOODEN SHIELD", Equipment::Class::SHIELD, Equipment::Type::WOODEN_SHIELD2, Attribute::Type::ARMOUR, 2, false);
     auto MASTERWORK_LONGSWORD3 = Equipment::Base("MASTERWORK LONGSWORD", "MASTERWORK LONGSWORD", Equipment::Class::WEAPON, Equipment::Type::MASTERWORK_LONGSWORD3, Attribute::Type::FIGHTING, 3, false);
     auto IRON_BATTLEAXE2 = Equipment::Base("IRON BATTLEAXE", "IRON BATTLEAXE", Equipment::Class::WEAPON, Equipment::Type::IRON_BATTLEAXE2, Attribute::Type::FIGHTING, 2, false);
+    auto RING_OF_HEALTH2 = Equipment::Base("RING OF HEALTH", "RING OF HEALTH", Equipment::Class::NORMAL, Equipment::Type::RING_OF_HEALTH2, Attribute::Type::HEALTH, 2, false);
 }
 
 #endif

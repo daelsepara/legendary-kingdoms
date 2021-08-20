@@ -44,6 +44,7 @@ namespace Army
         MERCENARY_SWORDS,
         NOMAD_HORSEMEN,
         PEASANT_LEVIES,
+        SALTDAD_INFANTRY,
         SLAVE_LEVIES,
         SPEARMEN_OF_SALTDAD,
         SPEARS_OF_UNBRAAKI,
