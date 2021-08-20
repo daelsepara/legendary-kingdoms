@@ -10778,7 +10778,11 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
             }
             else if (mode == Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE || mode == Control::Type::RAISE_ATTRIBUTE_SCORE)
             {
-                putHeader(renderer, "Choose party member to receive ATTRIBUTE increase", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member to receive attibute increase", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else if (mode == Control::Type::SELECT_LOWEST_ATTRIBUTE)
+            {
+                putHeader(renderer, "Choose party member with the lowest attibute score", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::LEARN_SPELL)
             {
@@ -11067,7 +11071,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         }
     }
 
-    if (Engine::IS_ALIVE(party, result) && mode == Control::Type::PARTY)
+    if (Engine::IS_ALIVE(party, result) && (mode == Control::Type::PARTY || mode == Control::Type::SELECT_LOWEST_ATTRIBUTE))
     {
         party.LastSelected = result;
     }
@@ -22729,6 +22733,41 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                         done = true;
                                     }
+                                }
+                                else
+                                {
+                                    error = true;
+
+                                    message = std::string(party.Members[target].Name) + " does not have the lowest " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + " score!";
+                                }
+                            }
+                        }
+                        else if (story->Choices[choice].Type == Choice::Type::SELECT_LOWEST_ATTRIBUTE)
+                        {
+                            auto attribute_min = Engine::MIN(party, story->Choices[choice].Attributes[0]);
+
+                            auto target = -1;
+
+                            party.CurrentCharacter = Engine::FIND_SOLO(party);
+
+                            if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
+                            {
+                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
+                            }
+                            else
+                            {
+                                target = Engine::FIRST(party, story->Choices[choice].Attributes[0], attribute_min);
+
+                                party.LastSelected = target;
+                            }
+
+                            if (Engine::IS_ALIVE(party, target))
+                            {
+                                if (Engine::SCORE(party.Members[target], story->Choices[choice].Attributes[0]) == attribute_min)
+                                {
+                                    next = findStory(story->Choices[choice].Destination);
+
+                                    done = true;
                                 }
                                 else
                                 {

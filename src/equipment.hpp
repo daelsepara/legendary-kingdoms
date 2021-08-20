@@ -111,7 +111,8 @@ namespace Equipment
         STEEL_SCIMITAR2,
         BLACK_PLATE_ARMOUR3,
         WOODEN_SHIELD2,
-        MASTERWORK_LONGSWORD3
+        MASTERWORK_LONGSWORD3,
+        IRON_BATTLEAXE2
     };
 
     class Base
@@ -284,6 +285,7 @@ namespace Equipment
     auto BLACK_PLATE_ARMOUR3 = Equipment::Base("BLACK PLATE ARMOUR", "BLACK PLATE ARMOUR", Equipment::Class::ARMOUR, Equipment::Type::BLACK_PLATE_ARMOUR3, Attribute::Type::ARMOUR, 3, false);
     auto WOODEN_SHIELD2 = Equipment::Base("WOODEN SHIELD", "WOODEN SHIELD", Equipment::Class::SHIELD, Equipment::Type::WOODEN_SHIELD2, Attribute::Type::ARMOUR, 2, false);
     auto MASTERWORK_LONGSWORD3 = Equipment::Base("MASTERWORK LONGSWORD", "MASTERWORK LONGSWORD", Equipment::Class::WEAPON, Equipment::Type::MASTERWORK_LONGSWORD3, Attribute::Type::FIGHTING, 3, false);
+    auto IRON_BATTLEAXE2 = Equipment::Base("IRON BATTLEAXE", "IRON BATTLEAXE", Equipment::Class::WEAPON, Equipment::Type::IRON_BATTLEAXE2, Attribute::Type::FIGHTING, 2, false);
 }
 
 #endif

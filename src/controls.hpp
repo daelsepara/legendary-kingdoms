@@ -66,6 +66,7 @@ namespace Control
         LEARN_SPELL,
         ROLL_FOR_ATTRIBUTE_INCREASE,
         RAISE_ATTRIBUTE_SCORE,
+        SELECT_LOWEST_ATTRIBUTE,
         HEALTH,
         GAIN_HEALTH,
         LOSE_HEALTH,

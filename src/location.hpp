@@ -47,7 +47,8 @@ namespace Location
         MORDAIN_EXCAVATED_DUNGEONS,
         LHASBREATH_RAPIDS,
         LHASBREATH_PYRAMID,
-        TOMB_OF_IMOPPOSH
+        TOMB_OF_IMOPPOSH,
+        HILLSIDE_CHALICE
     };
 
     std::map<Location::Type, const char *> Description = {
@@ -91,7 +92,8 @@ namespace Location
         {Location::Type::MORDAIN_EXCAVATED_DUNGEONS, "Mordain, Excavated Dungeons"},
         {Location::Type::LHASBREATH_RAPIDS, "Lhasbreath, The Rapids"},
         {Location::Type::LHASBREATH_PYRAMID, "Pyramid beyond Lhasbreath"},
-        {Location::Type::TOMB_OF_IMOPPOSH, "Tomb of Imopposh"}};
+        {Location::Type::TOMB_OF_IMOPPOSH, "Tomb of Imopposh"},
+        {Location::Type::HILLSIDE_CHALICE, "Hillside"}};
 
     enum class BattleField
     {

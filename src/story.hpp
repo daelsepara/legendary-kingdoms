@@ -60,6 +60,7 @@ namespace Choice
         HAS_STATUS,
         ASSIGN_TEAMS,
         RAISE_LOWEST_ATTRIBUTE,
+        SELECT_LOWEST_ATTRIBUTE,
         LAST_INDIVIDUAL_CHECK,
         LAST_PARTY_CHECK,
         RAISEATTRIBUTE_WITH_BLESSING,
@@ -515,6 +516,17 @@ namespace Choice
             InvisibleCodes = codes;
 
             Value = value;
+        }
+
+        Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Attribute::Type> attributes)
+        {
+            Text = text;
+
+            Destination = destination;
+
+            Type = type;
+
+            Attributes = attributes;
         }
 
         Base(const char *text, Engine::Destination destination, Choice::Type type, std::vector<Attribute::Type> attributes, int value)

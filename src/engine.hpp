@@ -792,6 +792,18 @@ namespace Engine
         return found;
     }
 
+    int COUNT_EQUIPMENT(Party::Base &party)
+    {
+        auto found = 0;
+
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            found += Engine::COUNT_INVENTORY(party.Members[i]);
+        }
+
+        return found;
+    }
+
     bool VERIFY_EQUIPMENT(Character::Base &character, std::vector<Equipment::Type> equipment)
     {
         auto found = 0;
