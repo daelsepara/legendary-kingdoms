@@ -7446,7 +7446,7 @@ namespace Book1
             if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::PYRAMIDAL_KEY}))
             {
                 PreText += "\n\nAkihiro has achieved Enlightenment. Akihiro also gains 1 point of Lore.";
-                
+
                 auto result = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
 
                 if (Engine::IS_ACTIVE(party, result))
@@ -30134,8 +30134,7 @@ namespace Book1
                     Equipment::QUICKSILVER,
                     Equipment::GREY_TALISMAN,
                     Equipment::INCENSE,
-                    Equipment::DRAGONYAK_HORN
-                };
+                    Equipment::DRAGONYAK_HORN};
 
                 PreText = "After some time searching through the pile of trash, you found the following items: 200 silver coins, IRON BATTLEAXE (Fighting +2), BONE ARMOUR (Armour +2), SOFT BOOTS (Stealth +1), REFERENCE BOOK (Lore +1), 150 silver coins, Vial of QUICKSILVER, GREY TALISMAN, INCENSE, DRAGONYAK HORN. You can only take " + std::to_string(Limit) + ".";
             }

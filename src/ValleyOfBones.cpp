@@ -17359,6 +17359,8 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
                     done = false;
+
+                    break;
                 }
             }
         }
@@ -17734,6 +17736,8 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
                     done = false;
+
+                    break;
                 }
             }
         }
@@ -18054,6 +18058,8 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
                     done = false;
+
+                    break;
                 }
             }
         }
