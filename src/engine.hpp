@@ -396,6 +396,21 @@ namespace Engine
         return result;
     }
 
+    bool HAS_ONE_HANDED_WEAPON(Character::Base &character)
+    {
+        auto result = false;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class == Equipment::Class::WEAPON && !character.Equipment[i].TwoHanded && (character.Equipment[i].Attribute == Attribute::Type::FIGHTING || character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2))
+            {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
     int MAX_WEAPON(Character::Base &character)
     {
         auto max = -1;
@@ -405,6 +420,31 @@ namespace Engine
             for (auto i = 0; i < character.Equipment.size(); i++)
             {
                 if (character.Equipment[i].Class == Equipment::Class::WEAPON && (character.Equipment[i].Attribute == Attribute::Type::FIGHTING || character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2))
+                {
+                    if (character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                    {
+                        max = std::max(max, 3);
+                    }
+                    else
+                    {
+                        max = std::max(max, character.Equipment[i].Modifier);
+                    }
+                }
+            }
+        }
+
+        return max;
+    }
+
+    int MAX_ONE_HANDED(Character::Base &character)
+    {
+        auto max = -1;
+
+        if (Engine::HAS_ONE_HANDED_WEAPON(character))
+        {
+            for (auto i = 0; i < character.Equipment.size(); i++)
+            {
+                if (character.Equipment[i].Class == Equipment::Class::WEAPON && !character.Equipment[i].TwoHanded && (character.Equipment[i].Attribute == Attribute::Type::FIGHTING || character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2))
                 {
                     if (character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
                     {
@@ -584,6 +624,20 @@ namespace Engine
         auto score = Engine::SCORE(character, Attribute::Type::FIGHTING);
 
         score = Engine::HAS_WEAPON(character) ? (score + Engine::MAX_WEAPON(character)) : (Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT) ? score : (score - 1));
+
+        if (score < 0)
+        {
+            score = 0;
+        }
+
+        return score;
+    }
+
+    int FIGHTING_SCORE_ONE_HANDED(Character::Base &character)
+    {
+        auto score = Engine::SCORE(character, Attribute::Type::FIGHTING);
+
+        score = Engine::HAS_ONE_HANDED_WEAPON(character) ? (score + Engine::MAX_ONE_HANDED(character)) : (Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT) ? score : (score - 1));
 
         if (score < 0)
         {

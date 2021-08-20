@@ -5674,7 +5674,15 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             }
                             else
                             {
-                                attack_score = Engine::FIGHTING_SCORE(party.Members[combatant]) - (focus * 5);
+                                if (!Engine::VERIFY_CODES(party, {Codes::Type::TWO_HANDED_DISABLED}))
+                                {
+                                    attack_score = Engine::FIGHTING_SCORE(party.Members[combatant]) - (focus * 5);
+                                }
+                                else
+                                {
+                                    attack_score = Engine::FIGHTING_SCORE_ONE_HANDED(party.Members[combatant]) - (focus * 5);
+                                }
+                                
                             }
                         }
                         else
@@ -8038,9 +8046,19 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         {
                             score1 = Engine::SCORE(party.Members[team[0]], Attribute::Type::FIGHTING);
 
-                            if (Engine::HAS_WEAPON(party.Members[team[0]]))
+                            if (!Engine::VERIFY_CODES(party, {Codes::Type::TWO_HANDED_DISABLED}))
                             {
-                                score1 += Engine::MAX_WEAPON(party.Members[team[0]]);
+                                if (Engine::HAS_WEAPON(party.Members[team[0]]))
+                                {
+                                    score1 += Engine::MAX_WEAPON(party.Members[team[0]]);
+                                }
+                            }
+                            else
+                            {
+                                if (Engine::HAS_ONE_HANDED_WEAPON(party.Members[team[0]]))
+                                {
+                                    score1 += Engine::MAX_ONE_HANDED(party.Members[team[0]]);
+                                }
                             }
 
                             score1 -= (focus * 5);
@@ -8090,9 +8108,19 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                             {
                                 score2 = Engine::SCORE(party.Members[team[1]], Attribute::Type::FIGHTING);
 
-                                if (Engine::HAS_WEAPON(party.Members[team[1]]))
+                                if (!Engine::VERIFY_CODES(party, {Codes::Type::TWO_HANDED_DISABLED}))
                                 {
-                                    score2 += Engine::MAX_WEAPON(party.Members[team[1]]);
+                                    if (Engine::HAS_WEAPON(party.Members[team[1]]))
+                                    {
+                                        score2 += Engine::MAX_WEAPON(party.Members[team[1]]);
+                                    }
+                                }
+                                else
+                                {
+                                    if (Engine::HAS_ONE_HANDED_WEAPON(party.Members[team[1]]))
+                                    {
+                                        score2 += Engine::MAX_ONE_HANDED(party.Members[team[1]]);
+                                    }
                                 }
 
                                 score2 -= (focus * 5);
