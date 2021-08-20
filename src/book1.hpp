@@ -30383,6 +30383,8 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
+            Team = Team::Type::SHADOW_ROOM;
+
             Text = "You enter the room, examining the tunnel curiously. Suddenly there is a loud crunch! Spinning around you see that a stone block has fallen to block off the shadow door. There is a fearful gurgling sound and suddenly water is pouring out of the tunnel with incredible force. It is not all bad news.\n\nA RING OF HEALTH (Health +2) comes washing out with the torrent of water. You may take it if you wish.\n\nNote: You gained the code A60.";
 
             Choices.clear();
@@ -30414,6 +30416,8 @@ namespace Book1
             DisplayID = 903;
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Team = Team::Type::SHADOW_ROOM;
 
             Text = "Your thoughts soon turn to escape, the water is already waist deep, and is getting deeper by the second! You try to lift up the stone block to allow you to get back to the shadow door.\n\nNote: Only party members who entered the room may make this skill check; the shadow door’s strange field makes it impossible for your friends outside to help.";
 
@@ -30482,6 +30486,8 @@ namespace Book1
             DisplayID = 903;
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Team = Team::Type::SHADOW_ROOM;
 
             Choices.clear();
 
