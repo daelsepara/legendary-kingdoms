@@ -1305,6 +1305,22 @@ namespace Engine
         }
     }
 
+    void GAIN_STATUS(Party::Base &party, Team::Type team, Character::Status status)
+    {
+        for (auto i = 0; i < party.Members.size(); i++)
+        {
+            if (Engine::IS_ALIVE(party.Members[i]) && (team == Team::Type::NONE || party.Members[i].Team == team))
+            {
+                Engine::GAIN_STATUS(party.Members[i], status);
+            }
+        }
+    }
+
+    void GAIN_STATUS(Party::Base &party, Character::Status status)
+    {
+        Engine::GAIN_STATUS(party, Team::Type::NONE, status);
+    }
+
     void REMOVE_STATUS(Character::Base &character, Character::Status status)
     {
         for (auto i = 0; i < character.Status.size(); i++)
@@ -1751,10 +1767,18 @@ namespace Engine
         if (party.Hearts.count(romance) > 0)
         {
             party.Hearts[romance] += heart;
+
+            if (party.Hearts[romance] <= 0)
+            {
+                party.Hearts.erase(romance);
+            }
         }
         else
         {
-            party.Hearts[romance] = heart;
+            if (heart > 0)
+            {
+                party.Hearts[romance] = heart;
+            }
         }
     }
 

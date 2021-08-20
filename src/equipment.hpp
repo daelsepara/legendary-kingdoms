@@ -110,7 +110,8 @@ namespace Equipment
         SCROLLS_OF_CURSUS,
         STEEL_SCIMITAR2,
         BLACK_PLATE_ARMOUR3,
-        WOODEN_SHIELD2
+        WOODEN_SHIELD2,
+        MASTERWORK_LONGSWORD3
     };
 
     class Base
@@ -282,6 +283,7 @@ namespace Equipment
     auto STEEL_SCIMITAR2 = Equipment::Base("STEEL SCIMITAR", "STEEL SCIMITAR", Equipment::Class::WEAPON, Equipment::Type::STEEL_SCIMITAR2, Attribute::Type::FIGHTING, 2, false);
     auto BLACK_PLATE_ARMOUR3 = Equipment::Base("BLACK PLATE ARMOUR", "BLACK PLATE ARMOUR", Equipment::Class::ARMOUR, Equipment::Type::BLACK_PLATE_ARMOUR3, Attribute::Type::ARMOUR, 3, false);
     auto WOODEN_SHIELD2 = Equipment::Base("WOODEN SHIELD", "WOODEN SHIELD", Equipment::Class::SHIELD, Equipment::Type::WOODEN_SHIELD2, Attribute::Type::ARMOUR, 2, false);
+    auto MASTERWORK_LONGSWORD3 = Equipment::Base("MASTERWORK LONGSWORD", "MASTERWORK LONGSWORD", Equipment::Class::WEAPON, Equipment::Type::MASTERWORK_LONGSWORD3, Attribute::Type::FIGHTING, 3, false);
 }
 
 #endif

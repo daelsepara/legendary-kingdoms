@@ -5060,6 +5060,8 @@ namespace Book1
 
             ID = 149;
 
+            Location = Location::Type::WITHERED_STEPPES;
+
             Text = "The bull stands seven feet tall at the shoulder.\n\nThis will not be an easy battle.";
 
             Choices.clear();
@@ -5769,7 +5771,7 @@ namespace Book1
 
             Image = "images/book1/ironking_and_malronac.png";
 
-            Text = "You step out into broiling heat, the sun scorching the sands under your bare feet. You are the first competitors into the arena and receive a roaring cheer from the crowd as you appear. High above you the Iron King gazes down impassively, Malronac the Deathengine standing unflinching by his side. You look across the heat-swept arena as the far gate is opened. You cannot help but swallow as a pair of shaggy-haired desert lions come snarling out of the gate. Their manes are stained red with the blood of other victims, and they roar at you with filthy yellow teeth. You must fight for your lives.";
+            Text = "You step out into broiling heat, the sun scorching the sands under your bare feet. You are the first competitors into the arena and receive a roaring cheer from the crowd as you appear. High above you the Iron King gazes down impassively, Malronac the Deathengine standing unflinching by his side. You look across the heat-swept arena as the far gate is opened. You cannot help but swallow as a pair of shaggy-haired desert lions come snarling out of the gate. Their manes are stained red with the blood of other victims, and they roar at you with filthy yellow teeth. You must fight for your lives.\n\nNote: You cannot use spells in this fight, under threat of mutilation!";
 
             Choices.clear();
 
@@ -7712,6 +7714,8 @@ namespace Book1
 
             ID = 226;
 
+            Location = Location::Type::CURSUS;
+
             Text = "Security is much too tight around the archwizard. All the party members assigned to the assassination have been captured. What happens to them now is down to you. If you capture the city of Cursus you can free them from prison. If your army is defeated, the party members will be executed. Either way, the captured party members can take no further part in the battle until rescued.";
 
             Choices.clear();
@@ -7721,13 +7725,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            for (auto i = 0; i < party.Members.size(); i++)
-            {
-                if (Engine::IS_ALIVE(party.Members[i]) && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
-                {
-                    Engine::GAIN_STATUS(party.Members[i], Character::Status::CAPTURED);
-                }
-            }
+            Engine::GAIN_STATUS(party, Team::Type::ASSASSINATION_DESCANTOS, Character::Status::CAPTURED);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 96}; }
@@ -8386,6 +8384,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 248;
+
+            Location = Location::Type::WITHERED_STEPPES;
 
             Text = "The dragonyak bull bows to you as you speak in the ancient tongue of beasts. \"You are an animal friend,\" he intones. \"Our legends say that it has been an eon since any dragonyak was so addressed. You honour us.\" The dragonyak unleashes a bellowing roar, which is repeated by his herd. One dragonyak immerses herself in the water of the oasis and emerges sometime later with a CLOAK, sodden with water, but miraculously unharmed by the passage of years. The bull insists you take the cloak, for he is aware that man-apes such as yourself favour them.\n\nYou take THE RUGGED CLOAK (Survival +2) so as not to offend the mighty bull and make your way onwards.\n\nNote: You gained the code A38.";
 
@@ -14528,13 +14528,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            for (auto i = 0; i < party.Members.size(); i++)
-            {
-                if (Engine::IS_ALIVE(party.Members[i]) && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
-                {
-                    Engine::GAIN_STATUS(party.Members[i], Character::Status::CAPTURED);
-                }
-            }
+            Engine::GAIN_STATUS(party, Team::Type::ASSASSINATION_DESCANTOS, Character::Status::CAPTURED);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 96}; }
@@ -16157,6 +16151,8 @@ namespace Book1
 
             ID = 492;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You close your eyes and focus. You can feel them... madshards reverberating in the earth, beneath the temple. Extracting them won't be easy. You will need hundreds of diggers to tear up the unwilling earth. What you will find below... who knows?";
 
             Choices.clear();
@@ -17001,6 +16997,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 517;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
             Text = "The Temple of the Unbroken collapses into a pile of broken stones behind you, great clouds of dust bursting from the shattered chambers. You think yourselves lucky to have survived.\n\nNote: You gained the code A41.";
 
@@ -18827,15 +18825,20 @@ namespace Book1
                     {
                         party.Members[i].MaximumHealth -= 1;
 
+                        if (party.Members[i].MaximumHealth < 0)
+                        {
+                            party.Members[i].MaximumHealth = 0;
+                        }
+
                         if (party.Members[i].Health > party.Members[i].MaximumHealth)
                         {
                             party.Members[i].Health = party.Members[i].MaximumHealth;
                         }
-
-                        Engine::GAIN_STATUS(party.Members[i], Character::Status::RITUAL_SCARRING_CURSUS);
                     }
                 }
             }
+
+            Engine::GAIN_STATUS(party, Character::Status::RITUAL_SCARRING_CURSUS);
 
             return {Book::Type::BOOK1, 713};
         }
@@ -20123,6 +20126,8 @@ namespace Book1
 
             ID = 605;
 
+            Location = Location::Type::WITHERED_STEPPES;
+
             Text = "You descend into a mighty canyon, different coloured bands of earth clearly visible along the tall walls of the cleft. Water pools in some places, with patches of lush vegetation clogging parts of the valley. A herd of wild dragonyaks, like scaled buffalo, cluster around the oasis, munching contentedly. A dragonyak bull, appalled at your intervention, stamps his clawed hoof and utters a roar of challenge. He is clearly unwilling to yield the water to you.";
 
             Controls = Story::Controls::STANDARD;
@@ -20248,6 +20253,8 @@ namespace Book1
                     Engine::REMOVE_STATUS(party.Members[i], Character::Status::USED_MAGIC_INARENA);
                 }
             }
+
+            Engine::LOSE_CODES(party, {Codes::Type::WARNED_ABOUT_ARENA_MAGIC});
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 792}; }
@@ -21801,7 +21808,7 @@ namespace Book1
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
         {
-            Engine::Destination destination = {Book::Type::NONE, -1};
+            Engine::Destination destination = {Book::Type::BOOK1, -1};
 
             auto result = (Engine::ROLL(1) < 3);
 
@@ -22892,13 +22899,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            for (auto i = 0; i < party.Members.size(); i++)
-            {
-                if (Engine::IS_ALIVE(party.Members[i]) && party.Members[i].Team == Team::Type::ASSASSINATION_DESCANTOS)
-                {
-                    Engine::GAIN_STATUS(party.Members[i], Character::Status::CAPTURED);
-                }
-            }
+            Engine::GAIN_STATUS(party, Team::Type::ASSASSINATION_DESCANTOS, Character::Status::CAPTURED);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 96}; }
@@ -24979,7 +24980,7 @@ namespace Book1
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
         {
-            Engine::Destination destination = {Book::Type::NONE, -1};
+            Engine::Destination destination = {Book::Type::BOOK1, -1};
 
             auto result = Engine::ROLL(1);
 
@@ -25890,7 +25891,7 @@ namespace Book1
             Choices.push_back(Choice::Base("Explore the city", {Book::Type::BOOK1, 182}));
             Choices.push_back(Choice::Base("Leave the city north, to the Tumblestones", {Book::Type::BOOK1, 137}));
             Choices.push_back(Choice::Base("Leave the city east, into the desert", {Book::Type::BOOK1, 752}));
-            Choices.push_back(Choice::Base("Go west, into the jungle", {Book::Type::BOOK1, 137}));
+            Choices.push_back(Choice::Base("Go west, into the jungle", {Book::Type::BOOK1, 370}));
             Choices.push_back(Choice::Base("Go northwest, to the Palace of Unbraaki", {Book::Type::BOOK1, 890}));
 
             Controls = Story::Controls::STANDARD;
@@ -28322,7 +28323,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-
             Monsters = {
                 Monster::Base("Nasty Goblins", 7, 5, 4, 10, 0),
                 Monster::Base("Ugly Goblins", 6, 5, 4, 11, 0),
@@ -28734,7 +28734,7 @@ namespace Book1
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
         {
-            Engine::Destination destination = {Book::Type::NONE, -1};
+            Engine::Destination destination = {Book::Type::BOOK1, -1};
 
             auto result = Engine::ROLL(1);
 
@@ -29500,6 +29500,320 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+    };
+
+    class Story880 : public Story::Base
+    {
+    public:
+        Story880()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 880;
+
+            Location = Location::Type::CURSUS;
+
+            Text = "You must steal into the night, staying clear of the vigilant forces of Cursus, and find a way into the tent of Descantos.\n\nNote: Only members assigned to the Assassination team can make this check.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Sneak past the army (Team check: Stealth 4+, Successes: 7)", {Book::Type::BOOK1, 365}, {Book::Type::BOOK1, 226}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::ASSASSINATION_DESCANTOS, {Attribute::Type::STEALTH}, 4, 7));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story881 : public Story::Base
+    {
+    public:
+        Story881()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 881;
+
+            Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
+
+            Text = "The temple is shaking itself apart! You must get out of here before you are buried alive. You scrabble across the rubble-strewn floor up to a large hole in the side of the temple. You will have to escape from the ziggurat even as it is shaking itself to pieces.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Escape the temple (Team check: Survival 4+, Successes: 5)", {Book::Type::BOOK1, 517}, {Book::Type::BOOK1, 517}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 5));
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
+        {
+            if (outcome)
+            {
+                Bye = "You manage to dash out of the chamber and down the steps of the ziggurat before it collapses.";
+            }
+            else
+            {
+                auto loss = Engine::ROLL(1);
+
+                Engine::GAIN_HEALTH(party, -loss);
+
+                temp_string = "Rocks fall and slabs of stone crush you as you run. Everyone loses " + std::to_string(loss) + " Health point";
+
+                if (loss > 1)
+                {
+                    temp_string += "s";
+                }
+
+                temp_string += ".";
+
+                if (Engine::COUNT(party) > 0)
+                {
+                    temp_string += " You manage to force your way out.";
+                }
+
+                Bye = temp_string.c_str();
+            }
+        }
+    };
+
+    class Story882 : public Story::Base
+    {
+    public:
+        Story882()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 882;
+
+            Location = Location::Type::DESERT;
+
+            Text = "Your blades clash as fast as fury, a blur of steel on steel. Your father cannot keep up with the speed of your blows. Your balanced mind is like a fortress, thwarting his attacks whilst strengthening your own. The end comes suddenly, your blade cutting through his ghostly torso, to split his form in two. The revenant unleashes a howl as its form begins to split into pieces.\n\n\"This is not the end!\" vows the revenant. \"It was the dark one's will that we serve him! One day, you too shall bow to him in death.\"\n\n\"Begone, old man!\" you bellow. \"Get you to your rest!\"\n\nThe revenant gives a sigh, his blade thudding into the sand, his spirit dissolving.\n\nYou are surprised to see that the sword remains when the ghost departs. You take your father's MASTERWORK LONGSWORD (Fighting +3).\n\nNote: Akihiro's Fighting and maximum, unwounded Health are increased by 1 point. You gained the code A52.";
+
+            Bye = "The sun rises a rich red on the eastern horizon, and your companions emerge from the tent greet you, now that the fear cast by the revenant has passed. You inhale deeply. It is a new day for you, from now until the end of your days.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GET_EQUIPMENT(party, Character::Type::AKIHIRO_OF_CHALICE, {Equipment::MASTERWORK_LONGSWORD3});
+
+            Engine::LOSE_CODES(party, {Codes::A(51)});
+
+            Engine::GET_CODES(party, {Codes::A(52)});
+
+            Engine::GAIN_SCORE(party, Character::Type::AKIHIRO_OF_CHALICE, Attribute::Type::FIGHTING, 1);
+
+            Engine::GAIN_SCORE(party, Character::Type::AKIHIRO_OF_CHALICE, Attribute::Type::HEALTH, 1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 840}; }
+    };
+
+    class Story883 : public Story::Base
+    {
+    public:
+        Story883()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 883;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "Benches line the wall of this small room, each with a number of hooks upon which hang mouldy rags. Only one garment has weathered the test of time, a WARM CLOAK (Survival +1).";
+
+            Bye = "You continue down the tunnel.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Take = {Equipment::WARM_CLOAK1};
+
+            Limit = 1;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 647}; }
+    };
+
+    class Story884 : public Story::Base
+    {
+    public:
+        Story884()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 884;
+
+            Location = Location::Type::WITHERED_STEPPES;
+
+            Text = "There are many deep clefts in the earth that you can choose from.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Explore a great canyon", {Book::Type::BOOK1, 605}));
+            Choices.push_back(Choice::Base("Explore a smaller crevice", {Book::Type::BOOK1, 689}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story885 : public Story::Base
+    {
+    public:
+        Story885()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 885;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "As you turn the handle of the door you find it wrenched out of your hand. Orcs and goblins come pouring out, bowling you to the ground in an aggressive ambush. It seems that they were waiting for you!\n\nNote: For this battle, your opponents attack first.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {
+                Monster::Base("Orc Leader", 7, 4, 4, 14, 0),
+                Monster::Base("Orc", 5, 4, 4, 8, 0),
+                Monster::Base("Orc", 5, 4, 4, 9, 0),
+                Monster::Base("Orc", 4, 4, 4, 11, 0),
+                Monster::Base("Goblins", 7, 5, 4, 10, 0)};
+
+            Engine::GET_CODES(party, {Codes::Type::LAST_IN_COMBAT});
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 669}; }
+    };
+
+    class Story886 : public Story::Base
+    {
+    public:
+        Story886()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 886;
+
+            Location = Location::Type::BEYOND_SHADED_GATE;
+
+            Text = "You scan the horizon for landmarks. There are none. The cold... the damnable cold gnaws at you.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, -886}, Choice::Type::GAIN_HEALTH, -1));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Event886 : public Story::Base
+    {
+    public:
+        Event886()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -886;
+
+            DisplayID = 886;
+
+            Location = Location::Type::BEYOND_SHADED_GATE;
+
+            Text = "Where will you go?";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("North", {Book::Type::BOOK1, 537}));
+            Choices.push_back(Choice::Base("West", {Book::Type::BOOK1, 589}));
+            Choices.push_back(Choice::Base("South", {Book::Type::BOOK1, 692}));
+            Choices.push_back(Choice::Base("East", {Book::Type::BOOK1, 273}));
+
+            Controls = Story::Controls::STANDARD;
+        }
+    };
+
+    class Story887 : public Story::Base
+    {
+    public:
+        Story887()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 887;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
+            Text = "Your old excavation lies here, backing in the sun, the sand slowly reclaiming it. You would not be pleased to return, so you make your way onwards.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 515}; }
+    };
+
+    class Story888 : public Story::Base
+    {
+    public:
+        Story888()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 888;
+
+            Location = Location::Type::LHASBREATH_OASIS;
+
+            Text = "From across the water, Amelia's eyes burn into Tasha's. The pirate woman cannot escape the idea that the bastard girl is somehow jealous of this rather intimate moment she is having with her sister. She turns her head as Tasha goes to speak, wading towards the bank. \"Hadn't we better get going?\" she says sharply.\n\nThe moment is ruined, so it's time to move on.\n\nNote: Amelia Pass-Dayne loses a heart for Tasha.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::GAIN_HEARTS(party, Character::Type::AMELIA_PASS_DAYNE, Character::Type::TASHA, -1);
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 51}; }
+    };
+
+    class Story889 : public Story::Base
+    {
+    public:
+        Story889()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = 889;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
+            Text = "This will not be an easy battle. The Everchild and her followers will handle half the thieves, whilst you handle the others.";
+
+            Choices.clear();
+
+            Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Monsters = {
+                Monster::Base("Thieves", 10, 5, 3, 20, 0),
+                Monster::Base("Brekken", 5, 4, 4, 9, 0)};
+        }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 328}; }
     };
 
     auto story001 = Story001();
@@ -30452,6 +30766,17 @@ namespace Book1
     auto story877 = Story877();
     auto story878 = Story878();
     auto story879 = Story879();
+    auto story880 = Story880();
+    auto story881 = Story881();
+    auto story882 = Story882();
+    auto story883 = Story883();
+    auto story884 = Story884();
+    auto story885 = Story885();
+    auto story886 = Story886();
+    auto event886 = Event886();
+    auto story887 = Story887();
+    auto story888 = Story888();
+    auto story889 = Story889();
 
     void InitializeStories()
     {
@@ -30463,7 +30788,7 @@ namespace Book1
             &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
             &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725,
             &event744, &event760, &event770, &event771, &event776, &event788, &event789, &event824, &event841, &e866_001,
-            &e866_002,
+            &e866_002, &event886,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,
@@ -30551,7 +30876,8 @@ namespace Book1
             &story840, &story841, &story842, &story843, &story844, &story845, &story846, &story847, &story848, &story849,
             &story850, &story851, &story852, &story853, &story854, &story855, &story856, &story857, &story858, &story859,
             &story860, &story861, &story862, &story863, &story864, &story865, &story866, &story867, &story868, &story869,
-            &story870, &story871, &story872, &story873, &story874, &story875, &story876, &story877, &story878, &story879};
+            &story870, &story871, &story872, &story873, &story874, &story875, &story876, &story877, &story878, &story879,
+            &story880, &story881, &story882, &story883, &story884, &story885, &story886, &story887, &story888, &story889};
     }
 }
 #endif
