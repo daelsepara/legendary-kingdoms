@@ -135,7 +135,8 @@ namespace Character
         LOST_TONGUE,
         USED_MAGIC_INARENA,
         ENCHANTED_CURSED,
-        SINKING_IN_QUICKSAND
+        SINKING_IN_QUICKSAND,
+        FALLEN
     };
 
     typedef std::pair<Character::Type, Character::Type> Romance;
@@ -160,7 +161,8 @@ namespace Character
         {Character::Status::LOST_TONGUE, "Lost Tongue"},
         {Character::Status::USED_MAGIC_INARENA, "Used magic in Saltdad Arena"},
         {Character::Status::ENCHANTED_CURSED, "Enchanted (Cursed)"},
-        {Character::Status::SINKING_IN_QUICKSAND, "Sinking in quicksand"}};
+        {Character::Status::SINKING_IN_QUICKSAND, "Sinking in quicksand"},
+        {Character::Status::FALLEN, "Fallen"}};
 
     class Base
     {

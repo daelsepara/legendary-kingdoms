@@ -2930,7 +2930,7 @@ namespace Book1
                 Engine::REMOVE_STATUS(party, Character::Status::ENCHANTED_CURSED);
 
                 Engine::LOSE_ALL(party.Members[cursed], Equipment::Class::ARMOUR);
-                
+
                 Engine::LOSE_ALL(party.Members[cursed], Equipment::Class::WEAPON);
 
                 Engine::KILL(party, party.Members[cursed].Type);
@@ -3766,6 +3766,8 @@ namespace Book1
 
             ID = 108;
 
+            Location = Location::Type::DESERT;
+
             Text = "You hear hoofbeats in the distance. Glancing over the top of dune you spot a group of Lhasbreath barbarians, riding on horseback. There are six of them -- quite a formidable group!";
 
             Choices.clear();
@@ -3921,6 +3923,8 @@ namespace Book1
             }
             else
             {
+                destination = {Book::Type::BOOK1, 468};
+
                 Monsters.clear();
             }
         }
@@ -3963,7 +3967,7 @@ namespace Book1
             Text = "Your new crew cheer as you come aboard. The ship is large and shabbily built -- but perhaps you can make something of it?\n\n[HULK] Fighting: 3, Health: 5, Cargo: 3 units\n\nNote: Your new ship is in Mordain harbour. What will you do now?";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Depart in your new ship", {Book::Type::BOOK1, 851}, Choice::Type::SHIP, Location::Type::MORDAIN));
+            Choices.push_back(Choice::Base("Depart in your new ship", {Book::Type::BOOK1, 851}, Choice::Type::SAIL, Location::Type::MORDAIN));
             Choices.push_back(Choice::Base("Enter the wide tunnel", {Book::Type::BOOK1, 593}));
 
             Controls = Story::Controls::STANDARD;
@@ -4032,7 +4036,7 @@ namespace Book1
             Text = "You are travelling across a stretch of rocky desert, that rolls and twists into great gulches and canyons. Paths have been worn into the stone from hundreds of years of travel by nomads and barbarians who avoid the well-guarded roads that link the cities. It is hot and dry, and getting lost is a distinct possibility.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Navigate the Withered Steppes (Team check: Survival 4+, Successes: 3)", {Book::Type::BOOK1, -115001}, {Book::Type::BOOK1, -115002}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 3));
+            Choices.push_back(Choice::Base("Navigate the Withered Steppes (Team check: Survival 4+, Successes: 3)", {Book::Type::BOOK1, -115}, {Book::Type::BOOK1, -115}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 3));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -4047,19 +4051,19 @@ namespace Book1
             }
             else
             {
-                Bye = NULL;
+                Bye = "You manage to get your bearings enough to explore your surroundings.";
             }
         }
     };
 
-    class E115_001 : public Story::Base
+    class Event115 : public Story::Base
     {
     public:
-        E115_001()
+        Event115()
         {
             BookID = Book::Type::BOOK1;
 
-            ID = -115001;
+            ID = -115;
 
             DisplayID = 115;
 
@@ -4067,7 +4071,7 @@ namespace Book1
 
             Image = "images/book1/rocky_desert.png";
 
-            Text = "You manage to get your bearings enough to explore your surroundings.";
+            Text = "What will you do now?";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Look for a nomad camp", {Book::Type::BOOK1, 253}));
@@ -4082,27 +4086,6 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
-    };
-
-    class E115_002 : public Story::Base
-    {
-    public:
-        E115_002()
-        {
-            BookID = Book::Type::BOOK1;
-
-            ID = -115002;
-
-            DisplayID = 115;
-
-            Location = Location::Type::WITHERED_STEPPES;
-
-            Choices.clear();
-
-            Controls = Story::Controls::NONE;
-        }
-
-        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 115}; }
     };
 
     class Story116 : public Story::Base
@@ -4179,7 +4162,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You try to elbow your way through the crowd, but by the time you have reached the carcass it has been almost stripped clean. You are forced to gnaw on empty bones, feeding on marrow and almost inedible ligaments. The lack of food begins to drain your spirits.\n\nEach party member must lose 1 Health point.";
+            Text = "You try to elbow your way through the crowd, but by the time you have reached the carcass it has been almost stripped clean. You are forced to gnaw on empty bones, feeding on marrow and almost inedible ligaments. The lack of food begins to drain your spirits.\n\nNote: Each party member loses 1 Health point.";
 
             Choices.clear();
 
@@ -4222,6 +4205,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 120;
+
+            Location = Location::Type::SALT_PLAINS;
 
             Text = "After days of wandering you finally reach the banks of a wide and fast-running river. You plunge your faces into the freshwater, drinking your fill. Following the river downstream you come to a shabby city perched atop a massive cliff.";
 
@@ -4307,6 +4292,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 123;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "Gurgling with effort, air bubbles blasting through the water from your mouth and nostrils, you finally wrench the block up high enough to get out. You roll under the block and through the shadow door, the stone block slamming down shut as you do so. You are soaking wet... but alive.";
 
@@ -4567,7 +4554,7 @@ namespace Book1
 
             ID = 130;
 
-            Location = Location::Type::LHASBREATH;
+            Location = Location::Type::WEST_ROAD;
 
             Text = "The barbarians hail you as friends of Lhasbreath.\n\nAfter discussing the health of the queen you bid the barbarians farewell.";
 
@@ -4852,6 +4839,8 @@ namespace Book1
 
             ID = 140;
 
+            Location = Location::Type::SHADED_GATE;
+
             Text = "Although your trip into the shadow world was short, it was oddly disconcerting. You feel pleased to leave it behind. You head north, directly away from the Blackwall.";
 
             Choices.clear();
@@ -4958,8 +4947,6 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
-
-            Army.clear();
 
             if (Engine::HAS_UNIT(party, Army::Type::BRONZEGUARD))
             {
@@ -5220,6 +5207,8 @@ namespace Book1
             IsCity = true;
 
             Text = "The slaves of Clifftop are a lucky breed, compared to the citizens. Having paid money to acquire them, most masters are unwilling to whip their slaves to death, unlike the deathly ill peasants who toil in the fields.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
+
+            RecruitmentPrice = 200;
 
             Choices.clear();
 
@@ -5742,6 +5731,8 @@ namespace Book1
 
             ID = 167;
 
+            Location = Location::Type::TOMB_OF_IMOPPOSH;
+
             Text = "You have returned to the funeral chamber of Imopposh the Mad. However, you have already defeated this vile shade and taken his treasures. There is nothing more to be done here.";
 
             Choices.clear();
@@ -5883,6 +5874,7 @@ namespace Book1
             Text = "You find lodging at a large inn, The Iron Crown, which serves coffee and warm beer in a courtyard surrounded by rentable rooms. For every 5 silver coins you spend, each party member can recover 1 Health point. Spellcasters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nDuring your stay you ask about the nearby landmarks. \"The Blackwall is a place of ill reputation,\" confides a serving wench. \"No one knows why it was built, or what it is walling off, since it is easy to go around it. Still, those who become obsessed with it tend to disappear, never to be seen again!\" Frightening stuff!";
 
             RestPrice = 5;
+
             CanRecharge = true;
 
             Choices.clear();
@@ -5958,13 +5950,11 @@ namespace Book1
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
         {
+            Bye = NULL;
+
             if (outcome)
             {
                 Bye = "You manage to steer past the rocks and into the harbour.";
-            }
-            else
-            {
-                Bye = NULL;
             }
         }
     };
@@ -6174,10 +6164,10 @@ namespace Book1
 
         Engine::Destination Continue(Party::Base &party)
         {
+            Bye = NULL;
+
             if (Engine::VERIFY_CODES(party, {Codes::A(66)}))
             {
-                Bye = NULL;
-
                 return {Book::Type::BOOK1, 286};
             }
             else
@@ -6237,14 +6227,9 @@ namespace Book1
 
                 Engine::GAIN_HEALTH(party, Team::Type::ZIGGURAT, -1);
             }
-            else
-            {
-                Bye = NULL;
-            }
         }
     };
 
-    // Dummy event to trigger Bye message in BOOK1:0183
     class Event183 : public Story::Base
     {
     public:
@@ -6286,6 +6271,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::GO_SOLO(party, Character::Type::AKIHIRO_OF_CHALICE);
+
             Engine::GET_EQUIPMENT(party, Character::Type::AKIHIRO_OF_CHALICE, {Equipment::STONECUTTER_SWORD2, Equipment::SILVER_IDOL});
 
             Engine::GAIN_MONEY(party, 135);
@@ -6377,6 +6364,8 @@ namespace Book1
 
             DisplayID = 186;
 
+            Location = Location::Type::AZURE_DEEP;
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -6450,30 +6439,57 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "You tie a few ropes together and bind them strongly to the most intact parts of the remaining wall, and then begin to abseil down the cliffside.";
+            Controls = Story::Controls::STANDARD;
+        }
 
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (attempts > 0)
+            {
+                if (Engine::IS_ALIVE(party, party.LastSelected))
+                {
+                    Engine::GAIN_STATUS(party.Members[party.LastSelected], Character::Status::FALLEN);
+                }
+            }
+
+            return {Book::Type::NONE, -1};
+        }
+
+        void Event(Party::Base &party)
+        {
             Choices.clear();
 
-            Choices.push_back(Choice::Base("Climb down the cliff side (Team check: Survival 3+, Successes: 4)", {Book::Type::BOOK1, 662}, {Book::Type::BOOK1, -188}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 3, 4));
+            if (Engine::COUNT(party, Character::Status::FALLEN) < Engine::COUNT(party) && attempts < Engine::COUNT(party))
+            {
+                Text = "You tie a few ropes together and bind them strongly to the most intact parts of the remaining wall, and then begin to abseil down the cliffside.";
 
-            Controls = Story::Controls::STANDARD;
+                Choices.push_back(Choice::Base("Climb down the cliff side (Team check: Survival 3+, Successes: 4)", {Book::Type::BOOK1, 662}, {Book::Type::BOOK1, -188}, Choice::Type::PARTY_EXCEPT_WITHSTATUS, {Character::Status::FALLEN}, {Attribute::Type::SURVIVAL}, 3, 4));
+            }
+            else
+            {
+                Text = "Your entire party has fallen down!";
+
+                Engine::REMOVE_STATUS(party, Character::Status::FALLEN);
+            }
         }
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
         {
-            temp_string = "";
+            Bye = NULL;
 
             attempts++;
 
             if (!outcome)
             {
-                if (attempts >= 4)
+                if (attempts >= std::min(4, Engine::COUNT(party)))
                 {
                     attempts = 0;
 
                     Bye = "After several attempts, your entire party has made it down, one way or another!";
 
                     Choices[0].DestinationFailed = {Book::Type::BOOK1, 662};
+
+                    Engine::REMOVE_STATUS(party, Character::Status::FALLEN);
                 }
                 else
                 {
@@ -6483,6 +6499,8 @@ namespace Book1
             else
             {
                 attempts = 0;
+
+                Engine::REMOVE_STATUS(party, Character::Status::FALLEN);
             }
         }
 
@@ -10035,6 +10053,8 @@ namespace Book1
 
             ID = 297;
 
+            Location = Location::Type::DESERT;
+
             Text = "You are attacking at a distance and the barbarians have no bows.\n\nNote: Your spellcasters can make an extra attack in the first round of combat, as long as that attack is used to cast some sort of spell. After the extra attacks, resolve the battle as normal.";
 
             Choices.clear();
@@ -10063,7 +10083,7 @@ namespace Book1
             }
         }
 
-        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 135}; }
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 840}; }
 
         void AfterCombat(Party::Base &party, Engine::Combat result)
         {
@@ -11025,6 +11045,8 @@ namespace Book1
             IsCity = true;
 
             Text = "The Saltdad slave markets sell flesh from all across the valley. Some are unfortunates who have crossed the jealous desert kings, others have been plucked, dying from dehydration, from the waterless wastes. Most are miserable-looking specimens in rags and heavy chains, but every so often a promising candidate will show up.\n\nNote: If you have fewer than four party members in your team, you may recruit some more from the slave market. It costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
+
+            RecruitmentPrice = 200;
 
             Choices.clear();
 
@@ -17696,6 +17718,8 @@ namespace Book1
 
             ID = 534;
 
+            Location = Location::Type::DESERT;
+
             Text = "Although the desert nights are cold, the temperature tonight is particularly freezing. You pitch up your tents and huddle together for warmth. Outside the tents you suddenly perceive a light, like the flame of a lantern, only brighter. Something stalks around your tent menacingly, the crunch of bootprints on the sand. A sudden fear grips you, and it is difficult to leave the safety of your tent. You briefly decide together who should check out this frightening phenomenon.";
 
             Choices.clear();
@@ -19880,6 +19904,8 @@ namespace Book1
 
             Text = "Slaves are expensive in Cursus, and do not remain unsold for long. The auction platforms have long stood in the shadow of a lesser temple and are fortified against theft. Only strong and healthy slaves can be found here... the god of judgement will not tolerate those who cannot work.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
 
+            RecruitmentPrice = 200;
+
             Choices.clear();
 
             Controls = Story::Controls::RECRUIT;
@@ -21938,6 +21964,8 @@ namespace Book1
 
             Text = "The slave market of Lhasbreath contains many varied peoples from across the valley, seized in raids by the barbarian warriors that rule the town. Most will be here only temporarily; the best slaves are sold on to the richer cities of the valley for farm work, or to perish in the terrible arena in Saltdad.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
 
+            RecruitmentPrice = 200;
+
             Choices.clear();
 
             Controls = Story::Controls::RECRUIT;
@@ -22326,6 +22354,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 666;
+
+            Location = Location::Type::WEST_ROAD;
 
             Controls = Story::Controls::STANDARD;
         }
@@ -30759,8 +30789,7 @@ namespace Book1
     auto story113 = Story113();
     auto story114 = Story114();
     auto story115 = Story115();
-    auto e115_001 = E115_001();
-    auto e115_002 = E115_002();
+    auto event115 = Event115();
     auto story116 = Story116();
     auto story117 = Story117();
     auto story118 = Story118();
@@ -31614,13 +31643,13 @@ namespace Book1
     {
         Book1::Stories = {
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
-            &e087_003, &event089, &event098, &event102, &e115_001, &e115_002, &e128_001, &e128_002, &event160, &event183,
-            &event186, &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324,
-            &event343, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
-            &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
-            &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725,
-            &event744, &event760, &event770, &event771, &event776, &event788, &event789, &event824, &event841, &e866_001,
-            &e866_002, &event886, &event891, &event896, &e903_001, &e903_002,
+            &e087_003, &event089, &event098, &event102, &event115, &e128_001, &e128_002, &event160, &event183, &event186,
+            &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324, &event343,
+            &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529, &event537,
+            &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589, &event597,
+            &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725, &event744,
+            &event760, &event770, &event771, &event776, &event788, &event789, &event824, &event841, &e866_001, &e866_002,
+            &event886, &event891, &event896, &e903_001, &e903_002,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,

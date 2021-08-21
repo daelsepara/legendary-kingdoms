@@ -1001,9 +1001,13 @@ namespace Story
         std::vector<Engine::ArmyStatus> EnemyArmyStatus = {};
         Location::Type Barracks = Location::Type::NONE;
 
+        // Price for recruiting characters
+        int RecruitmentPrice = -1;
+
         // temporary string
         std::string temp_string = "";
 
+        // flag to reset shop (shops with limited supplies)
         bool ResetShop = false;
 
         // Handle background events
