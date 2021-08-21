@@ -762,14 +762,6 @@ namespace Engine
         }
     }
 
-    void LOSE_EQUIPMENT(Party::Base &party, Team::Type team, Equipment::Type item, int count)
-    {
-        for (auto i = 0; i < count; i++)
-        {
-            Engine::LOSE_EQUIPMENT(party, team, {item});
-        }
-    }
-
     int COUNT_INVENTORY(Character::Base &character)
     {
         auto size = character.Equipment.size();
