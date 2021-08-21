@@ -23273,7 +23273,7 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
 
     if (next->Location != Location::Type::NONE)
     {
-        if (Engine::HAS_FOLLOWER(party, Follower::Type::MORDAIN_SKELETONS) && next->Location != Location::Type::MORDAIN)
+        if (Engine::HAS_FOLLOWER(party, Follower::Type::MORDAIN_SKELETONS) && next->Location != Location::Type::MORDAIN && next->Location != Location::Type::MORDAIN_EXCAVATED_DUNGEONS)
         {
             Engine::LOSE_FOLLOWERS(party, {Follower::Type::MORDAIN_SKELETONS});
 
