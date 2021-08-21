@@ -749,6 +749,21 @@ namespace Engine
 
     void LOSE_EQUIPMENT(Party::Base &party, Team::Type team, Equipment::Type item, int count)
     {
+        if (team == Team::Type::NONE)
+        {
+            Engine::LOSE_EQUIPMENT(party, item, count);
+        }
+        else
+        {
+            for (auto i = 0; i < count; i++)
+            {
+                Engine::LOSE_EQUIPMENT(party, team, {item});
+            }
+        }
+    }
+
+    void LOSE_EQUIPMENT(Party::Base &party, Team::Type team, Equipment::Type item, int count)
+    {
         for (auto i = 0; i < count; i++)
         {
             Engine::LOSE_EQUIPMENT(party, team, {item});
@@ -840,6 +855,28 @@ namespace Engine
             if (Engine::IS_CIVILIZED(party, party.Members[i]))
             {
                 found += Engine::COUNT_EQUIPMENT(party.Members[i], equipment);
+            }
+        }
+
+        return found;
+    }
+
+    int COUNT_EQUIPMENT(Party::Base &party, Team::Type team, std::vector<Equipment::Type> equipment)
+    {
+        auto found = 0;
+
+        if (team == Team::Type::NONE)
+        {
+            found = Engine::COUNT_EQUIPMENT(party, equipment);
+        }
+        else
+        {
+            for (auto i = 0; i < party.Members.size(); i++)
+            {
+                if (Engine::IS_CIVILIZED(party, party.Members[i]) && party.Members[i].Team == team)
+                {
+                    found += Engine::COUNT_EQUIPMENT(party.Members[i], equipment);
+                }
             }
         }
 
@@ -3194,6 +3231,8 @@ namespace Engine
                 }
 
                 army[i].Position = Location::BattleField::NONE;
+
+                army[i].Morale = 0;
             }
         }
     }

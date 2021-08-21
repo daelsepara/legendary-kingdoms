@@ -20741,6 +20741,10 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                     {
                                         displayMessage("You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!", intRD);
                                     }
+                                    else if (party.Army[current + offset].Morale <= 0)
+                                    {
+                                        displayMessage(std::string(party.Army[current + offset].Name) + " cannot join this battle!", intRD);
+                                    }
                                     else
                                     {
                                         left_flank.push_back(current + offset);
@@ -20776,6 +20780,10 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                     {
                                         displayMessage("You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!", intRD);
                                     }
+                                    else if (party.Army[current + offset].Morale <= 0)
+                                    {
+                                        displayMessage(std::string(party.Army[current + offset].Name) + " cannot join this battle!", intRD);
+                                    }
                                     else
                                     {
                                         center.push_back(current + offset);
@@ -20810,6 +20818,10 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                     if (party.Army[current + offset].Garrison != location)
                                     {
                                         displayMessage("You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!", intRD);
+                                    }
+                                    else if (party.Army[current + offset].Morale <= 0)
+                                    {
+                                        displayMessage(std::string(party.Army[current + offset].Name) + " cannot join this battle!", intRD);
                                     }
                                     else
                                     {
@@ -21994,11 +22006,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 equipment.push_back(story->Choices[choice].Equipment[i].Type);
                             }
 
-                            auto count = Engine::COUNT_EQUIPMENT(party, equipment);
+                            auto count = Engine::COUNT_EQUIPMENT(party, story->Choices[choice].Team, equipment);
 
                             if (count >= story->Choices[choice].Value)
                             {
-                                Engine::LOSE_EQUIPMENT(party, equipment[0], story->Choices[choice].Value);
+                                Engine::LOSE_EQUIPMENT(party, story->Choices[choice].Team, equipment[0], story->Choices[choice].Value);
 
                                 if (story->Choices[choice].Type == Choice::Type::BRIBE_CODEWORD_ITEM)
                                 {
@@ -22277,31 +22289,22 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (party.Army.size() > 0)
                             {
-                                std::vector<Location::BattleField> positions = {Location::BattleField::LEFT_FLANK_FRONT, Location::BattleField::LEFT_FLANK_SUPPORT, Location::BattleField::CENTER_FRONT, Location::BattleField::CENTER_SUPPORT, Location::BattleField::RIGHT_FLANK_FRONT, Location::BattleField::RIGHT_FLANK_SUPPORT};
-
-                                for (auto i = 0; i < positions.size(); i++)
+                                for (auto unit = 0; unit < party.Army.size(); unit++)
                                 {
-                                    auto unit = Engine::FIND_UNIT(party.Army, positions[i]);
-
-                                    if (unit >= 0 && unit < party.Army.size())
+                                    if (party.Army[unit].Position != Location::BattleField::NONE || party.Army[unit].Morale <= 0)
                                     {
-                                        auto location = story->Choices[choice].Location;
-
-                                        auto retreat = retreatArmy(window, renderer, party, unit, location, story->Choices[choice].Value, 1);
+                                        auto retreat = retreatArmy(window, renderer, party, unit, story->Choices[choice].Location, story->Choices[choice].Value, 1);
 
                                         if (retreat)
                                         {
-                                            party.Army[unit].Garrison = location;
                                             party.Army[unit].Position = Location::BattleField::NONE;
                                             party.Army[unit].Morale = party.Army[unit].MaximumMorale;
-                                        }
-                                        else
-                                        {
-                                            party.Army.erase(party.Army.begin() + unit);
                                         }
                                     }
                                 }
                             }
+
+                            Engine::REMOVE_ROUTED(party);
 
                             next = findStory(story->Choices[choice].Destination);
 
