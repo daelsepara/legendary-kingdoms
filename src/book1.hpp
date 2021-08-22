@@ -469,7 +469,7 @@ namespace Book1
             Text = "What do you wish to do now?";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Board your ship", {Book::Type::BOOK1, 851}, Choice::Type::SHIP, Location::Type::MORDAIN));
+            Choices.push_back(Choice::Base("Board your ship", {Book::Type::BOOK1, 851}, Choice::Type::SAIL, Location::Type::MORDAIN));
             Choices.push_back(Choice::Base("Enter the wide tunnel", {Book::Type::BOOK1, 593}));
 
             Controls = Story::Controls::STANDARD;
@@ -18810,7 +18810,7 @@ namespace Book1
 
             ID = 561;
 
-            Location = Location::Type::MORDAIN;
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You have returned to the orc guard room. Except for a pair of dead orcs there is nothing to see here. You return to the corridor.";
 
@@ -19024,7 +19024,7 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("West, to Clifftop", {Book::Type::BOOK1, 19}));
-            Choices.push_back(Choice::Base("Southwest, into the desert", {Book::Type::BOOK1, 350}));
+            Choices.push_back(Choice::Base("Southwest, into the desert", {Book::Type::BOOK1, 725}));
             Choices.push_back(Choice::Base("South, to the Tumblestones", {Book::Type::BOOK1, 137}));
             Choices.push_back(Choice::Base("East, along the road to Saltdad", {Book::Type::BOOK1, 511}));
             Choices.push_back(Choice::Base("North, to the Salt Plains", {Book::Type::BOOK1, 460}));
@@ -19094,6 +19094,10 @@ namespace Book1
 
             DisplayID = 570;
 
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
             Choices.clear();
 
             Controls = Story::Controls::NONE;
@@ -19107,17 +19111,7 @@ namespace Book1
                 {
                     if (!Engine::HAS_STATUS(party.Members[i], Character::Status::RITUAL_SCARRING_CURSUS))
                     {
-                        party.Members[i].MaximumHealth -= 1;
-
-                        if (party.Members[i].MaximumHealth < 0)
-                        {
-                            party.Members[i].MaximumHealth = 0;
-                        }
-
-                        if (party.Members[i].Health > party.Members[i].MaximumHealth)
-                        {
-                            party.Members[i].Health = party.Members[i].MaximumHealth;
-                        }
+                        Engine::GAIN_SCORE(party.Members[i], Attribute::Type::HEALTH, -1);
                     }
                 }
             }
@@ -19149,6 +19143,8 @@ namespace Book1
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
         {
+            Bye = NULL;
+
             if (!outcome)
             {
                 Bye = "The workers down their tools and flee into the desert.";
@@ -19385,6 +19381,8 @@ namespace Book1
 
             DisplayID = 575;
 
+            Location = Location::Type::SALT_MINES;
+
             Choices.clear();
 
             Controls = Story::Controls::NONE;
@@ -19573,6 +19571,8 @@ namespace Book1
 
             DisplayID = 580;
 
+            Location = Location::Type::CAVES_OF_URANU;
+
             Controls = Story::Controls::STANDARD;
         }
 
@@ -19607,6 +19607,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 581;
+
+            Location = Location::Type::CLIFFTOP;
 
             Text = "You meet a foreigner from the county of Longport Bay, now ploughing the fields as a humble farmworker. He has many bruises across his face from the cruel whips of his overseers. \"The ironic thing is I fled from the town of Joria-by-Long because I couldn't stand the beatings from my masters in House Bailey,\" he says bitterly. \"Now I am a broke tenant farmer in Clifftop and the overseers here are even crueller. It seems the gods have it in for me.\"\n\n\"The grass is always greener on the other side,\" you say wistfully.\n\n\"Not here, it isn't,\" he grumbles.";
 
@@ -19771,6 +19773,10 @@ namespace Book1
 
             ID = 587;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "The barbarians square up to you. Behind you, the knife-wielding assassin prepares to strike.\n\nNote: In any round where the Cursite Assassin is not injured he will backstab a party member. When backstabbing the Assassin does not need to roll to hit but inflicts 4 points of damage.";
 
             Choices.clear();
@@ -19895,7 +19901,7 @@ namespace Book1
 
                 Choices.push_back(Choice::Base("Bathe in the oasis", {Book::Type::BOOK1, 349}));
                 Choices.push_back(Choice::Base("Go North, to the Granite Hills", {Book::Type::BOOK1, 275}));
-                Choices.push_back(Choice::Base("East, into the desert", {Book::Type::BOOK1, 202}));
+                Choices.push_back(Choice::Base("Go East, into the desert", {Book::Type::BOOK1, 202}));
                 Choices.push_back(Choice::Base("Go South, to the Mordain ruins", {Book::Type::BOOK1, 515}));
                 Choices.push_back(Choice::Base("Travel West, across the desert towards Lhasbreath", {Book::Type::BOOK1, 752}));
             }
@@ -20108,6 +20114,8 @@ namespace Book1
 
             DisplayID = 597;
 
+            Location = Location::Type::SALT_MINES;
+
             Text = "You get lost in the mines, the terrible atmosphere slowly robbing you of strength.";
 
             Bye = "You give up your search and decide to look elsewhere.";
@@ -20127,6 +20135,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 598;
+
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "You encounter a group of loggers from Lhasbreath, chopping trees and skinning branches. Jungle woods make poor building materials, but the jungle nonetheless provides the majority of the lumber in the dry valley.\n\nOne of the loggers is clearly not a native of the city but is instead a wiry fellow from Chalice. You ask how he fell into this work. \"I've always been a labourer,\" he admits. \"For a time I worked as a miner for the God King of Chalice. We attempted to find metals in the Caves of Uranu -- but that place is packed full of terrible monsters. Take my advice; don't venture near the caves unless you are loaded down with weapons and armour. Even amongst barbarians, it's much safer here by the jungle.\"";
 
@@ -20371,6 +20381,10 @@ namespace Book1
             {
                 CanFlee = true;
             }
+            else
+            {
+                CanFlee = false;
+            }
 
             Monsters = {
                 Monster::Base("Orc", 5, 4, 4, 8, 0),
@@ -20505,7 +20519,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Because some of your party members used magic spells while in the arena, they are taken away by the guards to a small room where their tongues are cut out and then sealed with branding irons.\n\nNote: Each magic-using character loses 3 Health and cannot cast spells unless they can find a way to regrow their tongues!";
+            Text = "Because some in your party used magic spells while in the arena, they are taken away by the guards to a small room where their tongues are cut out and then sealed with branding irons.\n\nNote: Each magic-using character loses 3 Health and cannot cast spells unless they can find a way to regrow their tongues!";
 
             Choices.clear();
 
@@ -20911,6 +20925,8 @@ namespace Book1
 
             ID = 619;
 
+            Location = Location::Type::CAVES_OF_URANU;
+
             Text = "The monstrous thing seems almost indestructible and sweat breaks out on your forehead. Suddenly there is a sharp slink! The statue's right foot has been sliced from its leg. The creature totters unsteadily and comes crashing to the ground, shattering into pieces. Standing behind the destruction is the young Drakehallow woman, a green longsword clutched in her hand. She looks upon you with a quizzical eyebrow.\n\n\"Thank you,\" you say, bowing. \"Your assistance is most appreciated.\"\n\n\"I'm sure it is,\" she says slyly.";
 
             Choices.clear();
@@ -20966,6 +20982,8 @@ namespace Book1
 
             ID = 621;
 
+            Location = Location::Type::PALACE_OF_UNBRAAKI;
+
             Text = "You re-enter the study, eager to see what new spells Unbraaki has discovered. You almost jolt in surprise as you see the arch-sorcerer there, waiting for you, a gang of robed monkeys surrounding him. \"Thought I was in the library?\" smiles the sorcerer. \"Fool me once, shame on you. But you'll never fool me twice. Kill them.\"";
 
             Choices.clear();
@@ -21013,6 +21031,10 @@ namespace Book1
 
             ID = 623;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "The door behind you is almost in splinters as the Bronzeguard garrison attempts to break into the tower. Kicking open a nearby window you leap into the street beyond, panting with exhaustion. Alas, the Bronzeguard will never eat the stew now they know it is poisoned. But at least you escaped with your lives!";
 
             Choices.clear();
@@ -21031,6 +21053,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 624;
+
+            Location = Location::Type::UNDERGROUND_TUNNELS;
 
             Text = "You lower yourself into the pit and check over the body, but do not uncover any additional treasure.";
 
@@ -21171,13 +21195,10 @@ namespace Book1
             Controls = Story::Controls::STANDARD;
         }
 
-        void Event(Party::Base &party)
-        {
-            Bye = NULL;
-        }
-
         Engine::Destination Continue(Party::Base &party)
         {
+            Bye = NULL;
+
             if (Engine::VERIFY_CODES(party, {Codes::A(20)}))
             {
                 return {Book::Type::BOOK1, 641};
@@ -21729,11 +21750,12 @@ namespace Book1
 
             if (Engine::HAS_SHIP(party, Location::Type::MORDAIN))
             {
-                PreText += "\n\nYou have a ship docked in Mordain harbour, you can see it here. It might be possible to climb down the cliff face and reach the harbour, though it is far from a risk-free climb.";
-
-                Choices.push_back(Choice::Base("Climb down the cliffs to the harbour", {Book::Type::BOOK1, 188}));
+                PreText += "\n\nYou have a ship docked in Mordain harbour, you can see it here.";
             }
 
+            PreText += "\n\nIt might be possible to climb down the cliff face and reach the harbour, though it is far from a risk-free climb.";
+
+            Choices.push_back(Choice::Base("Climb down the cliffs to the harbour", {Book::Type::BOOK1, 188}));
             Choices.push_back(Choice::Base("Examine the body on the rack", {Book::Type::BOOK1, 274}));
             Choices.push_back(Choice::Base("Leave the room and return to the crossroads", {Book::Type::BOOK1, 566}));
 
@@ -21862,16 +21884,9 @@ namespace Book1
 
         Engine::Destination Background(Party::Base &party)
         {
-            if (Engine::IS_ACTIVE(party, party.LastSelected))
+            if (Engine::IS_ACTIVE(party, party.LastSelected) && party.Members[party.LastSelected].Type == Character::Type::BRASH)
             {
-                if (party.Members[party.LastSelected].Type == Character::Type::BRASH)
-                {
-                    return {Book::Type::BOOK1, 697};
-                }
-                else
-                {
-                    return {Book::Type::NONE, -1};
-                }
+                return {Book::Type::BOOK1, 697};
             }
             else
             {
@@ -22106,6 +22121,8 @@ namespace Book1
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
         {
+            Bye = NULL;
+
             Engine::Destination destination = {Book::Type::BOOK1, -1};
 
             auto result = (Engine::ROLL(1) < 3);
@@ -22139,10 +22156,6 @@ namespace Book1
                 if (result)
                 {
                     Bye = "You were harassed during your journey.";
-                }
-                else
-                {
-                    Bye = NULL;
                 }
 
                 Choices[0].Destination = destination;
@@ -22182,6 +22195,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 658;
+
+            Location = Location::Type::CLIFFTOP;
+
+            IsCity = true;
 
             Text = "\"Whipping is so dull!\" moans Lothor. \"Except when done en-mass!\"\n\nAt a nod from the king you are grasped by the guards and stripped. Soon King Lothor and his favourite lords are striping your backs with the whip, to the jeers of his court.\n\nEventually evening comes and Lothor tires of his sport. You are cast out of his court naked, to peels of laughter from his servants.\n\nNote: Each party member must lose 3 points of Health. Any characters wearing armour discards it, but the rest of your equipment is thrown after you. You gained the code A34.";
 
@@ -22337,7 +22354,7 @@ namespace Book1
                     if (Engine::HAS_SHIP(party, Location::Type::MORDAIN))
                     {
                         Choices.push_back(Choice::Base("Transfer your crew to the orc hulk", {Book::Type::BOOK1, 894}));
-                        Choices.push_back(Choice::Base("Board your ship", {Book::Type::BOOK1, 851}));
+                        Choices.push_back(Choice::Base("Board your ship", {Book::Type::BOOK1, 851}, Choice::Type::SAIL, Location::Type::MORDAIN));
                     }
 
                     Choices.push_back(Choice::Base("Enter the wide tunnel", {Book::Type::BOOK1, 593}));
@@ -22474,6 +22491,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            destination = {Book::Type::BOOK1, 219};
+
             Monsters.clear();
 
             PreText = "A pair of Lhasbreath barbarians come riding over the sands on dusty white horses.";
@@ -22530,8 +22549,6 @@ namespace Book1
             if (result == Engine::Combat::VICTORY)
             {
                 Engine::GAIN_MONEY(party, 20);
-
-                destination = {Book::Type::BOOK1, 219};
             }
         }
     };
@@ -22544,6 +22561,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = -666;
+
+            Location = Location::Type::WEST_ROAD;
 
             Text = "The barbarians will have to take it by brute force!";
 
@@ -22675,6 +22694,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 670;
+
+            Location = Location::Type::LUUTANESH;
 
             Choices.clear();
 
@@ -22934,6 +22955,10 @@ namespace Book1
 
             ID = 678;
 
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
+
             Text = "You wade into the still, cold water, holding your torch aloft as you make your way down the slippery passageway. Eventually the water level gets too high. To proceed, you will have to dive into the water and swim down -- but who knows where the pitch-black tunnel will lead?";
 
             Choices.clear();
@@ -22968,7 +22993,7 @@ namespace Book1
         {
             Engine::GET_CODES(party, {Codes::Type::CANNOT_USE_SHIPWEAPONS});
 
-            EnemyFleet = {Ship::Base("WAR CANOES", Ship::Type::WAR_CANOES, Location::Type::NONE, 3, 10, 0)};
+            EnemyFleet = {Ship::Base("WAR CANOES", Ship::Type::WAR_CANOES, Location::Type::VIAAN_ISLAND, 3, 10, 0)};
         }
 
         Engine::Destination Continue(Party::Base &party) { return destination; }
@@ -23028,7 +23053,7 @@ namespace Book1
             Choices.push_back(Choice::Base("Longport Bay", {Book::Type::BOOK1, 81}));
             Choices.push_back(Choice::Base("Politics of the Splintered Isles", {Book::Type::BOOK1, 794}));
             Choices.push_back(Choice::Base("Saint Elias", {Book::Type::BOOK1, 262}));
-            Choices.push_back(Choice::Base("Leave the library", {Book::Type::BOOK1, 560}));
+            Choices.push_back(Choice::Base("Leave the library", {Book::Type::BOOK1, 450}));
 
             Text = PreText.c_str();
         }
@@ -23688,6 +23713,8 @@ namespace Book1
 
             ID = 704;
 
+            Location = Location::Type::BANDO_VILLAGE;
+
             Text = "\"A trade, for bringing me the weave,\" announces the shaman, brightly. \"I brew potions for the tribe. Choose one, and it shall be yours.\" The shaman offers you one of two potions.\n\nYou also ask for more information about the 'man with hatred in his heart' that the shaman spoke to you about before. He looks blankly at you, and then laughs. \"No doubt a piece of prophesy from my visions. Pay it no mind. My dreams are as insubstantial as air. But I do have one piece of advice for you. When the queen comes to take the bishop, bring gold to take the knights.\"\n\n\"Another one of your visions?\" you ask dryly.\n\nThe shaman shrugs. \"Take it or leave it,\" he says philosophically.\n\nNote:  The first is a HEALING POTION (restore 5 Health), which you can drink at any time, including during combat. The second is a POTION OF FLUENCY (3 Charisma successes), which you can drink during a Charisma skill check to automatically gain 3 extra successes. You can only choose one potion.";
 
             Bye = "Thanking him for his time, you return to your ship and weigh anchor.";
@@ -23756,7 +23783,7 @@ namespace Book1
 
         void AfterCombat(Party::Base &party, Engine::Combat result)
         {
-            if (result == Engine::Combat::EXCEED_LIMIT)
+            if (result == Engine::Combat::EXCEED_LIMIT && Engine::COUNT(Monsters) > 0)
             {
                 destination = {Book::Type::BOOK1, 55};
 
@@ -23998,6 +24025,8 @@ namespace Book1
 
             ID = 715;
 
+            Location = Location::Type::LHASBREATH_JUNGLE;
+
             Text = "\"We've met, haven't we, Emlyn?\" you ask unsurely.\n\n\"Eleven years ago, at Strongstone,\" she confirms. \"For the birth of my brother... my legitimate brother, Jeffery Ross. We were sat together at the low table with Montague Pass-Bailey. All the high lords in the county were there that night. I remember Count Spenser patting me on the head for bringing him a cup of mead, and being spat on and cuffed by your father for accidentally brushing past him.\"\n\n\"Sorry about that...\" you say guiltily.\n\n\"Why? You didn't do it,\" says Emlyn flatly.\n\n\"I think I'm always apologising for him,\" you add sheepishly. \"He's... very traditional, I suppose.\"\n\n\"It must have been tough growing up with Baron Baldwin Dayne as your father,\" she sympathises.\n\n\"I didn't grow up with him... I barely saw him,\" you mutter. \"Eighteen years I lived in Fosterly Castle. I spoke with him three times. He was ashamed of me. I don't know what it was about me that was so different from other bastard-born. Your father loves you and educated you as a scholar. Montague now serves his father as a spymaster. I scrubbed the castle floors and looked after the horses. I was treated like a peasant... and he called me such dreadful names, and never my own.\"\n\n\"Well, you're free of him now,\" says Emlyn.\n\nYou laugh. \"You're never free of your father.. not really.\"\n\nEmlyn pauses, and then searches her bag for a pair of cups in which she pours a little Almskirk wine. \"Let's do the old toast,\" she says, passing you a cup and raising hers. \"To the bastards of Strongstone!\"\n\n\"To the bastards of Strongstone,\" you smile, downing wine as bitter as your memories.\n\nNote: You gained the code A84.";
 
             Choices.clear();
@@ -24139,7 +24168,7 @@ namespace Book1
 
             Location = Location::Type::WITHERED_STEPPES;
 
-            Text = "The hairs on the back of your neck prick up. You sense a weakening in the fabric of the world in this place. Tracing mystic symbols in the air you see a patch of rock to your left fade away, revealing a small chamber containing funeral urns. A frail looking casket rests in the corner of the chamber, seeming to shudder in the feint breeze outside.";
+            Text = "The hairs on the back of your neck prick up.\n\nYou sense a weakening in the fabric of the world in this place. Tracing mystic symbols in the air you see a patch of rock to your left fade away, revealing a small chamber containing funeral urns. A frail looking casket rests in the corner of the chamber, seeming to shudder in the feint breeze outside.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Enter the tomb", {Book::Type::BOOK1, 862}));
@@ -24851,7 +24880,17 @@ namespace Book1
             Text = PreText.c_str();
         }
 
-        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 674}; }
+        Engine::Destination Continue(Party::Base &party)
+        {
+            if (Engine::IN_PARTY(party, Character::Type::AMELIA_PASS_DAYNE))
+            {
+                return {Book::Type::BOOK1, 715}; 
+            }
+            else
+            {
+                return {Book::Type::BOOK1, 674}; 
+            }
+        }
     };
 
     class Story741 : public Story::Base
@@ -25368,11 +25407,13 @@ namespace Book1
             {
                 Choices.push_back(Choice::Base("Cast Wither", {Book::Type::BOOK1, 314}, Choice::Type::GET_CODES, {Codes::Type::CAST_WITHER}));
             }
-            else if (Engine::HAS_SPELL(party, {Spells::Type::STINGTAIL_RUNE}))
+            
+            if (Engine::HAS_SPELL(party, {Spells::Type::STINGTAIL_RUNE}))
             {
                 Choices.push_back(Choice::Base("Cast Stingtail Rune", {Book::Type::BOOK1, 314}, Choice::Type::GET_CODES, {Codes::Type::CAST_STINGTAIL_RUNE}));
             }
-            else if (Engine::HAS_SPELL(party, {Spells::Type::MAELSTROM}))
+            
+            if (Engine::HAS_SPELL(party, {Spells::Type::MAELSTROM}))
             {
                 Choices.push_back(Choice::Base("Cast Maelstrom", {Book::Type::BOOK1, 314}, Choice::Type::GET_CODES, {Codes::Type::CAST_MAELSTROM}));
             }
@@ -26406,9 +26447,10 @@ namespace Book1
 
             Team = Team::Type::AKIHIRO_OF_CHALICE;
 
-            party.CurrentCharacter = Engine::FIND_SOLO(party);
-
-            Team = Team::Type::AKIHIRO_OF_CHALICE;
+            if (Engine::IS_ALIVE(party, party.CurrentCharacter))
+            {
+                Engine::SET_TEAM(party.Members[party.CurrentCharacter]);
+            }
 
             RoundLimit = 2;
 
@@ -26532,9 +26574,9 @@ namespace Book1
 
             ID = 787;
 
-            Image = "images/book1/the_salt_dragon.png";
-
             Location = Location::Type::SALT_MINES;
+
+            Image = "images/book1/the_salt_dragon.png";
 
             Text = "Few mortals dare to face a dragon and live. This will be a most formidable battle.\n\nNote: Note: If ever the Salt Dragon ends a round without inflicting even a single point of Health damage on one of your party members, it will become enraged and breathe a blast of fire. When this happens, every party member loses 3 Health points, with no armour saves possible.";
 
@@ -26802,7 +26844,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "As arena champions your quarters are improved a little. You now have your own cell to sleep in, half the size of an inn room, with a dirty straw mattress. In addition, you are given some basic training from an experienced gladiator called Che Long, who claims to be a sword saint from the nearby city of Chalice. The meals are slightly better, too, with Milagros, the slave girl, serving you rice and cooked meat as well as your water ration.\n\nBetween training bouts you have many talks with Che Long, who is damning of the Iron King's rulership of Saltdad. \"I care not who hears it, the man is a tyrant,\" he exhorts. \"Life is hard in the valley, but wonton cruelty such as his is uncalled for. It sticks in my throat that I fight for his pleasure.\"\n\n\"I had heard that all the kings of the valley are petty tyrants,\" you say between mouthfuls of water.\n\n\"It was not always so,\" mutters Che Long. \"In times past we were ruled by a noble queen, the immortal Everchild, who cared more for her people than her comfort. After the destruction left by the demon lord Abraxas all that was left was ruins, and without her leadership the people of the valley became little better than barbarians. Only Chalice has a glimmer of civilization left.\"\n\nAfter a hard day of training you make your way back to your cell. You have another bout in the arena tomorrow and will need all your strength.\n\nYour party recovers 4 Health points.";
+            Text = "As arena champions your quarters are improved a little. You now have your own cell to sleep in, half the size of an inn room, with a dirty straw mattress. In addition, you are given some basic training from an experienced gladiator called Che Long, who claims to be a sword saint from the nearby city of Chalice. The meals are slightly better, too, with Milagros, the slave girl, serving you rice and cooked meat as well as your water ration.\n\nBetween training bouts you have many talks with Che Long, who is damning of the Iron King's rulership of Saltdad. \"I care not who hears it, the man is a tyrant,\" he exhorts. \"Life is hard in the valley, but wonton cruelty such as his is uncalled for. It sticks in my throat that I fight for his pleasure.\"\n\n\"I had heard that all the kings of the valley are petty tyrants,\" you say between mouthfuls of water.\n\n\"It was not always so,\" mutters Che Long. \"In times past we were ruled by a noble queen, the immortal Everchild, who cared more for her people than her comfort. After the destruction left by the demon lord Abraxas all that was left was ruins, and without her leadership the people of the valley became little better than barbarians. Only Chalice has a glimmer of civilization left.\"\n\nAfter a hard day of training you make your way back to your cell. You have another bout in the arena tomorrow and will need all your strength.\n\nNote: Your party recovers 4 Health points.";
 
             Choices.clear();
 
@@ -28277,11 +28319,11 @@ namespace Book1
 
             ID = 835;
 
-            Image = "images/book1/saltdad_arena.png";
-
             Location = Location::Type::SALTDAD_ARENA;
 
             IsCity = true;
+
+            Image = "images/book1/saltdad_arena.png";
 
             Text = "There is an almost full crowd in the huge arena, with rich and poor alike rubbing shoulders on long wooden benches. On the sandy and bloodstained floor of the arena are a number of bones and skulls, artfully left to bleach in the sun. You can see that all ten gatehouses have opened, disgorging teams of poorly armed slaves. Some are fearless men and women from Chalice, who do not so much as flinch as the crowd roars for their blood. Bold barbarians of Lhasbreath hold their arms and weapons high as they seek endorsement from the bloody-minded crowd. Most of the 'warriors', however, look more like frightened peasants, mere fodder for the skilled warriors of the arena.\n\nSitting high above the arena, upon a throne-like seat, is the Iron King himself, a black-bearded middle-aged man, his jagged iron crown sitting proudly on his skull. Next to him stands his bodyguard, the fearsome Malronac the Deathengine. The solid-metal golem was cast in the elder age of sorcery and has turned aside the blades of a dozen assassins. At a cold and distant motion from the king, the battle begins.\n\nOne team of excitable youths from the gate adjacent to you make a sudden rush, hoping to catch you off-guard. The crowd roar in joy -- the bloodshed is about to begin. You  must fight.";
 
@@ -28430,8 +28472,6 @@ namespace Book1
                 Choices.push_back(Choice::Base("Break off from the book (Individual check: Lore 5+, Successes: 2)", {Book::Type::BOOK1, 146}, {Book::Type::BOOK1, 65}, Choice::Type::LAST_INDIVIDUAL_CHECK, {Attribute::Type::LORE}, 5, 2));
             }
         }
-
-        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 865}; }
     };
 
     class Story840 : public Story::Base
@@ -28500,12 +28540,12 @@ namespace Book1
 
             DisplayID = 841;
 
-            Location = Location::Type::DESERT;
+            Location = Location::Type::SALT_MINES;
 
             Text = "Peering deeper into the chamber you can make out where the dragon came from. It has dug a tunnel under the mountains, that looks like it is so long it might go all the way to Drakehallow in the north.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("(Drakehallow) Follow this tunnel", {Book::Type::BOOK1, 33}));
+            Choices.push_back(Choice::Base("(Drakehallow) Follow this tunnel", {Book::Type::BOOK6, 33}));
             Choices.push_back(Choice::Base("You dare not enter that strange land: return to the mine lift", {Book::Type::BOOK1, 135}));
 
             Controls = Story::Controls::STANDARD;
@@ -28851,16 +28891,16 @@ namespace Book1
                     }
                     else
                     {
-                        PreText += "\n\nYou may replace the Berserkers with some:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
+                        PreText += "\n\nYou replace the Berserkers with some:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
 
-                        Army = {Army::Base("Lhasbreath Barbarians", Army::Type::LHASBREATH_BARBARIANS, location, 3, 2)};
+                        party.Army.push_back(Army::Base("Lhasbreath Barbarians", Army::Type::LHASBREATH_BARBARIANS, location, 3, 2));
                     }
                 }
                 else
                 {
-                    PreText += "\n\nYou may replace the Berserkers with some:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
+                    PreText += "\n\nYou replace the Berserkers with some:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
 
-                    Army = {Army::Base("Lhasbreath Barbarians", Army::Type::LHASBREATH_BARBARIANS, location, 3, 2)};
+                    party.Army.push_back(Army::Base("Lhasbreath Barbarians", Army::Type::LHASBREATH_BARBARIANS, location, 3, 2));
                 }
             }
             else if (Engine::VERIFY_CODES(party, {Codes::Type::RECEIVED_LHASBREATH_BARBARIANS}))
@@ -29036,7 +29076,7 @@ namespace Book1
             Text = "You are in a blistering wilderness of desert sands, far to the south of the city of Saltdad. Keeping track of direction in the desert is a formidable challenge, as the hazy heat tortures the horizon into swirls of shimmering air.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Navigate the desert (Team check: Survival 4+, Successes: 4)", {Book::Type::BOOK1, 858}, {Book::Type::BOOK1, 858}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 4));
+            Choices.push_back(Choice::Base("Navigate the desert (Team check: Survival 4+, Successes: 4)", {Book::Type::BOOK1, -1}, {Book::Type::BOOK1, -1}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::SURVIVAL}, 4, 4));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -29066,6 +29106,8 @@ namespace Book1
             }
             else
             {
+                Bye = "You manage to stay on course.";
+
                 Choices[0].Destination = destination;
             }
         }
@@ -29345,11 +29387,14 @@ namespace Book1
             }
             else
             {
-                temp_string = "You are caught and lashed for your impusence. " + std::string(party.Members[selection[0]].Name) + " loses 2 Health points. There's no alternative but to try again another day. It is possible to be whipped to death -- escaping slaves receive no mercy!";
+                if (Engine::IS_ACTIVE(party, party.LastSelected))
+                {
+                    temp_string = "You are caught and lashed for your impusence. " + std::string(party.Members[party.LastSelected].Name) + " loses 2 Health points. There's no alternative but to try again another day. It is possible to be whipped to death -- escaping slaves receive no mercy!";
 
-                Bye = temp_string.c_str();
+                    Bye = temp_string.c_str();
 
-                Engine::GAIN_HEALTH(party.Members[selection[0]], -2);
+                    Engine::GAIN_HEALTH(party.Members[party.LastSelected], -2);
+                }
             }
         }
     };
@@ -29486,6 +29531,18 @@ namespace Book1
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        Engine::Destination Background(Party::Base &party)
+        {
+            if (Engine::VERIFY_CODES(party, {Codes::A(48)}))
+            {
+                return {Book::Type::BOOK1, 34};
+            }
+            else
+            {
+                return {Book::Type::NONE, -1};
+            }
         }
 
         void Event(Party::Base &party)
@@ -30299,7 +30356,7 @@ namespace Book1
             Location = Location::Type::MORDAIN;
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Depart in your new ship", {Book::Type::BOOK1, 851}));
+            Choices.push_back(Choice::Base("Depart in your new ship", {Book::Type::BOOK1, 851}, Choice::Type::SAIL, Location::Type::MORDAIN));
             Choices.push_back(Choice::Base("Enter the wide tunnel", {Book::Type::BOOK1, 593}));
 
             Controls = Story::Controls::STANDARD;
