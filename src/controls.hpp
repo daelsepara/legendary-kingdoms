@@ -85,7 +85,8 @@ namespace Control
         CARGO,
         SAIL,
         DRINK,
-        PREVIEW
+        PREVIEW,
+        STORY
     };
 
     class Base

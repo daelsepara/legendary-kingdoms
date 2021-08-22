@@ -23408,6 +23408,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     auto saveParty = party;
 
     std::vector<Button> controls = {};
+    std::vector<Button> controls_normal = {};
+    std::vector<Button> controls_popup = {};
+
+    auto current_mode = Control::Type::STORY;
 
     while (!quit)
     {
@@ -23483,41 +23487,82 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         if (story->Controls == Story::Controls::STANDARD)
         {
-            controls = Story::StandardControls(compact);
+            controls_normal = Story::StandardControls(compact);
         }
         else if (story->Controls == Story::Controls::SHOP)
         {
-            controls = Story::ShopControls(compact);
+            controls_normal = Story::ShopControls(compact);
         }
         else if (story->Controls == Story::Controls::BARTER)
         {
-            controls = Story::BarterControls(compact);
+            controls_normal = Story::BarterControls(compact);
         }
         else if (story->Controls == Story::Controls::HARBOUR)
         {
-            controls = Story::HarbourControls(compact);
+            controls_normal = Story::HarbourControls(compact);
         }
         else if (story->Controls == Story::Controls::INN)
         {
-            controls = Story::InnControls(compact);
+            controls_normal = Story::InnControls(compact);
         }
         else if (story->Controls == Story::Controls::RECRUIT)
         {
-            controls = Story::RecruitmentConrols(compact);
+            controls_normal = Story::RecruitmentConrols(compact);
         }
         else
         {
-            controls = Story::ExitControls(compact);
+            controls_normal = Story::ExitControls(compact);
+        }
+
+        if ((story->Monsters.size() > 0 || story->EnemyArmy.size() > 0 || story->EnemyFleet.size() > 0) && ((Engine::ALIVE(party) + Engine::OUTSIDE(party)) > 0))
+        {
+            controls_normal = Story::BattlePreviewControls(compact);
         }
 
         if (story->Type != Story::Type::NORMAL || (Engine::ALIVE(party) + Engine::OUTSIDE(party)) <= 0)
         {
-            controls = Story::ExitControls(compact);
+            controls_normal = Story::ExitControls(compact);
         }
 
-        if (Engine::COUNT(story->Monsters) > 0 || Engine::COUNT(story->EnemyArmy) > 0 || Engine::COUNT(story->EnemyFleet) > 0)
+        auto popupw = (int)(0.6 * SCREEN_WIDTH);
+        auto popuph = (int)(0.6 * SCREEN_HEIGHT);
+        auto popupx = (SCREEN_WIDTH - popupw) / 2;
+        auto popupy = (SCREEN_HEIGHT - popuph) / 2;
+
+        auto popup_speed = 1;
+        auto popup_offset = 0;
+        auto popup_limit = (popuph - infoh - buttonh - button_space) / (88);
+        auto popup_last = popup_offset + popup_limit;
+
+        if (story->Monsters.size() > 0 || story->EnemyFleet.size() > 0 || story->EnemyArmy.size() > 0)
         {
-            controls = Story::BattlePreviewControls(compact);
+            if (story->Monsters.size() > 0)
+            {
+                if (popup_last > story->Monsters.size())
+                {
+                    popup_last = story->Monsters.size();
+                }
+
+                controls_popup = popupList(window, renderer, story->Monsters, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+            }
+            else if (story->EnemyFleet.size() > 0)
+            {
+                if (popup_last > story->EnemyFleet.size())
+                {
+                    popup_last = story->EnemyFleet.size();
+                }
+
+                controls_popup = popupList(window, renderer, story->EnemyFleet, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+            }
+            else if (story->EnemyArmy.size() > 0)
+            {
+                if (popup_last > story->EnemyArmy.size())
+                {
+                    popup_last = story->EnemyArmy.size();
+                }
+
+                controls_popup = popupList(window, renderer, story->EnemyArmy, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy, false);
+            }
         }
 
         // Render the image
@@ -23700,8 +23745,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                 if (!compact)
                 {
-                    fillRect(renderer, controls[0].W + 2 * border_space, controls[0].H + 2 * border_space, controls[0].X - border_space, controls[0].Y - border_space, intWH);
-                    fillRect(renderer, controls[1].W + 2 * border_space, controls[1].H + 2 * border_space, controls[1].X - border_space, controls[1].Y - border_space, intWH);
+                    fillRect(renderer, controls_normal[0].W + 2 * border_space, controls_normal[0].H + 2 * border_space, controls_normal[0].X - border_space, controls_normal[0].Y - border_space, intWH);
+                    fillRect(renderer, controls_normal[1].W + 2 * border_space, controls_normal[1].H + 2 * border_space, controls_normal[1].X - border_space, controls_normal[1].Y - border_space, intWH);
                 }
 
                 bool scrollUp = false;
@@ -23770,6 +23815,50 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     putText(renderer, "Your party has died. This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
 
+                if (current_mode == Control::Type::STORY)
+                {
+                    controls = controls_normal;
+                }
+                else if (current_mode == Control::Type::PREVIEW)
+                {
+                    renderButtons(renderer, controls_normal, -1, intLB, border_space, border_pts);
+
+                    fillRect(renderer, popupw, popuph, popupx, popupy, intBE);
+
+                    drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
+
+                    std::string preview_string = "";
+
+                    if (story->Monsters.size() > 0)
+                    {
+                        preview_string = "Enemy Combatants";
+                    }
+                    else if (story->EnemyFleet.size() > 0)
+                    {
+                        preview_string = "Enemy Fleet";
+                    }
+                    else if (story->EnemyArmy.size() > 0)
+                    {
+                        preview_string = "Enemy Army";
+                    }
+                    else
+                    {
+                        preview_string = "Battle Preview";
+                    }
+
+                    putHeader(renderer, preview_string.c_str(), font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+
+                    if (popup_last - popup_offset > 0)
+                    {
+                        for (auto i = 0; i < popup_last - popup_offset; i++)
+                        {
+                            drawRect(renderer, controls_popup[i].W + border_space, controls_popup[i].H + border_space, controls_popup[i].X - 4, controls_popup[i].Y - 4, intBK);
+                        }
+                    }
+
+                    controls = controls_popup;
+                }
+
                 renderButtons(renderer, controls, current, intLB, border_space, border_pts);
 
                 if (flash_message)
@@ -23784,40 +23873,173 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                 }
 
-                quit = Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+                Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
                 if (((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold))
                 {
                     if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
                     {
-                        if (text)
+                        if (current_mode == Control::Type::STORY)
                         {
-                            if (offset > 0)
+                            if (text)
                             {
-                                offset -= scrollSpeed;
+                                if (offset > 0)
+                                {
+                                    offset -= scrollSpeed;
+                                }
+
+                                if (offset < 0)
+                                {
+                                    offset = 0;
+                                }
+                            }
+                        }
+                        else if (current_mode == Control::Type::PREVIEW)
+                        {
+                            auto offset_limit = 0;
+
+                            if (story->Monsters.size() > 0)
+                            {
+                                offset_limit = story->Monsters.size();
+                            }
+                            else if (story->EnemyFleet.size() > 0)
+                            {
+                                offset_limit = story->EnemyFleet.size();
+                            }
+                            else if (story->EnemyArmy.size() > 0)
+                            {
+                                offset_limit = story->EnemyArmy.size();
                             }
 
-                            if (offset < 0)
+                            if (popup_offset > 0)
                             {
-                                offset = 0;
+                                popup_offset -= popup_speed;
+
+                                if (popup_offset < 0)
+                                {
+                                    popup_offset = 0;
+                                }
+
+                                popup_last = popup_offset + popup_limit;
+
+                                if (popup_last > offset_limit)
+                                {
+                                    popup_last = offset_limit;
+                                }
+
+                                controls_popup.clear();
+
+                                if (story->Monsters.size() > 0)
+                                {
+                                    controls_popup = popupList(window, renderer, story->Monsters, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+                                }
+                                else if (story->EnemyFleet.size() > 0)
+                                {
+                                    controls_popup = popupList(window, renderer, story->EnemyFleet, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+                                }
+                                else if (story->EnemyArmy.size() > 0)
+                                {
+                                    controls_popup = popupList(window, renderer, story->EnemyArmy, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy, false);
+                                }
+
+                                SDL_Delay(50);
+                            }
+
+                            if (popup_offset <= 0)
+                            {
+                                current = -1;
+
+                                selected = false;
                             }
                         }
                     }
                     else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
                     {
-                        if (text)
+                        if (current_mode == Control::Type::STORY)
                         {
-                            if (text->h >= text_bounds - 2 * space)
+                            if (text)
                             {
-                                if (offset < text->h - text_bounds + 2 * space)
+                                if (text->h >= text_bounds - 2 * space)
                                 {
-                                    offset += scrollSpeed;
+                                    if (offset < text->h - text_bounds + 2 * space)
+                                    {
+                                        offset += scrollSpeed;
+                                    }
+
+                                    if (offset > text->h - text_bounds + 2 * space)
+                                    {
+                                        offset = text->h - text_bounds + 2 * space;
+                                    }
+                                }
+                            }
+                        }
+                        else if (current_mode == Control::Type::PREVIEW)
+                        {
+                            auto offset_limit = 0;
+
+                            if (story->Monsters.size() > 0)
+                            {
+                                offset_limit = story->Monsters.size();
+                            }
+                            else if (story->EnemyFleet.size() > 0)
+                            {
+                                offset_limit = story->EnemyFleet.size();
+                            }
+                            else if (story->EnemyArmy.size() > 0)
+                            {
+                                offset_limit = story->EnemyArmy.size();
+                            }
+
+                            if (offset_limit - popup_last > 0)
+                            {
+                                if (popup_offset < offset_limit - popup_limit)
+                                {
+                                    popup_offset += popup_speed;
                                 }
 
-                                if (offset > text->h - text_bounds + 2 * space)
+                                if (popup_offset > offset_limit - popup_limit)
                                 {
-                                    offset = text->h - text_bounds + 2 * space;
+                                    popup_offset = offset_limit - popup_limit;
                                 }
+
+                                popup_last = popup_offset + popup_limit;
+
+                                if (popup_last > offset_limit)
+                                {
+                                    popup_last = offset_limit;
+                                }
+
+                                controls_popup.clear();
+
+                                if (story->Monsters.size() > 0)
+                                {
+                                    controls_popup = popupList(window, renderer, story->Monsters, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+                                }
+                                else if (story->EnemyFleet.size() > 0)
+                                {
+                                    controls_popup = popupList(window, renderer, story->EnemyFleet, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+                                }
+                                else if (story->EnemyArmy.size() > 0)
+                                {
+                                    controls_popup = popupList(window, renderer, story->EnemyArmy, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy, false);
+                                }
+
+                                if (popup_offset > 0)
+                                {
+                                    if (controls_popup[current].Type != Control::Type::SCROLL_DOWN)
+                                    {
+                                        current++;
+                                    }
+                                }
+
+                                SDL_Delay(50);
+                            }
+
+                            if (offset_limit - popup_last <= 0)
+                            {
+                                selected = false;
+
+                                current = -1;
                             }
                         }
                     }
@@ -23877,6 +24099,63 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::GAME && !hold)
                     {
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::PREVIEW && !hold)
+                    {
+                        if (current_mode == Control::Type::STORY)
+                        {
+                            current_mode = Control::Type::PREVIEW;
+
+                            popup_offset = 0;
+
+                            popup_last = popup_offset + popup_limit;
+
+                            if (Engine::COUNT(story->Monsters) > 0 || Engine::COUNT(story->EnemyArmy) > 0 || Engine::COUNT(story->EnemyFleet) > 0)
+                            {
+                                if (story->Monsters.size() > 0)
+                                {
+                                    if (popup_last > story->Monsters.size())
+                                    {
+                                        popup_last = story->Monsters.size();
+                                    }
+
+                                    controls_popup = popupList(window, renderer, story->Monsters, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+                                }
+                                else if (story->EnemyFleet.size() > 0)
+                                {
+                                    if (popup_last > story->EnemyFleet.size())
+                                    {
+                                        popup_last = story->EnemyFleet.size();
+                                    }
+
+                                    controls_popup = popupList(window, renderer, story->EnemyFleet, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+                                }
+                                else if (story->EnemyArmy.size() > 0)
+                                {
+                                    if (popup_last > story->EnemyArmy.size())
+                                    {
+                                        popup_last = story->EnemyArmy.size();
+                                    }
+
+                                    controls_popup = popupList(window, renderer, story->EnemyArmy, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy, false);
+                                }
+                            }
+                        }
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                    {
+                        if (current_mode == Control::Type::PREVIEW)
+                        {
+                            current_mode = Control::Type::STORY;
+                        }
+
                         current = -1;
 
                         selected = false;
@@ -24121,12 +24400,12 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             }
                             else if (Engine::ALIVE(party) <= 0)
                             {
-                                controls = Story::ExitControls(compact);
+                                controls_normal = Story::ExitControls(compact);
                             }
                         }
                         else
                         {
-                            controls = Story::ExitControls(compact);
+                            controls_normal = Story::ExitControls(compact);
                         }
                     }
                     else if (controls[current].Type == Control::Type::BACK && !hold)

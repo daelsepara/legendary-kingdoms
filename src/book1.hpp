@@ -12275,7 +12275,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-
             Monsters = {
                 Monster::Base("Kensai", 6, 4, 4, 9, 0),
                 Monster::Base("Kensai", 7, 4, 4, 8, 0),
@@ -18899,7 +18898,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-
             Monsters = {
                 Monster::Base("Unbraaki", Monster::Type::UNBRAAKI, 8, 3, 6, 11, 0),
                 Monster::Base("Monkey", Monster::Type::MONKEY_WITH_SPELLS, 0, 0, 5, 3, 0),
