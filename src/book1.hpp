@@ -15735,6 +15735,10 @@ namespace Book1
 
             ID = 472;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "You raise your hands to show there is no hard feelings. In response, one of your party members is punched in the mouth with the haft of an axe and loses 1 Health point. Weapons are drawn... how did this get so violent so quickly?";
 
             Choices.clear();
@@ -15807,6 +15811,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 475;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Text = "The guards suspect you are assassins and traitors. One calls out, and suddenly dozens of heavily armed Bronzeguard begin to clank towards you. There are too many to fight, you must flee!";
 
@@ -15909,9 +15917,9 @@ namespace Book1
 
             Engine::GET_CODES(party, {Codes::A(56)});
 
-            Take = {Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE};
+            Take = {Equipment::CRUDE_BLADE, Equipment::CRUDE_BLADE, Equipment::SHIELD2};
 
-            Limit = 2;
+            Limit = 3;
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 350}; }
@@ -15926,7 +15934,9 @@ namespace Book1
 
             ID = 479;
 
-            Text = "After days of wandering you reach the outskirts of a ramshackle city which stands in the shadow of a ruined palace. Some peasant girls take pity on you, feeding you with precious water. Thanking them you make your way into the city centre.\n\nYou lose 5 silver coins, if you have them.";
+            Location = Location::Type::SALTDAD;
+
+            Text = "After days of wandering you reach the outskirts of a ramshackle city which stands in the shadow of a ruined palace. Some peasant girls take pity on you, feeding you with precious water. Thanking them you make your way into the city centre.\n\nNote: You lose 5 silver coins, if you have them.";
 
             Choices.clear();
 
@@ -15949,6 +15959,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 480;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
 
             Text = "Since this is the first time you have taught this language Kopu is delighted. He offers you a BLUESTONE in exchange.\n\nNote: In addition, any injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
 
@@ -16312,6 +16326,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 490;
+
+            Location = Location::Type::WITHERED_STEPPES;
 
             Text = "The dragonyak bull is delighted to see you again, and bids you join the herd at the waterside. You chat idly with the bull as he tells you the ancient stories of his clan.\n\n\"Once,\" he claims, \"the herd found itself lost in the shadowlands. Seeking shelter from the blistering sun they entered the Shaded Gate. Many cattle were lost. But then Ganch, the spirit bull, appeared, and led the herd west, then south, then west again. The Shaded Gate was found, and the herd emerged into the sun once more, weaker but wiser.\"";
 
