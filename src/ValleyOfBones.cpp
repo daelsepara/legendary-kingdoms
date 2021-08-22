@@ -22088,25 +22088,16 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            if (Engine::HAS_STATUS(party, story->Choices[choice].Status[0]))
+                            if (Engine::COUNT(party, story->Choices[choice].Status[0]) == 1)
                             {
-                                target = Engine::FIND_CHARACTER(party, story->Choices[choice].Status[0]);
+                                target = Engine::FIRST(party, story->Choices[choice].Status[0]);
                             }
                             else
                             {
-                                party.CurrentCharacter = Engine::FIND_SOLO(party);
-
-                                if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
-                                {
-                                    target = party.CurrentCharacter;
-                                }
-                                else if (Engine::COUNT(party) == 1)
-                                {
-                                    target = Engine::FIRST(party);
-                                }
+                                target = selectPartyMember(window, renderer, party, story->Choices[choice].Team, Equipment::NONE, Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE);
                             }
 
-                            if (target >= 0 && target < party.Members.size())
+                            if (Engine::IS_ACTIVE(party, target) && Engine::HAS_STATUS(party.Members[target], story->Choices[choice].Status[0]))
                             {
                                 auto increase = gainAttributeScore(window, renderer, party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Value, story->Choices[choice].Difficulty);
 

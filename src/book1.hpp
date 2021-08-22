@@ -10348,6 +10348,8 @@ namespace Book1
 
             Monsters.clear();
 
+            CanFlee = false;
+
             if (!Engine::VERIFY_CODES(party, {Codes::A(65)}))
             {
                 PreText = "The room beyond is different from the others. It is a rough chamber, cut from the living rock, rather than a flagstone and brick room. Inside you can see, piled up, many crudely manufactured crates. These appear to be the orc's supplies, shipped all the way from the Savage Lands. Before them a pack of savage hounds have been left on guard, attached to long chains that will not let them leave the room, but gives them free reign to attack intruders. They bark and snarl at you, but with their masters dead you have little to fear from the noise. If you want the supplies you will have to deal with the hounds...\n\nNote: You can cast any number of spells before combat starts, as the chained hounds cannot reach you through the door.";
@@ -10370,6 +10372,8 @@ namespace Book1
             else
             {
                 PreText = "This chamber is empty.";
+
+                destination = {Book::Type::BOOK1, 736};
             }
 
             Text = PreText.c_str();
@@ -10398,6 +10402,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 307;
+
+            Location = Location::Type::SALT_PLAINS;
 
             Text = "Finally, after days of wandering you collapse, helpless into the dry sands. You fear death will take you. What happens later is scarcely much better. A patrol of guards from Clifftop come across your nearly dead bodies. Seeing the opportunity to make a quick coin, they decide to sell you into slavery.";
 
@@ -10444,6 +10450,8 @@ namespace Book1
 
         void AfterCombat(Party::Base &party, Engine::Combat result)
         {
+            Bye = NULL;
+
             if (result == Engine::Combat::VICTORY)
             {
                 Take = {Equipment::IRON_GREATAXE2};
@@ -10451,6 +10459,8 @@ namespace Book1
                 Limit = 1;
 
                 Engine::GAIN_MONEY(party, 300);
+
+                Bye = "Not wishing to be found surrounded by dead barbarian's in the king's hall, you slip away into the night.";
             }
         }
     };
@@ -10806,6 +10816,8 @@ namespace Book1
 
             ID = 318;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You have returned to the door you forced open earlier.";
 
             Choices.clear();
@@ -10824,6 +10836,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 319;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "Milagros wails but does not weep as she is beaten, the guard stopping short as he sees the angry gazes of the other slaves. Departing in a hail of foul language, he leaves the bloodied and defiant child. You feel ungallant for not interfering, but strangely proud of Milagros for her bravery.";
 
@@ -10869,6 +10885,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 321;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "You coldly sheathe your weapon, your companions bleeding into the flagstones and crumbling books around you. You push aside their bodies, sit and begin to read. You continue to read, unmoving, until death takes you.";
 
@@ -10926,7 +10944,7 @@ namespace Book1
         {
             PreText = "The keeper of the holy purse is in charge of tax administration, specifically the religious tithes paid by other cities. He is a fat, wealthy priest, who eyes you lazily as you enter.";
 
-            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::IRON_SCEPTRE}))
+            if (!Engine::VERIFY_EQUIPMENT(party, Team::Type::ZIGGURAT, {Equipment::Type::IRON_SCEPTRE}))
             {
                 PreText += "\n\nThe keeper has no time for you, and has you pushed out of his office.";
             }
@@ -10936,7 +10954,7 @@ namespace Book1
 
         Engine::Destination Continue(Party::Base &party)
         {
-            if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::IRON_SCEPTRE}))
+            if (Engine::VERIFY_EQUIPMENT(party, Team::Type::ZIGGURAT, {Equipment::Type::IRON_SCEPTRE}))
             {
                 return {Book::Type::BOOK1, 153};
             }
@@ -11047,6 +11065,10 @@ namespace Book1
 
             ID = 327;
 
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
             Text = "You cannot expect to rob the patriarch twice and get away with it! As soon as your party have made it down the stairs you are pounced upon by dozens of guards in hiding. Those who dash up the stairs are cut off by another troop. You have been captured!";
 
             Choices.clear();
@@ -11149,8 +11171,6 @@ namespace Book1
     class Story331 : public Story::Base
     {
     public:
-        std::string PreText = "";
-
         Story331()
         {
             BookID = Book::Type::BOOK1;
@@ -11161,31 +11181,25 @@ namespace Book1
 
             IsCity = true;
 
+            Text = "You pass by a number of Lhasbreath drinking halls, where the barbarians sing and dance to the sound of drums and flutes. A Lhasbreath maiden puts a garland of flowers around your neck, winking lewdly at you as you pass. The folk of this city seem to have no cares in the world!";
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
         }
 
-        void Event(Party::Base &party)
-        {
-            PreText = "You pass by a number of Lhasbreath drinking halls, where the barbarians sing and dance to the sound of drums and flutes. A Lhasbreath maiden puts a garland of flowers around your neck, winking lewdly at you as you pass. The folk of this city seem to have no cares in the world!";
-
-            if (!Engine::VERIFY_CODES(party, {Codes::A(1)}) || Engine::VERIFY_CODES(party, {Codes::A(90)}))
-            {
-                PreText += "\n\nYou stroll on past the merriment.";
-            }
-
-            Text = PreText.c_str();
-        }
-
         Engine::Destination Continue(Party::Base &party)
         {
+            Bye = NULL;
+
             if (Engine::VERIFY_CODES(party, {Codes::A(1)}) && !Engine::VERIFY_CODES(party, {Codes::A(90)}))
             {
                 return {Book::Type::BOOK1, 394};
             }
             else
             {
+                Bye = "You stroll on past the merriment.";
+
                 return {Book::Type::BOOK1, 775};
             }
         }
@@ -11245,6 +11259,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 334;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "Fastilon falls to the ground, quite dead, his glowing sword vanishing in his hand. He appears to be wearing nothing of value on his person, despite the power he summoned to fight you. Checking that the MADSHARDs are still in your possession, you return to the surface. Your workers have gone, scared away by the sounds of battle, leaving you alone amongst the ruins.\n\nNote: You gained the code A81.";
 
@@ -11365,6 +11381,10 @@ namespace Book1
 
             ID = 338;
 
+            Location = Location::Type::CLIFFTOP;
+
+            IsCity = true;
+
             Text = "The ghastly screams of the man echo in your head long after his eyes have been torn from his skull. Lothor congratulates you for your choice of punishments, gifting you a purse of 20 silver coins, but you shall pay a hefty price spiritually. The gods despise a torturer -- from now on you cannot receive any blessings from any priest in the world.\n\nNote: You gained the code A34.";
 
             Bye = "Feeling dead inside, you depart.";
@@ -11379,6 +11399,7 @@ namespace Book1
             Engine::GAIN_MONEY(party, 20);
 
             Engine::GET_CODES(party, {Codes::A(34)});
+
             Engine::GET_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER});
         }
 
@@ -11546,6 +11567,8 @@ namespace Book1
             ID = -343;
 
             DisplayID = 343;
+
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Choices.clear();
 
@@ -11980,6 +12003,10 @@ namespace Book1
 
             ID = 357;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "The old father is tearful with gratitude. \"I have no money to give you, obviously,\" he says. \"But I insist you have this. In my youth I travelled the world, and made a pilgrimage to Pendrilor, where St. Elias, the holiest man in the world, blessed this humble wooden talisman for me. It kept me safe from the grasp of undead horrors, but it's powers only work here in the Valley. Please, take it with my thanks.\"\n\nHe presses the TALISMAN of St. Elias into your hands. It is little more than a humble wooden pendant.\n\nTake it if you wish.";
 
             Choices.clear();
@@ -12005,6 +12032,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 358;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "You must climb the rope one at a time.";
 
@@ -12067,9 +12098,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Army = {
-                Army::Base("Kensai Warriors", Army::Type::LUUTANESH_SPEARS, Location::Type::LUUTANESH, 3, 3),
-                Army::Base("Chalice Archers", Army::Type::FAITHFUL_IRREGULARS, Location::Type::LUUTANESH, 1, 4)};
+            party.Army.push_back(Army::Base("Kensai Warriors", Army::Type::LUUTANESH_SPEARS, Location::Type::LUUTANESH, 3, 3));
+            party.Army.push_back(Army::Base("Chalice Archers", Army::Type::FAITHFUL_IRREGULARS, Location::Type::LUUTANESH, 1, 4));
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 263}; }
@@ -12290,7 +12320,7 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("You have a CRIER BIRD", {Book::Type::BOOK1, 441}, {Equipment::CRIER_BIRD}));
-            Choices.push_back(Choice::Base("promise to keep a look out for the bird, should you ever head out that way", {Book::Type::BOOK1, 340}));
+            Choices.push_back(Choice::Base("Promise to keep a look out for the bird, should you ever head out that way", {Book::Type::BOOK1, 340}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -12560,6 +12590,10 @@ namespace Book1
 
             ID = 378;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "Kopu is astounded you have learned this forbidden language. \"You keep divine company, for the only man I know who understands the Drear tongue is St. Elias himself. He would not have taught you such a language unless the world itself was at stake.\"\n\nKopu waves his hands and a magical cabinet made of purple wood appears, floating in the air. From the cabinet he retrieves a CLOAK OF WONDER (all skills +3). \"Take it!\" he insists. \"And banish the darkness from our land once and for all!\" You vow to do so.\n\nNote: In addition, all injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
 
             Choices.clear();
@@ -12622,6 +12656,7 @@ namespace Book1
             Engine::REST(party);
 
             Engine::REMOVE_STATUS(party, Character::Status::LOST_FINGERNAILS);
+
             Engine::REMOVE_STATUS(party, Character::Status::LOST_TONGUE);
         }
     };
@@ -12759,8 +12794,6 @@ namespace Book1
 
         void SkillCheck(Party::Base &party, bool outcome, std::vector<int> selection)
         {
-            Bye = NULL;
-
             if (outcome)
             {
                 if (Engine::IS_ACTIVE(party, party.LastSelected))
@@ -12778,7 +12811,7 @@ namespace Book1
             }
             else
             {
-                Bye = "Note: The 1st Orc gets a free attack at the beginning of the battle on the party member who failed the stealth check.";
+                Bye = "Note: The first Orc gets a free attack at the beginning of the battle on the party member who failed the stealth check.";
 
                 Engine::GET_CODES(party, {Codes::Type::ENEMY1_FREEATTACK_ROUND0});
             }
@@ -12805,8 +12838,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            Bye = NULL;
-
             PreText = "You make your way to Dulcimer's house, a red-roofed cubical block of stone and rough cement in the wealthiest part of the city. The house is well guarded and the family large in number, with aunts, uncles, nieces and nephews in ample numbers attending Dulcimer as he receives you in the family hall.\n\n\"That witch has damaged my honour and made me look a fool!\" rages Dulcimer as you explain the purpose of your visit. \"She is a thief and a harlot! My sister has volunteered personally to deal the killing blow to her.\"\n\nDulcimer's sister, a thin and sinister woman with sharp eyebrows, looks positively excited at the prospect.";
 
             Choices.clear();
@@ -12858,10 +12889,6 @@ namespace Book1
     public:
         Engine::Destination destination = {};
 
-        Team::Type previousTeam = Team::Type::NONE;
-
-        int character = -1;
-
         Story386()
         {
             BookID = Book::Type::BOOK1;
@@ -12885,17 +12912,15 @@ namespace Book1
         {
             Team = Team::Type::AKIHIRO_OF_CHALICE;
 
-            character = Engine::FIND_CHARACTER(party, Character::Type::AKIHIRO_OF_CHALICE);
+            Engine::GO_SOLO(party, Character::Type::AKIHIRO_OF_CHALICE);
 
-            if (Engine::IS_ACTIVE(party, character))
+            if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
             {
-                previousTeam = party.Members[character].Team;
-
-                Engine::SET_TEAM(party.Members[character]);
+                Engine::SET_TEAM(party.Members[party.CurrentCharacter]);
 
                 Monsters = {Monster::Base("Monks", 5, 4, 4, 8, 0)};
 
-                Engine::GAIN_STATUS(party.Members[character], Character::Status::UNARMED_COMBAT);
+                Engine::GAIN_STATUS(party.Members[party.CurrentCharacter], Character::Status::UNARMED_COMBAT);
             }
             else
             {
@@ -12909,22 +12934,20 @@ namespace Book1
         {
             if (result == Engine::Combat::VICTORY)
             {
-                if (Engine::IS_ACTIVE(party, character))
+                if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
                 {
-                    Engine::SET_TEAM(party.Members[character], previousTeam);
-
-                    Engine::REMOVE_STATUS(party.Members[character], Character::Status::UNARMED_COMBAT);
+                    Engine::REMOVE_STATUS(party.Members[party.CurrentCharacter], Character::Status::UNARMED_COMBAT);
                 }
 
                 destination = {Book::Type::BOOK1, 9};
             }
             else
             {
-                if (character >= 0 && character < party.Members.size())
+                if (party.CurrentCharacter >= 0 && party.CurrentCharacter < party.Members.size())
                 {
-                    party.Members[character].Health = 1;
+                    party.Members[party.CurrentCharacter].Health = 1;
 
-                    Engine::REMOVE_STATUS(party.Members[character], Character::Status::UNARMED_COMBAT);
+                    Engine::REMOVE_STATUS(party.Members[party.CurrentCharacter], Character::Status::UNARMED_COMBAT);
                 }
 
                 destination = {Book::Type::BOOK1, 596};
@@ -12940,6 +12963,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 387;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
 
             Text = "As soon as you show the ring, the guards become humble. \"Forgive us, great ones, we did not know!\" they whisper. \"Naturally, you may pass!\"";
 
@@ -12998,6 +13025,8 @@ namespace Book1
             ID = -388;
 
             DisplayID = 388;
+
+            Location = Location::Type::SALT_MINES;
 
             Text = "You only manage to bang your head on one of the low walls.";
 
@@ -13195,6 +13224,10 @@ namespace Book1
 
             ID = 394;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "A surly group of barbarians begin pushing you, spoiling for a fight. In the background a weaselly looking man with a long knife observes the horseplay, his finger pressing to the top of his dagger meaningfully.";
 
             Choices.clear();
@@ -13324,6 +13357,8 @@ namespace Book1
 
             DisplayID = 397;
 
+            Location = Location::Type::WEST_ROAD;
+
             Choices.clear();
 
             Controls = Story::Controls::NONE;
@@ -13421,7 +13456,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            // TODO: Rescue captured party members?
+            Engine::REMOVE_STATUS(party, Character::Status::CAPTURED);
 
             Engine::RAISE_HEALTH(party, 1);
 
@@ -13526,6 +13561,8 @@ namespace Book1
 
             ID = 402;
 
+            Location = Location::Type::LHASBREATH_JUNGLE;
+
             Text = "Throwing caution to the wind you pluck some flowers, keeping some in your pack, and perhaps wearing some in your hair. A little colour for your bleak desert trips. They are slightly magical, and it takes years for them to decay.";
 
             Bye = "Feeling slightly prettier you move on.";
@@ -13611,6 +13648,8 @@ namespace Book1
 
             ID = 405;
 
+            Location = Location::Type::CAVES_OF_URANU;
+
             Text = "The work is hot, smelly and dirty, and the piles of junk in the cave seem endless.\n\nNote: Each party member loses 1 Health point as they heave the heavy trash outside the cave.";
 
             Bye = "After a number of hours you still haven't found anything of value and decide to call it quits.";
@@ -13683,6 +13722,10 @@ namespace Book1
             ID = -406;
 
             DisplayID = 406;
+
+            Location = Location::Type::SALTDAD_ARENA;
+
+            IsCity = true;
 
             Text = "You fail but you still manage to force open the door, but not before a pair of guards, attracted by the noise, interrupt you!\n\nNote: Only members of the weapon stealing team may help in this combat.";
 
@@ -14015,6 +14058,10 @@ namespace Book1
 
             ID = 417;
 
+            Location = Location::Type::CLIFFTOP;
+
+            IsCity = true;
+
             Text = "The overseers have no intention of messing with armed warriors, and quickly leave their sport. The woman staggers to her feet, blood flowing from her face.\n\n\"Barbarians!\" she spits. \"They beat me because I am down on my luck. My family used to own half the land in Clifftop, but my grandfather was forced off his land by the vile sorcerer Unbraaki who stole his land documents. You look like adventurous sorts. If you find me the REGISTRY PAPERS from Unbraaki's vault, I'll reward you!\"\n\n\"And you are?\" you ask.\n\n\"They call me Damned Suzanna,\" she shrugs. \"At least, that's what I'm called when people see me. Find those REGISTRY PAPERS and I'll split the land value with you.\"\n\nIt might be worth looking out for.";
 
             Choices.clear();
@@ -14033,6 +14080,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 418;
+
+            Location = Location::Type::CHALICE;
+
+            IsCity = true;
 
             Text = "Your defeat of the kensai in single combat has proven the strength of your convictions. The sister defers and asks you to maintain a respectful tone as she escorts you to Hall of the King.";
 
@@ -14096,6 +14147,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 421;
+
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
 
             Text = "\"You have done all I have asked -- all I can ever ask,\" smiles the Everchild as she greets you into her presence. \"As a boon I am willing to provide soldiers to you, should you ever need the services of an army. Provided you own a barracks elsewhere, you have my permission to transfer soldiers to that barracks from Saltdad. Please leave me with a few units, though... you never know when the valley might need them.\"";
 
@@ -14300,6 +14355,8 @@ namespace Book1
 
             ID = 428;
 
+            Location = Location::Type::UNDERGROUND_TUNNELS;
+
             Text = "Quiet as a mouse you manage to step across the floor of broken bones without so much as raising a dust cloud. Nothing stirs, and you manage to reach the chest quite safely.";
 
             Choices.clear();
@@ -14391,7 +14448,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "You find 123 silver coins and a RUSTY KEY on the bodies.\n\nNote: If you paid any bribes to an ogre, you can recover that money as well.\n\nNote: You gained the code A76.";
+            Text = "You find 123 silver coins and a RUSTY KEY on the bodies.\n\nNote: If you paid any bribes to an ogre, you can recover that money as well.\n\nNote: You also gain any bribes you have paid to an ogre. You gained the code A76.";
 
             Choices.clear();
 
@@ -14499,6 +14556,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 435;
+
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
 
             Text = "The barbarians laugh as you shove them in return. You put up your fists to show you mean business and are alarmed as your opponents heft their axes in return. This isn't a merry brawl... it's a fight to the death!";
 
@@ -14674,6 +14735,10 @@ namespace Book1
 
             ID = 441;
 
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
+
             Text = "Haatchi is delighted as you produce the CRIER BIRD for him. He quickly hangs it in pride of place in his collection, the bird singing a mournful but sweet tune. True to his word, Haatchi hands over a purse of 100 silver coins. \"If you find any others, just bring them to me,\" he insists.";
 
             Bye = "Wishing him a good day, you stroll on.";
@@ -14749,6 +14814,10 @@ namespace Book1
 
             ID = 444;
 
+            Location = Location::Type::LHASBREATH;
+
+            IsCity = true;
+
             Text = "Kopu is impressed with your learnedness. \"Few people live long enough amongst orcs to grasp their language,\" admits Kopu. \"This requires a significant reward.\"\n\nHe rummages through his notes until he finds some SCROLLS OF LORE (Lore +3). \"These magical scrolls contain vast amounts of knowledge, practically an entire library's worth. I was looking for someone worthy to pass them on to. Consider them yours.\"\n\nNote: In addition, all injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
 
             Choices.clear();
@@ -14809,9 +14878,9 @@ namespace Book1
         {
             BookID = Book::Type::BOOK1;
 
-            Location = Location::Type::SALT_MINES;
-
             ID = 446;
+
+            Location = Location::Type::SALT_MINES;
 
             Text = "It was not easy to find them, but finally you discover a band of troglodytes in their lair. They hiss at you and leap to the attack.";
 
@@ -14895,6 +14964,8 @@ namespace Book1
 
             ID = 448;
 
+            Location = Location::Type::LHASBREATH_OASIS;
+
             Text = "The oasis is packed with herd beasts and nomads, sharing the waterhole like brothers. You have heard savage stories about the nomads, but they seem friendly enough. Indeed, one informs you that violence is forbidden at an oasis, though he does so with one hand on his scimitar, as if to suggest that he is willing to wink at that rule if provoked. You peacefully refill your waterskins and continue with your journey.";
 
             Choices.clear();
@@ -14913,6 +14984,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 449;
+
+            Location = Location::Type::LHASBREATH_JUNGLE;
 
             Text = "Tromping through the jungle you have attracted attention to yourselves. A pair of jungle panthers have been stalking you. They leap upon you, quite unexpectedly.\n\nNote: The panthers have ambushed you! They get the first turn.";
 
@@ -14965,6 +15038,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::CONSOLIDATE(party);
+
             Choices.clear();
 
             if (Engine::IN_PARTY(party, Character::Type::AKIHIRO_OF_CHALICE))
@@ -14974,6 +15049,8 @@ namespace Book1
 
             Choices.push_back(Choice::Base("Visit the marketplace", {Book::Type::BOOK1, 142}));
             Choices.push_back(Choice::Base("Find an inn in the foreign quarter", {Book::Type::BOOK1, 665}));
+            Choices.push_back(Choice::Base("Attend a temple", {Book::Type::BOOK1, 522}));
+            Choices.push_back(Choice::Base("Go to the tower of Oneness", {Book::Type::BOOK1, 411}));
             Choices.push_back(Choice::Base("Explore the city", {Book::Type::BOOK1, 270}));
             Choices.push_back(Choice::Base("Leave the city west, over the bridge (you do not need to pay on this side)", {Book::Type::BOOK1, 614}));
             Choices.push_back(Choice::Base("Leave the city south, along the Cold River", {Book::Type::BOOK1, 346}));
@@ -15144,7 +15221,6 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-
             Monsters = {Monster::Base("Skeletons", 5, 5, 4, 24, 0, 0, 2)};
         }
 
@@ -15354,6 +15430,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 465;
+
+            Location = Location::Type::CURSUS;
+
+            IsCity = true;
 
             Text = "You look in vain for your foe. Clearly Montague has outmatched you again! Cursing under your breath, you return to the city centre.";
 
@@ -18183,6 +18263,8 @@ namespace Book1
 
             ID = 547;
 
+            Location = Location::Type::LHASBREATH_JUNGLE;
+
             Text = "You come upon a patch of bright yellow flowers. They have a pleasing scent and your first thought is to gather some up. You pause, though... you are unsure if it is safe to pluck these blooms. They might be poisonous.";
 
             Choices.clear();
@@ -19007,6 +19089,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 571;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "For weeks your diggers clear away rubble and hack at the ground. The very stones seem to recoil as you dig deeper and deeper into the earth. Above your workforce, black clouds gather, and fierce rainstorms attempt to sweep away your encampments. Your workers are terrified and want to abandon their dig.";
 
@@ -19926,18 +20010,6 @@ namespace Book1
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
-        }
-
-        void Event(Party::Base &party)
-        {
-            Engine::GO_SOLO(party, Character::Type::AKIHIRO_OF_CHALICE);
-
-            party.CurrentCharacter = Engine::FIND_SOLO(party);
-
-            if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
-            {
-                party.Members[party.CurrentCharacter].Health = 1;
-            }
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
@@ -21025,8 +21097,6 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Engine::GAIN_MONEY(party, 120);
-
-            Engine::REMOVE_STATUS(party, Character::Status::CAPTURED);
 
             Engine::GET_EQUIPMENT(party, Character::Type::BRASH, {Equipment::HANDSOME_BROOCH1});
         }
@@ -23518,6 +23588,8 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 702;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Text = "With a mixture of threats and promises you keep the workers digging. Finally, after weeks more effort, and plenty of supernatural terrors, the workers break into an antique chamber. Fear seems to almost radiate from the dreadful hall, and only one worker is brave enough to accompany you inside.\n\nIn the shrouded chamber you come upon a plinth, on which you find two madshards. You eagerly scoop them up, but as you turn you realise that something is wrong. The worker who accompanied you inside has changed. His peasant garb has become tight-fitting black robes, and in his hand he holds a blade composed of pure light.\n\n\"I am Fastilon, of the Silence,\" he declares. \"You have troubled the dark one long enough. This place will be a fitting tomb for you.\"\n\n\"He shall never rise!\" you swear, drawing your weapons.\n\nFastilon murmurs, and soon his form splits into six identical copies, which swirl about, constantly changing positions. You must defeat this master assassin.\n\nNote: The first person to damage Fastilon in a combat round is stunned by a magical bolt. That party member cannot attack in the next combat round. If Fastilon takes no damage in a combat round he will cast a spell instead of attacking (see his spells below). If Fastilon has been damaged, he will make two attacks in his turn. You must assign the damage of the second attack to a different character from the first.\nFastilon casts spells in the following order:\n\n1st) Fastilon casts Rune of Unmaking. One party member takes 6 points of damage.\n\n2nd) Fastilon casts Thunderbolt. Inflict 5 points of damage on two party members.\n\n3rd) Fastilon casts Healing Word. Fastilon recovers up to 8 Health points.\n\nAfter casting all his spells, Fastilon will fight as normal, with two attacks as mentioned above.";
 
