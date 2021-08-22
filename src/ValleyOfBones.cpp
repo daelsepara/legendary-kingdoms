@@ -141,6 +141,10 @@ void renderArmy(SDL_Renderer *renderer, TTF_Font *font, int text_space, std::vec
 void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus, Location::Zone zone, int combatRound);
 void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next);
 
+// popup List Scroll controls
+template <typename T>
+void popupScrolls(std::vector<Button> &controls, std::vector<T> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button);
+
 // List Controls
 std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int offsetx, int offsety, bool party_controls);
 std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Attribute::Type> &attributes, int start, int last, int limit, int offsetx, int offsety);
@@ -167,6 +171,9 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
 // Controls
 std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer);
 std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
+std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button);
+std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
+std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
 
 SDL_Surface *createImage(const char *image)
 {
@@ -19106,25 +19113,57 @@ void renderArmy(SDL_Renderer *renderer, TTF_Font *font, int text_space, std::vec
     }
 }
 
-std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety)
+template <typename T>
+void popupScrolls(std::vector<Button> &controls, std::vector<T> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button)
+{
+    auto idx = controls.size();
+
+    if (list.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + infoh + 7 * border_space / 2, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (list.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + (popuph - arrow_size - 2 * border_space - buttonh - infoh), Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, "icons/yes.png", list.size() > 0 ? idx - 1 : idx, back_button ? idx + 1 : idx, list.size() > 0 ? idx - 1 : idx, idx, offsetx + button_space, offsety + popuph - button_space - buttonh, Control::Type::CONFIRM));
+
+    if (back_button)
+    {
+        controls.push_back(Button(idx + 1, "icons/no.png", idx, idx + 1, list.size() > 0 ? idx - 1 : idx + 1, idx + 1, offsetx + popupw - buttonw - button_space, offsety + popuph - button_space - buttonh, Control::Type::BACK));
+    }
+}
+
+std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button)
 {
     auto controls = std::vector<Button>();
 
     auto text_space = 8;
 
-    if (army.size() > 0)
+    if (list.size() > 0)
     {
         for (auto i = 0; i < last - start; i++)
         {
             auto index = start + i;
 
-            auto unit = army[index];
+            auto unit = list[index];
 
-            std::string army_string = "[" + std::string(unit.Name) + "] Strength: " + std::to_string(unit.Strength) + ", Morale: " + std::to_string(unit.Morale);
+            std::string list_string = "[" + std::string(unit.Name) + "] Strength: " + std::to_string(unit.Strength) + ", Morale: " + std::to_string(unit.Morale);
 
-            army_string += "\nPosition: " + std::string(Location::BattleFieldDescription[unit.Position]) + " Garrison: " + std::string(Location::Description[unit.Garrison]);
+            list_string += "\nPosition: " + std::string(Location::BattleFieldDescription[unit.Position]) + " Garrison: " + std::string(Location::Description[unit.Garrison]);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, army_string.c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space);
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
 
@@ -19136,29 +19175,98 @@ std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::v
         }
     }
 
-    auto idx = controls.size();
+    popupScrolls(controls, list, start, last, limit, popupw, popuph, infoh, offsetx, offsety, back_button);
 
-    if (army.size() > limit)
+    return controls;
+}
+
+std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety)
+{
+    return popupList(window, renderer, army, start, last, limit, popupw, popuph, infoh, offsetx, offsety, true);
+}
+
+std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (list.size() > 0)
     {
-        if (start > 0)
+        for (auto i = 0; i < last - start; i++)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + infoh + 7 * border_space / 2, Control::Type::SCROLL_UP));
+            auto index = start + i;
 
-            idx++;
-        }
+            std::string list_string = monsterString(list[index]);
 
-        if (army.size() - last > 0)
-        {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + (popuph - arrow_size - 2 * border_space - buttonh - infoh), Control::Type::SCROLL_DOWN));
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
 
-            idx++;
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
         }
     }
 
-    idx = controls.size();
+    popupScrolls(controls, list, start, last, limit, popupw, popuph, infoh, offsetx, offsety, false);
 
-    controls.push_back(Button(idx, "icons/yes.png", army.size() > 0 ? idx - 1 : idx, idx + 1, army.size() > 0 ? idx - 1 : idx, idx, offsetx + button_space, offsety + popuph - button_space - buttonh, Control::Type::CONFIRM));
-    controls.push_back(Button(idx + 1, "icons/no.png", idx, idx + 1, army.size() > 0 ? idx - 1 : idx + 1, idx + 1, offsetx + popupw - buttonw - button_space, offsety + popuph - button_space - buttonh, Control::Type::BACK));
+    return controls;
+}
+
+std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (list.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto ship = list[index];
+
+            std::string list_string = "[" + std::string(ship.Name) + "] Fighting: " + std::to_string(ship.Fighting) + ", Health: " + std::to_string(ship.Health);
+
+            if (ship.MaximumCargo > 0)
+            {
+                list_string += ", Cargo Units: " + std::to_string(ship.MaximumCargo);
+            }
+
+            list_string += "\nLocation: " + std::string(Location::Description[ship.Location]);
+
+            if (ship.MaximumCargo > 0 && ship.Cargo.size() > 0)
+            {
+                list_string += " Cargo: ";
+
+                for (auto j = 0; j < ship.Cargo.size(); j++)
+                {
+                    if (j > 0)
+                    {
+                        list_string += ", ";
+                    }
+
+                    list_string += Cargo::Description[ship.Cargo[j]];
+                }
+            }
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    popupScrolls(controls, list, start, last, limit, popupw, popuph, infoh, offsetx, offsety, false);
 
     return controls;
 }
