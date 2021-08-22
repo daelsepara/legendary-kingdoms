@@ -2297,7 +2297,7 @@ namespace Book1
             Text = "You spend several days in the handsomely appointed Cold River Inn.\n\nNote: For every 5 silver coins you spend, each party member can recover 1 Health point.\n\nSpell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
 
             RestPrice = 5;
-            
+
             CanRecharge = true;
 
             Choices.clear();
@@ -6907,7 +6907,7 @@ namespace Book1
             Text = "At first you fear you will have to stay in one of the religious hostelries that dot the city. A nightly whipping does not appeal, so fortunately you discover a single inn that caters to foreigners; The Sign of the Sand, built in the harbour district. Though it is built of stone, it reminds you of the kind of traditional inn you might find in Royce, with warm beer and comfortable rooms aplenty. It was built with the permission of the priests a hundred years ago, to encourage sea trade to the city. Its future is constantly in doubt, as hard-line priests detest its presence in the city, but so far economics has trumped religious politics.\n\nFor every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nYou get into a discussion with some travellers from Drakehallow, who seem set on exploring the ruins of Mordain. \"There are vast tunnels and dungeons located beneath the surface,\" says one, a wizard from the magical school Animus Mast. \"No one has mapped them all, but a wise explorer will try. It's easy to get turned around in those deathly arcades.\"";
 
             RestPrice = 5;
-            
+
             CanRecharge = true;
 
             Choices.clear();
@@ -7607,7 +7607,7 @@ namespace Book1
             Text = "The whole family have gathered outside onto the terrace as you approach, their neighbours craning their necks to see you. Janu, your brother-in-law, bows deeply as you approach. \"You honour us with your visit, kensai,\" he says honestly. \"My house is yours. It would please me if you and your companions would stay with us during your visit to the city.\"\n\n\"Thank you, Janu,\" you say. \"Your offer is most kind.\" That night the children sit at your feet as you recount tales of your adventures. Your mother and sister glow with pride to see you in your fine robes, your confidence returned.\n\nNote: You may stay in the house as long as you like. All party members can restore their Health scores to maximum. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
 
             RestPrice = 0;
-            
+
             CanRecharge = true;
 
             Choices.clear();
@@ -9594,9 +9594,9 @@ namespace Book1
         void Event(Party::Base &party)
         {
             RestPrice = -1;
-            
+
             CanRecharge = false;
-            
+
             Controls = Story::Controls::STANDARD;
 
             PreText = "The Cold River Inn is a large building built on sticks to protect it from flooding. The rooms are separated by stretched fabrics of many different colours, and the tavern is a virtual maze of woven corridors, from which the low voices of residents and drinkers alike can be heard behind the frescos and tapestries that separate you from them.";
@@ -9604,9 +9604,9 @@ namespace Book1
             if (!Engine::VERIFY_CODES_ANY(party, {Codes::A(6), Codes::C(17)}))
             {
                 RestPrice = 5;
-                
+
                 CanRecharge = true;
-                
+
                 Controls = Story::Controls::INN;
 
                 PreText += "\n\nYou may stay at the inn and recover your strength. For every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nDuring your stay meet a frustrated archaeologist, fresh from his digs at the Tumblestones just north of Lhasbreath. \"First we were constantly exploited by barbarians from the south, and then our trenches are refilled from the blasted sandstorms as quickly as we could dig them,\" he grumbles. \"I'm certain there are amazing discoveries to be made, but I'll be blown if it's worth all the hassle of finding them!\"";
@@ -16886,7 +16886,7 @@ namespace Book1
             Text = "A row of rowdy taverns stand on the wooden boardwalk built for the harbourside. The taverns are frequently flooded by the incoming tide, and no attempts have been made to sweep away the pooled saltwater that settles in their sunken floors. Frothy waves splash at the windows as you down a tankard of cheap grog at your table, and you wonder how the building manages to stay up.\n\nA nearby sailor sings a sad song about the Maiden of the Depths. She was a pure-hearted girl who was tossed over the side of a ship during one of the frequent storms in the Passage of Illikein around the Splintered Isles. The legend goes that those who present the Maiden with flowers receive rich rewards from sunken hulks beneath the waves.\n\nNote: You may stay at the tavern and recover your strength. For every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms. You gained the code A30.";
 
             RestPrice = 5;
-            
+
             CanRecharge = true;
 
             Choices.clear();
@@ -22460,7 +22460,7 @@ namespace Book1
             Text = "The foreign quarter is the place for merchants and travellers who do not follow the meditative teachings of the God King. It is noisier than the rest of Chalice, and the inn itself buzzes with activity from the traders and slaves who are tasked with shipping rice to the other starving cities of the valley. The inn you have found is typical of one in the foreign quarter, slightly shabby, with a mix of all races from dour Clifftop folk to the bone-clad barbarians of Lhasbreath.\n\nA chatty merchant advises you to avoid the Salt Plains, even if you are travelling on foot. \"It is the driest place in the valley and can suck the moisture from your gums quicker than the noonday sun,\" she says. \"It's not even a shortcut... the Westroad is a faster way to Clifftop. All you'll find in the Salt Plains are the bodies of the dead.\"\n\nNote: For every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
 
             RestPrice = 5;
-            
+
             CanRecharge = true;
 
             Choices.clear();
@@ -24884,11 +24884,11 @@ namespace Book1
         {
             if (Engine::IN_PARTY(party, Character::Type::AMELIA_PASS_DAYNE))
             {
-                return {Book::Type::BOOK1, 715}; 
+                return {Book::Type::BOOK1, 715};
             }
             else
             {
-                return {Book::Type::BOOK1, 674}; 
+                return {Book::Type::BOOK1, 674};
             }
         }
     };
@@ -25407,12 +25407,12 @@ namespace Book1
             {
                 Choices.push_back(Choice::Base("Cast Wither", {Book::Type::BOOK1, 314}, Choice::Type::GET_CODES, {Codes::Type::CAST_WITHER}));
             }
-            
+
             if (Engine::HAS_SPELL(party, {Spells::Type::STINGTAIL_RUNE}))
             {
                 Choices.push_back(Choice::Base("Cast Stingtail Rune", {Book::Type::BOOK1, 314}, Choice::Type::GET_CODES, {Codes::Type::CAST_STINGTAIL_RUNE}));
             }
-            
+
             if (Engine::HAS_SPELL(party, {Spells::Type::MAELSTROM}))
             {
                 Choices.push_back(Choice::Base("Cast Maelstrom", {Book::Type::BOOK1, 314}, Choice::Type::GET_CODES, {Codes::Type::CAST_MAELSTROM}));
