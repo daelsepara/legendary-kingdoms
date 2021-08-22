@@ -23407,6 +23407,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             controls = Story::ExitControls(compact);
         }
 
+        if (Engine::COUNT(story->Monsters) > 0 || Engine::COUNT(story->EnemyArmy) > 0 || Engine::COUNT(story->EnemyFleet) > 0)
+        {
+            controls = Story::BattlePreviewControls(compact);
+        }
+
         // Render the image
         if (window && renderer)
         {

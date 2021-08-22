@@ -84,7 +84,8 @@ namespace Control
         SELECT_ORDER,
         CARGO,
         SAIL,
-        DRINK
+        DRINK,
+        PREVIEW
     };
 
     class Base
@@ -192,7 +193,6 @@ public:
 
     Button()
     {
-        
     }
 
     Button(int id, const char *file, int left, int right, int up, int down, int x, int y)
