@@ -21861,22 +21861,23 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 target = party.CurrentCharacter;
                             }
-                            else if (Engine::COUNT(party) == 1)
+                            else if (Engine::COUNT(party, story->Choices[choice].Team) == 1)
                             {
-                                target = Engine::FIRST(party);
+                                target = Engine::FIRST(party, story->Choices[choice].Team);
                             }
                             else
                             {
-                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::HEALTH);
+                                target = selectPartyMember(window, renderer, party, story->Choices[choice].Team, Equipment::NONE, Control::Type::HEALTH);
                             }
 
-                            party.Members[target].MaximumHealth += story->Choices[choice].Value;
+                            if (Engine::IS_ACTIVE(party, target))
+                            {
+                                Engine::GAIN_SCORE(party.Members[target], Attribute::Type::HEALTH, story->Choices[choice].Value);
 
-                            Engine::GAIN_HEALTH(party.Members[target], story->Choices[choice].Value);
+                                next = findStory(story->Choices[choice].Destination);
 
-                            next = findStory(story->Choices[choice].Destination);
-
-                            done = true;
+                                done = true;
+                            }
                         }
                         else if (story->Choices[choice].Type == Choice::Type::GAIN_HEALTH)
                         {

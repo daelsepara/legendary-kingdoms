@@ -1500,7 +1500,22 @@ namespace Engine
         {
             character.MaximumHealth += score;
 
-            Engine::GAIN_HEALTH(character, score);
+            if (character.MaximumHealth < 0)
+            {
+                character.MaximumHealth = 0;
+            }
+
+            if (score > 0)
+            {
+                Engine::GAIN_HEALTH(character, score);
+            }
+            else
+            {
+                if (character.Health > character.MaximumHealth)
+                {
+                    character.Health = character.MaximumHealth;
+                }
+            }
         }
         else
         {
