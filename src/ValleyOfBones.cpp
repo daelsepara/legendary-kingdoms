@@ -15171,7 +15171,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 {
                     for (auto i = 0; i < selection.size(); i++)
                     {
-                        if (selection[i] >= 0 && selection[i] < party.Members.size() && harbour->ShipRepairPrice >= 0)
+                        if (selection[i] >= 0 && selection[i] < party.Fleet.size() && harbour->ShipRepairPrice >= 0)
                         {
                             if (controls[current].Type != Control::Type::FULL_RECOVERY)
                             {
@@ -15377,7 +15377,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             {
                                 displayMessage("The [" + std::string(party.Fleet[offset + current].Name) + "] is damaged beyond repair!", intRD);
                             }
-                            else if (selection.size() < party.Members.size())
+                            else if (selection.size() < party.Fleet.size())
                             {
                                 selection.push_back(offset + current);
                             }
