@@ -2270,6 +2270,30 @@ namespace Engine
         return result;
     }
 
+    int FIND_SHIP(Party::Base &party, Ship::Type ship, Location::Type location)
+    {
+        auto result = -1;
+
+        for (auto i = 0; i < party.Fleet.size(); i++)
+        {
+            if (party.Fleet[i].Type != Ship::Type::NONE && party.Fleet[i].Type == ship && party.Fleet[i].Location == location)
+            {
+                result = i;
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    bool HAS_SHIP(Party::Base &party, Ship::Type ship, Location::Type location)
+    {
+        auto result = Engine::FIND_SHIP(party, ship, location);
+
+        return (result >= 0 && result < party.Fleet.size());
+    }
+
     void SET_LOCATION(Party::Base &party, Location::Type location, bool inCity)
     {
         if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
@@ -3328,6 +3352,16 @@ namespace Engine
         }
 
         return damaged;
+    }
+
+    void LOSE_SHIP(Party::Base &party, Ship::Type ship, Location::Type location)
+    {
+        auto result = Engine::FIND_SHIP(party, ship, location);
+
+        if (result >= 0 && result < party.Fleet.size())
+        {
+            party.Fleet.erase(party.Fleet.begin() + result);
+        }
     }
 }
 #endif

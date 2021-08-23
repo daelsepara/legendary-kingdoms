@@ -87,6 +87,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int unit, Location::Type &location, int threshold, int rolls);
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
 bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Engine::TeamAssignment> teams);
+bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Engine::ShipPrices> &shop, Story::Base *harbour);
 bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Engine::EquipmentPrice> &shop, Character::Base &character);
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection, bool useEquipment);
 bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team_type, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
@@ -13475,6 +13476,512 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     return controls;
 }
 
+bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Engine::ShipPrices> &shop, Story::Base *harbour)
+{
+    auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
+    auto infoh = 48;
+    auto boxh = (int)(0.150 * SCREEN_HEIGHT);
+    auto box_space = 10;
+
+    auto font_size = 28;
+    auto text_space = 8;
+    auto scrollSpeed = 1;
+    auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+
+    auto offset = 0;
+
+    auto last = offset + limit;
+
+    if (last > shop.size())
+    {
+        last = shop.size();
+    }
+
+    std::string message = "";
+
+    auto flash_message = false;
+
+    auto flash_color = intRD;
+
+    Uint32 start_ticks = 0;
+
+    Uint32 duration = 3000;
+
+    // Lambda functions for displaying flash messages
+    auto displayMessage = [&](std::string msg, Uint32 color)
+    {
+        flash_message = true;
+
+        message = msg;
+
+        flash_color = color;
+
+        start_ticks = SDL_GetTicks();
+    };
+
+    auto done = false;
+
+    auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+
+    auto offsety = (texty + infoh);
+
+    auto controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
+
+    TTF_Init();
+
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+
+    TTF_SetFontKerning(font_dark11, 0);
+
+    auto selected = false;
+    auto current = -1;
+    auto scrollUp = false;
+    auto scrollDown = false;
+    auto hold = false;
+
+    auto selection = std::vector<int>();
+
+    while (!done)
+    {
+        last = offset + limit;
+
+        if (last > shop.size())
+        {
+            last = shop.size();
+        }
+
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Buy/Sell Ships");
+
+        fillWindow(renderer, intWH);
+
+        if (splash)
+        {
+            fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+        }
+
+        putHeader(renderer, "Money", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (5 * boxh / 2) - 2 * infoh - box_space);
+        putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh / 2, startx, starty + text_bounds - (5 * boxh / 2) - infoh - box_space);
+
+        putHeader(renderer, (selection.size() > 0 ? (std::string("Selected (") + std::to_string(selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+        if (selection.size() > 0)
+        {
+            std::string selection_string = "";
+
+            for (auto i = 0; i < selection.size(); i++)
+            {
+                if (i > 0)
+                {
+                    selection_string += ", ";
+                }
+
+                auto ship = std::get<0>(shop[selection[i]]);
+
+                selection_string += "[" + std::string(ship.Name) + "]";
+            }
+
+            fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+
+            auto text = createText(selection_string.c_str(), FONT_MASON, 24, clrBK, splashw - 2 * text_space, TTF_STYLE_NORMAL);
+
+            if (text)
+            {
+                renderText(renderer, text, intBE, startx + text_space, starty + text_bounds - 2 * boxh + text_space, 2 * (boxh - text_space), 0);
+
+                SDL_FreeSurface(text);
+
+                text = NULL;
+            }
+        }
+        else
+        {
+            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+        }
+
+        if (selection.size() > 0)
+        {
+            if (current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::BUY)
+                {
+                    std::string buy_string = "Buy ";
+
+                    if (selection.size() > 1)
+                    {
+                        buy_string += "these";
+                    }
+                    else
+                    {
+                        buy_string += "this";
+                    }
+
+                    putHeader(renderer, buy_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                }
+                else if (controls[current].Type == Control::Type::SELL)
+                {
+                    std::string sell_string = "Sell ";
+
+                    if (selection.size() > 1)
+                    {
+                        sell_string += "these";
+                    }
+                    else
+                    {
+                        sell_string += "this";
+                    }
+
+                    putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                }
+                else
+                {
+                    putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                }
+            }
+            else
+            {
+                putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+            }
+        }
+        else
+        {
+            putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+        }
+
+        fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+
+        if (last - offset > 0)
+        {
+            for (auto i = 0; i < last - offset; i++)
+            {
+                if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                {
+                    thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                }
+                else
+                {
+                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                }
+            }
+        }
+
+        renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+
+        if (flash_message)
+        {
+            if ((SDL_GetTicks() - start_ticks) < duration)
+            {
+                putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+            }
+            else
+            {
+                flash_message = false;
+            }
+        }
+
+        Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+        if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+        {
+            if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+            {
+                if (offset > 0)
+                {
+                    offset -= scrollSpeed;
+
+                    if (offset < 0)
+                    {
+                        offset = 0;
+                    }
+
+                    last = offset + limit;
+
+                    if (last > shop.size())
+                    {
+                        last = shop.size();
+                    }
+
+                    controls.clear();
+
+                    controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
+
+                    SDL_Delay(50);
+                }
+
+                if (offset <= 0)
+                {
+                    current = -1;
+
+                    selected = false;
+                }
+            }
+            else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
+            {
+                if (shop.size() - last > 0)
+                {
+                    if (offset < shop.size() - limit)
+                    {
+                        offset += scrollSpeed;
+                    }
+
+                    if (offset > shop.size() - limit)
+                    {
+                        offset = shop.size() - limit;
+                    }
+
+                    last = offset + limit;
+
+                    if (last > shop.size())
+                    {
+                        last = shop.size();
+                    }
+
+                    controls.clear();
+
+                    controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
+
+                    SDL_Delay(50);
+
+                    if (offset > 0)
+                    {
+                        if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                        {
+                            current++;
+                        }
+                    }
+                }
+
+                if (shop.size() - last <= 0)
+                {
+                    selected = false;
+
+                    current = -1;
+                }
+            }
+            else if (controls[current].Type == Control::Type::ACTION && !hold)
+            {
+                if (current >= 0 && current < controls.size())
+                {
+                    auto result = Engine::FIND_LIST(selection, offset + current);
+
+                    if (result >= 0)
+                    {
+                        selection.erase(selection.begin() + result);
+                    }
+                    else
+                    {
+                        if (selection.size() < shop.size())
+                        {
+                            selection.push_back(offset + current);
+                        }
+                    }
+                }
+
+                current = -1;
+
+                selected = false;
+            }
+            else if (controls[current].Type == Control::Type::BUY && !hold)
+            {
+                if (selection.size() > 0)
+                {
+                    auto total = 0;
+
+                    auto ships = std::vector<Ship::Base>();
+
+                    for (auto i = 0; i < selection.size(); i++)
+                    {
+                        if (selection[i] >= 0 && selection[i] < shop.size())
+                        {
+                            auto ship = std::get<0>(shop[selection[i]]);
+
+                            auto price = std::get<1>(shop[selection[i]]);
+
+                            if (price > 0)
+                            {
+                                ships.push_back(ship);
+
+                                total += price;
+                            }
+                        }
+                    }
+
+                    if (ships.size() > 0)
+                    {
+                        if (party.Money >= total)
+                        {
+                            Engine::GAIN_MONEY(party, -total);
+
+                            message = "Ship";
+
+                            if (ships.size() > 1)
+                            {
+                                message += "s";
+                            }
+
+                            message += " purchased: ";
+
+                            for (auto i = 0; i < ships.size(); i++)
+                            {
+                                auto ship = ships[i];
+
+                                ship.Location = harbour->Location;
+
+                                party.Fleet.push_back(ship);
+
+                                if (i > 0)
+                                {
+                                    message += ", ";
+                                }
+
+                                message += "[" + std::string(ship.Name) + "]";
+                            }
+
+                            displayMessage(message, intLB);
+                        }
+                        else
+                        {
+                            displayMessage("You do not have enough silver coins!", intRD);
+                        }
+                    }
+                }
+            }
+            else if (controls[current].Type == Control::Type::SELL && !hold)
+            {
+                if (selection.size() > 0)
+                {
+                    std::string sold_string = "";
+                    std::string unsold_string = "";
+
+                    auto sold = 0;
+                    auto unsold = 0;
+
+                    for (auto i = 0; i < selection.size(); i++)
+                    {
+                        if (selection[i] >= 0 && selection[i] < shop.size())
+                        {
+                            auto ship = std::get<0>(shop[selection[i]]);
+
+                            auto price = std::get<2>(shop[selection[i]]);
+
+                            if (price > 0)
+                            {
+                                if (!Engine::HAS_SHIP(party, ship.Type, harbour->Location))
+                                {
+                                    unsold++;
+
+                                    if (unsold_string.length() > 0)
+                                    {
+                                        unsold_string += ", ";
+                                    }
+
+                                    unsold_string += ship.Name;
+                                }
+                                else
+                                {
+                                    Engine::LOSE_SHIP(party, ship.Type, harbour->Location);
+
+                                    Engine::GAIN_MONEY(party, price);
+
+                                    sold++;
+
+                                    if (sold_string.length() > 0)
+                                    {
+                                        sold_string += ", ";
+                                    }
+
+                                    sold_string += "[" + std::string(ship.Name) + "]";
+                                }
+                            }
+                            else
+                            {
+                                unsold++;
+
+                                if (unsold_string.length() > 0)
+                                {
+                                    unsold_string += ", ";
+                                }
+
+                                unsold_string += "[" + std::string(ship.Name) + "]";
+                            }
+                        }
+                    }
+
+                    message = "";
+
+                    if (sold > 0)
+                    {
+                        message += "Ships sold: " + sold_string;
+                    }
+
+                    if (unsold > 0)
+                    {
+                        if (sold > 0)
+                        {
+                            message += "\n";
+                        }
+
+                        message += "Ships not sold: " + unsold_string;
+                    }
+
+                    if (sold > unsold)
+                    {
+                        flash_color = intLB;
+                    }
+                    else
+                    {
+                        flash_color = intRD;
+                    }
+
+                    displayMessage(message, flash_color);
+                }
+            }
+            else if (controls[current].Type == Control::Type::PARTY && !hold)
+            {
+                viewParty(window, renderer, party, Team::Type::NONE, false);
+            }
+            else if (controls[current].Type == Control::Type::BACK && !hold)
+            {
+                done = true;
+            }
+        }
+    }
+
+    if (font_garamond)
+    {
+        TTF_CloseFont(font_garamond);
+
+        font_garamond = NULL;
+    }
+
+    if (font_dark11)
+    {
+        TTF_CloseFont(font_dark11);
+
+        font_dark11 = NULL;
+    }
+
+    if (font_mason)
+    {
+        TTF_CloseFont(font_mason);
+
+        font_mason = NULL;
+    }
+
+    TTF_Quit();
+
+    if (splash)
+    {
+        SDL_FreeSurface(splash);
+
+        splash = NULL;
+    }
+
+    return false;
+}
+
 bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Engine::EquipmentPrice> &shop, Character::Base &character)
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
@@ -19087,12 +19594,24 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx + 1, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? (last - start) : idx), idx, (buy_button ? (startx + gridsize) : startx), buttony, Control::Type::SELL));
+        controls.push_back(Button(idx, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? (last - start) : idx), idx, (buy_button ? (startx + gridsize) : startx), buttony, Control::Type::SELL));
     }
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/back-button.png", (buy_button || sell_button) ? idx - 1 : idx, idx, (ships.size() > 0 ? (last - start) : idx), idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    auto grid_offset = 0;
+
+    if (buy_button && sell_button)
+    {
+        grid_offset = 2;
+    }
+    else if (buy_button || sell_button)
+    {
+        grid_offset = 1;
+    }
+
+    controls.push_back(Button(idx, "icons/user.png", ((buy_button || sell_button) ? idx - 1 : idx), idx + 1, (ships.size() > 0 ? (last - start) : idx), idx, startx + grid_offset * gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, (ships.size() > 0 ? (last - start) : +1), idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -19589,13 +20108,21 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 }
                 else if (controls[current].Type == Control::Type::BUY_SELL_SHIP && !hold)
                 {
+                    if (harbour->Ships.size() > 0)
+                    {
+                        shipScreen(window, renderer, party, Team::Type::NONE, harbour->Ships, harbour);
+                    }
+                    else
+                    {
+                        displayMessage("Ships cannot be sold nor bought at this harbour!", intRD);
+                    }
+
                     selected = false;
                 }
                 else if (controls[current].Type == Control::Type::BUY_SELL_CARGO && !hold)
                 {
                     if (Engine::HAS_SHIP(party, harbour->Location))
                     {
-                        repairScreen(window, renderer, party, harbour);
                     }
                     else
                     {
@@ -19610,6 +20137,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                     {
                         if (Engine::HAS_SHIP(party, harbour->Location))
                         {
+                            repairScreen(window, renderer, party, harbour);
                         }
                         else
                         {
