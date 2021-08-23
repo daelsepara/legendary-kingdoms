@@ -86,7 +86,9 @@ namespace Control
         SAIL,
         DRINK,
         PREVIEW,
-        STORY
+        STORY,
+        REPAIR1,
+        FULL_REPAIR
     };
 
     class Base

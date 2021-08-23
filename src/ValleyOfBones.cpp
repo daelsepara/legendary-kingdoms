@@ -51,10 +51,6 @@ SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_s
 SDL_Surface *createImage(const char *image);
 SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Color textColor, int wrap, int style);
 
-std::vector<TextButton> createFixedTextButtons(const char **choices, int num, int text_buttonw, int text_buttonh, int textbutton_space, int text_x, int text_y);
-std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y);
-std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y, bool has_scrolls);
-
 void clipValue(int &val, int min, int max);
 void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, const char *title, const char *icon);
 void drawRect(SDL_Renderer *renderer, int w, int h, int x, int y, int color);
@@ -84,6 +80,7 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, i
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
 bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Book::Type book, Story::Base *story);
 bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character);
+bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
 bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int unit, Location::Type &location, int threshold, int rolls);
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
 bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Engine::TeamAssignment> teams);
@@ -128,6 +125,7 @@ Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Ba
 std::string characterText(Character::Base &character, bool compact);
 std::string itemString(Equipment::Base &equipment);
 std::string monsterString(Monster::Base &monster);
+std::string shipString(Ship::Base &ship, bool cargo);
 
 // game screens (select multiple stuff)
 std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> army, Location::Type garrison, int num_limit);
@@ -145,7 +143,7 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next);
 template <typename T>
 void popupScrolls(std::vector<Button> &controls, std::vector<T> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button);
 
-// List Controls
+// Controls
 std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int offsetx, int offsety, bool party_controls);
 std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Attribute::Type> &attributes, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargo, int start, int last, int limit, int offsetx, int offsety);
@@ -153,27 +151,30 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
 std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, std::vector<Choice::Base> choices, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, int offsety, int scrolly);
 std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, bool confirm_button, bool back_button);
+std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer);
 std::vector<Button> innList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> party, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button);
 std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, int start, int last, int limit, int offsetx, int offsety, Control::Type mode);
 std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std::map<Character::Romance, int> &hearts, int start, int last, int limit, int offsetx, int offsety);
+std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
+std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button);
+std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
+std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, Control::Type mode);
-std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button);
+std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, bool cargo, bool confirm_button, bool back_button);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::ShipPrices> &ships, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::EquipmentPrice> &shop, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> rechargeList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int start, int last, int limit, int offsetx, int offsety, int scrolly);
+std::vector<Button> repairList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int start, int last, int limit, int offsetx, int offsety, int scrolly);
 std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int start, int last, int limit, int offsetx, int offsety, int scrolly, bool confirm_button, bool back_button);
 std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Team::Type> &teams, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, int offsety, int scrolly);
 
-// Controls
-std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer);
-std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
-std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button);
-std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
-std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
+std::vector<TextButton> createFixedTextButtons(const char **choices, int num, int text_buttonw, int text_buttonh, int textbutton_space, int text_x, int text_y);
+std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y);
+std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y, bool has_scrolls);
 
 SDL_Surface *createImage(const char *image)
 {
@@ -1239,26 +1240,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             auto index = start + i;
 
-            auto ship = ships[index];
-
-            std::string ship_string = "[" + std::string(ship.Name) + "] Fighting: " + std::to_string(ship.Fighting) + ", Health: " + std::to_string(ship.Health) + ", Cargo Units: " + std::to_string(ship.MaximumCargo);
-
-            ship_string += "\nLocation: " + std::string(Location::Description[ship.Location]);
-
-            if (ship.Cargo.size() > 0)
-            {
-                ship_string += " Cargo: ";
-
-                for (auto j = 0; j < ship.Cargo.size(); j++)
-                {
-                    if (j > 0)
-                    {
-                        ship_string += ", ";
-                    }
-
-                    ship_string += Cargo::Description[ship.Cargo[j]];
-                }
-            }
+            auto ship_string = shipString(ships[index], true);
 
             auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
 
@@ -3458,6 +3440,45 @@ std::vector<Button> rechargeList(SDL_Window *window, SDL_Renderer *renderer, std
     return controls;
 }
 
+std::string shipString(Ship::Base &ship, bool cargo)
+{
+    std::string ship_string = "";
+
+    if (!cargo)
+    {
+        ship_string = "[" + std::string(ship.Name) + "]";
+
+        ship_string += "\nFighting: " + (ship.Fighting > 0 ? std::to_string(ship.Fighting) : std::string("Special"));
+
+        ship_string += " Health: " + std::to_string(ship.Health);
+    }
+    else
+    {
+        ship_string = "[" + std::string(ship.Name) + "] Fighting: " + std::to_string(ship.Fighting) + ", Health: " + std::to_string(ship.Health) + ", Cargo Units: " + std::to_string(ship.MaximumCargo);
+
+        ship_string += "\nLocation: " + std::string(Location::Description[ship.Location]);
+    }
+
+    if (cargo)
+    {
+        if (ship.Cargo.size() > 0)
+        {
+            ship_string += " Cargo: ";
+
+            for (auto i = 0; i < ship.Cargo.size(); i++)
+            {
+                if (i > 0)
+                {
+                    ship_string += ", ";
+                }
+
+                ship_string += Cargo::Description[ship.Cargo[i]];
+            }
+        }
+    }
+    return ship_string;
+}
+
 std::string monsterString(Monster::Base &monster)
 {
     std::string monster_string = monster.Name;
@@ -4586,7 +4607,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
     return combat_damage;
 }
 
-std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button)
+std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, bool cargo, bool confirm_button, bool back_button)
 {
     auto controls = std::vector<Button>();
 
@@ -4598,15 +4619,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             auto index = start + i;
 
-            auto ship = ships[index];
-
-            std::string ship_string = "";
-
-            ship_string += "[" + std::string(ship.Name) + "]";
-
-            ship_string += "\nFighting: " + (ship.Fighting > 0 ? std::to_string(ship.Fighting) : std::string("Special"));
-
-            ship_string += " Health: " + std::to_string(ship.Health);
+            auto ship_string = shipString(ships[index], cargo);
 
             auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
 
@@ -4668,13 +4681,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             auto index = start + i;
 
-            auto ship = ships[index];
-
-            std::string ship_string = "";
-
-            ship_string = "[" + std::string(ship.Name) + "]";
-
-            ship_string += "\nFighting: " + (ship.Fighting > 0 ? std::to_string(ship.Fighting) : std::string("Special")) + " Health: " + std::to_string(ship.Health);
+            std::string ship_string = shipString(ships[index], false);
 
             auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
 
@@ -7521,7 +7528,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-        auto controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, true, false);
+        auto controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, false, true, false);
 
         auto done = false;
 
@@ -7631,7 +7638,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
 
                             controls.clear();
 
-                            controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, true, false);
+                            controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, false, true, false);
 
                             SDL_Delay(50);
                         }
@@ -7666,7 +7673,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
 
                             controls.clear();
 
-                            controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, true, false);
+                            controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, false, true, false);
 
                             SDL_Delay(50);
 
@@ -11167,7 +11174,7 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-        auto controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true);
+        auto controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, true);
 
         auto done = false;
 
@@ -11310,7 +11317,7 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
 
                         controls.clear();
 
-                        controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true);
+                        controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, true);
 
                         SDL_Delay(50);
                     }
@@ -11345,7 +11352,7 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
 
                         controls.clear();
 
-                        controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true);
+                        controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, true);
                         ;
 
                         SDL_Delay(50);
@@ -15027,6 +15034,518 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     return false;
 }
 
+std::vector<Button> repairList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (ships.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            std::string ship_string = shipString(ships[index], true);
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 22, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (ships.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (ships.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
+
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "REPAIR 1", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? idx - 1 : idx, idx, startx, text_y, Control::Type::REPAIR1));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FULLY REPAIR", clrWH, intDB, 220, 48, -1), idx, idx + 2, ships.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::FULL_REPAIR));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 1, idx + 2, ships.size() > 0 ? idx - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::BACK));
+
+    return controls;
+}
+
+bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
+{
+    auto *title = "Legendary Kingdoms: Repairs";
+
+    auto text_space = 8;
+
+    TTF_Init();
+
+    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+    TTF_SetFontKerning(font_dark11, 0);
+
+    // Render window
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        auto current = -1;
+
+        auto selection = std::vector<int>();
+
+        auto infoh = 48;
+        auto boxh = (int)(0.125 * SCREEN_HEIGHT);
+        auto box_space = 10;
+
+        int offset = 0;
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto last = offset + limit;
+
+        if (last > party.Fleet.size())
+        {
+            last = party.Fleet.size();
+        }
+
+        auto controls = repairList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
+
+        auto done = false;
+
+        auto text_space = 8;
+
+        bool scrollUp = false;
+        bool selected = false;
+        bool scrollDown = false;
+        bool hold = false;
+        int scrollSpeed = 1;
+
+        std::string message = "";
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
+        while (!done)
+        {
+            // Fill the surface with background
+            fillWindow(renderer, intWH);
+
+            if (current >= 0 && current < controls.size())
+            {
+                auto cost = 0;
+
+                if (selection.size() > 0)
+                {
+                    for (auto i = 0; i < selection.size(); i++)
+                    {
+                        if (selection[i] >= 0 && selection[i] < party.Members.size() && harbour->ShipRepairPrice >= 0)
+                        {
+                            if (controls[current].Type != Control::Type::FULL_RECOVERY)
+                            {
+                                cost += (Engine::IS_DAMAGED(party.Fleet[selection[i]])) ? harbour->ShipRepairPrice : 0;
+                            }
+                            else
+                            {
+                                cost += (Engine::IS_DAMAGED(party.Fleet[selection[i]])) ? harbour->ShipRepairPrice * (party.Fleet[selection[i]].MaximumHealth - party.Fleet[selection[i]].Health) : 0;
+                            }
+                        }
+                    }
+
+                    if (cost > 0 && harbour->ShipRepairPrice >= 0)
+                    {
+                        std::string repair_string = "";
+
+                        if (controls[current].Type != Control::Type::FULL_REPAIR)
+                        {
+                            repair_string = "Repair (" + std::to_string(cost);
+                        }
+                        else
+                        {
+                            repair_string = "Fully Repair (" + std::to_string(cost);
+                        }
+
+                        repair_string += ")";
+
+                        putText(renderer, repair_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                    }
+                    else
+                    {
+                        putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                    }
+                }
+                else
+                {
+                    putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                }
+            }
+            else
+            {
+                putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+            }
+
+            std::string fleet_string = "";
+
+            if (selection.size() > 0)
+            {
+                for (auto i = 0; i < selection.size(); i++)
+                {
+                    if (i > 0)
+                    {
+                        fleet_string += "\n";
+                    }
+
+                    fleet_string += "[" + std::string(party.Fleet[selection[i]].Name) + "]";
+                }
+            }
+
+            putText(renderer, selection.size() > 0 ? fleet_string.c_str() : "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+
+            putHeader(renderer, "Money", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + infoh);
+
+            if (harbour->ShipRepairPrice >= 0)
+            {
+                putHeader(renderer, "Repair Costs", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+                putText(renderer, (harbour->ShipRepairPrice > 0 ? std::to_string(harbour->ShipRepairPrice) + std::string(" silver coins") : std::string("Free")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+            }
+
+            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+            putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+            if (last - offset > 0)
+            {
+                for (auto i = 0; i < last - offset; i++)
+                {
+                    if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                    {
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    }
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (offset > 0)
+                    {
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > party.Fleet.size())
+                        {
+                            last = party.Fleet.size();
+                        }
+
+                        controls.clear();
+
+                        controls = repairList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
+
+                        SDL_Delay(50);
+                    }
+
+                    if (offset <= 0)
+                    {
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
+                {
+                    if (party.Fleet.size() - last > 0)
+                    {
+                        if (offset < party.Fleet.size() - limit)
+                        {
+                            offset += scrollSpeed;
+                        }
+
+                        if (offset > party.Fleet.size() - limit)
+                        {
+                            offset = party.Fleet.size() - limit;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > party.Fleet.size())
+                        {
+                            last = party.Fleet.size();
+                        }
+
+                        controls.clear();
+
+                        controls = repairList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
+
+                        SDL_Delay(50);
+
+                        if (offset > 0)
+                        {
+                            if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                            {
+                                current++;
+                            }
+                        }
+                    }
+
+                    if (party.Fleet.size() - last <= 0)
+                    {
+                        selected = false;
+
+                        current = -1;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if (current >= 0 && current < controls.size())
+                    {
+                        auto result = Engine::FIND_LIST(selection, offset + current);
+
+                        if (result >= 0)
+                        {
+                            selection.erase(selection.begin() + result);
+                        }
+                        else
+                        {
+                            if (party.Fleet[offset + current].Location != harbour->Location)
+                            {
+                                displayMessage("The [" + std::string(party.Fleet[offset + current].Name) + "] is not docked at " + std::string(Location::Description[harbour->Location]) + "!", intRD);
+                            }
+                            else if (party.Fleet[offset + current].Health >= party.Fleet[offset + current].MaximumHealth)
+                            {
+                                displayMessage("The [" + std::string(party.Fleet[offset + current].Name) + "] is not damaged!", intRD);
+                            }
+                            else if (party.Fleet[offset + current].Health <= 0)
+                            {
+                                displayMessage("The [" + std::string(party.Fleet[offset + current].Name) + "] is damaged beyond repair!", intRD);
+                            }
+                            else if (selection.size() < party.Members.size())
+                            {
+                                selection.push_back(offset + current);
+                            }
+                        }
+                    }
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::REPAIR1 && !hold)
+                {
+                    if (selection.size() > 0 && harbour->ShipRepairPrice >= 0)
+                    {
+                        auto cost = 0;
+
+                        for (auto i = 0; i < selection.size(); i++)
+                        {
+                            cost += (Engine::IS_DAMAGED(party.Fleet[selection[i]])) ? harbour->ShipRepairPrice : 0;
+                        }
+
+                        if (party.Money < cost)
+                        {
+                            displayMessage("You do not have enough silver coins!", intRD);
+                        }
+                        else
+                        {
+                            for (auto i = 0; i < selection.size(); i++)
+                            {
+                                if (Engine::IS_DAMAGED(party.Fleet[selection[i]]))
+                                {
+                                    Engine::GAIN_HEALTH(party.Fleet[selection[i]], 1);
+                                }
+                            }
+
+                            Engine::GAIN_MONEY(party, -cost);
+
+                            if (cost > 0)
+                            {
+                                message = "Your ships were repaired for " + std::to_string(cost) + " silver coins.";
+                            }
+                            else
+                            {
+                                if (harbour->ShipRepairPrice > 0)
+                                {
+                                    message = "None of your ships are damaged.";
+                                }
+                                else
+                                {
+                                    message = "Your ships were repaired for free.";
+                                }
+                            }
+
+                            displayMessage(message, intLB);
+
+                            offset = 0;
+
+                            last = offset + limit;
+
+                            if (last > party.Fleet.size())
+                            {
+                                last = party.Fleet.size();
+                            }
+
+                            controls.clear();
+
+                            controls = repairList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
+                        }
+                    }
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::FULL_REPAIR && !hold)
+                {
+                    if (selection.size() > 0 && harbour->ShipRepairPrice >= 0)
+                    {
+                        auto cost = 0;
+
+                        for (auto i = 0; i < selection.size(); i++)
+                        {
+                            cost += (Engine::IS_DAMAGED(party.Fleet[selection[i]])) ? harbour->ShipRepairPrice * (party.Fleet[selection[i]].MaximumHealth - party.Fleet[selection[i]].Health) : 0;
+                        }
+
+                        if (party.Money < cost)
+                        {
+                            displayMessage("You do not have enough silver coins!", intRD);
+                        }
+                        else
+                        {
+                            for (auto i = 0; i < selection.size(); i++)
+                            {
+                                if (Engine::IS_DAMAGED(party.Fleet[selection[i]]))
+                                {
+                                    Engine::GAIN_HEALTH(party.Fleet[selection[i]], party.Fleet[selection[i]].MaximumHealth - party.Fleet[selection[i]].Health);
+                                }
+                            }
+
+                            Engine::GAIN_MONEY(party, -cost);
+
+                            if (cost > 0)
+                            {
+                                message = "Your ships were repaired for " + std::to_string(cost) + " silver coins.";
+                            }
+                            else
+                            {
+                                if (harbour->ShipRepairPrice > 0)
+                                {
+                                    message = "None of your ships are damaged.";
+                                }
+                                else
+                                {
+                                    message = "Your ships were repaired for free.";
+                                }
+                            }
+
+                            displayMessage(message, intLB);
+
+                            offset = 0;
+
+                            last = offset + limit;
+
+                            if (last > party.Fleet.size())
+                            {
+                                last = party.Fleet.size();
+                            }
+
+                            controls.clear();
+
+                            controls = repairList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
+                        }
+                    }
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    done = true;
+                }
+            }
+        }
+    }
+
+    if (font_mason)
+    {
+        TTF_CloseFont(font_mason);
+
+        font_mason = NULL;
+    }
+
+    if (font_dark11)
+    {
+        TTF_CloseFont(font_dark11);
+
+        font_dark11 = NULL;
+    }
+
+    if (font_garamond)
+    {
+        TTF_CloseFont(font_garamond);
+
+        font_garamond = NULL;
+    }
+
+    TTF_Quit();
+
+    return false;
+}
+
 bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Character::Base &character, int equipment_limit, bool InCombat)
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
@@ -16884,7 +17403,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
         auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
-        auto controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, back_button);
+        auto controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, back_button);
 
         TTF_Init();
 
@@ -16991,7 +17510,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
                             last = ships.size();
                         }
 
-                        controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, back_button);
+                        controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, back_button);
 
                         SDL_Delay(50);
                     }
@@ -17024,7 +17543,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
                             last = ships.size();
                         }
 
-                        controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, back_button);
+                        controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, back_button);
 
                         SDL_Delay(50);
 
@@ -18780,9 +19299,18 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
                 fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
-                if (harbour->ShipRepairPrice > 0)
+                if (harbour->ShipRepairPrice >= 0)
                 {
-                    std::string repair_string = "You can repair any ship you have here. It costs " + std::to_string(harbour->ShipRepairPrice) + " silver coins to restore each Health point. You can restore your ship up to its starting Health value.";
+                    std::string repair_string = "";
+
+                    if (harbour->ShipRepairPrice == 0)
+                    {
+                        repair_string = "You can repair any ship you have here. It costs nothing to restore each Health point. You can restore your ship up to its starting Health value.";
+                    }
+                    else
+                    {
+                        repair_string = "You can repair any ship you have here. It costs " + std::to_string(harbour->ShipRepairPrice) + " silver coins to restore each Health point. You can restore your ship up to its starting Health value.";
+                    }
 
                     putText(renderer, repair_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
@@ -18983,6 +19511,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 {
                     if (Engine::HAS_SHIP(party, harbour->Location))
                     {
+                        repairScreen(window, renderer, party, harbour);
                     }
                     else
                     {

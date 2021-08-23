@@ -672,6 +672,11 @@ namespace Engine
         return (character.Health < character.MaximumHealth);
     }
 
+    bool IS_DAMAGED(Ship::Base &ship)
+    {
+        return (ship.Health < ship.MaximumHealth);
+    }
+
     bool IS_ACTIVE(Party::Base &party, int character)
     {
         return (character >= 0 && character < party.Members.size() && !Engine::IS_CAPTURED(party.Members[character]) && !Engine::IS_CURSED(party.Members[character]) && IS_ALIVE(party.Members[character]) && Engine::IS_CIVILIZED(party, party.Members[character]));
