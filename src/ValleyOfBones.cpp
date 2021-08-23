@@ -1456,7 +1456,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         auto text_space = 8;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -3097,7 +3097,7 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 {
     auto font_size = 28;
     auto text_space = 8;
-    auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto controls = std::vector<Button>();
 
@@ -3161,7 +3161,7 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 {
     auto font_size = 28;
     auto text_space = 8;
-    auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto controls = std::vector<Button>();
 
@@ -3219,7 +3219,7 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
 {
     auto font_size = 28;
     auto text_space = 8;
-    auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto controls = std::vector<Button>();
 
@@ -4093,7 +4093,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -6754,8 +6754,8 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto booksize = (int)(2 * (text_bounds) / 3 - infoh - box_space);
-        auto limit = (int)((booksize - 2 * text_space) / (88));
+        auto booksize = (int)(2 * text_bounds / 3 - infoh - box_space);
+        auto limit = (int)((booksize - 2 * text_space) / (96));
         auto last = offset + limit;
 
         if (last > spells.size())
@@ -6828,11 +6828,11 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                 {
                     if ((current + offset) >= 0 && (current + offset) < spells.size())
                     {
-                        fillRect(renderer, textwidth, text_bounds / 3 - box_space, textx, texty + infoh + booksize + box_space, intLB);
+                        fillRect(renderer, textwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
                         auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
-                        renderText(renderer, text, intLB, textx + text_space, texty + infoh + booksize + box_space + text_space, text_bounds / 3 - texty, 0);
+                        renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
                         SDL_FreeSurface(text);
 
@@ -7179,7 +7179,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -7533,7 +7533,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > enemyFleet.size())
@@ -8497,7 +8497,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -9036,7 +9036,7 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -9315,7 +9315,7 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -9594,7 +9594,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -9867,7 +9867,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         std::vector<Attribute::Type> attributes = {Attribute::Type::FIGHTING, Attribute::Type::STEALTH, Attribute::Type::LORE, Attribute::Type::SURVIVAL, Attribute::Type::CHARISMA};
@@ -10150,7 +10150,7 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
 
         auto teams_list = std::vector<Team::Type>();
 
@@ -10433,7 +10433,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -10744,7 +10744,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -11179,7 +11179,7 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > ships.size())
@@ -11528,7 +11528,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -11942,7 +11942,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > enemyFleet.size())
@@ -12430,7 +12430,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -13491,7 +13491,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     auto font_size = 28;
     auto text_space = 8;
     auto scrollSpeed = 1;
-    auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+    auto limit = (text_bounds - 2 * text_space) / (96);
 
     auto offset = 0;
 
@@ -13526,7 +13526,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto done = false;
 
-    auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto offsety = (texty + infoh);
 
@@ -13997,7 +13997,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     auto font_size = 28;
     auto text_space = 8;
     auto scrollSpeed = 1;
-    auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+    auto limit = (text_bounds - 2 * text_space) / (96);
 
     auto offset = 0;
 
@@ -14032,7 +14032,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto done = false;
 
-    auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto offsety = (texty + infoh);
 
@@ -14592,7 +14592,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
         auto box_space = 10;
 
         int offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -15072,7 +15072,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     auto font_size = 28;
     auto text_space = 8;
     auto scrollSpeed = 1;
-    auto limit = (text_bounds - 2 * text_space - infoh) / (font_size + 7 * text_space / 2);
+    auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * text_space / 2);
 
     auto offset = 0;
 
@@ -15107,7 +15107,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     auto done = false;
 
-    auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto scrolly = (texty + text_bounds - arrow_size - border_space);
     auto offsety = (texty + infoh);
@@ -15637,7 +15637,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         auto box_space = 10;
 
         int offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Fleet.size())
@@ -16077,7 +16077,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
     auto font_size = 28;
     auto text_space = 8;
     auto scrollSpeed = 1;
-    auto limit = (text_bounds - 2 * text_space - infoh) / (font_size + 7 * text_space / 2);
+    auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * text_space / 2);
 
     auto offset = 0;
 
@@ -16112,7 +16112,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
     auto done = false;
 
-    auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto scrolly = (texty + text_bounds - arrow_size - border_space);
     auto offsety = (texty + infoh);
@@ -16731,8 +16731,8 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
     auto font_size = 28;
     auto text_space = 8;
     auto scrollSpeed = 1;
-    auto booksize = (int)(2 * (text_bounds) / 3 - infoh - box_space);
-    auto limit = (int)((booksize - 2 * text_space) / (88));
+    auto booksize = (int)(2 * text_bounds / 3 - infoh - box_space);
+    auto limit = (int)((booksize - 2 * text_space) / (96));
 
     auto offset = 0;
 
@@ -16767,7 +16767,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
     auto done = false;
 
-    auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto scrolly = startx + infoh + booksize - buttonh - text_space + 1;
     auto offsety = (texty + infoh);
@@ -16920,13 +16920,13 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
         if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::ACTION)
         {
-            if (((current + offset) >= 0) && ((current + offset) < character.SpellBook.size()))
+            if ((current + offset) >= 0 && (current + offset) < character.SpellBook.size())
             {
-                fillRect(renderer, listwidth, text_bounds / 3, textx, texty + infoh + booksize + box_space, intLB);
+                fillRect(renderer, listwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
                 auto text = createText(character.SpellBook[current + offset].Description, FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
-                renderText(renderer, text, intLB, textx + text_space, texty + infoh + booksize + box_space + text_space, text_bounds / 3 - texty, 0);
+                renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
                 SDL_FreeSurface(text);
 
@@ -17232,8 +17232,8 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
     auto font_size = 28;
     auto text_space = 8;
     auto scrollSpeed = 1;
-    auto booksize = (int)(2 * (text_bounds) / 3 - infoh - box_space);
-    auto limit = (int)((booksize - 2 * text_space) / (88));
+    auto booksize = (int)(2 * text_bounds / 3 - infoh - box_space);
+    auto limit = (int)((booksize - 2 * text_space) / (96));
 
     auto offset = 0;
 
@@ -17268,7 +17268,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
     auto done = false;
 
-    auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto scrolly = startx + infoh + booksize - buttonh - text_space + 1;
     auto offsety = (texty + infoh);
@@ -17393,13 +17393,13 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
         if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::ACTION)
         {
-            if (((current + offset) >= 0) && ((current + offset) < character.SpellBook.size()))
+            if ((current + offset) >= 0 && (current + offset) < character.SpellBook.size())
             {
-                fillRect(renderer, listwidth, text_bounds / 3, textx, texty + infoh + booksize + box_space, intLB);
+                fillRect(renderer, listwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
                 auto text = createText(character.SpellBook[current + offset].Description, FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
-                renderText(renderer, text, intLB, textx + text_space, texty + infoh + booksize + box_space + text_space, text_bounds / 3 - texty, 0);
+                renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
                 SDL_FreeSurface(text);
 
@@ -17606,7 +17606,7 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
         auto offset = 0;
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > army.size())
@@ -17636,7 +17636,7 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
             start_ticks = SDL_GetTicks();
         };
 
-        auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
         auto controls = armyList(window, renderer, army, offset, last, limit, textx, texty + infoh, false);
 
@@ -17892,7 +17892,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
         auto offset = 0;
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > ships.size())
@@ -17922,7 +17922,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
             start_ticks = SDL_GetTicks();
         };
 
-        auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
         auto controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, back_button);
 
@@ -18173,7 +18173,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto offset = 0;
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > army.size())
@@ -18203,7 +18203,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             start_ticks = SDL_GetTicks();
         };
 
-        auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
         auto controls = armyList(window, renderer, army, offset, last, limit, textx, texty + infoh, false);
 
@@ -18450,8 +18450,8 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto infoh = 48;
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
-        auto booksize = (int)(2 * (text_bounds) / 3 - infoh - box_space);
-        auto limit = (int)((booksize - 2 * text_space) / (88));
+        auto booksize = (int)(2 * text_bounds / 3 - infoh - box_space);
+        auto limit = (int)((booksize - 2 * text_space) / (96));
         auto last = offset + limit;
 
         if (last > spells.size())
@@ -18483,7 +18483,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             start_ticks = SDL_GetTicks();
         };
 
-        auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
         auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, scrolly, true, true);
 
@@ -18556,11 +18556,11 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::ACTION)
             {
-                fillRect(renderer, listwidth, text_bounds / 3 - box_space, textx, texty + infoh + booksize + box_space, intLB);
+                fillRect(renderer, listwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
                 auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
-                renderText(renderer, text, intLB, textx + text_space, texty + infoh + booksize + box_space + text_space, text_bounds / 3 - texty, 0);
+                renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
                 SDL_FreeSurface(text);
 
@@ -18823,7 +18823,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto font_size = 28;
         auto text_space = 8;
         auto scrollSpeed = 1;
-        auto limit = (text_bounds - text_space) / (font_size + 7 * text_space / 2);
+        auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * text_space / 2);
         auto offset = 0;
         auto last = offset + limit;
 
@@ -18840,7 +18840,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         Uint32 duration = 3000;
 
-        auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
         auto controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
 
@@ -19145,7 +19145,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
         auto font_size = 28;
         auto text_space = 8;
         auto scrollSpeed = 1;
-        auto limit = (text_bounds - text_space) / (font_size + 7 * text_space / 2);
+        auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * text_space / 2);
         auto offset = 0;
         auto last = offset + limit;
 
@@ -19162,7 +19162,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
         Uint32 duration = 3000;
 
-        auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
         auto controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
 
@@ -19872,7 +19872,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto text_space = 8;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > harbour->Ships.size())
@@ -20518,7 +20518,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
         auto text_space = 8;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > harbour->Ships.size())
@@ -22426,7 +22426,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto popupy = (SCREEN_HEIGHT - popuph) / 2;
 
         auto offset = 0;
-        auto limit = (popuph - infoh - buttonh - button_space) / (88);
+        auto limit = (popuph - infoh - buttonh - button_space) / (96);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -23076,7 +23076,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto infoh = 48;
         auto box_space = 10;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (88);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > choices.size())
@@ -25390,7 +25390,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         if (story->Text)
         {
-            auto listwidth = ((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * space;
+            auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * space;
 
             text = createText(story->Text, FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
         }
@@ -25443,7 +25443,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         auto popup_speed = 1;
         auto popup_offset = 0;
-        auto popup_limit = (popuph - infoh - buttonh - button_space) / (88);
+        auto popup_limit = (popuph - infoh - buttonh - button_space) / (96);
         auto popup_last = popup_offset + popup_limit;
 
         if (story->Monsters.size() > 0 || story->EnemyFleet.size() > 0 || story->EnemyArmy.size() > 0)
@@ -26515,9 +26515,11 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
         }
 
         SDL_FreeSurface(splash);
+
         SDL_FreeSurface(text);
 
         splash = NULL;
+
         text = NULL;
     }
 
