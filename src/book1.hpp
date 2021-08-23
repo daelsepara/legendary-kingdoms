@@ -273,26 +273,26 @@ namespace Book1
 
                 if (jessica && akihiro)
                 {
-                    PreText = "Their";
+                    PreText += "Their";
                 }
                 else if (jessica)
                 {
-                    PreText = "Sar Jessica Dayne's";
+                    PreText += "Sar Jessica Dayne's";
                 }
                 else
                 {
-                    PreText = "Akihiro's";
+                    PreText += "Akihiro's";
                 }
 
                 PreText += " sense of personal honour ";
 
                 if (jessica && akihiro)
                 {
-                    PreText = "are";
+                    PreText += "are";
                 }
                 else
                 {
-                    PreText = "is";
+                    PreText += "is";
                 }
 
                 PreText += " too strict to attempt such a strategy.";
