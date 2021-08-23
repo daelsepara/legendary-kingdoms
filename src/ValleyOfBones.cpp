@@ -13877,7 +13877,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                         unsold_string += ", ";
                                     }
 
-                                    unsold_string += ship.Name;
+                                    unsold_string += "[" + std::string(ship.Name) + "]";
                                 }
                                 else
                                 {
