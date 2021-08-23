@@ -19102,7 +19102,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
     TTF_Init();
 
-    auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
