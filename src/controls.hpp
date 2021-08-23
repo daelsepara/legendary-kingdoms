@@ -88,7 +88,9 @@ namespace Control
         PREVIEW,
         STORY,
         REPAIR1,
-        FULL_REPAIR
+        FULL_REPAIR,
+        BUY_CARGO,
+        SELL_CARGO
     };
 
     class Base
