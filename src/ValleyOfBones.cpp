@@ -44,13 +44,13 @@ namespace fs = std::filesystem;
 #include "book1.hpp"
 
 // Forward declarations (internal functions)
-int fitImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, int h);
-int fadeImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, int h, Uint8 alpha);
 
+// create textures, images
 SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_size, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x);
 SDL_Surface *createImage(const char *image);
 SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Color textColor, int wrap, int style);
 
+// sdl helper functions
 void clipValue(int &val, int min, int max);
 void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, const char *title, const char *icon);
 void drawRect(SDL_Renderer *renderer, int w, int h, int x, int y, int color);
@@ -66,6 +66,9 @@ void renderTextButtons(SDL_Renderer *renderer, std::vector<TextButton> controls,
 void renderTextButtons(SDL_Renderer *renderer, std::vector<TextButton> controls, const char *ttf, int selected, SDL_Color fg, Uint32 bg, Uint32 bgSelected, int fontsize, int offsetx, int scrolly, bool hide_scroll, int style);
 void stretchImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, int h);
 void thickRect(SDL_Renderer *renderer, int w, int h, int x, int y, int color, int pts);
+
+// attributes list
+Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
 
 // game screens
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army);
@@ -95,6 +98,11 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character);
 bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, bool inCombat);
 
+// render images
+int fitImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, int h);
+int fadeImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, int h, Uint8 alpha);
+
+// attack, damage, armour saves screens
 int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int damage);
 int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int combat_damage);
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, int combatRound, bool useEquipment);
@@ -109,8 +117,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Equipment::Base equipment, Control::Type mode);
 int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> ships, Location::Type location, std::vector<Cargo::Type> cargo, Control::Type mode);
 
-Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, int increase);
-
+// combat screens
 Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool storyFlee, int fleeRound, int roundLimit, bool useEquipment);
 Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus);
 Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus);
@@ -127,13 +134,7 @@ std::string itemString(Equipment::Base &equipment);
 std::string monsterString(Monster::Base &monster);
 std::string shipString(Ship::Base &ship, bool cargo);
 
-// game screens (select multiple stuff)
-std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> army, Location::Type garrison, int num_limit);
-std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Location::Type garrison, int num_limit);
-std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Control::Type mode);
-std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> ships, Location::Type harbour, int num_limit, bool back_button);
-std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Character::Base &caster, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
-
+// miscellaneous utilities
 void addBye(Story::Base *story, std::string bye);
 void renderArmy(SDL_Renderer *renderer, TTF_Font *font, int text_space, std::vector<Army::Base> &army, int boxw, int boxh, int box_space, int offsety, SDL_Color fg, Uint32 bg);
 void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus, Location::Zone zone, int combatRound);
@@ -143,7 +144,7 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next);
 template <typename T>
 void popupScrolls(std::vector<Button> &controls, std::vector<T> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button);
 
-// Controls
+// icon button controls
 std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int offsetx, int offsety, bool party_controls);
 std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Attribute::Type> &attributes, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargo, int start, int last, int limit, int offsetx, int offsety);
@@ -164,6 +165,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, Control::Type mode);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, bool cargo, bool confirm_button, bool back_button);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::ShipPrices> &ships, int start, int last, int limit, int offsetx, int offsety);
+std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::ShipPrices> &ships, int start, int last, int limit, int offsetx, int offsety, bool buy_button, bool sell_button);
 std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::EquipmentPrice> &shop, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> rechargeList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int start, int last, int limit, int offsetx, int offsety, int scrolly);
 std::vector<Button> repairList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety);
@@ -172,6 +174,14 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Team::Type> &teams, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, int offsety, int scrolly);
 
+// game screens (select multiple stuff)
+std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> army, Location::Type garrison, int num_limit);
+std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Location::Type garrison, int num_limit);
+std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Control::Type mode);
+std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> ships, Location::Type harbour, int num_limit, bool back_button);
+std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Character::Base &caster, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
+
+// text button controls
 std::vector<TextButton> createFixedTextButtons(const char **choices, int num, int text_buttonw, int text_buttonh, int textbutton_space, int text_x, int text_y);
 std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y);
 std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y, bool has_scrolls);
@@ -19009,6 +19019,80 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, ships.size() > 0 ? idx - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::REPAIR_SHIP));
     controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, ships.size() > 0 ? idx - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::BUY_SELL_CARGO));
     controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, ships.size() > 0 ? idx - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::BACK));
+
+    return controls;
+}
+
+std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::ShipPrices> &ships, int start, int last, int limit, int offsetx, int offsety, bool buy_button, bool sell_button)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (ships.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto ship = std::get<0>(ships[index]);
+
+            auto buy = std::get<1>(ships[index]);
+
+            auto sell = std::get<2>(ships[index]);
+
+            std::string ship_string = "[" + std::string(ship.Name) + "] Fighting: " + std::to_string(ship.Fighting) + ", Health: " + std::to_string(ship.Health) + ", Cargo: " + std::to_string(ship.MaximumCargo) + " unit(s)";
+
+            ship_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + ", Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (ships.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (ships.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    if (buy_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (ships.size() > 0 ? idx - 1 : idx), idx, startx, buttony, Control::Type::BUY));
+    }
+
+    if (sell_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx + 1, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? (last - start) : idx), idx, (buy_button ? (startx + gridsize) : startx), buttony, Control::Type::SELL));
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, "icons/back-button.png", (buy_button || sell_button) ? idx - 1 : idx, idx, (ships.size() > 0 ? (last - start) : idx), idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
 
     return controls;
 }
