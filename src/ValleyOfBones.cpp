@@ -19875,9 +19875,9 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
-        if (last > harbour->Ships.size())
+        if (last > party.Fleet.size())
         {
-            last = harbour->Ships.size();
+            last = party.Fleet.size();
         }
 
         auto controls = std::vector<Button>();
@@ -19886,13 +19886,11 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         auto current_mode = Control::Type::SELL_CARGO;
 
+        bool hold = false;
+        auto done = false;
         bool scrollUp = false;
         bool scrollDown = false;
         auto scrollSpeed = 1;
-        bool hold = false;
-
-        auto done = false;
-
         auto selected_ship = -1;
         auto selected_cargo = std::vector<int>();
 
@@ -19926,7 +19924,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     std::string cargo_string = "";
 
-                    for (auto i = 0; i < harbour->Cargo.size(); i++)
+                    for (auto i = 0; i < selected_cargo.size(); i++)
                     {
                         auto cargo = std::get<0>(harbour->Cargo[selected_cargo[i]]);
 
@@ -19967,13 +19965,14 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         controls = cargoList(window, renderer, party.Fleet, offset, last, limit, textx, (texty + infoh));
 
-                        if (party.Fleet.size() - last > 0)
+                        for (auto i = 0; i < controls.size(); i++)
                         {
-                            current = last - offset + 1;
-                        }
-                        else
-                        {
-                            current = last - offset;
+                            if (controls[i].Type == Control::Type::SELL_CARGO)
+                            {
+                                current = i;
+
+                                break;
+                            }
                         }
                     }
 
@@ -19994,13 +19993,14 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         controls = buyCargo(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
 
-                        if (harbour->Cargo.size() - last > 0)
+                        for (auto i = 0; i < controls.size(); i++)
                         {
-                            current = last - offset + 3;
-                        }
-                        else
-                        {
-                            current = last - offset + 2;
+                            if (controls[i].Type == Control::Type::BUY_CARGO)
+                            {
+                                current = i;
+
+                                break;
+                            }
                         }
                     }
 
@@ -20035,15 +20035,17 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 fillRect(renderer, textwidth, infoh, textx, texty, intBR);
             }
 
-            for (auto i = offset; i < last; i++)
+            if (last - offset > 0)
             {
-                auto index = i - offset;
-
-                if (current != index)
+                for (auto i = 0; i < last - offset; i++)
                 {
-                    if (index >= 0 && index < controls.size())
+                    if ((current_mode == Control::Type::BUY_CARGO && (Engine::FIND_LIST(selected_cargo, offset + i) >= 0)) || (current_mode == Control::Type::SELL_CARGO && selected_ship == (offset + i)))
                     {
-                        drawRect(renderer, controls[index].W + 16, controls[index].H + 16, controls[index].X - 8, controls[index].Y - 8, intBK);
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
                     }
                 }
             }
@@ -20112,7 +20114,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (current_mode == Control::Type::SELL_CARGO)
                     {
-                        if (harbour->Ships.size() - last > 0)
+                        if (party.Fleet.size() - last > 0)
                         {
                             if (offset < party.Fleet.size() - limit)
                             {
