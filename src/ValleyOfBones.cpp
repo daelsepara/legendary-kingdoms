@@ -149,6 +149,7 @@ void popupScrolls(std::vector<Button> &controls, std::vector<T> &list, int start
 // icon button controls
 std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int offsetx, int offsety, bool party_controls);
 std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Attribute::Type> &attributes, int start, int last, int limit, int offsetx, int offsety);
+std::vector<Button> buyCargo(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargo, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargo, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> party, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button);
@@ -1724,7 +1725,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -1765,7 +1766,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -1806,7 +1807,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -1825,7 +1826,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         if (controls[current].Type != Control::Type::SCROLL_DOWN)
                         {
-                            current++;
+                            current += 1;
                         }
                     }
                 }
@@ -6973,7 +6974,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -7359,7 +7360,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -7695,7 +7696,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -10030,7 +10031,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -10311,7 +10312,7 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -10595,7 +10596,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -10993,7 +10994,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -11375,7 +11376,7 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -11753,7 +11754,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -12136,7 +12137,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -12761,7 +12762,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -13751,7 +13752,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     {
                         if (controls[current].Type != Control::Type::SCROLL_DOWN)
                         {
-                            current++;
+                            current += 1;
                         }
                     }
                 }
@@ -14284,7 +14285,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     {
                         if (controls[current].Type != Control::Type::SCROLL_DOWN)
                         {
-                            current++;
+                            current += 1;
                         }
                     }
                 }
@@ -14816,7 +14817,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -15303,7 +15304,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if (controls[current].Type != Control::Type::SCROLL_DOWN)
                         {
-                            current++;
+                            current += 1;
                         }
                     }
                 }
@@ -15861,7 +15862,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -16352,7 +16353,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     {
                         if (controls[current].Type != Control::Type::SCROLL_DOWN)
                         {
-                            current++;
+                            current += 1;
                         }
                     }
                 }
@@ -17014,7 +17015,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                     {
                         if (controls[current].Type != Control::Type::SCROLL_DOWN)
                         {
-                            current++;
+                            current += 1;
                         }
                     }
                 }
@@ -17487,7 +17488,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     {
                         if (controls[current].Type != Control::Type::SCROLL_DOWN)
                         {
-                            current++;
+                            current += 1;
                         }
                     }
                 }
@@ -17785,7 +17786,7 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -18071,7 +18072,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -18350,7 +18351,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -18643,7 +18644,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -19022,7 +19023,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -19344,7 +19345,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -20026,7 +20027,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                 if (harbour->Cargo.size() == 0)
                 {
-                    putText(renderer, "You cannot buy norsell any goods here", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                    putText(renderer, "You cannot buy nor sell any goods here", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
             }
             else
@@ -20138,7 +20139,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -20179,7 +20180,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -20198,7 +20199,72 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if (controls[current].Type != Control::Type::SCROLL_DOWN)
                         {
-                            current++;
+                            current += 1;
+                        }
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if (current_mode == Control::Type::SELL_CARGO)
+                    {
+                        if ((offset + current) >= 0 && (offset + current) < party.Fleet.size())
+                        {
+                            if (Engine::HAS_SHIP(party, harbour->Location))
+                            {
+                                if (selected_ship == offset + current)
+                                {
+                                    selected_ship = -1;
+                                }
+                                else if (party.Fleet[offset + current].Location != harbour->Location)
+                                {
+                                    displayMessage("The [" + std::string(party.Fleet[offset + current].Name) + "] is not docked at this harbour!", intRD);
+                                }
+                                else if (party.Fleet[offset + current].Cargo.size() <= 0)
+                                {
+                                    displayMessage("The [" + std::string(party.Fleet[offset + current].Name) + "] is not carrying any cargo!", intRD);
+                                }
+                                else if (party.Fleet[offset + current].Health > 0 && party.Fleet[offset + current].Cargo.size() > 0)
+                                {
+                                    selected_ship = offset + current;
+                                }
+                            }
+                            else
+                            {
+                                displayMessage("You do not have a ship docked at this harbour!", intRD);
+                            }
+                        }
+
+                        selected = false;
+                    }
+                    else if (current_mode == Control::Type::BUY_CARGO)
+                    {
+                        if (Engine::HAS_SHIP(party, harbour->Location))
+                        {
+                            auto found_cargo = Engine::FIND_LIST(selected_cargo, offset + current);
+
+                            if (found_cargo >= 0 && found_cargo < selected_cargo.size())
+                            {
+                                selected_cargo.erase(selected_cargo.begin() + found_cargo);
+                            }
+                            else if ((offset + current) >= 0 && (offset + current) < harbour->Cargo.size())
+                            {
+                                auto cargo = std::get<0>(harbour->Cargo[offset + current]);
+
+                                auto price = std::get<1>(harbour->Cargo[offset + current]);
+
+                                if (price >= 0)
+                                {
+                                    selected_cargo.push_back(offset + current);
+                                }
+                                else
+                                {
+                                    displayMessage(std::string(Cargo::Description[cargo]) + " not available at this harbour!", intRD);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            displayMessage("You do not have a ship docked at this harbour!", intRD);
                         }
                     }
                 }
@@ -20206,12 +20272,93 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (selected_ship >= 0 && selected_ship < party.Fleet.size())
                     {
-                        // sell the ship's cargo
+                        if (party.Fleet[selected_ship].Cargo.size() > 0)
+                        {
+                            auto sold = 0;
+                            auto unsold = 0;
+
+                            std::string sold_string = "";
+                            std::string unsold_string = "";
+
+                            auto revenue = 0;
+
+                            auto cargo = std::vector<Cargo::Type>();
+
+                            for (auto i = 0; i < party.Fleet[selected_ship].Cargo.size(); i++)
+                            {
+                                cargo.push_back(party.Fleet[selected_ship].Cargo[i]);
+                            }
+
+                            for (auto i = 0; i < cargo.size(); i++)
+                            {
+                                auto price = Engine::PRICE_SELL(harbour->Cargo, cargo[i]);
+
+                                if (price >= 0)
+                                {
+                                    if (sold > 0)
+                                    {
+                                        sold_string += ", ";
+                                    }
+
+                                    sold_string += std::string(Cargo::Description[cargo[i]]);
+
+                                    revenue += price;
+
+                                    sold += 1;
+
+                                    Engine::LOSE_CARGO(party.Fleet[selected_ship], cargo[i]);
+                                }
+                                else
+                                {
+                                    if (unsold > 0)
+                                    {
+                                        unsold_string += ", ";
+                                    }
+
+                                    unsold_string += std::string(Cargo::Description[cargo[i]]);
+
+                                    unsold += 1;
+                                }
+                            }
+
+                            if (sold > unsold)
+                            {
+                                flash_color = intLB;
+                            }
+                            else
+                            {
+                                flash_color = intRD;
+                            }
+
+                            message = "Cargo sold: " + (sold > 0 ? sold_string : "None");
+
+                            if (unsold > 0)
+                            {
+                                if (sold > 0)
+                                {
+                                    message += "\n";
+                                }
+
+                                message += "Unsold cargo: " + unsold_string;
+                            }
+
+                            message += "\nRevenue: " + std::to_string(revenue) + " silver coins";
+
+                            Engine::GAIN_MONEY(party, revenue);
+
+                            displayMessage(message, flash_color);
+                        }
+                        else
+                        {
+                            displayMessage("The [" + std::string(party.Fleet[selected_ship].Name) + "] is not carrying any cargo!", intRD);
+                        }
                     }
                     else
                     {
                         displayMessage("Please select the ship containing the cargo you want to sell", intRD);
                     }
+
+                    current = -1;
 
                     selected = false;
                 }
@@ -20219,12 +20366,70 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (selected_cargo.size() > 0)
                     {
-                        // buy cargo
+                        if (party.Fleet.size() <= 0)
+                        {
+                            displayMessage("You do not have any ships!", intRD);
+                        }
+                        else if (Engine::HAS_SHIP(party, harbour->Location, selected_cargo.size()))
+                        {
+                            auto price = 0;
+
+                            auto cargo = std::vector<Cargo::Type>();
+
+                            for (auto i = 0; i < selected_cargo.size(); i++)
+                            {
+                                auto goods = std::get<0>(harbour->Cargo[selected_cargo[i]]);
+
+                                price += Engine::PRICE_BUY(harbour->Cargo, goods);
+
+                                cargo.push_back(goods);
+                            }
+
+                            if (party.Money >= price)
+                            {
+                                auto ship = selectShip(window, renderer, party.Fleet, harbour->Location, cargo, Control::Type::CARGO);
+
+                                if (ship >= 0 && ship < party.Fleet.size())
+                                {
+                                    party.Fleet[ship].Cargo.insert(party.Fleet[ship].Cargo.end(), cargo.begin(), cargo.end());
+
+                                    Engine::GAIN_MONEY(party, -price);
+
+                                    std::string delivery_message = "";
+
+                                    for (auto i = 0; i < cargo.size(); i++)
+                                    {
+                                        if (i > 0)
+                                        {
+                                            delivery_message += ", ";
+                                        }
+
+                                        delivery_message += std::string(Cargo::Description[cargo[i]]);
+                                    }
+
+                                    displayMessage(delivery_message + " delivered aboard the [" + std::string(party.Fleet[ship].Name) + "]!", intLB);
+                                }
+                            }
+                            else
+                            {
+                                displayMessage("You do not have enough silver coins!", intRD);
+                            }
+                        }
+                        else if (Engine::HAS_SHIP(party, harbour->Location))
+                        {
+                            displayMessage("You do not have enough space in your ships!", intRD);
+                        }
+                        else
+                        {
+                            displayMessage("You do not have a ship docked at this harbour!", intRD);
+                        }
                     }
                     else
                     {
                         displayMessage("Please select the cargo you wish to buy", intRD);
                     }
+
+                    current = -1;
 
                     selected = false;
                 }
@@ -20607,7 +20812,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -20648,7 +20853,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                             {
                                 if (controls[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
                         }
@@ -20667,7 +20872,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                     {
                         if (controls[current].Type != Control::Type::SCROLL_DOWN)
                         {
-                            current++;
+                            current += 1;
                         }
                     }
                 }
@@ -22492,7 +22697,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                             {
                                 if (controls_deploy[current].Type != Control::Type::SCROLL_DOWN)
                                 {
-                                    current++;
+                                    current += 1;
                                 }
                             }
 
@@ -23209,7 +23414,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (controls[current].Type != Control::Type::SCROLL_DOWN)
                             {
-                                current++;
+                                current += 1;
                             }
                         }
                     }
@@ -25735,7 +25940,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 {
                                     if (controls_popup[current].Type != Control::Type::SCROLL_DOWN)
                                     {
-                                        current++;
+                                        current += 1;
                                     }
                                 }
 

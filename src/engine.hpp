@@ -3363,5 +3363,70 @@ namespace Engine
             party.Fleet.erase(party.Fleet.begin() + result);
         }
     }
+
+    int PRICE_BUY(std::vector<Engine::CargoPrices> &priceList, Cargo::Type cargo)
+    {
+        auto price = -1;
+
+        for (auto i = 0; i < priceList.size(); i++)
+        {
+            auto item = std::get<0>(priceList[i]);
+
+            if (item == cargo)
+            {
+                price = std::get<1>(priceList[i]);
+
+                break;
+            }
+        }
+
+        return price;
+    }
+
+    int PRICE_SELL(std::vector<Engine::CargoPrices> &priceList, Cargo::Type cargo)
+    {
+        auto price = -1;
+
+        for (auto i = 0; i < priceList.size(); i++)
+        {
+            auto item = std::get<0>(priceList[i]);
+
+            if (item == cargo)
+            {
+                price = std::get<2>(priceList[i]);
+
+                break;
+            }
+        }
+
+        return price;
+    }
+
+    int FIND_CARGO(Ship::Base &ship, Cargo::Type cargo)
+    {
+        auto found = -1;
+
+        for (auto i = 0; i < ship.Cargo.size(); i++)
+        {
+            if (ship.Cargo[i] == cargo)
+            {
+                found = i;
+
+                break;
+            }
+        }
+
+        return found;
+    }
+
+    void LOSE_CARGO(Ship::Base &ship, Cargo::Type cargo)
+    {
+        auto found = Engine::FIND_CARGO(ship, cargo);
+
+        if (found >= 0 && found < ship.Cargo.size())
+        {
+            ship.Cargo.erase(ship.Cargo.begin() + found);
+        }
+    }
 }
 #endif
