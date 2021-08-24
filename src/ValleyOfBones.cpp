@@ -26893,8 +26893,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
                         }
 
-                        current = -1;
-
                         selected = false;
                     }
                     else if (controls[current].Type == Control::Type::NEXT && !hold)
@@ -26916,8 +26914,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
                         }
-
-                        current = -1;
 
                         selected = false;
                     }
