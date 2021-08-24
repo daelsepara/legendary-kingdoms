@@ -26797,7 +26797,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             }
                             else
                             {
-                                thickRect(renderer, controls[index].W + text_space, controls[index].H + text_space, controls[index].X - border_pts, controls[index].Y - border_pts, intLB, border_pts);
+                                thickRect(renderer, controls[index].W + (text_space - 2), controls[index].H + (text_space - 2), controls[index].X - border_pts, controls[index].Y - (border_pts - 1), intLB, (border_pts - 1));
                             }
                         }
                     }
