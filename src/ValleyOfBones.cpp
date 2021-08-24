@@ -26630,7 +26630,7 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
     {
         auto marginx = (int)(SCREEN_WIDTH * Margin);
 
-        auto scroll_space = (marginx - (arrow_size + border_space)) / 2;
+        auto scroll_space = (marginx - (arrow_size + 2 * border_space)) / 2;
 
         if (start > 0)
         {
@@ -26801,7 +26801,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             }
                             else
                             {
-                                thickRect(renderer, controls[index].W + border_pts, controls[index].H + border_pts, controls[index].X - 2, controls[index].Y - 2, intLB, 2);
+                                thickRect(renderer, controls[index].W + text_space, controls[index].H + text_space, controls[index].X - border_pts, controls[index].Y - border_pts, intLB, border_pts);
                             }
                         }
                     }
