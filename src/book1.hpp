@@ -538,7 +538,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "You have chosen to battle one of the dark knights of Abraxas. Good luck!\n\nNote: On any round when Skallos does not take damage, he will unleash a roar of black magic. Each party member must lose 1 point of Health, and Skallos will restore 4 points of Health, up to his maximum of 20 Health points.";
+            Text = "You have chosen to battle one of the dark knights of Abraxas. Good luck!\n\nNote: On any round when Skallos does not take damage, he will unleash a roar of black magic. Each party member loses 1 point of Health, and Skallos will restore 4 points of Health, up to his maximum of 20 Health points.";
 
             Choices.clear();
 
@@ -3791,7 +3791,7 @@ namespace Book1
 
             Location = Location::Type::NORTH_ROAD;
 
-            Text = "There are no exceptions. With dozens of guards at their command the priests strip you of all your taxable items (items that provide a +2 or greater bonus, except for shields). For good measure you are scourged with the whip as well. Each party member must lose 1 Health point.";
+            Text = "There are no exceptions. With dozens of guards at their command the priests strip you of all your taxable items (items that provide a +2 or greater bonus, except for shields). For good measure you are scourged with the whip as well. Each party member alose loses 1 Health point.";
 
             Bye = "Appalled at this daylight robbery you make your way on.";
 
@@ -8674,7 +8674,7 @@ namespace Book1
 
             Location = Location::Type::CURSUS;
 
-            Text = "You cannot ward the assassin away. He ducks under your blade and stabs the Everchild in the leg. She squeals and kicks him away, and you impale the knave through the back. Casting his body aside you rush to the Everchild. \"It's not bad!\" she assures you, gripping her bleeding thigh. A quick examination of the assassin's dagger tells you otherwise... it has been poisoned.\n\nSoon she in a critical condition, unable to stand, her flesh looking as grey as stone. In her fevered delirium she insists on leading the troops into battle, but this is clearly impossible. You command her to concentrate on getting better, and to focus all her healing energies on herself.\n\nWord soon gets around about the Everchild's condition. Each army unit in the Saltdad barracks must lose 1 point of Morale. You dread the coming of the dawn, but you realise you cannot escape now. You must face what comes with as much courage as you can muster.";
+            Text = "You cannot ward the assassin away. He ducks under your blade and stabs the Everchild in the leg. She squeals and kicks him away, and you impale the knave through the back. Casting his body aside you rush to the Everchild. \"It's not bad!\" she assures you, gripping her bleeding thigh. A quick examination of the assassin's dagger tells you otherwise... it has been poisoned.\n\nSoon she in a critical condition, unable to stand, her flesh looking as grey as stone. In her fevered delirium she insists on leading the troops into battle, but this is clearly impossible. You command her to concentrate on getting better, and to focus all her healing energies on herself.\n\nWord soon gets around about the Everchild's condition. Each army unit in the Saltdad barracks loses 1 point of Morale. You dread the coming of the dawn, but you realise you cannot escape now. You must face what comes with as much courage as you can muster.";
 
             Choices.clear();
 
@@ -16309,7 +16309,7 @@ namespace Book1
 
             Location = Location::Type::CURSUS;
 
-            Text = "You are not sure how it happened. Foul sorcery? Assassins from the House of Silence? Either way, a lone assassin managed to penetrate the defences around the Everchild and stab her with a poisoned dagger. By the time your team have returned you find her in a critical condition, unable to stand, her flesh looking as grey as stone. In her fevered delirium she insists on leading the troops into battle, but this is clearly impossible. You command her to concentrate on getting better, and to focus all her healing energies on herself.\n\nWord soon gets around about the Everchild's condition.\n\nNote: Each army unit in the Saltdad barracks must lose 1 point of Morale.";
+            Text = "You are not sure how it happened. Foul sorcery? Assassins from the House of Silence? Either way, a lone assassin managed to penetrate the defences around the Everchild and stab her with a poisoned dagger. By the time your team have returned you find her in a critical condition, unable to stand, her flesh looking as grey as stone. In her fevered delirium she insists on leading the troops into battle, but this is clearly impossible. You command her to concentrate on getting better, and to focus all her healing energies on herself.\n\nWord soon gets around about the Everchild's condition.\n\nNote: Each army unit in the Saltdad barracks loses 1 point of Morale.";
 
             Bye = "You dread the coming of the dawn, but you realise you cannot escape now. You must face what comes with as much courage as you can muster.";
 
@@ -22198,7 +22198,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "\"Whipping is so dull!\" moans Lothor. \"Except when done en-mass!\"\n\nAt a nod from the king you are grasped by the guards and stripped. Soon King Lothor and his favourite lords are striping your backs with the whip, to the jeers of his court.\n\nEventually evening comes and Lothor tires of his sport. You are cast out of his court naked, to peels of laughter from his servants.\n\nNote: Each party member must lose 3 points of Health. Any characters wearing armour discards it, but the rest of your equipment is thrown after you. You gained the code A34.";
+            Text = "\"Whipping is so dull!\" moans Lothor. \"Except when done en-mass!\"\n\nAt a nod from the king you are grasped by the guards and stripped. Soon King Lothor and his favourite lords are striping your backs with the whip, to the jeers of his court.\n\nEventually evening comes and Lothor tires of his sport. You are cast out of his court naked, to peels of laughter from his servants.\n\nNote: Each party member loses 3 points of Health. Any characters wearing armour discards it, but the rest of your equipment is thrown after you. You gained the code A34.";
 
             Bye = "Vowing revenge you slink away to the marketplace to buy some new clothes.";
 
@@ -28099,7 +28099,7 @@ namespace Book1
 
             Location = Location::Type::PALACE_OF_UNBRAAKI;
 
-            Text = "Something goes wrong with your counter-spell. The runes suddenly flash brilliantly and you are knocked unconscious.\n\nNote: Each party member must lose 2 Health as they tumble off the roof and onto the ground.";
+            Text = "Something goes wrong with your counter-spell. The runes suddenly flash brilliantly and you are knocked unconscious.\n\nNote: Each party member loses 2 Health as they tumble off the roof and onto the ground.";
 
             Bye = "The guards, alerted by the bright light, swarm round and capture you.";
 

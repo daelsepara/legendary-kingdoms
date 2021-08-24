@@ -75,6 +75,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army);
 bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::TeamAssignment> teams, int min_teams);
 bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
+bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID);
 bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Character::Base &character, int equipment_limit, bool InCombat);
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
 bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge);
@@ -178,6 +179,7 @@ std::vector<Button> repairList(SDL_Window *window, SDL_Renderer *renderer, std::
 std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int start, int last, int limit, int offsetx, int offsety, int scrolly);
 std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Spells::Base> &spells, int start, int last, int limit, int offsetx, int offsety, int scrolly, bool confirm_button, bool back_button);
 std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Team::Type> &teams, int start, int last, int limit, int offsetx, int offsety);
+std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Topics::Base> &topics, int start, int last, int limit, int offsetx, int offsety, bool compact);
 std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, int offsety, int scrolly);
 
 // game screens (select multiple stuff)
@@ -223,6 +225,7 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
         SDL_GetCurrentDisplayMode(0, &mode);
 
         SCREEN_WIDTH = (mode.w);
+
         SCREEN_HEIGHT = (mode.h);
 
         Recompute();
@@ -2064,7 +2067,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
             if (current_mode != Control::Type::PARTY && character >= 0 && character < party.Members.size())
             {
-                putText(renderer, party.Members[character].Name, font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+                putText(renderer, party.Members[character].Name.c_str(), font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
             }
 
             if (current_mode != Control::Type::PARTY && character >= 0 && character < party.Members.size())
@@ -2583,7 +2586,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
             if (character >= 0 && character < characters.size() && adventurer)
             {
-                putText(renderer, characters[character].Name, font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+                putText(renderer, characters[character].Name.c_str(), font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
             }
 
             if (selection.size() > 0)
@@ -3961,7 +3964,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
                 std::string defender_string = "";
 
-                putHeader(renderer, character.Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, character.Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
@@ -4177,7 +4180,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (Engine::IS_ALIVE(party.Members[selection]))
                     {
-                        putText(renderer, party.Members[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                        putText(renderer, party.Members[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                     }
                     else
                     {
@@ -4521,12 +4524,12 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     }
                 }
 
-                putHeader(renderer, party.Members[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Members[combatant].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
                 std::string attacker_string = "Magic Fighting Score: " + std::to_string(fighting_score);
                 putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
-                putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                putHeader(renderer, monsters[opponent].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                 fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
                 std::string defender_string = "Defence: " + std::to_string(Defence) + "+\nHealth: " + std::to_string(monsters[opponent].Health);
                 putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
@@ -4990,7 +4993,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, party.Fleet[party.CurrentShip].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                        putHeader(renderer, party.Fleet[party.CurrentShip].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                         attack_score = party.Fleet[party.CurrentShip].Fighting;
 
@@ -5009,7 +5012,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     }
                     else
                     {
-                        putHeader(renderer, enemyFleet[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                        putHeader(renderer, enemyFleet[opponent].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                         attack_score = enemyFleet[opponent].Fighting;
 
@@ -5030,13 +5033,13 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, enemyFleet[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, enemyFleet[opponent].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Defence: " + std::to_string(Difficulty) + "+";
                         defender_string += "\nHealth: " + std::to_string(enemyFleet[opponent].Health);
                     }
                     else
                     {
-                        putHeader(renderer, party.Fleet[party.CurrentShip].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, party.Fleet[party.CurrentShip].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Defence: " + std::to_string(Difficulty) + "+";
                         defender_string += "\nHealth: " + std::to_string(party.Fleet[party.CurrentShip].Health);
                     }
@@ -5691,7 +5694,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, party.Members[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
+                        putHeader(renderer, party.Members[combatant].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
 
                         if (useEquipment)
                         {
@@ -5726,7 +5729,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                     else
                     {
-                        putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
+                        putHeader(renderer, monsters[opponent].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
 
                         attack_score = monsters[opponent].Attack;
 
@@ -5789,7 +5792,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, monsters[opponent].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, monsters[opponent].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Defence: " + std::to_string(Defence - focus) + "+";
                         defender_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
                     }
@@ -5801,7 +5804,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
                         else
                         {
-                            putHeader(renderer, party.Members[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
+                            putHeader(renderer, party.Members[combatant].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
                             defender_string = "Health: " + std::to_string(Engine::HEALTH(party.Members[combatant]));
                         }
                     }
@@ -6312,7 +6315,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                 }
 
-                putHeader(renderer, party.Army[unit].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Army[unit].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
                 std::string army_string = "Strength: " + std::to_string(party.Army[unit].Strength) + " Morale: " + std::to_string(party.Army[unit].Morale) + "\nPosition: " + Location::BattleFieldDescription[party.Army[unit].Position];
                 putText(renderer, army_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
@@ -6604,7 +6607,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
                     }
                 }
 
-                putHeader(renderer, character.Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, character.Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
                 std::string attacker_string = std::string(Attribute::Descriptions[attribute]) + " Score: " + std::to_string(Engine::SCORE(character, attribute));
                 putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
@@ -6837,7 +6840,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                     {
                         fillRect(renderer, textwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
-                        auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        auto text = createText(spells[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
                         renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
@@ -7268,7 +7271,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                     putHeader(renderer, "Spell Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
                 }
 
-                putText(renderer, party.Members[attacker].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+                putText(renderer, party.Members[attacker].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
 
                 putHeader(renderer, "Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -7276,7 +7279,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 {
                     if (monsters[selection].Health > 0)
                     {
-                        putText(renderer, monsters[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                        putText(renderer, monsters[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                     }
                     else
                     {
@@ -7612,7 +7615,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                 {
                     if (enemyFleet[selection].Health > 0)
                     {
-                        putText(renderer, enemyFleet[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                        putText(renderer, enemyFleet[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                     }
                     else
                     {
@@ -8069,7 +8072,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                 putHeader(renderer, test_string.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
-                putHeader(renderer, party.Members[team[0]].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Members[team[0]].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
@@ -8131,7 +8134,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                 if (team.size() > 1)
                 {
-                    putHeader(renderer, party.Members[team[1]].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                    putHeader(renderer, party.Members[team[1]].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
 
                     fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
 
@@ -8572,7 +8575,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                 if (selection >= 0 && selection < party.Members.size())
                 {
-                    putText(renderer, party.Members[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party.Members[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -9111,7 +9114,7 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
 
                 if (selection >= 0 && selection < party.Members.size())
                 {
-                    putText(renderer, party.Members[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party.Members[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -9390,7 +9393,7 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
 
                 if (selection >= 0 && selection < party.Members.size())
                 {
-                    putText(renderer, party.Members[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party.Members[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -10902,7 +10905,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
             {
                 if (Engine::IS_ALIVE(party.Members[selection]))
                 {
-                    putText(renderer, party.Members[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party.Members[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -11283,7 +11286,7 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
             {
                 if (ships[selection].Health > 0)
                 {
-                    putText(renderer, ships[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, ships[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -16997,7 +17000,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
         if (selection >= 0 && selection < character.SpellBook.size())
         {
-            putText(renderer, character.SpellBook[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            putText(renderer, character.SpellBook[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
         }
         else
         {
@@ -17081,7 +17084,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             {
                 fillRect(renderer, listwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
-                auto text = createText(character.SpellBook[current + offset].Description, FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                auto text = createText(character.SpellBook[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
                 renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
@@ -17478,7 +17481,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
         if (selection >= 0 && selection < character.SpellBook.size())
         {
-            putText(renderer, character.SpellBook[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            putText(renderer, character.SpellBook[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
         }
         else
         {
@@ -17554,7 +17557,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             {
                 fillRect(renderer, listwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
-                auto text = createText(character.SpellBook[current + offset].Description, FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                auto text = createText(character.SpellBook[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
                 renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
@@ -18715,7 +18718,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 fillRect(renderer, listwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
-                auto text = createText(spells[current + offset].Description, FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                auto text = createText(spells[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
                 renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
@@ -20069,7 +20072,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 if (selected_ship >= 0 && selected_ship < party.Fleet.size())
                 {
-                    putText(renderer, party.Fleet[selected_ship].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party.Fleet[selected_ship].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -21545,7 +21548,7 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, i
                 }
             }
 
-            putHeader(renderer, unit.Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+            putHeader(renderer, unit.Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
             std::string unit_string = "Strength: " + std::to_string(unit.Strength);
             unit_string += "\nMorale: " + std::to_string(unit.Morale);
@@ -22001,7 +22004,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             {
                 std::string army_string = "";
 
-                putHeader(renderer, party.Army[party_unit].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Army[party_unit].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 army_string = "Strength: " + std::to_string(party.Army[party_unit].Strength);
                 army_string += "\nMorale: " + std::to_string(party.Army[party_unit].Morale);
@@ -22038,7 +22041,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             {
                 std::string enemy_string = "";
 
-                putHeader(renderer, enemyArmy[enemy_unit].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                putHeader(renderer, enemyArmy[enemy_unit].Name.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
 
                 auto score = enemyArmy[enemy_unit].Strength;
 
@@ -26512,6 +26515,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::ENCYCLOPEDIA && !hold)
                     {
+                        encyclopediaScreen(window, renderer, story->BookID);
+
                         selected = false;
                     }
                     else if (controls[current].Type == Control::Type::BACK && !hold)
@@ -26591,6 +26596,464 @@ bool storyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     auto story = findStory(destination);
 
     return processStory(window, renderer, party, story->BookID, story);
+}
+
+std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Topics::Base> &topics, int start, int last, int limit, int offsetx, int offsety, bool compact)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    if (topics.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto topic = topics[index];
+
+            auto button = createHeaderButton(window, FONT_GARAMOND, 22, topic.Title.c_str(), clrBK, intBE, splashw - 3 * button_space / 2, (text_space + 28) * 2, text_space);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = button->w;
+
+            controls[i].H = button->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (topics.size() > limit)
+    {
+        auto marginx = (int)(SCREEN_WIDTH * Margin);
+
+        auto scroll_space = (marginx - (arrow_size + border_space)) / 2;
+
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, startx + splashw + scroll_space, texty + border_space, Control::Type::TOPICS_UP));
+
+            idx++;
+        }
+
+        if (topics.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, startx + splashw + scroll_space, (texty + text_bounds - arrow_size - border_space), Control::Type::TOPICS_DOWN));
+
+            idx++;
+        }
+    }
+
+    if (!compact)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
+        controls.push_back(Button(idx + 1, "icons/down-arrow.png", idx + 1, idx + 1, idx, idx + 2, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, "icons/previous.png", idx, idx + 1, topics.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::PREVIOUS));
+    controls.push_back(Button(idx + 1, "icons/next.png", idx, idx + 2, topics.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + gridsize, buttony, Control::Type::NEXT));
+    controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, topics.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+
+    return controls;
+}
+
+bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID)
+{
+    if (Topics::ALL.size() <= 0)
+    {
+        Topics::LoadTopics();
+    }
+
+    if (Topics::ALL.size() > 0)
+    {
+        auto quit = false;
+
+        auto space = 8;
+        auto font_size = 28;
+        auto text_space = 8;
+
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+        auto font_mason2 = TTF_OpenFont(FONT_MASON, 28);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto infoh = 48;
+
+        std::vector<Button> controls = {};
+
+        auto topic = 0;
+
+        auto topic_offset = 0;
+        auto topic_speed = 1;
+        auto topic_limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto topic_last = topic_offset + topic_limit;
+
+        if (topic_last > Topics::ALL.size())
+        {
+            topic_last = Topics::ALL.size();
+        }
+
+        while (!quit)
+        {
+            SDL_Surface *text = NULL;
+
+            auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * space;
+
+            if (Topics::ALL[topic].Text.length() > 0)
+            {
+                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+            }
+
+            auto compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+
+            controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+
+            // Render the image
+            if (window && renderer)
+            {
+                auto scrollSpeed = 20;
+
+                auto hold = false;
+
+                bool scrollUp = false;
+
+                bool scrollDown = false;
+
+                auto selected = false;
+
+                auto current = -1;
+
+                auto offset = 0;
+
+                auto transition = false;
+
+                auto text_up = -1;
+
+                auto text_dn = -1;
+
+                while (!transition)
+                {
+                    for (auto i = 0; i < controls.size(); i++)
+                    {
+                        if (controls[i].Type == Control::Type::SCROLL_UP)
+                        {
+                            text_up = i;
+                        }
+                        else if (controls[i].Type == Control::Type::SCROLL_DOWN)
+                        {
+                            text_dn = i;
+                        }
+                    }
+
+                    if (Topics::ALL[topic].Title.length() > 0)
+                    {
+                        SDL_SetWindowTitle(window, Topics::ALL[topic].Title.c_str());
+                    }
+
+                    fillWindow(renderer, intWH);
+
+                    putHeader(renderer, "Topics", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+
+                    fillRect(renderer, splashw, text_bounds - infoh, startx, texty + infoh, BE_80);
+
+                    putHeader(renderer, Topics::ALL[topic].Title.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                    fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, BE_80);
+
+                    if (Topics::ALL[topic].Text.length() > 0 && text)
+                    {
+                        renderText(renderer, text, 0, textx + space, texty + space + infoh, text_bounds - 2 * space - infoh, offset);
+                    }
+
+                    if (!compact)
+                    {
+                        if (text_up >= 0 && text_up < controls.size() && controls[text_dn].Type == Control::Type::SCROLL_UP)
+                        {
+                            fillRect(renderer, controls[text_up].W + 2 * border_space, controls[text_up].H + 2 * border_space, controls[text_up].X - border_space, controls[text_up].Y - border_space, intWH);
+                        }
+
+                        if (text_dn >= 0 && text_dn < controls.size() && controls[text_dn].Type == Control::Type::SCROLL_DOWN)
+                        {
+                            fillRect(renderer, controls[text_dn].W + 2 * border_space, controls[text_dn].H + 2 * border_space, controls[text_dn].X - border_space, controls[text_dn].Y - border_space, intWH);
+                        }
+                    }
+
+                    for (auto i = topic_offset; i < topic_last; i++)
+                    {
+                        auto index = i - topic_offset;
+
+                        if (index >= 0 && index < controls.size())
+                        {
+                            if (topic != i)
+                            {
+                                drawRect(renderer, controls[index].W + (2 * text_space), controls[index].H + (2 * text_space), controls[index].X - text_space, controls[index].Y - text_space, intBK);
+                            }
+                            else
+                            {
+                                thickRect(renderer, controls[index].W + border_pts, controls[index].H + border_pts, controls[index].X - 2, controls[index].Y - 2, intLB, 2);
+                            }
+                        }
+                    }
+
+                    renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+
+                    Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                    if (((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold))
+                    {
+                        if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                        {
+                            if (text)
+                            {
+                                if (offset > 0)
+                                {
+                                    offset -= scrollSpeed;
+                                }
+
+                                if (offset < 0)
+                                {
+                                    offset = 0;
+                                }
+                            }
+                        }
+                        else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
+                        {
+                            if (text)
+                            {
+                                if (text->h >= text_bounds - 2 * space - infoh)
+                                {
+                                    if (offset < text->h - text_bounds + 2 * space + infoh)
+                                    {
+                                        offset += scrollSpeed;
+                                    }
+
+                                    if (offset > text->h - text_bounds + 2 * space + infoh)
+                                    {
+                                        offset = text->h - text_bounds + 2 * space + infoh;
+                                    }
+                                }
+                            }
+                        }
+                        else if (controls[current].Type == Control::Type::ACTION && !hold)
+                        {
+                            if ((topic_offset + current) >= 0 && (topic_offset + current) < Topics::ALL.size())
+                            {
+                                topic = topic_offset + current;
+
+                                if (text)
+                                {
+                                    SDL_FreeSurface(text);
+                                }
+
+                                offset = 0;
+
+                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+
+                                compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+
+                                controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+                            }
+
+                            selected = false;
+                        }
+                        else if (controls[current].Type == Control::Type::PREVIOUS && !hold)
+                        {
+                            if (topic > 0)
+                            {
+                                topic -= 1;
+
+                                if (text)
+                                {
+                                    SDL_FreeSurface(text);
+                                }
+
+                                offset = 0;
+
+                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+
+                                compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+
+                                controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+                            }
+
+                            selected = false;
+                        }
+                        else if (controls[current].Type == Control::Type::NEXT && !hold)
+                        {
+                            if (topic < Topics::ALL.size() - 1)
+                            {
+                                topic += 1;
+
+                                if (text)
+                                {
+                                    SDL_FreeSurface(text);
+                                }
+
+                                offset = 0;
+
+                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+
+                                compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+
+                                controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+                            }
+
+                            selected = false;
+                        }
+                        if (controls[current].Type == Control::Type::TOPICS_UP || (controls[current].Type == Control::Type::TOPICS_UP && hold))
+                        {
+                            if (topic_offset > 0)
+                            {
+                                topic_offset -= topic_speed;
+
+                                if (topic_offset < 0)
+                                {
+                                    topic_offset = 0;
+                                }
+
+                                topic_last = topic_offset + topic_limit;
+
+                                if (topic_last > Topics::ALL.size())
+                                {
+                                    topic_last = Topics::ALL.size();
+                                }
+
+                                if (text)
+                                {
+                                    SDL_FreeSurface(text);
+                                }
+
+                                offset = 0;
+
+                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+
+                                compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+
+                                controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+
+                                SDL_Delay(50);
+                            }
+
+                            if (topic_offset <= 0)
+                            {
+                                current = -1;
+
+                                selected = false;
+                            }
+                        }
+                        else if (controls[current].Type == Control::Type::TOPICS_DOWN || (controls[current].Type == Control::Type::TOPICS_DOWN && hold))
+                        {
+                            if (Topics::ALL.size() - topic_last > 0)
+                            {
+                                if (topic_offset < Topics::ALL.size() - topic_limit)
+                                {
+                                    topic_offset += topic_speed;
+                                }
+
+                                if (topic_offset > Topics::ALL.size() - topic_limit)
+                                {
+                                    topic_offset = Topics::ALL.size() - topic_limit;
+                                }
+
+                                topic_last = topic_offset + topic_limit;
+
+                                if (topic_last > Topics::ALL.size())
+                                {
+                                    topic_last = Topics::ALL.size();
+                                }
+
+                                if (text)
+                                {
+                                    SDL_FreeSurface(text);
+                                }
+
+                                offset = 0;
+
+                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+
+                                compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+
+                                controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+
+                                SDL_Delay(50);
+
+                                if (topic_offset > 0)
+                                {
+                                    if (controls[current].Type != Control::Type::TOPICS_DOWN)
+                                    {
+                                        current += 1;
+                                    }
+                                }
+                            }
+
+                            if (Topics::ALL.size() - topic_last <= 0)
+                            {
+                                selected = false;
+
+                                current = -1;
+                            }
+                        }
+                        else if (controls[current].Type == Control::Type::BACK && !hold)
+                        {
+                            quit = true;
+
+                            transition = true;
+                        }
+                    }
+                }
+            }
+
+            if (text)
+            {
+                SDL_FreeSurface(text);
+
+                text = NULL;
+            }
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        if (font_mason2)
+        {
+            TTF_CloseFont(font_mason2);
+
+            font_mason2 = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
+    }
+
+    return false;
 }
 
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID)
@@ -26674,6 +27137,8 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                     break;
 
                 case Control::Type::ABOUT:
+
+                    encyclopediaScreen(window, renderer, bookID);
 
                     current = -1;
 

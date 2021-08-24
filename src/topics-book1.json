@@ -1,0 +1,292 @@
+{
+    "topics": [
+        {
+            "title": "THE ADVENTURE BEGINS...",
+            "text": "Welcome to Legendary Kingdoms, a fantasy adventure gamebook where you take a party of adventurers into a dangerous and adventure-filled land. Early in your career you will simply attempt to survive in a world of peril, but as you become more famous and powerful your actions will determine the fates of empires.\n\nLegendary Kingdoms is a series of books, with each book covering a different area of the world. You keep the same party of adventurers throughout, improving in skill and power, discovering new lands and curious civilisations. At any time you can leave one book and go to another by simply travelling off the edge of the map (or flying, sailing magically transporting yourself, or any number of other astonishing ways). Your party members all have their own stories to tell, including romances, settling old scores and quests for enlightenment. You can play these books any way you choose; as simple travellers, exploring strange ruins and wonderful cities, as revolutionaries, determined to overthrow tyranny, or as crusaders against a dark and lurking threat. Before beginning your game you must select a party of adventurers and learn a few rules about skill checks and combat. After that, turn to reference [1] to begin you adventures. Good luck, and may St. Elias watch over you."
+        },
+        {
+            "title": "Things you will need",
+            "text": "Before you start, grab yourself a pencil and an eraser. You will need these to make notes about your characters' skills and any treasures you find. In addition, you will need a set of normal, six-sided dice. Try to grab as many dice as you can; you will probably want at least six."
+        },
+        {
+            "title": "Your Party",
+            "text": "You must select a group of four adventurers to explore the Legendary Kingdoms. These adventurers are called party members, and each has their own backstory and set of abilities. You can select any four party members, but it is wise to have a balance of different skills in your party. If you only select the fiercest fighters, you might struggle when it comes to sneaking around or charming people. Once you have selected your party members, you should note down their skills and abilities on the adventure sheet provided at the back of this book. You can also download a copy of this sheet from www.spidermindgames.co.uk\n\nLord Ti'Quon and Amelia Pass-Dayne can cast spells, which makes up for their poor skill and health scores. You can read the rules on spells a little later on."
+        },
+        {
+            "title": "Sar Jessica Dayne",
+            "text": "Fighting 5, Stealth 1, Lore 3, Survival 2, Charisma 4, Health 8\n\nSar Jessica Dayne is a first-born knight of Royce. Her father, Baron Baldwin Dayne, is an ambitious contender for the rulership of Longport Bay, an important county. She is a powerful warrior, of impeccable noble blood, but she has received little love or affection since the death of her mother when Jessica was a girl. She is due to inherit the barony in preference to her younger brother, Ridley, but has clashed with her father in recent years, putting her inheritance in doubt. Sar Jessica hopes to become a rich and important woman in her own right before confronting her father at Fosterly Castle."
+        },
+        {
+            "title": "Lord Ti'quon",
+            "text": "Fighting 1, Stealth 2, Lore 5, Survival 1, Charisma 2, Health 6\n\n-Spellcaster-\n\nLord Ti'quon is a classically trained sorcerer from Drakehallow. Thanks to his family's wealth he has been able to learn his craft in the halls of Animus Mast, the premier academy for mages in the world. His knowledge is vast, learnt from library stacks and obscure scrolls, and his ambition is as great as his knowledge. Though at the beginning of his journey in the arts of magic, Ti'Quon shows great promise. He is handicapped, somewhat, by a lack of empathy, although his rich and regal voice make up for his curtness. If he can find additional sums for more tutelage, he desires to return to Animus Mast to unlock yet greater secrets of sorcery."
+        },
+        {
+            "title": "Tasha",
+            "text": "Fighting 3, Stealth 5, Lore 1, Survival 3, Charisma 3, Health 8\n\nTasha is a buccaneer from the Splintered Isles and is little more than an outright thief. She is born to the sails, and her family have lived on ships and in coastal taverns for generations. Tasha has stolen and squandered great fortunes in her time. Her extravagance and her love of a pretty face has meant she has seldom held onto money for long. Most recently she was ripped off by her lover, Katherine of Middenmarch, a country girl who was apprenticed to Tasha, before betraying her mistress and selling her off to slavers. Getting even with the bumptious pirate is foremost on Tasha's mind."
+        },
+        {
+            "title": "Amelia Pass-Dayne",
+            "text": "Fighting 3, Stealth 2, Lore 2, Survival 3, Charisma 1, Health 6\n\n-Spellcaster-\n\nAmelia is the half-sister of Jessica and grew up with her in Fosterly Castle. Her mother was a forester who took Amelia away from the castle when it became obvious that Baron Baldwin, her father, would take no interest in the girl. Since maturity Amelia has lived in the wild forests of the Savage Lands, learning earth magic from the druids of that isolated place. Though slender, she has become a rugged survivor, who can live off the land and fight off wild beasts. Her magic is instinctive, and much mocked by more scholarly wizards, but it is no less potent for all that. Amelia dreams of becoming a full-circle druid, but knows that she must learn much before returning home to the Savage Lands."
+        },
+        {
+            "title": "Akihiro of Chalice",
+            "text": "Fighting 4, Stealth 3, Lore 2, Survival 5, Charisma 1, Health 8\n\nAkihiro is a brooding young man from the Valley of Bones, who was banished from his city when he failed in his training to become a Kensai, a sword-saint of Chalice. A superb swordsman, Akihiro is his own worst enemy. He tortures himself over his failure to balance his mind and body. Since that time Akihiro has become an adept survivor, able to find water in the driest desert, and food in an empty wilderness. Though he tells himself he has given up, he longs in his heart to return to Chalice to attempt the tests again. Perhaps it is time for Akihiro to emerge from the wilderness and restore his own and his family's honour?"
+        },
+        {
+            "title": "Brash",
+            "text": "Fighting 2, Stealth 4, Lore 3, Survival 1, Charisma 5, Health 8\n\nBrash was born in Royce, in the duchy of Pendrilor. He was a pot washer in Vasthall, the stately home of Duchess Elenor Mauntell, but unwisely engaged in a love triangle with her and King Frances Goldwell. Fleeing before he could be hung, Brash has since lived on his wits, travelling the world to escape the King's agents. He can talk his way out of almost anything, and his ability to escape danger is second-to-none. One day, Brash will need to sort out the mess he left behind in Vasthall, but not until he has gained a little worldly experience."
+        },
+        {
+            "title": "Skills",
+            "text": "Every party member has five skills, that are used to get them out of sticky situations.\n\nFighting determines your skill in personal combat, as well as your physical strength.\n\nStealth helps you sneak around, hide from enemies, or lose pursuers in a crowd.\n\nLore is your knowledge of arcane, religious and historical facts.\n\nSurvival helps you forage in the wilderness, navigate forests, climb mountains, etc.\n\nCharisma is your ability to charm, intimidate and persuade people you meet.\n\nUsually the values of your skills don't change very much. However, you might sometimes be told to improve or reduce your skills during your adventures. There is no maximum skill score, but no skill can drop below 0 for any reason."
+        },
+        {
+            "title": "Skill Checks",
+            "text": "You will often be asked to make a skill check when you want to accomplish something difficult. An example of a skill check is printed below:\n\nSneak past the goblin (Team check)\nSkill and DC: Stealth (4+)\nSuccesses Required: 4\n\nThere are two types of skill check. Individual checks mean that you must choose a single party member to pass the check. Team checks allow you to choose two party members to combine their skills to pass the check.\n\nThe skill check will tell you what skill is being used in the Skill and DC (difficulty class) section of the check. In this case you are using the Stealth skill to sneak past the goblin.\n\nTo make a skill check, roll a number of dice equal to the skill being checked. For a team check you can combine the skill dice from two characters. For every die that is equal to or greater than the DC of the check you gain one success.\n\nExample: Tasha, Akihiro, Sar Jessica and Lord Ti'Quon are trying to sneak past a goblin on guard duty. They need to pass the 'Sneak past the goblin' skill check. Since this is a team check, the player choses the two best party members at Stealth -- in this case it will be Tasha (Stealth 5) and Akihiro (Stealth 3). The player takes 8 dice and rolls them all. Because the DC of this check is 4+, every result of 4 or more is a success. The player rolls a 6, 5, 4, 3, 3, 2, 2 and 1. Three of these dice have rolled 4 or more, so the team get three successes.\n\nIn order to pass a skill check you need a certain number of successes. In this skill check you need 4 successes to pass it. The team in our example have failed and will now have to face the consequences!\n\nNo matter how high your skill scores, you cannot roll more than 20 dice for a skill check. If you have more dice than this, you might consider using Skill Focus, which you can find in the Advanced Rules at the back of the book."
+        },
+        {
+            "title": "Health",
+            "text": "Each party member has a number of Health points, which determine how much damage they can take. This number is likely to go up and down a lot during your adventures. It is important to remember the maximum, unwounded health of a party member, as your Health score cannot rise above this number when you recover Health points due to healing or resting. Sometimes, by completing a particularly difficult adventure or task, you can increase a party member's Health score above this maximum value. The book will tell you when this happens.\n\nIf a party member's Health ever drops to 0, then they are dead. There is no way back from death - the party member is lost forever. Usually you can take any equipment you wish from a dead party member, unless the book specifically tells you otherwise."
+        },
+        {
+            "title": "Combat",
+            "text": "When a fight happens, your entire party works together to defeat your foes. When you get into a fight you will be presented a list of opponents (enemies you must defeat in combat).\n\nThe opponent list will look something like this:\n\n[Opponent, Attack, Def, Health]\nGoblin 4(5+), 4+, 6\nOrc Bodyguard 6(4+), 4+, 10\n\nYour party always strikes first in combat. Choose a party member to go first, then select an opponent from the list to attack. Roll a number of dice equal to the party member's Fighting score. If the party member has no weapon, reduce their Fighting score by 1.\n\nTo inflict damage your dice rolls must equal or exceed the Defence score of the opponent. For each die that does this, you inflict 1 point of Health damage. Any opponents reduced to 0 or fewer Health points are defeated.\n\nExample: Tasha (with a Fighting score of 3) wants to attack a goblin with a Defence (Def) score of 4+. She rolls three dice which come up as 2, 4 and 5. She scores two hits, and the goblin loses two Health points.\n\nMake an attack with each of your party members, in any order you choose. If there are any opponents still alive after your entire party have attacked, the enemy will take a turn. An opponent's Attack score is divided into two. The first number is the number of dice they roll, the second is the number they need on each of those dice to score a hit.\n\nExample: An orc warrior has an Attack value of 6(4+). This means the orc rolls six dice, each of which needs a 4 or more to score a hit.\n\nStarting with the first opponent on the list, make an attack with each opponent in order. If they score any hits, decide which party member has been hit, and reduce their Health by that many points. Once all the opponents have attacked, you may attack again with all your party members. Keep doing this until all opponents have been defeated or your whole party has been killed."
+        },
+        {
+            "title": "Armour Saves",
+            "text": "If your party members are wearing armour they can attempt to reduce the Health damage they take in combat. Roll a number of dice equal to that party member's Armour score, or equal to the amount of damage they have taken, whichever is less. For every 4, 5 or 6 you score on your armour save you can reduce the damage taken by 1 point.\n\nExample 1: Sar Jessica is wearing leather armour (Armour +1) and is carrying a shield (Armour +2), giving her a total Armour score of 3. A hideous sand lizard has just inflicted 4 points of Health damage on her. She rolls a three dice Armour save and scores a 4, 5 and 4. She has deflected three points of damage and only loses 1 Health point.\n\nExample 2: Sar Jessica has just been hit again by another sand lizard, but for just 2 points of damage. She can only roll two armour dice, because you cannot roll more dice than the amount of damage you have just taken. She rolls a 1 and a 3. She fails both saves and loses 2 Health points.\n\nOpponents do not make Armour saves. Instead, heavily armoured opponents have higher Health scores to represent the fact that they can take more damage.\n\nYou can only make Armour saves in combat. If you take damage at any other time, such as from starvation or being crushed by rocks during your adventure, you cannot make Armour saves against that damage."
+        },
+        {
+            "title": "Casting Spells in Combat",
+            "text": "Instead of making an attack, a party member can cast a spell instead. The spell description will tell you what happens when you do this."
+        },
+        {
+            "title": "Automatic Damage",
+            "text": "Some enemies are so fierce that a portion of their attacks are unstoppable. You will see this displayed in bold like this:\n\n[Opponent, Attack]\nBrimstone Dragon 7(3+), +2 Auto\n\nIn this case, in addition to the Brimstone Dragon's 7 attack dice, it also inflicts an extra 2 points of damage automatically. You can make Armour saves against this extra damage as normal.\n\nAuthor's Note:\nFortunately, in Book 1: The Valley of Bones, you will not discover any monsters with this nasty ability, but look out for them in other books!"
+        },
+        {
+            "title": "Spells",
+            "text": "Characters who can cast spells are called spellcasters. Spellcasters store their spells in spell books, but can only know a maximum of six spells at any given time. When you begin the game, each of your spellcasters can start with three spells, chosen from the starting spells section, which you'll find at the end of the rules section, just before paragraph 1.\n\nThere are a number of different types of spell: Adventure spells can be cast at any time except in combat. These spells help you overcome hazards, beat skill checks, or find secret areas.\n\nCombat spells can only be cast in personal combat. They usually harm or hinder your opponents, or provide you with a useful bonus in combat.\n\nMass Combat spells are rare, and can only be used when armies clash against each other.\n\nSea Combat spells are also rare, and are used exclusively during ship to ship combat.\n\nSome spells cover more than one area. A spell that is described as Adventure/Combat can be used both in combat and while adventuring."
+        },
+        {
+            "title": "Charging and Draining spells",
+            "text": "When you first discover or learn a spell it starts charged. Charged spells are ready to be cast when the spellcaster wishes. As soon as you cast a spell, it becomes drained and cannot be cast again until you recharge it.\n\nEvery spell has a recharge cost in its description, which covers the price of the special components you will need to cast it. You can recharge a spell when resting at most inns, and might find some places where you can recharge a spell for free!\n\nThe text will tell you when you can recharge a spell. It can get expensive to cast spells all the time, so only use them when it's urgent."
+        },
+        {
+            "title": "Discovering new spells",
+            "text": "Spells can crop up in the strangest of places, so keep an eye out for any opportunity to learn new ones. You can hold a maximum of six spells in your spell book at any given time. If your spell book is full and you discover a new spell you really want, you can rub out an old spell to make room for a new one. All new spells you learn begin charged.\n\nYou cannot learn the same spell more than once in your spell book. Your starting spellcaster cannot, for example, learn three Ice Bolt spells!"
+        },
+        {
+            "title": "Equipment",
+            "text": "Each of your party members can carry a maximum of ten items of equipment. Items that you can take during the adventure will be listed in bold. You can pass items between your party members at any time, except during combat or when you are making a skill check.\n\nMany items you find will give you one or more bonuses to your skills, Health or Armour.\n\nThe bonus they give is listed in brackets after the item, for example an iron shortsword (Fighting +1) increases the Fighting skill of the party member using it by 1 point. This bonus is applied only while the party member is using the item. Rather than adjust the skill score of the character it is better to put the bonus in the 'Modified' column on the adventure sheet. If Sar Jessica Dayne, with a Fighting score of 5, used the iron shortsword (Fighting +1), you would record the modification like this:\n\n[Attribute, Skill, Modified]\nFighting, 5, 6\n\nIf Sar Jessica ever lost her iron shortsword, you can then simply rub out the modified number rather than her base skill score.\n\nIf a party member ever possesses more than one item that gives a bonus to the same skill, only use the highest modifier. If Sar Jessica owned a steel longsword (Fighting +2), and an iron shortsword (Fighting +1), she would only gain a +2 bonus to her Fighting skill, not +3.\n\nSome weapons are two-handed. These are marked with an asterix (*) after their name, such as iron greataxe (Fighting +2)*. You cannot use a shield and a two-handed weapon at the same time."
+        },
+        {
+            "title": "Armour bonuses",
+            "text": "Armour works slightly differently.\n\nYou can get Armour bonuses from many different items and they all add up together. For example, if you were wearing chain armour (Armour +2) and a shield (Armour +2), both would add together to give you a maximum of 4 Armour dice. There are some restrictions, however:\n\nYou cannot wear more than one suit of armour or one robe at any given time. You will know a suit of armour or a robe because it has the word 'armour' or 'robe' in its name.\n\nYou can only use one shield.\n\nAny other items that grant Armour bonuses, such as magical rings or amulets, can be worn in any combination and their Armour bonuses add together."
+        },
+        {
+            "title": "Dropping Items",
+            "text": "If you are carrying too many items and wish to make room for more, you can simply rub out an item you don't want on your adventure sheet. However, this means it is gone forever."
+        },
+        {
+            "title": "Money",
+            "text": "Silver coins are the standard currency in Legendary Kingdoms. You can carry any amount of money on you at any given time. Silver is a lucky metal -- if a party member dies and their body cannot be found, you can assume that, luckily, they weren't carrying any cash at their time of death. Only if the text specifically tells you to lose your money, or you spend it, will you lose silver coins."
+        },
+        {
+            "title": "The Vault",
+            "text": "The Vault is a magical storehouse where your party can keep items of equipment and silver coins that they want to keep safe, but not on their person. There are many ways to access The Vault.\n\nThe easiest is with the magic cabinet spell which grants you immediate access at a time of your choosing. Some buildings might also grant access to The Vault as well. No matter where you access The Vault from, the items you store in it will be the same.\n\nFor example, if you put a magical ring into The Vault in Drakehallow, you will find it there when you open The Vault in the Valley of Bones. There is no limit to the items you can store in The Vault, although you might have to write very, very small if you want to store lots of things!"
+        },
+        {
+            "title": "Codes",
+            "text": "To keep track of the events that happen in your adventure you will be asked to record Codes, such a B12 or E13. When this happens just circle the appropriate code on the back of your adventure sheet. Don't rub out a code unless the book tells you to do so.\n\nSometimes you will be asked if you have a certain code or item. If you do, immediately turn to the paragraph number indicated.\n\nOccasionally you will be asked multiple times if you have a certain code. When this happens, check each code in the order in which you are asked, otherwise you may turn to a paragraph that doesn't make sense."
+        },
+        {
+            "title": "Romance",
+            "text": "Your party members are young and passionate, and it is only natural that they might fall in love, either with each other or people you meet in the game. When a party member starts to feel some romantic affection they will gain a 'heart'. When this happens, note down the name of the person your party member is falling in love with, and draw a little heart next to it. The more hearts that person has next to their name, the more attracted your party member is to that person!"
+        },
+        {
+            "title": "Other Rules",
+            "text": "There are other rules in the game, such as what to do when you buy a ship, or how to manage armies. However, you can deal with that as you play the game. To start with you must survive, find some equipment and make a name for yourselves. You can worry about the clash of empires when you have more than a few silver coins in your pocket."
+        },
+        {
+            "title": "Spell List for Starting Characters",
+            "text": "Animal Speech (Adventure)\nYou are able to communicate using the secret speech of animals. The text will tell you when you can cast this spell.\nRecharge: 50 silver\n\nArmour of Heaven (Combat)\nGain a +3 bonus to one party member's Armour which lasts until the end of this battle.\nRecharge: 50 silver\n\nIce Bolt (Combat)\nYou conjure a great block of ice and hurl it at your foe with magical strength. Make an immediate attack with a Fighting score of 8 against any opponent.\nRecharge: 50 silver\n\nPoison Stream (Combat)\nA sickly green poison jets from your hands. Make two immediate attacks with a Fighting score of 5, against two different opponents.\nRecharge: 50 silver\n\nUnfailing Strike (Combat)\nA pillar of energy sizzles into a single foe. Choose an opponent to lose 3 Health.\nRecharge: 50 silver\n\nWolf Spirit (Adventure)\nYou summon the spirit of the wolf to help guide you from danger in the natural world. Cast this spell when you fail a Survival check. You gain an additional 3 automatic successes for this check only.\nRecharge: 75 silver\n\nMagic Cabinet (Adventure)\nYou summon a magic cabinet made of purple wood. You can use this cabinet to access The Vault, storing and/or taking out as many items as you wish. When you have done this, the cabinet will vanish, until summoned again.\nRecharge: 100 silver"
+        },
+        {
+            "title": "Sea Combat",
+            "text": "Battles at sea are very similar to personal combat. Your ship makes the first attack, unless the text tells you otherwise. Make a Fighting check using the Fighting score of your ship. The Defence of ships is always 4+ in ship combat. For every success you score you can reduce the Health of the enemy ship by 1 point. The enemy ship then attacks you in the same way.\n\nIf you have a spellcaster with any Sea Combat spells, they can cast one spell before each attack you make. Only spells marked 'Sea Combat' can be used when ships fight.\n\nThe combat ends when either your ship or the enemy are reduced to 0 or fewer Health points. Now turn back to the page reference you recorded earlier. Good luck, captain!"
+        },
+        {
+            "title": "Mass Combat",
+            "text": "You are about to fight in a Mass Combat. This involves hundreds of soldiers clashing on the field of battle. any given battle you can bring a maximum of six units from your barracks. It will probably help if you record the location of your units, and those of your enemy, on the Battlefield section on your adventure sheet.\n\nTo win a Mass Combat you must control two out of three combat zones. The zones are called Left Flank, Centre and Right Flank. You control a zone when you have units in it, but your opponent does not. As soon as either you or the enemy general controls two zones the battle immediately ends. Any enemy units in the remaining zone will rout and flee as soon as it becomes obvious that one side has won.\n\nUnits have two attributes -- Strength and Morale. Strength shows how good the unit is at fighting, and Morale demonstrates how well a unit can cope with upsets such as casualties and enemy magic.\n\nBefore the battle you must arrange your units on the battlefield. You can put a maximum of two units into each zone (Left Flank, Centre and Right Flank). One unit is put at the Front -- preferably a unit with a high Strength score -- and the second unit is put behind in Support. The Support unit is there to take over the fight if the unit at the Front routs (runs away!). You can see where the enemy have deployed their units, so try to match or beat the Strength score of the enemy unit at the Front in each zone.\n\nOnce you have assigned your units the battle will begin. You will fight in each zone, starting in the Left Flank, moving to the Centre, and then fighting on the Right Flank. If you have any spellcasters who can cast Mass Combat spells, each caster can cast a single spell just before the combat starts. If you have any spells left over, you can cast again each time you are about to fight on the Left Flank.\n\nStarting with the enemy unit at the Front on the Left Flank, roll a die and add that unit's Strength score to the result. This is the unit's battle score. Now do the same for your own unit at the front. If your battle score is higher than the enemy's, the enemy must make a morale check. If the enemy's score is higher, you must make a morale check. If the results are equal the fight is inconclusive -- move onto the next zone.\n\nTo make a morale check, roll a die and compare it to the defeated unit's Morale score. If the result is higher, that unit immediately routs. Cross it off the battlefield! If the result is equal or lower than the unit's Morale score the unit does not rout -- but it does lose a point of Morale. The more often a unit checks morale, the lower its morale becomes.\n\nIf a unit routs, the unit behind it in support can immediately take its place. If there is no unit in support, then the zone is lost.\n\nKeep fighting, moving from zone to zone, until either you or your opponent controls two zones. Units in Support do not fight until the unit at the Front has routed -- at that point the unit in Support moves to the Front. As soon someone controls two zones the battle is over.\n\nNow turn back to the reference number you recorded earlier."
+        },
+        {
+            "title": "Advanced Rules",
+            "text": "When you have gotten used to the normal rules of Legendary Kingdoms, you might want to enhance your game by using the following rules.\n\nThese rules always exist in the background of the game, and you can use them whenever you like.\n\nThe 'Making your own Party Member' rules can be used immediately. The 'Focused Skill Checks' and 'Combat Focus' rules are generally only useful for powerful, established party members who have lots of skill points."
+        },
+        {
+            "title": "Make your own Party Member",
+            "text": "When you choose a party member for your party, either at the start of the game, or as a hired replacement, you can choose to invent your own party member and assign their skills as you see fit, rather than choose one of the pre-existing characters. When you do this, try to have an idea of what kind of person your new party member is. Are they a hulking barbarian, strong but dim? Are they a war wizard, trained in magic and swordplay, but lacking subtlety and independence in the wilderness? Are they very cultured or very crude? Are they kind or cruel? Having a vision of your new party member in your head will help you assign the relevant skill scores.\n\nThe advantage of making your own party members is obvious; you can make exactly the kind of team that you want. Fancy playing a party of nothing but wizards, trying to solve everything with spellcraft? Or do you think you could do better with a team of dedicated warriors, hacking apart everything in your path?\n\nThere are disadvantages, however. The six starting characters in this book all have their own plots, dialogues, ambitions and romances. Your new party members can have these things, of course, but only in your imagination. A good way to bring in your own party member is as a replacement for one of the starting characters once they are killed. That way you still have three party members with strong ties to the plot, but also have one character of your own creation helping to fill in the weaknesses of your party.\n\nWhen you make your own party member, decide if they are a spellcaster or not. Spellcasters are able to learn magic, but begin with lower skill scores than non-spellcasters, who have spent less time studying the mysteries of magic and more time learning practical skills.\n\nA non-spellcaster created in this book begins with 15 points to spend on their skills. No skill can be higher than 5, and no skill lower than 1. They also begin with 8 Health points.\n\nA spellcaster created in this book begins with 11 points to spend on their skills. As before, no skill can be higher than 5, and no skill lower than 1. They begin with only 6 Health points, but can choose three spells from the Spell List for starting characters, and can learn up to six spells during the course of their adventures."
+        },
+        {
+            "title": "Focused Skill Checks",
+            "text": "Powerful party members can make even very difficult skill checks easier by using focus. When you focus on a skill check, you make the DC (Difficulty Class) of the skill check one point lower. For example, a skill check with a DC of 5+ will become a DC of 4+ if you focus on the check.\n\nTo use focus on a skill check, each party member attempting the skill check must sacrifice 5 points from their skill before they make the check. You get these points back after the skill check is made.\n\nFor example: Lord Ti'Quon has become a powerful and learned sorcerer, with a Lore skill 14 thanks to his studies and powerful magical items. Brash is assisting him with a Lore skill check, and has 10 points of Lore himself. They are attempting to prevent an old enemy from seizing the mind of one of their party members, but the check is very difficult, with a DC of 6+, and 5 successes required. They decide to focus, to bring down the DC to 5+. This leaves Ti'Quon with 9 Lore dice, and Brash with 5. Rolling together, they now roll 14 dice to get 5 successes. Tricky, but at least possible! After the check, their Lore skills return to normal.\n\nYou can focus more than once, to bring the DC of a skill check even lower. Each time you do so, you lose another 5 dice for the check."
+        },
+        {
+            "title": "Combat Focus",
+            "text": "Just like skill checks, you can also focus when making attack rolls to lower the Defence (Def) of your opponents. By sacrificing 5 combat dice, you can lower the Defence of an opponent by 1 point, so a Defence of 5+ becomes 4+, for example. In the most difficult adventures, you might have to do this just to hit an opponent!"
+        },
+        {
+            "title": "These rules and Book 1: The Valley of Bones",
+            "text": "It's not very likely that your party members in The Valley of Bones will want to use skill or combat focus. However, the option to use it is always there. Focus is most often used by more powerful characters who are being limited by the '20 dice' rule that limits the number of dice you can roll for a skill check."
+        },
+        {
+            "title": "Glossary: Abraxas",
+            "text": "A demon lord who was summoned to the world by the monumental folly of the warring Kharid and Sovereign peoples. He destroyed all civilisation, and would have destroyed the world, were it not for the intervention of a coven of sorcerers, headed by St. Elias, who entombed him into the depths of the earth."
+        },
+        {
+            "title": "Glossary: Animus Mast",
+            "text": "A school of magic in Drakehallow, extremely expensive and exclusive."
+        },
+        {
+            "title": "Glossary: Astral Seekers",
+            "text": "An ancient religion practiced by only the most intellectual scholars. Astral Seekers attempt to understand the relationship between the heavens, the mortal world and the vast tracts of space that lie between them."
+        },
+        {
+            "title": "Glossary: Dagon",
+            "text": "A Drakehallow city of gaunt spires, choking smog and drifting embers. It is unclear if this city is the capital of Drakehallow, but it is the only location most foreigners to the country ever get to see."
+        },
+        {
+            "title": "Glossary: Deathengines",
+            "text": "A race of mechanical golems created by the Sovereign Republic so that its people did not have to fight in wars. Few survived the Desolation of Abraxas."
+        },
+        {
+            "title": "Glossary: Desolation of Abraxas",
+            "text": "The event that destroyed the ancient world. Abraxas, a great demon lord, destroyed the civilisations of the elder peoples before being entombed beneath the earth by St. Elias."
+        },
+        {
+            "title": "Glossary: Dragonyaks",
+            "text": "Beasts of burden, native to the Valley of Bones. Smelly and stubborn, they are stronger than bulls and can pull enormous caravans."
+        },
+        {
+            "title": "Glossary: Drakehallow",
+            "text": "A nation obsessed with coal, engines, and practical magic. The cities of Drakehallow are dark and mysterious, and few locals dare to leave their safety, as hideous monsters dwell in the smoky countryside. It is the chief rival of the Kingdom of Royce."
+        },
+        {
+            "title": "Glossary: Elf",
+            "text": "A spirit of nature, elves create physical bodies so they can interact with the world and experience its pains and joys. Some of the more common elves are wood elves, which take the form of animals or plants, and soot elves which scamper among the chimneys of Drakehallow. Much rarer are silver elves that take human form, or the possibly extinct sun elves that dwell as columns of radiant fire."
+        },
+        {
+            "title": "Glossary: House of Silence",
+            "text": "A secret order of assassins that originated in Drakehallow. The precise location of the house itself is a well-kept secret."
+        },
+        {
+            "title": "Glossary: Humans",
+            "text": "A human is a mortal creature, whose physical form is powered by a spirit granted by one or more gods from the astral realm. Humans are rare in the world, overall, but where they congregate they do so in great numbers. Somewhat short-lived, they are a passionate people, driven to warring, romance and surges of creativity. Most scholars agree that human spirits are intruders to the world, imported by the gods from less dangerous worlds in order to worship and build monuments to their masters. They appear to have manifested about two or three thousand years ago, and there is no trace of human culture before this date."
+        },
+        {
+            "title": "Glossary: Kharid",
+            "text": "An ancient civilisation which was destroyed a millennium ago during the Desolation of Abraxas. They built the great towers of the immortals, of which Tier Mundus is the only one left standing."
+        },
+        {
+            "title": "Glossary: King Frances Goldwell",
+            "text": "he current king of Royce is fat, unpopular and cunning. It is said that nothing happens within five hundred miles of Ozury that he does not know about."
+        },
+        {
+            "title": "Glossary: Kingdom of Royce",
+            "text": "A large and well spread-out feudal kingdom, prone to vicious in-fighting and grand celebrations in equal measure. Some of the regions of Royce are Pendrilor, Longport Bay and Relithor."
+        },
+        {
+            "title": "Glossary: Longport Bay",
+            "text": "The County of Longport Bay is a rich, but quarrelsome place. It is famous for the continued enmity between its noble houses, Bailey and Dayne."
+        },
+        {
+            "title": "Glossary: Longport City",
+            "text": "A grand trading city, divided into numerous wards. Famous for its good steel and agriculture."
+        },
+        {
+            "title": "Glossary: Orcs",
+            "text": "A race of aggressive humanoids bred for war by the now extinct Kharids. Scholars suggest that only one in ten orcs is as clever as a human, although these theories could be biased. Orcs dwell extensively in the Savage Lands, and frequently threaten Longport Bay and Pendrilor."
+        },
+        {
+            "title": "Glossary: Ozury",
+            "text": "The capital city of Royce. It drips with gold, and corruption, in equal measure."
+        },
+        {
+            "title": "Glossary: Pass-",
+            "text": "Illegitimate children born to noble parents are given the prefix 'pass-' in front their family names. This is a term used to demonstrate correct inheritance. In Amelia's case, she is 'Pass-Dayne' because she is literally to be 'passed over' for inheritance when her father dies."
+        },
+        {
+            "title": "Glossary: Pendrilor",
+            "text": "A powerful duchy in the Kingdom of Royce. It contains the capital city, Ozury, and is the seat of the king as well as Elenor Mauntell, its duchess."
+        },
+        {
+            "title": "Glossary: Penumbral Lords",
+            "text": "The name attached to a mysterious people who seem to originate from a similar, but shadowy alien world. The men of Drakehallow claim the Penumbral Lords taught them industry, but there has never been a scrap of proof that these supposed people even exist."
+        },
+        {
+            "title": "Glossary: Ross Bay",
+            "text": "A Royce colony on the shores of the Savage Lands. Defending it costs House Ross a fortune in silver, but they are determined to be the first 'civilised' people to exploit the unexplored realm."
+        },
+        {
+            "title": "Glossary: Saltdad",
+            "text": "The ancient capital of the Valley of Lilies, before it was laid waste to during the Desolation. The majority of its ancient palace still stands, although it is very dilapidated."
+        },
+        {
+            "title": "Glossary: Sar",
+            "text": "The title of a female knight of Royce, derived from the common term 'sarrah'."
+        },
+        {
+            "title": "Glossary: Savage Lands",
+            "text": "An unmapped land of dark forests, soaring mountains and crumbling ruins. It was once the Kharid or Sovereign homeland (scholars dispute endlessly which it was), but is now infested with orcs, shades and other dangerous peoples."
+        },
+        {
+            "title": "Glossary: Serpentine",
+            "text": "A very varied race of serpent-folk, the most numerous peoples in the world, although they rarely share territory with humans. Generally, the aristocratic Tassen are considered the most superior form of serpentine, with the lowly Hasseth (or Snakemen) are considered the least superior. Wars have been rare between humans and serpents, but those that have occurred generally favoured the Serpentine."
+        },
+        {
+            "title": "Glossary: Sir",
+            "text": "The title of a male knight of Royce, derived from the common term 'sirrah'."
+        },
+        {
+            "title": "Glossary: Sovereign Republic",
+            "text": "A notoriously proud people who would war for both noble and ignoble reasons. They were destroyed during the Desolation of Abraxas. It is the common consent of scholars that these people were the ones responsible for the summoning of the demon lord."
+        },
+        {
+            "title": "Glossary: Splintered Isles",
+            "text": "A deadly paradise of tropical islands, rich spices, and dangerous seas. The island folk cunningly play off the great powers of the world to keep their independence."
+        },
+        {
+            "title": "Glossary: St. Elias",
+            "text": "A silver elf, known as the Vicar of the Gods. He is extremely ancient, and still lives in his tower of Tier Mundus. He is widely considered to be the holiest man in the world."
+        },
+        {
+            "title": "Glossary: Steamers",
+            "text": "Tradesmen from Drakehallow, who have great boilers instead of bodies, and eat coal to survive."
+        },
+        {
+            "title": "Glossary: Thalsia",
+            "text": "Capital of the Splintered Isles, and the dwelling of the Great Suzerain. Its people are wealthy and laid-back, but fiercely clever and inventive."
+        },
+        {
+            "title": "Glossary: Tier Mundus",
+            "text": "A great Kharid tower, manufactured of black glass. It is the home of St. Elias and his denomination of Astral Seekers."
+        },
+        {
+            "title": "Glossary: Valley of Bones",
+            "text": "A desert kingdom, now occupied by barbarians and ruined cities. The Valley was once a fertile place ruled over by immortals. The Desolation of Abraxas abruptly ended their reign, and now only tyrants and wild nomads rule the sands."
+        },
+        {
+            "title": "Postscript",
+            "text": "I'm eight years old, sitting at the foot of the bed in my friend Simon's room. My brother, ten, is with me, and we are both quite sad because the packing has already started. We are leaving Maidenhead and heading for Crowborough in East Sussex. Dad has just been made manager of the South Terminal at Gatwick, now Terminal 4 has been finished at Heathrow, and that means we have to move house. I'm saying goodbye to my best friend Miles, my girlfriend Catherine, and everything I ever knew.\n\nDown below, my parents are sitting at the dinner table with Simon's parents, and we've been allowed to go off and play. Simon was in the middle of an amazing book called The Warlock of Firetop Mountain, and offered to read to us. He's old, a teenager of some indistinct age or other, and tall, so anything he does is by default extremely cool.\n\nWe probably played for half an hour, but in kid time that is the equivalent of half a day, and I remember distinctly battles against werewolves, ghouls and scary paintings. Then we tried to kill the evil warlock with a lump of cheese and got electrocuted. I loved it. It was the most incredible adventure in my life, and I replayed the evening over and over in my head. The day before I left, he gave me the book -- and I treasured it until it was time to hand it over to another child with dreams of swords and adventure.\n\nThe common conception of gamebooks is that they are an odd historical blip. In the wake of Dungeons & Dragons, Steve Jackson and Ian Livingstone created the vastly well-selling Fighting Fantasy gamebooks because computers were too primitive to create convincing fantasy adventures. The argument is that once computers got good enough we didn't need gamebooks anymore. They could create combat systems more engaging than rolling two dice and provide stunning visuals to bring their worlds to life. I don't really believe this, any more than I think that the novel replaced poetry books in the 19th century, or cinema replaced theatre in the 20th. Gamebooks are their own art form, and like poetry and theatre, they get more done with less.\n\nMy journey across Kakabad in Steve Jackson's Sorcery gamebooks is more imprinted upon my mind than PC games like Skyrim or the Witcher. It is more private, more personal, but perhaps most of all more wonderous. Gamebooks have no limitations upon the imagination. If I want to fill a fantasy city with three dozen different species, I don't have to worry about convincing the design team that it is worth creating this vastly different crowd for a single scene, I merely have to write it. My deserts can be vast, and take weeks to cross, but I don't need to procedurally generate four hundred miles of terrain. My voice actors are always top class, and the visual fidelity is only the limit of my reader's imagination.\n\nI refuse to believe that such a rich and limitless form of storytelling can be breezily written off as obsolete, especially when there is so much more to do, so much more to write. Legendary Kingdoms is an attempt to right that wrong, by producing the most ambitious gamebook series ever written, and trying to find an audience with it. I hope that we've succeeded, and that you are as eager for the sequel books as I am."
+        },
+        {
+            "title": "Influences of Legendary Kingdoms",
+            "text": "I've already mentioned my early love of Fighting Fantasy, and the Sorcery epic in particular. The biggest influence for this book series, however, is the wonderful Fabled Lands series, written by Dave Morris and Jamie Thompson. Much like Legendary Kingdoms, every book in the Fabled Lands series covers a different area of land, and your character can go from book to book, growing in power and wisdom. It has become something of a holy grail amongst gamebook fans, and anyone sensible should immediately buy one (or, preferably, all seven). You can thank Fabled Lands for bolded items that you can interact with, codes that keep track of changes in the book, and the pure ambition to write an entire world in a series of books.\n\nI should also mention Duelmaster, by Jamie Thompson and Mark Smith, and Blood Sword, by David Morris and Oliver Johnson, as inspirations, creating the first multiplayer gamebooks and multi-party gamebooks respectively. So much territory has been explored by these amazing writers, and I can only hope I add to this canon of great works."
+        },
+        {
+            "title": "The Mission of Legendary Kingdoms",
+            "text": "For Legendary Kingdoms, my main desire was to create, in gamebook form, a roleplaying game campaign. Those of you who play Dungeons & Dragons, or other role playing games, know that one of the greatest joys of those games is to be involved in a long story that can take months or years to come to its conclusion. In the space of such campaigns you go from novice adventurers, to some of the most important people in the world, the viceroys of kings and queens. There is a feeling that your adventure could go anywhere, restricted only by the choices you and your games master decide upon.\n\nI wanted to capture this sense in Legendary Kingdoms. The player should be able to lead armies, sail vast oceans, explore lost continents, or get involved in politics in distant courts. Alongside these grand ideas, I wanted the adventure to also be small and personal, with discussions with common folk, simple acts of courage, and discovering new places as important as empire building. Beyond that, I am also very keen on character development. I want the party members to have wild love affairs, get embroiled in vicious rivalries, or find redemption. By the end of their adventure (and despite the sandbox nature of the game, it does have an end) I want the player to feel that loose ends have been tied up, and that every member of their party has had their moment in the sun.\n\nIt's an extremely ambitious design, and though I am happy with book one, I am acutely conscious of the fact that five more vast adventures lie ahead of me -- all of them intertwining, and all of them playable in any order. But if the gamebook is to ever regain its place in the popular imagination, it needs standard bearers that are unafraid of everything that a gamebook can be. This, in a nutshell, is Legendary Kingdom's design strategy; to be the kind of adventure that you play for years, that makes you want to explore every corner and blank space on the map.\n\nMay St. Elias guide your steps..."
+        }
+    ]
+}

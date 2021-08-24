@@ -26,6 +26,7 @@ namespace Control
         SHOP,
         INN,
         NEXT,
+        PREVIOUS,
         ENCYCLOPEDIA,
         GLOSSARY,
         ACTION,
@@ -91,7 +92,9 @@ namespace Control
         FULL_REPAIR,
         BUY_CARGO,
         SELL_CARGO,
-        MONEY
+        MONEY,
+        TOPICS_UP,
+        TOPICS_DOWN
     };
 
     class Base

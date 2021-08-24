@@ -55,7 +55,7 @@ namespace Army
     class Base
     {
     public:
-        const char *Name = NULL;
+        std::string Name = "";
 
         Army::Type Type = Army::Type::NONE;
 

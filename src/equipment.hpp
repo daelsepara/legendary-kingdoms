@@ -20,8 +20,7 @@ namespace Equipment
         Equipment::Class::WEAPON,
         Equipment::Class::ARMOUR,
         Equipment::Class::ROBE,
-        Equipment::Class::SHIELD
-    };
+        Equipment::Class::SHIELD};
 
     enum class Type
     {
@@ -119,9 +118,9 @@ namespace Equipment
     class Base
     {
     public:
-        const char *Name = NULL;
+        std::string Name = "";
 
-        const char *Description = NULL;
+        std::string Description = "";
 
         Equipment::Class Class = Equipment::Class::NORMAL;
 

@@ -24,11 +24,10 @@ namespace Ship
     class Base
     {
     public:
+        std::string Name = "";
 
-        const char *Name = NULL;
-        
         Ship::Type Type = Ship::Type::NONE;
-        
+
         Location::Type Location = Location::Type::NONE;
 
         int Fighting = 0;
@@ -43,10 +42,9 @@ namespace Ship
 
         Base()
         {
-
         }
 
-        Base(const char*name, Ship::Type type, Location::Type location, int fighting, int health, int maximumCargo)
+        Base(const char *name, Ship::Type type, Location::Type location, int fighting, int health, int maximumCargo)
         {
             Name = name;
 

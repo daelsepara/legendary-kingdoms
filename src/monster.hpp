@@ -52,7 +52,7 @@ namespace Monster
     class Base
     {
     public:
-        const char *Name = NULL;
+        std::string Name = "";
 
         int Attack = 0;
 

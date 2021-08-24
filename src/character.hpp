@@ -80,7 +80,7 @@ namespace Follower
     class Base
     {
     public:
-        const char *Name = NULL;
+        std::string Name = "";
         Follower::Type Type = Follower::Type::NONE;
         int Health = 0;
 
@@ -167,7 +167,7 @@ namespace Character
     class Base
     {
     public:
-        const char *Name = NULL;
+        std::string Name = "";
 
         const char *Background = NULL;
 

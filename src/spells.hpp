@@ -84,9 +84,9 @@ namespace Spells
     class Base
     {
     public:
-        const char *Name = NULL;
+        std::string Name = "";
 
-        const char *Description = NULL;
+        std::string Description = "";
 
         Spells::Scope Scope = Spells::Scope::NONE;
 
