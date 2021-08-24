@@ -17,6 +17,7 @@ namespace Topics
     public:
         std::string Title = "";
         std::string Text = "";
+        std::string Image = "";
 
         Base()
         {
@@ -26,7 +27,25 @@ namespace Topics
         {
             Title = std::string(title);
 
-            Text = std::string(text);
+            if (text)
+            {
+                Text = std::string(text);
+            }
+        }
+
+        Base(const char *title, const char *text, const char *image)
+        {
+            Title = std::string(title);
+
+            if (text)
+            {
+                Text = std::string(text);
+            }
+
+            if (image)
+            {
+                Image = std::string(image);
+            }
         }
     };
 

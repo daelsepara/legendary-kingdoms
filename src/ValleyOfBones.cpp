@@ -26738,6 +26738,8 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                 auto text_dn = -1;
 
+                auto scroll_topics = false;
+
                 while (!transition)
                 {
                     for (auto i = 0; i < controls.size(); i++)
@@ -26806,9 +26808,26 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                     Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
+                    if (scrollUp || scrollDown)
+                    {
+                        auto mousex = 0;
+                        auto mousey = 0;
+
+                        SDL_GetMouseState(&mousex, &mousey);
+
+                        if (mousex >= startx && mousex <= (startx + splashw) && mousey >= starty && mousey <= (starty + text_bounds))
+                        {
+                            scroll_topics = true;
+                        }
+                        else
+                        {
+                            scroll_topics = false;
+                        }
+                    }
+
                     if (((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold))
                     {
-                        if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                        if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || (scrollUp && !scroll_topics))
                         {
                             if (text)
                             {
@@ -26823,7 +26842,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                                 }
                             }
                         }
-                        else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
+                        else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || (scrollDown && !scroll_topics))
                         {
                             if (text)
                             {
@@ -26907,7 +26926,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                             selected = false;
                         }
-                        if (controls[current].Type == Control::Type::TOPICS_UP || (controls[current].Type == Control::Type::TOPICS_UP && hold))
+                        if (controls[current].Type == Control::Type::TOPICS_UP || (controls[current].Type == Control::Type::TOPICS_UP && hold) || (scrollUp && scroll_topics))
                         {
                             if (topic_offset > 0)
                             {
@@ -26925,15 +26944,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                                     topic_last = Topics::ALL.size();
                                 }
 
-                                if (text)
-                                {
-                                    SDL_FreeSurface(text);
-                                }
-
-                                offset = 0;
-
-                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
-
                                 compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
 
                                 controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
@@ -26948,7 +26958,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                                 selected = false;
                             }
                         }
-                        else if (controls[current].Type == Control::Type::TOPICS_DOWN || (controls[current].Type == Control::Type::TOPICS_DOWN && hold))
+                        else if (controls[current].Type == Control::Type::TOPICS_DOWN || (controls[current].Type == Control::Type::TOPICS_DOWN && hold) || (scrollDown && scroll_topics))
                         {
                             if (Topics::ALL.size() - topic_last > 0)
                             {
@@ -26968,15 +26978,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                                 {
                                     topic_last = Topics::ALL.size();
                                 }
-
-                                if (text)
-                                {
-                                    SDL_FreeSurface(text);
-                                }
-
-                                offset = 0;
-
-                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
 
                                 compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
 
