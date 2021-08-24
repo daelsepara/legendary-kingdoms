@@ -26666,45 +26666,39 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
 
 bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID)
 {
-    if (Topics::ALL.size() <= 0)
+    if (window && renderer)
     {
-        Topics::LoadTopics();
-    }
-
-    if (Topics::ALL.size() > 0)
-    {
-        auto quit = false;
-
-        auto space = 8;
-        auto font_size = 28;
-        auto text_space = 8;
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-        auto infoh = 48;
-
-        std::vector<Button> controls = {};
-
-        auto topic = 0;
-
-        auto topic_offset = 0;
-        auto topic_speed = 1;
-        auto topic_limit = (text_bounds - 2 * text_space - infoh) / (96);
-        auto topic_last = topic_offset + topic_limit;
-
-        if (topic_last > Topics::ALL.size())
+        if (Topics::ALL.size() <= 0)
         {
-            topic_last = Topics::ALL.size();
+            Topics::LoadTopics();
         }
 
-        while (!quit)
+        if (Topics::ALL.size() > 0)
         {
+            TTF_Init();
+
             SDL_Surface *text = NULL;
 
+            auto space = 8;
+            auto font_size = 28;
+            auto text_space = 8;
+            auto infoh = 48;
+
+            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+
             auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * space;
+
+            auto topic = 0;
+            auto topic_offset = 0;
+            auto topic_speed = 1;
+            auto topic_limit = (text_bounds - 2 * text_space - infoh) / (96);
+            auto topic_last = topic_offset + topic_limit;
+
+            if (topic_last > Topics::ALL.size())
+            {
+                topic_last = Topics::ALL.size();
+            }
 
             if (Topics::ALL[topic].Text.length() > 0)
             {
@@ -26713,304 +26707,296 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
             auto compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
 
-            controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+            auto controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
 
-            // Render the image
-            if (window && renderer)
+            auto scrollSpeed = 20;
+
+            auto hold = false;
+
+            bool scrollUp = false;
+
+            bool scrollDown = false;
+
+            auto selected = false;
+
+            auto current = -1;
+
+            auto offset = 0;
+
+            auto transition = false;
+
+            auto text_up = -1;
+
+            auto text_dn = -1;
+
+            auto scroll_topics = false;
+
+            auto quit = false;
+
+            while (!quit)
             {
-                auto scrollSpeed = 20;
-
-                auto hold = false;
-
-                bool scrollUp = false;
-
-                bool scrollDown = false;
-
-                auto selected = false;
-
-                auto current = -1;
-
-                auto offset = 0;
-
-                auto transition = false;
-
-                auto text_up = -1;
-
-                auto text_dn = -1;
-
-                auto scroll_topics = false;
-
-                while (!transition)
+                if (Topics::ALL[topic].Title.length() > 0)
                 {
-                    for (auto i = 0; i < controls.size(); i++)
+                    SDL_SetWindowTitle(window, Topics::ALL[topic].Title.c_str());
+                }
+
+                for (auto i = 0; i < controls.size(); i++)
+                {
+                    if (controls[i].Type == Control::Type::SCROLL_UP)
                     {
-                        if (controls[i].Type == Control::Type::SCROLL_UP)
-                        {
-                            text_up = i;
-                        }
-                        else if (controls[i].Type == Control::Type::SCROLL_DOWN)
-                        {
-                            text_dn = i;
-                        }
+                        text_up = i;
+                    }
+                    else if (controls[i].Type == Control::Type::SCROLL_DOWN)
+                    {
+                        text_dn = i;
+                    }
+                }
+
+                fillWindow(renderer, intWH);
+
+                putHeader(renderer, "Topics", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+
+                fillRect(renderer, splashw, text_bounds - infoh, startx, texty + infoh, BE_80);
+
+                putHeader(renderer, Topics::ALL[topic].Title.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, BE_80);
+
+                if (Topics::ALL[topic].Text.length() > 0 && text)
+                {
+                    renderText(renderer, text, 0, textx + space, texty + space + infoh, text_bounds - 2 * space - infoh, offset);
+                }
+
+                if (!compact)
+                {
+                    if (text_up >= 0 && text_up < controls.size() && controls[text_dn].Type == Control::Type::SCROLL_UP)
+                    {
+                        fillRect(renderer, controls[text_up].W + 2 * border_space, controls[text_up].H + 2 * border_space, controls[text_up].X - border_space, controls[text_up].Y - border_space, intWH);
                     }
 
-                    if (Topics::ALL[topic].Title.length() > 0)
+                    if (text_dn >= 0 && text_dn < controls.size() && controls[text_dn].Type == Control::Type::SCROLL_DOWN)
                     {
-                        SDL_SetWindowTitle(window, Topics::ALL[topic].Title.c_str());
+                        fillRect(renderer, controls[text_dn].W + 2 * border_space, controls[text_dn].H + 2 * border_space, controls[text_dn].X - border_space, controls[text_dn].Y - border_space, intWH);
                     }
+                }
 
-                    fillWindow(renderer, intWH);
+                for (auto i = topic_offset; i < topic_last; i++)
+                {
+                    auto index = i - topic_offset;
 
-                    putHeader(renderer, "Topics", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
-
-                    fillRect(renderer, splashw, text_bounds - infoh, startx, texty + infoh, BE_80);
-
-                    putHeader(renderer, Topics::ALL[topic].Title.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-
-                    fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, BE_80);
-
-                    if (Topics::ALL[topic].Text.length() > 0 && text)
+                    if (index >= 0 && index < controls.size())
                     {
-                        renderText(renderer, text, 0, textx + space, texty + space + infoh, text_bounds - 2 * space - infoh, offset);
-                    }
-
-                    if (!compact)
-                    {
-                        if (text_up >= 0 && text_up < controls.size() && controls[text_dn].Type == Control::Type::SCROLL_UP)
+                        if (topic != i)
                         {
-                            fillRect(renderer, controls[text_up].W + 2 * border_space, controls[text_up].H + 2 * border_space, controls[text_up].X - border_space, controls[text_up].Y - border_space, intWH);
-                        }
-
-                        if (text_dn >= 0 && text_dn < controls.size() && controls[text_dn].Type == Control::Type::SCROLL_DOWN)
-                        {
-                            fillRect(renderer, controls[text_dn].W + 2 * border_space, controls[text_dn].H + 2 * border_space, controls[text_dn].X - border_space, controls[text_dn].Y - border_space, intWH);
-                        }
-                    }
-
-                    for (auto i = topic_offset; i < topic_last; i++)
-                    {
-                        auto index = i - topic_offset;
-
-                        if (index >= 0 && index < controls.size())
-                        {
-                            if (topic != i)
-                            {
-                                drawRect(renderer, controls[index].W + (2 * text_space), controls[index].H + (2 * text_space), controls[index].X - text_space, controls[index].Y - text_space, intBK);
-                            }
-                            else
-                            {
-                                thickRect(renderer, controls[index].W + (text_space - 2), controls[index].H + (text_space - 2), controls[index].X - border_pts, controls[index].Y - (border_pts - 1), intLB, (border_pts - 1));
-                            }
-                        }
-                    }
-
-                    renderButtons(renderer, controls, current, intLB, border_space, border_pts);
-
-                    Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
-
-                    if (scrollUp || scrollDown)
-                    {
-                        auto mousex = 0;
-                        auto mousey = 0;
-
-                        SDL_GetMouseState(&mousex, &mousey);
-
-                        if (mousex >= startx && mousex <= (startx + splashw) && mousey >= starty && mousey <= (starty + text_bounds))
-                        {
-                            scroll_topics = true;
+                            drawRect(renderer, controls[index].W + (2 * text_space), controls[index].H + (2 * text_space), controls[index].X - text_space, controls[index].Y - text_space, intBK);
                         }
                         else
                         {
-                            scroll_topics = false;
+                            thickRect(renderer, controls[index].W + (text_space - 2), controls[index].H + (text_space - 2), controls[index].X - border_pts, controls[index].Y - (border_pts - 1), intLB, (border_pts - 1));
                         }
                     }
+                }
 
-                    if (((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold))
+                renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+
+                Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (scrollUp || scrollDown)
+                {
+                    auto mousex = 0;
+                    auto mousey = 0;
+
+                    SDL_GetMouseState(&mousex, &mousey);
+
+                    if (mousex >= startx && mousex <= (startx + splashw) && mousey >= starty && mousey <= (starty + text_bounds))
                     {
-                        if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || (scrollUp && !scroll_topics))
+                        scroll_topics = true;
+                    }
+                    else
+                    {
+                        scroll_topics = false;
+                    }
+                }
+
+                if (((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold))
+                {
+                    if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || (scrollUp && !scroll_topics))
+                    {
+                        if (text)
                         {
+                            if (offset > 0)
+                            {
+                                offset -= scrollSpeed;
+                            }
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || (scrollDown && !scroll_topics))
+                    {
+                        if (text)
+                        {
+                            if (text->h >= text_bounds - 2 * space - infoh)
+                            {
+                                if (offset < text->h - text_bounds + 2 * space + infoh)
+                                {
+                                    offset += scrollSpeed;
+                                }
+
+                                if (offset > text->h - text_bounds + 2 * space + infoh)
+                                {
+                                    offset = text->h - text_bounds + 2 * space + infoh;
+                                }
+                            }
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::ACTION && !hold)
+                    {
+                        if ((topic_offset + current) >= 0 && (topic_offset + current) < Topics::ALL.size())
+                        {
+                            topic = topic_offset + current;
+
                             if (text)
                             {
-                                if (offset > 0)
-                                {
-                                    offset -= scrollSpeed;
-                                }
-
-                                if (offset < 0)
-                                {
-                                    offset = 0;
-                                }
+                                SDL_FreeSurface(text);
                             }
+
+                            offset = 0;
+
+                            text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+
+                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+
+                            controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
                         }
-                        else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || (scrollDown && !scroll_topics))
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::PREVIOUS && !hold)
+                    {
+                        if (topic > 0)
                         {
+                            topic -= 1;
+
                             if (text)
                             {
-                                if (text->h >= text_bounds - 2 * space - infoh)
-                                {
-                                    if (offset < text->h - text_bounds + 2 * space + infoh)
-                                    {
-                                        offset += scrollSpeed;
-                                    }
-
-                                    if (offset > text->h - text_bounds + 2 * space + infoh)
-                                    {
-                                        offset = text->h - text_bounds + 2 * space + infoh;
-                                    }
-                                }
+                                SDL_FreeSurface(text);
                             }
+
+                            offset = 0;
+
+                            text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+
+                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+
+                            controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
                         }
-                        else if (controls[current].Type == Control::Type::ACTION && !hold)
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::NEXT && !hold)
+                    {
+                        if (topic < Topics::ALL.size() - 1)
                         {
-                            if ((topic_offset + current) >= 0 && (topic_offset + current) < Topics::ALL.size())
+                            topic += 1;
+
+                            if (text)
                             {
-                                topic = topic_offset + current;
-
-                                if (text)
-                                {
-                                    SDL_FreeSurface(text);
-                                }
-
-                                offset = 0;
-
-                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
-
-                                compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
-
-                                controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+                                SDL_FreeSurface(text);
                             }
 
-                            selected = false;
+                            offset = 0;
+
+                            text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+
+                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+
+                            controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
                         }
-                        else if (controls[current].Type == Control::Type::PREVIOUS && !hold)
+
+                        current = -1;
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::TOPICS_UP || (controls[current].Type == Control::Type::TOPICS_UP && hold) || (scrollUp && scroll_topics))
+                    {
+                        if (topic_offset > 0)
                         {
-                            if (topic > 0)
+                            topic_offset -= topic_speed;
+
+                            if (topic_offset < 0)
                             {
-                                topic -= 1;
-
-                                if (text)
-                                {
-                                    SDL_FreeSurface(text);
-                                }
-
-                                offset = 0;
-
-                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
-
-                                compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
-
-                                controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+                                topic_offset = 0;
                             }
 
+                            topic_last = topic_offset + topic_limit;
+
+                            if (topic_last > Topics::ALL.size())
+                            {
+                                topic_last = Topics::ALL.size();
+                            }
+
+                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+
+                            controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+                        }
+
+                        if (topic_offset <= 0)
+                        {
                             current = -1;
 
                             selected = false;
                         }
-                        else if (controls[current].Type == Control::Type::NEXT && !hold)
+                    }
+                    else if (controls[current].Type == Control::Type::TOPICS_DOWN || (controls[current].Type == Control::Type::TOPICS_DOWN && hold) || (scrollDown && scroll_topics))
+                    {
+                        if (Topics::ALL.size() - topic_last > 0)
                         {
-                            if (topic < Topics::ALL.size() - 1)
+                            if (topic_offset < Topics::ALL.size() - topic_limit)
                             {
-                                topic += 1;
-
-                                if (text)
-                                {
-                                    SDL_FreeSurface(text);
-                                }
-
-                                offset = 0;
-
-                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
-
-                                compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
-
-                                controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+                                topic_offset += topic_speed;
                             }
 
-                            current = -1;
+                            if (topic_offset > Topics::ALL.size() - topic_limit)
+                            {
+                                topic_offset = Topics::ALL.size() - topic_limit;
+                            }
 
-                            selected = false;
-                        }
-                        else if (controls[current].Type == Control::Type::TOPICS_UP || (controls[current].Type == Control::Type::TOPICS_UP && hold) || (scrollUp && scroll_topics))
-                        {
+                            topic_last = topic_offset + topic_limit;
+
+                            if (topic_last > Topics::ALL.size())
+                            {
+                                topic_last = Topics::ALL.size();
+                            }
+
+                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+
+                            controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+
                             if (topic_offset > 0)
                             {
-                                topic_offset -= topic_speed;
-
-                                if (topic_offset < 0)
+                                if (controls[current].Type != Control::Type::TOPICS_DOWN)
                                 {
-                                    topic_offset = 0;
+                                    current += 1;
                                 }
-
-                                topic_last = topic_offset + topic_limit;
-
-                                if (topic_last > Topics::ALL.size())
-                                {
-                                    topic_last = Topics::ALL.size();
-                                }
-
-                                compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
-
-                                controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
-
-                                SDL_Delay(50);
-                            }
-
-                            if (topic_offset <= 0)
-                            {
-                                current = -1;
-
-                                selected = false;
                             }
                         }
-                        else if (controls[current].Type == Control::Type::TOPICS_DOWN || (controls[current].Type == Control::Type::TOPICS_DOWN && hold) || (scrollDown && scroll_topics))
+
+                        if (Topics::ALL.size() - topic_last <= 0)
                         {
-                            if (Topics::ALL.size() - topic_last > 0)
-                            {
-                                if (topic_offset < Topics::ALL.size() - topic_limit)
-                                {
-                                    topic_offset += topic_speed;
-                                }
+                            selected = false;
 
-                                if (topic_offset > Topics::ALL.size() - topic_limit)
-                                {
-                                    topic_offset = Topics::ALL.size() - topic_limit;
-                                }
-
-                                topic_last = topic_offset + topic_limit;
-
-                                if (topic_last > Topics::ALL.size())
-                                {
-                                    topic_last = Topics::ALL.size();
-                                }
-
-                                compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
-
-                                controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
-
-                                SDL_Delay(50);
-
-                                if (topic_offset > 0)
-                                {
-                                    if (controls[current].Type != Control::Type::TOPICS_DOWN)
-                                    {
-                                        current += 1;
-                                    }
-                                }
-                            }
-
-                            if (Topics::ALL.size() - topic_last <= 0)
-                            {
-                                selected = false;
-
-                                current = -1;
-                            }
+                            current = -1;
                         }
-                        else if (controls[current].Type == Control::Type::BACK && !hold)
-                        {
-                            quit = true;
-
-                            transition = true;
-                        }
+                    }
+                    else if (controls[current].Type == Control::Type::BACK && !hold)
+                    {
+                        quit = true;
                     }
                 }
             }
@@ -27021,23 +27007,23 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                 text = NULL;
             }
+
+            if (font_garamond)
+            {
+                TTF_CloseFont(font_garamond);
+
+                font_garamond = NULL;
+            }
+
+            if (font_mason)
+            {
+                TTF_CloseFont(font_mason);
+
+                font_mason = NULL;
+            }
+
+            TTF_Quit();
         }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
     }
 
     return false;
