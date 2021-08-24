@@ -40,6 +40,7 @@ namespace fs = std::filesystem;
 #include "input.hpp"
 #include "ship.hpp"
 #include "story.hpp"
+#include "topic.hpp"
 
 #include "book1.hpp"
 
@@ -26508,6 +26509,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         {
                             controls_normal = Story::ExitControls(compact);
                         }
+                    }
+                    else if (controls[current].Type == Control::Type::ENCYCLOPEDIA && !hold)
+                    {
+                        selected = false;
                     }
                     else if (controls[current].Type == Control::Type::BACK && !hold)
                     {
