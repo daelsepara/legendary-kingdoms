@@ -121,6 +121,9 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Equipment::Base equipment, Control::Type mode);
 int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> ships, Location::Type location, std::vector<Cargo::Type> cargo, Control::Type mode);
 
+// find control button
+int FIND_CONTROL(std::vector<Button> &controls, Control::Type control);
+
 // combat screens
 Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool storyFlee, int fleeRound, int roundLimit, bool useEquipment);
 Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus);
@@ -985,6 +988,23 @@ SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_s
     }
 
     return button;
+}
+
+int FIND_CONTROL(std::vector<Button> &controls, Control::Type control)
+{
+    auto found = -1;
+
+    for (auto i = 0; i < controls.size(); i++)
+    {
+        if (controls[i].Type == control)
+        {
+            found = i;
+
+            break;
+        }
+    }
+
+    return found;
 }
 
 void clipValue(int &val, int min, int max)
@@ -26738,17 +26758,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     SDL_SetWindowTitle(window, Topics::ALL[topic].Title.c_str());
                 }
 
-                for (auto i = 0; i < controls.size(); i++)
-                {
-                    if (controls[i].Type == Control::Type::SCROLL_UP)
-                    {
-                        text_up = i;
-                    }
-                    else if (controls[i].Type == Control::Type::SCROLL_DOWN)
-                    {
-                        text_dn = i;
-                    }
-                }
+                text_up = FIND_CONTROL(controls, Control::Type::SCROLL_UP);
+
+                text_dn = FIND_CONTROL(controls, Control::Type::SCROLL_DOWN);
 
                 fillWindow(renderer, intWH);
 
@@ -26891,6 +26903,8 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+
+                            current = FIND_CONTROL(controls, Control::Type::PREVIOUS);
                         }
 
                         selected = false;
@@ -26913,6 +26927,8 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
+
+                            current = FIND_CONTROL(controls, Control::Type::NEXT);
                         }
 
                         selected = false;
@@ -26940,12 +26956,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
                         }
 
-                        if (topic_offset <= 0)
-                        {
-                            current = -1;
+                        current = FIND_CONTROL(controls, Control::Type::TOPICS_UP);
 
-                            selected = false;
-                        }
+                        selected = false;
                     }
                     else if (controls[current].Type == Control::Type::TOPICS_DOWN || (controls[current].Type == Control::Type::TOPICS_DOWN && hold) || (scrollDown && scroll_topics))
                     {
@@ -26971,22 +26984,11 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
-
-                            if (topic_offset > 0)
-                            {
-                                if (controls[current].Type != Control::Type::TOPICS_DOWN)
-                                {
-                                    current += 1;
-                                }
-                            }
                         }
 
-                        if (Topics::ALL.size() - topic_last <= 0)
-                        {
-                            selected = false;
+                        current = FIND_CONTROL(controls, Control::Type::TOPICS_DOWN);
 
-                            current = -1;
-                        }
+                        selected = false;
                     }
                     else if (controls[current].Type == Control::Type::BACK && !hold)
                     {
