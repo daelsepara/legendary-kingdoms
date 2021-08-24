@@ -26630,7 +26630,7 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
     {
         auto marginx = (int)(SCREEN_WIDTH * Margin);
 
-        auto scroll_space = (marginx - (arrow_size + 2 * border_space)) / 2;
+        auto scroll_space = (marginx - arrow_size) / 2;
 
         if (start > 0)
         {
@@ -26682,11 +26682,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_mason2 = TTF_OpenFont(FONT_MASON, 28);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
+        auto font_mason = TTF_OpenFont(FONT_MASON, 32);
 
         auto infoh = 48;
 
@@ -26763,11 +26759,11 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                     fillWindow(renderer, intWH);
 
-                    putHeader(renderer, "Topics", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putHeader(renderer, "Topics", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
 
                     fillRect(renderer, splashw, text_bounds - infoh, startx, texty + infoh, BE_80);
 
-                    putHeader(renderer, Topics::ALL[topic].Title.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, Topics::ALL[topic].Title.c_str(), font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                     fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, BE_80);
 
@@ -27032,20 +27028,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
         if (font_mason)
         {
             TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        if (font_mason2)
-        {
-            TTF_CloseFont(font_mason2);
-
-            font_mason2 = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
 
             font_mason = NULL;
         }
