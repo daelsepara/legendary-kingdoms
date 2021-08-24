@@ -90,7 +90,8 @@ namespace Control
         REPAIR1,
         FULL_REPAIR,
         BUY_CARGO,
-        SELL_CARGO
+        SELL_CARGO,
+        MONEY
     };
 
     class Base

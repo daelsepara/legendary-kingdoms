@@ -3266,7 +3266,8 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (list.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::USE));
     controls.push_back(Button(idx + 1, "icons/interaction.png", idx, idx + 2, (list.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::TRANSFER));
-    controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, (list.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 2, "icons/shop.png", idx + 1, idx + 3, (list.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::MONEY));
+    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (list.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -3876,6 +3877,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
                 fillWindow(renderer, intWH);
 
                 putHeader(renderer, "Armour save results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::ArmourSave::START)
@@ -3957,9 +3959,9 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
 
                 std::string defender_string = "";
 
-                fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
-
                 putHeader(renderer, character.Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+
+                fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
                 defender_string = "Armour Save: +" + std::to_string(save_score);
                 defender_string += "\nHealth: " + std::to_string(Engine::HEALTH(character));
@@ -4132,7 +4134,9 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
                 for (auto i = offset; i < last; i++)
                 {
@@ -4164,8 +4168,6 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 }
 
                 renderButtons(renderer, controls, current, intLB, space, border_pts);
-
-                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 putHeader(renderer, (std::string("Deal " + std::to_string(combat_damage) + " damage to")).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -4434,6 +4436,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 fillWindow(renderer, intWH);
 
                 putHeader(renderer, "Attack Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::Attack::START)
@@ -4983,8 +4986,6 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                     std::string attacker_string = "";
 
-                    fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
-
                     if (direction == 0)
                     {
                         putHeader(renderer, party.Fleet[party.CurrentShip].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
@@ -5018,6 +5019,8 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         attacker_string = "Fighting: " + std::to_string(attack_score);
                         attacker_string += "\nHealth: " + std::to_string(enemyFleet[opponent].Health);
                     }
+
+                    fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
                     putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
@@ -5684,8 +5687,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     std::string attacker_string = "";
 
-                    fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
-
                     if (direction == 0)
                     {
                         putHeader(renderer, party.Members[combatant].Name, font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
@@ -5777,6 +5778,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         attacker_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
                     }
+
+                    fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
                     putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
@@ -6221,6 +6224,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 fillWindow(renderer, intWH);
 
                 putHeader(renderer, "Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::Retreat::START)
@@ -6516,6 +6520,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
                 fillWindow(renderer, intWH);
 
                 putHeader(renderer, "Results", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
                 if (stage != Engine::RaiseAttribute::START)
@@ -7220,7 +7225,9 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
                 if (last - offset > 0)
                 {
@@ -7249,8 +7256,6 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 }
 
                 renderButtons(renderer, controls, current, intLB, space, border_pts);
-
-                putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 if (mode == Control::Type::COMBAT)
                 {
@@ -7574,7 +7579,9 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
                 if (last - offset > 0)
                 {
@@ -7596,8 +7603,6 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                 }
 
                 renderButtons(renderer, controls, current, intLB, space, border_pts);
-
-                putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 putHeader(renderer, "Opponent", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -8536,7 +8541,9 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
                 if (last - offset > 0)
                 {
@@ -8558,8 +8565,6 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                 }
 
                 renderButtons(renderer, controls, current, intLB, space, border_pts);
-
-                putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -9075,7 +9080,9 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
                 if (last - offset > 0)
                 {
@@ -9097,8 +9104,6 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
                 }
 
                 renderButtons(renderer, controls, current, intLB, space, border_pts);
-
-                putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -9354,7 +9359,9 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
                 if (last - offset > 0)
                 {
@@ -9376,8 +9383,6 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
                 }
 
                 renderButtons(renderer, controls, current, intLB, space, border_pts);
-
-                putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -9633,7 +9638,16 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                if (team_size > 1)
+                {
+                    putHeader(renderer, "Select Adventurers", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+                else
+                {
+                    putHeader(renderer, "Select Adventurer", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                }
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
                 for (auto i = offset; i < last; i++)
                 {
@@ -9671,15 +9685,6 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
 
                 renderButtons(renderer, controls, current, intLB, space, border_pts);
-
-                if (team_size > 1)
-                {
-                    putHeader(renderer, "Select Adventurers", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
-                else
-                {
-                    putHeader(renderer, "Select Adventurer", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
 
                 putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -9910,7 +9915,11 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                std::string select_string = "Which of " + std::string(character.Name) + "'s attributes will be raised by " + std::to_string(increase) + "?";
+
+                putHeader(renderer, select_string.c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
                 if (last - offset > 0)
                 {
@@ -9928,10 +9937,6 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
                 }
 
                 renderButtons(renderer, controls, current, intLB, space, border_pts);
-
-                std::string select_string = "Which of " + std::string(character.Name) + "'s attributes will be raised by " + std::to_string(increase) + "?";
-
-                putHeader(renderer, select_string.c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 putHeader(renderer, "Attribute", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -10201,7 +10206,9 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                putHeader(renderer, "Select Team", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
                 if (last - offset > 0)
                 {
@@ -10219,8 +10226,6 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
                 }
 
                 renderButtons(renderer, controls, current, intLB, space, space / 2);
-
-                putHeader(renderer, "Select Team", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -10472,7 +10477,9 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+            putHeader(renderer, "Assign Party Member to a Team", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+            fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
             if (last - offset > 0)
             {
@@ -10483,8 +10490,6 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             }
 
             renderButtons(renderer, controls, current, intLB, space, space / 2);
-
-            putHeader(renderer, "Assign Party Member to a Team", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             putHeader(renderer, "Teams", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -10783,47 +10788,6 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
-
-            if (last - offset > 0)
-            {
-                for (auto i = 0; i < last - offset; i++)
-                {
-                    if (selection == offset + i)
-                    {
-                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
-                    }
-                    else if (Engine::IS_ALIVE(party.Members[offset + i]))
-                    {
-                        if (team != Team::Type::NONE)
-                        {
-                            if (party.Members[offset + i].Team == team)
-                            {
-                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
-                            }
-                            else
-                            {
-                                thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
-                            }
-                        }
-                        else if (Engine::IS_CURSED(party.Members[offset + i]))
-                        {
-                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
-                        }
-                        else
-                        {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
-                        }
-                    }
-                    else
-                    {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
-                    }
-                }
-            }
-
-            renderButtons(renderer, controls, current, intLB, space, border_pts);
-
             if (mode == Control::Type::COMBAT)
             {
                 putHeader(renderer, "Choose the party member attacking this round", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -10881,6 +10845,47 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
             {
                 putHeader(renderer, "Choose Party Member", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
+
+            fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+
+            if (last - offset > 0)
+            {
+                for (auto i = 0; i < last - offset; i++)
+                {
+                    if (selection == offset + i)
+                    {
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    }
+                    else if (Engine::IS_ALIVE(party.Members[offset + i]))
+                    {
+                        if (team != Team::Type::NONE)
+                        {
+                            if (party.Members[offset + i].Team == team)
+                            {
+                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            }
+                            else
+                            {
+                                thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
+                            }
+                        }
+                        else if (Engine::IS_CURSED(party.Members[offset + i]))
+                        {
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intGR, 2);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        }
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                    }
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, space, border_pts);
 
             if (mode == Control::Type::EQUIPMENT && equipment.Type != Equipment::Type::NONE)
             {
@@ -11218,29 +11223,6 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
-
-            if (last - offset > 0)
-            {
-                for (auto i = 0; i < last - offset; i++)
-                {
-                    if (selection == offset + i)
-                    {
-                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
-                    }
-                    else if (ships[offset + i].Health > 0)
-                    {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
-                    }
-                    else
-                    {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
-                    }
-                }
-            }
-
-            renderButtons(renderer, controls, current, intLB, space, border_pts);
-
             if (mode == Control::Type::COMBAT)
             {
                 putHeader(renderer, "Choose the ship attacking this round", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -11269,6 +11251,29 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
             {
                 putHeader(renderer, "Choose ship", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
+
+            fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+
+            if (last - offset > 0)
+            {
+                for (auto i = 0; i < last - offset; i++)
+                {
+                    if (selection == offset + i)
+                    {
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    }
+                    else if (ships[offset + i].Health > 0)
+                    {
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                    }
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, space, border_pts);
 
             putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -11567,7 +11572,36 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+            if (mode == Control::Type::SPELL_TARGET)
+            {
+                putHeader(renderer, "Choose target(s) for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else if (mode == Control::Type::SKILL)
+            {
+                putHeader(renderer, "Choose party member(s) to perform skill check", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else if (mode == Control::Type::RAISE_MAX_HEALTH)
+            {
+                putHeader(renderer, "Choose party member(s) to raise maximum health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else if (mode == Control::Type::GAIN_HEALTH)
+            {
+                putHeader(renderer, "Choose party member(s) to recover health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else if (mode == Control::Type::LOSE_HEALTH)
+            {
+                putHeader(renderer, "Choose party member(s) to lose health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else if (mode == Control::Type::SELECT_ORDER)
+            {
+                putHeader(renderer, "Select the order of characters to perform the task", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else
+            {
+                putHeader(renderer, "Choose Party Member(s)", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+
+            fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
             if (last - offset > 0)
             {
@@ -11605,35 +11639,6 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
             }
 
             renderButtons(renderer, controls, current, intLB, space, border_pts);
-
-            if (mode == Control::Type::SPELL_TARGET)
-            {
-                putHeader(renderer, "Choose target(s) for this spell", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-            }
-            else if (mode == Control::Type::SKILL)
-            {
-                putHeader(renderer, "Choose party member(s) to perform skill check", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-            }
-            else if (mode == Control::Type::RAISE_MAX_HEALTH)
-            {
-                putHeader(renderer, "Choose party member(s) to raise maximum health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-            }
-            else if (mode == Control::Type::GAIN_HEALTH)
-            {
-                putHeader(renderer, "Choose party member(s) to recover health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-            }
-            else if (mode == Control::Type::LOSE_HEALTH)
-            {
-                putHeader(renderer, "Choose party member(s) to lose health points", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-            }
-            else if (mode == Control::Type::SELECT_ORDER)
-            {
-                putHeader(renderer, "Select the order of characters to perform the task", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-            }
-            else
-            {
-                putHeader(renderer, "Choose Party Member(s)", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-            }
 
             putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -12019,7 +12024,9 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
+                putHeader(renderer, "Opponents", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
                 renderButtons(renderer, controls, current, intLB, space, border_pts);
 
@@ -12044,8 +12051,6 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                         }
                     }
                 }
-
-                putHeader(renderer, "Opponents", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 putHeader(renderer, "Current Ship", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
@@ -14718,8 +14723,9 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                 putText(renderer, (RestPrice > 0 ? std::to_string(RestPrice) + std::string(" silver coins") : std::string("Free")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
             }
 
-            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
             putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+            fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
             if (last - offset > 0)
             {
@@ -15068,6 +15074,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     auto infoh = 48;
     auto boxh = (int)(0.150 * SCREEN_HEIGHT);
+    auto box_space = 10;
 
     auto font_size = 28;
     auto text_space = 8;
@@ -15148,15 +15155,21 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
 
-        putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+        putHeader(renderer, "Money in Vault", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - 2 * (boxh + infoh) - box_space);
+
+        putText(renderer, (std::to_string(party.VaultMoney) + " silver coins").c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 2 * boxh - infoh - box_space);
+
+        putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (boxh + infoh));
 
         if (selection >= 0 && selection < party.Vault.size())
         {
-            putText(renderer, party.Vault[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            auto item_string = itemString(party.Vault[selection]);
+
+            putText(renderer, item_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - boxh);
         }
         else
         {
-            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - boxh);
         }
 
         if (selection >= 0 && selection < party.Vault.size())
@@ -15760,11 +15773,13 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             if (harbour->ShipRepairPrice >= 0)
             {
                 putHeader(renderer, "Repair Costs", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+
                 putText(renderer, (harbour->ShipRepairPrice > 0 ? std::to_string(harbour->ShipRepairPrice) + std::string(" silver coins") : std::string("Free")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
             }
 
-            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
             putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+            fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
             if (last - offset > 0)
             {
@@ -16181,15 +16196,15 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
 
-        putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+        putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (boxh + infoh));
 
         if (selection >= 0 && selection < character.Equipment.size())
         {
-            putText(renderer, character.Equipment[selection].Name, font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            putText(renderer, itemString(character.Equipment[selection]).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - boxh);
         }
         else
         {
-            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - boxh);
         }
 
         if (selection >= 0 && selection < character.Equipment.size())
@@ -19900,6 +19915,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             fillWindow(renderer, intWH);
 
             putHeader(renderer, "Harbour", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+
             putText(renderer, Location::Description[party.Location], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
 
             putHeader(renderer, "Money", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
@@ -20033,6 +20049,8 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             else
             {
                 fillRect(renderer, textwidth, infoh, textx, texty, intBR);
+
+                fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
             }
 
             if (last - offset > 0)
@@ -21845,6 +21863,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             else
             {
                 fillRect(renderer, headerw, infoh, startx, starty, intBR);
+
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
             }
 
@@ -21891,6 +21910,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             else
             {
                 fillRect(renderer, headerw, infoh, startx + boxwidth + marginx, starty, intBR);
+
                 fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
             }
 
@@ -25660,6 +25680,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 if (!compact)
                 {
                     fillRect(renderer, controls_normal[0].W + 2 * border_space, controls_normal[0].H + 2 * border_space, controls_normal[0].X - border_space, controls_normal[0].Y - border_space, intWH);
+
                     fillRect(renderer, controls_normal[1].W + 2 * border_space, controls_normal[1].H + 2 * border_space, controls_normal[1].X - border_space, controls_normal[1].Y - border_space, intWH);
                 }
 
