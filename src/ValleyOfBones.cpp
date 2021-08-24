@@ -165,6 +165,7 @@ std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::v
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button);
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
+std::vector<Button> popupMoney(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int popupw, int popuph, int infoh, int offsetx, int offsety);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, Control::Type mode);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, bool cargo, bool confirm_button, bool back_button);
@@ -1632,7 +1633,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 {
                     if (index >= 0 && index < controls.size())
                     {
-                        drawRect(renderer, controls[index].W + 16, controls[index].H + 16, controls[index].X - 8, controls[index].Y - 8, intBK);
+                        drawRect(renderer, controls[index].W + (2 * text_space), controls[index].H + (2 * text_space), controls[index].X - text_space, controls[index].Y - text_space, intBK);
                     }
                 }
             }
@@ -4158,11 +4159,11 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
                         else if (Engine::IS_ALIVE(party.Members[index]))
                         {
-                            drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - 4, controls[index].Y - 4, intBK);
+                            drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - border_pts, controls[index].Y - border_pts, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - 4, controls[index].Y - 4, intRD);
+                            drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - border_pts, controls[index].Y - border_pts, intRD);
                         }
                     }
                 }
@@ -6820,11 +6821,11 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                         }
                         else if (spells[offset + i].Charged)
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                         }
                     }
                 }
@@ -7241,7 +7242,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                         {
                             if (combatRound >= monsters[offset + i].Round)
                             {
-                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                             }
                             else
                             {
@@ -7250,7 +7251,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                         }
                     }
                 }
@@ -7593,11 +7594,11 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                         }
                         else if (enemyFleet[offset + i].Health > 0)
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                         }
                     }
                 }
@@ -8555,11 +8556,11 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         }
                         else if (Engine::IS_ALIVE(party.Members[offset + i]))
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                         }
                     }
                 }
@@ -9094,11 +9095,11 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
                         }
                         else if (Engine::IS_ALIVE(party.Members[offset + i]))
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                         }
                     }
                 }
@@ -9373,11 +9374,11 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
                         }
                         else if (Engine::IS_ALIVE(party.Members[offset + i]))
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                         }
                     }
                 }
@@ -9665,7 +9666,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             {
                                 if (party.Members[index].Team == team)
                                 {
-                                    drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - 4, controls[index].Y - 4, intBK);
+                                    drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - border_pts, controls[index].Y - border_pts, intBK);
                                 }
                                 else
                                 {
@@ -9674,12 +9675,12 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             }
                             else
                             {
-                                drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - 4, controls[index].Y - 4, intBK);
+                                drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - border_pts, controls[index].Y - border_pts, intBK);
                             }
                         }
                         else
                         {
-                            drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - 4, controls[index].Y - 4, intRD);
+                            drawRect(renderer, controls[index].W + border_space, controls[index].H + border_space, controls[index].X - border_pts, controls[index].Y - border_pts, intRD);
                         }
                     }
                 }
@@ -9931,7 +9932,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                     }
                 }
@@ -10220,7 +10221,7 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                     }
                 }
@@ -10485,7 +10486,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 for (auto i = 0; i < last - offset; i++)
                 {
-                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                 }
             }
 
@@ -10862,7 +10863,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         {
                             if (party.Members[offset + i].Team == team)
                             {
-                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                             }
                             else
                             {
@@ -10875,12 +10876,12 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                     }
                 }
             }
@@ -11264,11 +11265,11 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
                     }
                     else if (ships[offset + i].Health > 0)
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                     }
                 }
             }
@@ -11619,7 +11620,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                         {
                             if (party.Members[offset + i].Team == team)
                             {
-                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                             }
                             else
                             {
@@ -11628,12 +11629,12 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                     }
                 }
             }
@@ -12042,12 +12043,12 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                             }
                             else
                             {
-                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                             }
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                         }
                     }
                 }
@@ -12601,7 +12602,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                                 else
                                 {
-                                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                                 }
                             }
                             else
@@ -12611,7 +12612,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                         }
                     }
                 }
@@ -13671,12 +13672,12 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
                 else
                 {
-                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                 }
             }
         }
 
-        renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+        renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
         if (flash_message)
         {
@@ -14204,12 +14205,12 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
                 else
                 {
-                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                 }
             }
         }
 
-        renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+        renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
         if (flash_message)
         {
@@ -14737,12 +14738,12 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                 }
             }
 
-            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
             if (flash_message)
             {
@@ -15079,10 +15080,14 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     auto font_size = 28;
     auto text_space = 8;
     auto scrollSpeed = 1;
-    auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * text_space / 2);
+
+    auto popupw = (int)(0.6 * SCREEN_WIDTH);
+    auto popuph = (int)(0.6 * SCREEN_HEIGHT);
+    auto popupx = (SCREEN_WIDTH - popupw) / 2;
+    auto popupy = ((starty + text_bounds) - popuph) / 2;
 
     auto offset = 0;
-
+    auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * border_pts);
     auto last = offset + limit;
 
     if (last > party.Vault.size())
@@ -15119,7 +15124,12 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     auto scrolly = (texty + text_bounds - arrow_size - border_space);
     auto offsety = (texty + infoh);
 
-    auto controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+    std::vector<Button> controls = {};
+    std::vector<Button> controls_vault = {};
+    std::vector<Button> controls_money = {};
+
+    controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+    controls_money = popupMoney(window, renderer, party, popupw, popuph, infoh, popupx, popupy);
 
     TTF_Init();
 
@@ -15136,6 +15146,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     auto hold = false;
 
     auto selection = -1;
+
+    auto current_mode = Control::Type::EQUIPMENT;
 
     while (!done)
     {
@@ -15176,15 +15188,26 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         {
             auto item = party.Vault[selection];
 
-            if (current >= 0 && current < controls.size())
+            if (current_mode == Control::Type::EQUIPMENT)
             {
-                if (controls[current].Type == Control::Type::USE)
+                if (current >= 0 && current < controls_vault.size())
                 {
-                    putHeader(renderer, (std::string("Use the ") + std::string(item.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
-                }
-                else if (controls[current].Type == Control::Type::TRANSFER)
-                {
-                    putHeader(renderer, (std::string("Transfer the ") + std::string(item.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    if (controls_vault[current].Type == Control::Type::USE)
+                    {
+                        putHeader(renderer, (std::string("Use the ") + std::string(item.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    }
+                    else if (controls_vault[current].Type == Control::Type::TRANSFER)
+                    {
+                        putHeader(renderer, (std::string("Transfer the ") + std::string(item.Name)).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    }
+                    else if (controls_vault[current].Type == Control::Type::MONEY)
+                    {
+                        putHeader(renderer, "Access money in vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    }
+                    else
+                    {
+                        putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    }
                 }
                 else
                 {
@@ -15198,15 +15221,26 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         }
         else
         {
-            if (current >= 0 && current < controls.size())
+            if (current_mode == Control::Type::EQUIPMENT)
             {
-                if (controls[current].Type == Control::Type::USE)
+                if (current >= 0 && current < controls_vault.size())
                 {
-                    putHeader(renderer, "Use item", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
-                }
-                else if (controls[current].Type == Control::Type::TRANSFER)
-                {
-                    putHeader(renderer, "Transfer item to another party member", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    if (controls_vault[current].Type == Control::Type::USE)
+                    {
+                        putHeader(renderer, "Use item", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    }
+                    else if (controls_vault[current].Type == Control::Type::TRANSFER)
+                    {
+                        putHeader(renderer, "Transfer item to another party member", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    }
+                    else if (controls_vault[current].Type == Control::Type::MONEY)
+                    {
+                        putHeader(renderer, "Access money in vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    }
+                    else
+                    {
+                        putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    }
                 }
                 else
                 {
@@ -15227,16 +15261,38 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 if (selection != offset + i)
                 {
-                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    drawRect(renderer, controls_vault[i].W + border_space, controls_vault[i].H + border_space, controls_vault[i].X - border_pts, controls_vault[i].Y - border_pts, intBK);
                 }
                 else
                 {
-                    thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    thickRect(renderer, controls_vault[i].W + border_pts, controls_vault[i].H + border_pts, controls_vault[i].X - 2, controls_vault[i].Y - 2, intLB, 2);
                 }
             }
         }
 
-        renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+        if (current_mode == Control::Type::EQUIPMENT)
+        {
+            renderButtons(renderer, controls_vault, current, intLB, text_space, border_pts);
+
+            controls = controls_vault;
+        }
+        else
+        {
+            renderButtons(renderer, controls_vault, -1, intLB, text_space, border_pts);
+
+            fillRect(renderer, popupw, popuph, popupx, popupy, intBE);
+
+            drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
+
+            putHeader(renderer, "Transfer money", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+
+            drawRect(renderer, controls_money[0].W + border_space, controls_money[0].H + border_space, controls_money[0].X - border_pts, controls_money[0].Y - border_pts, intBK);
+            drawRect(renderer, controls_money[1].W + border_space, controls_money[1].H + border_space, controls_money[1].X - border_pts, controls_money[1].Y - border_pts, intBK);
+
+            renderButtons(renderer, controls_money, current, intLB, border_space, border_pts);
+
+            controls = controls_money;
+        }
 
         if (flash_message)
         {
@@ -15272,9 +15328,9 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         last = party.Vault.size();
                     }
 
-                    controls.clear();
+                    controls_vault.clear();
 
-                    controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+                    controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
                     SDL_Delay(50);
                 }
@@ -15307,15 +15363,15 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         last = party.Vault.size();
                     }
 
-                    controls.clear();
+                    controls_vault.clear();
 
-                    controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+                    controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
                     SDL_Delay(50);
 
                     if (offset > 0)
                     {
-                        if (controls[current].Type != Control::Type::SCROLL_DOWN)
+                        if (controls_vault[current].Type != Control::Type::SCROLL_DOWN)
                         {
                             current += 1;
                         }
@@ -15331,15 +15387,18 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             }
             else if (controls[current].Type == Control::Type::ACTION && !hold)
             {
-                if ((current + offset >= 0) && (current + offset) < party.Vault.size())
+                if (current_mode == Control::Type::EQUIPMENT)
                 {
-                    if (selection == current + offset)
+                    if ((current + offset >= 0) && (current + offset) < party.Vault.size())
                     {
-                        selection = -1;
-                    }
-                    else
-                    {
-                        selection = current + offset;
+                        if (selection == current + offset)
+                        {
+                            selection = -1;
+                        }
+                        else
+                        {
+                            selection = current + offset;
+                        }
                     }
                 }
 
@@ -15387,9 +15446,9 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 last = party.Vault.size();
                             }
 
-                            controls.clear();
+                            controls_vault.clear();
 
-                            controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+                            controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
                         }
 
                         selection = -1;
@@ -15430,9 +15489,9 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     last = party.Vault.size();
                                 }
 
-                                controls.clear();
+                                controls_vault.clear();
 
-                                controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+                                controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
                                 message = itemString(item);
 
@@ -15475,9 +15534,9 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 last = party.Vault.size();
                             }
 
-                            controls.clear();
+                            controls_vault.clear();
 
-                            controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+                            controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
                             message = itemString(item);
 
@@ -15510,9 +15569,9 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             last = party.Vault.size();
                         }
 
-                        controls.clear();
+                        controls_vault.clear();
 
-                        controls = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
+                        controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
                         message = itemString(item);
 
@@ -15527,6 +15586,88 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         selection = -1;
                     }
                 }
+            }
+            else if (controls[current].Type == Control::Type::MONEY && !hold)
+            {
+                if (current_mode == Control::Type::EQUIPMENT)
+                {
+                    current_mode = Control::Type::MONEY;
+
+                    current = -1;
+                }
+
+                selected = false;
+            }
+            else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+            {
+                if (current_mode == Control::Type::MONEY)
+                {
+                    current_mode = Control::Type::EQUIPMENT;
+
+                    current = -1;
+                }
+
+                selected = false;
+            }
+            else if (controls[current].Type == Control::Type::PLUS && !hold)
+            {
+                if (current_mode == Control::Type::MONEY)
+                {
+                    if (party.Money > 0)
+                    {
+                        auto store = std::min(party.Money, 10);
+
+                        party.VaultMoney += store;
+                        party.Money -= store;
+
+                        if (store > 1)
+                        {
+                            displayMessage(std::to_string(store) + " silver coins stored in the vault!", intLB);
+                        }
+                        else
+                        {
+                            displayMessage("One silver coin stored in the vault!", intLB);
+                        }
+                    }
+                    else
+                    {
+                        displayMessage("You do not any silver to store in the vault", intRD);
+                    }
+
+                    controls_money = popupMoney(window, renderer, party, popupw, popuph, infoh, popupx, popupy);
+                }
+
+                selected = false;
+            }
+            else if (controls[current].Type == Control::Type::MINUS && !hold)
+            {
+                if (current_mode == Control::Type::MONEY)
+                {
+                    if (party.VaultMoney > 0)
+                    {
+                        auto withdraw = std::min(party.VaultMoney, 10);
+
+                        party.VaultMoney -= withdraw;
+                        party.Money += withdraw;
+
+                        if (withdraw > 1)
+                        {
+                            displayMessage(std::to_string(withdraw) + " silver coins withdrawn from the vault!", intLB);
+                        }
+                        else
+                        {
+                            displayMessage("One silver coin withdrawn from the vault!", intLB);
+                        }
+                    }
+                    else
+                    {
+                        displayMessage("You do not any silver to withdraw from the vault", intRD);
+                    }
+
+                    controls_money = popupMoney(window, renderer, party, popupw, popuph, infoh, popupx, popupy);
+                }
+
+                selected = false;
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
             {
@@ -15791,12 +15932,12 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                 }
             }
 
-            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
             if (flash_message)
             {
@@ -16092,7 +16233,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
     auto font_size = 28;
     auto text_space = 8;
     auto scrollSpeed = 1;
-    auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * text_space / 2);
+    auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * border_pts);
 
     auto offset = 0;
 
@@ -16278,7 +16419,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 if (selection != offset + i)
                 {
-                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                 }
                 else
                 {
@@ -16287,7 +16428,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             }
         }
 
-        renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+        renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
         if (flash_message)
         {
@@ -16919,11 +17060,11 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 {
                     if (character.SpellBook[offset + i].Charged)
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                     }
                 }
                 else
@@ -16949,7 +17090,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             }
         }
 
-        renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+        renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
         if (flash_message)
         {
@@ -17392,11 +17533,11 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                 {
                     if (character.SpellBook[offset + i].Charged)
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intRD);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                     }
                 }
                 else
@@ -17422,7 +17563,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             }
         }
 
-        renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+        renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
         if (flash_message)
         {
@@ -17719,7 +17860,7 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                 }
             }
@@ -17736,7 +17877,7 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
                 }
             }
 
-            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -18005,7 +18146,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                 }
             }
@@ -18022,7 +18163,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
                 }
             }
 
-            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -18284,7 +18425,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                 }
             }
@@ -18301,7 +18442,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
             }
 
-            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -18564,7 +18705,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                 }
             }
@@ -18582,7 +18723,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 text = NULL;
             }
 
-            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
             if (flash_message)
             {
@@ -18838,7 +18979,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto font_size = 28;
         auto text_space = 8;
         auto scrollSpeed = 1;
-        auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * text_space / 2);
+        auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * border_pts);
         auto offset = 0;
         auto last = offset + limit;
 
@@ -18922,12 +19063,12 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + text_space, controls[i].H + text_space, controls[i].X - text_space / 2, controls[i].Y - text_space / 2, intBK);
+                        drawRect(renderer, controls[i].W + text_space, controls[i].H + text_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                 }
             }
 
-            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
             if (error)
             {
@@ -19160,7 +19301,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
         auto font_size = 28;
         auto text_space = 8;
         auto scrollSpeed = 1;
-        auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * text_space / 2);
+        auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * border_pts);
         auto offset = 0;
         auto last = offset + limit;
 
@@ -19244,12 +19385,12 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + text_space, controls[i].H + text_space, controls[i].X - text_space / 2, controls[i].Y - text_space / 2, intBK);
+                        drawRect(renderer, controls[i].W + text_space, controls[i].H + text_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                 }
             }
 
-            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
             if (error)
             {
@@ -20063,7 +20204,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                 }
             }
@@ -20736,7 +20877,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 {
                     if (index >= 0 && index < controls.size())
                     {
-                        drawRect(renderer, controls[index].W + 16, controls[index].H + 16, controls[index].X - 8, controls[index].Y - 8, intBK);
+                        drawRect(renderer, controls[index].W + (2 * text_space), controls[index].H + (2 * text_space), controls[index].X - text_space, controls[index].Y - text_space, intBK);
                     }
                 }
             }
@@ -21075,6 +21216,31 @@ void popupScrolls(std::vector<Button> &controls, std::vector<T> &list, int start
     {
         controls.push_back(Button(idx + 1, "icons/no.png", idx, idx + 1, list.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, offsetx + popupw - buttonw - button_space, offsety + popuph - button_space - buttonh, Control::Type::BACK));
     }
+}
+
+std::vector<Button> popupMoney(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int popupw, int popuph, int infoh, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    auto text_space = 8;
+
+    auto vaultMoney = createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Vault Money: " + std::to_string(party.VaultMoney) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space);
+    controls.push_back(Button(0, vaultMoney, 0, 0, 0, 0, offsetx + 2 * text_space, offsety + infoh + 3 * text_space, Control::Type::ACTION));
+    controls[0].W = vaultMoney->w;
+    controls[0].H = vaultMoney->h;
+
+    auto partyMoney = createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Party Money: " + std::to_string(party.Money) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space);
+    controls.push_back(Button(1, partyMoney, 1, 1, 1, 1, offsetx + 2 * text_space, controls[0].Y + controls[0].H + 3 * text_space, Control::Type::ACTION));
+    controls[1].W = partyMoney->w;
+    controls[1].H = partyMoney->h;
+
+    auto idx = controls.size();
+
+    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, idx, idx, offsetx + button_space, offsety + popuph - button_space - buttonh, Control::Type::CONFIRM));
+    controls.push_back(Button(idx + 1, "icons/add.png", idx, idx + 2, idx + 1, idx + 1, offsetx + button_space + gridsize, offsety + popuph - button_space - buttonh, Control::Type::PLUS));
+    controls.push_back(Button(idx + 2, "icons/minus.png", idx + 1, idx + 2, idx + 2, idx + 2, offsetx + button_space + 2 * gridsize, offsety + popuph - button_space - buttonh, Control::Type::MINUS));
+
+    return controls;
 }
 
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button)
@@ -22065,7 +22231,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto popupw = (int)(0.6 * SCREEN_WIDTH);
         auto popuph = (int)(0.6 * SCREEN_HEIGHT);
         auto popupx = (SCREEN_WIDTH - popupw) / 2;
-        auto popupy = (SCREEN_HEIGHT - popuph) / 2;
+        auto popupy = ((starty + text_bounds) - popuph) / 2;
 
         auto main_buttonw = 220;
 
@@ -22445,7 +22611,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto popupw = (int)(0.6 * SCREEN_WIDTH);
         auto popuph = (int)(0.6 * SCREEN_HEIGHT);
         auto popupx = (SCREEN_WIDTH - popupw) / 2;
-        auto popupy = (SCREEN_HEIGHT - popuph) / 2;
+        auto popupy = ((starty + text_bounds) - popuph) / 2;
 
         auto offset = 0;
         auto limit = (popuph - infoh - buttonh - button_space) / (96);
@@ -22629,7 +22795,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                         }
                         else
                         {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - 4, controls[i].Y - 4, intBK);
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                     }
                 }
@@ -23292,7 +23458,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
-            renderButtons(renderer, controls, current, intLB, text_space, text_space / 2);
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
             for (auto i = offset; i < last; i++)
             {
@@ -23302,7 +23468,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 {
                     if (index >= 0 && index < controls.size())
                     {
-                        drawRect(renderer, controls[index].W + 16, controls[index].H + 16, controls[index].X - 8, controls[index].Y - 8, intBK);
+                        drawRect(renderer, controls[index].W + (2 * text_space), controls[index].H + (2 * text_space), controls[index].X - text_space, controls[index].Y - text_space, intBK);
                     }
                 }
             }
@@ -25461,7 +25627,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         auto popupw = (int)(0.6 * SCREEN_WIDTH);
         auto popuph = (int)(0.6 * SCREEN_HEIGHT);
         auto popupx = (SCREEN_WIDTH - popupw) / 2;
-        auto popupy = (SCREEN_HEIGHT - popuph) / 2;
+        auto popupy = ((starty + text_bounds) - popuph) / 2;
 
         auto popup_speed = 1;
         auto popup_offset = 0;
@@ -25787,7 +25953,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         for (auto i = 0; i < popup_last - popup_offset; i++)
                         {
-                            drawRect(renderer, controls_popup[i].W + border_space, controls_popup[i].H + border_space, controls_popup[i].X - 4, controls_popup[i].Y - 4, intBK);
+                            drawRect(renderer, controls_popup[i].W + border_space, controls_popup[i].H + border_space, controls_popup[i].X - border_pts, controls_popup[i].Y - border_pts, intBK);
                         }
                     }
 
