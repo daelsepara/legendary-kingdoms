@@ -25927,12 +25927,14 @@ namespace Book1
 
                 if (loss > 1)
                 {
-                    PreText += "s. ";
+                    PreText += "s";
                 }
+
+                PreText += ".";
 
                 if (!Engine::IS_ALIVE(party, party.LastSelected))
                 {
-                    PreText += std::string(party.Members[party.LastSelected].Name) + " is dismembered gorily, limbs flaying across the chamber in a shower of blood and is killed.";
+                    PreText += " " + std::string(party.Members[party.LastSelected].Name) + " is dismembered gorily, limbs flaying across the chamber in a shower of blood and is killed.";
 
                     party.Members[party.LastSelected].Equipment.clear();
                 }
@@ -25947,8 +25949,10 @@ namespace Book1
 
                 if (loss > 1)
                 {
-                    PreText += "s.";
+                    PreText += "s";
                 }
+
+                PreText += ".";
 
                 PreText += "\n\nThey stagger bleeding back through the door. You comfort them as best as you can and try and bind their wounds.";
             }
