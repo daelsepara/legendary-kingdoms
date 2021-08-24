@@ -26723,8 +26723,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
             auto offset = 0;
 
-            auto transition = false;
-
             auto text_up = -1;
 
             auto text_dn = -1;
