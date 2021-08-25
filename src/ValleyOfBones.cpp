@@ -26160,7 +26160,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                 renderButtons(renderer, controls, current, intLB, border_space, border_pts);
 
-                if (splash)
+                if (splash && current_mode != Control::Type::PREVIEW)
                 {
                     auto mousex = 0;
                     auto mousey = 0;
