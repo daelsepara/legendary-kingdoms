@@ -2378,7 +2378,7 @@ namespace Engine
 
     int FIND_UNIT(std::vector<Army::Base> &army, Army::Type unit)
     {
-        int result = -1;
+        auto result = -1;
 
         for (auto i = 0; i < army.size(); i++)
         {
@@ -2395,7 +2395,7 @@ namespace Engine
 
     int FIND_UNIT(std::vector<Army::Base> &army, Location::BattleField position)
     {
-        int result = -1;
+        auto result = -1;
 
         for (auto i = 0; i < army.size(); i++)
         {

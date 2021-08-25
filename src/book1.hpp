@@ -1626,7 +1626,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            int success = 7 - party.RecentSuccesses;
+            auto success = 7 - party.RecentSuccesses;
 
             if (success < 0)
             {

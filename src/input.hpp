@@ -33,7 +33,7 @@ namespace Input
         // If we have some controllers attached
         if (numGamepads > 0)
         {
-            for (int i = 0; i < numGamepads; i++)
+            for (auto i = 0; i < numGamepads; i++)
             {
                 // Open the controller and add it to our list
                 auto pad = SDL_GameControllerOpen(i);

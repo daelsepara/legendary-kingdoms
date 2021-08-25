@@ -1701,10 +1701,10 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         auto current_mode = Control::Type::ARMY;
 
-        bool scrollUp = false;
-        bool scrollDown = false;
+        auto scrollUp = false;
+        auto scrollDown = false;
         auto scrollSpeed = 1;
-        bool hold = false;
+        auto hold = false;
 
         auto done = false;
 
@@ -2396,10 +2396,10 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
             renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, offsetx, scrolly, ((current_mode != Control::Type::PARTY || compact) ? true : false), TTF_STYLE_NORMAL);
 
-            bool scrollUp = false;
-            bool scrollDown = false;
-            bool hold = false;
-            int scrollSpeed = 20;
+            auto scrollUp = false;
+            auto scrollDown = false;
+            auto hold = false;
+            auto scrollSpeed = 20;
 
             if (adventurer && current_mode != Control::Type::PARTY)
             {
@@ -2426,8 +2426,8 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                     auto scalex = (double)(mousex - startx) / boundx;
                     auto scaley = (double)(mousey - starty) / adventurerh;
 
-                    int centerx = (int)(scalex * (double)adventurer->w);
-                    int centery = (int)(scaley * (double)adventurer->h);
+                    auto centerx = (int)(scalex * (double)adventurer->w);
+                    auto centery = (int)(scaley * (double)adventurer->h);
 
                     clipValue(centerx, zoomw / 2, adventurer->w - zoomw / 2);
                     clipValue(centery, zoomh / 2, adventurer->h - zoomh / 2);
@@ -2850,9 +2850,9 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                 controls = &controls_add;
             }
 
-            bool scrollUp = false;
-            bool scrollDown = false;
-            bool hold = false;
+            auto scrollUp = false;
+            auto scrollDown = false;
+            auto hold = false;
 
             if (flash_message)
             {
@@ -3157,9 +3157,9 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer)
 
             renderButtons(renderer, controls, current, intLB, border_space, border_pts);
 
-            bool scrollUp = false;
-            bool scrollDown = false;
-            bool hold = false;
+            auto scrollUp = false;
+            auto scrollDown = false;
+            auto hold = false;
 
             if (map_valley && map_kingdom)
             {
@@ -3334,7 +3334,7 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 
     if (list.size() > 0)
     {
-        for (int i = 0; i < last - start; i++)
+        for (auto i = 0; i < last - start; i++)
         {
             auto index = start + i;
 
@@ -3398,7 +3398,7 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 
     if (list.size() > 0)
     {
-        for (int i = 0; i < last - start; i++)
+        for (auto i = 0; i < last - start; i++)
         {
             auto index = start + i;
 
@@ -3456,7 +3456,7 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     if (list.size() > 0)
     {
-        for (int i = 0; i < last - start; i++)
+        for (auto i = 0; i < last - start; i++)
         {
             auto index = start + i;
 
@@ -5133,7 +5133,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
                         auto offsetx = startx + box_space;
 
-                        int damage = 0;
+                        auto damage = 0;
 
                         for (auto i = 0; i < results.size(); i++)
                         {
@@ -5662,7 +5662,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
                         auto offsetx = startx + box_space;
 
-                        int damage = 0;
+                        auto damage = 0;
 
                         for (auto i = 0; i < results.size(); i++)
                         {
@@ -8064,7 +8064,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
         return true;
     }
 
-    bool test_result = false;
+    auto test_result = false;
 
     if (Engine::COUNT(party) > 0 && Engine::COUNT(party) >= team.size())
     {
@@ -8208,7 +8208,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
             auto skill_checked = false;
 
-            int success_counter = 0;
+            auto success_counter = 0;
 
             while (!done)
             {
@@ -9788,7 +9788,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         return true;
     }
 
-    bool result = false;
+    auto result = false;
 
     auto title = "Legendary Kingdoms: Skill Check";
 
@@ -12428,7 +12428,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                             }
                             else
                             {
-                                int opponent = -1;
+                                auto opponent = -1;
 
                                 if (Engine::COUNT(enemyFleet) == 1)
                                 {
@@ -14827,7 +14827,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
 
-        int offset = 0;
+        auto offset = 0;
         auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
@@ -14842,11 +14842,11 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
         auto text_space = 8;
 
-        bool scrollUp = false;
-        bool selected = false;
-        bool scrollDown = false;
-        bool hold = false;
-        int scrollSpeed = 1;
+        auto scrollUp = false;
+        auto selected = false;
+        auto scrollDown = false;
+        auto hold = false;
+        auto scrollSpeed = 1;
 
         std::string message = "";
 
@@ -16020,7 +16020,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         auto boxh = (int)(0.125 * SCREEN_HEIGHT);
         auto box_space = 10;
 
-        int offset = 0;
+        auto offset = 0;
         auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
@@ -16035,11 +16035,11 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         auto text_space = 8;
 
-        bool scrollUp = false;
-        bool selected = false;
-        bool scrollDown = false;
-        bool hold = false;
-        int scrollSpeed = 1;
+        auto scrollUp = false;
+        auto selected = false;
+        auto scrollDown = false;
+        auto hold = false;
+        auto scrollSpeed = 1;
 
         std::string message = "";
 
@@ -20280,10 +20280,10 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         auto current_mode = Control::Type::SELL_CARGO;
 
-        bool hold = false;
+        auto hold = false;
         auto done = false;
-        bool scrollUp = false;
-        bool scrollDown = false;
+        auto scrollUp = false;
+        auto scrollDown = false;
         auto scrollSpeed = 1;
         auto selected_ship = -1;
         auto selected_cargo = std::vector<int>();
@@ -20931,10 +20931,10 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
         auto current_mode = Control::Type::BUY_SELL_SHIP;
 
-        bool scrollUp = false;
-        bool scrollDown = false;
+        auto scrollUp = false;
+        auto scrollDown = false;
         auto scrollSpeed = 1;
-        bool hold = false;
+        auto hold = false;
 
         auto done = false;
 
@@ -21609,7 +21609,7 @@ std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
 bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, int combatRound)
 {
-    bool morale_result = false;
+    auto morale_result = false;
 
     if (window && renderer)
     {
@@ -21699,7 +21699,7 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, i
 
         std::vector<int> morale = {};
 
-        int morale_score = 0;
+        auto morale_score = 0;
 
         auto size_dice = 64;
 
@@ -21974,9 +21974,9 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
         std::vector<int> enemy_combat_results = {};
         std::vector<int> morale = {};
 
-        int party_combat_score = 0;
-        int enemy_combat_score = 0;
-        int morale_score = 0;
+        auto party_combat_score = 0;
+        auto enemy_combat_score = 0;
+        auto morale_score = 0;
 
         auto size_dice = 64;
 
@@ -23537,7 +23537,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        int splash_h = splashw;
+        auto splash_h = splashw;
 
         if (splash)
         {
@@ -23748,8 +23748,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     auto scalex = (double)(mousex - startx) / boundx;
                     auto scaley = (double)(mousey - starty) / splash_h;
 
-                    int centerx = (int)(scalex * (double)splash->w);
-                    int centery = (int)(scaley * (double)splash->h);
+                    auto centerx = (int)(scalex * (double)splash->w);
+                    auto centery = (int)(scaley * (double)splash->h);
 
                     clipValue(centerx, zoomw / 2, splash->w - zoomw / 2);
                     clipValue(centery, zoomh / 2, splash->h - zoomh / 2);
@@ -25146,7 +25146,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             auto success = false;
 
-                            bool with_status = false;
+                            auto with_status = false;
 
                             if (selection.size() == 1)
                             {
@@ -25809,7 +25809,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             Engine::SET_LOCATION(party, story->Location, story->IsCity);
         }
 
-        int splash_h = 250;
+        auto splash_h = splashw;
 
         if (story->Image)
         {
@@ -25818,9 +25818,13 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         if (splash)
         {
-            if (splash->w != (textwidth - 2 * text_space))
+            if (splash->w > (textwidth - 2 * text_space))
             {
                 splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+            }
+            else
+            {
+                splash_h = splash->h;
             }
 
             splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
@@ -26098,67 +26102,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     fillRect(renderer, controls_normal[1].W + 2 * border_space, controls_normal[1].H + 2 * border_space, controls_normal[1].X - border_space, controls_normal[1].Y - border_space, intWH);
                 }
 
-                bool scrollUp = false;
-                bool scrollDown = false;
-
-                if (splash)
-                {
-                    auto mousex = 0;
-                    auto mousey = 0;
-
-                    SDL_GetMouseState(&mousex, &mousey);
-
-                    auto zoomw = textx - startx;
-                    auto zoomh = splashw;
-
-                    clipValue(zoomw, 0, splash->w);
-                    clipValue(zoomh, 0, splash->h);
-
-                    auto offsetx = 0;
-                    auto offsety = splash_h;
-
-                    if (splash->w < (textwidth - 2 * text_space))
-                    {
-                        offsetx = ((textwidth - 2 * text_space) - splash->w) / 2;
-                    }
-                    else
-                    {
-                        offsety = splash->h;
-                    }
-
-                    if (mousex >= (textx + text_space + offsetx) && mousex <= (textx + textwidth - text_space - offsetx) && mousey >= (texty + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= splash_h && ((mousey - (texty + text_space)) <= (offsety - offset)))
-                    {
-                        auto scalex = (double)(mousex - (textx + text_space)) / (textwidth - 2 * text_space);
-                        auto scaley = (double)((mousey - (texty + text_space)) + offset) / splash_h;
-
-                        int centerx = (int)(scalex * (double)splash->w);
-                        int centery = (int)(scaley * (double)splash->h);
-
-                        clipValue(centerx, zoomw / 2, splash->w - zoomw / 2);
-                        clipValue(centery, zoomh / 2, splash->h - zoomh / 2);
-
-                        if (splashTexture)
-                        {
-                            SDL_Rect src;
-
-                            src.w = zoomw;
-                            src.h = zoomh;
-                            src.x = centerx - zoomw / 2;
-                            src.y = centery - zoomh / 2;
-
-                            SDL_Rect dst;
-
-                            dst.w = zoomw;
-                            dst.h = zoomh;
-                            dst.x = startx / 2;
-                            dst.y = (starty + (text_bounds - zoomh) / 2);
-
-                            fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
-                            SDL_RenderCopy(renderer, splashTexture, &src, &dst);
-                            drawRect(renderer, dst.w + 2, dst.h + 2, dst.x - 1, dst.y - 1, intBK);
-                        }
-                    }
-                }
+                auto scrollUp = false;
+                auto scrollDown = false;
 
                 if (story->Type == Story::Type::DOOM)
                 {
@@ -26214,6 +26159,63 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
 
                 renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+
+                if (splash)
+                {
+                    auto mousex = 0;
+                    auto mousey = 0;
+
+                    SDL_GetMouseState(&mousex, &mousey);
+
+                    auto zoomw = textx - startx;
+                    auto zoomh = splashw;
+
+                    clipValue(zoomw, 0, splash->w);
+                    clipValue(zoomh, 0, splash->h);
+
+                    auto offsetx = 0;
+                    auto offsety = splash_h;
+
+                    if (splash->w < (textwidth - 2 * text_space))
+                    {
+                        offsetx = ((textwidth - 2 * text_space) - splash->w) / 2;
+
+                        offsety = splash->h;
+                    }
+
+                    if (mousex >= (textx + text_space + offsetx) && mousex <= (textx + textwidth - text_space - offsetx) && mousey >= (texty + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= offsety && ((mousey - (texty + text_space)) <= (offsety - offset)))
+                    {
+                        auto scalex = (double)(mousex - (textx + text_space)) / (textwidth - 2 * text_space);
+                        auto scaley = (double)((mousey - (texty + text_space)) + offset) / offsety;
+
+                        auto centerx = (int)(scalex * (double)splash->w);
+                        auto centery = (int)(scaley * (double)splash->h);
+
+                        clipValue(centerx, zoomw / 2, splash->w - zoomw / 2);
+                        clipValue(centery, zoomh / 2, splash->h - zoomh / 2);
+
+                        if (splashTexture)
+                        {
+                            SDL_Rect src;
+
+                            src.w = zoomw;
+                            src.h = zoomh;
+                            src.x = centerx - zoomw / 2;
+                            src.y = centery - zoomh / 2;
+
+                            SDL_Rect dst;
+
+                            dst.w = zoomw;
+                            dst.h = zoomh;
+                            dst.x = startx / 2;
+                            dst.y = (starty + (text_bounds - zoomh) / 2);
+
+                            fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
+                            SDL_RenderCopy(renderer, splashTexture, &src, &dst);
+                            drawRect(renderer, dst.w + 2, dst.h + 2, dst.x - 1, dst.y - 1, intBK);
+                        }
+                    }
+                }
 
                 if (flash_message)
                 {
@@ -26969,9 +26971,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
             auto hold = false;
 
-            bool scrollUp = false;
+            auto scrollUp = false;
 
-            bool scrollDown = false;
+            auto scrollDown = false;
 
             auto selected = false;
 
@@ -26987,8 +26989,34 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
             auto quit = false;
 
+            SDL_Surface *splash = NULL;
+
+            SDL_Texture *splashTexture = NULL;
+
+            auto splash_h = splashw;
+
+            if (Topics::ALL[topic].Image.length() > 0)
+            {
+                splash = createImage(Topics::ALL[topic].Image.c_str());
+            }
+
+            if (splash)
+            {
+                if (splash->w > (textwidth - 2 * text_space))
+                {
+                    splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+                }
+                else
+                {
+                    splash_h = splash->h;
+                }
+
+                splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
+            }
+
             while (!quit)
             {
+
                 if (Topics::ALL[topic].Title.length() > 0)
                 {
                     SDL_SetWindowTitle(window, Topics::ALL[topic].Title.c_str());
@@ -27048,6 +27076,63 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                 }
 
                 renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+
+                if (splash)
+                {
+                    auto mousex = 0;
+                    auto mousey = 0;
+
+                    SDL_GetMouseState(&mousex, &mousey);
+
+                    auto zoomw = textx - startx;
+                    auto zoomh = splashw;
+
+                    clipValue(zoomw, 0, splash->w);
+                    clipValue(zoomh, 0, splash->h);
+
+                    auto offsetx = 0;
+                    auto offsety = splash_h;
+
+                    if (splash->w < (textwidth - 2 * text_space))
+                    {
+                        offsetx = ((textwidth - 2 * text_space) - splash->w) / 2;
+
+                        offsety = splash->h;
+                    }
+
+                    if (mousex >= (textx + text_space + offsetx) && mousex <= (textx + textwidth - text_space - offsetx) && mousey >= (texty + infoh + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= offsety && ((mousey - (texty + infoh + text_space)) <= (offsety - offset)))
+                    {
+                        auto scalex = (double)(mousex - (textx + text_space)) / (textwidth - 2 * text_space);
+                        auto scaley = (double)((mousey - (texty + text_space + infoh)) + offset) / offsety;
+
+                        auto centerx = (int)(scalex * (double)splash->w);
+                        auto centery = (int)(scaley * (double)splash->h);
+
+                        clipValue(centerx, zoomw / 2, splash->w - zoomw / 2);
+                        clipValue(centery, zoomh / 2, splash->h - zoomh / 2);
+
+                        if (splashTexture)
+                        {
+                            SDL_Rect src;
+
+                            src.w = zoomw;
+                            src.h = zoomh;
+                            src.x = centerx - zoomw / 2;
+                            src.y = centery - zoomh / 2;
+
+                            SDL_Rect dst;
+
+                            dst.w = zoomw;
+                            dst.h = zoomh;
+                            dst.x = startx / 2;
+                            dst.y = (starty + (text_bounds - zoomh) / 2);
+
+                            fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
+                            SDL_RenderCopy(renderer, splashTexture, &src, &dst);
+                            drawRect(renderer, dst.w + 2, dst.h + 2, dst.x - 1, dst.y - 1, intBK);
+                        }
+                    }
+                }
 
                 Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -27129,6 +27214,41 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                                 text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                             }
 
+                            if (splash)
+                            {
+                                SDL_FreeSurface(splash);
+
+                                splash = NULL;
+                            }
+
+                            if (splashTexture)
+                            {
+                                SDL_DestroyTexture(splashTexture);
+
+                                splashTexture = NULL;
+                            }
+
+                            if (Topics::ALL[topic].Image.length() > 0)
+                            {
+                                splash = createImage(Topics::ALL[topic].Image.c_str());
+                            }
+
+                            splash_h = splashw;
+
+                            if (splash)
+                            {
+                                if (splash->w > (textwidth - 2 * text_space))
+                                {
+                                    splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+                                }
+                                else
+                                {
+                                    splash_h = splash->h;
+                                }
+
+                                splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
+                            }
+
                             compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
@@ -27160,6 +27280,41 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             else if (Topics::ALL[topic].Text.length() > 0)
                             {
                                 text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                            }
+
+                            if (splash)
+                            {
+                                SDL_FreeSurface(splash);
+
+                                splash = NULL;
+                            }
+
+                            if (splashTexture)
+                            {
+                                SDL_DestroyTexture(splashTexture);
+
+                                splashTexture = NULL;
+                            }
+
+                            if (Topics::ALL[topic].Image.length() > 0)
+                            {
+                                splash = createImage(Topics::ALL[topic].Image.c_str());
+                            }
+
+                            splash_h = splashw;
+
+                            if (splash)
+                            {
+                                if (splash->w > (textwidth - 2 * text_space))
+                                {
+                                    splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+                                }
+                                else
+                                {
+                                    splash_h = splash->h;
+                                }
+
+                                splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
                             }
 
                             compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
@@ -27195,6 +27350,41 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             else if (Topics::ALL[topic].Text.length() > 0)
                             {
                                 text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                            }
+
+                            if (splash)
+                            {
+                                SDL_FreeSurface(splash);
+
+                                splash = NULL;
+                            }
+
+                            if (splashTexture)
+                            {
+                                SDL_DestroyTexture(splashTexture);
+
+                                splashTexture = NULL;
+                            }
+
+                            if (Topics::ALL[topic].Image.length() > 0)
+                            {
+                                splash = createImage(Topics::ALL[topic].Image.c_str());
+                            }
+
+                            splash_h = splashw;
+
+                            if (splash)
+                            {
+                                if (splash->w > (textwidth - 2 * text_space))
+                                {
+                                    splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+                                }
+                                else
+                                {
+                                    splash_h = splash->h;
+                                }
+
+                                splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
                             }
 
                             compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
@@ -27268,6 +27458,20 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                         quit = true;
                     }
                 }
+            }
+
+            if (splash)
+            {
+                SDL_FreeSurface(splash);
+
+                splash = NULL;
+            }
+
+            if (splashTexture)
+            {
+                SDL_DestroyTexture(splashTexture);
+
+                splashTexture = NULL;
             }
 
             if (text)
@@ -27353,9 +27557,9 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
             renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
 
-            bool scrollUp = false;
-            bool scrollDown = false;
-            bool hold = false;
+            auto scrollUp = false;
+            auto scrollDown = false;
+            auto hold = false;
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -27486,9 +27690,9 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
             renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
 
-            bool scrollUp = false;
-            bool scrollDown = false;
-            bool hold = false;
+            auto scrollUp = false;
+            auto scrollDown = false;
+            auto hold = false;
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
