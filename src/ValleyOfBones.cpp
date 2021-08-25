@@ -26044,7 +26044,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     clipValue(zoomw, 0, splash->w);
                     clipValue(zoomh, 0, splash->h);
 
-                    if (mousex >= (textx + text_space) && mousex <= (textx + textwidth - text_space) && mousey >= (texty + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= splash_h)
+                    if (mousex >= (textx + text_space) && mousex <= (textx + textwidth - text_space) && mousey >= (texty + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= splash_h && ((mousey - (texty + text_space)) <= (splash_h - offset)))
                     {
                         auto scalex = (double)(mousex - (textx + text_space)) / (textwidth - 2 * text_space);
                         auto scaley = (double)((mousey - (texty + text_space)) + offset) / splash_h;
