@@ -80,9 +80,32 @@ namespace Topics
                 {
                     std::string title = std::string(data["topics"][i]["title"]);
 
-                    std::string text = std::string(data["topics"][i]["text"]);
+                    std::string text = "";
 
-                    Topics::ALL.push_back(Topics::Base(title.c_str(), text.c_str()));
+                    std::string image = "";
+
+                    if (!data["topics"][i]["text"].is_null())
+                    {
+                        text = std::string(data["topics"][i]["text"]);
+                    }
+
+                    if (!data["topics"][i]["image"].is_null())
+                    {
+                        image = data["topics"][i]["image"];
+                    }
+
+                    if (text.length() > 0 && image.length() > 0)
+                    {
+                        Topics::ALL.push_back(Topics::Base(title.c_str(), text.c_str(), image.c_str()));
+                    }
+                    else if (text.length() > 0)
+                    {
+                        Topics::ALL.push_back(Topics::Base(title.c_str(), text.c_str()));
+                    }
+                    else if (image.length() > 0)
+                    {
+                        Topics::ALL.push_back(Topics::Base(title.c_str(), NULL, image.c_str()));
+                    }
                 }
             }
         }

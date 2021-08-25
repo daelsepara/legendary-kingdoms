@@ -49,7 +49,9 @@ namespace fs = std::filesystem;
 // create textures, images
 SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_size, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x);
 SDL_Surface *createImage(const char *image);
+SDL_Surface *createImage(const char *image, int w, int h);
 SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Color textColor, int wrap, int style);
+SDL_Surface *createTextAndImage(const char *text, const char *image, const char *ttf, int font_size, SDL_Color textColor, Uint32 bg, int wrap, int style);
 
 // sdl helper functions
 void clipValue(int &val, int min, int max);
@@ -62,6 +64,7 @@ void putText(SDL_Renderer *renderer, const char *text, TTF_Font *font, int space
 void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts);
 void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts, bool hide_scroll);
 void renderImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y);
+void renderImage(SDL_Renderer *renderer, SDL_Surface *text, int x, int y, int bounds, int offset);
 void renderText(SDL_Renderer *renderer, SDL_Surface *text, Uint32 bg, int x, int y, int bounds, int offset);
 void renderTextButtons(SDL_Renderer *renderer, std::vector<TextButton> controls, const char *ttf, int selected, SDL_Color fg, Uint32 bg, Uint32 bgSelected, int fontsize, int style);
 void renderTextButtons(SDL_Renderer *renderer, std::vector<TextButton> controls, const char *ttf, int selected, SDL_Color fg, Uint32 bg, Uint32 bgSelected, int fontsize, int offsetx, int scrolly, bool hide_scroll, int style);
@@ -210,6 +213,57 @@ SDL_Surface *createImage(const char *image)
     return surface;
 }
 
+SDL_Surface *createImage(const char *image, int w, int h)
+{
+    SDL_Surface *surface = NULL;
+
+    // Load splash image
+    auto image_surface = IMG_Load(image);
+
+    if (image_surface == NULL)
+    {
+        std::cerr << "Unable to load image " << image << "! SDL Error: " << SDL_GetError() << std::endl;
+    }
+    else
+    {
+        surface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
+
+        SDL_Rect dst;
+
+        dst.w = w;
+        dst.h = h;
+        dst.x = 0;
+        dst.y = 0;
+
+        SDL_Rect src;
+
+        src.w = image_surface->w;
+        src.h = image_surface->h;
+        src.x = 0;
+        src.y = 0;
+
+        auto converted_surface = SDL_ConvertSurface(image_surface, surface->format, 0);
+
+        SDL_BlitScaled(converted_surface, &src, surface, &dst);
+
+        if (converted_surface)
+        {
+            SDL_FreeSurface(converted_surface);
+
+            converted_surface = NULL;
+        }
+    }
+
+    if (image_surface)
+    {
+        SDL_FreeSurface(image_surface);
+
+        image_surface = NULL;
+    }
+
+    return surface;
+}
+
 void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, const char *title, const char *icon)
 {
     // The window we'll be rendering to
@@ -235,8 +289,6 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
 
         // Create window and renderer
         SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, (SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC), window, renderer);
-
-        SDL_SetRenderDrawBlendMode(*renderer, SDL_BLENDMODE_NONE);
 
         if (window == NULL || renderer == NULL)
         {
@@ -464,6 +516,41 @@ void renderText(SDL_Renderer *renderer, SDL_Surface *text, Uint32 bg, int x, int
     }
 }
 
+void renderImage(SDL_Renderer *renderer, SDL_Surface *text, int x, int y, int bounds, int offset)
+{
+    if (renderer)
+    {
+        if (text && renderer)
+        {
+            SDL_Rect dst;
+            SDL_Rect src;
+
+            // select portion to render
+            src.w = text->w;
+            src.h = text->h < bounds ? text->h : bounds;
+            src.y = offset;
+            src.x = 0;
+
+            // specify location within the window
+            dst.w = text->w;
+            dst.h = text->h < bounds ? text->h : bounds;
+            dst.x = x;
+            dst.y = y;
+
+            auto texture = SDL_CreateTextureFromSurface(renderer, text);
+
+            if (texture)
+            {
+                SDL_RenderCopy(renderer, texture, &src, &dst);
+
+                SDL_DestroyTexture(texture);
+
+                texture = NULL;
+            }
+        }
+    }
+}
+
 // create text image with line wrap limit
 SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Color textColor, int wrap, int style)
 {
@@ -493,6 +580,76 @@ SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Co
     }
 
     TTF_Quit();
+
+    return surface;
+}
+
+// create text image with line wrap limit
+SDL_Surface *createTextAndImage(const char *text, const char *image, const char *ttf, int font_size, SDL_Color textColor, Uint32 bg, int wrap, int style)
+{
+    SDL_Surface *surface = NULL;
+    SDL_Surface *converted_surface = NULL;
+
+    auto image_surface = createImage(image);
+    auto text_surface = createText(text, ttf, font_size, textColor, wrap, style);
+
+    if (image_surface && text_surface)
+    {
+        auto text_space = 8;
+
+        auto image_scale = (double)((double)wrap / image_surface->w);
+
+        auto image_h = (int)(image_surface->h * image_scale);
+
+        surface = SDL_CreateRGBSurface(0, text_surface->w, image_h + text_space + text_surface->h, 32, 0, 0, 0, 0);
+
+        SDL_Rect dst;
+
+        dst.w = surface->w;
+        dst.h = surface->h;
+        dst.x = 0;
+        dst.y = 0;
+
+        SDL_Rect text_dst;
+
+        text_dst.w = surface->w;
+        text_dst.h = surface->h;
+        text_dst.x = 0;
+        text_dst.y = image_h + text_space;
+
+        SDL_FillRect(surface, &dst, bg);
+
+        dst.h = image_h;
+
+        dst.w = surface->w;
+
+        converted_surface = SDL_ConvertSurface(image_surface, surface->format, 0);
+
+        SDL_BlitScaled(converted_surface, NULL, surface, &dst);
+
+        SDL_BlitSurface(text_surface, NULL, surface, &text_dst);
+    }
+
+    if (image_surface)
+    {
+        SDL_FreeSurface(image_surface);
+
+        image_surface = NULL;
+    }
+
+    if (text_surface)
+    {
+        SDL_FreeSurface(text_surface);
+
+        text_surface = NULL;
+    }
+
+    if (converted_surface)
+    {
+        SDL_FreeSurface(converted_surface);
+
+        converted_surface = NULL;
+    }
 
     return surface;
 }
@@ -953,7 +1110,7 @@ std::vector<TextButton> createFixedTextButtons(const char **choices, int num, in
 
 SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_size, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x)
 {
-    auto button = SDL_CreateRGBSurface(0, w, h, arrow_size, 0, 0, 0, 0);
+    auto button = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
     auto text_surface = createText(text, font, font_size, color, w, TTF_STYLE_NORMAL);
 
     if (button && text_surface)
@@ -23476,11 +23633,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
             }
 
-            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
             fillRect(renderer, listwidth, text_bounds, textx, texty, BE_80);
-
-            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
@@ -25592,15 +25745,21 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         if (splash)
         {
-            if (splash->w != splashw)
+            if (splash->w != (textwidth - 2 * text_space))
             {
-                splash_h = (int)((double)splashw / splash->w * splash->h);
+                splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
             }
 
             splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
         }
 
-        if (story->Text)
+        if (story->Image && story->Text)
+        {
+            auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * space;
+
+            text = createTextAndImage(story->Text, story->Image, FONT_GARAMOND, font_size, clrDB, intBE, listwidth, TTF_STYLE_NORMAL);
+        }
+        else if (story->Text)
         {
             auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * space;
 
@@ -25735,10 +25894,12 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 // Fill the surface with background
                 stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
 
+                /*
                 if (splash)
                 {
                     splash_h = fitImage(renderer, splash, startx, texty, splashw, text_bounds);
                 }
+                */
 
                 if (!splash)
                 {
@@ -25765,46 +25926,43 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                 }
 
-                if (!splash || (splash && splash_h < (text_bounds - 2 * boxh - infoh)))
+                putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                if (Engine::COUNT(party) > 0)
                 {
-                    putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                    std::string party_string = "";
 
-                    if (Engine::COUNT(party) > 0)
+                    auto count = 0;
+
+                    for (auto i = 0; i < party.Members.size(); i++)
                     {
-                        std::string party_string = "";
-
-                        auto count = 0;
-
-                        for (auto i = 0; i < party.Members.size(); i++)
+                        if (count > 0)
                         {
-                            if (count > 0)
-                            {
-                                party_string += "\n";
-                            }
-
-                            party_string += party.Members[i].Name;
-
-                            if (Engine::IS_DEAD(party.Members[i]))
-                            {
-                                party_string += " (D)";
-                            }
-                            else if (Engine::IS_CURSED(party.Members[i]))
-                            {
-                                party_string += " (C)";
-                            }
-
-                            count++;
+                            party_string += "\n";
                         }
 
-                        putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                        party_string += party.Members[i].Name;
+
+                        if (Engine::IS_DEAD(party.Members[i]))
+                        {
+                            party_string += " (D)";
+                        }
+                        else if (Engine::IS_CURSED(party.Members[i]))
+                        {
+                            party_string += " (C)";
+                        }
+
+                        count++;
                     }
-                    else
-                    {
-                        fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
-                    }
+
+                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                }
+                else
+                {
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
                 }
 
-                if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && (Engine::COUNT_TEAMS(party) > 0 || story->Team != Team::Type::NONE))
+                if (Engine::COUNT_TEAMS(party) > 0 || story->Team != Team::Type::NONE)
                 {
                     std::vector<Team::Type> teams = {};
 
@@ -25849,23 +26007,23 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space, intBE);
                     }
                 }
-                else if (!splash || (splash && splash_h < (text_bounds - 3 * boxh - 2 * infoh - box_space)))
+                else
                 {
                     putHeader(renderer, "Money", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
 
                     putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
                 }
 
-                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
                 fillRect(renderer, textwidth, text_bounds, textx, texty, BE_80);
 
-                if (story->Text && text)
+                if (story->Text && text && story->Image && splash)
+                {
+                    renderImage(renderer, text, textx + space, texty + space, text_bounds - 2 * space, offset);
+                }
+                else if (story->Text && text)
                 {
                     renderText(renderer, text, 0, textx + space, texty + space, text_bounds - 2 * space, offset);
                 }
-
-                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
                 if (!compact)
                 {
@@ -25884,23 +26042,16 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                     SDL_GetMouseState(&mousex, &mousey);
 
-                    auto zoomw = (int)(0.80 * (double)textwidth);
-                    auto zoomh = (int)(0.80 * (double)text_bounds);
+                    auto zoomw = textx - startx;
+                    auto zoomh = splashw;
 
                     clipValue(zoomw, 0, splash->w);
                     clipValue(zoomh, 0, splash->h);
 
-                    auto boundx = splashw;
-
-                    if (splash_h == text_bounds)
+                    if (mousex >= (textx + text_space) && mousex <= (textx + textwidth - text_space) && mousey >= (texty + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= splash_h)
                     {
-                        boundx = (int)((double)splash_h / splash->h * (double)splash->w);
-                    }
-
-                    if (mousex >= startx && mousex <= (startx + boundx) && mousey >= starty && mousey <= (starty + splash_h))
-                    {
-                        auto scalex = (double)(mousex - startx) / boundx;
-                        auto scaley = (double)(mousey - starty) / splash_h;
+                        auto scalex = (double)(mousex - (textx + text_space)) / (textwidth - 2 * text_space);
+                        auto scaley = (double)((mousey - (texty + text_space)) + offset) / splash_h;
 
                         int centerx = (int)(scalex * (double)splash->w);
                         int centery = (int)(scaley * (double)splash->h);
@@ -25921,8 +26072,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             dst.w = zoomw;
                             dst.h = zoomh;
-                            dst.x = (textx + (textwidth - zoomw) / 2);
-                            dst.y = (texty + (text_bounds - zoomh) / 2);
+                            dst.x = startx / 2;
+                            dst.y = (starty + (text_bounds - zoomh) / 2);
 
                             fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
                             SDL_RenderCopy(renderer, splashTexture, &src, &dst);
@@ -26495,13 +26646,9 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                                         stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
 
-                                        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
                                         fillRect(renderer, ((int)((1.0 - 2.0 * Margin) * SCREEN_WIDTH)), bye->h + 2 * text_space, startx, ((buttony - button_space) - (bye->h + 2 * text_space)) / 2, BE_80);
 
                                         renderText(renderer, bye, 0, (SCREEN_WIDTH - bye->w) / 2, ((buttony - button_space) - bye->h) / 2, (buttony - button_space), 0);
-
-                                        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
                                         renderImage(renderer, forward, ((int)(SCREEN_WIDTH * (1.0 - Margin) - buttonw - button_space)), buttony);
 
