@@ -25892,14 +25892,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 fillWindow(renderer, intWH);
 
                 // Fill the surface with background
-                stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
-
-                /*
-                if (splash)
+                if (background)
                 {
-                    splash_h = fitImage(renderer, splash, startx, texty, splashw, text_bounds);
+                    stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
                 }
-                */
 
                 if (!splash)
                 {
@@ -26644,7 +26640,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                     {
                                         fillWindow(renderer, intWH);
 
-                                        stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
+                                        if (background)
+                                        {
+                                            stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
+                                        }
 
                                         fillRect(renderer, ((int)((1.0 - 2.0 * Margin) * SCREEN_WIDTH)), bye->h + 2 * text_space, startx, ((buttony - button_space) - (bye->h + 2 * text_space)) / 2, BE_80);
 
