@@ -1,6 +1,34 @@
 {
     "topics": [
         {
+            "title": "Valley of the Bones",
+            "image": "images/book1/front-cover.png"
+        },
+        {
+            "title": "Copyright",
+            "image": "images/book1/copyright-page.png"
+        },
+        {
+            "title": "Adventure Book Series",
+            "image": "images/book1/adventure-book-series.png"
+        },
+        {
+            "title": "World Map",
+            "image": "images/book1/world-map.png"
+        },
+        {
+            "title": "Local Map",
+            "image": "images/book1/local-map.png"
+        },
+        {
+            "title": "Adventure Sheet (1)",
+            "image": "images/book1/adventure-sheet-1.png"
+        },
+        {
+            "title": "Adventure Sheet (2)",
+            "image": "images/book1/adventure-sheet-2.png"
+        },
+        {
             "title": "THE ADVENTURE BEGINS...",
             "text": "Welcome to Legendary Kingdoms, a fantasy adventure gamebook where you take a party of adventurers into a dangerous and adventure-filled land. Early in your career you will simply attempt to survive in a world of peril, but as you become more famous and powerful your actions will determine the fates of empires.\n\nLegendary Kingdoms is a series of books, with each book covering a different area of the world. You keep the same party of adventurers throughout, improving in skill and power, discovering new lands and curious civilisations. At any time you can leave one book and go to another by simply travelling off the edge of the map (or flying, sailing magically transporting yourself, or any number of other astonishing ways). Your party members all have their own stories to tell, including romances, settling old scores and quests for enlightenment. You can play these books any way you choose; as simple travellers, exploring strange ruins and wonderful cities, as revolutionaries, determined to overthrow tyranny, or as crusaders against a dark and lurking threat. Before beginning your game you must select a party of adventurers and learn a few rules about skill checks and combat. After that, turn to reference [1] to begin you adventures. Good luck, and may St. Elias watch over you.",
             "image": "images/book1/valley-of-bones-logo-bw-alt.png"
@@ -306,6 +334,10 @@
         {
             "title": "Sketch: Characters II",
             "image": "images/book1/sketch-characters-2.png"
+        },
+        {
+            "title": "Back Cover",
+            "image": "images/book1/back-cover.png"
         }
     ]
 }

@@ -25970,29 +25970,26 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
                 }
 
-                if (!splash)
+                std::string title_string = std::string(Book::Title[book]) + "\n";
+
+                if (story->ID != -1)
                 {
-                    std::string title_string = std::string(Book::Title[book]) + "\n";
+                    auto storyID = story->ID;
 
-                    if (story->ID != -1)
+                    if (storyID < 0 && story->DisplayID >= 0)
                     {
-                        auto storyID = story->ID;
-
-                        if (storyID < 0 && story->DisplayID >= 0)
-                        {
-                            storyID = story->DisplayID;
-                        }
-
-                        title_string += std::string(3 - std::to_string(std::abs(storyID)).length(), '0') + std::to_string(std::abs(storyID));
-
-                        putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                        storyID = story->DisplayID;
                     }
-                    else
-                    {
-                        title_string += "Not Implemented";
 
-                        putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
-                    }
+                    title_string += std::string(3 - std::to_string(std::abs(storyID)).length(), '0') + std::to_string(std::abs(storyID));
+
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                }
+                else
+                {
+                    title_string += "Not Implemented";
+
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
 
                 putHeader(renderer, "Party", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
