@@ -26945,7 +26945,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
             auto topic_speed = 1;
             auto topic_limit = (text_bounds - 2 * text_space - infoh) / (96);
             auto topic_last = topic_offset + topic_limit;
-            auto splash_h = -1;
 
             if (topic_last > Topics::ALL.size())
             {
@@ -27120,8 +27119,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                             offset = 0;
 
-                            splash_h = -1;
-
                             if (Topics::ALL[topic].Text.length() > 0 && Topics::ALL[topic].Image.length() > 0)
                             {
                                 text = createTextAndImage(Topics::ALL[topic].Text.c_str(), Topics::ALL[topic].Image.c_str(), FONT_GARAMOND, font_size, clrDB, intBE, listwidth, TTF_STYLE_NORMAL);
@@ -27154,8 +27151,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             }
 
                             offset = 0;
-
-                            splash_h = -1;
 
                             if (Topics::ALL[topic].Text.length() > 0 && Topics::ALL[topic].Image.length() > 0)
                             {
@@ -27191,8 +27186,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             }
 
                             offset = 0;
-
-                            splash_h = -1;
 
                             if (Topics::ALL[topic].Text.length() > 0 && Topics::ALL[topic].Image.length() > 0)
                             {
