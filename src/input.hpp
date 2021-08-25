@@ -209,7 +209,7 @@ namespace Input
             {
                 hold = true;
 
-                if (current >= 0 && current < choices.size() && (choices[current].Type == Control::Type::SCROLL_UP || choices[current].Type == Control::Type::SCROLL_DOWN))
+                if (current >= 0 && current < choices.size() && (choices[current].Type == Control::Type::SCROLL_UP || choices[current].Type == Control::Type::SCROLL_DOWN || choices[current].Type == Control::Type::TOPICS_UP || choices[current].Type == Control::Type::TOPICS_DOWN))
                 {
                     selected = true;
 
@@ -278,7 +278,7 @@ namespace Input
             {
                 hold = true;
 
-                if (current >= 0 && current < choices.size() && (choices[current].Type == Control::Type::SCROLL_UP || choices[current].Type == Control::Type::SCROLL_DOWN))
+                if (current >= 0 && current < choices.size() && (choices[current].Type == Control::Type::SCROLL_UP || choices[current].Type == Control::Type::SCROLL_DOWN || choices[current].Type == Control::Type::TOPICS_UP || choices[current].Type == Control::Type::TOPICS_DOWN))
                 {
                     selected = true;
 
@@ -318,7 +318,7 @@ namespace Input
             }
             else if (hold)
             {
-                if (current >= 0 && current < choices.size() && (choices[current].Type == Control::Type::SCROLL_UP || choices[current].Type == Control::Type::SCROLL_DOWN))
+                if (current >= 0 && current < choices.size() && (choices[current].Type == Control::Type::SCROLL_UP || choices[current].Type == Control::Type::SCROLL_DOWN || choices[current].Type == Control::Type::TOPICS_UP || choices[current].Type == Control::Type::TOPICS_DOWN))
                 {
                     SDL_Delay(50);
 

@@ -245,6 +245,35 @@ namespace Engine
         }
     }
 
+    int MAX(Character::Base &character, Attribute::Type attribute)
+    {
+        auto max = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Class != Equipment::Class::WEAPON && (character.Equipment[i].Attribute == attribute || character.Equipment[i].Attribute == Attribute::Type::ALL_SKILLS || (character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2 && (attribute == Attribute::Type::LORE || attribute == Attribute::Type::FIGHTING))))
+            {
+                if ((character.Equipment[i].Modifier > max) || (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2 && max < 3) || (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2 && max < 2))
+                {
+                    if (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                    {
+                        max = 3;
+                    }
+                    else if (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                    {
+                        max = 2;
+                    }
+                    else
+                    {
+                        max = character.Equipment[i].Modifier;
+                    }
+                }
+            }
+        }
+
+        return max;
+    }
+
     int MAX(Character::Base &character, Equipment::Class type, Attribute::Type attribute)
     {
         auto max = 0;
@@ -281,6 +310,32 @@ namespace Engine
         for (auto i = 0; i < character.Equipment.size(); i++)
         {
             if (character.Equipment[i].Class == type && (character.Equipment[i].Attribute == attribute || (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2) || (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)))
+            {
+                if (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                {
+                    modifier += 3;
+                }
+                else if (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
+                {
+                    modifier += 2;
+                }
+                else
+                {
+                    modifier += character.Equipment[i].Modifier;
+                }
+            }
+        }
+
+        return modifier;
+    }
+
+    int MODIFIER(Character::Base &character, Attribute::Type attribute)
+    {
+        auto modifier = 0;
+
+        for (auto i = 0; i < character.Equipment.size(); i++)
+        {
+            if (character.Equipment[i].Attribute == attribute || (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2) || (attribute == Attribute::Type::LORE && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2))
             {
                 if (attribute == Attribute::Type::FIGHTING && character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
                 {
@@ -345,32 +400,21 @@ namespace Engine
         return score;
     }
 
-    int SCORE(Character::Base &character, Attribute::Type type)
+    int SCORE(Character::Base &character, Attribute::Type attribute)
     {
-        auto score = Engine::RAW_SCORE(character, type, false);
+        auto score = Engine::RAW_SCORE(character, attribute, false);
 
-        if (type == Attribute::Type::FIGHTING && Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
+        if (attribute == Attribute::Type::FIGHTING && Engine::HAS_FOLLOWER(character, Follower::Type::MORDAIN_SKELETONS))
         {
             score += 2;
         }
 
         if (character.Health > 0)
         {
-            score += Engine::MODIFIER(character, Equipment::Class::NORMAL, type);
+            score += Engine::MAX(character, attribute);
         }
 
-        if (type != Attribute::Type::HEALTH && type != Attribute::Type::ARMOUR)
-        {
-            score += Engine::MAX(character, Equipment::Class::ROBE, type);
-            score += Engine::MAX(character, Equipment::Class::SHIELD, type);
-
-            if (type == Attribute::Type::LORE)
-            {
-                score += Engine::MAX(character, Equipment::Class::WEAPON, type);
-            }
-        }
-
-        if (type != Attribute::Type::FIGHTING)
+        if (attribute != Attribute::Type::FIGHTING)
         {
             if (score < 0)
             {

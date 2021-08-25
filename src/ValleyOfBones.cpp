@@ -26690,7 +26690,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
     {
         if (Topics::ALL.size() <= 0)
         {
-            Topics::LoadTopics();
+            Topics::LoadTopics(bookID);
         }
 
         if (Topics::ALL.size() > 0)

@@ -10,6 +10,8 @@
 // JSON library
 #include "nlohmann/json.hpp"
 
+#include "book.hpp"
+
 namespace Topics
 {
     class Base
@@ -51,11 +53,18 @@ namespace Topics
 
     std::vector<Topics::Base> ALL = {};
 
-    void LoadTopics()
+    void LoadTopics(Book::Type book)
     {
         Topics::ALL.clear();
 
-        std::ifstream ifs("topics-book1.json");
+        std::string topic_file = "";
+
+        if (book == Book::Type::BOOK1)
+        {
+            topic_file = "topics/book1.json";
+        }
+
+        std::ifstream ifs(topic_file);
 
         if (ifs.good())
         {
