@@ -226,7 +226,14 @@ SDL_Surface *createImage(const char *image, int w, int h)
     }
     else
     {
-        surface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
+        Uint32 amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+        amask = 0x000000ff;
+#else
+        amask = 0xff000000;
+#endif
+        surface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, amask);
 
         SDL_Rect dst;
 
@@ -289,6 +296,11 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
 
         // Create window and renderer
         SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, (SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC), window, renderer);
+
+        if (renderer)
+        {
+            SDL_SetRenderDrawBlendMode(*renderer, SDL_BLENDMODE_NONE);
+        }
 
         if (window == NULL || renderer == NULL)
         {
@@ -601,7 +613,15 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
 
         auto image_h = (int)(image_surface->h * image_scale);
 
-        surface = SDL_CreateRGBSurface(0, text_surface->w, image_h + text_space + text_surface->h, 32, 0, 0, 0, 0);
+        Uint32 amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+        amask = 0x000000ff;
+#else
+        amask = 0xff000000;
+#endif
+
+        surface = SDL_CreateRGBSurface(0, text_surface->w, image_h + text_space + text_surface->h, 32, 0, 0, 0, amask);
 
         SDL_Rect dst;
 
@@ -617,7 +637,7 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
         text_dst.x = 0;
         text_dst.y = image_h + text_space;
 
-        SDL_FillRect(surface, &dst, bg);
+        SDL_FillRect(surface, NULL, bg);
 
         dst.h = image_h;
 
@@ -1110,7 +1130,15 @@ std::vector<TextButton> createFixedTextButtons(const char **choices, int num, in
 
 SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_size, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x)
 {
-    auto button = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
+    Uint32 amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    amask = 0x000000ff;
+#else
+    amask = 0xff000000;
+#endif
+
+    auto button = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, amask);
     auto text_surface = createText(text, font, font_size, color, w, TTF_STYLE_NORMAL);
 
     if (button && text_surface)
@@ -16810,7 +16838,11 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 if (selection >= 0 && selection < character.Equipment.size())
                 {
-                    if (character.Type != Character::Type::SKULLCRACKER)
+                    if (InCombat)
+                    {
+                        displayMessage("You cannot drop items while in combat!", intRD);
+                    }
+                    else if (character.Type != Character::Type::SKULLCRACKER)
                     {
                         auto item = character.Equipment[selection];
 
@@ -16856,7 +16888,11 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                 {
                     if (Engine::COUNT(party) > 1)
                     {
-                        if (character.Team != Team::Type::SOLO)
+                        if (InCombat)
+                        {
+                            displayMessage("You cannot transfer items while in combat!", intRD);
+                        }
+                        else if (character.Team != Team::Type::SOLO)
                         {
                             auto item = character.Equipment[selection];
 
@@ -22422,6 +22458,14 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto controls_battlefield = std::vector<Button>();
 
+        Uint32 amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+        amask = 0x000000ff;
+#else
+        amask = 0xff000000;
+#endif
+
         for (auto y = 0; y < 2; y++)
         {
             for (auto x = 0; x < 3; x++)
@@ -22435,7 +22479,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                 auto button = Button();
 
-                button.Surface = SDL_CreateRGBSurface(0, boxw - 2 * 8, boxh - 2 * 8, 32, 0, 0, 0, 0);
+                button.Surface = SDL_CreateRGBSurface(0, boxw - 2 * 8, boxh - 2 * 8, 32, 0, 0, 0, amask);
 
                 if (y > 0)
                 {
@@ -22811,6 +22855,14 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto controls_battlefield = std::vector<Button>();
 
+        Uint32 amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+        amask = 0x000000ff;
+#else
+        amask = 0xff000000;
+#endif
+
         for (auto y = 0; y < 2; y++)
         {
             for (auto x = 0; x < 3; x++)
@@ -22824,7 +22876,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                 auto button = Button();
 
-                button.Surface = SDL_CreateRGBSurface(0, boxw - 2 * 8, boxh - 2 * 8, 32, 0, 0, 0, 0);
+                button.Surface = SDL_CreateRGBSurface(0, boxw - 2 * 8, boxh - 2 * 8, 32, 0, 0, 0, amask);
 
                 if (y > 0)
                 {
@@ -27173,6 +27225,8 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID)
 {
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+
     auto font_size = 20;
 
     auto *introduction = "Prepare for adventure in this huge open-world gamebook series. Legendary Kingdoms is a gamebook campaign, where you lead a party of adventurers in a world that adapts to your actions. Venture into ancient ruins, pick a side and lead an army into battle, sail the high seas on your own warship, defeat tyrants or bring them to power. Along the way your party will increase in skill, wealth and renown, allowing them to take on more challenging adventures. Reach the heights of power and you may uncover a dreadful threat to the world itself and go on a mission that spans all six gamebooks in the series.\n\nBook 1: The Valley of Bones takes place in a desert wilderness where tyrant kings oppress the teeming masses in a land strewn with ancient artefacts and ruins. But their grip on power is fragile... and the citizenry are ripe for revolution. It is a land of blood and sand, where civilisation is rare and terrible beasts roam freely.";
