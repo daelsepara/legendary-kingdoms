@@ -61,6 +61,7 @@ void fillRect(SDL_Renderer *renderer, int w, int h, int x, int y, int color);
 void fillWindow(SDL_Renderer *renderer, Uint32 color);
 void putHeader(SDL_Renderer *renderer, const char *text, TTF_Font *font, int space, SDL_Color fg, Uint32 bg, int style, int w, int h, int x, int y);
 void putText(SDL_Renderer *renderer, const char *text, TTF_Font *font, int space, SDL_Color fg, Uint32 bg, int style, int w, int h, int x, int y);
+bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party, int recruitmentPrice);
 void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts);
 void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts, bool hide_scroll);
 void renderImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y);
@@ -2672,6 +2673,347 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
         TTF_CloseFont(font_dark11);
 
         font_dark11 = NULL;
+    }
+
+    if (font_garamond)
+    {
+        TTF_CloseFont(font_garamond);
+
+        font_garamond = NULL;
+    }
+
+    TTF_Quit();
+
+    return false;
+}
+
+bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party, int recruitmentPrice)
+{
+    SDL_Surface *adventurer = NULL;
+    SDL_Surface *text = NULL;
+
+    auto *title = "Legendary Kingdoms: Recruit adventuerer for your party";
+
+    auto font_size = 20;
+    auto garamond_size = 24;
+
+    TTF_Init();
+
+    auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
+    auto character_box = (int)(text_bounds * 2 / 3);
+
+    auto flash_message = false;
+
+    auto flash_color = intRD;
+
+    std::string message = "";
+
+    Uint32 start_ticks = 0;
+
+    Uint32 duration = 3000;
+
+    // Lambda functions for displaying flash messages
+    auto displayMessage = [&](std::string msg, Uint32 color)
+    {
+        flash_message = true;
+
+        message = msg;
+
+        flash_color = color;
+
+        start_ticks = SDL_GetTicks();
+    };
+
+    // Render window
+    if (window && renderer)
+    {
+        SDL_SetWindowTitle(window, title);
+
+        std::string recruitment_string = std::string("RECRUIT");
+
+        if (recruitmentPrice >= 0)
+        {
+            recruitment_string += "(";
+
+            if (recruitmentPrice > 0)
+            {
+                recruitment_string += std::to_string(recruitmentPrice);
+            }
+            else
+            {
+                recruitment_string += "Free";
+            }
+
+            recruitment_string += ")";
+        }
+
+        const char *choices[4] = {"PREVIOUS", "NEXT", recruitment_string.c_str(), "BACK"};
+
+        auto current = -1;
+
+        auto selected = false;
+
+        auto main_buttonh = 48;
+
+        auto infoh = 48;
+
+        auto controls = createHTextButtons(choices, 4, main_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - main_buttonh));
+        controls[0].Type = Control::Type::PREVIOUS;
+        controls[1].Type = Control::Type::NEXT;
+        controls[2].Type = Control::Type::RECRUIT;
+        controls[3].Type = Control::Type::BACK;
+
+        auto done = false;
+
+        auto text_space = 8;
+
+        std::vector<Character::Base> characters = {};
+
+        if (bookID == Book::Type::BOOK1)
+        {
+            for (auto i = 0; i < Character::BOOK1.size(); i++)
+            {
+                if ((Engine::FIND_LIST(party.Dead, Character::BOOK1[i].Type) < 0) && !Engine::IN_PARTY(party, Character::BOOK1[i].Type))
+                {
+                    characters.push_back(Character::BOOK1[i]);
+                }
+            }
+        }
+
+        auto character = 0;
+
+        if (character >= 0 && character < characters.size())
+        {
+            if (characters[character].Image != NULL)
+            {
+                if (adventurer != NULL)
+                {
+                    SDL_FreeSurface(adventurer);
+
+                    adventurer = NULL;
+                }
+
+                adventurer = createImage(characters[character].Image);
+            }
+
+            if (text != NULL)
+            {
+                SDL_FreeSurface(text);
+
+                text = NULL;
+            }
+
+            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+        }
+
+        if (characters.size() > 0)
+        {
+            while (!done)
+            {
+                // Fill the surface with background
+                fillWindow(renderer, intWH);
+
+                auto adventurerh = splashw;
+
+                if (adventurer != NULL)
+                {
+                    adventurerh = fitImage(renderer, adventurer, startx, starty, splashw, text_bounds);
+                }
+
+                fillRect(renderer, textwidth, character_box, textx, texty, intBE);
+
+                if (text != NULL)
+                {
+                    renderText(renderer, text, intBE, textx + text_space, texty + text_space, character_box, 0);
+                }
+
+                if (character >= 0 && character < characters.size() && adventurer)
+                {
+                    putText(renderer, characters[character].Name.c_str(), font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+                }
+
+                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+
+                auto scrollUp = false;
+                auto scrollDown = false;
+                auto hold = false;
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
+                Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+                if (selected && current >= 0 && current < controls.size())
+                {
+                    if (controls[current].Type == Control::Type::PREVIOUS && !hold)
+                    {
+                        if (character > 0)
+                        {
+                            character--;
+                        }
+
+                        if (character >= 0 && character < characters.size())
+                        {
+                            if (characters[character].Image != NULL)
+                            {
+                                if (adventurer != NULL)
+                                {
+                                    SDL_FreeSurface(adventurer);
+
+                                    adventurer = NULL;
+                                }
+
+                                adventurer = createImage(characters[character].Image);
+                            }
+
+                            if (text != NULL)
+                            {
+                                SDL_FreeSurface(text);
+
+                                text = NULL;
+                            }
+
+                            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::NEXT && !hold)
+                    {
+                        if (character < characters.size() - 1)
+                        {
+                            character++;
+                        }
+
+                        if (character >= 0 && character < characters.size())
+                        {
+                            if (characters[character].Image != NULL)
+                            {
+                                if (adventurer != NULL)
+                                {
+                                    SDL_FreeSurface(adventurer);
+
+                                    adventurer = NULL;
+                                }
+
+                                adventurer = createImage(characters[character].Image);
+                            }
+
+                            if (text != NULL)
+                            {
+                                SDL_FreeSurface(text);
+
+                                text = NULL;
+                            }
+
+                            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::RECRUIT && !hold)
+                    {
+                        if (recruitmentPrice >= 0 && party.Money >= recruitmentPrice && party.Members.size() < party.Limit)
+                        {
+                            if (character >= 0 && character < characters.size())
+                            {
+                                Engine::GAIN_MONEY(party, -recruitmentPrice);
+
+                                auto recruit = characters[character];
+
+                                if (recruit.SpellCaster)
+                                {
+                                    // TODO: Update this for other books
+                                    if (bookID == Book::Type::BOOK1)
+                                    {
+                                        auto spells_selected = 0;
+
+                                        auto spell_selection = std::vector<int>();
+
+                                        auto spellBook = Spells::BOOK1_SPELLS;
+
+                                        while (spells_selected < 3)
+                                        {
+                                            spell_selection = selectSpell(window, renderer, recruit, spellBook, 3, Spells::Select::SPELLBOOK);
+
+                                            spells_selected = spell_selection.size();
+                                        }
+
+                                        for (auto j = 0; j < spell_selection.size(); j++)
+                                        {
+                                            recruit.SpellBook.push_back(spellBook[spell_selection[j]]);
+                                        }
+                                    }
+                                }
+
+                                party.Members.push_back(recruit);
+
+                                Engine::CONSOLIDATE(party);
+
+                                party.CurrentCharacter = -1;
+
+                                party.LastSelected = -1;
+
+                                party.LastSelection.clear();
+
+                                party.Order.clear();
+
+                                done = true;
+                            }
+                            else
+                            {
+                                displayMessage("Please choose an adventurer to recruit!", intRD);
+                            }
+                        }
+                        else if (recruitmentPrice < 0)
+                        {
+                            displayMessage("You cannot recruit adventurers here!", intRD);
+                        }
+                        else if (party.Money < recruitmentPrice)
+                        {
+                            displayMessage("You do not have enough silver!", intRD);
+                        }
+                        else if (party.Members.size() >= party.Limit)
+                        {
+                            displayMessage("You already have full party!", intRD);
+                        }
+                    }
+                    else if (controls[current].Type == Control::Type::BACK && !hold)
+                    {
+                        done = true;
+                    }
+                }
+
+                SDL_SetWindowTitle(window, title);
+            }
+        }
+    }
+
+    if (adventurer != NULL)
+    {
+        SDL_FreeSurface(adventurer);
+
+        adventurer = NULL;
+    }
+
+    if (text != NULL)
+    {
+        SDL_FreeSurface(text);
+
+        text = NULL;
+    }
+
+    if (font_mason)
+    {
+        TTF_CloseFont(font_mason);
+
+        font_mason = NULL;
     }
 
     if (font_garamond)
@@ -26766,6 +27108,12 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     else if (controls[current].Type == Control::Type::ENCYCLOPEDIA && !hold)
                     {
                         encyclopediaScreen(window, renderer, story->BookID);
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::RECRUIT && !hold)
+                    {
+                        recruitAdventurer(window, renderer, story->BookID, party, story->RecruitmentPrice);
 
                         selected = false;
                     }

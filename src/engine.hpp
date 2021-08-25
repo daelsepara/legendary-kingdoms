@@ -1379,6 +1379,23 @@ namespace Engine
         return found;
     }
 
+    int FIND_LIST(std::vector<Character::Type> list, Character::Type character)
+    {
+        auto found = -1;
+        
+        for (auto i = 0; i < list.size(); i++)
+        {
+            if (list[i] == character)
+            {
+                found = i;
+
+                break;
+            }
+        }
+
+        return found;
+    }
+
     std::vector<int> ROLL_DICE(int count)
     {
         Engine::Random.UniformIntDistribution(1, 6);
