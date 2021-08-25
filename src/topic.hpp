@@ -91,7 +91,7 @@ namespace Topics
 
                     if (!data["topics"][i]["image"].is_null())
                     {
-                        image = data["topics"][i]["image"];
+                        image = std::string(data["topics"][i]["image"]);
                     }
 
                     if (text.length() > 0 && image.length() > 0)

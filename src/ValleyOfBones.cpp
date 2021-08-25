@@ -49,7 +49,7 @@ namespace fs = std::filesystem;
 // create textures, images
 SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_size, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x);
 SDL_Surface *createImage(const char *image);
-SDL_Surface *createImage(const char *image, int w, int h);
+SDL_Surface *createImage(const char *image, int w, Uint32 bg);
 SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Color textColor, int wrap, int style);
 SDL_Surface *createTextAndImage(const char *text, const char *image, const char *ttf, int font_size, SDL_Color textColor, Uint32 bg, int wrap, int style);
 
@@ -213,19 +213,24 @@ SDL_Surface *createImage(const char *image)
     return surface;
 }
 
-SDL_Surface *createImage(const char *image, int w, int h)
+SDL_Surface *createImage(const char *image, int wrap, Uint32 bg)
 {
     SDL_Surface *surface = NULL;
+    SDL_Surface *converted_surface = NULL;
 
-    // Load splash image
-    auto image_surface = IMG_Load(image);
+    auto image_surface = createImage(image);
 
-    if (image_surface == NULL)
+    if (image_surface)
     {
-        std::cerr << "Unable to load image " << image << "! SDL Error: " << SDL_GetError() << std::endl;
-    }
-    else
-    {
+        auto image_h = image_surface->h;
+
+        if (image_surface->w > wrap)
+        {
+            auto image_scale = (double)((double)wrap / image_surface->w);
+
+            image_h = (int)(image_surface->h * image_scale);
+        }
+
         Uint32 amask;
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -233,32 +238,34 @@ SDL_Surface *createImage(const char *image, int w, int h)
 #else
         amask = 0xff000000;
 #endif
-        surface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, amask);
+
+        surface = SDL_CreateRGBSurface(0, wrap, image_h, 32, 0, 0, 0, amask);
 
         SDL_Rect dst;
 
-        dst.w = w;
-        dst.h = h;
+        dst.w = surface->w;
+        dst.h = surface->h;
         dst.x = 0;
         dst.y = 0;
 
-        SDL_Rect src;
+        SDL_FillRect(surface, NULL, bg);
 
-        src.w = image_surface->w;
-        src.h = image_surface->h;
-        src.x = 0;
-        src.y = 0;
+        dst.h = image_h;
 
-        auto converted_surface = SDL_ConvertSurface(image_surface, surface->format, 0);
-
-        SDL_BlitScaled(converted_surface, &src, surface, &dst);
-
-        if (converted_surface)
+        if (image_surface->w > wrap)
         {
-            SDL_FreeSurface(converted_surface);
-
-            converted_surface = NULL;
+            dst.w = surface->w;
         }
+        else
+        {
+            dst.w = image_surface->w;
+            dst.h = image_surface->h;
+            dst.x = (surface->w - image_surface->w) / 2;
+        }
+
+        converted_surface = SDL_ConvertSurface(image_surface, surface->format, 0);
+
+        SDL_BlitScaled(converted_surface, NULL, surface, &dst);
     }
 
     if (image_surface)
@@ -266,6 +273,13 @@ SDL_Surface *createImage(const char *image, int w, int h)
         SDL_FreeSurface(image_surface);
 
         image_surface = NULL;
+    }
+
+    if (converted_surface)
+    {
+        SDL_FreeSurface(converted_surface);
+
+        converted_surface = NULL;
     }
 
     return surface;
@@ -609,9 +623,14 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
     {
         auto text_space = 8;
 
-        auto image_scale = (double)((double)wrap / image_surface->w);
+        auto image_h = image_surface->h;
 
-        auto image_h = (int)(image_surface->h * image_scale);
+        if (image_surface->w > wrap)
+        {
+            auto image_scale = (double)((double)wrap / image_surface->w);
+
+            image_h = (int)(image_surface->h * image_scale);
+        }
 
         Uint32 amask;
 
@@ -641,7 +660,16 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
 
         dst.h = image_h;
 
-        dst.w = surface->w;
+        if (image_surface->w > wrap)
+        {
+            dst.w = surface->w;
+        }
+        else
+        {
+            dst.w = image_surface->w;
+            dst.h = image_surface->h;
+            dst.x = (surface->w - image_surface->w) / 2;
+        }
 
         converted_surface = SDL_ConvertSurface(image_surface, surface->format, 0);
 
@@ -1143,13 +1171,6 @@ SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_s
 
     if (button && text_surface)
     {
-        SDL_Rect src;
-
-        src.w = text_surface->w;
-        src.h = text_surface->h;
-        src.x = 0;
-        src.y = 0;
-
         SDL_Rect dst;
 
         dst.w = button->w;
@@ -1157,12 +1178,12 @@ SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_s
         dst.x = 0;
         dst.y = 0;
 
-        SDL_FillRect(button, &dst, bg);
+        SDL_FillRect(button, NULL, bg);
 
         dst.x = x < 0 ? (button->w - text_surface->w) / 2 : x;
         dst.y = (button->h - text_surface->h) / 2;
 
-        SDL_BlitSurface(text_surface, &src, button, &dst);
+        SDL_BlitSurface(text_surface, NULL, button, &dst);
     }
 
     if (text_surface)
@@ -26096,7 +26117,19 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     clipValue(zoomw, 0, splash->w);
                     clipValue(zoomh, 0, splash->h);
 
-                    if (mousex >= (textx + text_space) && mousex <= (textx + textwidth - text_space) && mousey >= (texty + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= splash_h && ((mousey - (texty + text_space)) <= (splash_h - offset)))
+                    auto offsetx = 0;
+                    auto offsety = splash_h;
+
+                    if (splash->w < (textwidth - 2 * text_space))
+                    {
+                        offsetx = ((textwidth - 2 * text_space) - splash->w) / 2;
+                    }
+                    else
+                    {
+                        offsety = splash->h;
+                    }
+
+                    if (mousex >= (textx + text_space + offsetx) && mousex <= (textx + textwidth - text_space - offsetx) && mousey >= (texty + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= splash_h && ((mousey - (texty + text_space)) <= (offsety - offset)))
                     {
                         auto scalex = (double)(mousex - (textx + text_space)) / (textwidth - 2 * text_space);
                         auto scaley = (double)((mousey - (texty + text_space)) + offset) / splash_h;
@@ -26912,13 +26945,22 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
             auto topic_speed = 1;
             auto topic_limit = (text_bounds - 2 * text_space - infoh) / (96);
             auto topic_last = topic_offset + topic_limit;
+            auto splash_h = -1;
 
             if (topic_last > Topics::ALL.size())
             {
                 topic_last = Topics::ALL.size();
             }
 
-            if (Topics::ALL[topic].Text.length() > 0)
+            if (Topics::ALL[topic].Text.length() > 0 && Topics::ALL[topic].Image.length() > 0)
+            {
+                text = createTextAndImage(Topics::ALL[topic].Text.c_str(), Topics::ALL[topic].Image.c_str(), FONT_GARAMOND, font_size, clrDB, intBE, listwidth, TTF_STYLE_NORMAL);
+            }
+            else if (Topics::ALL[topic].Image.length() > 0)
+            {
+                text = createImage(Topics::ALL[topic].Image.c_str(), listwidth, intBE);
+            }
+            else if (Topics::ALL[topic].Text.length() > 0)
             {
                 text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
             }
@@ -26970,7 +27012,11 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                 fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, BE_80);
 
-                if (Topics::ALL[topic].Text.length() > 0 && text)
+                if (Topics::ALL[topic].Image.length() > 0 && text)
+                {
+                    renderImage(renderer, text, textx + space, texty + space + infoh, text_bounds - 2 * space - infoh, offset);
+                }
+                else if (Topics::ALL[topic].Text.length() > 0 && text)
                 {
                     renderText(renderer, text, 0, textx + space, texty + space + infoh, text_bounds - 2 * space - infoh, offset);
                 }
@@ -27074,7 +27120,20 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                             offset = 0;
 
-                            text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                            splash_h = -1;
+
+                            if (Topics::ALL[topic].Text.length() > 0 && Topics::ALL[topic].Image.length() > 0)
+                            {
+                                text = createTextAndImage(Topics::ALL[topic].Text.c_str(), Topics::ALL[topic].Image.c_str(), FONT_GARAMOND, font_size, clrDB, intBE, listwidth, TTF_STYLE_NORMAL);
+                            }
+                            else if (Topics::ALL[topic].Image.length() > 0)
+                            {
+                                text = createImage(Topics::ALL[topic].Image.c_str(), listwidth, intBE);
+                            }
+                            else if (Topics::ALL[topic].Text.length() > 0)
+                            {
+                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                            }
 
                             compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
 
@@ -27096,7 +27155,20 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                             offset = 0;
 
-                            text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                            splash_h = -1;
+
+                            if (Topics::ALL[topic].Text.length() > 0 && Topics::ALL[topic].Image.length() > 0)
+                            {
+                                text = createTextAndImage(Topics::ALL[topic].Text.c_str(), Topics::ALL[topic].Image.c_str(), FONT_GARAMOND, font_size, clrDB, intBE, listwidth, TTF_STYLE_NORMAL);
+                            }
+                            else if (Topics::ALL[topic].Image.length() > 0)
+                            {
+                                text = createImage(Topics::ALL[topic].Image.c_str(), listwidth, intBE);
+                            }
+                            else if (Topics::ALL[topic].Text.length() > 0)
+                            {
+                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                            }
 
                             compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
 
@@ -27120,7 +27192,20 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                             offset = 0;
 
-                            text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                            splash_h = -1;
+
+                            if (Topics::ALL[topic].Text.length() > 0 && Topics::ALL[topic].Image.length() > 0)
+                            {
+                                text = createTextAndImage(Topics::ALL[topic].Text.c_str(), Topics::ALL[topic].Image.c_str(), FONT_GARAMOND, font_size, clrDB, intBE, listwidth, TTF_STYLE_NORMAL);
+                            }
+                            else if (Topics::ALL[topic].Image.length() > 0)
+                            {
+                                text = createImage(Topics::ALL[topic].Image.c_str(), listwidth, intBE);
+                            }
+                            else if (Topics::ALL[topic].Text.length() > 0)
+                            {
+                                text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                            }
 
                             compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
 
