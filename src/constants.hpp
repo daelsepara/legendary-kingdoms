@@ -64,6 +64,13 @@ int buttonw = 64;
 int buttonh = 64;
 int buttony = (int)(SCREEN_HEIGHT * (1.0 - Margin) - buttonh);
 
+int infoh = 48;
+int text_buttonh = 48;
+int text_buttonw = 240;
+int box_space = 10;
+int boxh = (int)(0.125 * SCREEN_HEIGHT);
+int bigger_boxh = (int)(0.150 * SCREEN_HEIGHT);
+
 int button_space = 20;
 int gridsize = buttonw + button_space;
 int border_space = 8;
