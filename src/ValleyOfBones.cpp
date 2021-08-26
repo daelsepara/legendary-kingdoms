@@ -3429,11 +3429,6 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
 
             renderButtons(renderer, controls, current, intLB, border_space, border_pts);
 
-            if (current >= 0 && current < controls.size() && !hold)
-            {
-                renderCaption(renderer, font_caption, controls[current]);
-            }
-
             auto scrollUp = false;
             auto scrollDown = false;
             auto hold = false;
@@ -3530,6 +3525,11 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
                         drawRect(renderer, dst.w, dst.h, dst.x, dst.y, intBK);
                     }
                 }
+            }
+
+            if (current >= 0 && current < controls.size() && !hold)
+            {
+                renderCaption(renderer, font_caption, controls[current]);
             }
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
