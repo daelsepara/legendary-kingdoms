@@ -25608,6 +25608,18 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         Uint32 duration = 3000;
 
+        // Lambda functions for displaying flash messages
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         party.StoryID = story->ID;
 
         // capture party state before running the story
@@ -25700,7 +25712,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         }
         else if (story->Controls == Story::Controls::RECRUIT)
         {
-            controls_normal = Story::RecruitmentConrols(compact);
+            controls_normal = Story::RecruitmentControls(compact);
+        }
+        else if (story->Controls == Story::Controls::BARRACKS)
+        {
+            controls_normal = Story::BarracksControls(compact);
         }
         else
         {
@@ -26601,6 +26617,19 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     else if (controls[current].Type == Control::Type::RECRUIT && !hold)
                     {
                         recruitAdventurer(window, renderer, story->BookID, party, story->RecruitmentPrice);
+
+                        selected = false;
+                    }
+                    else if (controls[current].Type == Control::Type::BARRACKS && !hold)
+                    {
+                        if (party.Army.size() <= 0)
+                        {
+                            displayMessage("You do not have any army!", intRD);
+                        }
+                        else
+                        {
+                            // TODO: Implement codes A33 and A100 troop transfers
+                        }
 
                         selected = false;
                     }

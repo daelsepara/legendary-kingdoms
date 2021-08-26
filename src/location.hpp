@@ -8,6 +8,7 @@ namespace Location
     enum class Type
     {
         NONE = -1,
+        ANY,
         DESERT,
         LHASBREATH_JUNGLE,
         CLIFFTOP,
@@ -54,6 +55,7 @@ namespace Location
 
     std::map<Location::Type, const char *> Description = {
         {Location::Type::NONE, "Unknown"},
+        {Location::Type::ANY, "Unknown"},
         {Location::Type::DESERT, "Desert"},
         {Location::Type::LHASBREATH_JUNGLE, "Lhastbreath Jungle"},
         {Location::Type::CLIFFTOP, "Clifftop"},

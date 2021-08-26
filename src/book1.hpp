@@ -17021,12 +17021,11 @@ namespace Book1
             Choices.push_back(Choice::Base("Spend two GOLD BULLION on restoring the Bronzeguard", {Book::Type::BOOK1, 143}, Choice::Type::PAY_WITH, {Equipment::GOLD_BULLION}, 2));
             Choices.push_back(Choice::Base("Leave the training ground", {Book::Type::BOOK1, 620}));
 
-            Controls = Story::Controls::STANDARD;
+            Controls = Story::Controls::BARRACKS;
         }
 
         void Event(Party::Base &party)
         {
-            // TODO: Implement codes A33 and A100 troop transfers
             Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
         }
     };

@@ -94,7 +94,8 @@ namespace Control
         SELL_CARGO,
         MONEY,
         TOPICS_UP,
-        TOPICS_DOWN
+        TOPICS_DOWN,
+        BARRACKS
     };
 
     class Base
