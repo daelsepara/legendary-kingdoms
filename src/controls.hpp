@@ -25,7 +25,7 @@ namespace Control
         LOAD,
         SAVE,
         SHOP,
-        INN,
+        REST,
         CONTINUE_STORY,
         NEXT,
         PREVIOUS,

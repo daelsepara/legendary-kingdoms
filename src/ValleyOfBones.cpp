@@ -170,15 +170,15 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
 std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, int offsety, int scrolly);
 std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, bool confirm_button, bool back_button);
 std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer);
-std::vector<Button> innList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> party, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button);
 std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, int start, int last, int limit, int offsetx, int offsety, Control::Type mode);
-std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std::map<Character::Romance, int> &hearts, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button);
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
 std::vector<Button> popupMoney(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int popupw, int popuph, int infoh, int offsetx, int offsety);
+std::vector<Button> restList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> party, int start, int last, int limit, int offsetx, int offsety);
+std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std::map<Character::Romance, int> &hearts, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, Control::Type mode);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, bool cargo, bool confirm_button, bool back_button);
@@ -4207,7 +4207,7 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
     return controls;
 }
 
-std::vector<Button> innList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> party, int start, int last, int limit, int offsetx, int offsety)
+std::vector<Button> restList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> party, int start, int last, int limit, int offsetx, int offsety)
 {
     auto controls = std::vector<Button>();
 
@@ -14805,7 +14805,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             last = party.Members.size();
         }
 
-        auto controls = innList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
+        auto controls = restList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
 
         auto done = false;
 
@@ -14974,7 +14974,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             last = party.Members.size();
                         }
 
-                        controls = innList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
+                        controls = restList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
 
                         SDL_Delay(50);
                     }
@@ -15007,7 +15007,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             last = party.Members.size();
                         }
 
-                        controls = innList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
+                        controls = restList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
 
                         SDL_Delay(50);
 
@@ -15101,7 +15101,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                 last = party.Members.size();
                             }
 
-                            controls = innList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
+                            controls = restList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
                         }
                     }
 
@@ -15161,7 +15161,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                 last = party.Members.size();
                             }
 
-                            controls = innList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
+                            controls = restList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
                         }
                     }
 
@@ -25550,7 +25550,7 @@ void renderCaption(SDL_Renderer *renderer, TTF_Font *font_caption, Button contro
     {
         caption = "Buy/Sell Items";
     }
-    else if (control.Type == Control::Type::INN)
+    else if (control.Type == Control::Type::REST)
     {
         caption = "Rest, Recover, and Recharge Spells";
     }
@@ -25680,6 +25680,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         while (!quit)
         {
+            SDL_Surface *splash = NULL;
+            SDL_Texture *splashTexture = NULL;
+            SDL_Surface *text = NULL;
+
             auto saveParty = party;
 
             auto flash_message = false;
@@ -25706,10 +25710,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             party.StoryID = story->ID;
 
             auto run_once = true;
-
-            SDL_Surface *splash = NULL;
-            SDL_Texture *splashTexture = NULL;
-            SDL_Surface *text = NULL;
 
             if (run_once)
             {
@@ -25786,7 +25786,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             {
                 controls_normal = Story::HarbourControls(compact);
             }
-            else if (story->Controls == Story::Controls::INN)
+            else if (story->Controls == Story::Controls::REST)
             {
                 controls_normal = Story::InnControls(compact);
             }
@@ -25825,7 +25825,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             if (story->Monsters.size() > 0 || story->EnemyFleet.size() > 0 || story->EnemyArmy.size() > 0)
             {
-
                 if (story->Monsters.size() > 0)
                 {
                     if (popup_last > story->Monsters.size())
@@ -26030,6 +26029,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
 
                 auto scrollUp = false;
+                
                 auto scrollDown = false;
 
                 if (story->Type == Story::Type::DOOM)
@@ -26383,7 +26383,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         selected = false;
                     }
-                    else if (controls[current].Type == Control::Type::INN && !hold)
+                    else if (controls[current].Type == Control::Type::REST && !hold)
                     {
                         restScreen(window, renderer, party, story->RestPrice, story->CanRecharge);
 

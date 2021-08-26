@@ -2304,7 +2304,7 @@ namespace Book1
             Choices.push_back(Choice::Base("Return to the Everchild's hideout", {Book::Type::BOOK1, 263}));
             Choices.push_back(Choice::Base("Leave Luutanesh", {Book::Type::BOOK1, 614}));
 
-            Controls = Story::Controls::INN;
+            Controls = Story::Controls::REST;
         }
     };
 
@@ -5880,7 +5880,7 @@ namespace Book1
 
             Choices.clear();
 
-            Controls = Story::Controls::INN;
+            Controls = Story::Controls::REST;
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 75}; }
@@ -6912,7 +6912,7 @@ namespace Book1
 
             Choices.clear();
 
-            Controls = Story::Controls::INN;
+            Controls = Story::Controls::REST;
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 340}; }
@@ -7612,7 +7612,7 @@ namespace Book1
 
             Choices.clear();
 
-            Controls = Story::Controls::INN;
+            Controls = Story::Controls::REST;
         }
 
         Engine::Destination Continue(Party::Base &party)
@@ -9321,7 +9321,7 @@ namespace Book1
 
             Choices.clear();
 
-            Controls = Story::Controls::INN;
+            Controls = Story::Controls::REST;
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 775}; }
@@ -9607,7 +9607,7 @@ namespace Book1
 
                 CanRecharge = true;
 
-                Controls = Story::Controls::INN;
+                Controls = Story::Controls::REST;
 
                 PreText += "\n\nYou may stay at the inn and recover your strength. For every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nDuring your stay meet a frustrated archaeologist, fresh from his digs at the Tumblestones just north of Lhasbreath. \"First we were constantly exploited by barbarians from the south, and then our trenches are refilled from the blasted sandstorms as quickly as we could dig them,\" he grumbles. \"I'm certain there are amazing discoveries to be made, but I'll be blown if it's worth all the hassle of finding them!\"";
             }
@@ -16890,7 +16890,7 @@ namespace Book1
 
             Choices.clear();
 
-            Controls = Story::Controls::INN;
+            Controls = Story::Controls::REST;
         }
 
         void Event(Party::Base &party)
@@ -20959,7 +20959,7 @@ namespace Book1
 
             CanRecharge = true;
 
-            Controls = Story::Controls::INN;
+            Controls = Story::Controls::REST;
         }
 
         void Event(Party::Base &party)
@@ -22462,7 +22462,7 @@ namespace Book1
 
             Choices.clear();
 
-            Controls = Story::Controls::INN;
+            Controls = Story::Controls::REST;
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 450}; }
