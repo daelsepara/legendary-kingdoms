@@ -25670,7 +25670,7 @@ void renderCaption(SDL_Renderer *renderer, TTF_Font *font_caption, Button contro
     {
         caption = "Preview Battle";
     }
-    else if (control.Type == Control::Type::NEXT)
+    else if (control.Type == Control::Type::CONTINUE_STORY)
     {
         caption = "Continue Story";
     }
@@ -26555,7 +26555,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         selected = false;
                     }
-                    else if (controls[current].Type == Control::Type::NEXT && !hold)
+                    else if (controls[current].Type == Control::Type::CONTINUE_STORY && !hold)
                     {
                         Engine::Destination final_destination = {Book::Type::NONE, -1};
 

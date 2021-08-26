@@ -26,6 +26,7 @@ namespace Control
         SAVE,
         SHOP,
         INN,
+        CONTINUE_STORY,
         NEXT,
         PREVIOUS,
         ENCYCLOPEDIA,
