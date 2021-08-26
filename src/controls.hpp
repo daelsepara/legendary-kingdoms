@@ -229,8 +229,11 @@ public:
 
         Surface = image;
 
-        W = Surface->w;
-        H = Surface->h;
+        if (Surface)
+        {
+            W = Surface->w;
+            H = Surface->h;
+        }
 
         construct(id, left, right, up, down, x, y);
     }

@@ -149,6 +149,8 @@ std::string shipString(Ship::Base &ship, bool cargo);
 bool magicRound0(Character::Base &character, int combatRound);
 int FIND_CONTROL(std::vector<Button> &controls, Control::Type control);
 void addBye(Story::Base *story, std::string bye);
+void freeControl(Button &control);
+void freeControls(std::vector<Button> &controls);
 
 // other game/story helper functions
 void renderArmy(SDL_Renderer *renderer, TTF_Font *font, std::vector<Army::Base> &army, int boxw, int army_boxh, int offsety, SDL_Color fg, Uint32 bg);
@@ -209,7 +211,7 @@ SDL_Surface *createImage(const char *image)
 {
     auto surface = IMG_Load(image);
 
-    if (surface == NULL)
+    if (!surface)
     {
         std::cerr << "Unable to load image " << image << "! SDL Error: " << SDL_GetError() << std::endl;
     }
@@ -318,7 +320,7 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
             SDL_SetRenderDrawBlendMode(*renderer, SDL_BLENDMODE_NONE);
         }
 
-        if (window == NULL || renderer == NULL)
+        if (!window || !renderer)
         {
             std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         }
@@ -583,7 +585,7 @@ SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Co
 
     auto font = TTF_OpenFont(ttf, font_size);
 
-    if (font != NULL)
+    if (font)
     {
         if (std::strcmp(ttf, FONT_DARK11) == 0)
         {
@@ -1222,6 +1224,26 @@ void clipValue(int &val, int min, int max)
     }
 }
 
+void freeControl(Button &control)
+{
+    if (control.Surface)
+    {
+        SDL_FreeSurface(control.Surface);
+    }
+
+    control.Surface = NULL;
+}
+
+void freeControls(std::vector<Button> &controls)
+{
+    for (auto i = 0; i < controls.size(); i++)
+    {
+        freeControl(controls[i]);
+    }
+
+    controls.clear();
+}
+
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
 {
     auto splashLogo = "images/legendary-kingdoms.png";
@@ -1741,6 +1763,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             last = party.Army.size();
                         }
 
+                        freeControls(controls);
+
                         controls = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh, true);
 
                         current = FIND_CONTROL(controls, Control::Type::ARMY);
@@ -1761,6 +1785,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             last = party.Fleet.size();
                         }
 
+                        freeControls(controls);
+
                         controls = shipList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
 
                         current = FIND_CONTROL(controls, Control::Type::FLEET);
@@ -1780,6 +1806,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         {
                             last = party.Hearts.size();
                         }
+
+                        freeControls(controls);
 
                         controls = romanceList(window, renderer, party.Hearts, offset, last, limit, textx, texty + infoh);
 
@@ -1848,6 +1876,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 last = party.Army.size();
                             }
 
+                            freeControls(controls);
+
                             controls = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh, true);
                         }
                         else if (current_mode == Control::Type::FLEET)
@@ -1857,6 +1887,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 last = party.Fleet.size();
                             }
 
+                            freeControls(controls);
+
                             controls = shipList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
                         }
                         else if (current_mode == Control::Type::ROMANCE)
@@ -1865,6 +1897,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             {
                                 last = party.Hearts.size();
                             }
+
+                            freeControls(controls);
 
                             controls = romanceList(window, renderer, party.Hearts, offset, last, limit, textx, texty + infoh);
                         }
@@ -1901,6 +1935,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             {
                                 last = party.Army.size();
                             }
+
+                            freeControls(controls);
 
                             controls = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh, true);
 
@@ -1940,6 +1976,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 last = party.Fleet.size();
                             }
 
+                            freeControls(controls);
+
                             controls = shipList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
 
                             SDL_Delay(50);
@@ -1978,6 +2016,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 last = party.Hearts.size();
                             }
 
+                            freeControls(controls);
+
                             controls = romanceList(window, renderer, party.Hearts, offset, last, limit, textx, texty + infoh);
 
                             SDL_Delay(50);
@@ -2009,6 +2049,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
             }
         }
+
+        freeControls(controls);
     }
 
     if (font_mason)
@@ -2094,16 +2136,16 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
         if (character >= 0 && character < party.Members.size())
         {
-            if (party.Members[character].Image != NULL)
+            if (party.Members[character].Image)
             {
-                if (adventurer != NULL)
+                if (adventurer)
                 {
                     SDL_FreeSurface(adventurer);
 
                     adventurer = NULL;
                 }
 
-                if (adventurerTexture != NULL)
+                if (adventurerTexture)
                 {
                     SDL_DestroyTexture(adventurerTexture);
 
@@ -2118,7 +2160,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 }
             }
 
-            if (text != NULL)
+            if (text)
             {
                 SDL_FreeSurface(text);
 
@@ -2145,7 +2187,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
             code_text = createText(code_string.c_str(), FONT_MASON, 24, clrBK, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
         }
 
-        auto compact = (code_text && code_text->h <= text_bounds - infoh - 2 * text_space) || code_text == NULL;
+        auto compact = (code_text && code_text->h <= text_bounds - infoh - 2 * text_space) || !code_text;
 
         while (!done)
         {
@@ -2214,7 +2256,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 }
             }
 
-            if (current_mode != Control::Type::PARTY && text != NULL)
+            if (current_mode != Control::Type::PARTY && text)
             {
                 fillRect(renderer, textwidth, character_box, textx, texty, intBE);
 
@@ -2451,28 +2493,28 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
                     if (character >= 0 && character < party.Members.size())
                     {
-                        if (adventurer != NULL)
+                        if (adventurer)
                         {
                             SDL_FreeSurface(adventurer);
 
                             adventurer = NULL;
                         }
 
-                        if (adventurerTexture != NULL)
+                        if (adventurerTexture)
                         {
                             SDL_DestroyTexture(adventurerTexture);
 
                             adventurerTexture = NULL;
                         }
 
-                        if (text != NULL)
+                        if (text)
                         {
                             SDL_FreeSurface(text);
 
                             text = NULL;
                         }
 
-                        if (party.Members[character].Image != NULL)
+                        if (party.Members[character].Image)
                         {
                             adventurer = createImage(party.Members[character].Image);
 
@@ -2494,28 +2536,28 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
                     if (character >= 0 && character < party.Members.size())
                     {
-                        if (adventurer != NULL)
+                        if (adventurer)
                         {
                             SDL_FreeSurface(adventurer);
 
                             adventurer = NULL;
                         }
 
-                        if (adventurerTexture != NULL)
+                        if (adventurerTexture)
                         {
                             SDL_DestroyTexture(adventurerTexture);
 
                             adventurerTexture = NULL;
                         }
 
-                        if (text != NULL)
+                        if (text)
                         {
                             SDL_FreeSurface(text);
 
                             text = NULL;
                         }
 
-                        if (party.Members[character].Image != NULL)
+                        if (party.Members[character].Image)
                         {
 
                             adventurer = createImage(party.Members[character].Image);
@@ -2555,28 +2597,28 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
         }
     }
 
-    if (adventurer != NULL)
+    if (adventurer)
     {
         SDL_FreeSurface(adventurer);
 
         adventurer = NULL;
     }
 
-    if (adventurerTexture != NULL)
+    if (adventurerTexture)
     {
         SDL_DestroyTexture(adventurerTexture);
 
         adventurerTexture = NULL;
     }
 
-    if (text != NULL)
+    if (text)
     {
         SDL_FreeSurface(text);
 
         text = NULL;
     }
 
-    if (code_text != NULL)
+    if (code_text)
     {
         SDL_FreeSurface(code_text);
 
@@ -2704,9 +2746,9 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
         if (character >= 0 && character < characters.size())
         {
-            if (characters[character].Image != NULL)
+            if (characters[character].Image)
             {
-                if (adventurer != NULL)
+                if (adventurer)
                 {
                     SDL_FreeSurface(adventurer);
 
@@ -2716,7 +2758,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                 adventurer = createImage(characters[character].Image);
             }
 
-            if (text != NULL)
+            if (text)
             {
                 SDL_FreeSurface(text);
 
@@ -2734,14 +2776,14 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
                 auto adventurerh = splashw;
 
-                if (adventurer != NULL)
+                if (adventurer)
                 {
                     adventurerh = fitImage(renderer, adventurer, startx, starty, splashw, text_bounds);
                 }
 
                 fillRect(renderer, textwidth, character_box, textx, texty, intBE);
 
-                if (text != NULL)
+                if (text)
                 {
                     renderText(renderer, text, intBE, textx + text_space, texty + text_space, character_box, 0);
                 }
@@ -2782,9 +2824,9 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
                         if (character >= 0 && character < characters.size())
                         {
-                            if (characters[character].Image != NULL)
+                            if (characters[character].Image)
                             {
-                                if (adventurer != NULL)
+                                if (adventurer)
                                 {
                                     SDL_FreeSurface(adventurer);
 
@@ -2794,7 +2836,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                                 adventurer = createImage(characters[character].Image);
                             }
 
-                            if (text != NULL)
+                            if (text)
                             {
                                 SDL_FreeSurface(text);
 
@@ -2813,9 +2855,9 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
                         if (character >= 0 && character < characters.size())
                         {
-                            if (characters[character].Image != NULL)
+                            if (characters[character].Image)
                             {
-                                if (adventurer != NULL)
+                                if (adventurer)
                                 {
                                     SDL_FreeSurface(adventurer);
 
@@ -2825,7 +2867,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                                 adventurer = createImage(characters[character].Image);
                             }
 
-                            if (text != NULL)
+                            if (text)
                             {
                                 SDL_FreeSurface(text);
 
@@ -2911,14 +2953,14 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
         }
     }
 
-    if (adventurer != NULL)
+    if (adventurer)
     {
         SDL_FreeSurface(adventurer);
 
         adventurer = NULL;
     }
 
-    if (text != NULL)
+    if (text)
     {
         SDL_FreeSurface(text);
 
@@ -3017,9 +3059,9 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
         if (character >= 0 && character < characters.size())
         {
-            if (characters[character].Image != NULL)
+            if (characters[character].Image)
             {
-                if (adventurer != NULL)
+                if (adventurer)
                 {
                     SDL_FreeSurface(adventurer);
 
@@ -3029,7 +3071,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                 adventurer = createImage(characters[character].Image);
             }
 
-            if (text != NULL)
+            if (text)
             {
                 SDL_FreeSurface(text);
 
@@ -3045,14 +3087,14 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
             auto adventurerh = splashw;
 
-            if (adventurer != NULL)
+            if (adventurer)
             {
                 adventurerh = fitImage(renderer, adventurer, startx, starty, splashw, text_bounds);
             }
 
             fillRect(renderer, textwidth, character_box, textx, texty, intBE);
 
-            if (text != NULL)
+            if (text)
             {
                 renderText(renderer, text, intBE, textx + text_space, texty + text_space, character_box, 0);
             }
@@ -3135,9 +3177,9 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
                     if (character >= 0 && character < characters.size())
                     {
-                        if (characters[character].Image != NULL)
+                        if (characters[character].Image)
                         {
-                            if (adventurer != NULL)
+                            if (adventurer)
                             {
                                 SDL_FreeSurface(adventurer);
 
@@ -3147,7 +3189,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             adventurer = createImage(characters[character].Image);
                         }
 
-                        if (text != NULL)
+                        if (text)
                         {
                             SDL_FreeSurface(text);
 
@@ -3191,9 +3233,9 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
                     if (character >= 0 && character < characters.size())
                     {
-                        if (characters[character].Image != NULL)
+                        if (characters[character].Image)
                         {
-                            if (adventurer != NULL)
+                            if (adventurer)
                             {
                                 SDL_FreeSurface(adventurer);
 
@@ -3203,7 +3245,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             adventurer = createImage(characters[character].Image);
                         }
 
-                        if (text != NULL)
+                        if (text)
                         {
                             SDL_FreeSurface(text);
 
@@ -3299,14 +3341,14 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
         }
     }
 
-    if (adventurer != NULL)
+    if (adventurer)
     {
         SDL_FreeSurface(adventurer);
 
         adventurer = NULL;
     }
 
-    if (text != NULL)
+    if (text)
     {
         SDL_FreeSurface(text);
 
@@ -3536,6 +3578,8 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
                 current_map = 1 - current_map;
             }
         }
+
+        freeControls(controls);
 
         SDL_FreeSurface(map_local);
         SDL_FreeSurface(map_world);
@@ -4749,6 +4793,8 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -7337,6 +7383,8 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                                 last = spells.size();
                             }
 
+                            freeControls(controls);
+
                             controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, scrolly, true, false);
 
                             SDL_Delay(50);
@@ -7369,6 +7417,8 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                             {
                                 last = spells.size();
                             }
+
+                            freeControls(controls);
 
                             controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, scrolly, true, false);
 
@@ -7493,6 +7543,8 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -7707,7 +7759,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                                 last = monsters.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, true, false);
 
@@ -7742,7 +7794,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                                 last = monsters.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, true, false);
 
@@ -7836,6 +7888,8 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -8032,7 +8086,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                                 last = enemyFleet.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, false, true, false);
 
@@ -8067,7 +8121,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                                 last = enemyFleet.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, false, true, false);
 
@@ -8157,6 +8211,8 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -9315,6 +9371,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             }
         }
 
+        freeControls(controls);
+
         if (font_garamond)
         {
             TTF_CloseFont(font_garamond);
@@ -9590,6 +9648,8 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
             }
         }
 
+        freeControls(controls);
+
         if (font_garamond)
         {
             TTF_CloseFont(font_garamond);
@@ -9859,6 +9919,8 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -10142,6 +10204,8 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
         }
 
+        freeControls(controls);
+
         if (font_garamond)
         {
             TTF_CloseFont(font_garamond);
@@ -10320,7 +10384,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
                                 last = attributes.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = attributeList(window, renderer, character, attributes, offset, last, limit, textx, texty + infoh + text_space);
 
@@ -10355,7 +10419,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
                                 last = attributes.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = attributeList(window, renderer, character, attributes, offset, last, limit, textx, texty + infoh + text_space);
 
@@ -10414,6 +10478,8 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -10591,7 +10657,7 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
                                 last = teams_list.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = teamsList(window, renderer, teams_list, offset, last, limit, textx, texty + infoh + text_space);
 
@@ -10626,7 +10692,7 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
                                 last = teams_list.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = teamsList(window, renderer, teams_list, offset, last, limit, textx, texty + infoh + text_space);
 
@@ -10675,6 +10741,8 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -10864,7 +10932,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             last = party.Members.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, false);
 
@@ -10899,7 +10967,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             last = party.Members.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, false);
 
@@ -10974,6 +11042,8 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -11250,7 +11320,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                             last = party.Members.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
 
@@ -11285,7 +11355,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                             last = party.Members.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
 
@@ -11393,6 +11463,8 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -11620,7 +11692,7 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
                             last = ships.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, true);
 
@@ -11655,7 +11727,7 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
                             last = ships.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, true);
                         ;
@@ -11736,6 +11808,8 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -11988,7 +12062,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                             last = party.Members.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
 
@@ -12023,7 +12097,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                             last = party.Members.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
 
@@ -12117,6 +12191,8 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -12366,7 +12442,9 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                                 last = enemyFleet.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
+
+                            controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, current_mode);
 
                             SDL_Delay(50);
                         }
@@ -12399,7 +12477,9 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                                 last = enemyFleet.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
+
+                            controls = shipList(window, renderer, enemyFleet, offset, last, limit, textx, texty + infoh + text_space, current_mode);
 
                             SDL_Delay(50);
 
@@ -12580,6 +12660,8 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                 break;
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -12976,7 +13058,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 last = monsters.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
+
+                            controls = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, current_mode);
 
                             SDL_Delay(50);
                         }
@@ -13009,7 +13093,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 last = monsters.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
+
+                            controls = monsterList(window, renderer, monsters, offset, last, limit, textx, texty + infoh + text_space, current_mode);
 
                             SDL_Delay(50);
 
@@ -13559,6 +13645,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 {
                     done = true;
                 }
+
+                freeControls(controls);
             }
 
             if (combatResult == Engine::Combat::FLEE || combatResult == Engine::Combat::FAILED_ATTACK)
@@ -13566,6 +13654,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 break;
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -13955,7 +14045,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         last = shop.size();
                     }
 
-                    controls.clear();
+                    freeControls(controls);
 
                     controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
 
@@ -13990,7 +14080,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         last = shop.size();
                     }
 
-                    controls.clear();
+                    freeControls(controls);
 
                     controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
 
@@ -14197,6 +14287,8 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
         }
     }
+
+    freeControls(controls);
 
     if (font_garamond)
     {
@@ -14492,7 +14584,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         last = shop.size();
                     }
 
-                    controls.clear();
+                    freeControls(controls);
 
                     controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
 
@@ -14527,7 +14619,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         last = shop.size();
                     }
 
-                    controls.clear();
+                    freeControls(controls);
 
                     controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
 
@@ -14665,7 +14757,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                             displayMessage(message, intLB);
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
                         }
@@ -14779,6 +14871,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
         }
     }
+
+    freeControls(controls);
 
     if (font_garamond)
     {
@@ -15016,7 +15110,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             last = party.Members.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = innList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
 
@@ -15051,7 +15145,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             last = party.Members.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = innList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
 
@@ -15147,7 +15241,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                 last = party.Members.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = innList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
                         }
@@ -15209,7 +15303,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                 last = party.Members.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = innList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh);
                         }
@@ -15275,6 +15369,8 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
             }
         }
+
+        freeControls(controls);
     }
 
     if (font_mason)
@@ -16207,7 +16303,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             last = party.Fleet.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = repairList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
 
@@ -16242,7 +16338,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             last = party.Fleet.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = repairList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
 
@@ -16350,7 +16446,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 last = party.Fleet.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = repairList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
                         }
@@ -16412,7 +16508,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 last = party.Fleet.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = repairList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
                         }
@@ -16426,6 +16522,8 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
             }
         }
+
+        freeControls(controls);
     }
 
     if (font_mason)
@@ -16695,7 +16793,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         last = character.Equipment.size();
                     }
 
-                    controls.clear();
+                    freeControls(controls);
 
                     controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
 
@@ -16730,7 +16828,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         last = character.Equipment.size();
                     }
 
-                    controls.clear();
+                    freeControls(controls);
 
                     controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
 
@@ -16840,7 +16938,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                                 last = character.Equipment.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
                         }
@@ -16879,7 +16977,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                             last = character.Equipment.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
 
@@ -16939,7 +17037,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                                             last = character.Equipment.size();
                                         }
 
-                                        controls.clear();
+                                        freeControls(controls);
 
                                         controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
 
@@ -17017,7 +17115,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                                 last = character.Equipment.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
 
@@ -17046,7 +17144,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                                 last = character.Equipment.size();
                             }
 
-                            controls.clear();
+                            freeControls(controls);
 
                             controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
 
@@ -17078,6 +17176,8 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             }
         }
     }
+
+    freeControls(controls);
 
     if (font_garamond)
     {
@@ -17370,7 +17470,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         last = character.SpellBook.size();
                     }
 
-                    controls.clear();
+                    freeControls(controls);
 
                     controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
 
@@ -17405,7 +17505,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         last = character.SpellBook.size();
                     }
 
-                    controls.clear();
+                    freeControls(controls);
 
                     controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
 
@@ -17554,7 +17654,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         last = character.SpellBook.size();
                     }
 
-                    controls.clear();
+                    freeControls(controls);
 
                     controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
 
@@ -17584,6 +17684,8 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             }
         }
     }
+
+    freeControls(controls);
 
     if (font_garamond)
     {
@@ -17848,7 +17950,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         last = character.SpellBook.size();
                     }
 
-                    controls.clear();
+                    freeControls(controls);
 
                     controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
 
@@ -17883,7 +17985,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         last = character.SpellBook.size();
                     }
 
-                    controls.clear();
+                    freeControls(controls);
 
                     controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
 
@@ -17938,6 +18040,10 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                             character.SpellBook[selection].Charged = true;
 
                             displayMessage(character.SpellBook[selection].Name + " charged!", intLB);
+
+                            freeControls(controls);
+
+                            controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
                         }
                         else
                         {
@@ -17962,6 +18068,8 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             }
         }
     }
+
+    freeControls(controls);
 
     if (font_garamond)
     {
@@ -18152,6 +18260,8 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
                             last = army.size();
                         }
 
+                        freeControls(controls);
+
                         controls = armyList(window, renderer, army, offset, last, limit, textx, texty + infoh, false);
 
                         SDL_Delay(50);
@@ -18184,6 +18294,8 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
                         {
                             last = army.size();
                         }
+
+                        freeControls(controls);
 
                         controls = armyList(window, renderer, army, offset, last, limit, textx, texty + infoh, false);
 
@@ -18258,6 +18370,8 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -18433,6 +18547,8 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
                             last = ships.size();
                         }
 
+                        freeControls(controls);
+
                         controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, back_button);
 
                         SDL_Delay(50);
@@ -18465,6 +18581,8 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
                         {
                             last = ships.size();
                         }
+
+                        freeControls(controls);
 
                         controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, back_button);
 
@@ -18539,6 +18657,8 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -18707,6 +18827,8 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             last = army.size();
                         }
 
+                        freeControls(controls);
+
                         controls = armyList(window, renderer, army, offset, last, limit, textx, texty + infoh, false);
 
                         SDL_Delay(50);
@@ -18739,6 +18861,8 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         {
                             last = army.size();
                         }
+
+                        freeControls(controls);
 
                         controls = armyList(window, renderer, army, offset, last, limit, textx, texty + infoh, false);
 
@@ -18810,6 +18934,8 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -18994,6 +19120,8 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             last = spells.size();
                         }
 
+                        freeControls(controls);
+
                         controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, scrolly, true, true);
 
                         SDL_Delay(50);
@@ -19026,6 +19154,8 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             last = spells.size();
                         }
+
+                        freeControls(controls);
 
                         controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, scrolly, true, true);
 
@@ -19181,6 +19311,8 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -19363,7 +19495,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             last = equipment.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
 
@@ -19398,7 +19530,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             last = equipment.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
 
@@ -19497,6 +19629,8 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -19679,7 +19813,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                             last = equipment.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
 
@@ -19714,7 +19848,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                             last = equipment.size();
                         }
 
-                        controls.clear();
+                        freeControls(controls);
 
                         controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
 
@@ -19824,6 +19958,8 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 }
             }
         }
+
+        freeControls(controls);
 
         if (font_garamond)
         {
@@ -20234,9 +20370,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             last = party.Fleet.size();
         }
 
-        auto controls = std::vector<Button>();
-
-        controls = cargoList(window, renderer, party.Fleet, offset, last, limit, textx, (texty + infoh));
+        auto controls = cargoList(window, renderer, party.Fleet, offset, last, limit, textx, (texty + infoh));
 
         auto current_mode = Control::Type::SELL_CARGO;
 
@@ -20317,6 +20451,8 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             last = party.Fleet.size();
                         }
 
+                        freeControls(controls);
+
                         controls = cargoList(window, renderer, party.Fleet, offset, last, limit, textx, (texty + infoh));
 
                         for (auto i = 0; i < controls.size(); i++)
@@ -20344,6 +20480,8 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             last = harbour->Cargo.size();
                         }
+
+                        freeControls(controls);
 
                         controls = buyCargo(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
 
@@ -20449,6 +20587,8 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 last = party.Fleet.size();
                             }
 
+                            freeControls(controls);
+
                             controls = cargoList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
                         }
                         else if (current_mode == Control::Type::BUY_CARGO)
@@ -20457,6 +20597,8 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 last = harbour->Cargo.size();
                             }
+
+                            freeControls(controls);
 
                             controls = buyCargo(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
                         }
@@ -20493,6 +20635,8 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 last = party.Fleet.size();
                             }
+
+                            freeControls(controls);
 
                             controls = cargoList(window, renderer, party.Fleet, offset, last, limit, textx, texty + infoh);
 
@@ -20531,6 +20675,8 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 last = harbour->Cargo.size();
                             }
+
+                            freeControls(controls);
 
                             controls = buyCargo(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
 
@@ -20793,6 +20939,8 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 }
             }
         }
+
+        freeControls(controls);
     }
 
     if (font_mason)
@@ -20830,12 +20978,10 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
-    auto font_size = 28;
-
     TTF_Init();
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
     TTF_SetFontKerning(font_dark11, 0);
@@ -20878,9 +21024,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
             last = harbour->Ships.size();
         }
 
-        auto controls = std::vector<Button>();
-
-        controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, (texty + infoh));
+        auto controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, (texty + infoh));
 
         auto current_mode = Control::Type::BUY_SELL_SHIP;
 
@@ -20948,6 +21092,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                             last = harbour->Ships.size();
                         }
 
+                        freeControls(controls);
+
                         controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, texty + infoh);
 
                         current = FIND_CONTROL(controls, Control::Type::BUY_SELL_SHIP);
@@ -20962,6 +21108,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                         offset = 0;
 
                         last = 0;
+
+                        freeControls(controls);
 
                         controls = harbourControls(window, renderer);
 
@@ -20982,6 +21130,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                         {
                             last = harbour->Cargo.size();
                         }
+
+                        freeControls(controls);
 
                         controls = cargoList(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
 
@@ -21096,6 +21246,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                                 last = harbour->Ships.size();
                             }
 
+                            freeControls(controls);
+
                             controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, texty + infoh);
                         }
                         else if (current_mode == Control::Type::BUY_SELL_CARGO)
@@ -21104,6 +21256,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                             {
                                 last = harbour->Cargo.size();
                             }
+
+                            freeControls(controls);
 
                             controls = cargoList(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
                         }
@@ -21140,6 +21294,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                             {
                                 last = harbour->Ships.size();
                             }
+
+                            freeControls(controls);
 
                             controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, texty + infoh);
 
@@ -21178,6 +21334,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                             {
                                 last = harbour->Cargo.size();
                             }
+
+                            freeControls(controls);
 
                             controls = cargoList(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
 
@@ -21256,6 +21414,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 }
             }
         }
+
+        freeControls(controls);
     }
 
     if (font_mason)
@@ -22666,6 +22826,10 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             }
         }
 
+        freeControls(controls_battlefield);
+
+        freeControls(controls_yes);
+
         if (font_dark11)
         {
             TTF_CloseFont(font_dark11);
@@ -22976,7 +23140,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                 last = party.Army.size();
                             }
 
-                            controls_deploy.clear();
+                            freeControls(controls_deploy);
 
                             controls_deploy = popupArmy(window, renderer, party.Army, offset, last, limit, popupw, popuph, infoh, popupx, popupy);
 
@@ -23014,7 +23178,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                 last = party.Army.size();
                             }
 
-                            controls_deploy.clear();
+                            freeControls(controls_deploy);
 
                             controls_deploy = popupArmy(window, renderer, party.Army, offset, last, limit, popupw, popuph, infoh, popupx, popupy);
 
@@ -23270,6 +23434,10 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             }
         }
 
+        freeControls(controls_deploy);
+
+        freeControls(controls_battlefield);
+
         if (font_dark11)
         {
             TTF_CloseFont(font_dark11);
@@ -23345,7 +23513,7 @@ void addBye(Story::Base *story, std::string bye)
 {
     if (bye.length() > 0)
     {
-        if (story->Bye == NULL)
+        if (!story->Bye)
         {
             story->temp_string = bye;
         }
@@ -23380,8 +23548,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             splash = createImage(story->Image);
         }
 
-        auto choices = story->Choices;
-
         auto selected = false;
         auto current = -1;
         auto done = false;
@@ -23396,12 +23562,12 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
-        if (last > choices.size())
+        if (last > story->Choices.size())
         {
-            last = choices.size();
+            last = story->Choices.size();
         }
 
-        auto controls = createChoices(window, renderer, choices, offset, last, limit, textx, texty);
+        auto controls = createChoices(window, renderer, story->Choices, offset, last, limit, textx, texty);
 
         TTF_Init();
 
@@ -23687,12 +23853,14 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                         last = offset + limit;
 
-                        if (last > choices.size())
+                        if (last > story->Choices.size())
                         {
-                            last = choices.size();
+                            last = story->Choices.size();
                         }
 
-                        controls = createChoices(window, renderer, choices, offset, last, limit, textx, texty);
+                        freeControls(controls);
+
+                        controls = createChoices(window, renderer, story->Choices, offset, last, limit, textx, texty);
 
                         SDL_Delay(50);
                     }
@@ -23706,26 +23874,28 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
                 else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
                 {
-                    if (choices.size() - last > 0)
+                    if (story->Choices.size() - last > 0)
                     {
-                        if (offset < choices.size() - limit)
+                        if (offset < story->Choices.size() - limit)
                         {
                             offset += scrollSpeed;
                         }
 
-                        if (offset > choices.size() - limit)
+                        if (offset > story->Choices.size() - limit)
                         {
-                            offset = choices.size() - limit;
+                            offset = story->Choices.size() - limit;
                         }
 
                         last = offset + limit;
 
-                        if (last > choices.size())
+                        if (last > story->Choices.size())
                         {
-                            last = choices.size();
+                            last = story->Choices.size();
                         }
 
-                        controls = createChoices(window, renderer, choices, offset, last, limit, textx, texty);
+                        freeControls(controls);
+
+                        controls = createChoices(window, renderer, story->Choices, offset, last, limit, textx, texty);
 
                         SDL_Delay(50);
 
@@ -23735,7 +23905,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                     }
 
-                    if (choices.size() - last <= 0)
+                    if (story->Choices.size() - last <= 0)
                     {
                         selected = false;
 
@@ -25498,6 +25668,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             }
         }
 
+        freeControls(controls);
+
         if (font_garamond)
         {
             TTF_CloseFont(font_garamond);
@@ -25880,7 +26052,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 text = createText(story->Text, FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
             }
 
-            auto compact = (text && text->h <= text_bounds - 2 * text_space) || text == NULL;
+            auto compact = (text && text->h <= text_bounds - 2 * text_space) || !text;
 
             if (story->Controls == Story::Controls::STANDARD)
             {
@@ -26339,7 +26511,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                     popup_last = offset_limit;
                                 }
 
-                                controls_popup.clear();
+                                freeControls(controls_popup);
 
                                 if (story->Monsters.size() > 0)
                                 {
@@ -26421,7 +26593,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                     popup_last = offset_limit;
                                 }
 
-                                controls_popup.clear();
+                                freeControls(controls_popup);
 
                                 if (story->Monsters.size() > 0)
                                 {
@@ -26524,6 +26696,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             if (Engine::COUNT(story->Monsters) > 0 || Engine::COUNT(story->EnemyArmy) > 0 || Engine::COUNT(story->EnemyFleet) > 0)
                             {
+                                freeControls(controls_popup);
+
                                 if (story->Monsters.size() > 0)
                                 {
                                     if (popup_last > story->Monsters.size())
@@ -26807,11 +26981,15 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             }
                             else if (Engine::ALIVE(party) <= 0)
                             {
+                                freeControls(controls_normal);
+
                                 controls_normal = Story::ExitControls(compact);
                             }
                         }
                         else
                         {
+                            freeControls(controls_normal);
+
                             controls_normal = Story::ExitControls(compact);
                         }
                     }
@@ -26848,6 +27026,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                 }
             }
+
+            freeControls(controls_normal);
+
+            freeControls(controls_popup);
 
             if (splash)
             {
@@ -27063,7 +27245,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                 text = createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
             }
 
-            auto compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+            auto compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || !text;
 
             auto controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
 
@@ -27366,7 +27548,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                                 splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
                             }
 
-                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || !text;
+
+                            freeControls(controls);
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
                         }
@@ -27434,7 +27618,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                                 splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
                             }
 
-                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || !text;
+
+                            freeControls(controls);
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
 
@@ -27504,7 +27690,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                                 splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
                             }
 
-                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || !text;
+
+                            freeControls(controls);
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
 
@@ -27531,7 +27719,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                                 topic_last = Topics::ALL.size();
                             }
 
-                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || !text;
+
+                            freeControls(controls);
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
                         }
@@ -27561,7 +27751,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                                 topic_last = Topics::ALL.size();
                             }
 
-                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || text == NULL;
+                            compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || !text;
+
+                            freeControls(controls);
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
                         }
@@ -27576,6 +27768,8 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     }
                 }
             }
+
+            freeControls(controls);
 
             if (splash)
             {
