@@ -27456,7 +27456,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You rush the guard, pulling him to the ground, and kicking his whip away. Alas, more guards are never far away and soon the room is filled with sweating, swearing soldiers who restrain and beat you as the other slaves look on.\n\nThe guards will not beat you to death... this time.\n\nNote: Every party members loses 2 Health points. Their health points do not drop below 1.";
+            Text = "You rush the guard, pulling him to the ground, and kicking his whip away. Alas, more guards are never far away and soon the room is filled with sweating, swearing soldiers who restrain and beat you as the other slaves look on.\n\nThe guards will not beat you to death... this time.\n\nNote: All party members lose 2 Health points. Their Health points do not drop below 1.";
 
             Bye = "Eventually you are released, bloodied but not unbowed.";
 
