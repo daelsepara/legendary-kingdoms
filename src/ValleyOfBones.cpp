@@ -3379,7 +3379,6 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
 
     auto current_map = 1;
 
-    // Render the image
     if (window && renderer && map_local && map_world)
     {
         auto selected = false;
@@ -3398,7 +3397,14 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
         {
             if (current_map == 1)
             {
-                SDL_SetWindowTitle(window, "Map: The Valley of Bones");
+                if (book == Book::Type::BOOK1)
+                {
+                    SDL_SetWindowTitle(window, "Map: The Valley of Bones");
+                }
+                else
+                {
+                    SDL_SetWindowTitle(window, "Map: Legendary Kingdoms");
+                }
             }
             else
             {
@@ -25656,6 +25662,7 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
     std::string temp_string = "";
 
     auto storyID = story->ID < 0 ? story->DisplayID : story->ID;
+
     auto nextID = next->ID < 0 ? next->DisplayID : next->ID;
 
     if ((story->BookID != next->BookID) || (story->BookID == next->BookID && storyID != nextID))
@@ -25843,209 +25850,204 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 {
     auto quit = false;
 
-    auto font_size = 28;
-
-    TTF_Init();
-
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-    auto font_mason2 = TTF_OpenFont(FONT_MASON, 28);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
-    SDL_Surface *background = NULL;
-
-    auto saveParty = party;
-
-    std::vector<Button> controls = {};
-    std::vector<Button> controls_normal = {};
-    std::vector<Button> controls_popup = {};
-
-    auto current_mode = Control::Type::STORY;
-
-    while (!quit)
+    if (window && renderer)
     {
-        auto flash_message = false;
+        TTF_Init();
 
-        auto flash_color = intRD;
+        auto font_size = 28;
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
+        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+        auto font_mason2 = TTF_OpenFont(FONT_MASON, 28);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
-        std::string message = "";
+        TTF_SetFontKerning(font_dark11, 0);
 
-        Uint32 start_ticks = 0;
+        SDL_Surface *background = NULL;
 
-        Uint32 duration = 3000;
+        std::vector<Button> controls = {};
+        std::vector<Button> controls_normal = {};
+        std::vector<Button> controls_popup = {};
 
-        // Lambda functions for displaying flash messages
-        auto displayMessage = [&](std::string msg, Uint32 color)
+        auto current_mode = Control::Type::STORY;
+
+        while (!quit)
         {
-            flash_message = true;
+            auto saveParty = party;
 
-            message = msg;
+            auto flash_message = false;
 
-            flash_color = color;
+            auto flash_color = intRD;
 
-            start_ticks = SDL_GetTicks();
-        };
+            std::string message = "";
 
-        party.StoryID = story->ID;
+            Uint32 start_ticks = 0;
 
-        // capture party state before running the story
-        saveParty = party;
+            Uint32 duration = 3000;
 
-        auto run_once = true;
-
-        SDL_Surface *splash = NULL;
-        SDL_Texture *splashTexture = NULL;
-        SDL_Surface *text = NULL;
-
-        if (run_once)
-        {
-            run_once = false;
-
-            auto jump = story->Background(party);
-
-            auto jumpBook = jump.first;
-
-            if (jumpBook != Book::Type::NONE)
+            // Lambda functions for displaying flash messages
+            auto displayMessage = [&](std::string msg, Uint32 color)
             {
-                story = findStory(jump);
+                flash_message = true;
 
-                continue;
+                message = msg;
+
+                flash_color = color;
+
+                start_ticks = SDL_GetTicks();
+            };
+
+            party.StoryID = story->ID;
+
+            auto run_once = true;
+
+            SDL_Surface *splash = NULL;
+            SDL_Texture *splashTexture = NULL;
+            SDL_Surface *text = NULL;
+
+            if (run_once)
+            {
+                run_once = false;
+
+                auto jump = story->Background(party);
+
+                auto jumpBook = jump.first;
+
+                if (jumpBook != Book::Type::NONE)
+                {
+                    story = findStory(jump);
+
+                    continue;
+                }
+
+                story->Event(party);
             }
 
-            story->Event(party);
-        }
-
-        if (story->Location != Location::Type::NONE)
-        {
-            Engine::SET_LOCATION(party, story->Location, story->IsCity);
-        }
-
-        auto splash_h = splashw;
-
-        if (story->Image)
-        {
-            splash = createImage(story->Image);
-        }
-
-        if (splash)
-        {
-            if (splash->w > (textwidth - 2 * text_space))
+            if (story->Location != Location::Type::NONE)
             {
-                splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+                Engine::SET_LOCATION(party, story->Location, story->IsCity);
+            }
+
+            auto splash_h = splashw;
+
+            if (story->Image)
+            {
+                splash = createImage(story->Image);
+            }
+
+            if (splash)
+            {
+                if (splash->w > (textwidth - 2 * text_space))
+                {
+                    splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+                }
+                else
+                {
+                    splash_h = splash->h;
+                }
+
+                splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
+            }
+
+            if (story->Image && story->Text)
+            {
+                auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * text_space;
+
+                text = createTextAndImage(story->Text, story->Image, FONT_GARAMOND, font_size, clrDB, intBE, listwidth, TTF_STYLE_NORMAL);
+            }
+            else if (story->Text)
+            {
+                auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * text_space;
+
+                text = createText(story->Text, FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+            }
+
+            auto compact = (text && text->h <= text_bounds - 2 * text_space) || text == NULL;
+
+            if (story->Controls == Story::Controls::STANDARD)
+            {
+                controls_normal = Story::StandardControls(compact);
+            }
+            else if (story->Controls == Story::Controls::SHOP)
+            {
+                controls_normal = Story::ShopControls(compact);
+            }
+            else if (story->Controls == Story::Controls::BARTER)
+            {
+                controls_normal = Story::BarterControls(compact);
+            }
+            else if (story->Controls == Story::Controls::HARBOUR)
+            {
+                controls_normal = Story::HarbourControls(compact);
+            }
+            else if (story->Controls == Story::Controls::INN)
+            {
+                controls_normal = Story::InnControls(compact);
+            }
+            else if (story->Controls == Story::Controls::RECRUIT)
+            {
+                controls_normal = Story::RecruitmentControls(compact);
+            }
+            else if (story->Controls == Story::Controls::BARRACKS)
+            {
+                controls_normal = Story::BarracksControls(compact);
             }
             else
             {
-                splash_h = splash->h;
+                controls_normal = Story::ExitControls(compact);
             }
 
-            splashTexture = SDL_CreateTextureFromSurface(renderer, splash);
-        }
-
-        if (story->Image && story->Text)
-        {
-            auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * text_space;
-
-            text = createTextAndImage(story->Text, story->Image, FONT_GARAMOND, font_size, clrDB, intBE, listwidth, TTF_STYLE_NORMAL);
-        }
-        else if (story->Text)
-        {
-            auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * text_space;
-
-            text = createText(story->Text, FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
-        }
-
-        auto compact = (text && text->h <= text_bounds - 2 * text_space) || text == NULL;
-
-        if (story->Controls == Story::Controls::STANDARD)
-        {
-            controls_normal = Story::StandardControls(compact);
-        }
-        else if (story->Controls == Story::Controls::SHOP)
-        {
-            controls_normal = Story::ShopControls(compact);
-        }
-        else if (story->Controls == Story::Controls::BARTER)
-        {
-            controls_normal = Story::BarterControls(compact);
-        }
-        else if (story->Controls == Story::Controls::HARBOUR)
-        {
-            controls_normal = Story::HarbourControls(compact);
-        }
-        else if (story->Controls == Story::Controls::INN)
-        {
-            controls_normal = Story::InnControls(compact);
-        }
-        else if (story->Controls == Story::Controls::RECRUIT)
-        {
-            controls_normal = Story::RecruitmentControls(compact);
-        }
-        else if (story->Controls == Story::Controls::BARRACKS)
-        {
-            controls_normal = Story::BarracksControls(compact);
-        }
-        else
-        {
-            controls_normal = Story::ExitControls(compact);
-        }
-
-        if ((story->Monsters.size() > 0 || story->EnemyArmy.size() > 0 || story->EnemyFleet.size() > 0) && ((Engine::ALIVE(party) + Engine::OUTSIDE(party)) > 0))
-        {
-            controls_normal = Story::BattlePreviewControls(compact);
-        }
-
-        if (story->Type != Story::Type::NORMAL || (Engine::ALIVE(party) + Engine::OUTSIDE(party)) <= 0)
-        {
-            controls_normal = Story::ExitControls(compact);
-        }
-
-        auto popupw = (int)(0.6 * SCREEN_WIDTH);
-        auto popuph = (int)(0.6 * SCREEN_HEIGHT);
-        auto popupx = (SCREEN_WIDTH - popupw) / 2;
-        auto popupy = ((starty + text_bounds) - popuph) / 2;
-
-        auto popup_speed = 1;
-        auto popup_offset = 0;
-        auto popup_limit = (popuph - infoh - buttonh - button_space) / (96);
-        auto popup_last = popup_offset + popup_limit;
-
-        if (story->Monsters.size() > 0 || story->EnemyFleet.size() > 0 || story->EnemyArmy.size() > 0)
-        {
-            if (story->Monsters.size() > 0)
+            if ((story->Monsters.size() > 0 || story->EnemyArmy.size() > 0 || story->EnemyFleet.size() > 0) && ((Engine::ALIVE(party) + Engine::OUTSIDE(party)) > 0))
             {
-                if (popup_last > story->Monsters.size())
-                {
-                    popup_last = story->Monsters.size();
-                }
-
-                controls_popup = popupList(window, renderer, story->Monsters, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+                controls_normal = Story::BattlePreviewControls(compact);
             }
-            else if (story->EnemyFleet.size() > 0)
+
+            if (story->Type != Story::Type::NORMAL || (Engine::ALIVE(party) + Engine::OUTSIDE(party)) <= 0)
             {
-                if (popup_last > story->EnemyFleet.size())
-                {
-                    popup_last = story->EnemyFleet.size();
-                }
-
-                controls_popup = popupList(window, renderer, story->EnemyFleet, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+                controls_normal = Story::ExitControls(compact);
             }
-            else if (story->EnemyArmy.size() > 0)
+
+            auto popupw = (int)(0.6 * SCREEN_WIDTH);
+            auto popuph = (int)(0.6 * SCREEN_HEIGHT);
+            auto popupx = (SCREEN_WIDTH - popupw) / 2;
+            auto popupy = ((starty + text_bounds) - popuph) / 2;
+
+            auto popup_speed = 1;
+            auto popup_offset = 0;
+            auto popup_limit = (popuph - infoh - buttonh - button_space) / (96);
+            auto popup_last = popup_offset + popup_limit;
+
+            if (story->Monsters.size() > 0 || story->EnemyFleet.size() > 0 || story->EnemyArmy.size() > 0)
             {
-                if (popup_last > story->EnemyArmy.size())
+                if (story->Monsters.size() > 0)
                 {
-                    popup_last = story->EnemyArmy.size();
+                    if (popup_last > story->Monsters.size())
+                    {
+                        popup_last = story->Monsters.size();
+                    }
+
+                    controls_popup = popupList(window, renderer, story->Monsters, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
                 }
+                else if (story->EnemyFleet.size() > 0)
+                {
+                    if (popup_last > story->EnemyFleet.size())
+                    {
+                        popup_last = story->EnemyFleet.size();
+                    }
 
-                controls_popup = popupList(window, renderer, story->EnemyArmy, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy, false);
+                    controls_popup = popupList(window, renderer, story->EnemyFleet, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+                }
+                else if (story->EnemyArmy.size() > 0)
+                {
+                    if (popup_last > story->EnemyArmy.size())
+                    {
+                        popup_last = story->EnemyArmy.size();
+                    }
+
+                    controls_popup = popupList(window, renderer, story->EnemyArmy, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy, false);
+                }
             }
-        }
 
-        // Render the image
-        if (window && renderer)
-        {
             auto scrollSpeed = 20;
             auto hold = false;
 
@@ -26915,73 +26917,73 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                 }
             }
+
+            if (splash)
+            {
+                SDL_FreeSurface(splash);
+
+                splash = NULL;
+            }
+
+            if (splashTexture)
+            {
+                SDL_DestroyTexture(splashTexture);
+
+                splashTexture = NULL;
+            }
+
+            if (text)
+            {
+                SDL_FreeSurface(text);
+
+                text = NULL;
+            }
         }
 
-        if (splash)
+        if (background)
         {
-            SDL_FreeSurface(splash);
+            SDL_FreeSurface(background);
 
-            splash = NULL;
+            background = NULL;
         }
 
-        if (splashTexture)
+        if (font_garamond)
         {
-            SDL_DestroyTexture(splashTexture);
+            TTF_CloseFont(font_garamond);
 
-            splashTexture = NULL;
+            font_garamond = NULL;
         }
 
-        if (text)
+        if (font_caption)
         {
-            SDL_FreeSurface(text);
+            TTF_CloseFont(font_caption);
 
-            text = NULL;
+            font_caption = NULL;
         }
+
+        if (font_mason)
+        {
+            TTF_CloseFont(font_mason);
+
+            font_mason = NULL;
+        }
+
+        if (font_mason2)
+        {
+            TTF_CloseFont(font_mason2);
+
+            font_mason2 = NULL;
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_mason = NULL;
+        }
+
+        TTF_Quit();
     }
-
-    if (background)
-    {
-        SDL_FreeSurface(background);
-
-        background = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    if (font_caption)
-    {
-        TTF_CloseFont(font_caption);
-
-        font_caption = NULL;
-    }
-
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_mason2)
-    {
-        TTF_CloseFont(font_mason2);
-
-        font_mason2 = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_mason = NULL;
-    }
-
-    TTF_Quit();
 
     return quit;
 }
