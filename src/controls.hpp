@@ -16,6 +16,7 @@ namespace Control
         SCROLL_UP,
         SCROLL_DOWN,
         MAP,
+        TOGGLE_MAP,
         CHARACTER,
         PARTY,
         GAME,
@@ -95,7 +96,11 @@ namespace Control
         MONEY,
         TOPICS_UP,
         TOPICS_DOWN,
-        BARRACKS
+        BARRACKS,
+        NEXT_TOPIC,
+        PREVIOUS_TOPIC,
+        BUY_SHIP,
+        SELL_SHIP
     };
 
     class Base

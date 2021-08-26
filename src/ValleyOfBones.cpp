@@ -63,6 +63,7 @@ void putHeader(SDL_Renderer *renderer, const char *text, TTF_Font *font, int spa
 void putText(SDL_Renderer *renderer, const char *text, TTF_Font *font, int space, SDL_Color fg, Uint32 bg, int style, int w, int h, int x, int y);
 void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts);
 void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts, bool hide_scroll);
+void renderCaption(SDL_Renderer *renderer, TTF_Font *font_caption, Button control);
 void renderImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y);
 void renderImage(SDL_Renderer *renderer, SDL_Surface *text, int x, int y, int bounds, int offset);
 void renderText(SDL_Renderer *renderer, SDL_Surface *text, Uint32 bg, int x, int y, int bounds, int offset);
@@ -2998,17 +2999,17 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
         auto controls_add = createHTextButtons(choices_add, 5, text_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
         auto controls_del = createHTextButtons(choices_del, 5, text_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
 
-        controls_add[0].Type = Control::Type::BACK;
+        controls_add[0].Type = Control::Type::PREVIOUS;
         controls_add[1].Type = Control::Type::NEXT;
         controls_add[2].Type = Control::Type::PLUS;
         controls_add[3].Type = Control::Type::NEW;
-        controls_add[4].Type = Control::Type::QUIT;
+        controls_add[4].Type = Control::Type::BACK;
 
-        controls_del[0].Type = Control::Type::BACK;
+        controls_del[0].Type = Control::Type::PREVIOUS;
         controls_del[1].Type = Control::Type::NEXT;
         controls_del[2].Type = Control::Type::MINUS;
         controls_del[3].Type = Control::Type::NEW;
-        controls_del[4].Type = Control::Type::QUIT;
+        controls_del[4].Type = Control::Type::BACK;
 
         std::vector<TextButton> *controls;
 
@@ -3138,7 +3139,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
             {
                 switch (controls->at(current).Type)
                 {
-                case Control::Type::BACK:
+                case Control::Type::PREVIOUS:
 
                     if (character > 0)
                     {
@@ -3293,7 +3294,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
                     break;
 
-                case Control::Type::QUIT:
+                case Control::Type::BACK:
 
                     done = true;
 
@@ -3353,6 +3354,10 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
 bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
 {
+    TTF_Init();
+
+    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
+
     auto done = false;
 
     std::string book_map = "";
@@ -3383,7 +3388,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
         auto marginw = ((int)((1.0 - 2.0 * Margin) * SCREEN_WIDTH));
 
         auto controls = std::vector<Button>();
-        controls.push_back(Button(0, "icons/map.png", 0, 1, 0, 0, startx, buttony, Control::Type::MAP));
+        controls.push_back(Button(0, "icons/map.png", 0, 1, 0, 0, startx, buttony, Control::Type::TOGGLE_MAP));
         controls.push_back(Button(1, "icons/back-button.png", 0, 1, 1, 1, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
 
         auto offset_x = 0;
@@ -3423,6 +3428,11 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
             }
 
             renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+
+            if (current >= 0 && current < controls.size() && !hold)
+            {
+                renderCaption(renderer, font_caption, controls[current]);
+            }
 
             auto scrollUp = false;
             auto scrollDown = false;
@@ -3528,7 +3538,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
             {
                 done = true;
             }
-            else if (selected && current >= 0 && current < controls.size() && controls[current].Type == Control::Type::MAP)
+            else if (selected && current >= 0 && current < controls.size() && controls[current].Type == Control::Type::TOGGLE_MAP)
             {
                 current_map = 1 - current_map;
             }
@@ -3546,6 +3556,15 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
         texture_valley = NULL;
         texture_kingdom = NULL;
     }
+
+    if (font_caption)
+    {
+        TTF_CloseFont(font_caption);
+
+        font_caption = NULL;
+    }
+
+    TTF_Quit();
 
     return done;
 }
@@ -13749,9 +13768,8 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-    auto font_size = 28;
-
     auto scrollSpeed = 1;
+
     auto limit = (text_bounds - 2 * text_space) / (96);
 
     auto offset = 0;
@@ -13795,7 +13813,8 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     TTF_Init();
 
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
 
@@ -13934,6 +13953,11 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
+        if (current >= 0 && current < controls.size())
+        {
+            renderCaption(renderer, font_caption, controls[current]);
+        }
+
         if (flash_message)
         {
             if ((SDL_GetTicks() - start_ticks) < duration)
@@ -14045,7 +14069,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                 selected = false;
             }
-            else if (controls[current].Type == Control::Type::BUY && !hold)
+            else if (controls[current].Type == Control::Type::BUY_SHIP && !hold)
             {
                 if (selection.size() > 0)
                 {
@@ -14110,7 +14134,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     }
                 }
             }
-            else if (controls[current].Type == Control::Type::SELL && !hold)
+            else if (controls[current].Type == Control::Type::SELL_SHIP && !hold)
             {
                 if (selection.size() > 0)
                 {
@@ -14218,6 +14242,13 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         font_garamond = NULL;
     }
 
+    if (font_caption)
+    {
+        TTF_CloseFont(font_caption);
+
+        font_caption = NULL;
+    }
+
     if (font_dark11)
     {
         TTF_CloseFont(font_dark11);
@@ -14248,9 +14279,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-    auto font_size = 28;
-
     auto scrollSpeed = 1;
+
     auto limit = (text_bounds - 2 * text_space) / (96);
 
     auto offset = 0;
@@ -14294,7 +14324,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     TTF_Init();
 
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
 
@@ -14459,6 +14490,11 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         }
 
         renderButtons(renderer, controls, current, intLB, text_space, border_pts);
+
+        if (current >= 0 && current < controls.size())
+        {
+            renderCaption(renderer, font_caption, controls[current]);
+        }
 
         if (flash_message)
         {
@@ -14787,6 +14823,13 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         TTF_CloseFont(font_garamond);
 
         font_garamond = NULL;
+    }
+
+    if (font_caption)
+    {
+        TTF_CloseFont(font_caption);
+
+        font_caption = NULL;
     }
 
     if (font_dark11)
@@ -15304,8 +15347,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-    auto font_size = 28;
-
     auto scrollSpeed = 1;
 
     auto popupw = (int)(0.6 * SCREEN_WIDTH);
@@ -15314,7 +15355,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     auto popupy = ((starty + text_bounds) - popuph) / 2;
 
     auto offset = 0;
-    auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * border_pts);
+    auto limit = (text_bounds - 2 * text_space) / (56);
     auto last = offset + limit;
 
     if (last > party.Vault.size())
@@ -15360,7 +15401,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     TTF_Init();
 
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
 
@@ -15371,8 +15413,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     auto scrollUp = false;
     auto scrollDown = false;
     auto hold = false;
-
     auto selection = -1;
+    auto start_money = 0;
 
     auto current_mode = Control::Type::EQUIPMENT;
 
@@ -15519,6 +15561,11 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             renderButtons(renderer, controls_money, current, intLB, border_space, border_pts);
 
             controls = controls_money;
+        }
+
+        if (current >= 0 && current < controls.size())
+        {
+            renderCaption(renderer, font_caption, controls[current]);
         }
 
         if (flash_message)
@@ -15815,6 +15862,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 if (current_mode == Control::Type::EQUIPMENT)
                 {
+                    start_money = party.Money;
+
                     current_mode = Control::Type::MONEY;
 
                     current = -1;
@@ -15826,6 +15875,45 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 if (current_mode == Control::Type::MONEY)
                 {
+                    if (party.Money != start_money)
+                    {
+                        auto diff = party.VaultMoney - party.Money;
+
+                        if (diff > 0)
+                        {
+                            if (diff > 1)
+                            {
+                                displayMessage(std::to_string(diff) + " silver coins stored in The Vault.", intLB);
+                            }
+                            else
+                            {
+                                displayMessage("One silver coin stored in The Vault.", intLB);
+                            }
+                        }
+                        else if (diff < 0)
+                        {
+                            if (diff < -1)
+                            {
+                                displayMessage(std::to_string(-diff) + " silver coins withdrawn from The Vault.", intLB);
+                            }
+                            else
+                            {
+                                displayMessage("One silver coin withdrawn from The Vault.", intLB);
+                            }
+                        }
+                        else if (diff == 0)
+                        {
+                            if (party.Money < start_money)
+                            {
+                                displayMessage("You store half of your silver coins into The Vault", intLB);
+                            }
+                            else
+                            {
+                                displayMessage("You withdrew half of the silver coins from The Vault", intLB);
+                            }
+                        }
+                    }
+
                     current_mode = Control::Type::EQUIPMENT;
 
                     current = -1;
@@ -15843,15 +15931,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         party.VaultMoney += store;
                         party.Money -= store;
-
-                        if (store > 1)
-                        {
-                            displayMessage(std::to_string(store) + " silver coins stored in the vault!", intLB);
-                        }
-                        else
-                        {
-                            displayMessage("One silver coin stored in the vault!", intLB);
-                        }
                     }
                     else
                     {
@@ -15873,15 +15952,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         party.VaultMoney -= withdraw;
                         party.Money += withdraw;
-
-                        if (withdraw > 1)
-                        {
-                            displayMessage(std::to_string(withdraw) + " silver coins withdrawn from the vault!", intLB);
-                        }
-                        else
-                        {
-                            displayMessage("One silver coin withdrawn from the vault!", intLB);
-                        }
                     }
                     else
                     {
@@ -15905,6 +15975,13 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         TTF_CloseFont(font_garamond);
 
         font_garamond = NULL;
+    }
+
+    if (font_caption)
+    {
+        TTF_CloseFont(font_caption);
+
+        font_caption = NULL;
     }
 
     if (font_dark11)
@@ -16435,10 +16512,8 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-    auto font_size = 28;
-
     auto scrollSpeed = 1;
-    auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * border_pts);
+    auto limit = (text_bounds - 2 * text_space) / (56);
 
     auto offset = 0;
 
@@ -16482,7 +16557,8 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
     TTF_Init();
 
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
 
@@ -16634,6 +16710,11 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
         }
 
         renderButtons(renderer, controls, current, intLB, text_space, border_pts);
+
+        if (current >= 0 && current < controls.size())
+        {
+            renderCaption(renderer, font_caption, controls[current]);
+        }
 
         if (flash_message)
         {
@@ -17060,6 +17141,13 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
         font_garamond = NULL;
     }
 
+    if (font_caption)
+    {
+        TTF_CloseFont(font_caption);
+
+        font_caption = NULL;
+    }
+
     if (font_dark11)
     {
         TTF_CloseFont(font_dark11);
@@ -17139,6 +17227,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
     TTF_Init();
 
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
 
@@ -17297,6 +17386,11 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
         }
 
         renderButtons(renderer, controls, current, intLB, text_space, border_pts);
+
+        if (current >= 0 && current < controls.size())
+        {
+            renderCaption(renderer, font_caption, controls[current]);
+        }
 
         if (flash_message)
         {
@@ -17554,6 +17648,13 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
         font_garamond = NULL;
     }
 
+    if (font_caption)
+    {
+        TTF_CloseFont(font_caption);
+
+        font_caption = NULL;
+    }
+
     if (font_dark11)
     {
         TTF_CloseFont(font_dark11);
@@ -17633,6 +17734,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
     TTF_Init();
 
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
 
@@ -17763,6 +17865,11 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         }
 
         renderButtons(renderer, controls, current, intLB, text_space, border_pts);
+
+        if (current >= 0 && current < controls.size())
+        {
+            renderCaption(renderer, font_caption, controls[current]);
+        }
 
         if (flash_message)
         {
@@ -17918,6 +18025,13 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         TTF_CloseFont(font_garamond);
 
         font_garamond = NULL;
+    }
+
+    if (font_caption)
+    {
+        TTF_CloseFont(font_caption);
+
+        font_caption = NULL;
     }
 
     if (font_dark11)
@@ -19910,14 +20024,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY));
+        controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY_SHIP));
     }
 
     if (sell_button)
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, (buy_button ? (startx + gridsize) : startx), buttony, Control::Type::SELL));
+        controls.push_back(Button(idx, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, (buy_button ? (startx + gridsize) : startx), buttony, Control::Type::SELL_SHIP));
     }
 
     idx = controls.size();
@@ -20055,11 +20169,10 @@ std::vector<Button> buyCargo(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = controls.size();
 
-    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "SELL CARGO", clrWH, intDB, 220, 48, -1), idx, idx + 1, cargo.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::SELL_CARGO));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "BUY CARGO", clrWH, intDB, 220, 48, -1), idx, idx + 2, cargo.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::BUY_CARGO));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 1, idx + 2, cargo.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::BACK));
+    controls.push_back(Button(idx, "icons/selling.png", idx, idx + 1, (cargo.size() > 0 ? (last - start) - 1 : idx), idx, startx, buttony, Control::Type::SELL_CARGO));
+    controls.push_back(Button(idx + 1, "icons/shop.png", idx, idx + 2, (cargo.size() > 0 ? (last - start) - 1 : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::BUY_CARGO));
+    controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, (cargo.size() > 0 ? (last - start) - 1 : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (cargo.size() > 0 ? (last - start) - 1 : idx + 3), idx + 3, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -20109,11 +20222,10 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     idx = controls.size();
 
-    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "SELL CARGO", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::SELL_CARGO));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "BUY CARGO", clrWH, intDB, 220, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::BUY_CARGO));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 1, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::BACK));
+    controls.push_back(Button(idx, "icons/selling.png", idx, idx + 1, (ships.size() > 0 ? (last - start) - 1 : idx), idx, startx, buttony, Control::Type::SELL_CARGO));
+    controls.push_back(Button(idx + 1, "icons/shop.png", idx, idx + 2, (ships.size() > 0 ? (last - start) - 1 : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::BUY_CARGO));
+    controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, (ships.size() > 0 ? (last - start) - 1 : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (ships.size() > 0 ? (last - start) - 1 : idx + 3), idx + 3, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -20136,12 +20248,11 @@ std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer)
 
 bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
-    auto font_size = 28;
-
     TTF_Init();
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
     TTF_SetFontKerning(font_dark11, 0);
@@ -20359,6 +20470,11 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             }
 
             renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+
+            if (current >= 0 && current < controls.size())
+            {
+                renderCaption(renderer, font_caption, controls[current]);
+            }
 
             if (flash_message)
             {
@@ -20763,6 +20879,13 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         font_garamond = NULL;
     }
 
+    if (font_caption)
+    {
+        TTF_CloseFont(font_caption);
+
+        font_caption = NULL;
+    }
+
     TTF_Quit();
 
     return false;
@@ -20892,14 +21015,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
                         controls = shipList(window, renderer, harbour->Ships, offset, last, limit, textx, texty + infoh);
 
-                        if (harbour->Ships.size() - last > 0)
-                        {
-                            current = last - offset + 1;
-                        }
-                        else
-                        {
-                            current = last - offset;
-                        }
+                        current = FIND_CONTROL(controls, Control::Type::BUY_SELL_SHIP);
                     }
 
                     current_mode = Control::Type::BUY_SELL_SHIP;
@@ -20914,7 +21030,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
                         controls = harbourControls(window, renderer);
 
-                        current = 1;
+                        current = FIND_CONTROL(controls, Control::Type::REPAIR_SHIP);
                     }
 
                     current_mode = Control::Type::REPAIR_SHIP;
@@ -20934,14 +21050,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
                         controls = cargoList(window, renderer, harbour->Cargo, offset, last, limit, textx, texty + infoh);
 
-                        if (harbour->Cargo.size() - last > 0)
-                        {
-                            current = last - offset + 3;
-                        }
-                        else
-                        {
-                            current = last - offset + 2;
-                        }
+                        current = FIND_CONTROL(controls, Control::Type::BUY_SELL_CARGO);
                     }
 
                     current_mode = Control::Type::BUY_SELL_CARGO;
@@ -23299,9 +23408,10 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/map.png", idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::MAP));
-    controls.push_back(Button(idx + 1, "icons/user.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::PARTY));
-    controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, idx - 1, idx + 2, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, "icons/open-book.png", idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
+    controls.push_back(Button(idx + 1, "icons/map.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
+    controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, idx - 1, idx + 3, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -23355,8 +23465,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto hold = false;
         auto scrollSpeed = 1;
 
-        auto font_size = 28;
-
         auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
         auto offset = 0;
@@ -23372,10 +23480,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         TTF_Init();
 
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
         auto font_mason = TTF_OpenFont(FONT_MASON, 24);
         auto font_mason2 = TTF_OpenFont(FONT_MASON, 28);
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+        auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
 
         TTF_SetFontKerning(font_dark11, 0);
 
@@ -23551,6 +23660,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             fillRect(renderer, listwidth, text_bounds, textx, texty, BE_80);
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
+
+            if (current >= 0 && current < controls.size() && !selected)
+            {
+                renderCaption(renderer, font_caption, controls[current]);
+            }
 
             for (auto i = offset; i < last; i++)
             {
@@ -25426,6 +25540,14 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                     }
                 }
+                else if (controls[current].Type == Control::Type::ENCYCLOPEDIA && !hold)
+                {
+                    encyclopediaScreen(window, renderer, story->BookID);
+
+                    current = -1;
+
+                    selected = false;
+                }
                 else if (controls[current].Type == Control::Type::MAP && !hold)
                 {
                     mapScreen(window, renderer, story->BookID);
@@ -25456,6 +25578,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             TTF_CloseFont(font_garamond);
 
             font_garamond = NULL;
+        }
+
+        if (font_caption)
+        {
+            TTF_CloseFont(font_caption);
+
+            font_caption = NULL;
         }
 
         if (font_mason)
@@ -25547,7 +25676,7 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
             }
         }
 
-        if (story->BookID != next->BookID && Engine::IN_PARTY(party, Character::Type::SKULLCRACKER))
+        if (((story->BookID != next->BookID) || (party.CurrentShip != -1)) && Engine::IN_PARTY(party, Character::Type::SKULLCRACKER))
         {
             auto result = Engine::FIND_CHARACTER(party, Character::Type::SKULLCRACKER);
 
@@ -25571,6 +25700,145 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
     }
 }
 
+void renderCaption(SDL_Renderer *renderer, TTF_Font *font_caption, Button control)
+{
+    auto caption_size = TTF_FontHeight(font_caption);
+    auto captiony = buttony + buttonh + border_space;
+    auto captionx = control.X - text_space;
+
+    std::string caption = "";
+
+    if (control.Type == Control::Type::ENCYCLOPEDIA)
+    {
+        caption = "Consult Encyclopedia";
+    }
+    else if (control.Type == Control::Type::MAP)
+    {
+        caption = "View Map";
+    }
+    else if (control.Type == Control::Type::TOGGLE_MAP)
+    {
+        caption = "Switch between Local and World Maps";
+    }
+    else if (control.Type == Control::Type::GAME)
+    {
+        caption = "Load or Save Game";
+    }
+    else if (control.Type == Control::Type::PARTY)
+    {
+        caption = "View Party";
+    }
+    else if (control.Type == Control::Type::HARBOUR)
+    {
+        caption = "Visit Harbour";
+    }
+    else if (control.Type == Control::Type::SHOP)
+    {
+        caption = "Buy/Sell Items";
+    }
+    else if (control.Type == Control::Type::INN)
+    {
+        caption = "Rest, Recover, and Recharge Spells";
+    }
+    else if (control.Type == Control::Type::PREVIEW)
+    {
+        caption = "Preview Battle";
+    }
+    else if (control.Type == Control::Type::NEXT)
+    {
+        caption = "Continue Story";
+    }
+    else if (control.Type == Control::Type::RECRUIT)
+    {
+        caption = "Recruit adventurers for your party";
+    }
+    else if (control.Type == Control::Type::BARRACKS)
+    {
+        caption = "Transfer Troops";
+    }
+    else if (control.Type == Control::Type::BACK)
+    {
+        caption = "Go Back";
+    }
+    else if (control.Type == Control::Type::QUIT)
+    {
+        caption = "Leave Game";
+    }
+    else if (control.Type == Control::Type::USE)
+    {
+        caption = "Use Item";
+    }
+    else if (control.Type == Control::Type::DROP)
+    {
+        caption = "Drop Item";
+    }
+    else if (control.Type == Control::Type::VAULT)
+    {
+        caption = "Access The Vault";
+    }
+    else if (control.Type == Control::Type::MONEY)
+    {
+        caption = "Access Money in The Vault";
+    }
+    else if (control.Type == Control::Type::TRANSFER)
+    {
+        caption = "Transfer Item";
+    }
+    else if (control.Type == Control::Type::SPELL)
+    {
+        caption = "Cast Spell";
+    }
+    else if (control.Type == Control::Type::RECHARGE)
+    {
+        caption = "Recharge Spell";
+    }
+    else if (control.Type == Control::Type::UNLEARN)
+    {
+        caption = "Unlearn Spell (Erase from Spellbook)";
+    }
+    else if (control.Type == Control::Type::BUY)
+    {
+        caption = "Buy Items";
+    }
+    else if (control.Type == Control::Type::SELL)
+    {
+        caption = "Sell Items";
+    }
+    else if (control.Type == Control::Type::EQUIPMENT)
+    {
+        caption = "View Inventory";
+    }
+    else if (control.Type == Control::Type::PREVIOUS_TOPIC)
+    {
+        caption = "Previous Topic";
+    }
+    else if (control.Type == Control::Type::NEXT_TOPIC)
+    {
+        caption = "Next Topic";
+    }
+    else if (control.Type == Control::Type::BUY_CARGO)
+    {
+        caption = "Buy Cargo";
+    }
+    else if (control.Type == Control::Type::SELL_CARGO)
+    {
+        caption = "Sell Cargo";
+    }
+    else if (control.Type == Control::Type::BUY_SHIP)
+    {
+        caption = "Buy Ships";
+    }
+    else if (control.Type == Control::Type::SELL_SHIP)
+    {
+        caption = "Sell Ships";
+    }
+
+    if (caption.length() > 0)
+    {
+        putText(renderer, caption.c_str(), font_caption, border_pts, clrDB, intWH, TTF_STYLE_NORMAL, textwidth, caption_size, captionx, captiony);
+    }
+}
+
 bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Book::Type book, Story::Base *story)
 {
     auto quit = false;
@@ -25580,6 +25848,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     TTF_Init();
 
     auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
     auto font_mason2 = TTF_OpenFont(FONT_MASON, 28);
     auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
@@ -26007,6 +26276,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
 
                 renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+
+                if (current >= 0 && current < controls.size() && !selected)
+                {
+                    renderCaption(renderer, font_caption, controls[current]);
+                }
 
                 if (splash && (splash->w > (textwidth - 2 * text_space)) && (current_mode != Control::Type::PREVIEW))
                 {
@@ -26633,7 +26907,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         selected = false;
                     }
-                    else if (controls[current].Type == Control::Type::BACK && !hold)
+                    else if (controls[current].Type == Control::Type::QUIT && !hold)
                     {
                         transition = true;
 
@@ -26677,6 +26951,13 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         TTF_CloseFont(font_garamond);
 
         font_garamond = NULL;
+    }
+
+    if (font_caption)
+    {
+        TTF_CloseFont(font_caption);
+
+        font_caption = NULL;
     }
 
     if (font_mason)
@@ -26769,8 +27050,8 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/previous.png", idx, idx + 1, topics.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::PREVIOUS));
-    controls.push_back(Button(idx + 1, "icons/next.png", idx, idx + 2, topics.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + gridsize, buttony, Control::Type::NEXT));
+    controls.push_back(Button(idx, "icons/previous.png", idx, idx + 1, topics.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::PREVIOUS_TOPIC));
+    controls.push_back(Button(idx + 1, "icons/next.png", idx, idx + 2, topics.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + gridsize, buttony, Control::Type::NEXT_TOPIC));
     controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, topics.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
 
     return controls;
@@ -26779,6 +27060,7 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
 bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID)
 {
     static int topic = 0;
+
     static int topic_offset = 0;
 
     if (window && renderer)
@@ -26830,6 +27112,8 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
             auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
 
             auto font_mason = TTF_OpenFont(FONT_MASON, 32);
+
+            auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
 
             auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * text_space;
 
@@ -26958,6 +27242,11 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                 }
 
                 renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+
+                if (current >= 0 && current < controls.size())
+                {
+                    renderCaption(renderer, font_caption, controls[current]);
+                }
 
                 if (splash && splash->w > (textwidth - 2 * text_space))
                 {
@@ -27138,7 +27427,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                         selected = false;
                     }
-                    else if (controls[current].Type == Control::Type::PREVIOUS && !hold)
+                    else if (controls[current].Type == Control::Type::PREVIOUS_TOPIC && !hold)
                     {
                         if (topic > 0)
                         {
@@ -27203,12 +27492,12 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
 
-                            current = FIND_CONTROL(controls, Control::Type::PREVIOUS);
+                            current = FIND_CONTROL(controls, Control::Type::PREVIOUS_TOPIC);
                         }
 
                         selected = false;
                     }
-                    else if (controls[current].Type == Control::Type::NEXT && !hold)
+                    else if (controls[current].Type == Control::Type::NEXT_TOPIC && !hold)
                     {
                         if (topic < Topics::ALL.size() - 1)
                         {
@@ -27273,7 +27562,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                             controls = topicsList(window, renderer, Topics::ALL, topic_offset, topic_last, topic_limit, startx, starty + infoh, compact);
 
-                            current = FIND_CONTROL(controls, Control::Type::NEXT);
+                            current = FIND_CONTROL(controls, Control::Type::NEXT_TOPIC);
                         }
 
                         selected = false;
@@ -27368,6 +27657,13 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                 TTF_CloseFont(font_garamond);
 
                 font_garamond = NULL;
+            }
+
+            if (font_caption)
+            {
+                TTF_CloseFont(font_caption);
+
+                font_caption = NULL;
             }
 
             if (font_mason)
