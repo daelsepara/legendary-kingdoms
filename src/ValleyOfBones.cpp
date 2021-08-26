@@ -2186,7 +2186,6 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
         while (!done)
         {
-
             fillWindow(renderer, intWH);
 
             auto adventurerh = splashw;
@@ -2778,7 +2777,6 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
         {
             while (!done)
             {
-
                 fillWindow(renderer, intWH);
 
                 auto adventurerh = splashw;
@@ -3102,7 +3100,6 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
         while (!done)
         {
-
             fillWindow(renderer, intWH);
 
             auto adventurerh = splashw;
@@ -15166,7 +15163,6 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
         while (!done)
         {
-
             fillWindow(renderer, intWH);
 
             if (current >= 0 && current < controls.size())
@@ -16353,7 +16349,6 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         while (!done)
         {
-
             fillWindow(renderer, intWH);
 
             if (current >= 0 && current < controls.size())
@@ -20548,7 +20543,6 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         while (!done)
         {
-
             fillWindow(renderer, intWH);
 
             putHeader(renderer, "Harbour", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
@@ -21189,7 +21183,6 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
         while (!done)
         {
-
             fillWindow(renderer, intWH);
 
             putHeader(renderer, "Location", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
@@ -27165,6 +27158,7 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
 bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID)
 {
     static int topic = 0;
+    static int topic_offset = 0;
 
     if (window && renderer)
     {
@@ -27187,6 +27181,27 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                 topic = Topics::ALL.size();
             }
 
+            if (topic_offset < 0)
+            {
+                topic_offset = 0;
+            }
+
+            auto topic_speed = 1;
+
+            auto topic_limit = (text_bounds - 2 * text_space - infoh) / (96);
+
+            if (topic_offset > (Topics::ALL.size() - topic_limit))
+            {
+                topic_offset = Topics::ALL.size() - topic_limit;
+            }
+
+            auto topic_last = topic_offset + topic_limit;
+
+            if (topic_last > Topics::ALL.size())
+            {
+                topic_last = Topics::ALL.size();
+            }
+
             SDL_Surface *text = NULL;
 
             auto space = 8;
@@ -27198,16 +27213,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
             auto font_mason = TTF_OpenFont(FONT_MASON, 32);
 
             auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * space;
-
-            auto topic_offset = 0;
-            auto topic_speed = 1;
-            auto topic_limit = (text_bounds - 2 * text_space - infoh) / (96);
-            auto topic_last = topic_offset + topic_limit;
-
-            if (topic_last > Topics::ALL.size())
-            {
-                topic_last = Topics::ALL.size();
-            }
 
             if (Topics::ALL[topic].Text.length() > 0 && Topics::ALL[topic].Image.length() > 0)
             {
@@ -27275,7 +27280,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
             while (!quit)
             {
-
                 if (Topics::ALL[topic].Title.length() > 0)
                 {
                     SDL_SetWindowTitle(window, Topics::ALL[topic].Title.c_str());
