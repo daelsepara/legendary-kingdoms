@@ -237,5 +237,71 @@ public:
 
         construct(id, left, right, up, down, x, y);
     }
+
+    // constructor for making deep copies of Button controls
+    Button(const Button &src)
+    {
+        ID = src.ID;
+        Type = src.Type;
+        File = src.File;
+        Left = src.Left;
+        Right = src.Right;
+        Up = src.Up;
+        Down = src.Down;
+        X = src.X;
+        Y = src.Y;
+        W = src.W;
+        H = src.H;
+
+        if (src.Surface)
+        {
+            Surface = SDL_ConvertSurface(src.Surface, src.Surface->format, 0);
+        }
+    }
+
+    // operator overload for making deep copies of Button controls
+    Button &operator=(const Button &src)
+    {
+        // self-assignment protection
+        if (this != &src)
+        {
+            ID = src.ID;
+            Type = src.Type;
+            File = src.File;
+            Left = src.Left;
+            Right = src.Right;
+            Up = src.Up;
+            Down = src.Down;
+            X = src.X;
+            Y = src.Y;
+            W = src.W;
+            H = src.H;
+
+            if (Surface)
+            {
+                SDL_FreeSurface(Surface);
+
+                Surface = NULL;
+            }
+
+            if (src.Surface)
+            {
+                Surface = SDL_ConvertSurface(src.Surface, src.Surface->format, 0);
+            }
+        }
+
+        return *this;
+    }
+
+    // free allocated surface
+    ~Button()
+    {
+        if (Surface)
+        {
+            SDL_FreeSurface(Surface);
+
+            Surface = NULL;
+        }
+    }
 };
 #endif
