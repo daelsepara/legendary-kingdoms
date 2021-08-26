@@ -25968,12 +25968,13 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             auto scrollSpeed = 20;
             auto hold = false;
-
             auto selected = false;
             auto current = -1;
             auto offset = 0;
-
             auto transition = false;
+
+            auto text_up = FIND_CONTROL(controls_normal, Control::Type::SCROLL_UP);
+            auto text_dn = FIND_CONTROL(controls_normal, Control::Type::SCROLL_DOWN);
 
             while (!transition)
             {
@@ -26196,6 +26197,19 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
 
                 renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+
+                if (!compact)
+                {
+                    if (offset <= 0 && text_up >= 0 && text_up < controls_normal.size())
+                    {
+                        fillRect(renderer, arrow_size + 4 * border_space, arrow_size + 4 * border_space, controls_normal[text_up].X - 2 * border_space, controls_normal[text_up].Y - 2 * border_space, intWH);
+                    }
+
+                    if (text && (offset >= (text->h - text_bounds + 2 * text_space)) && text_dn >= 0 && text_dn < controls_normal.size())
+                    {
+                        fillRect(renderer, arrow_size + 4 * border_space, arrow_size + 4 * border_space, controls_normal[text_dn].X - 2 * border_space, controls_normal[text_dn].Y - 2 * border_space, intWH);
+                    }
+                }
 
                 if (current >= 0 && current < controls.size() && !selected)
                 {
@@ -27221,6 +27235,19 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             SDL_RenderCopy(renderer, splashTexture, &src, &dst);
                             drawRect(renderer, dst.w + 2, dst.h + 2, dst.x - 1, dst.y - 1, intBK);
                         }
+                    }
+                }
+
+                if (!compact)
+                {
+                    if (offset <= 0 && text_up >= 0 && text_up < controls.size())
+                    {
+                        fillRect(renderer, arrow_size + 4 * border_space, arrow_size + 4 * border_space, controls[text_up].X - 2 * border_space, controls[text_up].Y - 2 * border_space, intWH);
+                    }
+
+                    if (text && (offset >= (text->h - text_bounds + 2 * text_space + infoh)) && text_dn >= 0 && text_dn < controls.size())
+                    {
+                        fillRect(renderer, arrow_size + 4 * border_space, arrow_size + 4 * border_space, controls[text_dn].X - 2 * border_space, controls[text_dn].Y - 2 * border_space, intWH);
                     }
                 }
 
