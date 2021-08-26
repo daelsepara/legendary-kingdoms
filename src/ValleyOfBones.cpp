@@ -128,9 +128,6 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Equipment::Base equipment, Control::Type mode);
 int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> ships, Location::Type location, std::vector<Cargo::Type> cargo, Control::Type mode);
 
-// find control button
-int FIND_CONTROL(std::vector<Button> &controls, Control::Type control);
-
 // combat screens
 Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, std::vector<Allies::Type> &allies, bool storyFlee, int fleeRound, int roundLimit, bool useEquipment);
 Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus);
@@ -148,8 +145,12 @@ std::string itemString(Equipment::Base &equipment);
 std::string monsterString(Monster::Base &monster);
 std::string shipString(Ship::Base &ship, bool cargo);
 
-// miscellaneous utilities
+// miscellaneous functions
+bool magicRound0(Character::Base &character, int combatRound);
+int FIND_CONTROL(std::vector<Button> &controls, Control::Type control);
 void addBye(Story::Base *story, std::string bye);
+
+// other game/story helper functions
 void renderArmy(SDL_Renderer *renderer, TTF_Font *font, std::vector<Army::Base> &army, int boxw, int army_boxh, int offsety, SDL_Color fg, Uint32 bg);
 void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus, Location::Zone zone, int combatRound);
 void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next);

@@ -30194,7 +30194,7 @@ namespace Book1
 
             Location = Location::Type::PALACE_OF_UNBRAAKI;
 
-            Image = "images/palace_of_unbraaki.png";
+            Image = "images/book1/palace_of_unbraaki.png";
 
             Text = "You have arrived on the outskirts of the Palace of Unbraaki, the dwelling place of an outlandishly wealthy sorcerer who keeps his own private army. The palace itself is a gorgeous wood and glass affair, with a sharply sloping roof and fantastic gardens. Soldiers patrol the grounds at all times of day, their polished bone armour and iron weapons glinting in the sun. It is said that Unbraaki keeps most of his wealth in a fantastic vault deep in the bowels of the palace. The skeletal remains of thieves hang in iron cages, offsetting the pastoral beauty of the tropical garden surrounding them.";
 
