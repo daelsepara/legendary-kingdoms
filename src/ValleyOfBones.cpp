@@ -30,7 +30,6 @@ namespace fs = std::filesystem;
 
 #endif
 
-// JSON library
 #include "nlohmann/json.hpp"
 
 #include "constants.hpp"
@@ -44,7 +43,7 @@ namespace fs = std::filesystem;
 
 #include "book1.hpp"
 
-// Forward declarations (internal functions)
+// Forward declarations
 
 // create textures, images
 SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_size, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x);
@@ -123,7 +122,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
 int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Monster::Base> &monsters, Spells::Base &spell, int combatant, int opponent, int fighting_score);
 int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Ship::Base> &enemyFleet, int opponent, int direction);
 
-// game screen: select single stuff
+// select single objects
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &enemyFleet, std::vector<int> previousTargets, int combatRound);
 int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int attacker, std::vector<Monster::Base> &monsters, std::vector<int> previousTargets, int combatRound, Control::Type mode);
 int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Equipment::Base equipment, Control::Type mode);
@@ -193,7 +192,7 @@ std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::v
 std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Topics::Base> &topics, int start, int last, int limit, int offsetx, int offsety, bool compact);
 std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, int offsety, int scrolly);
 
-// game screens (select multiple stuff)
+// select multiple objects
 std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> army, Location::Type garrison, int num_limit);
 std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Location::Type garrison, int num_limit);
 std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Control::Type mode);
@@ -207,7 +206,6 @@ std::vector<TextButton> createHTextButtons(const char **choices, int num, int te
 
 SDL_Surface *createImage(const char *image)
 {
-    // Load splash image
     auto surface = IMG_Load(image);
 
     if (surface == NULL)
@@ -296,7 +294,6 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
     *window = NULL;
     *renderer = NULL;
 
-    // Initialize SDL
     if (SDL_Init(flags) < 0)
     {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
@@ -313,7 +310,6 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
 
         Recompute();
 
-        // Create window and renderer
         SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, (SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC), window, renderer);
 
         if (renderer)
@@ -334,10 +330,8 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
 
         if (surface)
         {
-            // The icon is attached to the window pointer
             SDL_SetWindowIcon(*window, surface);
 
-            // ...and the surface containing the icon pixel data is no longer required.
             SDL_FreeSurface(surface);
 
             surface = NULL;
@@ -515,13 +509,11 @@ void renderText(SDL_Renderer *renderer, SDL_Surface *text, Uint32 bg, int x, int
             SDL_Rect dst;
             SDL_Rect src;
 
-            // select portion to render
             src.w = text->w;
             src.h = text->h < bounds ? text->h : bounds;
             src.y = offset;
             src.x = 0;
 
-            // specify location within the window
             dst.w = text->w;
             dst.h = text->h < bounds ? text->h : bounds;
             dst.x = x;
@@ -547,6 +539,7 @@ void renderText(SDL_Renderer *renderer, SDL_Surface *text, Uint32 bg, int x, int
     }
 }
 
+// Render a portion of the image on bounded surface within the specified window
 void renderImage(SDL_Renderer *renderer, SDL_Surface *text, int x, int y, int bounds, int offset)
 {
     if (renderer)
@@ -556,13 +549,11 @@ void renderImage(SDL_Renderer *renderer, SDL_Surface *text, int x, int y, int bo
             SDL_Rect dst;
             SDL_Rect src;
 
-            // select portion to render
             src.w = text->w;
             src.h = text->h < bounds ? text->h : bounds;
             src.y = offset;
             src.x = 0;
 
-            // specify location within the window
             dst.w = text->w;
             dst.h = text->h < bounds ? text->h : bounds;
             dst.x = x;
@@ -615,7 +606,7 @@ SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Co
     return surface;
 }
 
-// create text image with line wrap limit
+// create text and image with line wrap limit
 SDL_Surface *createTextAndImage(const char *text, const char *image, const char *ttf, int font_size, SDL_Color textColor, Uint32 bg, int wrap, int style)
 {
     SDL_Surface *surface = NULL;
@@ -1664,7 +1655,6 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
     TTF_SetFontKerning(font_dark11, 0);
 
-    // Render window
     if (window && renderer)
     {
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Party");
@@ -2068,7 +2058,6 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
     auto character_box = (int)(text_bounds * 2 / 3);
     auto offset = 0;
 
-    // Render window
     if (window && renderer)
     {
         SDL_SetWindowTitle(window, "Legendary Kingdoms: View Party");
@@ -2650,7 +2639,6 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
     Uint32 duration = 3000;
 
-    // Lambda functions for displaying flash messages
     auto displayMessage = [&](std::string msg, Uint32 color)
     {
         flash_message = true;
@@ -2662,7 +2650,6 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
         start_ticks = SDL_GetTicks();
     };
 
-    // Render window
     if (window && renderer)
     {
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Recruit adventuerer for your party");
@@ -2984,7 +2971,6 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
     Uint32 duration = 3000;
 
-    // Render window
     if (window && renderer)
     {
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Select adventurers for your party");
@@ -4566,7 +4552,6 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -4825,7 +4810,6 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
             Uint32 duration = 3000;
 
-            // Lambda functions for displaying flash messages
             auto displayMessage = [&](std::string msg, Uint32 color)
             {
                 flash_message = true;
@@ -5239,7 +5223,6 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
     Uint32 duration = 3000;
 
-    // Lambda functions for displaying flash messages
     auto displayMessage = [&](std::string msg, Uint32 color)
     {
         flash_message = true;
@@ -5744,7 +5727,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     Uint32 duration = 3000;
 
-    // Lambda functions for displaying flash messages
     auto displayMessage = [&](std::string msg, Uint32 color)
     {
         flash_message = true;
@@ -6554,7 +6536,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         }
     }
 
-    // if opponent left any loot that can be used, allow party to take it
+    // seize and loot drops
     if (monsters[opponent].Health <= 0 && monsters[opponent].Loot.size() > 0)
     {
         takeScreen(window, renderer, party, team, monsters[opponent].Loot, monsters[opponent].Loot.size(), false);
@@ -6581,7 +6563,6 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             Uint32 duration = 3000;
 
-            // Lambda functions for displaying flash messages
             auto displayMessage = [&](std::string msg, Uint32 color)
             {
                 flash_message = true;
@@ -6864,7 +6845,6 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
 
             Uint32 duration = 3000;
 
-            // Lambda functions for displaying flash messages
             auto displayMessage = [&](std::string msg, Uint32 color)
             {
                 flash_message = true;
@@ -7156,7 +7136,6 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -7573,7 +7552,6 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -7917,7 +7895,6 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -8244,7 +8221,6 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
             Uint32 duration = 3000;
 
-            // Lambda functions for displaying flash messages
             auto displayMessage = [&](std::string msg, Uint32 color)
             {
                 flash_message = true;
@@ -8859,7 +8835,6 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -9391,7 +9366,6 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -9667,7 +9641,6 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -9943,7 +9916,6 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -10755,7 +10727,6 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -11055,7 +11026,6 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -11480,7 +11450,6 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -11819,7 +11788,6 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -12221,7 +12189,6 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -12656,16 +12623,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
         }
     }
 
-    // Clear temporary status, e.g. magic effects
-    if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}))
-    {
-        Engine::LOSE_CODES(party, {Codes::Type::LAST_IN_COMBAT});
-    }
-
-    if (Engine::VERIFY_CODES(party, {Codes::Type::CANNOT_USE_SHIPWEAPONS}))
-    {
-        Engine::LOSE_CODES(party, {Codes::Type::CANNOT_USE_SHIPWEAPONS});
-    }
+    Engine::LOSE_CODES(party, {Codes::Type::LAST_IN_COMBAT, Codes::Type::CANNOT_USE_SHIPWEAPONS});
 
     if (combatResult != Engine::Combat::NONE)
     {
@@ -12695,7 +12653,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -13382,7 +13339,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (!allies_attack)
                             {
-                                // After combat round trigger
+                                // After combat round triggers
                                 if (Engine::HAS_MONSTER(monsters, Monster::Type::SNAKEMAN_PRIEST))
                                 {
                                     Engine::GAIN_HEALTH(party, -1);
@@ -13491,7 +13448,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 Engine::REMOVE_STATUS(party, Character::Status::UNLIMITED_MAGIC_ROUND0);
 
-                                // clear damaged flag for next round
+                                // clear monster damaged flags for next round
                                 for (auto i = 0; i < monsters.size(); i++)
                                 {
                                     monsters[i].Damaged = false;
@@ -13797,7 +13754,6 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     Uint32 duration = 3000;
 
-    // Lambda functions for displaying flash messages
     auto displayMessage = [&](std::string msg, Uint32 color)
     {
         flash_message = true;
@@ -14308,7 +14264,6 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     Uint32 duration = 3000;
 
-    // Lambda functions for displaying flash messages
     auto displayMessage = [&](std::string msg, Uint32 color)
     {
         flash_message = true;
@@ -14874,7 +14829,6 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
     TTF_SetFontKerning(font_dark11, 0);
 
-    // Render window
     if (window && renderer)
     {
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Inn");
@@ -14912,7 +14866,6 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -15379,7 +15332,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     Uint32 duration = 3000;
 
-    // Lambda functions for displaying flash messages
     auto displayMessage = [&](std::string msg, Uint32 color)
     {
         flash_message = true;
@@ -16078,7 +16030,6 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
     TTF_SetFontKerning(font_dark11, 0);
 
-    // Render window
     if (window && renderer)
     {
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Repairs");
@@ -16116,7 +16067,6 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -16540,7 +16490,6 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
     Uint32 duration = 3000;
 
-    // Lambda functions for displaying flash messages
     auto displayMessage = [&](std::string msg, Uint32 color)
     {
         flash_message = true;
@@ -17209,7 +17158,6 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
     Uint32 duration = 3000;
 
-    // Lambda functions for displaying flash messages
     auto displayMessage = [&](std::string msg, Uint32 color)
     {
         flash_message = true;
@@ -17716,7 +17664,6 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
     Uint32 duration = 3000;
 
-    // Lambda functions for displaying flash messages
     auto displayMessage = [&](std::string msg, Uint32 color)
     {
         flash_message = true;
@@ -18095,7 +18042,6 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -18377,7 +18323,6 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -18654,7 +18599,6 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -18929,7 +18873,6 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -20263,7 +20206,6 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     TTF_SetFontKerning(font_dark11, 0);
 
-    // Render window
     if (window && renderer)
     {
         auto flash_message = false;
@@ -20276,7 +20218,6 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -20909,7 +20850,6 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
     TTF_SetFontKerning(font_dark11, 0);
 
-    // Render window
     if (window && renderer)
     {
         auto flash_message = false;
@@ -20922,7 +20862,6 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -21368,7 +21307,6 @@ void renderArmy(SDL_Renderer *renderer, TTF_Font *font, std::vector<Army::Base> 
         std::string right_front = "";
         std::string right_support = "";
 
-        // Render Enemy army
         for (auto i = 0; i < army.size(); i++)
         {
             if (army[i].Position == Location::BattleField::LEFT_FLANK_FRONT || army[i].Position == Location::BattleField::CENTER_FRONT || army[i].Position == Location::BattleField::RIGHT_FLANK_FRONT)
@@ -21615,7 +21553,6 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, i
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -21872,7 +21809,6 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -22401,7 +22337,6 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -22572,10 +22507,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 renderButtons(renderer, controls_battlefield, -1, intLB, border_space, border_pts);
             }
 
-            // Render Enemy army
             renderArmy(renderer, font_garamond, enemyArmy, boxw, combat_boxh, starty + infoh, clrBK, intBE);
 
-            // Render Party army
             renderArmy(renderer, font_garamond, party.Army, boxw, combat_boxh, starty + infoh + combat_boxh + box_space, clrBK, intBE);
 
             if (current_mode == Engine::MassCombatMode::SPELL)
@@ -22634,7 +22567,6 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                         {
                             if (Engine::ACTIVE(party.Army, enemyArmy, zones[i]))
                             {
-                                // resolve combat, spells, special status
                                 resolveMassCombat(window, renderer, location, party, enemyArmy, enemySpells, enemyStatus, zones[i], combat_round);
                             }
                         }
@@ -22791,7 +22723,6 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         Uint32 duration = 3000;
 
-        // Lambda functions for displaying flash messages
         auto displayMessage = [&](std::string msg, Uint32 color)
         {
             flash_message = true;
@@ -22953,10 +22884,8 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 renderButtons(renderer, controls_battlefield, -1, intLB, border_space, border_pts);
             }
 
-            // Render Enemy army
             renderArmy(renderer, font_garamond, enemyArmy, boxw, deployment_boxh, starty + infoh, clrBK, intBE);
 
-            // Render Party army
             renderArmy(renderer, font_garamond, party.Army, boxw, deployment_boxh, starty + infoh + deployment_boxh + box_space, clrBK, intBE);
 
             if (current_mode == Engine::MassCombatMode::DEPLOY)
@@ -25885,7 +25814,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             Uint32 duration = 3000;
 
-            // Lambda functions for displaying flash messages
             auto displayMessage = [&](std::string msg, Uint32 color)
             {
                 flash_message = true;
@@ -26831,7 +26759,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             book = next->BookID;
 
-                            // story transitions
                             storyTransition(party, story, next);
 
                             if ((next->ID != story->ID) || (story->BookID != next->BookID))
@@ -27696,7 +27623,6 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
     Book1::InitializeStories();
 
-    // Render window
     if (window && renderer && splash && text)
     {
         const char *choices[4] = {"NEW GAME", "LOAD GAME", "ABOUT", "EXIT"};
@@ -27814,7 +27740,6 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
     auto splash = createImage("images/legendary-kingdoms-logo.png");
 
-    // Render window
     if (window && renderer && text && splash)
     {
         auto current = -1;
@@ -28019,7 +27944,6 @@ int main(int argc, char **argv)
         mainScreen(window, renderer, bookID, storyID);
 #endif
 
-        // Destroy window and renderer
         if (renderer)
         {
             SDL_DestroyRenderer(renderer);
@@ -28035,7 +27959,6 @@ int main(int argc, char **argv)
         }
     }
 
-    // Quit SDL subsystems
     IMG_Quit();
 
     SDL_Quit();
