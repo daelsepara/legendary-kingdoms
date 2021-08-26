@@ -27336,7 +27336,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                 renderButtons(renderer, controls, current, intLB, border_space, border_pts);
 
-                if (splash)
+                if (splash && splash->w > (textwidth - 2 * text_space))
                 {
                     auto mousex = 0;
                     auto mousey = 0;
