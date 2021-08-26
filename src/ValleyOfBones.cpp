@@ -1653,8 +1653,6 @@ std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
 {
-    auto *title = "Legendary Kingdoms: Party";
-
     auto font_size = 28;
 
     TTF_Init();
@@ -1668,7 +1666,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     // Render window
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Party");
 
         auto current = 0;
 
@@ -2054,8 +2052,6 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
     SDL_Surface *text = NULL;
     SDL_Surface *code_text = NULL;
 
-    auto *title = "Legendary Kingdoms: View Party";
-
     auto font_size = 20;
     auto garamond_size = 24;
 
@@ -2074,7 +2070,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
     // Render window
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: View Party");
 
         const char *choices[7] = {"PARTY", "PREVIOUS", "NEXT", "EQUIPMENT", "SPELLBOOK", "FOLLOWERS", "BACK"};
 
@@ -2634,8 +2630,6 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
     SDL_Surface *adventurer = NULL;
     SDL_Surface *text = NULL;
 
-    auto *title = "Legendary Kingdoms: Recruit adventuerer for your party";
-
     auto font_size = 20;
     auto garamond_size = 24;
 
@@ -2670,7 +2664,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
     // Render window
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Recruit adventuerer for your party");
 
         std::string recruitment_string = std::string("RECRUIT");
 
@@ -2924,8 +2918,6 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                         done = true;
                     }
                 }
-
-                SDL_SetWindowTitle(window, title);
             }
         }
     }
@@ -2970,8 +2962,6 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     SDL_Surface *adventurer = NULL;
     SDL_Surface *text = NULL;
 
-    auto *title = "Legendary Kingdoms: Select adventurers for your party";
-
     auto font_size = 20;
     auto garamond_size = 24;
 
@@ -2996,7 +2986,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     // Render window
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Select adventurers for your party");
 
         const char *choices_add[5] = {"PREVIOUS", "NEXT", "ADD TO PARTY", "START", "BACK"};
         const char *choices_del[5] = {"PREVIOUS", "NEXT", "REMOVE", "START", "BACK"};
@@ -3318,8 +3308,6 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                     break;
                 }
             }
-
-            SDL_SetWindowTitle(window, title);
         }
     }
 
@@ -4539,11 +4527,9 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms: Assign Damage";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Assign Damage");
 
         auto flash_message = false;
 
@@ -4838,7 +4824,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
             auto stage = Engine::Attack::START;
 
-            SDL_SetWindowTitle(window, "Legendary Kingdoms: Attack");
+            SDL_SetWindowTitle(window, "Legendary Kingdoms: Magic Attack");
 
             TTF_Init();
 
@@ -7131,11 +7117,9 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
 {
     auto select_result = std::vector<int>();
 
-    auto title = "Legendary Kingdoms: Select Spell";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Select Spell");
 
         auto flash_message = false;
 
@@ -7550,11 +7534,9 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms: Select Opponent";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Select Opponent");
 
         auto flash_message = false;
 
@@ -7896,11 +7878,9 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms: Select Enemy Ship";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Select Enemy Ship");
 
         auto flash_message = false;
 
@@ -8840,11 +8820,9 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms: Cast Spell";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Cast Spell");
 
         auto flash_message = false;
 
@@ -9374,11 +9352,9 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
 {
     auto caster = -1;
 
-    auto title = "Legendary Kingdoms: Cast Spell";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Cast Mass Combat Spell");
 
         auto flash_message = false;
 
@@ -9652,11 +9628,9 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
 {
     auto caster = -1;
 
-    auto title = "Legendary Kingdoms: Cast Sea Combat Spell";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Cast Sea Combat Spell");
 
         auto flash_message = false;
 
@@ -9930,11 +9904,9 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto result = false;
 
-    auto title = "Legendary Kingdoms: Skill Check";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Skill Check");
 
         auto flash_message = false;
 
@@ -10210,11 +10182,9 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
 {
     auto result = Attribute::Type::NONE;
 
-    auto title = "Legendary Kingdoms: Select Attribute";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Select Attribute");
 
         auto flash_message = false;
 
@@ -10485,11 +10455,9 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
 {
     auto result = false;
 
-    auto title = "Legendary Kingdoms: Select Team";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Select Team");
 
         auto flash_message = false;
 
@@ -10748,11 +10716,9 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 {
     auto result = false;
 
-    auto title = "Legendary Kingdoms: Assign Party Members to Teams";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Assign Party Members to Teams");
 
         auto flash_message = false;
 
@@ -11050,11 +11016,9 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms: Select Party Member";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Select Party Member");
 
         auto flash_message = false;
 
@@ -11477,11 +11441,9 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
 {
     auto result = -1;
 
-    auto title = "Legendary Kingdoms: Select Ship";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Select Ship");
 
         auto flash_message = false;
 
@@ -11818,11 +11780,9 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
 {
     auto selected_party = std::vector<int>();
 
-    auto title = "Legendary Kingdoms: Select Party Members";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Select Party Members");
 
         auto flash_message = false;
 
@@ -12222,11 +12182,9 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
 {
     auto combatResult = Engine::Combat::NONE;
 
-    auto title = "Legendary Kindoms: Sea Combat";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kindoms: Sea Combat");
 
         auto flash_message = false;
 
@@ -12696,11 +12654,9 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 {
     auto combatResult = Engine::Combat::NONE;
 
-    auto title = "Legendary Kindoms: Combat";
-
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kindoms: Combat");
 
         auto allies_attack = false;
 
@@ -14366,7 +14322,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             last = shop.size();
         }
 
-        SDL_SetWindowTitle(window, "Legendary Kingdoms: Items");
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Buy/Sell Items");
 
         fillWindow(renderer, intWH);
 
@@ -14861,8 +14817,6 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
 bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge)
 {
-    auto *title = "Legendary Kingdoms: Inn";
-
     TTF_Init();
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
@@ -14874,7 +14828,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
     // Render window
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Inn");
 
         auto current = -1;
 
@@ -16033,8 +15987,6 @@ std::vector<Button> repairList(SDL_Window *window, SDL_Renderer *renderer, std::
 
 bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
-    auto *title = "Legendary Kingdoms: Repairs";
-
     TTF_Init();
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 24);
@@ -16046,7 +15998,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
     // Render window
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Repairs");
 
         auto current = -1;
 
@@ -20184,8 +20136,6 @@ std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer)
 
 bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
-    auto *title = "Legendary Kingdoms: Buy/Sell Cargo";
-
     auto font_size = 28;
 
     TTF_Init();
@@ -20221,7 +20171,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             start_ticks = SDL_GetTicks();
         };
 
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Buy/Sell Cargo");
 
         auto current = 0;
 
@@ -20820,8 +20770,6 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
-    auto *title = "Legendary Kingdoms: Harbour";
-
     auto font_size = 28;
 
     TTF_Init();
@@ -20857,7 +20805,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
             start_ticks = SDL_GetTicks();
         };
 
-        SDL_SetWindowTitle(window, title);
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Harbour");
 
         auto current = 0;
 
@@ -27419,15 +27367,11 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, ((int)SCREEN_WIDTH * (1.0 - 3.0 * Margin) - splashw), TTF_STYLE_NORMAL);
 
-    auto title = "Legendary Kingdoms";
-
     Book1::InitializeStories();
 
     // Render window
     if (window && renderer && splash && text)
     {
-        SDL_SetWindowTitle(window, title);
-
         const char *choices[4] = {"NEW GAME", "LOAD GAME", "ABOUT", "EXIT"};
 
         auto current = -1;
@@ -27445,6 +27389,8 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
         while (!done)
         {
+            SDL_SetWindowTitle(window, "Legendary Kingdoms");
+
             auto Party = Party::Base();
 
             fillWindow(renderer, intWH);
@@ -27517,8 +27463,6 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                     break;
                 }
             }
-
-            SDL_SetWindowTitle(window, title);
         }
 
         SDL_FreeSurface(splash);
@@ -27541,15 +27485,11 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
     auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
-    auto title = "Legendary Kingdoms: Debug";
-
     auto splash = createImage("images/legendary-kingdoms-logo.png");
 
     // Render window
     if (window && renderer && text && splash)
     {
-        SDL_SetWindowTitle(window, title);
-
         auto current = -1;
 
         auto selected = false;
@@ -27572,7 +27512,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
         while (!done)
         {
-            SDL_SetWindowTitle(window, title);
+            SDL_SetWindowTitle(window, "Legendary Kingdoms: Debug");
 
             fillWindow(renderer, intWH);
 
@@ -27726,9 +27666,7 @@ int main(int argc, char **argv)
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
 
-    auto title = "Legendary Kingdoms";
-
-    createWindow(SDL_INIT_VIDEO, &window, &renderer, title, "icons/toxic.png");
+    createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/toxic.png");
 
     Input::InitializeGamePads();
 
