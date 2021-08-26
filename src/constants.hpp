@@ -59,6 +59,7 @@ int startx = (SCREEN_WIDTH * Margin);
 int starty = (SCREEN_HEIGHT * Margin);
 int textx = startx * 2 + splashw;
 int texty = starty;
+int text_space = 8;
 int buttonw = 64;
 int buttonh = 64;
 int buttony = (int)(SCREEN_HEIGHT * (1.0 - Margin) - buttonh);
