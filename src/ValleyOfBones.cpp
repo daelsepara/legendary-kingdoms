@@ -15657,7 +15657,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         last = party.Vault.size();
                     }
 
-                    controls_vault.clear();
+                    freeControls(controls_vault);
 
                     controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
@@ -15692,7 +15692,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         last = party.Vault.size();
                     }
 
-                    controls_vault.clear();
+                    freeControls(controls_vault);
 
                     controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
@@ -15772,7 +15772,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 last = party.Vault.size();
                             }
 
-                            controls_vault.clear();
+                            freeControls(controls_vault);
 
                             controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
                         }
@@ -15815,7 +15815,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     last = party.Vault.size();
                                 }
 
-                                controls_vault.clear();
+                                freeControls(controls_vault);
 
                                 controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
@@ -15860,7 +15860,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 last = party.Vault.size();
                             }
 
-                            controls_vault.clear();
+                            freeControls(controls_vault);
 
                             controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
@@ -15895,7 +15895,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             last = party.Vault.size();
                         }
 
-                        controls_vault.clear();
+                        freeControls(controls_vault);
 
                         controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
 
@@ -15981,6 +15981,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         displayMessage("You do not any silver to store in the vault", intRD);
                     }
 
+                    freeControls(controls_money);
+
                     controls_money = popupMoney(window, renderer, party, popupw, popuph, infoh, popupx, popupy);
                 }
 
@@ -16002,6 +16004,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         displayMessage("You do not any silver to withdraw from the vault", intRD);
                     }
 
+                    freeControls(controls_money);
+
                     controls_money = popupMoney(window, renderer, party, popupw, popuph, infoh, popupx, popupy);
                 }
 
@@ -16013,6 +16017,10 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             }
         }
     }
+
+    freeControls(controls_money);
+
+    freeControls(controls_vault);
 
     if (font_garamond)
     {
@@ -26109,6 +26117,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             if (story->Monsters.size() > 0 || story->EnemyFleet.size() > 0 || story->EnemyArmy.size() > 0)
             {
+                freeControls(controls_popup);
+
                 if (story->Monsters.size() > 0)
                 {
                     if (popup_last > story->Monsters.size())
