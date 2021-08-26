@@ -81,7 +81,6 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID);
 bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Character::Base &character, int equipment_limit, bool InCombat);
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
-bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge);
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer);
 bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Type character, Team::Type team, std::vector<Equipment::Base> equipment, std::vector<Equipment::Class> exceptions, int LoseLimit, bool back_button);
 bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, int storyID);
@@ -92,6 +91,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character);
 bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party, int recruitmentPrice);
 bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
+bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge);
 bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int unit, Location::Type &location, int threshold, int rolls);
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
 bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &character, std::vector<Engine::TeamAssignment> teams);
@@ -14819,7 +14819,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return false;
 }
 
-bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge)
+bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge)
 {
     TTF_Init();
 
@@ -14831,7 +14831,7 @@ bool innScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, i
 
     if (window && renderer)
     {
-        SDL_SetWindowTitle(window, "Legendary Kingdoms: Inn");
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Rest and Recovery");
 
         auto current = -1;
 
@@ -15835,9 +15835,9 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (party.Money != start_money)
                     {
-                        auto diff = party.VaultMoney - party.Money;
+                        auto diff = start_money - party.Money;
 
-                        if (diff > 0)
+                        if (party.Money < start_money)
                         {
                             if (diff > 1)
                             {
@@ -15848,7 +15848,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 displayMessage("One silver coin stored in The Vault.", intLB);
                             }
                         }
-                        else if (diff < 0)
+                        else if (party.Money > start_money)
                         {
                             if (diff < -1)
                             {
@@ -15857,17 +15857,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             else
                             {
                                 displayMessage("One silver coin withdrawn from The Vault.", intLB);
-                            }
-                        }
-                        else if (diff == 0)
-                        {
-                            if (party.Money < start_money)
-                            {
-                                displayMessage("You store half of your silver coins into The Vault", intLB);
-                            }
-                            else
-                            {
-                                displayMessage("You withdrew half of the silver coins from The Vault", intLB);
                             }
                         }
                     }
@@ -26496,7 +26485,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::INN && !hold)
                     {
-                        innScreen(window, renderer, party, story->RestPrice, story->CanRecharge);
+                        restScreen(window, renderer, party, story->RestPrice, story->CanRecharge);
 
                         current = -1;
 
