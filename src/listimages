@@ -1,0 +1,2 @@
+#!/bin/bash
+grep "Image = \"images/.*.png" *.hpp | cut -d'/' -f 2-3 | cut -d'"' -f 1 | uniq

@@ -1,0 +1,2 @@
+#!/bin/bash
+for i in `./listimages`; do ls images/$i; done;
