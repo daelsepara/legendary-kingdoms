@@ -6484,7 +6484,7 @@ namespace Book1
 
             if (!outcome)
             {
-                if (attempts >= std::min(4, Engine::COUNT(party)))
+                if (attempts >= std::min<int>(4, Engine::COUNT(party)))
                 {
                     attempts = 0;
 
@@ -30487,9 +30487,9 @@ namespace Book1
         {
             Take.clear();
 
-            Limit = std::max(party.RecentSuccesses, 0);
+            Limit = std::max<int>(party.RecentSuccesses, 0);
 
-            Limit = std::min(party.RecentSuccesses, 10);
+            Limit = std::min<int>(party.RecentSuccesses, 10);
 
             if (Limit > 0)
             {

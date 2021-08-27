@@ -4571,7 +4571,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
         }
     }
 
-    return std::max(0, final_damage);
+    return std::max<int>(0, final_damage);
 }
 
 int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int combat_damage)
@@ -4833,7 +4833,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
     {
         Defence += 1;
 
-        Defence = std::min(Defence, 6);
+        Defence = std::min<int>(Defence, 6);
     }
 
     if (Engine::COUNT(party) > 0 && Engine::COUNT(monsters) > 0)
@@ -5646,14 +5646,14 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         }
     }
 
-    return std::max(0, combat_damage);
+    return std::max<int>(0, combat_damage);
 }
 
 int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Monster::Base> &monsters, int combatant, int opponent, int direction, int combatRound, bool useEquipment)
 {
     auto combat_damage = 0;
 
-    auto num_attacks = direction == 0 ? 1 : std::min(monsters[opponent].Attacks, Engine::COUNT(party, team));
+    auto num_attacks = direction == 0 ? 1 : std::min<int>(monsters[opponent].Attacks, Engine::COUNT(party, team));
 
     auto Difficulty = monsters[opponent].Difficulty;
 
@@ -5676,7 +5676,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         {
             if (combatRound == 0)
             {
-                num_attacks = std::min(2, Engine::COUNT(party, team));
+                num_attacks = std::min<int>(2, Engine::COUNT(party, team));
             }
             else if (combatRound == 2)
             {
@@ -5707,7 +5707,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             }
             else if (roll <= 6)
             {
-                num_attacks = std::min(2, Engine::COUNT(party, team));
+                num_attacks = std::min<int>(2, Engine::COUNT(party, team));
 
                 spell = Spells::Type::POISON_STREAM;
 
@@ -5739,7 +5739,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             }
             else if (combatRound == 1)
             {
-                num_attacks = std::min(2, Engine::COUNT(party, team));
+                num_attacks = std::min<int>(2, Engine::COUNT(party, team));
             }
         }
     }
@@ -5749,7 +5749,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         {
             Defence += 1;
 
-            Defence = std::min(Defence, 6);
+            Defence = std::min<int>(Defence, 6);
         }
     }
 
@@ -5909,7 +5909,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                 if (direction == 1 && Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
                                 {
-                                    result = std::max(0, result - 1);
+                                    result = std::max<int>(0, result - 1);
                                 }
 
                                 fitImage(renderer, dice[result], offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), size_dice, size_dice);
@@ -5931,7 +5931,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                         if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
                                         {
-                                            attack_result = std::max(1, attack_result - 1);
+                                            attack_result = std::max<int>(1, attack_result - 1);
                                         }
 
                                         if (attack_result >= Difficulty)
@@ -6473,7 +6473,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                                 {
                                                     auto reduced_damage = armourSave(window, renderer, party.Members[result], combat_damage);
 
-                                                    combat_damage = std::max(0, reduced_damage);
+                                                    combat_damage = std::max<int>(0, reduced_damage);
 
                                                     selected = false;
 
@@ -6578,7 +6578,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         takeScreen(window, renderer, party, team, monsters[opponent].Loot, monsters[opponent].Loot.size(), false);
     }
 
-    return direction == 0 ? std::max(-1, combat_damage) : std::max(0, combat_damage);
+    return direction == 0 ? std::max<int>(-1, combat_damage) : std::max<int>(0, combat_damage);
 }
 
 bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int unit, Location::Type &location, int threshold, int rolls)
@@ -9173,7 +9173,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                             {
                                                 if (Engine::COUNT(monsters, combatRound) > 0)
                                                 {
-                                                    auto max_targets = std::min(2, Engine::COUNT(monsters, combatRound));
+                                                    auto max_targets = std::min<int>(2, Engine::COUNT(monsters, combatRound));
 
                                                     auto targets = std::vector<int>();
 
@@ -12769,7 +12769,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (Engine::ARMOUR(party.Members[party.LastSelected]) > 0 && monsters[monster_attacking].Type != Monster::Type::PAPER && monsters[monster_attacking].Type != Monster::Type::NAGA && !Engine::VERIFY_CODES(party, {Codes::Type::ARMOUR_DISABLED}))
                             {
-                                free_attack = std::max(0, armourSave(window, renderer, party.Members[party.LastSelected], free_attack));
+                                free_attack = std::max<int>(0, armourSave(window, renderer, party.Members[party.LastSelected], free_attack));
                             }
 
                             if (free_attack > 0)
@@ -15846,7 +15846,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (party.Money > 0)
                     {
-                        auto store = std::min(party.Money, 10);
+                        auto store = std::min<int>(party.Money, 10);
 
                         party.VaultMoney += store;
                         party.Money -= store;
@@ -15867,7 +15867,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (party.VaultMoney > 0)
                     {
-                        auto withdraw = std::min(party.VaultMoney, 10);
+                        auto withdraw = std::min<int>(party.VaultMoney, 10);
 
                         party.VaultMoney -= withdraw;
                         party.Money += withdraw;
@@ -24354,7 +24354,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             auto with_status = Engine::COUNT(party, story->Choices[choice].Status[0]);
                             auto party_count = Engine::COUNT(party, story->Choices[choice].Team);
 
-                            auto team_size = std::min(2, party_count - with_status);
+                            auto team_size = std::min<int>(2, party_count - with_status);
 
                             if (team_size > 0)
                             {
@@ -27561,7 +27561,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     }
                 }
 
-                renderButtons(renderer, controls, current, intLB, border_space, border_pts, (!compact && offset > 0), !compact && text && offset < (text->h - text_bounds + 2 * text_space));
+                renderButtons(renderer, controls, current, intLB, border_space, border_pts, (!compact && offset > 0), !compact && text && offset < (text->h - text_bounds + 2 * text_space + infoh));
 
                 if (current >= 0 && current < controls.size())
                 {

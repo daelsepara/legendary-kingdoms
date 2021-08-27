@@ -468,11 +468,11 @@ namespace Engine
                 {
                     if (character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
                     {
-                        max = std::max(max, 3);
+                        max = std::max<int>(max, 3);
                     }
                     else
                     {
-                        max = std::max(max, character.Equipment[i].Modifier);
+                        max = std::max<int>(max, character.Equipment[i].Modifier);
                     }
                 }
             }
@@ -493,11 +493,11 @@ namespace Engine
                 {
                     if (character.Equipment[i].Attribute == Attribute::Type::FIGHTING3_LORE2)
                     {
-                        max = std::max(max, 3);
+                        max = std::max<int>(max, 3);
                     }
                     else
                     {
-                        max = std::max(max, character.Equipment[i].Modifier);
+                        max = std::max<int>(max, character.Equipment[i].Modifier);
                     }
                 }
             }
@@ -2806,7 +2806,7 @@ namespace Engine
         {
             if (!Engine::IS_CAPTURED(party.Members[i]))
             {
-                score = std::min(score, Engine::SCORE(party.Members[i], type));
+                score = std::min<int>(score, Engine::SCORE(party.Members[i], type));
             }
         }
 
@@ -2821,7 +2821,7 @@ namespace Engine
         {
             if (!Engine::IS_CAPTURED(party.Members[i]))
             {
-                score = std::max(score, Engine::SCORE(party.Members[i], type));
+                score = std::max<int>(score, Engine::SCORE(party.Members[i], type));
             }
         }
 
