@@ -18604,6 +18604,8 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         auto done = false;
 
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
+
         while (!done)
         {
             last = offset + limit;
@@ -18617,6 +18619,11 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             fillWindow(renderer, intWH);
 
+            if (splash)
+            {
+                fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+            }
+
             std::string army_string = "";
 
             if (selection >= 0 && selection < party.Army.size())
@@ -18628,7 +18635,7 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             putText(renderer, (selection >= 0 && selection < party.Army.size()) ? army_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "Your Army", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+            putHeader(renderer, "Troop Transfer", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
 
             fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -18958,6 +18965,13 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                 }
             }
+        }
+
+        if (splash)
+        {
+            SDL_FreeSurface(splash);
+
+            splash = NULL;
         }
 
         if (font_dark11)
