@@ -4938,7 +4938,9 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You spend a full month with Che Long training up the Bronzeguard. They are a formidable sight in their gleaming bronze armour and powerful steel weapons. Only the best recruits are permitted to stay in training, and soon you have a unit of the Everchild's fiercest supporters dressed in enchanted armour. The unit's morale is exceptional, and they are sure to make a powerful impression on the battlefield.\n\nYou add the following unit to the Saltdad garrison:\n\n[Bronzeguard]: Strength 5, Morale 5\n\nNote: You cannot have more than one unit of [Bronzeguard] in existence at any given time as their equipment is irreplaceable. If the [Bronzeguard] are ever destroyed, you can train new recruits to use their equipment by spending another two GOLD BULLION bars. Feeling nigh indestructible, you return to the palace.";
+            Text = "You spend a full month with Che Long training up the Bronzeguard. They are a formidable sight in their gleaming bronze armour and powerful steel weapons. Only the best recruits are permitted to stay in training, and soon you have a unit of the Everchild's fiercest supporters dressed in enchanted armour. The unit's morale is exceptional, and they are sure to make a powerful impression on the battlefield.\n\nYou add the following unit to the Saltdad garrison:\n\n[Bronzeguard]: Strength 5, Morale 5\n\nNote: You cannot have more than one unit of [Bronzeguard] in existence at any given time as their equipment is irreplaceable. If the [Bronzeguard] are ever destroyed, you can train new recruits to use their equipment by spending another two GOLD BULLION bars.";
+
+            Bye = "Feeling nigh indestructible, you return to the palace.";
 
             Choices.clear();
 
@@ -30651,7 +30653,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You spend the next several weeks helping to equip and train just over five hundred soldiers for the Everchild's army. They are well equipped with hide armour, a shield and good iron shortswords. The following unit was added to the Saltdad garrison::\n\n[Saltdad Infantry]: Strength 2, Morale 3\n\nNote: You can hire as many units of Saltdad Infantry as you wish, though each unit costs one bar of GOLD BULLION.";
+            Text = "You spend the next several weeks helping to equip and train just over five hundred soldiers for the Everchild's army. They are well equipped with hide armour, a shield and good iron shortswords. The following unit was added to the Saltdad garrison:\n\n[Saltdad Infantry]: Strength 2, Morale 3\n\nNote: You can hire as many units of Saltdad Infantry as you wish, though each unit costs one bar of GOLD BULLION.";
 
             Bye = "Pleased with your new troops, you return to the palace.";
 
