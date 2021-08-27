@@ -61,7 +61,7 @@ void fillWindow(SDL_Renderer *renderer, Uint32 color);
 void putHeader(SDL_Renderer *renderer, const char *text, TTF_Font *font, int space, SDL_Color fg, Uint32 bg, int style, int w, int h, int x, int y);
 void putText(SDL_Renderer *renderer, const char *text, TTF_Font *font, int space, SDL_Color fg, Uint32 bg, int style, int w, int h, int x, int y);
 void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts);
-void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts, bool hide_scroll);
+void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts, bool scroll_up, bool scroll_dn);
 void renderCaption(SDL_Renderer *renderer, TTF_Font *font_caption, Button control);
 void renderImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y);
 void renderImage(SDL_Renderer *renderer, SDL_Surface *text, int x, int y, int bounds, int offset);
@@ -1003,6 +1003,8 @@ void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int cur
         {
             SDL_Rect rect;
 
+            renderImage(renderer, controls[i].Surface, controls[i].X, controls[i].Y);
+
             if (i == current)
             {
                 for (auto size = pts; size >= 0; size--)
@@ -1016,37 +1018,43 @@ void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int cur
                     SDL_RenderDrawRect(renderer, &rect);
                 }
             }
-
-            renderImage(renderer, controls[i].Surface, controls[i].X, controls[i].Y);
         }
     }
 }
 
-void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts, bool hide_scroll)
+void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts, bool scroll_up, bool scroll_dn)
 {
     if (controls.size() > 0)
     {
         for (auto i = 0; i < controls.size(); i++)
         {
-            if (!hide_scroll || (controls[i].Type != Control::Type::SCROLL_UP && controls[i].Type != Control::Type::SCROLL_DOWN))
+            SDL_Rect rect;
+
+            if ((controls[i].Type == Control::Type::SCROLL_UP && scroll_up) || (controls[i].Type == Control::Type::SCROLL_DOWN && scroll_dn) || (controls[i].Type != Control::Type::SCROLL_UP && controls[i].Type != Control::Type::SCROLL_DOWN))
             {
-                SDL_Rect rect;
-
-                for (auto size = pts; size >= 0; size--)
+                if (controls[i].Type == Control::Type::SCROLL_UP || controls[i].Type == Control::Type::SCROLL_DOWN)
                 {
-                    rect.w = controls[i].W + 2 * (space - size);
-                    rect.h = controls[i].H + 2 * (space - size);
-                    rect.x = controls[i].X - space + size;
-                    rect.y = controls[i].Y - space + size;
+                    fillRect(renderer, controls[i].W + 2 * border_space, controls[i].H + 2 * border_space, controls[i].X - border_space, controls[i].Y - border_space, intWH);
+                }
 
-                    if (i == current)
+                renderImage(renderer, controls[i].Surface, controls[i].X, controls[i].Y);
+            }
+
+            if (i == current)
+            {
+                if ((controls[i].Type == Control::Type::SCROLL_UP && scroll_up) || (controls[i].Type == Control::Type::SCROLL_DOWN && scroll_dn) || (controls[i].Type != Control::Type::SCROLL_UP && controls[i].Type != Control::Type::SCROLL_DOWN))
+                {
+                    for (auto size = pts; size >= 0; size--)
                     {
+                        rect.w = controls[i].W + 2 * (space - size);
+                        rect.h = controls[i].H + 2 * (space - size);
+                        rect.x = controls[i].X - space + size;
+                        rect.y = controls[i].Y - space + size;
+
                         SDL_SetRenderDrawColor(renderer, R(fg), G(fg), B(fg), A(fg));
                         SDL_RenderDrawRect(renderer, &rect);
                     }
                 }
-
-                renderImage(renderer, controls[i].Surface, controls[i].X, controls[i].Y);
             }
         }
     }
@@ -12177,7 +12185,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        std::vector<Button> controls;
+        auto controls = std::vector<Button>();
 
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space) / (96);
@@ -12652,7 +12660,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        std::vector<Button> controls;
+        auto controls = std::vector<Button>();
 
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space) / (96);
@@ -25861,8 +25869,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             auto offset = 0;
             auto transition = false;
 
-            auto text_up = FIND_CONTROL(controls_normal, Control::Type::SCROLL_UP);
-            auto text_dn = FIND_CONTROL(controls_normal, Control::Type::SCROLL_DOWN);
+            //auto text_up = FIND_CONTROL(controls_normal, Control::Type::SCROLL_UP);
+            //auto text_dn = FIND_CONTROL(controls_normal, Control::Type::SCROLL_DOWN);
 
             while (!transition)
             {
@@ -26021,13 +26029,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     renderText(renderer, text, 0, textx + text_space, texty + text_space, text_bounds - 2 * text_space, offset);
                 }
 
-                if (!compact)
-                {
-                    fillRect(renderer, controls_normal[0].W + 2 * border_space, controls_normal[0].H + 2 * border_space, controls_normal[0].X - border_space, controls_normal[0].Y - border_space, intWH);
-
-                    fillRect(renderer, controls_normal[1].W + 2 * border_space, controls_normal[1].H + 2 * border_space, controls_normal[1].X - border_space, controls_normal[1].Y - border_space, intWH);
-                }
-
                 auto scrollUp = false;
 
                 auto scrollDown = false;
@@ -26047,7 +26048,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
                 else if (current_mode == Control::Type::PREVIEW)
                 {
-                    renderButtons(renderer, controls_normal, -1, intLB, border_space, border_pts);
+                    renderButtons(renderer, controls_normal, -1, intLB, border_space, border_pts, (!compact && offset > 0), !compact && text && offset < (text->h - text_bounds + 2 * text_space));
 
                     fillRect(renderer, popupw, popuph, popupx, popupy, intBE);
 
@@ -26085,19 +26086,13 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     controls = controls_popup;
                 }
 
-                renderButtons(renderer, controls, current, intLB, border_space, border_pts);
-
-                if (!compact)
+                if (current_mode == Control::Type::STORY)
                 {
-                    if (offset <= 0 && text_up >= 0 && text_up < controls_normal.size())
-                    {
-                        fillRect(renderer, arrow_size + 4 * border_space, arrow_size + 4 * border_space, controls_normal[text_up].X - 2 * border_space, controls_normal[text_up].Y - 2 * border_space, intWH);
-                    }
-
-                    if (text && (offset >= (text->h - text_bounds + 2 * text_space)) && text_dn >= 0 && text_dn < controls_normal.size())
-                    {
-                        fillRect(renderer, arrow_size + 4 * border_space, arrow_size + 4 * border_space, controls_normal[text_dn].X - 2 * border_space, controls_normal[text_dn].Y - 2 * border_space, intWH);
-                    }
+                    renderButtons(renderer, controls, current, intLB, border_space, border_pts, (!compact && offset > 0), !compact && text && offset < (text->h - text_bounds + 2 * text_space));
+                }
+                if (current_mode == Control::Type::PREVIEW)
+                {
+                    renderButtons(renderer, controls, current, intLB, border_space, border_pts);
                 }
 
                 if (current >= 0 && current < controls.size() && !selected)
@@ -26974,10 +26969,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
             auto offset = 0;
 
-            auto text_up = -1;
-
-            auto text_dn = -1;
-
             auto scroll_topics = false;
 
             auto quit = false;
@@ -27014,10 +27005,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     SDL_SetWindowTitle(window, Topics::ALL[topic].Title.c_str());
                 }
 
-                text_up = FIND_CONTROL(controls, Control::Type::SCROLL_UP);
-
-                text_dn = FIND_CONTROL(controls, Control::Type::SCROLL_DOWN);
-
                 fillWindow(renderer, intWH);
 
                 putHeader(renderer, "Topics", font_mason, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
@@ -27037,19 +27024,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     renderText(renderer, text, 0, textx + text_space, texty + text_space + infoh, text_bounds - 2 * text_space - infoh, offset);
                 }
 
-                if (!compact)
-                {
-                    if (text_up >= 0 && text_up < controls.size() && controls[text_dn].Type == Control::Type::SCROLL_UP)
-                    {
-                        fillRect(renderer, controls[text_up].W + 2 * border_space, controls[text_up].H + 2 * border_space, controls[text_up].X - border_space, controls[text_up].Y - border_space, intWH);
-                    }
-
-                    if (text_dn >= 0 && text_dn < controls.size() && controls[text_dn].Type == Control::Type::SCROLL_DOWN)
-                    {
-                        fillRect(renderer, controls[text_dn].W + 2 * border_space, controls[text_dn].H + 2 * border_space, controls[text_dn].X - border_space, controls[text_dn].Y - border_space, intWH);
-                    }
-                }
-
                 for (auto i = topic_offset; i < topic_last; i++)
                 {
                     auto index = i - topic_offset;
@@ -27067,7 +27041,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     }
                 }
 
-                renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+                renderButtons(renderer, controls, current, intLB, border_space, border_pts, (!compact && offset > 0), !compact && text && offset < (text->h - text_bounds + 2 * text_space));
 
                 if (current >= 0 && current < controls.size())
                 {
@@ -27128,19 +27102,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             SDL_RenderCopy(renderer, splashTexture, &src, &dst);
                             drawRect(renderer, dst.w + 2, dst.h + 2, dst.x - 1, dst.y - 1, intBK);
                         }
-                    }
-                }
-
-                if (!compact)
-                {
-                    if (offset <= 0 && text_up >= 0 && text_up < controls.size())
-                    {
-                        fillRect(renderer, arrow_size + 4 * border_space, arrow_size + 4 * border_space, controls[text_up].X - 2 * border_space, controls[text_up].Y - 2 * border_space, intWH);
-                    }
-
-                    if (text && (offset >= (text->h - text_bounds + 2 * text_space + infoh)) && text_dn >= 0 && text_dn < controls.size())
-                    {
-                        fillRect(renderer, arrow_size + 4 * border_space, arrow_size + 4 * border_space, controls[text_dn].X - 2 * border_space, controls[text_dn].Y - 2 * border_space, intWH);
                     }
                 }
 
