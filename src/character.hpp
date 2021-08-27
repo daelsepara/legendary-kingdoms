@@ -322,21 +322,21 @@ namespace Party
 
         std::vector<Equipment::Base> Vault = {};
 
+        std::vector<Ship::Base> Fleet = {};
+
+        std::vector<Army::Base> Army = {};
+
+        Location::Type Location = Location::Type::NONE;
+
+        bool InCity = false;
+
         int VaultMoney = 0;
 
         int Money = 0;
 
         int Limit = 4;
 
-        Location::Type Location = Location::Type::NONE;
-
-        bool InCity = false;
-
-        std::vector<Ship::Base> Fleet = {};
-
         int CurrentShip = -1;
-
-        std::vector<Army::Base> Army = {};
 
         // For tracking recent success (team checks, individual checks)
         int RecentSuccesses = 0;

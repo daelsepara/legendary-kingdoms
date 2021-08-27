@@ -26029,7 +26029,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
 
                 auto scrollUp = false;
-                
+
                 auto scrollDown = false;
 
                 if (story->Type == Story::Type::DOOM)
@@ -26709,7 +26709,14 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::RECRUIT && !hold)
                     {
-                        recruitAdventurer(window, renderer, story->BookID, party, story->RecruitmentPrice);
+                        if (Engine::CAN_RECRUIT(party, story->BookID))
+                        {
+                            recruitAdventurer(window, renderer, story->BookID, party, story->RecruitmentPrice);
+                        }
+                        else
+                        {
+                            displayMessage("There is no one left to recruit in this land!", intRD);
+                        }
 
                         selected = false;
                     }

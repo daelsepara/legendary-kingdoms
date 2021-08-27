@@ -1,6 +1,7 @@
 #ifndef __ENGINE__HPP__
 #define __ENGINE__HPP__
 
+#include "book.hpp"
 #include "character.hpp"
 #include "equipment.hpp"
 #include "location.hpp"
@@ -1382,7 +1383,7 @@ namespace Engine
     int FIND_LIST(std::vector<Character::Type> list, Character::Type character)
     {
         auto found = -1;
-        
+
         for (auto i = 0; i < list.size(); i++)
         {
             if (list[i] == character)
@@ -3488,6 +3489,28 @@ namespace Engine
         {
             ship.Cargo.erase(ship.Cargo.begin() + found);
         }
+    }
+
+    bool CAN_RECRUIT(Party::Base &party, Book::Type bookID)
+    {
+        auto characters = 0;
+
+        auto available = std::vector<Character::Base>();
+
+        if (bookID == Book::Type::BOOK1)
+        {
+            available = Character::BOOK1;
+        }
+
+        for (auto i = 0; i < available.size(); i++)
+        {
+            if ((Engine::FIND_LIST(party.Dead, available[i].Type) < 0) && !Engine::IN_PARTY(party, available[i].Type))
+            {
+                characters += 1;
+            }
+        }
+
+        return (characters > 0);
     }
 }
 #endif
