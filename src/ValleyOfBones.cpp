@@ -3372,7 +3372,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
         auto marginw = ((int)((1.0 - 2.0 * Margin) * SCREEN_WIDTH));
 
         auto controls = std::vector<Button>();
-        controls.push_back(Button(0, "icons/map.png", 0, 1, 0, 0, startx, buttony, Control::Type::TOGGLE_MAP));
+        controls.push_back(Button(0, "icons/scroll.png", 0, 1, 0, 0, startx, buttony, Control::Type::TOGGLE_MAP));
         controls.push_back(Button(1, "icons/back-button.png", 0, 1, 1, 1, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
 
         auto offset_x = 0;
@@ -23180,7 +23180,7 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
     idx = controls.size();
 
     controls.push_back(Button(idx, "icons/papyrus.png", idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
-    controls.push_back(Button(idx + 1, "icons/map.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
+    controls.push_back(Button(idx + 1, "icons/ancient-map.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
     controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
     controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, idx - 1, idx + 3, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
 
@@ -26667,7 +26667,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         if (party.Army.size() <= 0)
                         {
-                            displayMessage("You do not have any army!", intRD);
+                            displayMessage("You do not have any troops!", intRD);
                         }
                         else
                         {
