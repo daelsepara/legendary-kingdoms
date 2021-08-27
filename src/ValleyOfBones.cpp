@@ -23179,7 +23179,7 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/open-book.png", idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
+    controls.push_back(Button(idx, "icons/papyrus.png", idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
     controls.push_back(Button(idx + 1, "icons/map.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
     controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
     controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, idx - 1, idx + 3, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
