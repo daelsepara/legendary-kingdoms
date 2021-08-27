@@ -76,6 +76,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
 
 // game screens
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army);
+bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
 bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::TeamAssignment> teams, int min_teams);
 bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
 bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID);
@@ -146,6 +147,7 @@ std::string monsterString(Monster::Base &monster);
 std::string shipString(Ship::Base &ship, bool cargo);
 
 // miscellaneous functions
+bool IsValidTransfer(Party::Base &party, Location::Type src, Location::Type dst);
 bool magicRound0(Character::Base &character, int combatRound);
 int FIND_CONTROL(std::vector<Button> &controls, Control::Type control);
 void addBye(Story::Base *story, std::string bye);
@@ -174,6 +176,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, int start, int last, int limit, int offsetx, int offsety, Control::Type mode);
 std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button);
+std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Location::Type> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
 std::vector<Button> popupMoney(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int popupw, int popuph, int infoh, int offsetx, int offsety);
@@ -1469,6 +1472,58 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     return controls;
 }
 
+std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    if (army.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto unit = army[index];
+
+            std::string ship_string = "[" + unit.Name + "] Strength: " + std::to_string(unit.Strength) + ", Morale: " + std::to_string(unit.Morale);
+
+            ship_string += "\nPosition: " + std::string(Location::BattleFieldDescription[unit.Position]) + ", Garrison: " + std::string(Location::Description[unit.Garrison]);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = controls[i].Surface->w;
+
+            controls[i].H = controls[i].Surface->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (army.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+
+            idx++;
+        }
+
+        if (army.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+
+            idx++;
+        }
+    }
+
+    idx = controls.size();
+
+    controls.push_back(Button(idx, "icons/back-button.png", idx, idx, army.size() > 0 ? (last - start) - 1 : idx, idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+
+    return controls;
+}
+
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety)
 {
     auto controls = std::vector<Button>();
@@ -1663,7 +1718,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         auto selected = false;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -4557,7 +4612,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -7553,7 +7608,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -7892,7 +7947,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship:
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > enemyFleet.size())
@@ -8828,7 +8883,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -9359,7 +9414,7 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -9634,7 +9689,7 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -9909,7 +9964,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -10175,7 +10230,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Char
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         std::vector<Attribute::Type> attributes = {Attribute::Type::FIGHTING, Attribute::Type::STEALTH, Attribute::Type::LORE, Attribute::Type::SURVIVAL, Attribute::Type::CHARISMA};
@@ -10444,7 +10499,7 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Character::Base &cha
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
 
         auto teams_list = std::vector<Team::Type>();
 
@@ -10712,7 +10767,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -11007,7 +11062,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -11427,7 +11482,7 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Bas
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > ships.size())
@@ -11761,7 +11816,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -12160,7 +12215,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
         auto controls = std::vector<Button>();
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > enemyFleet.size())
@@ -12635,7 +12690,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto controls = std::vector<Button>();
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -13680,7 +13735,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto scrollSpeed = 1;
 
-    auto limit = (text_bounds - 2 * text_space) / (96);
+    auto limit = (text_bounds - 2 * text_space - infoh) / (88);
 
     auto offset = 0;
 
@@ -14186,7 +14241,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto scrollSpeed = 1;
 
-    auto limit = (text_bounds - 2 * text_space) / (96);
+    auto limit = (text_bounds - 2 * text_space - infoh) / (88);
 
     auto offset = 0;
 
@@ -14775,7 +14830,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto selection = std::vector<int>();
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -15243,7 +15298,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     auto popupy = ((starty + text_bounds) - popuph) / 2;
 
     auto offset = 0;
-    auto limit = (text_bounds - 2 * text_space) / (56);
+    auto limit = (text_bounds - 2 * text_space - infoh) / (56);
     auto last = offset + limit;
 
     if (last > party.Vault.size())
@@ -15943,7 +15998,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         auto selection = std::vector<int>();
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Fleet.size())
@@ -16365,7 +16420,8 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
     auto scrollSpeed = 1;
-    auto limit = (text_bounds - 2 * text_space) / (56);
+
+    auto limit = (text_bounds - 2 * text_space - infoh) / (56);
 
     auto offset = 0;
 
@@ -17897,8 +17953,7 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
 
         auto scrollSpeed = 1;
         auto offset = 0;
-
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > army.size())
@@ -18179,7 +18234,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
         auto scrollSpeed = 1;
         auto offset = 0;
 
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > ships.size())
@@ -18444,18 +18499,499 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
     return selected_units;
 }
 
+bool IsValidTransfer(Party::Base &party, Location::Type src, Location::Type dst)
+{
+    bool valid = false;
+
+    if (Engine::VERIFY_CODES(party, {Codes::A(33)}))
+    {
+        if (dst == Location::Type::SALTDAD)
+        {
+            valid = true;
+        }
+    }
+
+    if (Engine::VERIFY_CODES(party, {Codes::A(33)}))
+    {
+        if (src == Location::Type::SALTDAD)
+        {
+            valid = true;
+        }
+    }
+
+    return valid;
+}
+
+bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
+{
+    if (window && renderer && party.Army.size() > 0)
+    {
+        TTF_Init();
+
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+        TTF_SetFontKerning(font_dark11, 0);
+
+        auto selected = false;
+        auto current = -1;
+        auto scrollUp = false;
+        auto scrollDown = false;
+        auto hold = false;
+
+        std::string message = "";
+
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
+        // This will be expanded to include barracks from other lands (books)
+        std::vector<Location::Type> barracks = {Location::Type::LUUTANESH, Location::Type::SALTDAD};
+
+        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
+
+        auto popupw = (int)(0.6 * SCREEN_WIDTH);
+        auto popuph = (int)(0.6 * SCREEN_HEIGHT);
+        auto popupx = (SCREEN_WIDTH - popupw) / 2;
+        auto popupy = ((starty + text_bounds) - popuph) / 2;
+
+        auto popup_speed = 1;
+        auto popup_offset = 0;
+        auto popup_limit = (popuph - infoh - buttonh - button_space) / (96);
+        auto popup_last = popup_offset + popup_limit;
+
+        if (popup_last > barracks.size())
+        {
+            popup_last = barracks.size();
+        }
+
+        auto controls_popup = popupList(window, renderer, barracks, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+
+        auto scrollSpeed = 1;
+        auto offset = 0;
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto last = offset + limit;
+
+        if (last > party.Army.size())
+        {
+            last = party.Army.size();
+        }
+
+        auto controls = std::vector<Button>();
+
+        auto controls_army = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh);
+
+        auto selection = -1;
+
+        auto destination = -1;
+
+        auto current_mode = Control::Type::ARMY;
+
+        auto done = false;
+
+        while (!done)
+        {
+            last = offset + limit;
+
+            if (last > party.Army.size())
+            {
+                last = party.Army.size();
+            }
+
+            SDL_SetWindowTitle(window, "Legendary Kingdoms: Transfer Army Units");
+
+            fillWindow(renderer, intWH);
+
+            std::string army_string = "";
+
+            if (selection >= 0 && selection < party.Army.size())
+            {
+                army_string = party.Army[selection].Name;
+            }
+
+            putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+
+            putText(renderer, (selection >= 0 && selection < party.Army.size()) ? army_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+
+            putHeader(renderer, "Your Army", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+
+            fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+
+            if (last - offset > 0)
+            {
+                for (auto i = 0; i < last - offset; i++)
+                {
+                    if (selection == (offset + i))
+                    {
+                        thickRect(renderer, controls_army[i].W + border_pts, controls_army[i].H + border_pts, controls_army[i].X - 2, controls_army[i].Y - 2, intLB, 2);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls_army[i].W + border_space, controls_army[i].H + border_space, controls_army[i].X - border_pts, controls_army[i].Y - border_pts, intBK);
+                    }
+                }
+            }
+
+            if (current_mode == Control::Type::ARMY)
+            {
+                controls = controls_army;
+            }
+            else if (current_mode == Control::Type::TRANSFER)
+            {
+                renderButtons(renderer, controls_army, -1, intLB, border_space, border_pts);
+
+                fillRect(renderer, popupw, popuph, popupx, popupy, intBE);
+
+                drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
+
+                putHeader(renderer, "Select Destination", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+
+                if (popup_last - popup_offset > 0)
+                {
+                    for (auto i = 0; i < popup_last - popup_offset; i++)
+                    {
+                        if (destination == popup_offset + i)
+                        {
+                            thickRect(renderer, controls_popup[i].W + border_pts, controls_popup[i].H + border_pts, controls_popup[i].X - 2, controls_popup[i].Y - 2, intLB, 2);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls_popup[i].W + border_space, controls_popup[i].H + border_space, controls_popup[i].X - border_pts, controls_popup[i].Y - border_pts, intBK);
+                        }
+                    }
+                }
+
+                controls = controls_popup;
+            }
+
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (current_mode == Control::Type::ARMY)
+                    {
+                        if (offset > 0)
+                        {
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Army.size())
+                            {
+                                last = party.Army.size();
+                            }
+
+                            controls_army = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                    else if (current_mode == Control::Type::TRANSFER)
+                    {
+                        if (popup_offset > 0)
+                        {
+                            popup_offset -= popup_speed;
+
+                            if (popup_offset < 0)
+                            {
+                                popup_offset = 0;
+                            }
+
+                            popup_last = popup_offset + popup_limit;
+
+                            if (popup_last > barracks.size())
+                            {
+                                popup_last = barracks.size();
+                            }
+
+                            controls_popup = popupList(window, renderer, barracks, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+
+                            SDL_Delay(50);
+                        }
+
+                        if (popup_offset <= 0)
+                        {
+                            current = -1;
+
+                            selected = false;
+                        }
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
+                {
+                    if (current_mode == Control::Type::ARMY)
+                    {
+                        if (party.Army.size() - last > 0)
+                        {
+                            if (offset < party.Army.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > party.Army.size() - limit)
+                            {
+                                offset = party.Army.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > party.Army.size())
+                            {
+                                last = party.Army.size();
+                            }
+
+                            controls_army = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                current = FIND_CONTROL(controls_army, Control::Type::SCROLL_DOWN);
+                            }
+                        }
+
+                        if (party.Army.size() - last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                    else if (current_mode == Control::Type::TRANSFER)
+                    {
+                        if (barracks.size() - popup_last > 0)
+                        {
+                            if (popup_offset < barracks.size() - popup_limit)
+                            {
+                                popup_offset += popup_speed;
+                            }
+
+                            if (popup_offset > barracks.size() - popup_limit)
+                            {
+                                popup_offset = barracks.size() - popup_limit;
+                            }
+
+                            popup_last = popup_offset + popup_limit;
+
+                            if (popup_last > barracks.size())
+                            {
+                                popup_last = barracks.size();
+                            }
+
+                            controls_popup = popupList(window, renderer, barracks, popup_offset, popup_last, popup_limit, popupw, popuph, infoh, popupx, popupy);
+
+                            SDL_Delay(50);
+
+                            if (popup_offset > 0)
+                            {
+                                current = FIND_CONTROL(controls_popup, Control::Type::SCROLL_DOWN);
+                            }
+                        }
+
+                        if (barracks.size() - popup_last <= 0)
+                        {
+                            selected = false;
+
+                            current = -1;
+                        }
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if (current >= 0 && current < controls.size())
+                    {
+                        auto unit = offset + current;
+
+                        if (current_mode == Control::Type::ARMY)
+                        {
+                            if (unit >= 0 && unit < party.Army.size())
+                            {
+                                if (selection == unit)
+                                {
+                                    selection = -1;
+                                }
+                                else
+                                {
+                                    selection = unit;
+
+                                    current_mode = Control::Type::TRANSFER;
+                                }
+                            }
+                        }
+                        else if (current_mode == Control::Type::TRANSFER)
+                        {
+                            auto transfer = offset + current;
+
+                            if (transfer >= 0 && transfer < barracks.size())
+                            {
+                                if (destination == transfer)
+                                {
+                                    destination = -1;
+                                }
+                                else
+                                {
+                                    destination = transfer;
+                                }
+                            }
+                        }
+                    }
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                {
+                    if (current_mode == Control::Type::TRANSFER)
+                    {
+                        if (selection >= 0 && selection <= party.Army.size() && destination >= 0 && destination < barracks.size())
+                        {
+                            auto src = party.Army[selection].Garrison;
+                            auto dst = barracks[destination];
+
+                            // verify Validity of transfer
+                            if (src == dst)
+                            {
+                                displayMessage("The " + party.Army[selection].Name + " is already garrisoned at " + std::string(Location::Description[dst]) + "!", intRD);
+                            }
+                            else if (IsValidTransfer(party, src, dst))
+                            {
+                                displayMessage(party.Army[selection].Name + " from " + std::string(Location::Description[src]) + " barracks transferred to " + std::string(Location::Description[dst]) + ".", intLB);
+
+                                selection = -1;
+
+                                destination = -1;
+
+                                party.Army[selection].Garrison = dst;
+
+                                controls_army = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh);
+
+                                current_mode = Control::Type::ARMY;
+                            }
+                            else
+                            {
+                                displayMessage("It is not possible to transfer the " + party.Army[selection].Name + " from " + std::string(Location::Description[src]) + " barracks to " + std::string(Location::Description[dst]) + " at this time.", intRD);
+                            }
+                        }
+                        else if (selection >= 0 && selection <= party.Army.size())
+                        {
+                            displayMessage("Please select destination!", intRD);
+                        }
+                        else if (destination >= 0 && destination <= barracks.size())
+                        {
+                            displayMessage("Please select army unit to transfer!", intRD);
+                        }
+                        else
+                        {
+                            displayMessage("Please select army unit and destination!", intRD);
+                        }
+                    }
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    if (current_mode == Control::Type::ARMY)
+                    {
+                        done = false;
+
+                        break;
+                    }
+                    else if (current_mode == Control::Type::TRANSFER)
+                    {
+                        current_mode = Control::Type::ARMY;
+
+                        current = -1;
+
+                        selection = -1;
+
+                        destination = -1;
+
+                        selected = false;
+
+                        controls_army = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh);
+                    }
+                }
+            }
+        }
+
+        if (font_dark11)
+        {
+            TTF_CloseFont(font_dark11);
+
+            font_dark11 = NULL;
+        }
+
+        if (font_garamond)
+        {
+            TTF_CloseFont(font_garamond);
+
+            font_garamond = NULL;
+        }
+
+        TTF_Quit();
+    }
+
+    return false;
+}
+
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army)
 {
     auto done = false;
 
     if (army.size() > 0)
     {
-        auto font_size = 28;
-
         auto scrollSpeed = 1;
+
         auto offset = 0;
 
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+
         auto last = offset + limit;
 
         if (last > army.size())
@@ -18490,7 +19026,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         TTF_Init();
 
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
         TTF_SetFontKerning(font_dark11, 0);
@@ -19092,10 +19628,8 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     if (TakeLimit > 0)
     {
-        auto font_size = 28;
-
         auto scrollSpeed = 1;
-        auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * border_pts);
+        auto limit = (text_bounds - 2 * text_space) / (56);
         auto offset = 0;
         auto last = offset + limit;
 
@@ -19118,7 +19652,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         TTF_Init();
 
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
         TTF_SetFontKerning(font_dark11, 0);
@@ -19404,10 +19938,8 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
     if (LoseLimit > 0)
     {
-        auto font_size = 28;
-
         auto scrollSpeed = 1;
-        auto limit = (text_bounds - 2 * text_space) / (font_size + 7 * border_pts);
+        auto limit = (text_bounds - 2 * text_space) / (56);
         auto offset = 0;
         auto last = offset + limit;
 
@@ -19430,7 +19962,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
         TTF_Init();
 
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
+        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
         TTF_SetFontKerning(font_dark11, 0);
@@ -20092,7 +20624,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto selected = false;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Fleet.size())
@@ -20732,7 +21264,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
         auto selected = false;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > harbour->Ships.size())
@@ -21375,6 +21907,33 @@ std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::v
     }
 
     popupScrolls(controls, list, start, last, limit, popupw, popuph, infoh, offsetx, offsety, false);
+
+    return controls;
+}
+
+std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Location::Type> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    if (list.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            std::string list_string = Location::Description[list[index]];
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
+
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = controls[i].Surface->w;
+
+            controls[i].H = controls[i].Surface->h;
+        }
+    }
+
+    popupScrolls(controls, list, start, last, limit, popupw, popuph, infoh, offsetx, offsety, true);
 
     return controls;
 }
@@ -23237,7 +23796,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > story->Choices.size())
@@ -26672,6 +27231,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         else
                         {
                             // TODO: Implement codes A33 and A100 troop transfers
+                            armyTransfer(window, renderer, party);
                         }
 
                         selected = false;

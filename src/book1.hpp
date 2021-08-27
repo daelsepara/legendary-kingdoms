@@ -12092,7 +12092,7 @@ namespace Book1
 
             Location = Location::Type::LUUTANESH;
 
-            Text = "You travel a few miles outside the village before coming to the Everchild's training grounds. Her soldiers are divided into two types. The guards of Luutanesh are easily the best, well-provisioned and equipped with hide armour and long spears. They are disciplined and well trained. The other half of her army are less impressive, peasants and freed slaves armed with crude weapons, and only a few with shields. They are eager, and evidently their morale is quite good. Still, you wouldn't want to use them in battle as anything except reserve troops.\n\n\"As they say in Royce, from small seeds mighty trees grow,\" quotes the Everchild. \"Still, I am eager for more soldiers. I will even accept foreign mercenaries if you have access to them. However, Lhasbreath and Chalice are your best bets in the short term.\"\n\nShe cocks her head thoughtfully. \"I find that I trust you well,\" she says. \"I am happy to launch the attack on Saltdad as soon as you think we have enough soldiers, and the Iron King is suitably diminished in power. We shall only have one chance, so choose our moment well.\"\n\nNote: You can note the following soldiers in your Army:\n\n[Luutanesh Spears]: Strength 3, Morale 3\n[Faithful Irregulars]: Strength 1, Morale 4\n\nThese forces are currently in Luutanesh garrison. You cannot transfer troops from the Luutanesh barracks without permission from the Everchild. Because the Everchild does not yet own a port city, you also cannot transfer troops you might own in other barracks to the Luutanesh barracks.";
+            Text = "You travel a few miles outside the village before coming to the Everchild's training grounds. Her soldiers are divided into two types. The guards of Luutanesh are easily the best, well-provisioned and equipped with hide armour and long spears. They are disciplined and well trained. The other half of her army are less impressive, peasants and freed slaves armed with crude weapons, and only a few with shields. They are eager, and evidently their morale is quite good. Still, you wouldn't want to use them in battle as anything except reserve troops.\n\n\"As they say in Royce, from small seeds mighty trees grow,\" quotes the Everchild. \"Still, I am eager for more soldiers. I will even accept foreign mercenaries if you have access to them. However, Lhasbreath and Chalice are your best bets in the short term.\"\n\nShe cocks her head thoughtfully. \"I find that I trust you well,\" she says. \"I am happy to launch the attack on Saltdad as soon as you think we have enough soldiers, and the Iron King is suitably diminished in power. We shall only have one chance, so choose our moment well.\"\n\nYou take note of the following soldiers added to your Army:\n\n[Luutanesh Spears]: Strength 3, Morale 3\n[Faithful Irregulars]: Strength 1, Morale 4\n\nThese forces are currently in Luutanesh garrison. You cannot transfer troops from the Luutanesh barracks without permission from the Everchild. Because the Everchild does not yet own a port city, you also cannot transfer troops you might own in other barracks to the Luutanesh barracks.";
 
             Bye = "At that she kisses you on your cheeks and departs for her chambers at the Cold River Inn.";
 
@@ -12644,7 +12644,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You make your way down the pitch-black tunnel, relying on touching the damp walls to guide you. You emerge into a small cell, through which light streams weakly from a tiny arch high in the wall. In the cell you can see Che Long, your trainer, and several other gladiator slaves.\n\n\"Welcome, my students,\" bows Che Long. He indicates Milagros. \"You come in good company, I see.\"\n\n\"I believe we can trust these warriors,\" announces Milagros. \"Tell them the plan, Che Long.\"\n\n\"Do they know what they are letting themselves in for... who they fight for?\"\n\n\"We are all slaves here,\" you assure them. \"We fight for our freedom.\"\n\n\"That, and so much more,\" says Che Long, smiling. \"This is no mere slave girl. Standing before you is the reincarnation of the Everchild. The Queen of the Valley. The supreme sorceress herself.\"\n\nYou look down at the dirty blonde waif. She speaks well, but could she really be a queen? The Everchild is a figure of legend, a story told to squires and children. Milagros sees the doubt in your eyes and places a finger in the soul bowl. She withdraws it, and paints the walls with the thick soup, drawing strange symbols and wards which begin to pulse and move as if under their own power. To your astonishment she has drawn a spell upon the walls, filled with arcane power.\n\nWith a wave of her hands Milagros bathes your bodies in healing energies. Your party's Health scores are restored to full. Any of your characters that lost limbs, tongues or other organs, are restored. Any diseases or curses you are affected by are also removed.\n\nThere can be no doubt. This young slave girl is, if not the Everchild, certainly a sorceress of great power.\n\nNote: You can learn the following spell:\n\nSoothing Touch (Adventure or Combat)\n\nYour hands glow with divine energy. Choose one of your party members; they can restore 5 Health points.\n\nRecharge: 50 silver";
+            Text = "You make your way down the pitch-black tunnel, relying on touching the damp walls to guide you. You emerge into a small cell, through which light streams weakly from a tiny arch high in the wall. In the cell you can see Che Long, your trainer, and several other gladiator slaves.\n\n\"Welcome, my students,\" bows Che Long. He indicates Milagros. \"You come in good company, I see.\"\n\n\"I believe we can trust these warriors,\" announces Milagros. \"Tell them the plan, Che Long.\"\n\n\"Do they know what they are letting themselves in for... who they fight for?\"\n\n\"We are all slaves here,\" you assure them. \"We fight for our freedom.\"\n\n\"That, and so much more,\" says Che Long, smiling. \"This is no mere slave girl. Standing before you is the reincarnation of the Everchild. The Queen of the Valley. The supreme sorceress herself.\"\n\nYou look down at the dirty blonde waif. She speaks well, but could she really be a queen? The Everchild is a figure of legend, a story told to squires and children. Milagros sees the doubt in your eyes and places a finger in the soul bowl. She withdraws it, and paints the walls with the thick soup, drawing strange symbols and wards which begin to pulse and move as if under their own power. To your astonishment she has drawn a spell upon the walls, filled with arcane power.\n\nWith a wave of her hands Milagros bathes your bodies in healing energies. There can be no doubt. This young slave girl is, if not the Everchild, certainly a sorceress of great power.\n\nNote: Your party's Health scores are restored to full. Any of your characters that lost limbs, tongues or other organs, are restored. Any diseases or curses you are affected by are also removed.\n\nYou can also learn the following spell:\n\nSoothing Touch (Adventure or Combat)\n\nYour hands glow with divine energy. Choose one of your party members; they can restore 5 Health points.\n\nRecharge: 50 silver";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Ask her how she came to be enslaved", {Book::Type::BOOK1, 629}));
@@ -14162,7 +14162,7 @@ namespace Book1
 
             Choices.clear();
 
-            Controls = Story::Controls::STANDARD;
+            Controls = Story::Controls::BARRACKS;
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 620}; }
@@ -17004,6 +17004,8 @@ namespace Book1
     class Story508 : public Story::Base
     {
     public:
+        std::string PreText = "";
+
         Story508()
         {
             BookID = Book::Type::BOOK1;
@@ -17013,8 +17015,6 @@ namespace Book1
             Location = Location::Type::SALTDAD;
 
             IsCity = true;
-
-            Text = "You make your way to the training grounds, where you see the soldiers of the Everchild at practice. All the troops you have gathered for her can be found here, their armour and weapons glinting in the unforgiving sun.\n\n\"We can always use more soldiers,\" comments general Che Long. \"I know the Everchild has asked you to find some more from the leaders in the valley, but we can also muster more troops here if we can find the money.\"\n\n\"How much will it cost to levy more troops?\" you ask, checking your purse.\n\n\"More than any number of silver coins!\" laughs Che Long. \"We are talking about hundreds of soldiers, including weapons and supplies. You would need bars of GOLD BULLION to fully pay for the cost.\"\n\nYou ponder Che Long's request. \"If I found some, what kind of soldiers could we raise?\"\n\n\"For one bar of GOLD BULLION we could raise a decent troop of light infantry,\" says Che Long. \"But ideally, we would want two GOLD BULLION bars. With that we could retrain and equip the Bronzeguard. We still have their armour and equipment -- but teaching men to fight to that standard is a long and expensive process.\"\n\nIf you have any bars of GOLD BULLION you can purchase additional troops for the Everchild.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Spend one GOLD BULLION on some light infantry", {Book::Type::BOOK1, 900}, Choice::Type::PAY_WITH, {Equipment::GOLD_BULLION}, 1));
@@ -17027,6 +17027,27 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
+
+            PreText = "You make your way to the training grounds, where you see the soldiers of the Everchild at practice. All the troops you have gathered for her can be found here, their armour and weapons glinting in the unforgiving sun.\n\n\"We can always use more soldiers,\" comments general Che Long. \"I know the Everchild has asked you to find some more from the leaders in the valley, but we can also muster more troops here if we can find the money.\"\n\n\"How much will it cost to levy more troops?\" you ask, checking your purse.\n\n\"More than any number of silver coins!\" laughs Che Long. \"We are talking about hundreds of soldiers, including weapons and supplies. You would need bars of GOLD BULLION to fully pay for the cost.\"\n\nYou ponder Che Long's request. \"If I found some, what kind of soldiers could we raise?\"\n\n\"For one bar of GOLD BULLION we could raise a decent troop of light infantry,\" says Che Long. \"But ideally, we would want two GOLD BULLION bars. With that we could retrain and equip the Bronzeguard. We still have their armour and equipment -- but teaching men to fight to that standard is a long and expensive process.\"\n\nNote: If you have any bars of GOLD BULLION you can purchase additional troops for the Everchild.";
+
+            if (!Engine::VERIFY_CODES_ANY(party, {Codes::A(33), Codes::A(100)}))
+            {
+                PreText += " You cannot transfer any troops, as the Everchild does not have access to any seaports.";
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(33), Codes::A(100)}))
+            {
+                PreText += " You can transfer any troops you own in other lands to the Saltdad barracks. You can also transfer troops from Saltdad to other garrisons you control in other lands.";
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(33)}))
+            {
+                PreText += " You can transfer any troops you own in other lands to the Saltdad barracks.";
+            }
+            else if (Engine::VERIFY_CODES(party, {Codes::A(100)}))
+            {
+                PreText += " You can transfer troops from Saltdad to other garrisons you control in other lands.";
+            }
+
+            Text = PreText.c_str();
         }
     };
 
