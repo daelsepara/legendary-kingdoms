@@ -1420,7 +1420,7 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             std::string ship_string = "[" + unit.Name + "] Strength: " + std::to_string(unit.Strength) + ", Morale: " + std::to_string(unit.Morale);
 
-            ship_string += "\nPosition: " + std::string(Location::BattleFieldDescription[unit.Position]) + " Garrison: " + std::string(Location::Description[unit.Garrison]);
+            ship_string += "\nPosition: " + std::string(Location::BattleFieldDescription[unit.Position]) + ", Garrison: " + std::string(Location::Description[unit.Garrison]);
 
             auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
 
@@ -21323,7 +21323,7 @@ std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             std::string list_string = "[" + unit.Name + "] Strength: " + std::to_string(unit.Strength) + ", Morale: " + std::to_string(unit.Morale);
 
-            list_string += "\nPosition: " + std::string(Location::BattleFieldDescription[unit.Position]) + " Garrison: " + std::string(Location::Description[unit.Garrison]);
+            list_string += "\nPosition: " + std::string(Location::BattleFieldDescription[unit.Position]) + ", Garrison: " + std::string(Location::Description[unit.Garrison]);
 
             auto button = createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space);
 
