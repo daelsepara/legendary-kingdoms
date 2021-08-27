@@ -1368,15 +1368,13 @@ std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Ch
                 attributes_string += ": " + std::to_string(Engine::SCORE(character, attributes[index]));
             }
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 28, attributes_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 28, attributes_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -1422,15 +1420,13 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             ship_string += "\nPosition: " + std::string(Location::BattleFieldDescription[unit.Position]) + ", Garrison: " + std::string(Location::Description[unit.Garrison]);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -1485,15 +1481,13 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto ship_string = shipString(ships[index], true);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -1558,15 +1552,13 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             ship_string += " for " + to.Name + ".";
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -1613,15 +1605,13 @@ std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             std::string teams_string = std::string(Team::Descriptions[teams[index]]);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 28, teams_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 28, teams_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -3808,15 +3798,13 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             spell_string += "\nType: " + std::string(Spells::ScopeDescriptions[spell.Scope]) + ", Charged: " + std::string(spell.Charged ? "Yes" : "No") + ", Recharge: " + std::to_string(spell.Recharge);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -3874,15 +3862,13 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             spell_string += "\nType: " + std::string(Spells::ScopeDescriptions[spell.Scope]) + ", Charged: " + std::string(spell.Charged ? "Yes" : "No") + ", Recharge: " + std::to_string(spell.Recharge);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -3930,15 +3916,13 @@ std::vector<Button> rechargeList(SDL_Window *window, SDL_Renderer *renderer, std
 
             spell_string += "\nType: " + std::string(Spells::ScopeDescriptions[spell.Scope]) + ", Charged: " + std::string(spell.Charged ? "Yes" : "No") + ", Recharge: " + std::to_string(spell.Recharge);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -4037,15 +4021,13 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             std::string monster_string = monsterString(monster);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -4099,15 +4081,13 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             std::string monster_string = monsterString(monster);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -4167,15 +4147,13 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
 
             std::string adventurer_string = characterText(adventurer, true);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), ((i < (last - start) - 1) ? i + 1 : ((back_button || confirm_button) ? i + 1 : i)), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), ((i < (last - start) - 1) ? i + 1 : ((back_button || confirm_button) ? i + 1 : i)), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -4229,15 +4207,13 @@ std::vector<Button> restList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             std::string adventurer_string = characterText(adventurer, true);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -5108,15 +5084,13 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto ship_string = shipString(ships[index], cargo);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -5168,15 +5142,13 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             std::string ship_string = shipString(ships[index], false);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -13663,15 +13635,13 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             item_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + ", Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, item_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, item_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -15916,15 +15886,13 @@ std::vector<Button> repairList(SDL_Window *window, SDL_Renderer *renderer, std::
 
             std::string ship_string = shipString(ships[index], true);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 22, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -19773,15 +19741,13 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             ship_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + ", Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -19836,15 +19802,13 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             ship_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + ", Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -19920,15 +19884,13 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             cargo_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + " Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -19983,15 +19945,13 @@ std::vector<Button> buyCargo(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             cargo_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + " Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -20036,15 +19996,13 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             std::string cargo_string = shipString(ships[index], true);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -21290,15 +21248,13 @@ std::vector<Button> popupMoney(SDL_Window *window, SDL_Renderer *renderer, Party
 {
     auto controls = std::vector<Button>();
 
-    auto vaultMoney = createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Vault Money: " + std::to_string(party.VaultMoney) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space);
-    controls.push_back(Button(0, vaultMoney, 0, 0, 0, 0, offsetx + 2 * text_space, offsety + infoh + 3 * text_space, Control::Type::ACTION));
-    controls[0].W = vaultMoney->w;
-    controls[0].H = vaultMoney->h;
+    controls.push_back(Button(0, createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Vault Money: " + std::to_string(party.VaultMoney) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space), 0, 0, 0, 0, offsetx + 2 * text_space, offsety + infoh + 3 * text_space, Control::Type::ACTION));
+    controls[0].W = controls[0].Surface->w;
+    controls[0].H = controls[0].Surface->h;
 
-    auto partyMoney = createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Party Money: " + std::to_string(party.Money) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space);
-    controls.push_back(Button(1, partyMoney, 1, 1, 1, 1, offsetx + 2 * text_space, controls[0].Y + controls[0].H + 3 * text_space, Control::Type::ACTION));
-    controls[1].W = partyMoney->w;
-    controls[1].H = partyMoney->h;
+    controls.push_back(Button(1, createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Party Money: " + std::to_string(party.Money) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space), 1, 1, 1, 1, offsetx + 2 * text_space, controls[0].Y + controls[0].H + 3 * text_space, Control::Type::ACTION));
+    controls[1].W = controls[1].Surface->w;
+    controls[1].H = controls[1].Surface->h;
 
     auto idx = controls.size();
 
@@ -21325,15 +21281,13 @@ std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             list_string += "\nPosition: " + std::string(Location::BattleFieldDescription[unit.Position]) + ", Garrison: " + std::string(Location::Description[unit.Garrison]);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -21359,15 +21313,13 @@ std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             std::string list_string = monsterString(list[index]);
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -21412,15 +21364,13 @@ std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::v
                 }
             }
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -23198,15 +23148,13 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
         {
             auto index = start + i;
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 24, choices[index].Text, clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, choices[index].Text, clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
@@ -26826,15 +26774,13 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
 
             auto topic = topics[index];
 
-            auto button = createHeaderButton(window, FONT_GARAMOND, 22, topic.Title.c_str(), clrBK, intBE, splashw - 3 * button_space / 2, (text_space + 28) * 2, text_space);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, button, i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, topic.Title.c_str(), clrBK, intBE, splashw - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = button->w;
+            controls[i].W = controls[i].Surface->w;
 
-            controls[i].H = button->h;
+            controls[i].H = controls[i].Surface->h;
         }
     }
 
