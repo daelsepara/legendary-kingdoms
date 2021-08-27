@@ -1061,9 +1061,9 @@ namespace Story
             idx = 2;
         }
 
-        controls.push_back(Button(idx, "icons/open-book.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
+        controls.push_back(Button(idx, "icons/papyrus.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
         controls.push_back(Button(idx + 1, "icons/map.png", idx, idx + 2, compact ? idx + 1 : 1, idx, startx + gridsize, buttony, Control::Type::MAP));
-        controls.push_back(Button(idx + 2, "icons/disk.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 1, startx + 2 * gridsize, buttony, Control::Type::GAME));
+        controls.push_back(Button(idx + 2, "icons/writing.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 1, startx + 2 * gridsize, buttony, Control::Type::GAME));
         controls.push_back(Button(idx + 3, "icons/user.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 2, startx + 3 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 3, startx + 4 * gridsize, buttony, Control::Type::CONTINUE_STORY));
         controls.push_back(Button(idx + 5, "icons/exit.png", idx + 4, idx + 5, compact ? idx + 5 : 1, idx + 4, (1.0 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::QUIT));
@@ -1085,9 +1085,9 @@ namespace Story
             idx = 2;
         }
 
-        controls.push_back(Button(idx, "icons/open-book.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
+        controls.push_back(Button(idx, "icons/papyrus.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
         controls.push_back(Button(idx + 1, "icons/map.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
-        controls.push_back(Button(idx + 2, "icons/disk.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
+        controls.push_back(Button(idx + 2, "icons/writing.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
         controls.push_back(Button(idx + 3, "icons/user.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 4, "icons/swords.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::PREVIEW));
         controls.push_back(Button(idx + 5, "icons/next.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::CONTINUE_STORY));
@@ -1110,9 +1110,9 @@ namespace Story
             idx = 2;
         }
 
-        controls.push_back(Button(idx, "icons/open-book.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
+        controls.push_back(Button(idx, "icons/papyrus.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
         controls.push_back(Button(idx + 1, "icons/map.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
-        controls.push_back(Button(idx + 2, "icons/disk.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
+        controls.push_back(Button(idx + 2, "icons/writing.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
         controls.push_back(Button(idx + 3, "icons/user.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 4, "icons/shop.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::SHOP));
         controls.push_back(Button(idx + 5, "icons/next.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::CONTINUE_STORY));
@@ -1135,9 +1135,9 @@ namespace Story
             idx = 2;
         }
 
-        controls.push_back(Button(idx, "icons/open-book.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
+        controls.push_back(Button(idx, "icons/papyrus.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
         controls.push_back(Button(idx + 1, "icons/map.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
-        controls.push_back(Button(idx + 2, "icons/disk.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
+        controls.push_back(Button(idx + 2, "icons/writing.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
         controls.push_back(Button(idx + 3, "icons/user.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 4, "icons/exchange.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::BARTER));
         controls.push_back(Button(idx + 5, "icons/next.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::CONTINUE_STORY));
@@ -1160,9 +1160,9 @@ namespace Story
             idx = 2;
         }
 
-        controls.push_back(Button(idx, "icons/open-book.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
+        controls.push_back(Button(idx, "icons/papyrus.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
         controls.push_back(Button(idx + 1, "icons/map.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
-        controls.push_back(Button(idx + 2, "icons/disk.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
+        controls.push_back(Button(idx + 2, "icons/writing.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
         controls.push_back(Button(idx + 3, "icons/user.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 4, "icons/anchors.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::HARBOUR));
         controls.push_back(Button(idx + 5, "icons/next.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::CONTINUE_STORY));
@@ -1185,11 +1185,11 @@ namespace Story
             idx = 2;
         }
 
-        controls.push_back(Button(idx, "icons/open-book.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
+        controls.push_back(Button(idx, "icons/papyrus.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
         controls.push_back(Button(idx + 1, "icons/map.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
-        controls.push_back(Button(idx + 2, "icons/disk.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
+        controls.push_back(Button(idx + 2, "icons/writing.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
         controls.push_back(Button(idx + 3, "icons/user.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::PARTY));
-        controls.push_back(Button(idx + 4, "icons/inn.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::REST));
+        controls.push_back(Button(idx + 4, "icons/hourglass.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::REST));
         controls.push_back(Button(idx + 5, "icons/next.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::CONTINUE_STORY));
         controls.push_back(Button(idx + 6, "icons/exit.png", idx + 5, idx + 6, compact ? idx + 6 : 1, idx + 6, (1.0 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::QUIT));
 
@@ -1210,9 +1210,9 @@ namespace Story
             idx = 2;
         }
 
-        controls.push_back(Button(idx, "icons/open-book.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
+        controls.push_back(Button(idx, "icons/papyrus.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
         controls.push_back(Button(idx + 1, "icons/map.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
-        controls.push_back(Button(idx + 2, "icons/disk.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
+        controls.push_back(Button(idx + 2, "icons/writing.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
         controls.push_back(Button(idx + 3, "icons/user.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::PARTY));
         controls.push_back(Button(idx + 4, "icons/interaction.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::RECRUIT));
         controls.push_back(Button(idx + 5, "icons/next.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::CONTINUE_STORY));
@@ -1235,11 +1235,11 @@ namespace Story
             idx = 2;
         }
 
-        controls.push_back(Button(idx, "icons/open-book.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
+        controls.push_back(Button(idx, "icons/papyrus.png", idx, idx + 1, compact ? idx : 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
         controls.push_back(Button(idx + 1, "icons/map.png", idx, idx + 2, compact ? idx + 1 : 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
-        controls.push_back(Button(idx + 2, "icons/disk.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
+        controls.push_back(Button(idx + 2, "icons/writing.png", idx + 1, idx + 3, compact ? idx + 2 : 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::GAME));
         controls.push_back(Button(idx + 3, "icons/user.png", idx + 2, idx + 4, compact ? idx + 3 : 1, idx + 3, startx + 3 * gridsize, buttony, Control::Type::PARTY));
-        controls.push_back(Button(idx + 4, "icons/tent.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::BARRACKS));
+        controls.push_back(Button(idx + 4, "icons/helmet.png", idx + 3, idx + 5, compact ? idx + 4 : 1, idx + 4, startx + 4 * gridsize, buttony, Control::Type::BARRACKS));
         controls.push_back(Button(idx + 5, "icons/next.png", idx + 4, idx + 6, compact ? idx + 5 : 1, idx + 5, startx + 5 * gridsize, buttony, Control::Type::CONTINUE_STORY));
         controls.push_back(Button(idx + 6, "icons/exit.png", idx + 5, idx + 6, compact ? idx + 6 : 1, idx + 6, (1.0 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::QUIT));
 
