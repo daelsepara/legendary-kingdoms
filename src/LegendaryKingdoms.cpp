@@ -68,6 +68,7 @@ void renderImage(SDL_Renderer *renderer, SDL_Surface *text, int x, int y, int bo
 void renderText(SDL_Renderer *renderer, SDL_Surface *text, Uint32 bg, int x, int y, int bounds, int offset);
 void renderTextButtons(SDL_Renderer *renderer, std::vector<TextButton> controls, const char *ttf, int selected, SDL_Color fg, Uint32 bg, Uint32 bgSelected, int fontsize, int style);
 void renderTextButtons(SDL_Renderer *renderer, std::vector<TextButton> controls, const char *ttf, int selected, SDL_Color fg, Uint32 bg, Uint32 bgSelected, int fontsize, int offsetx, int scrolly, bool hide_scroll, int style);
+void setWindowIcon(SDL_Window *window, const char *icon);
 void stretchImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y, int w, int h);
 void thickRect(SDL_Renderer *renderer, int w, int h, int x, int y, int color, int pts);
 
@@ -308,6 +309,20 @@ SDL_Surface *createImage(const char *image, int wrap, Uint32 bg)
     return surface;
 }
 
+void setWindowIcon(SDL_Window *window, const char *icon)
+{
+    auto surface = createImage(icon);
+
+    if (surface)
+    {
+        SDL_SetWindowIcon(window, surface);
+
+        SDL_FreeSurface(surface);
+
+        surface = NULL;
+    }
+}
+
 void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, const char *title, const char *icon)
 {
     // The window we'll be rendering to
@@ -346,16 +361,7 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
             SDL_SetWindowTitle(*window, title);
         }
 
-        auto surface = createImage(icon);
-
-        if (surface)
-        {
-            SDL_SetWindowIcon(*window, surface);
-
-            SDL_FreeSurface(surface);
-
-            surface = NULL;
-        }
+        setWindowIcon(*window, icon);
     }
 }
 
@@ -27314,7 +27320,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         while (!quit)
         {
-            createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/spidermindgames-48.png");
+            setWindowIcon(window, "icons/spidermindgames-48.png");
 
             SDL_Surface *splash = NULL;
             SDL_Texture *splashTexture = NULL;
@@ -27345,11 +27351,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             if (party.Book == Book::Type::BOOK1)
             {
-                createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/book1-48.png");
+                setWindowIcon(window, "icons/book1-48.png");
             }
             else
             {
-                createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/spidermindgames-48.png");
+                setWindowIcon(window, "icons/spidermindgames-48.png");
             }
 
             auto saveParty = party;
