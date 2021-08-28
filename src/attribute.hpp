@@ -46,6 +46,10 @@ namespace Attribute
 
         int Value = 0;
 
+        Base()
+        {
+        }
+
         Base(Attribute::Type type, int value)
         {
             Type = type;

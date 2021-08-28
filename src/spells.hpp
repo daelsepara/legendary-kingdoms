@@ -96,6 +96,10 @@ namespace Spells
 
         int Recharge = 0;
 
+        Base()
+        {
+        }
+
         Base(const char *name, const char *description, Spells::Scope scope, Spells::Type type, int recharge)
         {
             Name = name;

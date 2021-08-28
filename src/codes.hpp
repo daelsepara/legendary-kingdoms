@@ -83,6 +83,10 @@ namespace Codes
 
         int Code = 0;
 
+        Base()
+        {
+        }
+
         Base(Book::Type type, int code)
         {
             Type = type;

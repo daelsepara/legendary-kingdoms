@@ -169,9 +169,9 @@ namespace Character
     public:
         std::string Name = "";
 
-        const char *Background = NULL;
+        std::string Background = "";
 
-        const char *Image = NULL;
+        std::string Image = "";
 
         Character::Type Type = Character::Type::NONE;
 

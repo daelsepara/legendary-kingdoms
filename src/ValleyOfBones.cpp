@@ -2156,7 +2156,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
         if (character >= 0 && character < party.Members.size())
         {
-            if (party.Members[character].Image)
+            if (party.Members[character].Image.length() > 0)
             {
                 if (adventurer)
                 {
@@ -2172,7 +2172,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                     adventurerTexture = NULL;
                 }
 
-                adventurer = createImage(party.Members[character].Image);
+                adventurer = createImage(party.Members[character].Image.c_str());
 
                 if (adventurer)
                 {
@@ -2534,9 +2534,9 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                             text = NULL;
                         }
 
-                        if (party.Members[character].Image)
+                        if (party.Members[character].Image.length() > 0)
                         {
-                            adventurer = createImage(party.Members[character].Image);
+                            adventurer = createImage(party.Members[character].Image.c_str());
 
                             if (adventurer)
                             {
@@ -2577,10 +2577,10 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                             text = NULL;
                         }
 
-                        if (party.Members[character].Image)
+                        if (party.Members[character].Image.length() > 0)
                         {
 
-                            adventurer = createImage(party.Members[character].Image);
+                            adventurer = createImage(party.Members[character].Image.c_str());
 
                             if (adventurer)
                             {
@@ -2766,7 +2766,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
         if (character >= 0 && character < characters.size())
         {
-            if (characters[character].Image)
+            if (characters[character].Image.length() > 0)
             {
                 if (adventurer)
                 {
@@ -2775,7 +2775,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                     adventurer = NULL;
                 }
 
-                adventurer = createImage(characters[character].Image);
+                adventurer = createImage(characters[character].Image.c_str());
             }
 
             if (text)
@@ -2844,7 +2844,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
                         if (character >= 0 && character < characters.size())
                         {
-                            if (characters[character].Image)
+                            if (characters[character].Image.length() > 0)
                             {
                                 if (adventurer)
                                 {
@@ -2853,7 +2853,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                                     adventurer = NULL;
                                 }
 
-                                adventurer = createImage(characters[character].Image);
+                                adventurer = createImage(characters[character].Image.c_str());
                             }
 
                             if (text)
@@ -2875,7 +2875,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
                         if (character >= 0 && character < characters.size())
                         {
-                            if (characters[character].Image)
+                            if (characters[character].Image.length() > 0)
                             {
                                 if (adventurer)
                                 {
@@ -2884,7 +2884,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                                     adventurer = NULL;
                                 }
 
-                                adventurer = createImage(characters[character].Image);
+                                adventurer = createImage(characters[character].Image.c_str());
                             }
 
                             if (text)
@@ -3079,7 +3079,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
         if (character >= 0 && character < characters.size())
         {
-            if (characters[character].Image)
+            if (characters[character].Image.length() > 0)
             {
                 if (adventurer)
                 {
@@ -3088,7 +3088,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                     adventurer = NULL;
                 }
 
-                adventurer = createImage(characters[character].Image);
+                adventurer = createImage(characters[character].Image.c_str());
             }
 
             if (text)
@@ -3197,7 +3197,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
                     if (character >= 0 && character < characters.size())
                     {
-                        if (characters[character].Image)
+                        if (characters[character].Image.length() > 0)
                         {
                             if (adventurer)
                             {
@@ -3206,7 +3206,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                                 adventurer = NULL;
                             }
 
-                            adventurer = createImage(characters[character].Image);
+                            adventurer = createImage(characters[character].Image.c_str());
                         }
 
                         if (text)
@@ -3253,7 +3253,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
                     if (character >= 0 && character < characters.size())
                     {
-                        if (characters[character].Image)
+                        if (characters[character].Image.length() > 0)
                         {
                             if (adventurer)
                             {
@@ -3262,7 +3262,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                                 adventurer = NULL;
                             }
 
-                            adventurer = createImage(characters[character].Image);
+                            adventurer = createImage(characters[character].Image.c_str());
                         }
 
                         if (text)
@@ -24088,11 +24088,254 @@ Party::Base loadGame(std::string file_name)
         party.CurrentCharacter = !data["currentCharacter"].is_null() ? (int)data["currentCharacter"] : -1;
         party.Book = !data["book"].is_null() ? static_cast<Book::Type>((int)data["book"]) : Book::Type::NONE;
         party.StoryID = !data["storyID"].is_null() ? (int)data["storyID"] : -1;
+
 #if defined(_WIN32) || defined(__arm__)
         party.Epoch = !data["epoch"].is_null() ? (long long)(data["epoch"]) : 0;
 #else
         party.Epoch = !data["epoch"].is_null() ? (long)(data["epoch"]) : 0;
 #endif
+
+        if (!data["members"].is_null() && data["members"].is_array() && data["members"].size() > 0)
+        {
+            for (auto i = 0; i < data["members"].size(); i++)
+            {
+                auto character = Character::Base();
+
+                character.Name = !data["members"][i]["name"].is_null() ? data["members"][i]["name"] : "";
+                character.Background = !data["members"][i]["background"].is_null() ? data["members"][i]["background"] : "";
+                character.Image = !data["members"][i]["image"].is_null() ? data["members"][i]["image"] : "";
+                character.Type = !data["members"][i]["type"].is_null() ? static_cast<Character::Type>((int)data["members"][i]["type"]) : Character::Type::NONE;
+                character.Team = !data["members"][i]["team"].is_null() ? static_cast<Team::Type>((int)data["members"][i]["team"]) : Team::Type::NONE;
+                character.Health = !data["members"][i]["health"].is_null() ? (int)data["members"][i]["health"] : 0;
+                character.MaximumHealth = !data["members"][i]["maximumHealth"].is_null() ? (int)data["members"][i]["maximumHealth"] : 0;
+                character.MaximumEquipment = !data["members"][i]["maximumEquipment"].is_null() ? (int)data["members"][i]["maximumEquipment"] : character.MaximumEquipment;
+                character.SpellBookLimit = !data["members"][i]["spellBookLimit"].is_null() ? (int)data["members"][i]["spellBookLimit"] : 10;
+                character.SpellCaster = !data["members"][i]["spellCaster"].is_null() ? (bool)data["members"][i]["spellCaster"] : character.SpellCaster;
+                character.IsCivilized = !data["members"][i]["isCivilized"].is_null() ? (bool)data["members"][i]["isCivilized"] : character.IsCivilized;
+                character.Damaged = !data["members"][i]["damaged"].is_null() ? (bool)data["members"][i]["damaged"] : character.Damaged;
+
+                if (!data["members"][i]["equipment"].is_null() && data["members"][i]["equipment"].is_array() && data["members"][i]["equipment"].size() > 0)
+                {
+                    for (auto j = 0; j < data["members"][i]["equipment"].size(); j++)
+                    {
+                        auto equipment = Equipment::Base();
+
+                        equipment.Name = !data["members"][i]["equipment"][j]["name"].is_null() ? data["members"][i]["equipment"][j]["name"] : "";
+                        equipment.Description = !data["members"][i]["equipment"][j]["description"].is_null() ? data["members"][i]["equipment"][j]["description"] : "";
+                        equipment.Class = !data["members"][i]["equipment"][j]["class"].is_null() ? static_cast<Equipment::Class>((int)data["members"][i]["equipment"][j]["class"]) : equipment.Class;
+                        equipment.Type = !data["members"][i]["equipment"][j]["type"].is_null() ? static_cast<Equipment::Type>((int)data["members"][i]["equipment"][j]["type"]) : equipment.Type;
+                        equipment.Attribute = !data["members"][i]["equipment"][j]["attribute"].is_null() ? static_cast<Attribute::Type>((int)data["members"][i]["equipment"][j]["attribute"]) : equipment.Attribute;
+                        equipment.Modifier = !data["members"][i]["equipment"][j]["modifier"].is_null() ? (int)data["members"][i]["equipment"][j]["modifier"] : equipment.Modifier;
+                        equipment.TwoHanded = !data["members"][i]["equipment"][j]["twoHanded"].is_null() ? (bool)data["members"][i]["equipment"][j]["twoHanded"] : equipment.TwoHanded;
+                        equipment.AdditionalSlots = !data["members"][i]["equipment"][j]["additionalSlots"].is_null() ? (int)data["members"][i]["equipment"][j]["additionalSlots"] : equipment.AdditionalSlots;
+                        equipment.Value = !data["members"][i]["equipment"][j]["value"].is_null() ? (int)data["members"][i]["equipment"][j]["value"] : equipment.Value;
+
+                        character.Equipment.push_back(equipment);
+                    }
+                }
+
+                if (!data["members"][i]["attributes"].is_null() && data["members"][i]["attributes"].is_array() && data["members"][i]["attributes"].size() > 0)
+                {
+                    for (auto j = 0; j < data["members"][i]["attributes"].size(); j++)
+                    {
+                        auto attribute = Attribute::Base();
+
+                        attribute.Type = !data["members"][i]["attributes"][j]["type"].is_null() ? static_cast<Attribute::Type>((int)data["members"][i]["attributes"][j]["type"]) : attribute.Type;
+                        attribute.Value = !data["members"][i]["attributes"][j]["value"].is_null() ? (int)data["members"][i]["attributes"][j]["value"] : attribute.Value;
+
+                        character.Attributes.push_back(attribute);
+                    }
+                }
+
+                if (!data["members"][i]["spellBook"].is_null() && data["members"][i]["spellBook"].is_array() && data["members"][i]["spellBook"].size() > 0)
+                {
+                    for (auto j = 0; j < data["members"][i]["spellBook"].size(); j++)
+                    {
+                        auto spell = Spells::Base();
+
+                        spell.Name = !data["members"][i]["spellBook"][j]["name"].is_null() ? data["members"][i]["spellBook"][j]["name"] : "";
+                        spell.Description = !data["members"][i]["spellBook"][j]["description"].is_null() ? data["members"][i]["spellBook"][j]["description"] : "";
+                        spell.Scope = !data["members"][i]["spellBook"][j]["scope"].is_null() ? static_cast<Spells::Scope>((int)data["members"][i]["spellBook"][j]["scope"]) : spell.Scope;
+                        spell.Type = !data["members"][i]["spellBook"][j]["type"].is_null() ? static_cast<Spells::Type>((int)data["members"][i]["spellBook"][j]["type"]) : spell.Type;
+                        spell.Charged = !data["members"][i]["spellBook"][j]["charged"].is_null() ? (bool)data["members"][i]["spellBook"][j]["charged"] : spell.Charged;
+                        spell.Recharge = !data["members"][i]["spellBook"][j]["recharge"].is_null() ? (int)data["members"][i]["spellBook"][j]["recharge"] : spell.Recharge;
+
+                        character.SpellBook.push_back(spell);
+                    }
+                }
+
+                if (!data["members"][i]["followers"].is_null() && data["members"][i]["followers"].is_array() && data["members"][i]["followers"].size() > 0)
+                {
+                    for (auto j = 0; j < data["members"][i]["followers"].size(); j++)
+                    {
+                        auto follower = Follower::Base();
+
+                        follower.Name = !data["members"][i]["followers"][j]["name"].is_null() ? data["members"][i]["followers"][j]["name"] : "";
+                        follower.Type = !data["members"][i]["followers"][j]["type"].is_null() ? static_cast<Follower::Type>((int)data["followers"][i]["followers"][j]["type"]) : follower.Type;
+                        follower.Health = !data["members"][i]["followers"][j]["health"].is_null() ? (int)data["members"][i]["followers"][j]["health"] : follower.Health;
+
+                        character.Followers.push_back(follower);
+                    }
+                }
+
+                if (!data["members"][i]["status"].is_null() && data["members"][i]["status"].is_array() && data["members"][i]["status"].size() > 0)
+                {
+                    for (auto j = 0; j < data["members"][i]["status"].size(); j++)
+                    {
+                        if (!data["members"][i]["status"].is_null())
+                        {
+                            character.Status.push_back(static_cast<Character::Status>((int)data["members"][i]["status"][j]));
+                        }
+                    }
+                }
+
+                party.Members.push_back(character);
+            }
+        }
+
+        if (!data["codes"].is_null() && data["codes"].is_array() && data["codes"].size() > 0)
+        {
+            for (auto i = 0; i < data["codes"].size(); i++)
+            {
+                auto code = Codes::Base();
+
+                code.Type = !data["codes"][i]["type"].is_null() ? static_cast<Book::Type>((int)data["codes"][i]["type"]) : code.Type;
+                code.Code = !data["codes"][i]["code"].is_null() ? (int)data["codes"][i]["code"] : code.Code;
+
+                party.Codes.push_back(code);
+            }
+        }
+
+        if (!data["vault"].is_null() && data["vault"].is_array() && data["vault"].size() > 0)
+        {
+            for (auto i = 0; i < data["vault"].size(); i++)
+            {
+                auto equipment = Equipment::Base();
+
+                equipment.Name = !data["vault"][i]["name"].is_null() ? data["vault"][i]["name"] : "";
+                equipment.Description = !data["vault"][i]["description"].is_null() ? data["vault"][i]["description"] : "";
+                equipment.Class = !data["vault"][i]["class"].is_null() ? static_cast<Equipment::Class>((int)data["vault"][i]["class"]) : equipment.Class;
+                equipment.Type = !data["vault"][i]["type"].is_null() ? static_cast<Equipment::Type>((int)data["vault"][i]["type"]) : equipment.Type;
+                equipment.Attribute = !data["vault"][i]["attribute"].is_null() ? static_cast<Attribute::Type>((int)data["vault"][i]["attribute"]) : equipment.Attribute;
+                equipment.Modifier = !data["vault"][i]["modifier"].is_null() ? (int)data["vault"][i]["modifier"] : equipment.Modifier;
+                equipment.TwoHanded = !data["vault"][i]["twoHanded"].is_null() ? (bool)data["vault"][i]["twoHanded"] : equipment.TwoHanded;
+                equipment.AdditionalSlots = !data["vault"][i]["additionalSlots"].is_null() ? (int)data["vault"][i]["additionalSlots"] : equipment.AdditionalSlots;
+                equipment.Value = !data["vault"][i]["value"].is_null() ? (int)data["vault"][i]["value"] : equipment.Value;
+
+                party.Vault.push_back(equipment);
+            }
+        }
+
+        if (!data["fleet"].is_null() && data["fleet"].is_array() && data["fleet"].size() > 0)
+        {
+            for (auto i = 0; i < data["fleet"].size(); i++)
+            {
+                auto ship = Ship::Base();
+
+                ship.Name = !data["fleet"][i]["name"].is_null() ? data["fleet"][i]["name"] : "";
+                ship.Type = !data["fleet"][i]["type"].is_null() ? static_cast<Ship::Type>((int)data["fleet"][i]["type"]) : ship.Type;
+                ship.Location = !data["fleet"][i]["location"].is_null() ? static_cast<Location::Type>((int)data["fleet"][i]["location"]) : ship.Location;
+                ship.Fighting = !data["fleet"][i]["fighting"].is_null() ? (int)data["fleet"][i]["fighting"] : ship.Fighting;
+                ship.Health = !data["fleet"][i]["health"].is_null() ? (int)data["fleet"][i]["health"] : ship.Health;
+                ship.MaximumHealth = !data["fleet"][i]["maximumHealth"].is_null() ? (int)data["fleet"][i]["maximumHealth"] : ship.MaximumHealth;
+                ship.MaximumCargo = !data["fleet"][i]["maximumCargo"].is_null() ? (int)data["fleet"][i]["maximumCargo"] : ship.MaximumCargo;
+
+                if (!data["fleet"][i]["cargo"].is_null() && data["fleet"][i]["cargo"].is_array() && data["fleet"][i]["cargo"].size() > 0)
+                {
+                    for (auto j = 0; j < data["fleet"][i]["cargo"].size(); j++)
+                    {
+                        if (!data["fleet"][i]["cargo"][j].is_null())
+                        {
+                            ship.Cargo.push_back(static_cast<Cargo::Type>((int)data["fleet"][i]["cargo"][j]));
+                        }
+                    }
+                }
+
+                party.Fleet.push_back(ship);
+            }
+        }
+
+        if (!data["army"].is_null() && data["army"].is_array() && data["army"].size() > 0)
+        {
+            for (auto i = 0; i < data["army"].size(); i++)
+            {
+                auto unit = Army::Base();
+
+                unit.Name = !data["army"][i]["name"].is_null() ? data["army"][i]["name"] : "";
+                unit.Type = !data["army"][i]["type"].is_null() ? static_cast<Army::Type>((int)data["army"][i]["type"]) : unit.Type;
+                unit.Garrison = !data["army"][i]["garrison"].is_null() ? static_cast<Location::Type>((int)data["army"][i]["garrison"]) : unit.Garrison;
+                unit.Strength = !data["army"][i]["strength"].is_null() ? (int)data["army"][i]["strength"] : unit.Strength;
+                unit.MaximumStrength = !data["army"][i]["maximumStrength"].is_null() ? (int)data["army"][i]["maximumStrength"] : unit.MaximumStrength;
+                unit.Morale = !data["army"][i]["morale"].is_null() ? (int)data["army"][i]["morale"] : unit.Morale;
+                unit.MaximumMorale = !data["army"][i]["maximumMorale"].is_null() ? (int)data["army"][i]["maximumMorale"] : unit.MaximumMorale;
+                unit.Unique = !data["army"][i]["unique"].is_null() ? (bool)data["army"][i]["unique"] : unit.Unique;
+                unit.Position = !data["army"][i]["position"].is_null() ? static_cast<Location::BattleField>((int)data["army"][i]["position"]) : unit.Position;
+                unit.Status = !data["army"][i]["status"].is_null() ? static_cast<Army::Status>((int)data["army"][i]["status"]) : unit.Status;
+                unit.StatusRound = !data["army"][i]["statusRound"].is_null() ? (int)data["army"][i]["statusRound"] : unit.StatusRound;
+                unit.StatusDuration = !data["army"][i]["statusDuration"].is_null() ? (int)data["army"][i]["statusDuration"] : unit.StatusDuration;
+
+                party.Army.push_back(unit);
+            }
+        }
+
+        if (!data["dead"].is_null() && data["dead"].is_array() && data["dead"].size() > 0)
+        {
+            for (auto i = 0; i < data["dead"].size(); i++)
+            {
+                if (!data["dead"][i].is_null())
+                {
+                    party.Dead.push_back(static_cast<Character::Type>((int)data["dead"][i]));
+                }
+            }
+        }
+
+        if (!data["invisibleCodes"].is_null() && data["invisibleCodes"].is_array() && data["invisibleCodes"].size() > 0)
+        {
+            for (auto i = 0; i < data["invisibleCodes"].size(); i++)
+            {
+                if (!data["invisibleCodes"][i].is_null())
+                {
+                    party.InvisibleCodes.push_back(static_cast<Codes::Type>((int)data["invisibleCodes"][i]));
+                }
+            }
+        }
+
+        if (!data["lastSelection"].is_null() && data["lastSelection"].is_array() && data["lastSelection"].size() > 0)
+        {
+            for (auto i = 0; i < data["lastSelection"].size(); i++)
+            {
+                if (!data["lastSelection"][i].is_null())
+                {
+                    party.LastSelection.push_back((int)data["lastSelection"][i]);
+                }
+            }
+        }
+
+        if (!data["order"].is_null() && data["order"].is_array() && data["order"].size() > 0)
+        {
+            for (auto i = 0; i < data["order"].size(); i++)
+            {
+                if (!data["order"][i].is_null())
+                {
+                    party.Order.push_back(static_cast<Character::Type>((int)data["order"][i]));
+                }
+            }
+        }
+
+        if (!data["hearts"].is_null() && data["hearts"].is_array() && data["hearts"].size() > 0)
+        {
+            for (auto i = 0; i < data["hearts"].size(); i++)
+            {
+                if (!data["hearts"][i].is_null() && data["hearts"][i].is_array() && data["hearts"][i].size() >= 3)
+                {
+                    auto from = static_cast<Character::Type>((int)data["hearts"][i][0]);
+                    auto to = static_cast<Character::Type>((int)data["hearts"][i][1]);
+                    auto hearts = (int)data["hearts"][i][2];
+
+                    Engine::GAIN_HEARTS(party, from, to, hearts);
+                }
+            }
+        }
     }
 
     return party;
