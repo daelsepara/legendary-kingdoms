@@ -24,6 +24,7 @@ namespace Control
         CUSTOM,
         LOAD,
         SAVE,
+        DELETE,
         SHOP,
         REST,
         CONTINUE_STORY,
