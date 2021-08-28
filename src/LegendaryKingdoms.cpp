@@ -27252,6 +27252,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         while (!quit)
         {
+            createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/spidermindgames-48.png");
+
             SDL_Surface *splash = NULL;
             SDL_Texture *splashTexture = NULL;
             SDL_Surface *text = NULL;
@@ -27278,6 +27280,15 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             };
 
             party.StoryID = story->ID;
+
+            if (party.Book == Book::Type::BOOK1)
+            {
+                createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/book1-48.png");
+            }
+            else
+            {
+                createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/spidermindgames-48.png");
+            }
 
             auto saveParty = party;
 
@@ -29379,7 +29390,7 @@ int main(int argc, char **argv)
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
 
-    createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/book1-48.png");
+    createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/spidermindgames-48.png");
 
     Input::InitializeGamePads();
 
