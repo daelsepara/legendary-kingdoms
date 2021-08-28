@@ -24407,7 +24407,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
         fs::create_directories(save);
 
-        auto splash = createImage("images/legendary-kingdoms-logo.png");
+        auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
         auto entries = std::vector<std::string>();
 
@@ -24539,7 +24539,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                     }
                     else
                     {
-                        putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));   
+                        putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                 }
             }
@@ -24571,7 +24571,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                 }
             }
@@ -24599,13 +24599,29 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
             if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
             {
-                if (controls[current].Type == Control::Type::BACK)
+                if (controls[current].Type == Control::Type::BACK && !hold)
                 {
                     result = Control::Type::BACK;
 
                     done = true;
 
                     current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if (current + offset >= 0 && current < entries.size())
+                    {
+                        if (selection == current + offset)
+                        {
+                            selection = -1;
+                        }
+                        else
+                        {
+                            selection = current + offset;
+                        }
+                    }
 
                     selected = false;
                 }
@@ -24677,7 +24693,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                         current = -1;
                     }
                 }
-                else if (controls[current].Type == Control::Type::SAVE)
+                else if (controls[current].Type == Control::Type::SAVE && !hold)
                 {
                     if (selection >= 0 && selection < entries.size())
                     {
@@ -24696,7 +24712,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::LOAD)
+                else if (controls[current].Type == Control::Type::LOAD && !hold)
                 {
                     if (selection >= 0 && selection < entries.size())
                     {
@@ -24715,11 +24731,40 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::DELETE)
+                else if (controls[current].Type == Control::Type::DELETE && !hold)
                 {
                     if (selection >= 0 && selection < entries.size())
                     {
-                        // TODO: Delete Game
+                        auto del = fs::remove(entries[selection]);
+
+                        if (del)
+                        {
+                            displayMessage("Game Deleted", intLB);
+
+                            entries.erase(entries.begin() + selection);
+
+                            if (offset > 0)
+                            {
+                                offset--;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > entries.size())
+                            {
+                                last = entries.size();
+                            }
+
+                            controls = createFileList(window, renderer, entries, offset, last, limit, textx, texty + infoh, save_button);
+
+                            selection = -1;
+
+                            SDL_Delay(50);
+                        }
+                        else
+                        {
+                            displayMessage("Game not removed!", intRD);
+                        }
                     }
                     else
                     {
@@ -27211,8 +27256,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             SDL_Texture *splashTexture = NULL;
             SDL_Surface *text = NULL;
 
-            auto saveParty = party;
-
             auto flash_message = false;
 
             auto flash_color = intRD;
@@ -27235,6 +27278,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             };
 
             party.StoryID = story->ID;
+
+            auto saveParty = party;
 
             auto run_once = true;
 
