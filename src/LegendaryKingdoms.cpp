@@ -147,8 +147,9 @@ Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Ba
 std::string characterText(Character::Base &character, bool compact);
 std::string itemString(Equipment::Base &equipment);
 std::string monsterString(Monster::Base &monster);
-std::string shipString(Ship::Base &ship, bool cargo);
+std::string miniPreview(std::string file_name);
 std::string previewGame(std::string file_name);
+std::string shipString(Ship::Base &ship, bool cargo);
 
 // miscellaneous functions
 bool IsValidTransfer(Party::Base &party, Location::Type src, Location::Type dst);
@@ -24313,6 +24314,59 @@ std::string previewGame(std::string file_name)
     return preview;
 }
 
+std::string miniPreview(std::string file_name)
+{
+    std::string preview = "";
+
+    std::ifstream ifs(file_name);
+
+    if (ifs.good())
+    {
+        auto data = nlohmann::json::parse(ifs);
+
+        ifs.close();
+
+        auto location = !data["location"].is_null() ? static_cast<Location::Type>((int)data["location"]) : Location::Type::NONE;
+
+#if defined(_WIN32) || defined(__arm__)
+        auto epoch = !data["epoch"].is_null() ? (long long)(data["epoch"]) : 0;
+#else
+        auto epoch = !data["epoch"].is_null() ? (long)(data["epoch"]) : 0;
+#endif
+
+        preview = std::string(Location::Description[location]);
+
+        // get names
+        if (!data["members"].is_null() && data["members"].is_array() && data["members"].size() > 0)
+        {
+            preview += "\n";
+
+            auto names = 0;
+
+            for (auto i = 0; i < data["members"].size(); i++)
+            {
+                std::string name = !data["members"][i]["name"].is_null() ? data["members"][i]["name"] : "";
+
+                if (name.length() > 0)
+                {
+                    if (names > 0)
+                    {
+                        preview += ", ";
+                    }
+
+                    preview += name;
+
+                    names += 1;
+                }
+            }
+        }
+
+        preview += "\n" + time_string(epoch);
+    }
+
+    return preview;
+}
+
 std::vector<Button> createFileList(SDL_Window *window, SDL_Renderer *renderer, std::vector<std::string> list, int start, int last, int limit, int offsetx, int offsety, bool save_button)
 {
     auto controls = std::vector<Button>();
@@ -24444,6 +24498,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+        auto font_garamond2 = TTF_OpenFont(FONT_GARAMOND, 22);
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
         auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
 
@@ -24550,11 +24605,11 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
             if (selection >= 0 && selection < entries.size())
             {
-                putText(renderer, previewGame(entries[selection]).c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, miniPreview(entries[selection]).c_str(), font_garamond2, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
             else
             {
-                putText(renderer, "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, "(None)", font_garamond2, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             putHeader(renderer, "Games", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -24783,6 +24838,13 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
             TTF_CloseFont(font_garamond);
 
             font_garamond = NULL;
+        }
+
+        if (font_garamond2)
+        {
+            TTF_CloseFont(font_garamond2);
+
+            font_garamond2 = NULL;
         }
 
         if (font_dark11)
