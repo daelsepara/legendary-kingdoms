@@ -24067,6 +24067,37 @@ void saveGame(Party::Base &party, const char *overwrite)
     file.close();
 }
 
+Party::Base loadGame(std::string file_name)
+{
+    auto party = Party::Base();
+
+    std::ifstream ifs(file_name);
+
+    if (ifs.good())
+    {
+        auto data = nlohmann::json::parse(ifs);
+
+        ifs.close();
+
+        party.Location = !data["location"].is_null() ? static_cast<Location::Type>((int)data["location"]) : Location::Type::NONE;
+        party.VaultMoney = !data["vaultMoney"].is_null() ? (int)data["vaultMoney"] : 0;
+        party.Limit = !data["limit"].is_null() ? (int)data["limit"] : party.Limit;
+        party.CurrentShip = !data["currentShip"].is_null() ? (int)data["currentShip"] : -1;
+        party.RecentSuccesses = !data["recentSuccesses"].is_null() ? (int)data["recentSuccesses"] : 0;
+        party.LastSelected = !data["lastSelected"].is_null() ? (int)data["lastSelected"] : -1;
+        party.CurrentCharacter = !data["currentCharacter"].is_null() ? (int)data["currentCharacter"] : -1;
+        party.Book = !data["book"].is_null() ? static_cast<Book::Type>((int)data["book"]) : Book::Type::NONE;
+        party.StoryID = !data["storyID"].is_null() ? (int)data["storyID"] : -1;
+#if defined(_WIN32) || defined(__arm__)
+        party.Epoch = !data["epoch"].is_null() ? (long long)(data["epoch"]) : 0;
+#else
+        party.Epoch = !data["epoch"].is_null() ? (long)(data["epoch"]) : 0;
+#endif
+    }
+
+    return party;
+}
+
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story)
 {
     Story::Base *next = &Story::notImplemented;
