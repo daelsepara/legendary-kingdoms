@@ -204,9 +204,9 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
 std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Character::Base &caster, std::vector<Spells::Base> &spells, int select_limit, Spells::Select mode);
 
 // text button controls
-std::vector<TextButton> createFixedTextButtons(const char **choices, int num, int text_buttonw, int text_buttonh, int textbutton_space, int text_x, int text_y);
-std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y);
-std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y, bool has_scrolls);
+std::vector<TextButton> createFixedTextButtons(const char **choices, int num, int text_buttonw, int text_buttonh, int textbutton_space, int text_x, int text_buttony);
+std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_buttony);
+std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_buttony, bool has_scrolls);
 
 // json helpers
 void followersJSON(nlohmann::json &json, std::vector<Follower::Base> followers);
@@ -1073,7 +1073,7 @@ void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int cur
     }
 }
 
-std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y)
+std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_buttony)
 {
     auto controls = std::vector<TextButton>();
 
@@ -1098,7 +1098,7 @@ std::vector<TextButton> createHTextButtons(const char **choices, int num, int te
 
             auto x = text_x + i * (htext_buttonw + text_space * 2) + text_space;
 
-            auto button = TextButton(i, choices[i], left, right, up, down, x, text_y, htext_buttonw, text_buttonh);
+            auto button = TextButton(i, choices[i], left, right, up, down, x, text_buttony, htext_buttonw, text_buttonh);
 
             controls.push_back(button);
         }
@@ -1107,11 +1107,11 @@ std::vector<TextButton> createHTextButtons(const char **choices, int num, int te
     return controls;
 }
 
-std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y, bool has_scrolls)
+std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_buttony, bool has_scrolls)
 {
     if (!has_scrolls)
     {
-        return createHTextButtons(choices, num, text_buttonh, text_x, text_y);
+        return createHTextButtons(choices, num, text_buttonh, text_x, text_buttony);
     }
 
     auto controls = std::vector<TextButton>();
@@ -1140,7 +1140,7 @@ std::vector<TextButton> createHTextButtons(const char **choices, int num, int te
 
             auto x = text_x + i * (htext_buttonw + text_space * 2) + text_space;
 
-            auto button = TextButton(i + 2, choices[i], left, right, up, down, x, text_y, htext_buttonw, text_buttonh);
+            auto button = TextButton(i + 2, choices[i], left, right, up, down, x, text_buttony, htext_buttonw, text_buttonh);
 
             controls.push_back(button);
         }
@@ -1149,7 +1149,7 @@ std::vector<TextButton> createHTextButtons(const char **choices, int num, int te
     return controls;
 }
 
-std::vector<TextButton> createFixedTextButtons(const char **choices, int num, int text_buttonw, int text_buttonh, int textbutton_space, int text_x, int text_y)
+std::vector<TextButton> createFixedTextButtons(const char **choices, int num, int text_buttonw, int text_buttonh, int textbutton_space, int text_x, int text_buttony)
 {
     auto controls = std::vector<TextButton>();
 
@@ -1164,7 +1164,7 @@ std::vector<TextButton> createFixedTextButtons(const char **choices, int num, in
 
             auto x = text_x + i * (text_buttonw + textbutton_space);
 
-            auto button = TextButton(i, choices[i], left, right, up, down, x, text_y, text_buttonw, text_buttonh);
+            auto button = TextButton(i, choices[i], left, right, up, down, x, text_buttony, text_buttonw, text_buttonh);
 
             controls.push_back(button);
         }
@@ -1383,7 +1383,7 @@ std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Ch
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 28, attributes_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 28, attributes_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -1397,14 +1397,14 @@ std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Ch
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (attributes.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -1435,7 +1435,7 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -1449,14 +1449,14 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (army.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -1466,17 +1466,15 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     if (party_controls)
     {
-        auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, army.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::ARMY));
-        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, army.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::FLEET));
-        controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, army.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::ROMANCE));
-        controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, army.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::BACK));
+        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, army.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ARMY));
+        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, army.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FLEET));
+        controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, army.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::ROMANCE));
+        controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, army.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
     }
     else
     {
         controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, army.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
-        controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, army.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+        controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, army.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, lastx, buttony, Control::Type::BACK));
     }
 
     return controls;
@@ -1500,7 +1498,7 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -1514,14 +1512,14 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (army.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -1529,7 +1527,7 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/back-button.png", idx, idx, army.size() > 0 ? (last - start) - 1 : idx, idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, "icons/back-button.png", idx, idx, army.size() > 0 ? (last - start) - 1 : idx, idx, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -1548,7 +1546,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -1562,14 +1560,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (ships.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -1577,12 +1575,10 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = controls.size();
 
-    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::ARMY));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::FLEET));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::ROMANCE));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ARMY));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FLEET));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::ROMANCE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -1619,7 +1615,7 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -1633,14 +1629,14 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (hearts.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -1648,12 +1644,10 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
 
     idx = controls.size();
 
-    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, 220, 48, -1), idx, idx + 1, hearts.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::ARMY));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, 220, 48, -1), idx, idx + 2, hearts.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::FLEET));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, hearts.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::ROMANCE));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, hearts.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, hearts.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ARMY));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, hearts.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FLEET));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, hearts.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::ROMANCE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, hearts.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -1672,7 +1666,7 @@ std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 28, teams_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 28, teams_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -1686,14 +1680,14 @@ std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::v
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (teams.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -1702,7 +1696,7 @@ std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::v
     idx = controls.size();
 
     controls.push_back(Button(idx, "icons/yes.png", idx, idx, teams.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
-    controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, teams.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, teams.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -2132,14 +2126,11 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
         auto selected = false;
 
-        auto controls = createHTextButtons(choices, 7, text_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh), true);
+        auto controls = createHTextButtons(choices, 7, text_buttonh, startx, text_buttony, true);
 
-        auto scrolly = texty + text_bounds - arrow_size - border_space;
-        auto offsetx = (int)((1.0 - Margin) * SCREEN_WIDTH) - arrow_size;
-
-        controls[0].X = offsetx;
+        controls[0].X = scrollx;
         controls[0].Y = texty + border_space;
-        controls[1].X = offsetx;
+        controls[1].X = scrollx;
         controls[1].Y = scrolly;
         controls[2].Type = Control::Type::PARTY;
         controls[3].Type = Control::Type::MINUS;
@@ -2188,7 +2179,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 text = NULL;
             }
 
-            text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+            text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
         }
 
         if (party.Codes.size() > 0)
@@ -2205,7 +2196,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 code_string += std::string(Codes::Prefix[party.Codes[i].Type]) + std::to_string(party.Codes[i].Code);
             }
 
-            code_text = createText(code_string.c_str(), FONT_MASON, 24, clrBK, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+            code_text = createText(code_string.c_str(), FONT_MASON, 24, clrBK, listwidth, TTF_STYLE_NORMAL);
         }
 
         auto compact = (code_text && code_text->h <= text_bounds - infoh - 2 * text_space) || !code_text;
@@ -2387,7 +2378,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 }
             }
 
-            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, offsetx, scrolly, ((current_mode != Control::Type::PARTY || compact) ? true : false), TTF_STYLE_NORMAL);
+            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, scrollx, scrolly, ((current_mode != Control::Type::PARTY || compact) ? true : false), TTF_STYLE_NORMAL);
 
             auto scrollUp = false;
             auto scrollDown = false;
@@ -2545,7 +2536,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                             }
                         }
 
-                        text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                     }
                 }
                 else if (controls[current].Type == Control::Type::PLUS && !hold)
@@ -2589,7 +2580,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                             }
                         }
 
-                        text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                     }
                 }
                 else if (controls[current].Type == Control::Type::EQUIPMENT && !hold)
@@ -2742,7 +2733,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
         auto selected = false;
 
-        auto controls = createHTextButtons(choices, 4, text_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+        auto controls = createHTextButtons(choices, 4, text_buttonh, startx, text_buttony);
         controls[0].Type = Control::Type::PREVIOUS;
         controls[1].Type = Control::Type::NEXT;
         controls[2].Type = Control::Type::RECRUIT;
@@ -2786,7 +2777,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                 text = NULL;
             }
 
-            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
         }
 
         if (characters.size() > 0)
@@ -2864,7 +2855,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                                 text = NULL;
                             }
 
-                            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                         }
                     }
                     else if (controls[current].Type == Control::Type::NEXT && !hold)
@@ -2895,7 +2886,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                                 text = NULL;
                             }
 
-                            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                         }
                     }
                     else if (controls[current].Type == Control::Type::RECRUIT && !hold)
@@ -3046,8 +3037,8 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
         auto selected = false;
 
-        auto controls_add = createHTextButtons(choices_add, 5, text_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
-        auto controls_del = createHTextButtons(choices_del, 5, text_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+        auto controls_add = createHTextButtons(choices_add, 5, text_buttonh, startx, text_buttony);
+        auto controls_del = createHTextButtons(choices_del, 5, text_buttonh, startx, text_buttony);
 
         controls_add[0].Type = Control::Type::PREVIOUS;
         controls_add[1].Type = Control::Type::NEXT;
@@ -3099,7 +3090,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                 text = NULL;
             }
 
-            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
         }
 
         while (!done)
@@ -3217,7 +3208,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             text = NULL;
                         }
 
-                        text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                     }
 
                     break;
@@ -3273,7 +3264,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             text = NULL;
                         }
 
-                        text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                        text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                     }
 
                     break;
@@ -3434,11 +3425,9 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
         auto selected = false;
         auto current = -1;
 
-        auto marginw = ((int)((1.0 - 2.0 * Margin) * SCREEN_WIDTH));
-
         auto controls = std::vector<Button>();
         controls.push_back(Button(0, "icons/scroll.png", 0, 1, 0, 0, startx, buttony, Control::Type::TOGGLE_MAP));
-        controls.push_back(Button(1, "icons/back-button.png", 0, 1, 1, 1, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
+        controls.push_back(Button(1, "icons/back-button.png", 0, 1, 1, 1, (int)((1.0 - Margin) * SCREEN_WIDTH - buttonw), buttony, Control::Type::BACK));
 
         auto offset_x = 0;
         auto offset_y = 0;
@@ -3463,12 +3452,12 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
 
             if (current_map == 1)
             {
-                offset_x = (marginw - (double)text_bounds / map_local->h * map_local->w) / 2;
+                offset_x = (fullwidth - (double)text_bounds / map_local->h * map_local->w) / 2;
                 offset_y = ((SCREEN_HEIGHT) - (double)text_bounds / map_local->h * map_local->h) / 2;
             }
             else
             {
-                offset_x = (marginw - (double)text_bounds / map_world->h * map_world->w) / 2;
+                offset_x = (fullwidth - (double)text_bounds / map_world->h * map_world->w) / 2;
                 offset_y = ((SCREEN_HEIGHT) - (double)text_bounds / map_world->h * map_world->h) / 2;
             }
 
@@ -3476,11 +3465,11 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
 
             if (current_map == 1)
             {
-                fitImage(renderer, map_local, startx + offset_x, offset_y, marginw, text_bounds);
+                fitImage(renderer, map_local, startx + offset_x, offset_y, fullwidth, text_bounds);
             }
             else
             {
-                fitImage(renderer, map_world, startx + offset_x, offset_y, marginw, text_bounds);
+                fitImage(renderer, map_world, startx + offset_x, offset_y, fullwidth, text_bounds);
             }
 
             renderButtons(renderer, controls, current, intLB, border_space, border_pts);
@@ -3496,7 +3485,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
 
                 SDL_GetMouseState(&mousex, &mousey);
 
-                auto zoomw = (int)(0.40 * (double)(marginw - 2 * offset_x));
+                auto zoomw = (int)(0.40 * (double)(fullwidth - 2 * offset_x));
                 auto zoomh = (int)(0.40 * (double)text_bounds);
 
                 if (zoomw > zoomh)
@@ -3519,7 +3508,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
                     clipValue(zoomh, 0, map_world->h);
                 }
 
-                auto boundx = startx + offset_x + marginw;
+                auto boundx = startx + offset_x + fullwidth;
 
                 if (current_map == 1)
                 {
@@ -3670,8 +3659,6 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 {
     auto font_size = 28;
 
-    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
     auto controls = std::vector<Button>();
 
     if (list.size() > 0)
@@ -3682,13 +3669,13 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 
             auto item_string = itemString(list[index]);
 
-            auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, listwidth - 4 * text_space, TTF_STYLE_NORMAL);
+            auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, textwidth - 4 * text_space, TTF_STYLE_NORMAL);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : texty + 2 * text_space);
 
             controls.push_back(Button(i, text, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), textx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = listwidth - 4 * text_space;
+            controls[i].W = textwidth - 4 * text_space;
 
             controls[i].H = text->h;
         }
@@ -3700,14 +3687,14 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (list.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -3724,7 +3711,7 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, (list.size() > 0 ? ((last - start) - 1) : idx), idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, (list.size() > 0 ? ((last - start) - 1) : idx), idx, lastx, buttony, Control::Type::BACK));
     }
 
     return controls;
@@ -3733,8 +3720,6 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, int offsety, int scrolly)
 {
     auto font_size = 28;
-
-    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto controls = std::vector<Button>();
 
@@ -3746,13 +3731,13 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 
             auto item_string = itemString(list[index]);
 
-            auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, listwidth - 4 * text_space, TTF_STYLE_NORMAL);
+            auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, textwidth - 4 * text_space, TTF_STYLE_NORMAL);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
             controls.push_back(Button(i, text, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), textx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = listwidth - 4 * text_space;
+            controls[i].W = textwidth - 4 * text_space;
 
             controls[i].H = text->h;
         }
@@ -3764,14 +3749,14 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (list.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), scrolly, Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -3783,7 +3768,7 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
     controls.push_back(Button(idx + 1, "icons/no.png", idx, idx + 2, (list.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::DROP));
     controls.push_back(Button(idx + 2, "icons/interaction.png", idx + 1, idx + 3, (list.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::TRANSFER));
     controls.push_back(Button(idx + 3, "icons/vault.png", idx + 2, idx + 4, (list.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, startx + 3 * gridsize, buttony, Control::Type::VAULT));
-    controls.push_back(Button(idx + 4, "icons/back-button.png", idx + 3, idx + 4, (list.size() > 0 ? ((last - start) - 1) : idx + 4), idx + 4, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 4, "icons/back-button.png", idx + 3, idx + 4, (list.size() > 0 ? ((last - start) - 1) : idx + 4), idx + 4, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -3791,8 +3776,6 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Equipment::Base> list, int start, int last, int limit, int offsety, int scrolly)
 {
     auto font_size = 28;
-
-    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto controls = std::vector<Button>();
 
@@ -3804,13 +3787,13 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             auto item_string = itemString(list[index]);
 
-            auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, listwidth - 4 * text_space, TTF_STYLE_NORMAL);
+            auto text = createText(item_string.c_str(), FONT_GARAMOND, font_size, clrBK, textwidth - 4 * text_space, TTF_STYLE_NORMAL);
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
             controls.push_back(Button(i, text, i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), textx + 2 * text_space, y, Control::Type::ACTION));
 
-            controls[i].W = listwidth - 4 * text_space;
+            controls[i].W = textwidth - 4 * text_space;
 
             controls[i].H = text->h;
         }
@@ -3822,14 +3805,14 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (list.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), scrolly, Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -3840,7 +3823,7 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
     controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (list.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::USE));
     controls.push_back(Button(idx + 1, "icons/interaction.png", idx, idx + 2, (list.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::TRANSFER));
     controls.push_back(Button(idx + 2, "icons/shop.png", idx + 1, idx + 3, (list.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::MONEY));
-    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (list.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (list.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -3865,7 +3848,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -3879,14 +3862,14 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (spells.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), scrolly, Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -3903,7 +3886,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, spells.size() > 0 ? (last - start) - 1 : idx, idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, spells.size() > 0 ? (last - start) - 1 : idx, idx, lastx, buttony, Control::Type::BACK));
     }
 
     return controls;
@@ -3929,7 +3912,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -3943,14 +3926,14 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (spells.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), scrolly, Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -3958,7 +3941,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (spells.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::SPELL));
     controls.push_back(Button(idx + 1, "icons/no.png", idx, idx + 2, (spells.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::UNLEARN));
-    controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, (spells.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, (spells.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -3983,7 +3966,7 @@ std::vector<Button> rechargeList(SDL_Window *window, SDL_Renderer *renderer, std
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, spell_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -3997,21 +3980,21 @@ std::vector<Button> rechargeList(SDL_Window *window, SDL_Renderer *renderer, std
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (spells.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), scrolly, Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
     }
 
     controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (spells.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::RECHARGE));
-    controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, (spells.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, (spells.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -4088,7 +4071,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -4102,14 +4085,14 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (monsters.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -4126,7 +4109,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, monsters.size() > 0 ? (last - start) - 1 : idx, idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, monsters.size() > 0 ? (last - start) - 1 : idx, idx, lastx, buttony, Control::Type::BACK));
     }
 
     return controls;
@@ -4148,7 +4131,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, monster_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -4162,38 +4145,36 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (monsters.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
     }
 
-    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "VIEW PARTY", clrWH, intDB, 220, 48, -1), idx, idx + 1, monsters.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::PARTY));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "VIEW PARTY", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, monsters.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::PARTY));
 
     if (mode == Control::Type::ATTACK)
     {
-        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "ATTACK", clrWH, intDB, 220, 48, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::ATTACK));
+        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "ATTACK", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::ATTACK));
     }
     else if (mode == Control::Type::DEFEND)
     {
-        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "DEFEND", clrWH, intDB, 220, 48, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::ATTACK));
+        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "DEFEND", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::ATTACK));
     }
     else if (mode == Control::Type::NEXT)
     {
-        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "NEXT ROUND", clrWH, intDB, 220, 48, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::ATTACK));
+        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "NEXT ROUND", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::ATTACK));
     }
 
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::SPELL));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::FLEE));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::SPELL));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::FLEE));
 
     return controls;
 }
@@ -4214,7 +4195,7 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), ((i < (last - start) - 1) ? i + 1 : ((back_button || confirm_button) ? i + 1 : i)), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), ((i < (last - start) - 1) ? i + 1 : ((back_button || confirm_button) ? i + 1 : i)), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -4228,14 +4209,14 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (party.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -4252,7 +4233,7 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/back-button.png", confirm_button ? idx - 1 : idx, idx, party.size() > 0 ? (last - start) - 1 : idx, idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+        controls.push_back(Button(idx, "icons/back-button.png", confirm_button ? idx - 1 : idx, idx, party.size() > 0 ? (last - start) - 1 : idx, idx, lastx, buttony, Control::Type::BACK));
     }
 
     return controls;
@@ -4274,7 +4255,7 @@ std::vector<Button> restList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -4288,25 +4269,23 @@ std::vector<Button> restList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (party.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
     }
 
-    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "HEAL 1", clrWH, intDB, 220, 48, -1), idx, idx + 1, party.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::HEAL1));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FULLY RECOVER", clrWH, intDB, 220, 48, -1), idx, idx + 2, party.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::FULL_RECOVERY));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "RECHARGE SPELLS", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, party.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::RECHARGE));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, party.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "HEAL 1", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, party.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::HEAL1));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FULLY RECOVER", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, party.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FULL_RECOVERY));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "RECHARGE SPELLS", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, party.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::RECHARGE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, party.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -4329,12 +4308,6 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
             Uint32 start_ticks = 0;
 
             Uint32 duration = 3000;
-
-            auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-            auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
-            auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
 
             auto headerw = (int)(boxwidth * 0.75);
 
@@ -4365,13 +4338,13 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Character::Base &char
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto controls_save = createFixedTextButtons(choices_save, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_save = createFixedTextButtons(choices_save, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_save[0].Type = Control::Type::CONFIRM;
 
-            auto controls_reduce = createFixedTextButtons(choices_reduce, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_reduce = createFixedTextButtons(choices_reduce, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_reduce[0].Type = Control::Type::CONFIRM;
 
-            auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_end[0].Type = Control::Type::BACK;
 
             auto current = -1;
@@ -4871,12 +4844,6 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 start_ticks = SDL_GetTicks();
             };
 
-            auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-            auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
-            auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
-
             auto headerw = (int)(boxwidth * 0.75);
 
             auto done = false;
@@ -4906,15 +4873,15 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto controls_attack = createFixedTextButtons(choices_attack, 2, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_attack = createFixedTextButtons(choices_attack, 2, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_attack[0].Type = Control::Type::CONFIRM;
             controls_attack[1].Type = Control::Type::BACK;
 
-            auto controls_damage = createFixedTextButtons(choices_damage, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_damage = createFixedTextButtons(choices_damage, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_damage[0].Type = Control::Type::CONFIRM;
             controls_damage[0].W = controls_attack[0].W;
 
-            auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_end[0].Type = Control::Type::BACK;
             controls_end[0].W = controls_attack[0].W;
 
@@ -5151,7 +5118,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -5165,14 +5132,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (ships.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -5189,7 +5156,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, ships.size() > 0 ? (last - start) - 1 : idx, idx, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+        controls.push_back(Button(idx, "icons/back-button.png", idx - 1, idx, ships.size() > 0 ? (last - start) - 1 : idx, idx, lastx, buttony, Control::Type::BACK));
     }
 
     return controls;
@@ -5209,7 +5176,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), (i < (last - start) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -5223,36 +5190,34 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (ships.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
     }
 
-    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
     if (mode == Control::Type::ATTACK)
     {
-        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ATTACK", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::ATTACK));
+        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ATTACK", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ATTACK));
     }
     else if (mode == Control::Type::DEFEND)
     {
-        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "DEFEND", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::ATTACK));
+        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "DEFEND", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ATTACK));
     }
     else if (mode == Control::Type::NEXT)
     {
-        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "NEXT ROUND", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::ATTACK));
+        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "NEXT ROUND", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ATTACK));
     }
 
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, 220, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::SPELL));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, 220, 48, -1), idx + 1, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::FLEE));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::SPELL));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::FLEE));
 
     return controls;
 }
@@ -5312,27 +5277,21 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
     const char *choices_damage[1] = {"Deal Damage"};
     const char *choices_end[1] = {"Done"};
 
-    auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-    auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
-    auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
-
     auto headerw = (int)(boxwidth * 0.75);
 
     auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
 
-    auto controls_attack = createFixedTextButtons(choices_attack, 2, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+    auto controls_attack = createFixedTextButtons(choices_attack, 2, text_buttonw, text_buttonh, 10, startx, text_buttony);
     controls_attack[0].Type = Control::Type::CONFIRM;
     controls_attack[1].Type = Control::Type::BACK;
 
-    auto controls_defend = createFixedTextButtons(choices_defend, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+    auto controls_defend = createFixedTextButtons(choices_defend, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
     controls_defend[0].Type = Control::Type::CONFIRM;
 
-    auto controls_damage = createFixedTextButtons(choices_damage, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+    auto controls_damage = createFixedTextButtons(choices_damage, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
     controls_damage[0].Type = Control::Type::CONFIRM;
 
-    auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+    auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
     controls_end[0].Type = Control::Type::BACK;
 
     auto combat_damage = 0;
@@ -5784,12 +5743,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         start_ticks = SDL_GetTicks();
     };
 
-    auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-    auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
-    auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
-
     TTF_Init();
 
     auto font_mason = TTF_OpenFont(FONT_MASON, 32);
@@ -5818,29 +5771,29 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     dice[4] = createImage("images/dice/dice5.png");
     dice[5] = createImage("images/dice/dice6.png");
 
-    auto controls_attack = createFixedTextButtons(choices_attack, 4, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+    auto controls_attack = createFixedTextButtons(choices_attack, 4, text_buttonw, text_buttonh, 10, startx, text_buttony);
     controls_attack[0].Type = Control::Type::CONFIRM;
     controls_attack[1].Type = Control::Type::PLUS;
     controls_attack[2].Type = Control::Type::MINUS;
     controls_attack[3].Type = Control::Type::BACK;
 
-    auto controls_skipattack = createFixedTextButtons(choices_skipattack, 5, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+    auto controls_skipattack = createFixedTextButtons(choices_skipattack, 5, text_buttonw, text_buttonh, 10, startx, text_buttony);
     controls_skipattack[0].Type = Control::Type::CONFIRM;
     controls_skipattack[1].Type = Control::Type::NEXT;
     controls_skipattack[2].Type = Control::Type::PLUS;
     controls_skipattack[3].Type = Control::Type::MINUS;
     controls_skipattack[4].Type = Control::Type::BACK;
 
-    auto controls_defend = createFixedTextButtons(choices_defend, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+    auto controls_defend = createFixedTextButtons(choices_defend, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
     controls_defend[0].Type = Control::Type::CONFIRM;
 
-    auto controls_damage = createFixedTextButtons(choices_damage, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+    auto controls_damage = createFixedTextButtons(choices_damage, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
     controls_damage[0].Type = Control::Type::CONFIRM;
 
-    auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+    auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
     controls_end[0].Type = Control::Type::BACK;
 
-    auto controls_assign = createFixedTextButtons(choices_assign, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+    auto controls_assign = createFixedTextButtons(choices_assign, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
     controls_assign[0].Type = Control::Type::CONFIRM;
 
     for (auto attacks = 0; attacks < num_attacks; attacks++)
@@ -6620,12 +6573,6 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 start_ticks = SDL_GetTicks();
             };
 
-            auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-            auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
-            auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
-
             auto headerw = (int)(boxwidth * 0.75);
 
             auto done = false;
@@ -6655,13 +6602,13 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto controls_retreat = createFixedTextButtons(choices_retreat, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_retreat = createFixedTextButtons(choices_retreat, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_retreat[0].Type = Control::Type::CONFIRM;
 
-            auto controls_confirm = createFixedTextButtons(choices_confirm, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_confirm = createFixedTextButtons(choices_confirm, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_confirm[0].Type = Control::Type::CONFIRM;
 
-            auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_end[0].Type = Control::Type::BACK;
 
             auto current = -1;
@@ -6902,12 +6849,6 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
                 start_ticks = SDL_GetTicks();
             };
 
-            auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-            auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
-            auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
-
             auto headerw = (int)(boxwidth * 0.75);
 
             auto done = false;
@@ -6937,14 +6878,14 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Character::Ba
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto controls_raise = createFixedTextButtons(choices_raise, 2, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_raise = createFixedTextButtons(choices_raise, 2, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_raise[0].Type = Control::Type::CONFIRM;
             controls_raise[1].Type = Control::Type::BACK;
 
-            auto controls_confirm = createFixedTextButtons(choices_confirm, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_confirm = createFixedTextButtons(choices_confirm, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_confirm[0].Type = Control::Type::CONFIRM;
 
-            auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_end[0].Type = Control::Type::BACK;
 
             auto current = -1;
@@ -7205,7 +7146,6 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
         auto font_size = 24;
 
         auto offset = 0;
-        auto booksize = (int)(2 * text_bounds / 3 - infoh - box_space);
         auto limit = (int)((booksize - 2 * text_space) / (96));
         auto last = offset + limit;
 
@@ -7216,9 +7156,9 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-        auto scrolly = starty + infoh + booksize - arrow_size - border_space;
+        auto spell_scrolly = starty + infoh + booksize - arrow_size - border_space;
 
-        auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, scrolly, true, (mode == Spells::Select::CAST_SPELL ? true : false));
+        auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, spell_scrolly, true, (mode == Spells::Select::CAST_SPELL ? true : false));
 
         auto done = false;
 
@@ -7229,309 +7169,306 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Charact
             displayMessage("Your spellbook is holding too many spells! You must unlearn spells from your spellbook.", intRD);
         }
 
+        auto current = -1;
+
+        auto selected = false;
+
+        auto scrollUp = false;
+
+        auto scrollDown = false;
+
+        auto hold = false;
+
+        auto scrollSpeed = 1;
+
         while (!done)
         {
-            auto current = -1;
+            fillWindow(renderer, intWH);
 
-            auto selected = false;
-
-            auto scrollUp = false;
-
-            auto scrollDown = false;
-
-            auto hold = false;
-
-            auto scrollSpeed = 1;
-
-            while (!done)
+            if (splash)
             {
-                fillWindow(renderer, intWH);
+                fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+            }
 
-                if (splash)
+            fillRect(renderer, textwidth, booksize, textx, texty + infoh, intBE);
+
+            if (last - offset > 0)
+            {
+                for (auto i = 0; i < last - offset; i++)
                 {
-                    fitImage(renderer, splash, startx, starty, splashw, text_bounds);
-                }
-
-                fillRect(renderer, textwidth, booksize, textx, texty + infoh, intBE);
-
-                if (last - offset > 0)
-                {
-                    for (auto i = 0; i < last - offset; i++)
+                    if (Engine::FIND_LIST(selection, offset + i) >= 0)
                     {
-                        if (Engine::FIND_LIST(selection, offset + i) >= 0)
-                        {
-                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
-                        }
-                        else if (spells[offset + i].Charged)
-                        {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
-                        }
-                        else
-                        {
-                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
-                        }
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
                     }
-                }
-
-                if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::ACTION)
-                {
-                    if ((current + offset) >= 0 && (current + offset) < spells.size())
+                    else if (spells[offset + i].Charged)
                     {
-                        fillRect(renderer, textwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
-
-                        auto text = createText(spells[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
-
-                        renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
-
-                        SDL_FreeSurface(text);
-
-                        text = NULL;
-                    }
-                }
-
-                renderButtons(renderer, controls, current, intLB, text_space, border_pts);
-
-                std::string list_header = "Choose " + (select_limit > 1 ? std::to_string(select_limit) : "a") + " spell" + (select_limit > 1 ? "s" : "") + " to ";
-
-                if (mode == Spells::Select::SPELLBOOK)
-                {
-                    list_header += "add to ";
-
-                    if (caster.Type != Character::Type::NONE)
-                    {
-                        list_header += caster.Name + "'s ";
-                    }
-
-                    list_header += "spellbook";
-                }
-                else if (mode == Spells::Select::CAST_SPELL)
-                {
-                    list_header = "cast";
-                }
-                else if (mode == Spells::Select::UNLEARN)
-                {
-                    list_header = "unlearn";
-                }
-
-                putHeader(renderer, list_header.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-
-                putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
-
-                if (selection.size() > 0)
-                {
-                    std::string spells_string = "";
-
-                    for (auto i = 0; i < selection.size(); i++)
-                    {
-                        if (spells[selection[i]].Charged)
-                        {
-                            if (spells_string.length() > 0)
-                            {
-                                spells_string += ",";
-                            }
-
-                            spells_string += spells[selection[i]].Name;
-                        }
-                    }
-
-                    if (spells_string.length() > 0)
-                    {
-                        putText(renderer, spells_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                     }
                     else
                     {
-                        putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intRD);
                     }
+                }
+            }
+
+            if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::ACTION)
+            {
+                if ((current + offset) >= 0 && (current + offset) < spells.size())
+                {
+                    fillRect(renderer, textwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
+
+                    auto text = createText(spells[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth, TTF_STYLE_NORMAL);
+
+                    renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
+
+                    SDL_FreeSurface(text);
+
+                    text = NULL;
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
+
+            std::string list_header = "Choose " + (select_limit > 1 ? std::to_string(select_limit) : "a") + " spell" + (select_limit > 1 ? "s" : "") + " to ";
+
+            if (mode == Spells::Select::SPELLBOOK)
+            {
+                list_header += "add to ";
+
+                if (caster.Type != Character::Type::NONE)
+                {
+                    list_header += caster.Name + "'s ";
+                }
+
+                list_header += "spellbook";
+            }
+            else if (mode == Spells::Select::CAST_SPELL)
+            {
+                list_header = "cast";
+            }
+            else if (mode == Spells::Select::UNLEARN)
+            {
+                list_header = "unlearn";
+            }
+
+            putHeader(renderer, list_header.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+            if (selection.size() > 0)
+            {
+                std::string spells_string = "";
+
+                for (auto i = 0; i < selection.size(); i++)
+                {
+                    if (spells[selection[i]].Charged)
+                    {
+                        if (spells_string.length() > 0)
+                        {
+                            spells_string += ",";
+                        }
+
+                        spells_string += spells[selection[i]].Name;
+                    }
+                }
+
+                if (spells_string.length() > 0)
+                {
+                    putText(renderer, spells_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
                     putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
+            }
+            else
+            {
+                putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            }
 
-                if (flash_message)
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    putHeader(renderer, message.c_str(), font_garamond2, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (offset > 0)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond2, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > spells.size())
+                        {
+                            last = spells.size();
+                        }
+
+                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, spell_scrolly, true, false);
+
+                        SDL_Delay(50);
                     }
-                    else
+
+                    if (offset <= 0)
                     {
-                        flash_message = false;
+                        current = -1;
+
+                        selected = false;
                     }
                 }
-
-                Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
-
-                if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
                 {
-                    if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                    if (spells.size() - last > 0)
                     {
+                        if (offset < spells.size() - limit)
+                        {
+                            offset += scrollSpeed;
+                        }
+
+                        if (offset > spells.size() - limit)
+                        {
+                            offset = spells.size() - limit;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > spells.size())
+                        {
+                            last = spells.size();
+                        }
+
+                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, spell_scrolly, true, false);
+
+                        SDL_Delay(50);
+
                         if (offset > 0)
                         {
-                            offset -= scrollSpeed;
-
-                            if (offset < 0)
-                            {
-                                offset = 0;
-                            }
-
-                            last = offset + limit;
-
-                            if (last > spells.size())
-                            {
-                                last = spells.size();
-                            }
-
-                            controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, scrolly, true, false);
-
-                            SDL_Delay(50);
-                        }
-
-                        if (offset <= 0)
-                        {
-                            current = -1;
-
-                            selected = false;
+                            current = FIND_CONTROL(controls, Control::Type::SCROLL_DOWN);
                         }
                     }
-                    else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
+
+                    if (spells.size() - last <= 0)
                     {
-                        if (spells.size() - last > 0)
-                        {
-                            if (offset < spells.size() - limit)
-                            {
-                                offset += scrollSpeed;
-                            }
+                        selected = false;
 
-                            if (offset > spells.size() - limit)
-                            {
-                                offset = spells.size() - limit;
-                            }
-
-                            last = offset + limit;
-
-                            if (last > spells.size())
-                            {
-                                last = spells.size();
-                            }
-
-                            controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, scrolly, true, false);
-
-                            SDL_Delay(50);
-
-                            if (offset > 0)
-                            {
-                                current = FIND_CONTROL(controls, Control::Type::SCROLL_DOWN);
-                            }
-                        }
-
-                        if (spells.size() - last <= 0)
-                        {
-                            selected = false;
-
-                            current = -1;
-                        }
+                        current = -1;
                     }
-                    else if (controls[current].Type == Control::Type::BACK)
-                    {
-                        select_result.clear();
+                }
+                else if (controls[current].Type == Control::Type::BACK)
+                {
+                    select_result.clear();
 
+                    done = true;
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::CONFIRM)
+                {
+                    if (selection.size() > 0 && selection.size() >= select_limit)
+                    {
                         done = true;
+
+                        for (auto i = 0; i < selection.size(); i++)
+                        {
+                            select_result.push_back(selection[i]);
+                        }
 
                         current = -1;
 
                         selected = false;
                     }
-                    else if (controls[current].Type == Control::Type::CONFIRM)
+                    else
                     {
-                        if (selection.size() > 0 && selection.size() >= select_limit)
+                        if (mode == Spells::Select::CAST_SPELL)
                         {
-                            done = true;
-
-                            for (auto i = 0; i < selection.size(); i++)
-                            {
-                                select_result.push_back(selection[i]);
-                            }
-
-                            current = -1;
-
-                            selected = false;
+                            message = "You must select a spell to CAST.";
                         }
-                        else
+                        else if (mode == Spells::Select::SPELLBOOK || mode == Spells::Select::UNLEARN)
                         {
-                            if (mode == Spells::Select::CAST_SPELL)
+                            message = "You must select ";
+
+                            if (select_limit > 1)
                             {
-                                message = "You must select a spell to CAST.";
-                            }
-                            else if (mode == Spells::Select::SPELLBOOK || mode == Spells::Select::UNLEARN)
-                            {
-                                message = "You must select ";
-
-                                if (select_limit > 1)
-                                {
-                                    message += std::to_string(select_limit);
-                                }
-                                else
-                                {
-                                    message += "a";
-                                }
-
-                                message += " spell";
-
-                                if (select_limit > 1)
-                                {
-                                    message += "s";
-                                }
-
-                                message += " to ";
-
-                                if (mode == Spells::Select::SPELLBOOK)
-                                {
-                                    message += "add to ";
-                                }
-                                else
-                                {
-                                    message += "erase from ";
-                                }
-
-                                if (caster.Type != Character::Type::NONE)
-                                {
-                                    message += caster.Name + "'s";
-                                }
-                                else
-                                {
-                                    message += "your";
-                                }
-
-                                message += " spellbook.";
-                            }
-
-                            displayMessage(message, intRD);
-                        }
-                    }
-                    else if (controls[current].Type == Control::Type::ACTION)
-                    {
-                        if (current + offset >= 0 && current + offset < spells.size())
-                        {
-                            auto result = Engine::FIND_LIST(selection, current + offset);
-
-                            if (result >= 0)
-                            {
-                                selection.erase(selection.begin() + result);
+                                message += std::to_string(select_limit);
                             }
                             else
                             {
-                                if (spells[current + offset].Charged)
+                                message += "a";
+                            }
+
+                            message += " spell";
+
+                            if (select_limit > 1)
+                            {
+                                message += "s";
+                            }
+
+                            message += " to ";
+
+                            if (mode == Spells::Select::SPELLBOOK)
+                            {
+                                message += "add to ";
+                            }
+                            else
+                            {
+                                message += "erase from ";
+                            }
+
+                            if (caster.Type != Character::Type::NONE)
+                            {
+                                message += caster.Name + "'s";
+                            }
+                            else
+                            {
+                                message += "your";
+                            }
+
+                            message += " spellbook.";
+                        }
+
+                        displayMessage(message, intRD);
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION)
+                {
+                    if (current + offset >= 0 && current + offset < spells.size())
+                    {
+                        auto result = Engine::FIND_LIST(selection, current + offset);
+
+                        if (result >= 0)
+                        {
+                            selection.erase(selection.begin() + result);
+                        }
+                        else
+                        {
+                            if (spells[current + offset].Charged)
+                            {
+                                if (selection.size() < select_limit)
                                 {
-                                    if (selection.size() < select_limit)
-                                    {
-                                        selection.push_back(current + offset);
-                                    }
+                                    selection.push_back(current + offset);
                                 }
-                                else
-                                {
-                                    displayMessage(spells[current + offset].Name + " cannot be cast!", intRD);
-                                }
+                            }
+                            else
+                            {
+                                displayMessage(spells[current + offset].Name + " cannot be cast!", intRD);
                             }
                         }
                     }
@@ -8270,12 +8207,6 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                 start_ticks = SDL_GetTicks();
             };
 
-            auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-            auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
-            auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
-
             auto headerw = (int)(boxwidth * 0.75);
 
             auto done = false;
@@ -8310,34 +8241,34 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             dice[4] = createImage("images/dice/dice5.png");
             dice[5] = createImage("images/dice/dice6.png");
 
-            auto controls_skill = createFixedTextButtons(choices_skill, 3, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_skill = createFixedTextButtons(choices_skill, 3, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_skill[0].Type = Control::Type::CONFIRM;
             controls_skill[1].Type = Control::Type::PLUS;
             controls_skill[2].Type = Control::Type::MINUS;
 
-            auto controls_confirm = createFixedTextButtons(choices_confirm, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_confirm = createFixedTextButtons(choices_confirm, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_confirm[0].Type = Control::Type::CONFIRM;
 
-            auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_end[0].Type = Control::Type::BACK;
 
-            auto controls_wolfspirit = createFixedTextButtons(choices_wolfspirit, 2, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_wolfspirit = createFixedTextButtons(choices_wolfspirit, 2, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_wolfspirit[0].Type = Control::Type::CONFIRM;
             controls_wolfspirit[1].Type = Control::Type::BACK;
 
-            auto controls_wisdom = createFixedTextButtons(choices_wisdom, 2, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_wisdom = createFixedTextButtons(choices_wisdom, 2, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_wisdom[0].Type = Control::Type::CONFIRM;
             controls_wisdom[1].Type = Control::Type::BACK;
 
-            auto controls_silvertongue = createFixedTextButtons(choices_silvertongue, 2, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_silvertongue = createFixedTextButtons(choices_silvertongue, 2, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_silvertongue[0].Type = Control::Type::CONFIRM;
             controls_silvertongue[1].Type = Control::Type::BACK;
 
-            auto controls_charisma_potion = createFixedTextButtons(choices_charisma_potion, 2, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_charisma_potion = createFixedTextButtons(choices_charisma_potion, 2, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_charisma_potion[0].Type = Control::Type::DRINK;
             controls_charisma_potion[1].Type = Control::Type::BACK;
 
-            auto controls_silvertongue_potion = createFixedTextButtons(choices_silvertongue_potion, 3, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+            auto controls_silvertongue_potion = createFixedTextButtons(choices_silvertongue_potion, 3, text_buttonw, text_buttonh, 10, startx, text_buttony);
             controls_silvertongue_potion[0].Type = Control::Type::CONFIRM;
             controls_silvertongue_potion[1].Type = Control::Type::DRINK;
             controls_silvertongue_potion[2].Type = Control::Type::BACK;
@@ -13702,7 +13633,7 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, item_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, item_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -13716,14 +13647,14 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (shop.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -13734,7 +13665,7 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (shop.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY));
     controls.push_back(Button(idx + 1, "icons/selling.png", idx, idx + 2, (shop.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::SELL));
     controls.push_back(Button(idx + 2, "icons/items.png", idx + 1, idx + 3, (shop.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::EQUIPMENT));
-    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (shop.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (shop.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -13778,8 +13709,6 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     };
 
     auto done = false;
-
-    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
 
     auto offsety = (texty + infoh);
 
@@ -13876,7 +13805,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         buy_string += "this";
                     }
 
-                    putHeader(renderer, buy_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, buy_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::SELL)
                 {
@@ -13891,24 +13820,24 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         sell_string += "this";
                     }
 
-                    putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
         else
         {
-            putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+            putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
         }
 
-        fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+        fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
         if (last - offset > 0)
         {
@@ -14285,8 +14214,6 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto done = false;
 
-    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
     auto offsety = (texty + infoh);
 
     auto controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
@@ -14387,7 +14314,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         buy_string += "this";
                     }
 
-                    putHeader(renderer, buy_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, buy_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::SELL)
                 {
@@ -14402,22 +14329,22 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         sell_string += "this";
                     }
 
-                    putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::EQUIPMENT)
                 {
                     std::string view_string = "View " + character.Name + "'s items";
 
-                    putHeader(renderer, view_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, view_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
         else
@@ -14428,20 +14355,20 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     std::string view_string = "View " + character.Name + "'s items";
 
-                    putHeader(renderer, view_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, view_string.c_str(), font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
 
-        fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+        fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
         if (last - offset > 0)
         {
@@ -15339,9 +15266,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     auto done = false;
 
-    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
-    auto scrolly = (texty + text_bounds - arrow_size - border_space);
     auto offsety = (texty + infoh);
 
     std::vector<Button> controls = {};
@@ -15415,29 +15339,29 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (controls_vault[current].Type == Control::Type::USE)
                     {
-                        putHeader(renderer, (std::string("Use the ") + item.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                        putHeader(renderer, (std::string("Use the ") + item.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else if (controls_vault[current].Type == Control::Type::TRANSFER)
                     {
-                        putHeader(renderer, (std::string("Transfer the ") + item.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                        putHeader(renderer, (std::string("Transfer the ") + item.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else if (controls_vault[current].Type == Control::Type::MONEY)
                     {
-                        putHeader(renderer, "Access money in vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                        putHeader(renderer, "Access money in vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else
                     {
-                        putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                        putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                 }
                 else
                 {
-                    putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
         else
@@ -15448,33 +15372,33 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (controls_vault[current].Type == Control::Type::USE)
                     {
-                        putHeader(renderer, "Use item", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                        putHeader(renderer, "Use item", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else if (controls_vault[current].Type == Control::Type::TRANSFER)
                     {
-                        putHeader(renderer, "Transfer item to another party member", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                        putHeader(renderer, "Transfer item to another party member", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else if (controls_vault[current].Type == Control::Type::MONEY)
                     {
-                        putHeader(renderer, "Access money in vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                        putHeader(renderer, "Access money in vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else
                     {
-                        putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                        putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                 }
                 else
                 {
-                    putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
 
-        fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+        fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
         if (last - offset > 0)
         {
@@ -15953,7 +15877,7 @@ std::vector<Button> repairList(SDL_Window *window, SDL_Renderer *renderer, std::
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, ship_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -15967,24 +15891,22 @@ std::vector<Button> repairList(SDL_Window *window, SDL_Renderer *renderer, std::
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (ships.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
     }
 
-    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "REPAIR 1", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::REPAIR1));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FULLY REPAIR", clrWH, intDB, 220, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::FULL_REPAIR));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 1, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "REPAIR 1", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::REPAIR1));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FULLY REPAIR", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FULL_REPAIR));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -16465,9 +16387,6 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
     auto done = false;
 
-    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
-    auto scrolly = (texty + text_bounds - arrow_size - border_space);
     auto offsety = (texty + infoh);
 
     auto controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
@@ -16554,28 +16473,28 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 if (controls[current].Type == Control::Type::USE)
                 {
-                    putHeader(renderer, (std::string("Use the ") + item.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Use the ") + item.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::DROP)
                 {
-                    putHeader(renderer, (std::string("Drop the ") + item.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Drop the ") + item.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::TRANSFER)
                 {
-                    putHeader(renderer, (std::string("Transfer the ") + item.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Transfer the ") + item.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::VAULT)
                 {
-                    putHeader(renderer, (std::string("Send the ") + item.Name + " to the vault").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Send the ") + item.Name + " to the vault").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
         else
@@ -16584,32 +16503,32 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 if (controls[current].Type == Control::Type::USE)
                 {
-                    putHeader(renderer, "Use item", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Use item", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::DROP)
                 {
-                    putHeader(renderer, "Drop item", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Drop item", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::TRANSFER)
                 {
-                    putHeader(renderer, "Transfer item to another party member", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Transfer item to another party member", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::VAULT)
                 {
-                    putHeader(renderer, "Access magic vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Access magic vault", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
 
-        fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+        fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
         if (last - offset > 0)
         {
@@ -17084,7 +17003,6 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
     auto font_size = 28;
 
     auto scrollSpeed = 1;
-    auto booksize = (int)(2 * text_bounds / 3 - infoh - box_space);
     auto limit = (int)((booksize - 2 * text_space) / (96));
 
     auto offset = 0;
@@ -17119,12 +17037,9 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
     auto done = false;
 
-    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
-    auto scrolly = startx + infoh + booksize - buttonh - text_space + 1;
     auto offsety = (texty + infoh);
 
-    auto controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+    auto controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, spelly);
 
     TTF_Init();
 
@@ -17208,20 +17123,20 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             {
                 if (controls[current].Type == Control::Type::SPELL)
                 {
-                    putHeader(renderer, (std::string("Cast ") + spell.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Cast ") + spell.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::UNLEARN)
                 {
-                    putHeader(renderer, (std::string("Unlearn ") + spell.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Unlearn ") + spell.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s spells").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s spells").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
         else
@@ -17230,24 +17145,24 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             {
                 if (controls[current].Type == Control::Type::SPELL)
                 {
-                    putHeader(renderer, "Cast spell", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Cast spell", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::UNLEARN)
                 {
-                    putHeader(renderer, "Unlearn Spell", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Unlearn Spell", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
 
-        fillRect(renderer, listwidth, booksize, textx, texty + infoh, intBE);
+        fillRect(renderer, textwidth, booksize, textx, texty + infoh, intBE);
 
         if (last - offset > 0)
         {
@@ -17275,9 +17190,9 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
         {
             if ((current + offset) >= 0 && (current + offset) < character.SpellBook.size())
             {
-                fillRect(renderer, listwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
+                fillRect(renderer, textwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
-                auto text = createText(character.SpellBook[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                auto text = createText(character.SpellBook[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth, TTF_STYLE_NORMAL);
 
                 renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
@@ -17328,7 +17243,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         last = character.SpellBook.size();
                     }
 
-                    controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+                    controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, spelly);
 
                     SDL_Delay(50);
                 }
@@ -17361,7 +17276,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         last = character.SpellBook.size();
                     }
 
-                    controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+                    controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, spelly);
 
                     SDL_Delay(50);
 
@@ -17508,7 +17423,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         last = character.SpellBook.size();
                     }
 
-                    controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+                    controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, spelly);
 
                     message = spell.Name;
 
@@ -17584,7 +17499,6 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
     auto font_size = 28;
 
     auto scrollSpeed = 1;
-    auto booksize = (int)(2 * text_bounds / 3 - infoh - box_space);
     auto limit = (int)((booksize - 2 * text_space) / (96));
 
     auto offset = 0;
@@ -17619,12 +17533,9 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
     auto done = false;
 
-    auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
-    auto scrolly = startx + infoh + booksize - buttonh - text_space + 1;
     auto offsety = (texty + infoh);
 
-    auto controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+    auto controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, spelly);
 
     TTF_Init();
 
@@ -17688,16 +17599,16 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             {
                 if (controls[current].Type == Control::Type::RECHARGE)
                 {
-                    putHeader(renderer, (std::string("Recharge ") + spell.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Recharge ") + spell.Name).c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s spells").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s spells").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
         else
@@ -17706,20 +17617,20 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             {
                 if (controls[current].Type == Control::Type::RECHARGE)
                 {
-                    putHeader(renderer, "Recharge spell", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, "Recharge spell", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
 
-        fillRect(renderer, listwidth, booksize, textx, texty + infoh, intBE);
+        fillRect(renderer, textwidth, booksize, textx, texty + infoh, intBE);
 
         if (last - offset > 0)
         {
@@ -17747,9 +17658,9 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         {
             if ((current + offset) >= 0 && (current + offset) < character.SpellBook.size())
             {
-                fillRect(renderer, listwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
+                fillRect(renderer, textwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
-                auto text = createText(character.SpellBook[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                auto text = createText(character.SpellBook[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth, TTF_STYLE_NORMAL);
 
                 renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
@@ -17800,7 +17711,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         last = character.SpellBook.size();
                     }
 
-                    controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+                    controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, spelly);
 
                     SDL_Delay(50);
                 }
@@ -17833,7 +17744,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         last = character.SpellBook.size();
                     }
 
-                    controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+                    controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, spelly);
 
                     SDL_Delay(50);
 
@@ -17887,7 +17798,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                             displayMessage(character.SpellBook[selection].Name + " charged!", intLB);
 
-                            controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, scrolly);
+                            controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, spelly);
                         }
                         else
                         {
@@ -17992,8 +17903,6 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
             start_ticks = SDL_GetTicks();
         };
 
-        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
         auto controls = armyList(window, renderer, army, offset, last, limit, textx, texty + infoh, false);
 
         TTF_Init();
@@ -18046,9 +17955,9 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, std
             putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? army_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "Select units", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+            putHeader(renderer, "Select units", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-            fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+            fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
             if (last - offset > 0)
             {
@@ -18273,8 +18182,6 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
             start_ticks = SDL_GetTicks();
         };
 
-        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
         auto controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, back_button);
 
         TTF_Init();
@@ -18327,9 +18234,9 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, std::ve
             putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? fleet_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "Select ships", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+            putHeader(renderer, "Select ships", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-            fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+            fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
             if (last - offset > 0)
             {
@@ -18573,8 +18480,6 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         // This will be expanded to include barracks from other lands (books)
         std::vector<Location::Type> barracks = {Location::Type::LUUTANESH, Location::Type::SALTDAD};
 
-        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
         auto popupw = (int)(0.6 * SCREEN_WIDTH);
         auto popuph = (int)(0.6 * SCREEN_HEIGHT);
         auto popupx = (SCREEN_WIDTH - popupw) / 2;
@@ -18645,9 +18550,9 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             putText(renderer, (selection >= 0 && selection < party.Army.size()) ? army_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "Troop Transfer", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+            putHeader(renderer, "Troop Transfer", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-            fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+            fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
             if (last - offset > 0)
             {
@@ -19044,8 +18949,6 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             start_ticks = SDL_GetTicks();
         };
 
-        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
         auto controls = armyList(window, renderer, army, offset, last, limit, textx, texty + infoh, false);
 
         TTF_Init();
@@ -19096,9 +18999,9 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? army_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "Select the units to add to your army", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+            putHeader(renderer, "Select the units to add to your army", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-            fillRect(renderer, listwidth, text_bounds - infoh, textx, texty + infoh, intBE);
+            fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
             if (last - offset > 0)
             {
@@ -19286,7 +19189,6 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto scrollSpeed = 1;
         auto offset = 0;
 
-        auto booksize = (int)(2 * text_bounds / 3 - infoh - box_space);
         auto limit = (int)((booksize - 2 * text_space) / (96));
         auto last = offset + limit;
 
@@ -19294,8 +19196,6 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         {
             last = spells.size();
         }
-
-        auto scrolly = startx + infoh + booksize - buttonh - text_space + 1;
 
         std::string message = "";
 
@@ -19318,9 +19218,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             start_ticks = SDL_GetTicks();
         };
 
-        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
-        auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, scrolly, true, true);
+        auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, spelly, true, true);
 
         TTF_Init();
 
@@ -19370,9 +19268,9 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? spell_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "You can copy the following spells", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, listwidth, infoh, textx, texty);
+            putHeader(renderer, "You can copy the following spells", font_garamond, text_space, clrWH, intBR, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-            fillRect(renderer, listwidth, booksize, textx, texty + infoh, intBE);
+            fillRect(renderer, textwidth, booksize, textx, texty + infoh, intBE);
 
             if (last - offset > 0)
             {
@@ -19391,9 +19289,9 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             if (current >= 0 && current < controls.size() && controls[current].Type == Control::Type::ACTION)
             {
-                fillRect(renderer, listwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
+                fillRect(renderer, textwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
-                auto text = createText(spells[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth - 2 * text_space, TTF_STYLE_NORMAL);
+                auto text = createText(spells[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth, TTF_STYLE_NORMAL);
 
                 renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
@@ -19438,7 +19336,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             last = spells.size();
                         }
 
-                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, scrolly, true, true);
+                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, spelly, true, true);
 
                         SDL_Delay(50);
                     }
@@ -19471,7 +19369,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             last = spells.size();
                         }
 
-                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, scrolly, true, true);
+                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, spelly, true, true);
 
                         SDL_Delay(50);
 
@@ -19670,8 +19568,6 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         Uint32 duration = 3000;
 
-        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
         auto controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
 
         TTF_Init();
@@ -19722,7 +19618,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? take.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            fillRect(renderer, listwidth, text_bounds, textx, texty, intBE);
+            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
 
             if (last - offset > 0)
             {
@@ -19980,8 +19876,6 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
         Uint32 duration = 3000;
 
-        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
         auto controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
 
         TTF_Init();
@@ -20032,7 +19926,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? lose.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            fillRect(renderer, listwidth, text_bounds, textx, texty, intBE);
+            fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
 
             if (last - offset > 0)
             {
@@ -20299,7 +20193,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -20313,14 +20207,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (ships.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -20328,12 +20222,10 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = controls.size();
 
-    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::BUY_SELL_SHIP));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::REPAIR_SHIP));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::BUY_SELL_CARGO));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -20360,7 +20252,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -20374,14 +20266,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (ships.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -20415,7 +20307,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     }
 
     controls.push_back(Button(idx, "icons/user.png", ((buy_button || sell_button) ? idx - 1 : idx), idx + 1, (ships.size() > 0 ? (last - start) - 1 : idx), idx, startx + grid_offset * gridsize, buttony, Control::Type::PARTY));
-    controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -20442,7 +20334,7 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -20456,14 +20348,14 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (cargo.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -20471,12 +20363,10 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     idx = controls.size();
 
-    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, cargo.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_y, Control::Type::BUY_SELL_SHIP));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, cargo.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::REPAIR_SHIP));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, cargo.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::BUY_SELL_CARGO));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, cargo.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, cargo.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, cargo.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, cargo.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, cargo.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -20503,7 +20393,7 @@ std::vector<Button> buyCargo(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -20517,14 +20407,14 @@ std::vector<Button> buyCargo(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (cargo.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -20535,7 +20425,7 @@ std::vector<Button> buyCargo(SDL_Window *window, SDL_Renderer *renderer, std::ve
     controls.push_back(Button(idx, "icons/selling.png", idx, idx + 1, (cargo.size() > 0 ? (last - start) - 1 : idx), idx, startx, buttony, Control::Type::SELL_CARGO));
     controls.push_back(Button(idx + 1, "icons/shop.png", idx, idx + 2, (cargo.size() > 0 ? (last - start) - 1 : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::BUY_CARGO));
     controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, (cargo.size() > 0 ? (last - start) - 1 : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
-    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (cargo.size() > 0 ? (last - start) - 1 : idx + 3), idx + 3, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (cargo.size() > 0 ? (last - start) - 1 : idx + 3), idx + 3, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -20554,7 +20444,7 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, cargo_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -20568,14 +20458,14 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (ships.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -20586,7 +20476,7 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
     controls.push_back(Button(idx, "icons/selling.png", idx, idx + 1, (ships.size() > 0 ? (last - start) - 1 : idx), idx, startx, buttony, Control::Type::SELL_CARGO));
     controls.push_back(Button(idx + 1, "icons/shop.png", idx, idx + 2, (ships.size() > 0 ? (last - start) - 1 : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::BUY_CARGO));
     controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, (ships.size() > 0 ? (last - start) - 1 : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
-    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (ships.size() > 0 ? (last - start) - 1 : idx + 3), idx + 3, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (ships.size() > 0 ? (last - start) - 1 : idx + 3), idx + 3, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -20597,12 +20487,10 @@ std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer)
 
     auto idx = 0;
 
-    auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, 220, 48, -1), idx, idx + 1, idx, idx, startx, text_y, Control::Type::BUY_SELL_SHIP));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, 220, 48, -1), idx, idx + 2, idx + 1, idx + 1, startx + (220 + button_space), text_y, Control::Type::REPAIR_SHIP));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, 220, 48, -1), idx + 1, idx + 3, idx + 2, idx + 2, startx + 2 * (220 + button_space), text_y, Control::Type::BUY_SELL_CARGO));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, 220, 48, -1), idx + 2, idx + 3, idx + 3, idx + 3, startx + 3 * (220 + button_space), text_y, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, idx, idx, startx, text_buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -21804,11 +21692,11 @@ std::vector<Button> popupMoney(SDL_Window *window, SDL_Renderer *renderer, Party
 {
     auto controls = std::vector<Button>();
 
-    controls.push_back(Button(0, createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Vault Money: " + std::to_string(party.VaultMoney) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space), 0, 0, 0, 0, offsetx + 2 * text_space, offsety + infoh + 3 * text_space, Control::Type::ACTION));
+    controls.push_back(Button(0, createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Vault Money: " + std::to_string(party.VaultMoney) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, list_buttonh, text_space), 0, 0, 0, 0, offsetx + 2 * text_space, offsety + infoh + 3 * text_space, Control::Type::ACTION));
     controls[0].W = controls[0].Surface->w;
     controls[0].H = controls[0].Surface->h;
 
-    controls.push_back(Button(1, createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Party Money: " + std::to_string(party.Money) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space), 1, 1, 1, 1, offsetx + 2 * text_space, controls[0].Y + controls[0].H + 3 * text_space, Control::Type::ACTION));
+    controls.push_back(Button(1, createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Party Money: " + std::to_string(party.Money) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, list_buttonh, text_space), 1, 1, 1, 1, offsetx + 2 * text_space, controls[0].Y + controls[0].H + 3 * text_space, Control::Type::ACTION));
     controls[1].W = controls[1].Surface->w;
     controls[1].H = controls[1].Surface->h;
 
@@ -21839,7 +21727,7 @@ std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -21871,7 +21759,7 @@ std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -21922,7 +21810,7 @@ std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -21949,7 +21837,7 @@ std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + infoh + 3 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, list_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -21989,12 +21877,6 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, i
             start_ticks = SDL_GetTicks();
         };
 
-        auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-        auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
-        auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
-
         auto headerw = (int)(boxwidth * 0.75);
 
         auto done = false;
@@ -22023,10 +21905,10 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Army::Base &unit, i
         dice[4] = createImage("images/dice/dice5.png");
         dice[5] = createImage("images/dice/dice6.png");
 
-        auto controls_morale = createFixedTextButtons(choices_morale, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+        auto controls_morale = createFixedTextButtons(choices_morale, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
         controls_morale[0].Type = Control::Type::CONFIRM;
 
-        auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+        auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
         controls_end[0].Type = Control::Type::BACK;
 
         auto current = -1;
@@ -22245,12 +22127,6 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             start_ticks = SDL_GetTicks();
         };
 
-        auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-        auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
-        auto boxwidth = (SCREEN_WIDTH - 3 * marginx) / 2;
-
         auto headerw = (int)(boxwidth * 0.75);
 
         auto done = false;
@@ -22280,13 +22156,13 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
         dice[4] = createImage("images/dice/dice5.png");
         dice[5] = createImage("images/dice/dice6.png");
 
-        auto controls_combat = createFixedTextButtons(choices_combat, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+        auto controls_combat = createFixedTextButtons(choices_combat, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
         controls_combat[0].Type = Control::Type::CONFIRM;
 
-        auto controls_morale = createFixedTextButtons(choices_morale, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+        auto controls_morale = createFixedTextButtons(choices_morale, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
         controls_morale[0].Type = Control::Type::CONFIRM;
 
-        auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+        auto controls_end = createFixedTextButtons(choices_end, 1, text_buttonw, text_buttonh, 10, startx, text_buttony);
         controls_end[0].Type = Control::Type::BACK;
 
         auto current = -1;
@@ -22780,10 +22656,6 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         TTF_SetFontKerning(font_dark11, 0);
 
-        auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-        auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
         auto boxw = (int)((fullwidth - 2 * box_space) / 3);
 
         auto combat_boxh = (int)((text_bounds - box_space - infoh) / 2);
@@ -22846,10 +22718,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             }
         }
 
-        auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_DARK11, 28, "Fight", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::CONFIRM));
-        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_DARK11, 28, "Cast Spell", clrWH, intDB, 220, 48, -1), 6, 7, 4, 7, startx + (text_buttonw + button_space), text_y, Control::Type::SPELL));
+        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_DARK11, 28, "Fight", clrWH, intDB, text_buttonw, 48, -1), 6, 7, 3, 6, startx, text_buttony, Control::Type::CONFIRM));
+        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_DARK11, 28, "Cast Spell", clrWH, intDB, text_buttonw, 48, -1), 6, 7, 4, 7, startx + text_gridsize, text_buttony, Control::Type::SPELL));
 
         auto current = -1;
         auto selected = false;
@@ -23168,10 +23038,6 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto font_size = 28;
 
-        auto marginx = (int)(Margin * SCREEN_WIDTH);
-
-        auto fullwidth = SCREEN_WIDTH - 2 * marginx;
-
         auto boxw = (int)((fullwidth - 2 * box_space) / 3);
 
         auto deployment_boxh = (int)((text_bounds - box_space - infoh) / 2);
@@ -23243,10 +23109,8 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             }
         }
 
-        auto text_y = (int)(SCREEN_HEIGHT * (1.0 - Margin)) - 48;
-
-        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_DARK11, font_size, "Start Battle", clrWH, intDB, 220, 48, -1), 6, 7, 3, 6, startx, text_y, Control::Type::CONFIRM));
-        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_DARK11, font_size, "Cancel", clrWH, intDB, 220, 48, -1), 6, 7, 4, 7, startx + (text_buttonw + button_space), text_y, Control::Type::BACK));
+        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_DARK11, font_size, "Start Battle", clrWH, intDB, text_buttonw, 48, -1), 6, 7, 3, 6, startx, text_buttony, Control::Type::CONFIRM));
+        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_DARK11, font_size, "Cancel", clrWH, intDB, text_buttonw, 48, -1), 6, 7, 4, 7, startx + text_gridsize, text_buttony, Control::Type::BACK));
 
         auto controls_deploy = popupArmy(window, renderer, party.Army, offset, last, limit, popupw, popuph, infoh, popupx, popupy);
 
@@ -23733,7 +23597,7 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, choices[index].Text, clrBK, intBE, textwidth - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, choices[index].Text, clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -23747,14 +23611,14 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
     {
         if (start > 0)
         {
-            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), texty + border_space, Control::Type::SCROLL_UP));
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
             idx++;
         }
 
         if (choices.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, ((int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size)), (texty + text_bounds - arrow_size - border_space), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
             idx++;
         }
@@ -23765,7 +23629,7 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
     controls.push_back(Button(idx, "icons/papyrus.png", idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
     controls.push_back(Button(idx + 1, "icons/ancient-map.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
     controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
-    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, idx - 1, idx + 3, (1 - Margin) * SCREEN_WIDTH - buttonw, buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, idx - 1, idx + 3, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -24372,8 +24236,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto hold = false;
         auto scrollSpeed = 1;
 
-        auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space);
-
         auto offset = 0;
         auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -24564,7 +24426,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
             }
 
-            fillRect(renderer, listwidth, text_bounds, textx, texty, BE_80);
+            fillRect(renderer, textwidth, text_bounds, textx, texty, BE_80);
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
@@ -24593,7 +24455,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                 SDL_GetMouseState(&mousex, &mousey);
 
-                auto zoomw = (int)(0.80 * (double)listwidth);
+                auto zoomw = (int)(0.80 * (double)textwidth);
                 auto zoomh = (int)(0.80 * (double)text_bounds);
 
                 clipValue(zoomw, 0, splash->w);
@@ -24630,7 +24492,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                         dst.w = zoomw;
                         dst.h = zoomh;
-                        dst.x = (textx + (listwidth - zoomw) / 2);
+                        dst.x = (textx + (textwidth - zoomw) / 2);
                         dst.y = (texty + (text_bounds - zoomh) / 2);
 
                         fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
@@ -26837,9 +26699,9 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             if (splash)
             {
-                if (splash->w > (textwidth - 2 * text_space))
+                if (splash->w > listwidth)
                 {
-                    splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+                    splash_h = (int)((double)listwidth / splash->w * splash->h);
                 }
                 else
                 {
@@ -26851,14 +26713,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             if (story->Image && story->Text)
             {
-                auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * text_space;
-
                 text = createTextAndImage(story->Text, story->Image, FONT_GARAMOND, font_size, clrDB, intBE, listwidth, TTF_STYLE_NORMAL);
             }
             else if (story->Text)
             {
-                auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * text_space;
-
                 text = createText(story->Text, FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
             }
 
@@ -27186,7 +27044,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     renderCaption(renderer, font_caption, controls[current]);
                 }
 
-                if (splash && (splash->w > (textwidth - 2 * text_space)) && (current_mode != Control::Type::PREVIEW))
+                if (splash && splash->w > listwidth && current_mode != Control::Type::PREVIEW)
                 {
                     auto mousex = 0;
                     auto mousey = 0;
@@ -27202,16 +27060,16 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     auto offsetx = 0;
                     auto offsety = splash_h;
 
-                    if (splash->w < (textwidth - 2 * text_space))
+                    if (splash->w < listwidth)
                     {
-                        offsetx = ((textwidth - 2 * text_space) - splash->w) / 2;
+                        offsetx = (listwidth - splash->w) / 2;
 
                         offsety = splash->h;
                     }
 
                     if (mousex >= (textx + text_space + offsetx) && mousex <= (textx + textwidth - text_space - offsetx) && mousey >= (texty + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= offsety && ((mousey - (texty + text_space)) <= (offsety - offset)))
                     {
-                        auto scalex = (double)(mousex - (textx + text_space)) / (textwidth - 2 * text_space);
+                        auto scalex = (double)(mousex - (textx + text_space)) / listwidth;
                         auto scaley = (double)((mousey - (texty + text_space)) + offset) / offsety;
 
                         auto centerx = (int)(scalex * (double)splash->w);
@@ -27740,7 +27598,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             {
                                 if (story->Bye)
                                 {
-                                    auto bye = createText(story->Bye, FONT_GARAMOND, font_size + 4, clrDB, ((int)(SCREEN_WIDTH * (1.0 - 2.0 * Margin)) - 2 * text_space), TTF_STYLE_NORMAL);
+                                    auto bye = createText(story->Bye, FONT_GARAMOND, font_size + 4, clrDB, fullwidth - 2 * text_space, TTF_STYLE_NORMAL);
                                     auto forward = createImage("icons/next.png");
 
                                     if (bye && forward)
@@ -27752,11 +27610,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                             stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
                                         }
 
-                                        fillRect(renderer, ((int)((1.0 - 2.0 * Margin) * SCREEN_WIDTH)), bye->h + 2 * text_space, startx, ((buttony - button_space) - (bye->h + 2 * text_space)) / 2, BE_80);
+                                        fillRect(renderer, fullwidth, bye->h + 2 * text_space, startx, ((buttony - button_space) - (bye->h + 2 * text_space)) / 2, BE_80);
 
                                         renderText(renderer, bye, 0, (SCREEN_WIDTH - bye->w) / 2, ((buttony - button_space) - bye->h) / 2, (buttony - button_space), 0);
 
-                                        renderImage(renderer, forward, ((int)(SCREEN_WIDTH * (1.0 - Margin) - buttonw - button_space)), buttony);
+                                        renderImage(renderer, forward, lastx, buttony);
 
                                         SDL_RenderPresent(renderer);
 
@@ -27919,7 +27777,7 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, topic.Title.c_str(), clrBK, intBE, splashw - 3 * button_space / 2, (text_space + 28) * 2, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, topic.Title.c_str(), clrBK, intBE, splashw - 3 * button_space / 2, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -27944,7 +27802,7 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
 
         if (topics.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, startx + splashw + scroll_space, (texty + text_bounds - arrow_size - border_space), Control::Type::TOPICS_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, startx + splashw + scroll_space, scrolly, Control::Type::TOPICS_DOWN));
 
             idx++;
         }
@@ -27954,15 +27812,17 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + border_space, Control::Type::SCROLL_UP));
-        controls.push_back(Button(idx + 1, "icons/down-arrow.png", idx + 1, idx + 1, idx, idx + 2, (1.0 - Margin) * SCREEN_WIDTH - arrow_size, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
+        auto topic_scrollx = (int)((1.0 - Margin) * SCREEN_WIDTH - arrow_size);
+
+        controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, topic_scrollx, texty + border_space, Control::Type::SCROLL_UP));
+        controls.push_back(Button(idx + 1, "icons/down-arrow.png", idx + 1, idx + 1, idx, idx + 2, topic_scrollx, texty + text_bounds - arrow_size - border_space, Control::Type::SCROLL_DOWN));
     }
 
     idx = controls.size();
 
     controls.push_back(Button(idx, "icons/previous.png", idx, idx + 1, topics.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::PREVIOUS_TOPIC));
     controls.push_back(Button(idx + 1, "icons/next.png", idx, idx + 2, topics.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + gridsize, buttony, Control::Type::NEXT_TOPIC));
-    controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, topics.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, ((int)((1.0 - Margin) * SCREEN_WIDTH) - buttonw), buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, topics.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -28025,8 +27885,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
             auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
 
-            auto listwidth = (int)((1 - Margin) * SCREEN_WIDTH) - (textx + arrow_size + button_space) - 2 * text_space;
-
             if (Topics::ALL[topic].Text.length() > 0 && Topics::ALL[topic].Image.length() > 0)
             {
                 text = createTextAndImage(Topics::ALL[topic].Text.c_str(), Topics::ALL[topic].Image.c_str(), FONT_GARAMOND, font_size, clrDB, intBE, listwidth, TTF_STYLE_NORMAL);
@@ -28075,9 +27933,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
             if (splash)
             {
-                if (splash->w > (textwidth - 2 * text_space))
+                if (splash->w > listwidth)
                 {
-                    splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+                    splash_h = (int)((double)listwidth / splash->w * splash->h);
                 }
                 else
                 {
@@ -28137,7 +27995,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     renderCaption(renderer, font_caption, controls[current]);
                 }
 
-                if (splash && splash->w > (textwidth - 2 * text_space))
+                if (splash && splash->w > listwidth)
                 {
                     auto mousex = 0;
                     auto mousey = 0;
@@ -28153,16 +28011,16 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     auto offsetx = 0;
                     auto offsety = splash_h;
 
-                    if (splash->w < (textwidth - 2 * text_space))
+                    if (splash->w < listwidth)
                     {
-                        offsetx = ((textwidth - 2 * text_space) - splash->w) / 2;
+                        offsetx = (listwidth - splash->w) / 2;
 
                         offsety = splash->h;
                     }
 
                     if (mousex >= (textx + text_space + offsetx) && mousex <= (textx + textwidth - text_space - offsetx) && mousey >= (texty + infoh + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= offsety && ((mousey - (texty + infoh + text_space)) <= (offsety - offset)))
                     {
-                        auto scalex = (double)(mousex - (textx + text_space)) / (textwidth - 2 * text_space);
+                        auto scalex = (double)(mousex - (textx + text_space)) / listwidth;
                         auto scaley = (double)((mousey - (texty + text_space + infoh)) + offset) / offsety;
 
                         auto centerx = (int)(scalex * (double)splash->w);
@@ -28297,9 +28155,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                             if (splash)
                             {
-                                if (splash->w > (textwidth - 2 * text_space))
+                                if (splash->w > listwidth)
                                 {
-                                    splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+                                    splash_h = (int)((double)listwidth / splash->w * splash->h);
                                 }
                                 else
                                 {
@@ -28365,9 +28223,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                             if (splash)
                             {
-                                if (splash->w > (textwidth - 2 * text_space))
+                                if (splash->w > listwidth)
                                 {
-                                    splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+                                    splash_h = (int)((double)listwidth / splash->w * splash->h);
                                 }
                                 else
                                 {
@@ -28435,9 +28293,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                             if (splash)
                             {
-                                if (splash->w > (textwidth - 2 * text_space))
+                                if (splash->w > listwidth)
                                 {
-                                    splash_h = (int)((double)(textwidth - 2 * text_space) / splash->w * splash->h);
+                                    splash_h = (int)((double)listwidth / splash->w * splash->h);
                                 }
                                 else
                                 {
@@ -28579,7 +28437,7 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
     auto splash = createImage("images/book1/valley-of-bones-cover.png");
 
-    auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, ((int)SCREEN_WIDTH * (1.0 - 3.0 * Margin) - splashw), TTF_STYLE_NORMAL);
+    auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, (int)(SCREEN_WIDTH * (1.0 - 3.0 * Margin) - splashw), TTF_STYLE_NORMAL);
 
     Book1::InitializeStories();
 
@@ -28591,7 +28449,7 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
         auto selected = false;
 
-        auto controls = createHTextButtons(choices, 4, text_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+        auto controls = createHTextButtons(choices, 4, text_buttonh, startx, text_buttony);
 
         controls[0].Type = Control::Type::NEW;
         controls[1].Type = Control::Type::LOAD;
@@ -28612,7 +28470,7 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
             fillRect(renderer, text->w + 2 * text_space, text->h + 2 * text_space, startx * 2 + splashw, texty, intWH);
 
-            renderText(renderer, text, intBK, startx * 2 + splashw + text_space, starty + text_space, SCREEN_HEIGHT * (1.0 - 2 * Margin) - 2 * text_space, 0);
+            renderText(renderer, text, intBK, startx * 2 + splashw + text_space, starty + text_space, (int)(SCREEN_HEIGHT * (1.0 - 2 * Margin) - 2 * text_space), 0);
 
             renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
 
@@ -28696,7 +28554,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
     auto *introduction = "This is the DEBUG screen. Testing facilities for various gamebook functions such as COMBAT, SKILL CHECKS, MAGIC, etc, can be accessed here. While the game is still in the ALPHA stage, this is the default screen.\n\nTests:\n1 - Combat\n2 - Map\n3 - Team Skill check\n4 - Individual Skill check\n5 - Mass Combat\n6 - Sea Combat";
 
-    auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, textwidth - 2 * text_space, TTF_STYLE_NORMAL);
+    auto text = createText(introduction, FONT_GARAMOND, 28, clrDB, listwidth, TTF_STYLE_NORMAL);
 
     auto splash = createImage("images/legendary-kingdoms-logo.png");
 
@@ -28708,7 +28566,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
         const char *choices[7] = {"1", "2", "3", "4", "5", "6", "Exit"};
 
-        auto controls = createHTextButtons(choices, 7, text_buttonh, startx, ((int)SCREEN_HEIGHT * (1.0 - Margin) - text_buttonh));
+        auto controls = createHTextButtons(choices, 7, text_buttonh, startx, text_buttony);
 
         controls[0].Type = Control::Type::COMBAT;
         controls[1].Type = Control::Type::MAP;
@@ -28732,7 +28590,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
             fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
 
-            renderText(renderer, text, intBK, startx * 2 + splashw + text_space, starty + text_space, SCREEN_HEIGHT * (1.0 - 2 * Margin) - 2 * text_space, 0);
+            renderText(renderer, text, intBK, startx * 2 + splashw + text_space, starty + text_space, (int)(SCREEN_HEIGHT * (1.0 - 2 * Margin) - 2 * text_space), 0);
 
             renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
 
