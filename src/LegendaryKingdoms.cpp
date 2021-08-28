@@ -24503,12 +24503,12 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                 SDL_SetWindowTitle(window, "Legendary Kingdoms: Load Game");
             }
 
+            fillWindow(renderer, intWH);
+
             if (splash)
             {
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
-
-            fillWindow(renderer, intWH);
 
             if (current >= 0 && current < controls.size())
             {
@@ -24536,6 +24536,10 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                     if (controls[current].Type == Control::Type::SAVE)
                     {
                         putText(renderer, "Save Game", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                    }
+                    else
+                    {
+                        putText(renderer, "Selected", font_dark11, text_space, clrWH, intBR, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));   
                     }
                 }
             }
@@ -24692,7 +24696,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::SAVE)
+                else if (controls[current].Type == Control::Type::LOAD)
                 {
                     if (selection >= 0 && selection < entries.size())
                     {
