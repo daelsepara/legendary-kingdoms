@@ -208,6 +208,15 @@ std::vector<TextButton> createFixedTextButtons(const char **choices, int num, in
 std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y);
 std::vector<TextButton> createHTextButtons(const char **choices, int num, int text_buttonh, int text_x, int text_y, bool has_scrolls);
 
+// json helpers
+void followersJSON(nlohmann::json &json, std::vector<Follower::Base> followers);
+void spellBookJSON(nlohmann::json &json, std::vector<Spells::Base> spells);
+void attributesJSON(nlohmann::json &json, std::vector<Attribute::Base> attributes);
+void equipmentJSON(nlohmann::json &json, std::vector<Equipment::Base> equipment);
+
+// load/save games
+void saveGame(Party::Base &party, const char *overwrite);
+
 SDL_Surface *createImage(const char *image)
 {
     auto surface = IMG_Load(image);
@@ -1587,16 +1596,16 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
         {
             auto index = start + i;
 
-            auto ship = hearts.begin();
+            auto heart = hearts.begin();
 
-            std::advance(ship, index);
+            std::advance(heart, index);
 
-            Character::Romance romance = ship->first;
+            Character::Romance romance = heart->first;
 
             auto from = Character::ALL[Engine::FIND_CHARACTER(Character::ALL, romance.first)];
             auto to = Character::ALL[Engine::FIND_CHARACTER(Character::ALL, romance.second)];
 
-            auto count = ship->second;
+            auto count = heart->second;
 
             std::string ship_string = from.Name + " has " + std::to_string(count) + " heart";
 
@@ -23777,6 +23786,287 @@ void addBye(Story::Base *story, std::string bye)
     }
 }
 
+void followersJSON(nlohmann::json &json, std::vector<Follower::Base> followers)
+{
+    for (auto i = 0; i < followers.size(); i++)
+    {
+        nlohmann::json data;
+
+        data.emplace("name", followers[i].Name);
+        data.emplace("type", followers[i].Type);
+        data.emplace("health", followers[i].Health);
+
+        json.push_back(data);
+    }
+}
+
+void spellBookJSON(nlohmann::json &json, std::vector<Spells::Base> spells)
+{
+    for (auto i = 0; i < spells.size(); i++)
+    {
+        nlohmann::json data;
+
+        data.emplace("name", spells[i].Name);
+        data.emplace("description", spells[i].Description);
+        data.emplace("scope", spells[i].Scope);
+        data.emplace("type", spells[i].Type);
+        data.emplace("charged", spells[i].Charged);
+        data.emplace("recharge", spells[i].Recharge);
+
+        json.push_back(data);
+    }
+}
+
+void attributesJSON(nlohmann::json &json, std::vector<Attribute::Base> attributes)
+{
+    for (auto i = 0; i < attributes.size(); i++)
+    {
+        nlohmann::json data;
+
+        data.emplace("type", attributes[i].Type);
+        data.emplace("value", attributes[i].Value);
+
+        json.push_back(data);
+    }
+}
+
+void equipmentJSON(nlohmann::json &json, std::vector<Equipment::Base> equipment)
+{
+    for (auto i = 0; i < equipment.size(); i++)
+    {
+        nlohmann::json data;
+
+        data.emplace("name", equipment[i].Name);
+        data.emplace("description", equipment[i].Description);
+        data.emplace("class", equipment[i].Class);
+        data.emplace("type", equipment[i].Type);
+        data.emplace("attribute", equipment[i].Attribute);
+        data.emplace("modifier", equipment[i].Modifier);
+        data.emplace("twoHanded", equipment[i].TwoHanded);
+        data.emplace("additionalSlots", equipment[i].AdditionalSlots);
+        data.emplace("value", equipment[i].Value);
+
+        json.push_back(data);
+    }
+}
+
+void saveGame(Party::Base &party, const char *overwrite)
+{
+    auto seed = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+
+    std::ostringstream buffer;
+
+#if defined(_WIN32)
+    PWSTR path_str;
+
+    SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_DEFAULT, NULL, &path_str);
+
+    std::wstring wpath(path_str);
+
+    CoTaskMemFree(path_str);
+
+    std::string save(wpath.length(), ' ');
+
+    std::copy(wpath.begin(), wpath.end(), save.begin());
+
+    save += "/Saved Games/Legendary Kingdoms";
+#else
+    const char *homedir;
+
+    if ((homedir = getenv("HOME")) == NULL)
+    {
+        homedir = getpwuid(getuid())->pw_dir;
+    }
+
+    std::string save = std::string(homedir) + "/Documents/Saved Games/Legendary Kingdoms";
+#endif
+
+    std::string path = save + "/";
+
+    fs::create_directories(save);
+
+    if (overwrite != NULL)
+    {
+        buffer << std::string(overwrite);
+    }
+    else
+    {
+        buffer << path << std::to_string(seed) << ".save";
+    }
+
+    nlohmann::json data;
+
+    party.Epoch = seed;
+
+    // set up empty lists/arrays
+    data["members"] = std::vector<nlohmann::json>();
+    data["codes"] = std::vector<nlohmann::json>();
+    data["vault"] = std::vector<nlohmann::json>();
+    data["fleet"] = std::vector<nlohmann::json>();
+    data["army"] = std::vector<nlohmann::json>();
+    data["dead"] = std::vector<int>();
+    data["invisibleCodes"] = std::vector<int>();
+    data["lastSelection"] = std::vector<int>();
+    data["order"] = std::vector<int>();
+    data["hearts"] = std::vector<std::vector<int>>();
+
+    data["location"] = party.Location;
+    data["vaultMoney"] = party.VaultMoney;
+    data["limit"] = party.Limit;
+    data["currentShip"] = party.CurrentShip;
+    data["recentSuccesses"] = party.RecentSuccesses;
+    data["lastSelected"] = party.LastSelected;
+    data["currentCharacter"] = party.CurrentCharacter;
+    data["book"] = party.Book;
+    data["storyID"] = party.StoryID;
+    data["epoch"] = party.Epoch;
+
+    // save characters
+    for (auto i = 0; i < party.Members.size(); i++)
+    {
+        nlohmann::json character;
+
+        character["attributes"] = std::vector<nlohmann::json>();
+        character["equipment"] = std::vector<nlohmann::json>();
+        character["spellBook"] = std::vector<nlohmann::json>();
+        character["followers"] = std::vector<nlohmann::json>();
+        character["status"] = std::vector<int>();
+
+        character["name"] = party.Members[i].Name;
+        character["background"] = party.Members[i].Background;
+        character["image"] = party.Members[i].Image;
+        character["type"] = party.Members[i].Type;
+        character["team"] = party.Members[i].Team;
+        character["health"] = party.Members[i].Health;
+        character["maximumHealth"] = party.Members[i].MaximumHealth;
+        character["maximumEquipment"] = party.Members[i].MaximumEquipment;
+        character["spellBookLimit"] = party.Members[i].SpellBookLimit;
+        character["spellCaster"] = party.Members[i].SpellCaster;
+        character["isCivilized"] = party.Members[i].IsCivilized;
+        character["damaged"] = party.Members[i].Damaged;
+
+        equipmentJSON(character["equipment"], party.Members[i].Equipment);
+        attributesJSON(character["attributes"], party.Members[i].Attributes);
+        spellBookJSON(character["spellBook"], party.Members[i].SpellBook);
+        followersJSON(character["followers"], party.Members[i].Followers);
+
+        for (auto j = 0; j < party.Members[i].Status.size(); j++)
+        {
+            character["status"].push_back(party.Members[i].Status[j]);
+        }
+
+        data["members"].push_back(character);
+    }
+
+    // save codes
+    for (auto i = 0; i < party.Codes.size(); i++)
+    {
+        nlohmann::json code;
+
+        code.emplace("type", party.Codes[i].Type);
+        code.emplace("code", party.Codes[i].Code);
+
+        data["codes"].push_back(code);
+    }
+
+    // save vault equipment
+    equipmentJSON(data["vault"], party.Vault);
+
+    // save fleet
+    for (auto i = 0; i < party.Fleet.size(); i++)
+    {
+        nlohmann::json ship;
+
+        ship.emplace("name", party.Fleet[i].Name);
+        ship.emplace("type", party.Fleet[i].Type);
+        ship.emplace("location", party.Fleet[i].Location);
+        ship.emplace("fighting", party.Fleet[i].Fighting);
+        ship.emplace("health", party.Fleet[i].Health);
+        ship.emplace("maximumHealth", party.Fleet[i].MaximumHealth);
+        ship.emplace("maximumCargo", party.Fleet[i].MaximumCargo);
+        ship["cargo"] = std::vector<int>();
+
+        for (auto j = 0; j < party.Fleet[i].Cargo.size(); j++)
+        {
+            ship["cargo"].push_back(party.Fleet[i].Cargo[j]);
+        }
+
+        data["fleet"].push_back(ship);
+    }
+
+    // save army
+    for (auto i = 0; i < party.Army.size(); i++)
+    {
+        nlohmann::json unit;
+
+        unit.emplace("name", party.Army[i].Name);
+        unit.emplace("type", party.Army[i].Type);
+        unit.emplace("garrison", party.Army[i].Garrison);
+        unit.emplace("strength", party.Army[i].Strength);
+        unit.emplace("maximumStrength", party.Army[i].MaximumStrength);
+        unit.emplace("morale", party.Army[i].Morale);
+        unit.emplace("maximumMorale", party.Army[i].MaximumMorale);
+        unit.emplace("unique", party.Army[i].Unique);
+        unit.emplace("position", party.Army[i].Position);
+        unit.emplace("status", party.Army[i].Status);
+        unit.emplace("statusRound", party.Army[i].StatusRound);
+        unit.emplace("statusDuration", party.Army[i].StatusDuration);
+
+        data["army"].push_back(unit);
+    }
+
+    for (auto i = 0; i < party.Dead.size(); i++)
+    {
+        data["dead"].push_back(party.Dead[i]);
+    }
+
+    for (auto i = 0; i < party.InvisibleCodes.size(); i++)
+    {
+        data["invisibleCodes"].push_back(party.InvisibleCodes[i]);
+    }
+
+    for (auto i = 0; i < party.LastSelection.size(); i++)
+    {
+        data["lastSelection"].push_back(party.LastSelection[i]);
+    }
+
+    for (auto i = 0; i < party.Order.size(); i++)
+    {
+        data["order"].push_back(party.Order[i]);
+    }
+
+    for (auto i = 0; i < party.Hearts.size(); i++)
+    {
+        auto hearts = std::vector<int>();
+
+        auto heart = party.Hearts.begin();
+
+        std::advance(heart, i);
+
+        auto romance = heart->first;
+
+        auto from = romance.first;
+
+        auto to = romance.second;
+
+        auto value = party.Hearts[romance];
+
+        hearts.push_back((int)from);
+        hearts.push_back((int)to);
+        hearts.push_back(value);
+
+        data["hearts"].push_back(hearts);
+    }
+
+    std::string filename = buffer.str();
+
+    std::ofstream file(filename);
+
+    file << data.dump();
+
+    file.close();
+}
+
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story)
 {
     Story::Base *next = &Story::notImplemented;
@@ -26909,6 +27199,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::GAME && !hold)
                     {
+                        saveGame(saveParty, NULL);
+
+                        displayMessage("Game Saved!", intLB);
+
                         current = -1;
 
                         selected = false;
