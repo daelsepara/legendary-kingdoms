@@ -29379,7 +29379,7 @@ int main(int argc, char **argv)
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
 
-    createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/toxic.png");
+    createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/book1-48.png");
 
     Input::InitializeGamePads();
 
