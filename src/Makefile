@@ -1,16 +1,16 @@
 CC = clang++
-VALLEY_OF_BONES = ValleyOfBones.cpp
-VALLEY_OF_BONES_OUTPUT = ValleyOfBones.exe
+LEGENDARY_KINGDOMS = LegendaryKingdoms.cpp
+LEGENDARY_KINGDOMS_OUTPUT = LegendaryKingdoms.exe
 LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -O3 -std=c++17 -lstdc++fs
 INCLUDES = -I/usr/include/SDL2
 
-all: clean valley-of-bones
+all: clean legendary-kingdoms
 
-valley-of-bones:
-	$(CC) -Wall $(VALLEY_OF_BONES) $(LINKER_FLAGS) $(INCLUDES) -o $(VALLEY_OF_BONES_OUTPUT)
+legendary-kingdoms:
+	$(CC) -Wall $(LEGENDARY_KINGDOMS) $(LINKER_FLAGS) $(INCLUDES) -o $(LEGENDARY_KINGDOMS_OUTPUT)
 
 debug:
-	$(CC) -Wall $(VALLEY_OF_BONES) $(LINKER_FLAGS) $(INCLUDES) -o $(VALLEY_OF_BONES_OUTPUT) -DDEBUG
+	$(CC) -Wall $(LEGENDARY_KINGDOMS) $(LINKER_FLAGS) $(INCLUDES) -o $(LEGENDARY_KINGDOMS_OUTPUT) -DDEBUG
 
 clean:
 	rm -f *.exe *.o
