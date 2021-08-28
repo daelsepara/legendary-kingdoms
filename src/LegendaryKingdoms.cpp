@@ -215,6 +215,7 @@ void attributesJSON(nlohmann::json &json, std::vector<Attribute::Base> attribute
 void equipmentJSON(nlohmann::json &json, std::vector<Equipment::Base> equipment);
 
 // load/save games
+Party::Base loadGame(std::string file_name);
 void saveGame(Party::Base &party, const char *overwrite);
 
 SDL_Surface *createImage(const char *image)

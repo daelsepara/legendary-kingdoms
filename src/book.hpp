@@ -7,7 +7,8 @@ namespace Book
 {
     enum class Type
     {
-        NONE = 0,
+        NONE = -1,
+        BOOK0,
         BOOK1,
         BOOK2,
         BOOK3,
@@ -18,6 +19,7 @@ namespace Book
 
     std::map<Book::Type, const char *> Title = {
         {Book::Type::NONE, "The Game"},
+        {Book::Type::BOOK0, "The Valley of Bones (Sample)"},
         {Book::Type::BOOK1, "The Valley of Bones"},
         {Book::Type::BOOK2, "Crown and Tower"},
         {Book::Type::BOOK3, "Pirates of the Splintered Isles"},
