@@ -14394,7 +14394,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
             else if (controls[current].Type == Control::Type::SELL || controls[current].Type == Control::Type::EQUIPMENT)
             {
-                if (current_mode != controls[current].Type && current_mode != Control::Type::BACK)
+                if (current_mode != controls[current].Type)
                 {
                     offset = 0;
 
@@ -14410,7 +14410,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     current_mode = controls[current].Type;
                 }
 
-                current = FIND_CONTROL(controls, controls[current].Type);
+                current = FIND_CONTROL(controls, current_mode);
 
                 selected = false;
             }
@@ -14473,70 +14473,51 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
         }
 
-        if (buy_selection.size() > 0 || sell_selection.size() > 0)
+        if (current >= 0 && current < controls.size())
         {
-            if (current >= 0 && current < controls.size())
+            if (current_mode == Control::Type::BUY)
             {
-                if (controls[current].Type == Control::Type::BUY)
+                std::string buy_string = "";
+
+                if (buy_selection.size() > 1)
                 {
-                    std::string buy_string = "Buy ";
-
-                    if (buy_selection.size() > 1)
-                    {
-                        buy_string += "these";
-                    }
-                    else
-                    {
-                        buy_string += "this";
-                    }
-
-                    putHeader(renderer, buy_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    buy_string = "Buy these";
                 }
-                else if (controls[current].Type == Control::Type::SELL)
+                else if (buy_selection.size() == 1)
                 {
-                    std::string sell_string = "Sell ";
-
-                    if (sell_selection.size() > 1)
-                    {
-                        sell_string += "these";
-                    }
-                    else
-                    {
-                        sell_string += "this";
-                    }
-
-                    putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
-                else if (controls[current].Type == Control::Type::EQUIPMENT)
-                {
-                    std::string view_string = "View " + character.Name + "'s items";
-
-                    putHeader(renderer, view_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    buy_string = "Buy this";
                 }
                 else
                 {
-                    fillRect(renderer, textwidth, infoh, textx, texty, fg);
+                    buy_string  = "Items for sale";
                 }
-            }
-            else
-            {
-                putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-            }
-        }
-        else
-        {
-            if (current >= 0 && current < controls.size())
-            {
-                if (controls[current].Type == Control::Type::EQUIPMENT || controls[current].Type == Control::Type::SELL)
-                {
-                    std::string view_string = character.Name + "'s items";
 
-                    putHeader(renderer, view_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
-                else if (controls[current].Type == Control::Type::BUY)
+                putHeader(renderer, buy_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else if (current_mode == Control::Type::SELL)
+            {
+                std::string sell_string = "";
+
+                if (sell_selection.size() > 1)
                 {
-                    putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    sell_string = "Sell these";
                 }
+                else if (sell_selection.size() == 1)
+                {
+                    sell_string = "Sell this";
+                }
+                else
+                {
+                    sell_string = character.Name + "'s items";
+                }
+
+                putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            }
+            else if (current_mode == Control::Type::EQUIPMENT)
+            {
+                std::string view_string = character.Name + "'s items";
+
+                putHeader(renderer, view_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else
             {
