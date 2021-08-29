@@ -15173,6 +15173,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     auto sold = 0;
                     auto unsold = 0;
 
+                    auto sold_items = std::vector<int>();
+
                     for (auto i = 0; i < sell_selection.size(); i++)
                     {
                         if (sell_selection[i] >= 0 && sell_selection[i] < character.Equipment.size())
@@ -15196,8 +15198,6 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                 }
                                 else
                                 {
-                                    Engine::LOSE_EQUIPMENT(character, {item.Type});
-
                                     Engine::GAIN_MONEY(party, price);
 
                                     sold += 1;
@@ -15208,6 +15208,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                     }
 
                                     sold_string += item.Name;
+
+                                    sold_items.push_back(sell_selection[i]);
                                 }
                             }
                             else
@@ -15251,6 +15253,21 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     }
 
                     displayMessage(message, flash_color);
+
+                    if (sold_items.size() > 0)
+                    {
+                        auto remaining = std::vector<Equipment::Base>();
+
+                        for (auto i = 0; i < character.Equipment.size(); i++)
+                        {
+                            if (Engine::FIND_LIST(sold_items, i) < 0)
+                            {
+                                remaining.push_back(character.Equipment[i]);
+                            }
+                        }
+
+                        character.Equipment = remaining;
+                    }
 
                     if (sold > 0)
                     {
