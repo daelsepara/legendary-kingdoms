@@ -1403,7 +1403,7 @@ std::string characterText(Character::Base &character, bool compact)
 
     if (!compact && character.SpellCaster)
     {
-        character_text += "\n\n" += "Spellcaster";
+        character_text += "\n\nSpellcaster";
     }
 
     return character_text;
