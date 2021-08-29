@@ -27809,6 +27809,10 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Bye = NULL;
+
+            temp_string = "";
+            
             Choices.clear();
 
             auto tax = 0;
