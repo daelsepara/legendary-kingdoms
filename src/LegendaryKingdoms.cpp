@@ -1316,6 +1316,11 @@ std::string characterText(Character::Base &character, bool compact)
                 character_text += ", Team: " + std::string(Team::Descriptions[character.Team]);
             }
         }
+
+        if (character.SpellCaster)
+        {
+            character_text += ", SpellCaster";
+        }
     }
 
     if (!compact)
@@ -1333,10 +1338,11 @@ std::string characterText(Character::Base &character, bool compact)
         }
 
         auto raw_score = Engine::RAW_SCORE(character, character.Attributes[i].Type, true);
+        
         auto mod_score = 0;
 
-        character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": " + std::to_string(raw_score);
-
+        character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": ";
+        
         if (character.Attributes[i].Type == Attribute::Type::FIGHTING)
         {
             mod_score = Engine::FIGHTING_SCORE(character);
@@ -1346,34 +1352,58 @@ std::string characterText(Character::Base &character, bool compact)
             mod_score = Engine::SCORE(character, character.Attributes[i].Type);
         }
 
-        if (mod_score != raw_score)
+        if (!compact)
         {
-            character_text += "(" + std::to_string(mod_score) + ")";
+            character_text += std::to_string(raw_score);
+
+            if (mod_score != raw_score)
+            {
+                character_text += "(" + std::to_string(mod_score) + ")";
+            }
+        }
+        else
+        {
+            if (raw_score > mod_score)
+            {
+                character_text += std::to_string(raw_score);
+            }
+            else
+            {
+                character_text += std::to_string(mod_score);
+            }
         }
     }
 
     auto raw_health = character.Health;
+    
     auto mod_health = Engine::HEALTH(character);
 
-    character_text += ", Health: " + std::to_string(raw_health);
+    character_text += ", Health: ";
 
-    if (raw_health != mod_health)
+    if (!compact)
     {
-        character_text += "(" + std::to_string(mod_health) + ")";
-    }
+        character_text += std::to_string(raw_health);
 
-    if (character.SpellCaster)
-    {
-        if (!compact)
+        if (raw_health != mod_health)
         {
-            character_text += "\n\n";
+            character_text += "(" + std::to_string(mod_health) + ")";
+        }
+    }
+    else
+    {
+        if (raw_health > mod_health)
+        {
+            character_text += std::to_string(raw_health);
         }
         else
         {
-            character_text += ", ";
+            character_text += std::to_string(mod_health);
         }
+    }
 
-        character_text += "Spellcaster";
+    if (!compact && character.SpellCaster)
+    {
+        character_text += "\n\n" += "Spellcaster";
     }
 
     return character_text;
