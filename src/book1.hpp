@@ -23031,7 +23031,7 @@ namespace Book1
 
             Location = Location::Type::VIAAN_ISLAND;
 
-            Text = "You watch with mounting concern as dozens of small boats round the corner of Viaan Island and make their way directly towards you. They are war canoes, filled with tribal Bando warriors. Your crew man the ballista's (catapults are useless here against these small boats) and prepare to repel boarders.\n\nNote: Note: Because you cannot use all your ship's weapons you must lower the Fighting value of your ship by 1 point for this battle.";
+            Text = "You watch with mounting concern as dozens of small boats round the corner of Viaan Island and make their way directly towards you. They are war canoes, filled with tribal Bando warriors. Your crew man the ballista's (catapults are useless here against these small boats) and prepare to repel boarders.\n\nNote: Because you cannot use all your ship's weapons you must lower the Fighting value of your ship by 1 point for this battle.";
 
             Choices.clear();
 

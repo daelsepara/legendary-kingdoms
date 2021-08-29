@@ -1338,11 +1338,11 @@ std::string characterText(Character::Base &character, bool compact)
         }
 
         auto raw_score = Engine::RAW_SCORE(character, character.Attributes[i].Type, true);
-        
+
         auto mod_score = 0;
 
         character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": ";
-        
+
         if (character.Attributes[i].Type == Attribute::Type::FIGHTING)
         {
             mod_score = Engine::FIGHTING_SCORE(character);
@@ -1375,7 +1375,7 @@ std::string characterText(Character::Base &character, bool compact)
     }
 
     auto raw_health = character.Health;
-    
+
     auto mod_health = Engine::HEALTH(character);
 
     character_text += ", Health: ";
@@ -28997,10 +28997,10 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                     }
                                 }
                             }
-                            
+
                             // clean-up fleet
                             auto remaining_fleet = std::vector<Ship::Base>();
-                            
+
                             for (auto i = 0; i < party.Fleet.size(); i++)
                             {
                                 if (party.Fleet[i].Health > 0)
@@ -29013,7 +29013,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                     }
                                 }
                             }
-                            
+
                             party.Fleet = remaining_fleet;
 
                             current = -1;
