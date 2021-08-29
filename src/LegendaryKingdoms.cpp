@@ -28997,6 +28997,24 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                     }
                                 }
                             }
+                            
+                            // clean-up fleet
+                            auto remaining_fleet = std::vector<Ship::Base>();
+                            
+                            for (auto i = 0; i < party.Fleet.size(); i++)
+                            {
+                                if (party.Fleet[i].Health > 0)
+                                {
+                                    remaining_fleet.push_back(party.Fleet[i]);
+
+                                    if (party.CurrentShip == i)
+                                    {
+                                        party.CurrentShip = remaining_fleet.size() - 1;
+                                    }
+                                }
+                            }
+                            
+                            party.Fleet = remaining_fleet;
 
                             current = -1;
 
