@@ -14586,13 +14586,16 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         {
             for (auto i = 0; i < last - offset; i++)
             {
-                if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                if (controls[i].Type == Control::Type::ACTION)
                 {
-                    thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
-                }
-                else
-                {
-                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
+                    if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                    {
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
+                    }
                 }
             }
         }
