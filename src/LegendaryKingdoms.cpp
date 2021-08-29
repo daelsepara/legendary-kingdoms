@@ -14334,7 +14334,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     auto scrollDown = false;
     auto hold = false;
 
-    auto selection = std::vector<int>();
+    auto buy_selection = std::vector<int>();
+    auto sell_selection = std::vector<int>();
 
     auto current_mode = Control::Type::BUY;
 
@@ -14365,7 +14366,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh / 2, startx, starty + text_bounds - (5 * bigger_boxh / 2) - infoh - box_space);
 
-        putHeader(renderer, (selection.size() > 0 ? (std::string("Selected (") + std::to_string(selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
+        putHeader(renderer, (buy_selection.size() > 0 ? (std::string("Selected (") + std::to_string(buy_selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
 
         if (current >= 0 && current < controls.size())
         {
@@ -14373,21 +14374,16 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (current_mode != Control::Type::BUY)
                 {
-                    if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT)
+                    offset = 0;
+
+                    last = offset + limit;
+
+                    if (last > shop.size())
                     {
-                        selection.clear();
-
-                        offset = 0;
-
-                        last = offset + limit;
-
-                        if (last > shop.size())
-                        {
-                            last = shop.size();
-                        }
-
-                        controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
+                        last = shop.size();
                     }
+
+                    controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
 
                     current_mode = Control::Type::BUY;
                 }
@@ -14396,78 +14392,46 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                 selected = false;
             }
-            else if (controls[current].Type == Control::Type::SELL)
+            else if (controls[current].Type == Control::Type::SELL || controls[current].Type == Control::Type::EQUIPMENT)
             {
-                if (current_mode != Control::Type::SELL)
+                if (current_mode != controls[current].Type && current_mode != Control::Type::BACK)
                 {
-                    if (current_mode == Control::Type::BUY)
+                    offset = 0;
+
+                    last = offset + limit;
+
+                    if (last > character.Equipment.size())
                     {
-                        selection.clear();
-
-                        offset = 0;
-
-                        last = offset + limit;
-
-                        if (last > character.Equipment.size())
-                        {
-                            last = character.Equipment.size();
-                        }
-
-                        controls = shopList(window, renderer, character.Equipment, shop, offset, last, limit, textx, offsety);
+                        last = character.Equipment.size();
                     }
 
-                    current_mode = Control::Type::SELL;
+                    controls = shopList(window, renderer, character.Equipment, shop, offset, last, limit, textx, offsety);
+
+                    current_mode = controls[current].Type;
                 }
 
-                current = FIND_CONTROL(controls, Control::Type::SELL);
-
-                selected = false;
-            }
-            else if (controls[current].Type == Control::Type::EQUIPMENT)
-            {
-                if (current_mode != Control::Type::EQUIPMENT)
-                {
-                    if (current_mode == Control::Type::BUY)
-                    {
-                        selection.clear();
-
-                        offset = 0;
-
-                        last = offset + limit;
-
-                        if (last > character.Equipment.size())
-                        {
-                            last = character.Equipment.size();
-                        }
-
-                        controls = shopList(window, renderer, character.Equipment, shop, offset, last, limit, textx, offsety);
-                    }
-
-                    current_mode = Control::Type::EQUIPMENT;
-                }
-
-                current = FIND_CONTROL(controls, Control::Type::EQUIPMENT);
+                current = FIND_CONTROL(controls, controls[current].Type);
 
                 selected = false;
             }
         }
 
-        if (selection.size() > 0)
+        if (buy_selection.size() > 0 || sell_selection.size() > 0)
         {
             std::string selection_string = "";
 
             if (current_mode == Control::Type::BUY)
             {
-                for (auto i = 0; i < selection.size(); i++)
+                for (auto i = 0; i < buy_selection.size(); i++)
                 {
-                    if (selection[i] >= 0 && selection[i] < shop.size())
+                    if (buy_selection[i] >= 0 && buy_selection[i] < shop.size())
                     {
                         if (i > 0)
                         {
                             selection_string += ", ";
                         }
 
-                        auto item = std::get<0>(shop[selection[i]]);
+                        auto item = std::get<0>(shop[buy_selection[i]]);
 
                         selection_string += item.Name;
                     }
@@ -14475,16 +14439,16 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
             else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT)
             {
-                for (auto i = 0; i < selection.size(); i++)
+                for (auto i = 0; i < sell_selection.size(); i++)
                 {
-                    if (selection[i] >= 0 && selection[i] < character.Equipment.size())
+                    if (sell_selection[i] >= 0 && sell_selection[i] < character.Equipment.size())
                     {
                         if (i > 0)
                         {
                             selection_string += ", ";
                         }
 
-                        auto item = character.Equipment[selection[i]];
+                        auto item = character.Equipment[sell_selection[i]];
 
                         selection_string += item.Name;
                     }
@@ -14509,7 +14473,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
         }
 
-        if (selection.size() > 0)
+        if (buy_selection.size() > 0 || sell_selection.size() > 0)
         {
             if (current >= 0 && current < controls.size())
             {
@@ -14517,7 +14481,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     std::string buy_string = "Buy ";
 
-                    if (selection.size() > 1)
+                    if (buy_selection.size() > 1)
                     {
                         buy_string += "these";
                     }
@@ -14532,7 +14496,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     std::string sell_string = "Sell ";
 
-                    if (selection.size() > 1)
+                    if (sell_selection.size() > 1)
                     {
                         sell_string += "these";
                     }
@@ -14551,7 +14515,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
                 else
                 {
-                    putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    fillRect(renderer, textwidth, infoh, textx, texty, fg);
                 }
             }
             else
@@ -14563,20 +14527,20 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         {
             if (current >= 0 && current < controls.size())
             {
-                if (controls[current].Type == Control::Type::EQUIPMENT)
+                if (controls[current].Type == Control::Type::EQUIPMENT || controls[current].Type == Control::Type::SELL)
                 {
-                    std::string view_string = "View " + character.Name + "'s items";
+                    std::string view_string = character.Name + "'s items";
 
                     putHeader(renderer, view_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
-                else
+                else if (controls[current].Type == Control::Type::BUY)
                 {
                     putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, "Items for Sale", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                fillRect(renderer, textwidth, infoh, textx, texty, fg);
             }
         }
 
@@ -14588,9 +14552,27 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (controls[i].Type == Control::Type::ACTION)
                 {
-                    if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                    if (current_mode == Control::Type::BUY)
                     {
-                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        if (Engine::FIND_LIST(buy_selection, offset + i) >= 0)
+                        {
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
+                        }
+                    }
+                    else if (current_mode == Control::Type::SELL)
+                    {
+                        if (Engine::FIND_LIST(sell_selection, offset + i) >= 0)
+                        {
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
+                        }
                     }
                     else
                     {
@@ -14762,26 +14744,35 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (current >= 0 && current < controls.size())
                 {
-                    auto result = Engine::FIND_LIST(selection, offset + current);
+                    if (current_mode == Control::Type::BUY)
+                    {
+                        auto result = Engine::FIND_LIST(buy_selection, offset + current);
 
-                    if (result >= 0)
-                    {
-                        selection.erase(selection.begin() + result);
-                    }
-                    else
-                    {
-                        if (current_mode == Control::Type::BUY)
+                        if (result >= 0)
+                        {
+                            buy_selection.erase(buy_selection.begin() + result);
+                        }
+                        else
                         {
                             if ((offset + current) >= 0 && (offset + current) < shop.size())
                             {
-                                selection.push_back(offset + current);
+                                buy_selection.push_back(offset + current);
                             }
                         }
-                        else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT)
+                    }
+                    else if (current_mode == Control::Type::SELL)
+                    {
+                        auto result = Engine::FIND_LIST(sell_selection, offset + current);
+
+                        if (result >= 0)
+                        {
+                            sell_selection.erase(sell_selection.begin() + result);
+                        }
+                        else
                         {
                             if ((offset + current) >= 0 && (offset + current) < character.Equipment.size())
                             {
-                                selection.push_back(offset + current);
+                                sell_selection.push_back(offset + current);
                             }
                         }
                     }
@@ -14791,26 +14782,26 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
             else if (controls[current].Type == Control::Type::BUY && !hold)
             {
-                if (selection.size() > 0)
+                if (buy_selection.size() > 0)
                 {
                     auto total = 0;
 
                     auto items = std::vector<std::tuple<Equipment::Base, int>>();
                     auto codes_gained = std::vector<Codes::Base>();
 
-                    for (auto i = 0; i < selection.size(); i++)
+                    for (auto i = 0; i < buy_selection.size(); i++)
                     {
-                        if (selection[i] >= 0 && selection[i] < shop.size())
+                        if (buy_selection[i] >= 0 && buy_selection[i] < shop.size())
                         {
-                            auto item = std::get<0>(shop[selection[i]]);
+                            auto item = std::get<0>(shop[buy_selection[i]]);
 
-                            auto price = std::get<1>(shop[selection[i]]);
+                            auto price = std::get<1>(shop[buy_selection[i]]);
 
-                            auto supply = std::get<3>(shop[selection[i]]);
+                            auto supply = std::get<3>(shop[buy_selection[i]]);
 
                             if (price > 0 && (supply == -1 || supply > 0))
                             {
-                                items.push_back({item, selection[i]});
+                                items.push_back({item, buy_selection[i]});
 
                                 total += price;
                             }
@@ -14894,15 +14885,13 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     }
                 }
 
-                selection.clear();
-
                 current = FIND_CONTROL(controls, Control::Type::BUY);
 
                 selected = false;
             }
             else if (controls[current].Type == Control::Type::SELL && !hold)
             {
-                if (selection.size() > 0)
+                if (sell_selection.size() > 0)
                 {
                     std::string sold_string = "";
                     std::string unsold_string = "";
@@ -14910,11 +14899,11 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     auto sold = 0;
                     auto unsold = 0;
 
-                    for (auto i = 0; i < selection.size(); i++)
+                    for (auto i = 0; i < sell_selection.size(); i++)
                     {
-                        if (selection[i] >= 0 && selection[i] < character.Equipment.size())
+                        if (sell_selection[i] >= 0 && sell_selection[i] < character.Equipment.size())
                         {
-                            auto item = character.Equipment[selection[i]];
+                            auto item = character.Equipment[sell_selection[i]];
 
                             auto price = Engine::PRICE_SELL(shop, item.Type);
 
@@ -15008,7 +14997,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     displayMessage("Please choose items you wish to sell!", intRD);
                 }
 
-                selection.clear();
+                sell_selection.clear();
 
                 current = FIND_CONTROL(controls, Control::Type::SELL);
 
