@@ -13643,7 +13643,7 @@ namespace Book1
                 {Cargo::Type::STEEL, 3000, 3000},
                 {Cargo::Type::SPICES, 3200, 3200},
                 {Cargo::Type::WINE, 2000, 2000},
-                {Cargo::Type::SLAVES, 7000, 700}
+                {Cargo::Type::SLAVES, 700, 700}
 
             };
 
