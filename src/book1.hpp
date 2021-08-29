@@ -16312,7 +16312,7 @@ namespace Book1
             }
             else
             {
-                return {Book::Type::NONE, 620};
+                return {Book::Type::BOOK1, 620};
             }
         }
     };
