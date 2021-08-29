@@ -13864,12 +13864,12 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         last = shop.size();
                     }
 
+                    current_mode = Control::Type::BUY_SHIP;
+
                     controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
 
-                    current_mode = Control::Type::BUY_SHIP;
+                    current = FIND_CONTROL(controls, Control::Type::BUY_SHIP);
                 }
-
-                current = FIND_CONTROL(controls, Control::Type::BUY_SHIP);
 
                 selected = false;
             }
@@ -13889,9 +13889,9 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     controls = shipList(window, renderer, party.Fleet, shop, offset, last, limit, textx, offsety, true, true);
 
                     current_mode = controls[current].Type;
-                }
 
-                current = FIND_CONTROL(controls, current_mode);
+                    current = FIND_CONTROL(controls, current_mode);
+                }
 
                 selected = false;
             }
@@ -14011,6 +14011,10 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         else if (current_mode == Control::Type::PARTY)
         {
             putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+        }
+        else
+        {
+            fillRect(renderer, textwidth, infoh, textx, texty, fg);
         }
 
         fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
@@ -14586,9 +14590,9 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
 
                     current_mode = Control::Type::BUY;
-                }
 
-                current = FIND_CONTROL(controls, Control::Type::BUY);
+                    current = FIND_CONTROL(controls, Control::Type::BUY);
+                }
 
                 selected = false;
             }
@@ -14608,9 +14612,9 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     controls = shopList(window, renderer, character.Equipment, shop, offset, last, limit, textx, offsety);
 
                     current_mode = controls[current].Type;
-                }
 
-                current = FIND_CONTROL(controls, current_mode);
+                    current = FIND_CONTROL(controls, current_mode);
+                }
 
                 selected = false;
             }
