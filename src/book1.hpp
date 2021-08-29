@@ -11582,7 +11582,7 @@ namespace Book1
             Controls = Story::Controls::NONE;
         }
 
-        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 343}; }
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 343}; }
     };
 
     class Story344 : public Story::Base
@@ -18747,7 +18747,7 @@ namespace Book1
             Controls = Story::Controls::NONE;
         }
 
-        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 558}; }
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 558}; }
     };
 
     class Story559 : public Story::Base
@@ -26709,7 +26709,7 @@ namespace Book1
             Controls = Story::Controls::NONE;
         }
 
-        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 788}; }
+        Engine::Destination Background(Party::Base &party) { return {Book::Type::BOOK1, 788}; }
     };
 
     class Story789 : public Story::Base
