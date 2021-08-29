@@ -24080,7 +24080,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::SPEAK_BANDO}))
             {
-                Choices.push_back(Choice::Base("Reassure the Bando (Team check: Charisma 4+, Successes: 5)", {Book::Type::BOOK1, 339}, {Book::Type::BOOK1, 52}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 6, 4));
+                Choices.push_back(Choice::Base("Reassure the Bando (Team check: Charisma 4+, Successes: 5)", {Book::Type::BOOK1, 339}, {Book::Type::BOOK1, 52}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 5));
             }
         }
 
