@@ -7112,6 +7112,10 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            temp_string = "";
+            
+            Bye = NULL;
+
             Choices.clear();
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
@@ -9160,6 +9164,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Bye = NULL;
+
             temp_string = "";
 
             Choices.clear();
@@ -25629,6 +25635,10 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            temp_string = "";
+
+            Bye = NULL;
+
             Choices.clear();
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
@@ -26010,6 +26020,10 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            temp_string = "";
+
+            Bye = NULL;
+
             Choices.clear();
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))

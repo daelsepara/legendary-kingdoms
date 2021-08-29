@@ -27355,6 +27355,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                             if (increase >= 0)
                                             {
+                                                if (increase > 0)
+                                                {
+                                                    addBye(story, party.Members[target].Name + " gains +" + std::to_string(increase) + " " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + "!");
+                                                }
+
                                                 Engine::GAIN_MONEY(party, -story->Choices[choice].Value);
 
                                                 next = findStory(story->Choices[choice].Destination);
@@ -27419,6 +27424,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     if (Engine::SCORE(party.Members[target], story->Choices[choice].Attributes[0]) == attribute_min)
                                     {
                                         Engine::GAIN_SCORE(party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Value);
+
+                                        if (story->Choices[choice].Value > 0)
+                                        {
+                                            addBye(story, party.Members[target].Name + " gains +" + std::to_string(story->Choices[choice].Value) + " " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + "!");
+                                        }
 
                                         Engine::LOSE_EQUIPMENT(party, story->Choices[choice].Team, equipment);
 
