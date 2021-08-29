@@ -23056,6 +23056,8 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                                 else
                                 {
                                     message = "Your " + party.Army[party_unit].Name + " is routed!";
+
+                                    party.Army[party_unit].Morale = 0;
                                 }
 
                                 Engine::UPDATE_ARMY(party.Army, location);
@@ -23073,6 +23075,8 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                                 else
                                 {
                                     message = "The " + enemyArmy[enemy_unit].Name + " is routed!";
+
+                                    enemyArmy[enemy_unit].Morale = 0;
                                 }
 
                                 Engine::UPDATE_ARMY(enemyArmy, Location::Type::NONE);
