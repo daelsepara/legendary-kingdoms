@@ -14802,7 +14802,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                     }
-                    else if (current_mode == Control::Type::SELL || current_mode == Control::Type::PARTY)
+                    else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT)
                     {
                         if (Engine::FIND_LIST(sell_selection, offset + i) >= 0)
                         {
@@ -16969,43 +16969,36 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
     auto selection = -1;
 
-    while (!done)
+    if (!Engine::VERIFY_EQUIPMENT_LIMIT(character) || (equipment_limit > -1 && !Engine::VERIFY_EQUIPMENT_LIMIT(character, equipment_limit)))
     {
-        if (!Engine::VERIFY_EQUIPMENT_LIMIT(character) || (equipment_limit > -1 && !Engine::VERIFY_EQUIPMENT_LIMIT(character, equipment_limit)))
+        if (equipment_limit > -1)
         {
-            if (equipment_limit > -1)
+            if (equipment_limit > 0)
             {
-                if (equipment_limit > 0)
-                {
-                    message = "You are carrying more than " + std::to_string(equipment_limit) + " item";
+                message = "You are carrying more than " + std::to_string(equipment_limit) + " item";
 
-                    if (equipment_limit > 1)
-                    {
-                        message += "s";
-                    }
-
-                    message += ". Drop or transfer excess items.";
-                }
-                else
+                if (equipment_limit > 1)
                 {
-                    message = "Drop all your items.";
+                    message += "s";
                 }
+
+                message += ". Drop or transfer excess items.";
             }
             else
             {
-                message = "You are carrying too many items! Drop or transfer excess items.";
+                message = "Drop all your items.";
             }
-
-            displayMessage(message, intRD);
         }
-
-        last = offset + limit;
-
-        if (last > character.Equipment.size())
+        else
         {
-            last = character.Equipment.size();
+            message = "You are carrying too many items! Drop or transfer excess items.";
         }
 
+        displayMessage(message, intRD);
+    }
+
+    while (!done)
+    {
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Items");
 
         fillWindow(renderer, intWH);

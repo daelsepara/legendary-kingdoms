@@ -16624,9 +16624,9 @@ namespace Book1
         {
             Engine::GAIN_MONEY(party, 500);
 
-            Take = {Equipment::GOLD_BULLION, Equipment::INCENSE, Equipment::ROYAL_LEDGER};
+            Take = {Equipment::GOLD_BULLION, Equipment::INCENSE, Equipment::ROYAL_LEDGER, Equipment::WAYFINDER_ROD};
 
-            Limit = 3;
+            Limit = 4;
 
             Engine::GET_CODES(party, {Codes::A(83)});
         }
