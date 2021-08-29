@@ -3312,6 +3312,11 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Engine::CONSOLIDATE(party);
+        }
     };
 
     class Story094 : public Story::Base
@@ -5015,6 +5020,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::CONSOLIDATE(party);
+
             Take = {Equipment::BONE_ARMOUR2};
 
             Limit = 1;
@@ -9153,6 +9160,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            temp_string = "";
+
             Choices.clear();
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
@@ -11465,6 +11474,8 @@ namespace Book1
         void Event(Party::Base &party)
         {
             party.CurrentShip = -1;
+
+            Engine::CONSOLIDATE(party);
         }
     };
 

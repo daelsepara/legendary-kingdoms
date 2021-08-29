@@ -55,7 +55,7 @@ namespace Team
         {Team::Type::BRASH, "Brash"},
         {Team::Type::SKULLCRACKER, "Skullcracker"},
         {Team::Type::SOLO, "Solo"},
-        {Team::Type::SPELLCASTERS, "Spellcasers"},
+        {Team::Type::SPELLCASTERS, "Spellcasters"},
         {Team::Type::FIGHTERS, "Fighters"},
         {Team::Type::WEAPONS, "Weapons"},
         {Team::Type::DISTRACTION, "Distraction"},
@@ -63,7 +63,7 @@ namespace Team
         {Team::Type::CHASE, "Chase"},
         {Team::Type::MAGICAL_DOOR, "Magical door"},
         {Team::Type::WALL_CLIMBING, "Wall-climbing"},
-        {Team::Type::ZIGGURAT, "Wall-climbing"},
+        {Team::Type::ZIGGURAT, "Ziggurat"},
         {Team::Type::ASSASSINATION_DESCANTOS, "Assassination of Descantos"},
         {Team::Type::EVERCHILD_SECURITY, "Everchild's Personal Security"},
         {Team::Type::SHADOW_ROOM, "Shadow Room"}};
