@@ -14866,12 +14866,18 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             displayMessage(message, intLB);
 
                             controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
+
+                            buy_selection.clear();
                         }
                         else
                         {
                             displayMessage("You do not have enough silver coins!", intRD);
                         }
                     }
+                }
+                else
+                {
+                    displayMessage("Please select the items you wish to buy!", intRD);
                 }
 
                 current = FIND_CONTROL(controls, Control::Type::BUY);
@@ -14983,7 +14989,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
                 else
                 {
-                    displayMessage("Please choose items you wish to sell!", intRD);
+                    displayMessage("Please select the items you wish to sell!", intRD);
                 }
 
                 sell_selection.clear();
