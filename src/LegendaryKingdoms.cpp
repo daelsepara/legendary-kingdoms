@@ -1407,7 +1407,7 @@ std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Ch
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (attributes.size() > limit)
     {
@@ -1459,7 +1459,7 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (army.size() > limit)
     {
@@ -1522,7 +1522,7 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (army.size() > limit)
     {
@@ -1570,7 +1570,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (ships.size() > limit)
     {
@@ -1639,7 +1639,7 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (hearts.size() > limit)
     {
@@ -1690,7 +1690,7 @@ std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::v
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (teams.size() > limit)
     {
@@ -3703,7 +3703,7 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (list.size() > limit)
     {
@@ -3765,7 +3765,7 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (list.size() > limit)
     {
@@ -3821,7 +3821,7 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (list.size() > limit)
     {
@@ -3878,7 +3878,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (spells.size() > limit)
     {
@@ -3942,7 +3942,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (spells.size() > limit)
     {
@@ -3996,7 +3996,7 @@ std::vector<Button> rechargeList(SDL_Window *window, SDL_Renderer *renderer, std
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (spells.size() > limit)
     {
@@ -4101,7 +4101,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (monsters.size() > limit)
     {
@@ -4161,7 +4161,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (monsters.size() > limit)
     {
@@ -4225,7 +4225,7 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (party.size() > limit)
     {
@@ -4285,7 +4285,7 @@ std::vector<Button> restList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (party.size() > limit)
     {
@@ -5151,7 +5151,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (ships.size() > limit)
     {
@@ -5209,7 +5209,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (ships.size() > limit)
     {
@@ -13682,7 +13682,7 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (shop.size() > limit)
     {
@@ -13739,7 +13739,7 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (equipment.size() > limit)
     {
@@ -13873,9 +13873,9 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                 selected = false;
             }
-            else if (controls[current].Type == Control::Type::SELL_SHIP || controls[current].Type == Control::Type::PARTY)
+            else if (controls[current].Type == Control::Type::SELL_SHIP)
             {
-                if (current_mode != controls[current].Type)
+                if (current_mode != Control::Type::SELL_SHIP)
                 {
                     offset = 0;
 
@@ -13888,9 +13888,31 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                     controls = shipList(window, renderer, party.Fleet, shop, offset, last, limit, textx, offsety, true, true);
 
-                    current_mode = controls[current].Type;
+                    current_mode = Control::Type::SELL_SHIP;
 
-                    current = FIND_CONTROL(controls, current_mode);
+                    current = FIND_CONTROL(controls, Control::Type::SELL_SHIP);
+                }
+
+                selected = false;
+            }
+            else if (controls[current].Type == Control::Type::PARTY)
+            {
+                if (current_mode != Control::Type::PARTY)
+                {
+                    offset = 0;
+
+                    last = offset + limit;
+
+                    if (last > party.Fleet.size())
+                    {
+                        last = party.Fleet.size();
+                    }
+
+                    controls = shipList(window, renderer, party.Fleet, shop, offset, last, limit, textx, offsety, true, true);
+
+                    current_mode = Control::Type::PARTY;
+
+                    current = FIND_CONTROL(controls, Control::Type::PARTY);
                 }
 
                 selected = false;
@@ -16399,7 +16421,7 @@ std::vector<Button> repairList(SDL_Window *window, SDL_Renderer *renderer, std::
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (ships.size() > limit)
     {
@@ -20736,7 +20758,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (ships.size() > limit)
     {
@@ -20793,7 +20815,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (ships.size() > limit)
     {
@@ -20814,19 +20836,17 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     if (buy_button)
     {
-        idx = controls.size();
-
         controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY_SHIP));
+
+        idx += 1;
     }
 
     if (sell_button)
     {
-        idx = controls.size();
-
         controls.push_back(Button(idx, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, (buy_button ? (startx + gridsize) : startx), buttony, Control::Type::SELL_SHIP));
-    }
 
-    idx = controls.size();
+        idx += 1;
+    }
 
     auto grid_offset = 0;
 
@@ -20875,7 +20895,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (ships.size() > limit)
     {
@@ -20896,19 +20916,17 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     if (buy_button)
     {
-        idx = controls.size();
-
         controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY_SHIP));
+
+        idx += 1;
     }
 
     if (sell_button)
     {
-        idx = controls.size();
-
         controls.push_back(Button(idx, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, (buy_button ? (startx + gridsize) : startx), buttony, Control::Type::SELL_SHIP));
-    }
 
-    idx = controls.size();
+        idx += 1;
+    }
 
     auto grid_offset = 0;
 
@@ -20957,7 +20975,7 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (cargo.size() > limit)
     {
@@ -21016,7 +21034,7 @@ std::vector<Button> buyCargo(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (cargo.size() > limit)
     {
@@ -21067,7 +21085,7 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (ships.size() > limit)
     {
@@ -22278,7 +22296,7 @@ void renderArmy(SDL_Renderer *renderer, TTF_Font *font, std::vector<Army::Base> 
 template <typename T>
 void popupScrolls(std::vector<Button> &controls, std::vector<T> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button)
 {
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (list.size() > limit)
     {
@@ -22319,7 +22337,7 @@ std::vector<Button> popupMoney(SDL_Window *window, SDL_Renderer *renderer, Party
     controls[1].W = controls[1].Surface->w;
     controls[1].H = controls[1].Surface->h;
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, idx, idx, offsetx + button_space, offsety + popuph - button_space - buttonh, Control::Type::CONFIRM));
     controls.push_back(Button(idx + 1, "icons/add.png", idx, idx + 2, idx + 1, idx + 1, offsetx + button_space + gridsize, offsety + popuph - button_space - buttonh, Control::Type::PLUS));
@@ -24232,7 +24250,7 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (choices.size() > limit)
     {
@@ -25008,7 +25026,7 @@ std::vector<Button> createFileList(SDL_Window *window, SDL_Renderer *renderer, s
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (list.size() > limit)
     {
@@ -29115,7 +29133,7 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
         }
     }
 
-    auto idx = controls.size();
+    auto idx = (int)controls.size();
 
     if (topics.size() > limit)
     {
