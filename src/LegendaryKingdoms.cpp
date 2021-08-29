@@ -14989,7 +14989,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     if (sold > 0)
                     {
                         offset = 0;
-                        
+
                         last = offset + limit;
 
                         if (last > character.Equipment.size())
