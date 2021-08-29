@@ -3512,5 +3512,24 @@ namespace Engine
 
         return (characters > 0);
     }
+
+    int PRICE_SELL(std::vector<Engine::EquipmentPrice> &priceList, Equipment::Type equipment)
+    {
+        auto price = -1;
+
+        for (auto i = 0; i < priceList.size(); i++)
+        {
+            auto item = std::get<0>(priceList[i]);
+
+            if (item.Type == equipment)
+            {
+                price = std::get<2>(priceList[i]);
+
+                break;
+            }
+        }
+
+        return price;
+    }
 }
 #endif
