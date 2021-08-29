@@ -14573,13 +14573,13 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto current_mode = Control::Type::BUY;
 
+    if (!Engine::VERIFY_EQUIPMENT_LIMIT(character))
+    {
+        displayMessage("You are carrying too many items! Drop, sell, or transfer excess items.", intRD);
+    }
+
     while (!done)
     {
-        if (!Engine::VERIFY_EQUIPMENT_LIMIT(character))
-        {
-            displayMessage("You are carrying too many items! Drop, sell, or transfer excess items.", intRD);
-        }
-
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Buy/Sell Items");
 
         fillWindow(renderer, intWH);
