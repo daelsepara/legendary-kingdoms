@@ -14802,7 +14802,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                     }
-                    else if (current_mode == Control::Type::SELL)
+                    else if (current_mode == Control::Type::SELL || current_mode == Control::Type::PARTY)
                     {
                         if (Engine::FIND_LIST(sell_selection, offset + i) >= 0)
                         {
@@ -25040,7 +25040,7 @@ std::vector<Button> createFileList(SDL_Window *window, SDL_Renderer *renderer, s
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, preview.c_str(), clrBK, intBE, list_buttonw, 100, text_space), i, i, (i > 0 ? i - 1 : i), ((i < (last - start) - 1) ? i + 1 : i), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, preview.c_str(), clrBK, intBE, list_buttonw, 100, text_space), i, i, (i > 0 ? i - 1 : i), (list.size() > limit ? (start > 0 && (list.size() - last) > 0 ? i + 3 : (start > 0 || (list.size() - last) > 0 ? i + 2 : i + 1)) : i + 1), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
