@@ -3531,5 +3531,24 @@ namespace Engine
 
         return price;
     }
+
+    int PRICE_SELL(std::vector<Engine::ShipPrices> &priceList, Ship::Type ship)
+    {
+        auto price = -1;
+
+        for (auto i = 0; i < priceList.size(); i++)
+        {
+            auto item = std::get<0>(priceList[i]);
+
+            if (item.Type == ship)
+            {
+                price = std::get<2>(priceList[i]);
+
+                break;
+            }
+        }
+
+        return price;
+    }
 }
 #endif

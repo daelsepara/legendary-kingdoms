@@ -194,6 +194,7 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, Control::Type mode);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety, bool cargo, bool confirm_button, bool back_button);
+std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, std::vector<Engine::ShipPrices> &shop, int start, int last, int limit, int offsetx, int offsety, bool buy_button, bool sell_button);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::ShipPrices> &ships, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::ShipPrices> &ships, int start, int last, int limit, int offsetx, int offsety, bool buy_button, bool sell_button);
 std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::EquipmentPrice> &shop, int start, int last, int limit, int offsetx, int offsety);
@@ -1414,14 +1415,14 @@ std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Ch
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (attributes.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -1466,14 +1467,14 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (army.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -1529,14 +1530,14 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (army.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -1577,14 +1578,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (ships.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -1646,14 +1647,14 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (hearts.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -1697,14 +1698,14 @@ std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::v
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (teams.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -1794,7 +1795,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         party_string += " (C)";
                     }
 
-                    count++;
+                    count += 1;
                 }
 
                 putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
@@ -2271,7 +2272,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                             party_string += " (C)";
                         }
 
-                        count++;
+                        count += 1;
                     }
 
                     putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
@@ -2519,7 +2520,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 {
                     if (character > 0)
                     {
-                        character--;
+                        character -= 1;
                     }
 
                     if (character >= 0 && character < party.Members.size())
@@ -2562,7 +2563,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 {
                     if (character < party.Members.size() - 1)
                     {
-                        character++;
+                        character += 1;
                     }
 
                     if (character >= 0 && character < party.Members.size())
@@ -2850,7 +2851,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                     {
                         if (character > 0)
                         {
-                            character--;
+                            character -= 1;
                         }
 
                         if (character >= 0 && character < characters.size())
@@ -2881,7 +2882,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                     {
                         if (character < characters.size() - 1)
                         {
-                            character++;
+                            character += 1;
                         }
 
                         if (character >= 0 && character < characters.size())
@@ -3205,7 +3206,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
                     if (character > 0)
                     {
-                        character--;
+                        character -= 1;
                     }
 
                     if (character >= 0 && character < characters.size())
@@ -3261,7 +3262,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
                     if (character < characters.size() - 1)
                     {
-                        character++;
+                        character += 1;
                     }
 
                     if (character >= 0 && character < characters.size())
@@ -3710,14 +3711,14 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (list.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -3772,14 +3773,14 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (list.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -3828,14 +3829,14 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (list.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -3885,14 +3886,14 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (spells.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -3949,14 +3950,14 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (spells.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -4003,14 +4004,14 @@ std::vector<Button> rechargeList(SDL_Window *window, SDL_Renderer *renderer, std
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (spells.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -4108,14 +4109,14 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (monsters.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -4168,14 +4169,14 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (monsters.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -4232,14 +4233,14 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (party.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -4292,14 +4293,14 @@ std::vector<Button> restList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (party.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -4439,19 +4440,19 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
                                 {
                                     thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
 
-                                    reduced_damage++;
+                                    reduced_damage += 1;
                                 }
                             }
 
                             if (col < cols)
                             {
-                                col++;
+                                col += 1;
                             }
                             else
                             {
                                 col = 0;
 
-                                row++;
+                                row += 1;
                             }
                         }
                     }
@@ -4974,19 +4975,19 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                 {
                                     thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
 
-                                    damage++;
+                                    damage += 1;
                                 }
                             }
 
                             if (col < cols)
                             {
-                                col++;
+                                col += 1;
                             }
                             else
                             {
                                 col = 0;
 
-                                row++;
+                                row += 1;
                             }
                         }
                     }
@@ -5158,14 +5159,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (ships.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -5216,14 +5217,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (ships.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -5394,19 +5395,19 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                     {
                                         thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), (direction == 0 ? intLB : intRD), 2);
 
-                                        damage++;
+                                        damage += 1;
                                     }
                                 }
 
                                 if (col < cols)
                                 {
-                                    col++;
+                                    col += 1;
                                 }
                                 else
                                 {
                                     col = 0;
 
-                                    row++;
+                                    row += 1;
                                 }
                             }
                         }
@@ -5913,7 +5914,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                         {
                                             thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intLB, 2);
 
-                                            damage++;
+                                            damage += 1;
                                         }
                                     }
                                     else
@@ -5929,20 +5930,20 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                         {
                                             thickRect(renderer, size_dice, size_dice, offsetx + (col) * (box_space + size_dice), offsety + (row) * (box_space + size_dice), intRD, 2);
 
-                                            damage++;
+                                            damage += 1;
                                         }
                                     }
                                 }
 
                                 if (col < cols)
                                 {
-                                    col++;
+                                    col += 1;
                                 }
                                 else
                                 {
                                     col = 0;
 
-                                    row++;
+                                    row += 1;
                                 }
                             }
                         }
@@ -6701,13 +6702,13 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                 if (col < cols)
                                 {
-                                    col++;
+                                    col += 1;
                                 }
                                 else
                                 {
                                     col = 0;
 
-                                    row++;
+                                    row += 1;
                                 }
                             }
                         }
@@ -6980,13 +6981,13 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
                                 if (col < cols)
                                 {
-                                    col++;
+                                    col += 1;
                                 }
                                 else
                                 {
                                     col = 0;
 
-                                    row++;
+                                    row += 1;
                                 }
                             }
                         }
@@ -8381,20 +8382,20 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                                     if (stage == Attribute::Test::CHECK)
                                     {
-                                        success_counter++;
+                                        success_counter += 1;
                                     }
                                 }
                             }
 
                             if (col < cols)
                             {
-                                col++;
+                                col += 1;
                             }
                             else
                             {
                                 col = 0;
 
-                                row++;
+                                row += 1;
                             }
                         }
                     }
@@ -12695,7 +12696,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             if (fleeRound == 0)
             {
-                fleeRound++;
+                fleeRound += 1;
             }
         }
 
@@ -12904,7 +12905,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             }
                         }
 
-                        count++;
+                        count += 1;
                     }
 
                     putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
@@ -13137,7 +13138,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                                             if (Engine::HAS_STATUS(party.Members[result], Character::Status::ATTACK2_ENEMY0_ROUND0))
                                                             {
-                                                                round0_attacks++;
+                                                                round0_attacks += 1;
 
                                                                 if (opponent != 0 || round0_attacks > 1 || combatRound != 0)
                                                                 {
@@ -13427,7 +13428,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 canFlee = storyFlee;
 
-                                combatRound++;
+                                combatRound += 1;
 
                                 Engine::REMOVE_STATUS(party, Character::Status::EXTRA_MAGIC_ROUND0);
 
@@ -13689,14 +13690,14 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (shop.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -13746,14 +13747,14 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (equipment.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -13828,17 +13829,13 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     auto scrollDown = false;
     auto hold = false;
 
-    auto selection = std::vector<int>();
+    auto buy_selection = std::vector<int>();
+    auto sell_selection = std::vector<int>();
+
+    auto current_mode = Control::Type::BUY_SHIP;
 
     while (!done)
     {
-        last = offset + limit;
-
-        if (last > shop.size())
-        {
-            last = shop.size();
-        }
-
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Buy/Sell Ships");
 
         fillWindow(renderer, intWH);
@@ -13849,37 +13846,123 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         }
 
         putHeader(renderer, "Money", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (5 * bigger_boxh / 2) - 2 * infoh - box_space);
+
         putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh / 2, startx, starty + text_bounds - (5 * bigger_boxh / 2) - infoh - box_space);
 
-        putHeader(renderer, (selection.size() > 0 ? (std::string("Selected (") + std::to_string(selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
+        if (current >= 0 && current < controls.size())
+        {
+            if (controls[current].Type == Control::Type::BUY_SHIP)
+            {
+                if (current_mode != Control::Type::BUY_SHIP)
+                {
+                    offset = 0;
 
-        if (selection.size() > 0)
+                    last = offset + limit;
+
+                    if (last > shop.size())
+                    {
+                        last = shop.size();
+                    }
+
+                    controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
+
+                    current_mode = Control::Type::BUY_SHIP;
+                }
+
+                current = FIND_CONTROL(controls, Control::Type::BUY_SHIP);
+
+                selected = false;
+            }
+            else if (controls[current].Type == Control::Type::SELL_SHIP || controls[current].Type == Control::Type::PARTY)
+            {
+                if (current_mode != controls[current].Type)
+                {
+                    offset = 0;
+
+                    last = offset + limit;
+
+                    if (last > party.Fleet.size())
+                    {
+                        last = party.Fleet.size();
+                    }
+
+                    controls = shipList(window, renderer, party.Fleet, shop, offset, last, limit, textx, offsety, true, true);
+
+                    current_mode = controls[current].Type;
+                }
+
+                current = FIND_CONTROL(controls, current_mode);
+
+                selected = false;
+            }
+        }
+
+        if (current_mode == Control::Type::BUY_SHIP)
+        {
+            putHeader(renderer, (buy_selection.size() > 0 ? (std::string("Selected (") + std::to_string(buy_selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
+        }
+        else if (current_mode == Control::Type::SELL_SHIP || current_mode == Control::Type::PARTY)
+        {
+            putHeader(renderer, (sell_selection.size() > 0 ? (std::string("Selected (") + std::to_string(sell_selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
+        }
+        else
+        {
+            fillRect(renderer, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh), fg);
+        }
+
+        if (buy_selection.size() > 0 || sell_selection.size() > 0)
         {
             std::string selection_string = "";
 
-            for (auto i = 0; i < selection.size(); i++)
+            if (current_mode == Control::Type::BUY_SHIP)
             {
-                if (i > 0)
+                for (auto i = 0; i < buy_selection.size(); i++)
                 {
-                    selection_string += ", ";
+                    if (buy_selection[i] >= 0 && buy_selection[i] < shop.size())
+                    {
+                        if (i > 0)
+                        {
+                            selection_string += ", ";
+                        }
+
+                        auto ship = std::get<0>(shop[buy_selection[i]]);
+
+                        selection_string += "[" + ship.Name + "]";
+                    }
                 }
+            }
+            else if (current_mode == Control::Type::SELL_SHIP || current_mode == Control::Type::PARTY)
+            {
+                for (auto i = 0; i < sell_selection.size(); i++)
+                {
+                    if (sell_selection[i] >= 0 && sell_selection[i] < party.Fleet.size())
+                    {
+                        if (i > 0)
+                        {
+                            selection_string += ", ";
+                        }
 
-                auto ship = std::get<0>(shop[selection[i]]);
+                        auto ship = party.Fleet[sell_selection[i]];
 
-                selection_string += "[" + ship.Name + "]";
+                        selection_string += "[" + ship.Name + "]";
+                    }
+                }
             }
 
             fillRect(renderer, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh, intBE);
 
-            auto text = createText(selection_string.c_str(), FONT_MASON, 24, clrBK, splashw - 2 * text_space, TTF_STYLE_NORMAL);
-
-            if (text)
+            if (selection_string.length() > 0)
             {
-                renderText(renderer, text, intBE, startx + text_space, starty + text_bounds - 2 * bigger_boxh + text_space, 2 * (bigger_boxh - text_space), 0);
+                auto text = createText(selection_string.c_str(), FONT_MASON, 24, clrBK, splashw - 2 * text_space, TTF_STYLE_NORMAL);
 
-                SDL_FreeSurface(text);
+                if (text)
+                {
+                    renderText(renderer, text, intBE, startx + text_space, starty + text_bounds - 2 * bigger_boxh + text_space, 2 * (bigger_boxh - text_space), 0);
 
-                text = NULL;
+                    SDL_FreeSurface(text);
+
+                    text = NULL;
+                }
             }
         }
         else
@@ -13887,53 +13970,47 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
         }
 
-        if (selection.size() > 0)
+        if (current_mode == Control::Type::BUY_SHIP)
         {
-            if (current >= 0 && current < controls.size())
+            std::string buy_string = "";
+
+            if (buy_selection.size() > 1)
             {
-                if (controls[current].Type == Control::Type::BUY)
-                {
-                    std::string buy_string = "Buy ";
-
-                    if (selection.size() > 1)
-                    {
-                        buy_string += "these";
-                    }
-                    else
-                    {
-                        buy_string += "this";
-                    }
-
-                    putHeader(renderer, buy_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
-                else if (controls[current].Type == Control::Type::SELL)
-                {
-                    std::string sell_string = "Sell ";
-
-                    if (selection.size() > 1)
-                    {
-                        sell_string += "these";
-                    }
-                    else
-                    {
-                        sell_string += "this";
-                    }
-
-                    putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
-                else
-                {
-                    putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
-                }
+                buy_string = "Buy these";
+            }
+            else if (buy_selection.size() == 1)
+            {
+                buy_string = "Buy this";
             }
             else
             {
-                putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                buy_string = "Ships for sale";
             }
+
+            putHeader(renderer, buy_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
         }
-        else
+        else if (current_mode == Control::Type::SELL_SHIP)
         {
-            putHeader(renderer, "Ships for Sale", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            std::string sell_string = "";
+
+            if (sell_selection.size() > 1)
+            {
+                sell_string = "Sell these";
+            }
+            else if (sell_selection.size() == 1)
+            {
+                sell_string = "Sell this";
+            }
+            else
+            {
+                sell_string = "Fleet";
+            }
+
+            putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+        }
+        else if (current_mode == Control::Type::PARTY)
+        {
+            putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
         }
 
         fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
@@ -13942,13 +14019,34 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         {
             for (auto i = 0; i < last - offset; i++)
             {
-                if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                if (controls[i].Type == Control::Type::ACTION)
                 {
-                    thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
-                }
-                else
-                {
-                    drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
+                    if (current_mode == Control::Type::BUY_SHIP)
+                    {
+                        if (Engine::FIND_LIST(buy_selection, offset + i) >= 0)
+                        {
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
+                        }
+                    }
+                    else if (current_mode == Control::Type::SELL_SHIP || current_mode == Control::Type::PARTY)
+                    {
+                        if (Engine::FIND_LIST(sell_selection, offset + i) >= 0)
+                        {
+                            thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        }
+                        else
+                        {
+                            drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
+                        }
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
+                    }
                 }
             }
         }
@@ -13978,25 +14076,51 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         {
             if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
             {
-                if (offset > 0)
+                if (current_mode == Control::Type::BUY_SHIP)
                 {
-                    offset -= scrollSpeed;
-
-                    if (offset < 0)
+                    if (offset > 0)
                     {
-                        offset = 0;
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > shop.size())
+                        {
+                            last = shop.size();
+                        }
+
+                        controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
+
+                        SDL_Delay(50);
                     }
-
-                    last = offset + limit;
-
-                    if (last > shop.size())
+                }
+                else if (current_mode == Control::Type::SELL_SHIP)
+                {
+                    if (offset > 0)
                     {
-                        last = shop.size();
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > party.Fleet.size())
+                        {
+                            last = party.Fleet.size();
+                        }
+
+                        controls = shipList(window, renderer, party.Fleet, shop, offset, last, limit, textx, offsety, true, true);
+
+                        SDL_Delay(50);
                     }
-
-                    controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
-
-                    SDL_Delay(50);
                 }
 
                 if (offset <= 0)
@@ -14008,57 +14132,117 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
             else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
             {
-                if (shop.size() - last > 0)
+                if (current_mode == Control::Type::BUY_SHIP)
                 {
-                    if (offset < shop.size() - limit)
+                    if (shop.size() - last > 0)
                     {
-                        offset += scrollSpeed;
+                        if (offset < shop.size() - limit)
+                        {
+                            offset += scrollSpeed;
+                        }
+
+                        if (offset > shop.size() - limit)
+                        {
+                            offset = shop.size() - limit;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > shop.size())
+                        {
+                            last = shop.size();
+                        }
+
+                        controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
+
+                        SDL_Delay(50);
+
+                        if (offset > 0)
+                        {
+                            current = FIND_CONTROL(controls, Control::Type::SCROLL_DOWN);
+                        }
                     }
 
-                    if (offset > shop.size() - limit)
+                    if (shop.size() - last <= 0)
                     {
-                        offset = shop.size() - limit;
-                    }
+                        selected = false;
 
-                    last = offset + limit;
-
-                    if (last > shop.size())
-                    {
-                        last = shop.size();
-                    }
-
-                    controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
-
-                    SDL_Delay(50);
-
-                    if (offset > 0)
-                    {
-                        current = FIND_CONTROL(controls, Control::Type::SCROLL_DOWN);
+                        current = -1;
                     }
                 }
-
-                if (shop.size() - last <= 0)
+                else if (current_mode == Control::Type::SELL_SHIP || current_mode == Control::Type::PARTY)
                 {
-                    selected = false;
+                    if (party.Fleet.size() - last > 0)
+                    {
+                        if (offset < party.Fleet.size() - limit)
+                        {
+                            offset += scrollSpeed;
+                        }
 
-                    current = -1;
+                        if (offset > party.Fleet.size() - limit)
+                        {
+                            offset = party.Fleet.size() - limit;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > party.Fleet.size())
+                        {
+                            last = party.Fleet.size();
+                        }
+
+                        controls = shipList(window, renderer, party.Fleet, shop, offset, last, limit, textx, offsety, true, true);
+
+                        SDL_Delay(50);
+
+                        if (offset > 0)
+                        {
+                            current = FIND_CONTROL(controls, Control::Type::SCROLL_DOWN);
+                        }
+                    }
+
+                    if (party.Fleet.size() - last <= 0)
+                    {
+                        selected = false;
+
+                        current = -1;
+                    }
                 }
             }
             else if (controls[current].Type == Control::Type::ACTION && !hold)
             {
                 if (current >= 0 && current < controls.size())
                 {
-                    auto result = Engine::FIND_LIST(selection, offset + current);
+                    if (current_mode == Control::Type::BUY_SHIP)
+                    {
+                        auto result = Engine::FIND_LIST(buy_selection, offset + current);
 
-                    if (result >= 0)
-                    {
-                        selection.erase(selection.begin() + result);
-                    }
-                    else
-                    {
-                        if (selection.size() < shop.size())
+                        if (result >= 0)
                         {
-                            selection.push_back(offset + current);
+                            buy_selection.erase(buy_selection.begin() + result);
+                        }
+                        else
+                        {
+                            if (buy_selection.size() < shop.size())
+                            {
+                                buy_selection.push_back(offset + current);
+                            }
+                        }
+                    }
+                    else if (current_mode == Control::Type::SELL_SHIP)
+                    {
+                        auto result = Engine::FIND_LIST(sell_selection, offset + current);
+
+                        if (result >= 0)
+                        {
+                            sell_selection.erase(sell_selection.begin() + result);
+                        }
+                        else
+                        {
+                            if (sell_selection.size() < shop.size())
+                            {
+                                sell_selection.push_back(offset + current);
+                            }
                         }
                     }
                 }
@@ -14069,19 +14253,19 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
             else if (controls[current].Type == Control::Type::BUY_SHIP && !hold)
             {
-                if (selection.size() > 0)
+                if (buy_selection.size() > 0)
                 {
                     auto total = 0;
 
                     auto ships = std::vector<Ship::Base>();
 
-                    for (auto i = 0; i < selection.size(); i++)
+                    for (auto i = 0; i < buy_selection.size(); i++)
                     {
-                        if (selection[i] >= 0 && selection[i] < shop.size())
+                        if (buy_selection[i] >= 0 && buy_selection[i] < shop.size())
                         {
-                            auto ship = std::get<0>(shop[selection[i]]);
+                            auto ship = std::get<0>(shop[buy_selection[i]]);
 
-                            auto price = std::get<1>(shop[selection[i]]);
+                            auto price = std::get<1>(shop[buy_selection[i]]);
 
                             if (price > 0)
                             {
@@ -14131,10 +14315,14 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         }
                     }
                 }
+                else
+                {
+                    displayMessage("Please select the ships you wish to buy!", intRD);
+                }
             }
             else if (controls[current].Type == Control::Type::SELL_SHIP && !hold)
             {
-                if (selection.size() > 0)
+                if (sell_selection.size() > 0)
                 {
                     std::string sold_string = "";
                     std::string unsold_string = "";
@@ -14142,19 +14330,21 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     auto sold = 0;
                     auto unsold = 0;
 
-                    for (auto i = 0; i < selection.size(); i++)
-                    {
-                        if (selection[i] >= 0 && selection[i] < shop.size())
-                        {
-                            auto ship = std::get<0>(shop[selection[i]]);
+                    auto ship_sold = std::vector<int>();
 
-                            auto price = std::get<2>(shop[selection[i]]);
+                    for (auto i = 0; i < sell_selection.size(); i++)
+                    {
+                        if (sell_selection[i] >= 0 && sell_selection[i] < party.Fleet.size())
+                        {
+                            auto ship = party.Fleet[sell_selection[i]];
+
+                            auto price = Engine::PRICE_SELL(shop, party.Fleet[sell_selection[i]].Type);
 
                             if (price > 0)
                             {
-                                if (!Engine::HAS_SHIP(party, ship.Type, harbour->Location))
+                                if (party.Fleet[sell_selection[i]].Location != harbour->Location)
                                 {
-                                    unsold++;
+                                    unsold += 1;
 
                                     if (unsold_string.length() > 0)
                                     {
@@ -14165,11 +14355,11 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                 }
                                 else
                                 {
-                                    Engine::LOSE_SHIP(party, ship.Type, harbour->Location);
+                                    ship_sold.push_back(sell_selection[i]);
 
                                     Engine::GAIN_MONEY(party, price);
 
-                                    sold++;
+                                    sold += 1;
 
                                     if (sold_string.length() > 0)
                                     {
@@ -14181,7 +14371,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             }
                             else
                             {
-                                unsold++;
+                                unsold += 1;
 
                                 if (unsold_string.length() > 0)
                                 {
@@ -14198,6 +14388,21 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     if (sold > 0)
                     {
                         message += "Ships sold: " + sold_string;
+
+                        auto fleet = std::vector<Ship::Base>();
+
+                        for (auto i = 0; i < party.Fleet.size(); i++)
+                        {
+                            if (Engine::FIND_LIST(ship_sold, i) < 0)
+                            {
+                                fleet.push_back(party.Fleet[i]);
+                            }
+                        }
+
+                        if (fleet.size() > 0)
+                        {
+                            party.Fleet = fleet;
+                        }
                     }
 
                     if (unsold > 0)
@@ -14220,6 +14425,10 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     }
 
                     displayMessage(message, flash_color);
+                }
+                else
+                {
+                    displayMessage("Please select the ships you wish to sell!", intRD);
                 }
             }
             else if (controls[current].Type == Control::Type::PARTY && !hold)
@@ -14344,13 +14553,6 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         if (!Engine::VERIFY_EQUIPMENT_LIMIT(character))
         {
             displayMessage("You are carrying too many items! Drop, sell, or transfer excess items.", intRD);
-        }
-
-        last = offset + limit;
-
-        if (last > shop.size())
-        {
-            last = shop.size();
         }
 
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Buy/Sell Items");
@@ -14906,7 +15108,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             {
                                 if (!Engine::VERIFY_EQUIPMENT(character, {item.Type}))
                                 {
-                                    unsold++;
+                                    unsold += 1;
 
                                     if (unsold_string.length() > 0)
                                     {
@@ -14921,7 +15123,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                                     Engine::GAIN_MONEY(party, price);
 
-                                    sold++;
+                                    sold += 1;
 
                                     if (sold_string.length() > 0)
                                     {
@@ -14933,7 +15135,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             }
                             else
                             {
-                                unsold++;
+                                unsold += 1;
 
                                 if (unsold_string.length() > 0)
                                 {
@@ -15887,7 +16089,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                             if (offset > 0)
                             {
-                                offset--;
+                                offset -= 1;
                             }
 
                             last = offset + limit;
@@ -15928,7 +16130,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                 if (offset > 0)
                                 {
-                                    offset--;
+                                    offset -= 1;
                                 }
 
                                 last = offset + limit;
@@ -15971,7 +16173,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                             if (offset > 0)
                             {
-                                offset--;
+                                offset -= 1;
                             }
 
                             last = offset + limit;
@@ -16004,7 +16206,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                         if (offset > 0)
                         {
-                            offset--;
+                            offset -= 1;
                         }
 
                         last = offset + limit;
@@ -16201,14 +16403,14 @@ std::vector<Button> repairList(SDL_Window *window, SDL_Renderer *renderer, std::
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (ships.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -17028,7 +17230,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                             if (offset > 0)
                             {
-                                offset--;
+                                offset -= 1;
                             }
 
                             last = offset + limit;
@@ -17065,7 +17267,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                         if (offset > 0)
                         {
-                            offset--;
+                            offset -= 1;
                         }
 
                         last = offset + limit;
@@ -17123,7 +17325,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                                         if (offset > 0)
                                         {
-                                            offset--;
+                                            offset -= 1;
                                         }
 
                                         last = offset + limit;
@@ -17199,7 +17401,7 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                             if (offset > 0)
                             {
-                                offset--;
+                                offset -= 1;
                             }
 
                             last = offset + limit;
@@ -17726,7 +17928,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
                     if (offset > 0)
                     {
-                        offset--;
+                        offset -= 1;
                     }
 
                     last = offset + limit;
@@ -20538,14 +20740,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (ships.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -20555,6 +20757,86 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::REPAIR_SHIP));
     controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BUY_SELL_CARGO));
     controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
+
+    return controls;
+}
+
+std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, std::vector<Engine::ShipPrices> &shop, int start, int last, int limit, int offsetx, int offsety, bool buy_button, bool sell_button)
+{
+    auto controls = std::vector<Button>();
+
+    if (ships.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto ship = ships[index];
+
+            auto sell = Engine::PRICE_SELL(shop, ship.Type);
+
+            std::string ship_string = "[" + ship.Name + "] Fighting: " + std::to_string(ship.Fighting) + ", Health: " + std::to_string(ship.Health) + ", Cargo: " + std::to_string(ship.MaximumCargo) + " unit(s)";
+
+            ship_string += "\nSell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, ship_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = controls[i].Surface->w;
+
+            controls[i].H = controls[i].Surface->h;
+        }
+    }
+
+    auto idx = controls.size();
+
+    if (ships.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx += 1;
+        }
+
+        if (ships.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
+
+            idx += 1;
+        }
+    }
+
+    if (buy_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY_SHIP));
+    }
+
+    if (sell_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, (buy_button ? (startx + gridsize) : startx), buttony, Control::Type::SELL_SHIP));
+    }
+
+    idx = controls.size();
+
+    auto grid_offset = 0;
+
+    if (buy_button && sell_button)
+    {
+        grid_offset = 2;
+    }
+    else if (buy_button || sell_button)
+    {
+        grid_offset = 1;
+    }
+
+    controls.push_back(Button(idx, "icons/user.png", ((buy_button || sell_button) ? idx - 1 : idx), idx + 1, (ships.size() > 0 ? (last - start) - 1 : idx), idx, startx + grid_offset * gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -20597,14 +20879,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (ships.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -20679,14 +20961,14 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (cargo.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -20738,14 +21020,14 @@ std::vector<Button> buyCargo(SDL_Window *window, SDL_Renderer *renderer, std::ve
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (cargo.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -20789,14 +21071,14 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (ships.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -21564,7 +21846,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                         party_string += " (C)";
                     }
 
-                    count++;
+                    count += 1;
                 }
 
                 putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
@@ -22000,14 +22282,14 @@ void popupScrolls(std::vector<Button> &controls, std::vector<T> &list, int start
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + infoh + 7 * border_space / 2, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (list.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + (popuph - arrow_size - 2 * border_space - buttonh - infoh), Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -22305,13 +22587,13 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
 
                         if (col < cols)
                         {
-                            col++;
+                            col += 1;
                         }
                         else
                         {
                             col = 0;
 
-                            row++;
+                            row += 1;
                         }
                     }
                 }
@@ -22603,13 +22885,13 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
                             if (col < cols)
                             {
-                                col++;
+                                col += 1;
                             }
                             else
                             {
                                 col = 0;
 
-                                row++;
+                                row += 1;
                             }
                         }
                     }
@@ -22639,13 +22921,13 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
                             if (col < cols)
                             {
-                                col++;
+                                col += 1;
                             }
                             else
                             {
                                 col = 0;
 
-                                row++;
+                                row += 1;
                             }
                         }
                     }
@@ -22710,13 +22992,13 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
                         if (col < cols)
                         {
-                            col++;
+                            col += 1;
                         }
                         else
                         {
                             col = 0;
 
-                            row++;
+                            row += 1;
                         }
                     }
                 }
@@ -23207,7 +23489,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                         castSpells.clear();
 
-                        combat_round++;
+                        combat_round += 1;
 
                         enemy_has_cast = false;
 
@@ -23954,14 +24236,14 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (choices.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -24730,14 +25012,14 @@ std::vector<Button> createFileList(SDL_Window *window, SDL_Renderer *renderer, s
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (list.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
@@ -25137,7 +25419,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
                             if (offset > 0)
                             {
-                                offset--;
+                                offset -= 1;
                             }
 
                             last = offset + limit;
@@ -25343,7 +25625,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             party_string += " (C)";
                         }
 
-                        count++;
+                        count += 1;
                     }
 
                     putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
@@ -27927,7 +28209,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             party_string += " (C)";
                         }
 
-                        count++;
+                        count += 1;
                     }
 
                     putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
@@ -28841,14 +29123,14 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
         {
             controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, startx + splashw + scroll_space, texty + border_space, Control::Type::TOPICS_UP));
 
-            idx++;
+            idx += 1;
         }
 
         if (topics.size() - last > 0)
         {
             controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, startx + splashw + scroll_space, scrolly, Control::Type::TOPICS_DOWN));
 
-            idx++;
+            idx += 1;
         }
     }
 
