@@ -7456,8 +7456,6 @@ namespace Book1
             {
                 PreText += "\n\n\"It was quite a feat, you sneaking out of the Saltdad Arena like that,\" muses Brekken over a glass of white wine. \"It's a shame to waste such talents merely on matters of survival. Perhaps you'd be willing to do a little wealth redistribution? Namely, from the silver stores of a rich man into the pockets of the poor -- in other words, us?\"\n\n\"What's the job?\" you ask neutrally.\n\n\"The city jeweller, Chellar, a former chancellor of the Iron King,\" says Brekken. \"He's as rich as a king himself. We go in, grab everything we can, and get out. Of course, his brother is a sorcerer, so they say the whole place is protected by magical defences. That's where you come in. You help us deal with the magic, and we'll help get through the more mundane protections, like locks and stubborn guards. We split the rewards fifty-fifty. Deal?\"";
 
-                Engine::GET_CODES(party, {Codes::A(11)});
-
                 Choices.push_back(Choice::Base("Agree to the heist", {Book::Type::BOOK1, 617}));
                 Choices.push_back(Choice::Base("Politely decline", {Book::Type::BOOK1, 75}));
             }
@@ -7663,8 +7661,6 @@ namespace Book1
             if (!Engine::VERIFY_CODES(party, {Codes::A(27)}))
             {
                 PreText += "\n\nYou creep carefully down the tunnels until they open into a sizable cavern. Curled up into a tight ball, you see the fish-white scales of a terrible salt dragon, sleeping on a pile of human bones and scattered treasure. Its eyes flick open, and it puffs sharply, trying to scare you off.";
-
-                Engine::GET_CODES(party, {Codes::A(11)});
 
                 Choices.push_back(Choice::Base("Fight the dragon", {Book::Type::BOOK1, 787}));
                 Choices.push_back(Choice::Base("Carefully back away to the lift", {Book::Type::BOOK1, 135}));
