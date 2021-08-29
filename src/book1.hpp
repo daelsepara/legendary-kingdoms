@@ -21669,7 +21669,7 @@ namespace Book1
         {
             BookID = Book::Type::BOOK1;
 
-            ID = 640;
+            ID = 641;
 
             Location = Location::Type::CHALICE;
 
