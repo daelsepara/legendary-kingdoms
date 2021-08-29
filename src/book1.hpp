@@ -564,6 +564,10 @@ namespace Book1
 
             ID = 17;
 
+            Location = Location::Type::SALTDAD;
+
+            IsCity = true;
+
             Text = "The Iron King is most displeased to see you. He clicks his fingers and soon you have been dragged away to the dungeons for a gruesome session of torture.\n\nNote: Each party member loses 4 Health points.";
 
             Bye = "Afterwards, the king has the guards dispose of you as they see fit.";
