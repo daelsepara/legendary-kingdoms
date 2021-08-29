@@ -14255,7 +14255,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             }
                         }
                     }
-                    else if (current_mode == Control::Type::SELL_SHIP)
+                    else if (current_mode == Control::Type::SELL_SHIP || current_mode == Control::Type::PARTY)
                     {
                         auto result = Engine::FIND_LIST(sell_selection, offset + current);
 
@@ -14999,7 +14999,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             }
                         }
                     }
-                    else if (current_mode == Control::Type::SELL)
+                    else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT)
                     {
                         auto result = Engine::FIND_LIST(sell_selection, offset + current);
 
