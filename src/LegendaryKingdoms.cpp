@@ -14618,9 +14618,9 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                 selected = false;
             }
-            else if (controls[current].Type == Control::Type::SELL || controls[current].Type == Control::Type::EQUIPMENT)
+            else if (controls[current].Type == Control::Type::SELL)
             {
-                if (current_mode != controls[current].Type)
+                if (current_mode != Control::Type::SELL)
                 {
                     offset = 0;
 
@@ -14633,9 +14633,31 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                     controls = shopList(window, renderer, character.Equipment, shop, offset, last, limit, textx, offsety);
 
-                    current_mode = controls[current].Type;
+                    current_mode = Control::Type::SELL;
 
-                    current = FIND_CONTROL(controls, current_mode);
+                    current = FIND_CONTROL(controls, Control::Type::SELL);
+                }
+
+                selected = false;
+            }
+            else if (controls[current].Type == Control::Type::EQUIPMENT)
+            {
+                if (current_mode != Control::Type::EQUIPMENT)
+                {
+                    offset = 0;
+
+                    last = offset + limit;
+
+                    if (last > character.Equipment.size())
+                    {
+                        last = character.Equipment.size();
+                    }
+
+                    controls = shopList(window, renderer, character.Equipment, shop, offset, last, limit, textx, offsety);
+
+                    current_mode = Control::Type::EQUIPMENT;
+
+                    current = FIND_CONTROL(controls, Control::Type::EQUIPMENT);
                 }
 
                 selected = false;
