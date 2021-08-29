@@ -25868,7 +25868,7 @@ namespace Book1
 
             Engine::LOSE_EQUIPMENT(party, {Equipment::Type::MAGICAL_WEAVE});
 
-            Engine::Destination destination = {Book::Type::BOOK1, 704};
+            destination = {Book::Type::BOOK1, 704};
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::SPEAK_BANDO}))
             {
