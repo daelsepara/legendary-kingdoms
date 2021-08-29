@@ -647,7 +647,6 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
 
     if (image_surface && text_surface)
     {
-
         auto image_h = image_surface->h;
 
         if (image_surface->w > wrap)
@@ -665,7 +664,7 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
         amask = 0xff000000;
 #endif
 
-        surface = SDL_CreateRGBSurface(0, text_surface->w, image_h + text_space + text_surface->h, 32, 0, 0, 0, amask);
+        surface = SDL_CreateRGBSurface(0, wrap, image_h + text_space + text_surface->h, 32, 0, 0, 0, amask);
 
         SDL_Rect dst;
 
