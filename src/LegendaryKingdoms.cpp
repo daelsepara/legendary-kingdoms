@@ -4508,6 +4508,8 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
 
                         if (final_damage > 0)
                         {
+                            Sound::Play(Sound::Type::FAIL);
+
                             Engine::GAIN_HEALTH(character, -final_damage);
 
                             message = character.Name + " dealt " + std::to_string(final_damage) + " damage!";
@@ -4516,6 +4518,8 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             message = character.Name + " deflects the attack!";
 
                             flash_color = intLB;
@@ -4787,6 +4791,8 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You must select an adventurer damaged by the attack.", intRD);
                     }
                 }
@@ -4796,6 +4802,8 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if (selection == current + offset)
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             selection = -1;
                         }
                         else
@@ -4806,10 +4814,14 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     if (Engine::IS_CURSED(party.Members[current + offset]))
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage("You cannot assign the damage to " + party.Members[current + offset].Name + "!", intRD);
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                         selection = current + offset;
                                     }
                                 }
@@ -4817,16 +4829,22 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     if (!Engine::IS_CHARACTER(party.Members[current + offset].Team))
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[current + offset].Name + " is not part of the " + std::string(Team::Descriptions[team]) + " team!", intRD);
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage("You can only assign damage to " + std::string(Team::Descriptions[team]) + "!", intRD);
                                     }
                                 }
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(party.Members[current + offset].Name + " is dead!", intRD);
                             }
                         }
@@ -6032,10 +6050,14 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     if (combat_damage > 0)
                                     {
+                                        Sound::Play(Sound::Type::SUCCESS);
+
                                         displayMessage(party.Members[combatant].Name + " deals " + std::to_string(damage_scale * damage) + " to the " + monsters[opponent].Name + "!" + stunned, intLB);
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::FAIL);
+
                                         displayMessage(party.Members[combatant].Name + "'s attack was ineffective!", intRD);
                                     }
                                 }
@@ -6045,10 +6067,14 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     if (combat_damage > 0)
                                     {
+                                        Sound::Play(Sound::Type::FAIL);
+
                                         displayMessage(monsters[opponent].Name + " deals " + std::to_string(damage) + " to the party!", intRD);
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::SUCCESS);
+
                                         assigned = true;
 
                                         displayMessage("The " + monsters[opponent].Name + "'s attack was ineffective!", intLB);
@@ -6119,6 +6145,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 if (!monsters[opponent].Damaged)
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     displayMessage("The Cursite Assassin executes a backstabbing attack dealing 4 damage to the party!", intRD);
 
                                     damaged = true;
@@ -6153,6 +6181,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 }
                                 else if (spell == Spells::Type::UNFAILING_STRIKE)
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     message += "Unfailing Strike! " + monsters[opponent].Name + " deals 3 damage to the party!";
 
                                     damaged = true;
@@ -6165,6 +6195,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 }
                                 else if (spell == Spells::Type::RUNE_OF_UNMAKING)
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     message += "Rune of Unmaking! " + monsters[opponent].Name + " deals 6 damage to the party!";
 
                                     damaged = true;
@@ -6479,6 +6511,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                                 if (Engine::HAS_STATUS(party.Members[result], Character::Status::POTION_OF_INVULNERABILITY))
                                                 {
+                                                    Sound::Play(Sound::Type::SUCCESS);
+
                                                     displayMessage(party.Members[result].Name + "'s Invulnerability cancels the damage!", intLB);
 
                                                     Engine::REMOVE_STATUS(party.Members[result], Character::Status::POTION_OF_INVULNERABILITY);
@@ -6487,6 +6521,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                                 }
                                                 else if (Engine::HAS_FOLLOWER(party.Members[result], Follower::Type::MORDAIN_SKELETONS))
                                                 {
+                                                    Sound::Play(Sound::Type::SUCCESS);
+
                                                     message = party.Members[result].Name + "'s [SKELETON] steps in the way and takes " + std::to_string(combat_damage) + " damage!";
 
                                                     auto follower = Engine::FIND_FOLLOWER(party.Members[result], Follower::Type::MORDAIN_SKELETONS);
@@ -6519,6 +6555,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                                     if (monsters[opponent].Type == Monster::Type::UNBRAAKI && reduced_damage > 0)
                                                     {
+                                                        Sound::Play(Sound::Type::FAIL);
+
                                                         Engine::GAIN_HEALTH(monsters[opponent], reduced_damage);
 
                                                         displayMessage("Unbraaki gains " + std::to_string(reduced_damage) + " health!", intRD);
@@ -6536,6 +6574,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                                     if (monsters[opponent].Type == Monster::Type::UNBRAAKI && combat_damage > 0)
                                                     {
+                                                        Sound::Play(Sound::Type::FAIL);
+
                                                         Engine::GAIN_HEALTH(monsters[opponent], combat_damage);
 
                                                         message += " " + monsters[opponent].Name + " gains " + std::to_string(combat_damage) + " health point";
@@ -6553,17 +6593,23 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                             }
                                             else
                                             {
+                                                Sound::Play(Sound::Type::ERROR);
+
                                                 displayMessage(party.Members[result].Name + " was already assigned damage. Please choose another target.", intRD);
                                             }
                                         }
                                         else
                                         {
+                                            Sound::Play(Sound::Type::ERROR);
+
                                             displayMessage(party.Members[result].Name + " is already dead!", intRD);
                                         }
                                     }
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     assigned = true;
 
                                     displayMessage("The " + monsters[opponent].Name + "'s attack was ineffective!", intLB);
