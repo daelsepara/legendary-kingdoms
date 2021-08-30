@@ -11407,6 +11407,8 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         {
                             if (party.Members[selection].Type == Character::Type::SKULLCRACKER)
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("Skullcracker refuses!", intRD);
                             }
                             else
@@ -11433,6 +11435,8 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You must select a party member!", intRD);
                     }
                 }
@@ -11442,6 +11446,8 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     {
                         if (selection == current + offset)
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             selection = -1;
                         }
                         else
@@ -11452,18 +11458,26 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                 {
                                     if (Engine::IS_CAPTURED(party.Members[current + offset]))
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[current + offset].Name + " has been captured!", intRD);
                                     }
                                     else if (Engine::IS_CURSED(party.Members[current + offset]))
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[current + offset].Name + " is cursed!", intRD);
                                     }
                                     else if (party.InCity && !party.Members[current + offset].IsCivilized)
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[current + offset].Name + " is waiting outside the city!", intRD);
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                         selection = current + offset;
                                     }
                                 }
@@ -11471,16 +11485,22 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                 {
                                     if (!Engine::IS_CHARACTER(team))
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[current + offset].Name + " is not part of the " + std::string(Team::Descriptions[team]) + " team!", intRD);
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage("You can only choose " + std::string(Team::Descriptions[team]) + "!", intRD);
                                     }
                                 }
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(party.Members[current + offset].Name + " is dead!", intRD);
                             }
                         }
@@ -12147,6 +12167,8 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You must select " + std::to_string(team_size) + " party members!", intRD);
                     }
                 }
@@ -12158,6 +12180,8 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
 
                         if (result >= 0 && result < selection.size())
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             selection.erase(selection.begin() + result);
                         }
                         else
@@ -12168,22 +12192,32 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                                 {
                                     if (Engine::IS_CAPTURED(party.Members[current + offset]))
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[current + offset].Name + " has been captured!", intRD);
                                     }
                                     else if (Engine::IS_CURSED(party.Members[current + offset]))
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[current + offset].Name + " is cursed!", intRD);
                                     }
                                     else if (Engine::IS_DEAD(party.Members[current + offset]))
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[current + offset].Name + " is dead!", intRD);
                                     }
                                     else if (party.InCity && !party.Members[current + offset].IsCivilized)
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[current + offset].Name + " is waiting outside the city!", intRD);
                                     }
                                     else if (selection.size() < team_size)
                                     {
+                                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                         selection.push_back(current + offset);
                                     }
                                 }
@@ -12191,16 +12225,22 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                                 {
                                     if (!Engine::IS_CHARACTER(team))
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[current + offset].Name + " is not part of the " + std::string(Team::Descriptions[team]) + " team!", intRD);
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage("You can only choose " + std::string(Team::Descriptions[team]) + "!", intRD);
                                     }
                                 }
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+                                
                                 displayMessage(party.Members[current + offset].Name + " is dead!", intRD);
                             }
                         }
@@ -12870,10 +12910,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 Engine::GAIN_HEALTH(party.Members[party.LastSelected], -free_attack);
 
+                                Sound::Play(Sound::Type::FAIL);
+
                                 displayMessage(message, intRD);
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 message = +"'s attack was ineffective!";
 
                                 displayMessage(message, intLB);
@@ -12881,6 +12925,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             message = +"'s attack was ineffective!";
 
                             displayMessage(message, intLB);
@@ -13141,10 +13187,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (combatRound < fleeRound)
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     message = "You cannot flee at this time.";
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     message = "You can no longer flee from this battle.";
                                 }
 
@@ -13153,6 +13203,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You cannot flee from this battle.", intRD);
                         }
                     }
@@ -13195,10 +13247,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (Engine::HAS_STATUS(party.Members[result], Character::Status::STUNNED))
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     message = party.Members[result].Name + " is stunned!";
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     message = party.Members[result].Name + " already attacked this round.";
                                 }
 
@@ -13227,6 +13283,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                             {
                                                 if (Engine::HAS_STATUS(party.Members[result], Character::Status::ATTACK2_ENEMY0_ROUND0) && opponent != 0 && round0_attacks > 0 && combatRound == 0)
                                                 {
+                                                    Sound::Play(Sound::Type::ERROR);
+
                                                     displayMessage("You cannot attack another opponent.", intRD);
                                                 }
                                                 else
@@ -13262,6 +13320,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                         {
                                                             if (damage == 100 && hasAttacked.size() == (Engine::TEAM_SIZE(party, team) - 1))
                                                             {
+                                                                Sound::Play(Sound::Type::ERROR);
+
                                                                 displayMessage("There must be at least 1 attack on the Jungle each round.", intRD);
                                                             }
                                                             else
@@ -13278,6 +13338,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                                 {
                                                                     if (monsters[opponent].Health > 0)
                                                                     {
+                                                                        Sound::Play(Sound::Type::FAIL);
+
                                                                         Engine::GAIN_HEALTH(party.Members[result], -1);
 
                                                                         message = "The " + monsters[opponent].Name + " deals 1 damage to " + party.Members[result].Name + "!";
@@ -13292,17 +13354,23 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                             }
                                             else
                                             {
+                                                Sound::Play(Sound::Type::FAIL);
+
                                                 displayMessage("The attack has failed!", intRD);
                                             }
                                         }
                                         else
                                         {
+                                            Sound::Play(Sound::Type::SUCCESS);
+
                                             displayMessage("Your party has prevailed!", intLB);
                                         }
                                     }
                                     else
                                     {
-                                        displayMessage(message, intRD);
+                                        Sound::Play(Sound::Type::FAIL);
+
+                                        displayMessage("Your party is dead!", intRD);
                                     }
                                 }
                             }
@@ -13314,6 +13382,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (Engine::HAS_MONSTER(monsters, Monster::Type::ORC))
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     auto slaves_damage = -1;
 
                                     message = "The slaves attack the orcs! All orcs lose ";
@@ -13352,12 +13422,16 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                         if (attack_result > 0)
                                         {
+                                            Sound::Play(Sound::Type::SUCCESS);
+
                                             Engine::GAIN_HEALTH(monsters[target], -attack_result);
 
                                             allyMessage("Yu Yuan deals " + std::to_string(attack_result) + " to the " + monsters[target].Name + "!", intLB);
                                         }
                                         else
                                         {
+                                            Sound::Play(Sound::Type::FAIL);
+
                                             allyMessage("Yu Yuan's attack was ineffective!", intRD);
                                         }
                                     }
@@ -13406,6 +13480,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                                         {
                                                             if (spells_cast == 2)
                                                             {
+                                                                Sound::Play(Sound::Type::FAIL);
+
                                                                 displayMessage("Fastilon a Healing Word! Fastilon recovers 8 Health points!", intRD);
 
                                                                 Engine::GAIN_HEALTH(monsters[i], 8);
@@ -13442,22 +13518,30 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     Engine::GAIN_HEALTH(monsters, -1);
 
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     displayMessage("Blocks of stone come raining down from the walls! The priest and each party member loses 1 Health!", intRD);
                                 }
                                 else if (Engine::HAS_MONSTER(monsters, Monster::Type::SPIDER_WITH_SWARM))
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     Engine::GAIN_HEALTH(party, team, -1);
 
                                     displayMessage("Swarms of tiny spiders attack the party and deal 1 damage to everyone!", intRD);
                                 }
                                 else if (Engine::HAS_MONSTER(monsters, Monster::Type::BEETLE_SWARM))
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     Engine::GAIN_HEALTH(party, team, -1);
 
                                     displayMessage("The beetles deals 1 damage to the entire party!", intRD);
                                 }
                                 else if (Engine::HAS_MONSTER(monsters, Monster::Type::ZEALOT_HEALER) && Engine::COUNT(monsters) > 1)
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     Engine::GAIN_HEALTH(monsters, 2);
 
                                     displayMessage("The Zealot Healer heals each Zealot for 2 Health points!", intRD);
@@ -13472,6 +13556,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                         if (selection.size() > 0)
                                         {
+                                            Sound::Play(Sound::Type::FAIL);
+
                                             message = "The Skeleton Archers deal 2 damage to: ";
 
                                             for (auto i = 0; i < selection.size(); i++)
@@ -13500,6 +13586,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                         if (selection.size() > 0)
                                         {
+                                            Sound::Play(Sound::Type::FAIL);
+
                                             message = "The Goblin Archers deal 2 damage to: ";
 
                                             for (auto i = 0; i < selection.size(); i++)
@@ -13522,6 +13610,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 {
                                     if (!Engine::IS_DAMAGED(party))
                                     {
+                                        Sound::Play(Sound::Type::FAIL);
+
                                         Engine::GAIN_HEALTH(party, -3);
 
                                         displayMessage("The Salt Dragon is enraged and breathes out a blast of fire. Each member of the party is damaged for 3!", intRD);
@@ -13591,6 +13681,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     if (combat_spells <= 0)
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage("Your party does not have any usable combat spells.", intRD);
                                     }
                                     else
@@ -13621,6 +13713,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage("There are no spell casters in your party!", intRD);
                                 }
                             }
@@ -13628,10 +13722,14 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             {
                                 if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}) && combatRound == 0)
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     message = "Your party does not get to attack first nor cast spells this round!";
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     message = "Your entire party has already attacked this round.";
                                 }
 
@@ -13640,6 +13738,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You cannot cast spells in this battle!", intRD);
                         }
                     }
