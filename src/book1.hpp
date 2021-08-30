@@ -203,6 +203,8 @@ namespace Book1
 
             ID = 6;
 
+            Location = Location::Type::CAVES_OF_URANU;
+
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
@@ -393,6 +395,10 @@ namespace Book1
             BookID = Book::Type::BOOK1;
 
             ID = 10;
+
+            Location = Location::Type::CLIFFTOP;
+
+            IsCity = true;
 
             Text = "\"You should send the man to the Church of Cursus and have priests ritually scar him,\" says Ti'quon coldly.\n\n\"That way he shall be both punished and spiritually improved.\"\n\n\"Yes!\" hisses the King. \"The scarring is most painful. Send this dog to the church!\"\n\nThe poor man is dragged away, and the king retires with his councillors to discuss other business. You take the opportunity to slip away from the hall.\n\n\"A rather harsh punishment, ritual scarring,\" you mutter to Ti'quon as you exit the building.\n\n\"True enough,\" admits Ti'quon. \"Except that I noticed the poor man had already been scarred by the priests, and it is forbidden to perform the ritual twice. Getting him out of the sight of the mad king seemed to be the most important thing.\"\n\nYou shake your head, smiling.\n\nNote: You gained the code A34.";
 
@@ -677,6 +683,8 @@ namespace Book1
             ID = -18;
 
             DisplayID = 18;
+
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
             Choices.clear();
 
@@ -17616,6 +17624,8 @@ namespace Book1
 
             ID = 527;
 
+            Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
+
             Text = "You cast the spell, but the shadow door is blocked on the other side by a huge stone slab. The weird magics of the shadow door make getting a grip on the stone block impossible. Eventually you are forced to give up.";
 
             Choices.clear();
@@ -21547,6 +21557,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::SHADOW_DOOR);
+
             Take = {Equipment::GOLD_BULLION};
 
             Limit = 1;
