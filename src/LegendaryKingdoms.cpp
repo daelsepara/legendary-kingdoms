@@ -4419,7 +4419,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
 
             auto size_dice = 64;
 
-            auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+            auto cols = (fullwidth - 2 * box_space) / (size_dice + 2 * box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -16588,13 +16588,13 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         if (selection[i] >= 0 && selection[i] < party.Fleet.size() && harbour->ShipRepairPrice >= 0)
                         {
-                            if (controls[current].Type != Control::Type::FULL_RECOVERY)
+                            if (controls[current].Type != Control::Type::FULL_REPAIR)
                             {
-                                cost += (Engine::IS_DAMAGED(party.Fleet[selection[i]])) ? harbour->ShipRepairPrice : 0;
+                                cost += ((Engine::IS_DAMAGED(party.Fleet[selection[i]])) ? harbour->ShipRepairPrice : 0);
                             }
                             else
                             {
-                                cost += (Engine::IS_DAMAGED(party.Fleet[selection[i]])) ? harbour->ShipRepairPrice * (party.Fleet[selection[i]].MaximumHealth - party.Fleet[selection[i]].Health) : 0;
+                                cost += ((Engine::IS_DAMAGED(party.Fleet[selection[i]])) ? harbour->ShipRepairPrice * (party.Fleet[selection[i]].MaximumHealth - party.Fleet[selection[i]].Health) : 0);
                             }
                         }
                     }
