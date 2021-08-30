@@ -26954,7 +26954,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
                             {
-                                if (((party.Fleet[party.CurrentShip].MaximumCargo - party.Fleet[party.CurrentShip].Cargo.size()) - story->Choices[choice].Cargo.size()) >= 0)
+                                if ((party.Fleet[party.CurrentShip].MaximumCargo - party.Fleet[party.CurrentShip].Cargo.size()) >= story->Choices[choice].Cargo.size())
                                 {
                                     party.Fleet[party.CurrentShip].Cargo.insert(party.Fleet[party.CurrentShip].Cargo.end(), story->Choices[choice].Cargo.begin(), story->Choices[choice].Cargo.end());
 
