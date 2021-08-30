@@ -15,6 +15,7 @@ namespace fs = std::filesystem;
 // Using SDL
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 #include <SDL_ttf.h>
 
 #if defined(_WIN32)
@@ -38,6 +39,7 @@ namespace fs = std::filesystem;
 #include "location.hpp"
 #include "input.hpp"
 #include "ship.hpp"
+#include "sound.hpp"
 #include "story.hpp"
 #include "topic.hpp"
 
@@ -363,9 +365,16 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
         else if (window)
         {
             SDL_SetWindowTitle(*window, title);
+
+            setWindowIcon(*window, icon);
         }
 
-        setWindowIcon(*window, icon);
+         //Initialize SDL_mixer
+        if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+        {
+            std::cerr << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
+        }
+
     }
 }
 
@@ -4445,6 +4454,8 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
                     {
                         if (results.size() == 0)
                         {
+                            Sound::Play(Sound::Type::DICE_ROLL);
+
                             results = Engine::ROLL_DICE(save_score);
                         }
                     }
@@ -4978,6 +4989,8 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     {
                         if (results.size() == 0)
                         {
+                            Sound::Play(Sound::Type::DICE_ROLL);
+
                             results = Engine::ROLL_DICE(fighting_score);
                         }
                     }
@@ -5398,6 +5411,8 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         {
                             if (results.size() == 0)
                             {
+                                Sound::Play(Sound::Type::DICE_ROLL);
+
                                 results = Engine::ROLL_DICE(attack_score);
                             }
                         }
@@ -5910,6 +5925,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             if (results.size() == 0)
                             {
+                                Sound::Play(Sound::Type::DICE_ROLL);
+
                                 results = Engine::ROLL_DICE(attack_score);
                             }
                         }
@@ -6709,6 +6726,8 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             if (results.size() == 0)
                             {
+                                Sound::Play(Sound::Type::DICE_ROLL);
+
                                 results = Engine::ROLL_DICE(rolls);
                             }
                         }
@@ -6988,6 +7007,8 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                         {
                             if (results.size() == 0)
                             {
+                                Sound::Play(Sound::Type::DICE_ROLL);
+
                                 results = Engine::ROLL_DICE(rolls);
                             }
                         }
@@ -8385,6 +8406,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     {
                         if (results.size() == 0)
                         {
+                            Sound::Play(Sound::Type::DICE_ROLL);
+
                             results = Engine::ROLL_DICE(skill_score);
                         }
                     }
@@ -8437,12 +8460,16 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                             if (success_counter >= success)
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 displayMessage("Skill Check PASSED!", intLB);
 
                                 test_result = true;
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::FAIL);
+
                                 displayMessage("Skill Check FAILED!", intRD);
 
                                 test_result = false;
@@ -8728,6 +8755,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                         if (Skill == Attribute::Type::SURVIVAL)
                         {
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             Engine::CAST_SPELL(party, team_type, Spells::Type::WOLF_SPIRIT);
 
                             party.RecentSuccesses += 3;
@@ -8736,6 +8765,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         }
                         else if (Skill == Attribute::Type::LORE)
                         {
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             Engine::CAST_SPELL(party, team_type, Spells::Type::WISDOM);
 
                             party.RecentSuccesses += 3;
@@ -8744,6 +8775,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         }
                         else if (Skill == Attribute::Type::CHARISMA)
                         {
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             Engine::CAST_SPELL(party, team_type, Spells::Type::SILVER_TONGUE);
 
                             party.RecentSuccesses += 3;
@@ -8763,6 +8796,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                         if (Skill == Attribute::Type::CHARISMA)
                         {
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             Engine::LOSE_EQUIPMENT(party, team_type, {Equipment::Type::POTION_OF_CHARISMA});
 
                             party.RecentSuccesses += 3;
@@ -22927,6 +22962,11 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             {
                 if (stage == Engine::MassCombat::COMBAT)
                 {
+                    if (party_combat_results.size() == 0 || enemy_combat_results.size() == 0)
+                    {
+                        Sound::Play(Sound::Type::DICE_ROLL);
+                    }
+
                     if (party_combat_results.size() == 0)
                     {
                         party_combat_results = Engine::ROLL_DICE(1);
@@ -26198,6 +26238,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                     {
                                         error = true;
 
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         if (selection.size() == 1)
                                         {
                                             message = "The party member selected is not valid";
@@ -26735,6 +26777,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::RANDOM_EVENT)
                         {
+                            Sound::Play(Sound::Type::DICE_ROLL);
+
                             auto results = Engine::ROLL_DICE(story->Choices[choice].Value);
 
                             auto sum = 0;
@@ -27692,6 +27736,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (SDL_GetTicks() - start_ticks > duration)
                             {
+                                Sound::Play(Sound::Type::ERROR);
+                                
                                 start_ticks = SDL_GetTicks();
                             }
                         }
@@ -30191,11 +30237,14 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 int main(int argc, char **argv)
 {
     SDL_Window *window = NULL;
+    
     SDL_Renderer *renderer = NULL;
 
-    createWindow(SDL_INIT_VIDEO, &window, &renderer, "Legendary Kingdoms", "icons/spidermindgames-48.png");
+    createWindow(SDL_INIT_VIDEO | SDL_INIT_AUDIO, &window, &renderer, "Legendary Kingdoms", "icons/spidermindgames-48.png");
 
     Input::InitializeGamePads();
+
+    Sound::Initialize();
 
     auto storyID = 1;
 
@@ -30233,6 +30282,11 @@ int main(int argc, char **argv)
             window = NULL;
         }
     }
+
+    Sound::Free();
+
+    // Quit SDL Subsystems
+    Mix_Quit();
 
     IMG_Quit();
 

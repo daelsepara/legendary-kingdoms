@@ -9,7 +9,7 @@ An Implementation of Legendary Kingdoms 1 - The Valley of Bones done in C++ and 
 - Fully digitized gameplay (**DONE**)
 - Quality of life improvements to record keeping (**PARTIAL**)
 - Load / Save game at any point (**DONE**)
-- Sound
+- Sound  (**PARTIAL**)
 - Multiplatform Linux/Windows/OSX (**PARTIAL**)
 
 # Current Progress (Screenshots)
