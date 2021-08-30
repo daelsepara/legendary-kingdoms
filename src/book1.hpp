@@ -23889,7 +23889,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "You step cautiously through a crooked black stone archway and into a wide pillared chamber. You are just taking your bearings when you head a slam of rusted metal. Spinning around you can see that you have been cut off from the exit by a large portcullis. Worse, you can hear a savage hissing from all around the temple chamber. Drawing your weapons, you are startled to see a number of hideous snakemen, serpentine creatures with the arms of men and the bodies of a giant cobra. There is no escape, you must fight!\n\nNote: Note: If you have a HYGLIPH FLOWER the snakemen are put off by its pungent odour and require a 5+ on their attack rolls to inflict damage during this battle.";
+            Text = "You step cautiously through a crooked black stone archway and into a wide pillared chamber. You are just taking your bearings when you head a slam of rusted metal. Spinning around you can see that you have been cut off from the exit by a large portcullis. Worse, you can hear a savage hissing from all around the temple chamber. Drawing your weapons, you are startled to see a number of hideous snakemen, serpentine creatures with the arms of men and the bodies of a giant cobra. There is no escape, you must fight!\n\nNote: If you have a HYGLIPH FLOWER the snakemen are put off by its pungent odour and require a 5+ on their attack rolls to inflict damage during this battle.";
 
             Choices.clear();
 
@@ -26639,7 +26639,7 @@ namespace Book1
 
             Image = "images/book1/the_salt_dragon.png";
 
-            Text = "Few mortals dare to face a dragon and live. This will be a most formidable battle.\n\nNote: Note: If ever the Salt Dragon ends a round without inflicting even a single point of Health damage on one of your party members, it will become enraged and breathe a blast of fire. When this happens, every party member loses 3 Health points, with no armour saves possible.";
+            Text = "Few mortals dare to face a dragon and live. This will be a most formidable battle.\n\nNote: If ever the Salt Dragon ends a round without inflicting even a single point of Health damage on one of your party members, it will become enraged and breathe a blast of fire. When this happens, every party member loses 3 Health points, with no armour saves possible.";
 
             Choices.clear();
 
