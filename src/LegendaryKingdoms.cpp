@@ -24063,6 +24063,8 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                 current_mode = Engine::MassCombatMode::DEPLOY;
 
                                 current = -1;
+
+                                controls_deploy = popupArmy(window, renderer, party.Army, offset, last, limit, popupw, popuph, infoh, popupx, popupy);
                             }
                         }
 
@@ -24245,6 +24247,8 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                 party.Army[right_flank[1]].Position = Location::BattleField::RIGHT_FLANK_SUPPORT;
                             }
                         }
+
+                        controls_deploy = popupArmy(window, renderer, party.Army, offset, last, limit, popupw, popuph, infoh, popupx, popupy);
 
                         current_mode = Engine::MassCombatMode::NORMAL;
 

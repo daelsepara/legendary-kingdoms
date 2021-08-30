@@ -24226,6 +24226,11 @@ namespace Book1
             Controls = Story::Controls::STANDARD;
         }
 
+        void Event(Party::Base &party)
+        {
+            Engine::CAST_SPELL(party, Team::Type::NONE, Spells::Type::SHADOW_DOOR);
+        }
+
         Engine::Destination Background(Party::Base &party)
         {
             if (Engine::VERIFY_CODES(party, {Codes::A(39)}))
