@@ -7121,7 +7121,7 @@ namespace Book1
         void Event(Party::Base &party)
         {
             temp_string = "";
-            
+
             Bye = NULL;
 
             Choices.clear();
@@ -10763,7 +10763,7 @@ namespace Book1
             Bye = NULL;
 
             temp_string = "";
-            
+
             EnemyArmy.clear();
 
             Barracks = Location::Type::SALTDAD;
@@ -27817,7 +27817,7 @@ namespace Book1
             Bye = NULL;
 
             temp_string = "";
-            
+
             Choices.clear();
 
             auto tax = 0;
