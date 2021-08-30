@@ -1,7 +1,7 @@
 CC = clang++
 GAME_SOURCE = LegendaryKingdoms.cpp
 GAME_OUTPUT = LegendaryKingdoms.exe
-LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -stdlib=libc++ -O3 -std=c++17
+LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -stdlib=libc++ -O3 -std=c++17
 INCLUDES = -I/usr/include/SDL2 -I/usr/local/include/SDL2
 
 all: clean legendary-kingdoms
