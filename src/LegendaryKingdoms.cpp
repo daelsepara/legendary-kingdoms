@@ -2242,22 +2242,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
         if (party.Codes.size() > 0)
         {
-            auto sorted_codes = std::multimap<int, Codes::Base, std::less<int>>();
-
-            for (auto i = 0; i < party.Codes.size(); i++)
-            {
-                sorted_codes.insert(std::make_pair(party.Codes[i].Value(), party.Codes[i]));
-            }
-
-            if (sorted_codes.size() > 0)
-            {
-                party.Codes.clear();
-
-                for (auto const &entry : sorted_codes)
-                {
-                    party.Codes.push_back(entry.second);
-                }
-            }
+            sort(party.Codes.begin(), party.Codes.end());
 
             std::string code_string = "";
 

@@ -97,6 +97,11 @@ namespace Codes
         {
             return ((int)Type * 1000 + Code);
         }
+
+        bool operator<(Base &src)
+        {
+            return Value() < src.Value();
+        }
     };
 
     Codes::Base A(int code)
