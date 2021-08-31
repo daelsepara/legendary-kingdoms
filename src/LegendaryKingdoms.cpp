@@ -2118,6 +2118,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
                 else if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
                 }
             }
@@ -2563,42 +2565,46 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                         Sound::Play(Sound::Type::BUTTON_CLICK);
 
                         character -= 1;
-                    }
 
-                    if (character >= 0 && character < party.Members.size())
-                    {
-                        if (adventurer)
+                        if (character >= 0 && character < party.Members.size())
                         {
-                            SDL_FreeSurface(adventurer);
-
-                            adventurer = NULL;
-                        }
-
-                        if (adventurerTexture)
-                        {
-                            SDL_DestroyTexture(adventurerTexture);
-
-                            adventurerTexture = NULL;
-                        }
-
-                        if (text)
-                        {
-                            SDL_FreeSurface(text);
-
-                            text = NULL;
-                        }
-
-                        if (party.Members[character].Image.length() > 0)
-                        {
-                            adventurer = createImage(party.Members[character].Image.c_str());
-
                             if (adventurer)
                             {
-                                adventurerTexture = SDL_CreateTextureFromSurface(renderer, adventurer);
-                            }
-                        }
+                                SDL_FreeSurface(adventurer);
 
-                        text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                                adventurer = NULL;
+                            }
+
+                            if (adventurerTexture)
+                            {
+                                SDL_DestroyTexture(adventurerTexture);
+
+                                adventurerTexture = NULL;
+                            }
+
+                            if (text)
+                            {
+                                SDL_FreeSurface(text);
+
+                                text = NULL;
+                            }
+
+                            if (party.Members[character].Image.length() > 0)
+                            {
+                                adventurer = createImage(party.Members[character].Image.c_str());
+
+                                if (adventurer)
+                                {
+                                    adventurerTexture = SDL_CreateTextureFromSurface(renderer, adventurer);
+                                }
+                            }
+
+                            text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                        }
+                    }
+                    else
+                    {
+                        Sound::Play(Sound::Type::ERROR);
                     }
                 }
                 else if (controls[current].Type == Control::Type::NEXT && !hold)
@@ -2608,42 +2614,46 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                         Sound::Play(Sound::Type::BUTTON_CLICK);
 
                         character += 1;
-                    }
 
-                    if (character >= 0 && character < party.Members.size())
-                    {
-                        if (adventurer)
+                        if (character >= 0 && character < party.Members.size())
                         {
-                            SDL_FreeSurface(adventurer);
-
-                            adventurer = NULL;
-                        }
-
-                        if (adventurerTexture)
-                        {
-                            SDL_DestroyTexture(adventurerTexture);
-
-                            adventurerTexture = NULL;
-                        }
-
-                        if (text)
-                        {
-                            SDL_FreeSurface(text);
-
-                            text = NULL;
-                        }
-
-                        if (party.Members[character].Image.length() > 0)
-                        {
-                            adventurer = createImage(party.Members[character].Image.c_str());
-
                             if (adventurer)
                             {
-                                adventurerTexture = SDL_CreateTextureFromSurface(renderer, adventurer);
-                            }
-                        }
+                                SDL_FreeSurface(adventurer);
 
-                        text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                                adventurer = NULL;
+                            }
+
+                            if (adventurerTexture)
+                            {
+                                SDL_DestroyTexture(adventurerTexture);
+
+                                adventurerTexture = NULL;
+                            }
+
+                            if (text)
+                            {
+                                SDL_FreeSurface(text);
+
+                                text = NULL;
+                            }
+
+                            if (party.Members[character].Image.length() > 0)
+                            {
+                                adventurer = createImage(party.Members[character].Image.c_str());
+
+                                if (adventurer)
+                                {
+                                    adventurerTexture = SDL_CreateTextureFromSurface(renderer, adventurer);
+                                }
+                            }
+
+                            text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                        }
+                    }
+                    else
+                    {
+                        Sound::Play(Sound::Type::ERROR);
                     }
                 }
                 else if (controls[current].Type == Control::Type::EQUIPMENT && !hold)
@@ -3273,62 +3283,74 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                 {
                     if (character > 0)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         character -= 1;
-                    }
 
-                    if (character >= 0 && character < characters.size())
-                    {
-                        if (characters[character].Image.length() > 0)
+                        if (character >= 0 && character < characters.size())
                         {
-                            if (adventurer)
+                            if (characters[character].Image.length() > 0)
                             {
-                                SDL_FreeSurface(adventurer);
+                                if (adventurer)
+                                {
+                                    SDL_FreeSurface(adventurer);
 
-                                adventurer = NULL;
+                                    adventurer = NULL;
+                                }
+
+                                adventurer = createImage(characters[character].Image.c_str());
                             }
 
-                            adventurer = createImage(characters[character].Image.c_str());
+                            if (text)
+                            {
+                                SDL_FreeSurface(text);
+
+                                text = NULL;
+                            }
+
+                            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                         }
-
-                        if (text)
-                        {
-                            SDL_FreeSurface(text);
-
-                            text = NULL;
-                        }
-
-                        text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                    }
+                    else
+                    {
+                        Sound::Play(Sound::Type::ERROR);
                     }
                 }
                 else if (controls->at(current).Type == Control::Type::NEXT && !hold)
                 {
                     if (character < characters.size() - 1)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         character += 1;
-                    }
 
-                    if (character >= 0 && character < characters.size())
-                    {
-                        if (characters[character].Image.length() > 0)
+                        if (character >= 0 && character < characters.size())
                         {
-                            if (adventurer)
+                            if (characters[character].Image.length() > 0)
                             {
-                                SDL_FreeSurface(adventurer);
+                                if (adventurer)
+                                {
+                                    SDL_FreeSurface(adventurer);
 
-                                adventurer = NULL;
+                                    adventurer = NULL;
+                                }
+
+                                adventurer = createImage(characters[character].Image.c_str());
                             }
 
-                            adventurer = createImage(characters[character].Image.c_str());
+                            if (text)
+                            {
+                                SDL_FreeSurface(text);
+
+                                text = NULL;
+                            }
+
+                            text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                         }
-
-                        if (text)
-                        {
-                            SDL_FreeSurface(text);
-
-                            text = NULL;
-                        }
-
-                        text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                    }
+                    else
+                    {
+                        Sound::Play(Sound::Type::ERROR);
                     }
                 }
                 else if (controls->at(current).Type == Control::Type::PLUS && !hold)
