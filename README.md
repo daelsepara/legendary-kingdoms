@@ -77,6 +77,7 @@ An Implementation of Legendary Kingdoms 1 - The Valley of Bones done in C++ and 
 
 # Other features implemented
 
+- Button/Icon hints/captions
 - Mass Combat
 - Sea Combat and Sailing
 - Item and Money access to The Vault
@@ -88,6 +89,7 @@ An Implementation of Legendary Kingdoms 1 - The Valley of Bones done in C++ and 
 - Rest, recovery, and spell recharge
 - Harbour/Dockyard: Buy/Sell ships or cargo, repairs
 - Recruitment
+- Combat/Skill checks focus
 
 # Copyright Information 
 
