@@ -26280,6 +26280,8 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                         result = Control::Type::LOAD;
 
                         done = true;
+
+                        Sound::Play(Sound::Type::SUCCESS);
                     }
                     else
                     {

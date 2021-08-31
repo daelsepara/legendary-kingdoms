@@ -22184,6 +22184,8 @@ namespace Book1
         {
             Bye = NULL;
 
+            temp_string = "";
+
             Engine::Destination destination = {Book::Type::BOOK1, -1};
 
             auto result = (Engine::ROLL(1) < 3);
