@@ -119,7 +119,7 @@ All rights reserved.  No part of this publication may be reproduced, stored in o
 ISBN 978-1-9160704-0-0
 ```
 
-** Note: This computer game implementation is not official nor is it endorsed by the gamebook's creators **
+**Note: This computer game implementation is not official nor is it endorsed by the gamebook's creators**
 
 # Bugs
 
