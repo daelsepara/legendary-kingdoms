@@ -20081,13 +20081,13 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                                 displayMessage(party.Army[selection].Name + " from " + std::string(Location::Description[src]) + " barracks transferred to " + std::string(Location::Description[dst]) + ".", intLB);
 
-                                selection = -1;
-
-                                destination = -1;
-
                                 party.Army[selection].Garrison = dst;
 
                                 controls_army = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh);
+
+                                destination = -1;
+
+                                selection = -1;
 
                                 current_mode = Control::Type::ARMY;
                             }
