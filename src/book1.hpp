@@ -14069,7 +14069,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            PreText = "You rub your hands together with glee as you behold the stores of treasure. It's time to get looting!\n\nThe following items are in the vault:\n\n1500 silver pieces\nA bar GOLD BULLION\nA MAGICAL WEAVE\nA pile of REGISTRY PAPERS\nA GLITTERING NECKLACE (Charisma +2)\nA TOME OF KNOWLEDGE (Lore +2)\nA SILVER IDOL\n\nWhat will you do now?\n\nNote: You may take what you wish.";
+            PreText = "You rub your hands together with glee as you behold the stores of treasure. It's time to get looting!\n\nThe following items are in the vault:\n\n1500 silver pieces\nA bar GOLD BULLION\nA MAGICAL WEAVE\nA pile of REGISTRY PAPERS\nA GLITTERING NECKLACE (Charisma +2)\nA TOME OF KNOWLEDGE (Lore +2)\nA SILVER IDOL\n\nWhat will you do now?\n\nNote: You may take what you wish. You gained the code A93.";
 
             Take = {
                 Equipment::Base("1500 silver pieces", "1500 silver pieces", Equipment::Class::NORMAL, Equipment::Type::SILVER_COINS, Attribute::Type::NONE, 0, 0, 1500, false),
@@ -14089,6 +14089,8 @@ namespace Book1
             }
 
             Text = PreText.c_str();
+
+            Engine::GET_CODES(party, {Codes::A(93)});
         }
     };
 
