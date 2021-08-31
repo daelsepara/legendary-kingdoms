@@ -2242,6 +2242,25 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
         if (party.Codes.size() > 0)
         {
+            auto sorted_codes = std::multimap<int, Codes::Base, std::less<int>>();
+
+            for (auto i = 0; i < party.Codes.size(); i++)
+            {
+                auto index = ((int)party.Codes[i].Type) * 1000 + party.Codes[i].Code;
+                
+                sorted_codes.insert(std::make_pair(index, party.Codes[i]));
+            }
+
+            if (sorted_codes.size() > 0)
+            {
+                party.Codes.clear();
+
+                for (auto const &entry : sorted_codes)
+                {
+                    party.Codes.push_back(entry.second);
+                }
+            }
+
             std::string code_string = "";
 
             for (auto i = 0; i < party.Codes.size(); i++)
