@@ -27836,31 +27836,36 @@ namespace Book1
 
             Choices.clear();
 
-            auto tax = 0;
-
-            for (auto i = 0; i < party.Members.size(); i++)
+            if (!Engine::VERIFY_CODES(party, {Codes::A(100)}))
             {
-                for (auto j = 0; j < party.Members[i].Equipment.size(); j++)
+                auto tax = 0;
+
+                for (auto i = 0; i < party.Members.size(); i++)
                 {
-                    if (party.Members[i].Equipment[j].Class != Equipment::Class::SHIELD && ((party.Members[i].Equipment[j].Attribute != Attribute::Type::NONE && party.Members[i].Equipment[j].Modifier > 1) || (party.Members[i].Equipment[j].Attribute == Attribute::Type::FIGHTING3_LORE2)))
+                    for (auto j = 0; j < party.Members[i].Equipment.size(); j++)
                     {
-                        tax += 100;
+                        if (party.Members[i].Equipment[j].Class != Equipment::Class::SHIELD && ((party.Members[i].Equipment[j].Attribute != Attribute::Type::NONE && party.Members[i].Equipment[j].Modifier > 1) || (party.Members[i].Equipment[j].Attribute == Attribute::Type::FIGHTING3_LORE2)))
+                        {
+                            tax += 100;
+                        }
                     }
                 }
-            }
 
-            if (tax > 0)
-            {
-                temp_string = "Pay the Cursite taxmen " + std::to_string(tax) + " silver coins";
+                if (tax > 0)
+                {
+                    temp_string = "Pay the Cursite taxmen " + std::to_string(tax) + " silver coins";
 
-                Choices.push_back(Choice::Base(temp_string.c_str(), {Book::Type::BOOK1, 458}, Choice::Type::GAIN_MONEY, -tax, "Grumbling at the greed of priests you march on having paid the extortionate tax"));
-                Choices.push_back(Choice::Base("You cannot or will not pay the taxmen", {Book::Type::BOOK1, 109}));
-            }
-            else
-            {
-                Choices.push_back(Choice::Base("You do not have any taxable 'luxuries'", {Book::Type::BOOK1, 458}));
+                    Choices.push_back(Choice::Base(temp_string.c_str(), {Book::Type::BOOK1, 458}, Choice::Type::GAIN_MONEY, -tax, "Grumbling at the greed of priests you march on having paid the extortionate tax"));
+                    Choices.push_back(Choice::Base("You cannot or will not pay the taxmen", {Book::Type::BOOK1, 109}));
+                }
+                else
+                {
+                    Choices.push_back(Choice::Base("You do not have any taxable 'luxuries'", {Book::Type::BOOK1, 458}));
+                }
             }
         }
+
+        Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 362}; }
     };
 
     class Story823 : public Story::Base
