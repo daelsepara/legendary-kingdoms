@@ -369,12 +369,11 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
             setWindowIcon(*window, icon);
         }
 
-         //Initialize SDL_mixer
-        if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+        //Initialize SDL_mixer
+        if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
         {
             std::cerr << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
         }
-
     }
 }
 
@@ -2629,7 +2628,6 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
                         if (party.Members[character].Image.length() > 0)
                         {
-
                             adventurer = createImage(party.Members[character].Image.c_str());
 
                             if (adventurer)
@@ -2995,27 +2993,39 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                                 party.Order.clear();
 
                                 done = true;
+
+                                Sound::Play(Sound::Type::BUTTON_CLICK);
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("Please choose an adventurer to recruit!", intRD);
                             }
                         }
                         else if (recruitmentPrice < 0)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You cannot recruit adventurers here!", intRD);
                         }
                         else if (party.Money < recruitmentPrice)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have enough silver!", intRD);
                         }
                         else if (party.Members.size() >= party.Limit)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You already have full party!", intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::BACK && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         done = true;
                     }
                 }
@@ -3368,6 +3378,8 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             }
                         }
 
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         done = true;
 
                         current = -1;
@@ -3383,6 +3395,8 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                         start_ticks = SDL_GetTicks();
 
                         flash_color = intRD;
+
+                        Sound::Play(Sound::Type::ERROR);
                     }
 
                     break;
@@ -3641,10 +3655,14 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
 
             if (selected && current >= 0 && current < controls.size() && controls[current].Type == Control::Type::BACK)
             {
+                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                 done = true;
             }
             else if (selected && current >= 0 && current < controls.size() && controls[current].Type == Control::Type::TOGGLE_MAP)
             {
+                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                 current_map = 1 - current_map;
             }
         }
@@ -4234,6 +4252,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
     }
 
     controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::SPELL));
+
     controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::FLEE));
 
     return controls;
@@ -4583,6 +4602,8 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
                     }
                     else if (stage == Engine::ArmourSave::REDUCE && controls[current].Type == Control::Type::BACK)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         stage = Engine::ArmourSave::END;
 
                         done = true;
@@ -4771,6 +4792,8 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
 
                     current = -1;
@@ -4781,6 +4804,8 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (selection >= 0 && selection < party.Members.size())
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         done = true;
 
                         result = selection;
@@ -4802,8 +4827,6 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if (selection == current + offset)
                         {
-                            Sound::Play(Sound::Type::BUTTON_CLICK);
-
                             selection = -1;
                         }
                         else
@@ -4820,8 +4843,6 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     }
                                     else
                                     {
-                                        Sound::Play(Sound::Type::BUTTON_CLICK);
-
                                         selection = current + offset;
                                     }
                                 }
@@ -4988,6 +5009,8 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::ENEMY_DAZING_LIGHTS}))
             {
+                Sound::Play(Sound::Type::FAIL);
+
                 displayMessage("The enemy cast Dazing Lights. Your target is more difficult to hit!", intRD);
             }
 
@@ -5060,6 +5083,8 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
                             if (damage > 0 && monsters[opponent].Type == Monster::Type::FASTILON && !monsters[opponent].Damaged)
                             {
+                                Sound::Play(Sound::Type::FAIL);
+
                                 stunned = "\n\n" + party.Members[combatant].Name + " is stunned next round!";
 
                                 Engine::GAIN_STATUS(party.Members[combatant], Character::Status::STUNNED_NEXT_ROUND);
@@ -5071,10 +5096,14 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
                             if (damage > 0)
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 displayMessage(party.Members[combatant].Name + "'s " + spell.Name + " deals " + std::to_string(damage) + " to the " + monsters[opponent].Name + "!" + stunned, intLB);
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::FAIL);
+
                                 displayMessage(party.Members[combatant].Name + "'s " + spell.Name + " was ineffective!", intRD);
                             }
 
@@ -5129,6 +5158,8 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 {
                     if (stage == Engine::Attack::START && controls[current].Type == Control::Type::BACK)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         combat_damage = -1;
 
                         done = true;
@@ -5147,6 +5178,8 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     }
                     else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::BACK)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         stage = Engine::Attack::END;
 
                         done = true;
@@ -5302,6 +5335,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     }
 
     controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::SPELL));
+
     controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::FLEE));
 
     return controls;
@@ -5488,10 +5522,14 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                                     if (damage_scale * damage > 0)
                                     {
+                                        Sound::Play(Sound::Type::SUCCESS);
+
                                         displayMessage("The " + party.Fleet[party.CurrentShip].Name + " deals " + std::to_string(damage_scale * damage) + " to the " + enemyFleet[opponent].Name + "!", intLB);
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::FAIL);
+
                                         displayMessage("The " + party.Fleet[party.CurrentShip].Name + "'s attack was ineffective!", intRD);
                                     }
                                 }
@@ -5501,12 +5539,16 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                                     if (combat_damage > 0)
                                     {
+                                        Sound::Play(Sound::Type::FAIL);
+
                                         Engine::GAIN_HEALTH(party.Fleet[party.CurrentShip], -damage);
 
                                         displayMessage(enemyFleet[opponent].Name + " deals " + std::to_string(damage) + " to your ship!", intRD);
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::SUCCESS);
+
                                         displayMessage("The " + enemyFleet[opponent].Name + "'s attack was ineffective!", intLB);
                                     }
                                 }
@@ -5622,6 +5664,8 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     {
                         if (stage == Engine::Attack::START && controls[current].Type == Control::Type::BACK)
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             done = true;
 
                             current = -1;
@@ -5640,6 +5684,8 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         }
                         else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::BACK)
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             stage = Engine::Attack::END;
 
                             done = true;
@@ -5654,17 +5700,23 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                             {
                                 if (combat_damage > 0)
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     displayMessage(party.Fleet[party.CurrentShip].Name + " dealt " + std::to_string(combat_damage) + " damage!", intRD);
 
                                     Engine::GAIN_HEALTH(party.Fleet[party.CurrentShip], -combat_damage);
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     displayMessage("The " + enemyFleet[opponent].Name + "'s attack was ineffective!", intLB);
                                 }
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                 done = true;
 
                                 selected = false;
@@ -6050,7 +6102,14 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                                     if (combat_damage > 0)
                                     {
-                                        Sound::Play(Sound::Type::SUCCESS);
+                                        if (stunned.length() <= 0)
+                                        {
+                                            Sound::Play(Sound::Type::SUCCESS);
+                                        }
+                                        else
+                                        {
+                                            Sound::Play(Sound::Type::FAIL);
+                                        }
 
                                         displayMessage(party.Members[combatant].Name + " deals " + std::to_string(damage_scale * damage) + " to the " + monsters[opponent].Name + "!" + stunned, intLB);
                                     }
@@ -6091,11 +6150,15 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         {
                             if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
                             {
+                                Sound::Play(Sound::Type::FAIL);
+
                                 displayMessage("Dazing Lights reduces " + monsters[opponent].Name + "'s Attack results by 1.", intLB);
                             }
 
                             if (monsters[opponent].Type == Monster::Type::SKALLOS && !monsters[opponent].Damaged)
                             {
+                                Sound::Play(Sound::Type::FAIL);
+
                                 displayMessage("Skallos unleashes a roar of black magic! Each party member loses 1 Health. Skallos recovers 4 Health points!", intRD);
 
                                 Engine::GAIN_HEALTH(party, -1);
@@ -6106,7 +6169,9 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::HYGLIPH_FLOWER}))
                                 {
-                                    Difficulty = 5;
+                                    Sound::Play(Sound::Type::SUCCESS);
+
+                                    Difficulty = monsters[opponent].Difficulty + 1;
 
                                     if (monsters[opponent].Type == Monster::Type::SNAKEMAN_PRIEST)
                                     {
@@ -6114,11 +6179,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     }
                                     else if (monsters[opponent].Type == Monster::Type::SNAKEMAN)
                                     {
-                                        if (monsters[opponent].Difficulty == 5)
-                                        {
-                                            Difficulty = 6;
-                                        }
-
                                         message = "The snakeman is put off by the pungent odour of the HYGLIPH FLOWER and requires a " + std::to_string(Difficulty) + "+ to his attack rolls to inflict damage during this battle.";
                                     }
 
@@ -6407,6 +6467,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if (stage == Engine::Attack::START && controls[current].Type == Control::Type::BACK)
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             done = true;
 
                             current = -1;
@@ -6417,6 +6479,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
                         else if (stage == Engine::Attack::START && controls[current].Type == Control::Type::NEXT)
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             done = true;
 
                             current = -1;
@@ -6435,6 +6499,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage("You cannot add more focus points!", intRD);
                                 }
                             }
@@ -6451,6 +6517,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage("All focus points have been removed!", intRD);
                                 }
                             }
@@ -6467,6 +6535,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
                         else if (stage == Engine::Attack::DAMAGE && controls[current].Type == Control::Type::BACK)
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             stage = Engine::Attack::END;
 
                             done = true;
@@ -6816,6 +6886,8 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 if (success > threshold)
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     retreats = true;
 
                                     displayMessage(party.Army[unit].Name + " retreats safely to " + std::string(Location::Description[location]) + ".", intLB);
@@ -6826,6 +6898,8 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     retreats = false;
 
                                     displayMessage(party.Army[unit].Name + " routed.", intRD);
@@ -6833,6 +6907,8 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 retreats = true;
 
                                 displayMessage(party.Army[unit].Name + " retreats safely to " + std::string(Location::Description[location]) + ".", intLB);
@@ -6903,6 +6979,8 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                     else if (stage == Engine::Retreat::CONFIRM && controls[current].Type == Control::Type::BACK)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         stage = Engine::Retreat::END;
 
                         done = true;
@@ -7097,6 +7175,8 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                             {
                                 if (success > Engine::SCORE(character, attribute))
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     increase = score;
 
                                     Engine::GAIN_SCORE(character, attribute, score);
@@ -7105,6 +7185,8 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     increase = 0;
 
                                     displayMessage(character.Name + "'s " + std::string(Attribute::Descriptions[attribute]) + " score did not increase.", intRD);
@@ -7112,6 +7194,8 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 increase = score;
 
                                 Engine::GAIN_SCORE(character, attribute, score);
@@ -7165,6 +7249,8 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                 {
                     if (stage == Engine::RaiseAttribute::START && controls[current].Type == Control::Type::BACK)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         increase = -1;
 
                         done = true;
@@ -7190,6 +7276,8 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                     }
                     else if (stage == Engine::RaiseAttribute::CONFIRM && controls[current].Type == Control::Type::BACK)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         stage = Engine::RaiseAttribute::END;
 
                         done = true;
@@ -7297,6 +7385,8 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
 
         if (mode == Spells::Select::UNLEARN && !Engine::VERIFY_SPELL_LIMIT(caster))
         {
+            Sound::Play(Sound::Type::ERROR);
+
             displayMessage("Your spellbook is holding too many spells! You must unlearn spells from your spellbook.", intRD);
         }
 
@@ -7503,6 +7593,8 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
                 }
                 else if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     select_result.clear();
 
                     done = true;
@@ -7515,6 +7607,8 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
                 {
                     if (selection.size() > 0 && selection.size() >= select_limit)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         done = true;
 
                         for (auto i = 0; i < selection.size(); i++)
@@ -7575,6 +7669,8 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
                             message += " spellbook.";
                         }
 
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage(message, intRD);
                     }
                 }
@@ -7599,6 +7695,8 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(spells[current + offset].Name + " cannot be cast!", intRD);
                             }
                         }
@@ -7872,6 +7970,8 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 }
                 else if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     result = -1;
 
                     done = true;
@@ -7888,10 +7988,14 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                         {
                             if (Engine::FIND_LIST(previousTargets, selection) >= 0)
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("That opponent has been attacked before! Choose another target!", intRD);
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                 done = true;
 
                                 result = selection;
@@ -7903,6 +8007,8 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             done = true;
 
                             result = selection;
@@ -7914,6 +8020,8 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You must select an opponent to attack this round.", intRD);
                     }
                 }
@@ -8192,6 +8300,8 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, 
                 }
                 else if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     result = -1;
 
                     done = true;
@@ -8208,10 +8318,14 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, 
                         {
                             if (Engine::FIND_LIST(previousTargets, selection) >= 0)
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("That opponent has been attacked before! Choose another target!", intRD);
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                 done = true;
 
                                 result = selection;
@@ -8223,6 +8337,8 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, 
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             done = true;
 
                             result = selection;
@@ -8234,6 +8350,8 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, 
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You must select an opponent to attack this round.", intRD);
                     }
                 }
@@ -8253,6 +8371,8 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, 
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(enemyFleet[current + offset].Name + " is destroyed!", intRD);
                             }
                         }
@@ -8755,6 +8875,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("You cannot add more focus points!", intRD);
                             }
                         }
@@ -8768,6 +8890,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("You cannot add more focus points!", intRD);
                             }
                         }
@@ -8786,6 +8910,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("All focus points have been removed!", intRD);
                         }
 
@@ -8859,6 +8985,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     }
                     else if (stage == Attribute::Test::MAGIC && controls[current].Type == Control::Type::BACK)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         stage = Attribute::Test::END;
 
                         done = true;
@@ -8869,6 +8997,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     }
                     else if (stage == Attribute::Test::CHECK && controls[current].Type == Control::Type::BACK)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         stage = Attribute::Test::END;
 
                         done = true;
@@ -9060,6 +9190,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             {
                 if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
 
                     current = -1;
@@ -9076,6 +9208,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         {
                             if (hasAttacked.size() > 0 && Engine::FIND_LIST(hasAttacked, selection) >= 0 && magicRound0(party.Members[selection], combatRound))
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(party.Members[selection].Name + " already attacked this turn!", intRD);
                             }
                             else
@@ -9114,6 +9248,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                             {
                                                 if (Engine::HAS_STATUS(party.Members[target], Character::Status::ARMOUR3))
                                                 {
+                                                    Sound::Play(Sound::Type::ERROR);
+
                                                     displayMessage(party.Members[target].Name + " already has the " + party.Members[selection].SpellBook[i].Name + "!", intRD);
                                                 }
                                                 else
@@ -9125,6 +9261,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                             }
                                             else
                                             {
+                                                Sound::Play(Sound::Type::ERROR);
+
                                                 displayMessage(party.Members[target].Name + " is an invalid target!", intRD);
                                             }
                                         }
@@ -9163,6 +9301,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                         message += " is not injured!";
                                                     }
 
+                                                    Sound::Play(Sound::Type::ERROR);
+
                                                     displayMessage(message, intRD);
                                                 }
                                                 else
@@ -9175,6 +9315,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                                     }
                                                     else
                                                     {
+                                                        Sound::Play(Sound::Type::ERROR);
+
                                                         displayMessage(party.Members[target].Name + " is an invalid target!", intRD);
                                                     }
                                                 }
@@ -9184,6 +9326,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                         {
                                             if (Engine::VERIFY_CODES(party, {Codes::Type::DAZING_LIGHTS}))
                                             {
+                                                Sound::Play(Sound::Type::ERROR);
+
                                                 displayMessage("Dazing Lights has already been cast!", intRD);
                                             }
                                             else
@@ -9220,6 +9364,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                             }
                                             else
                                             {
+                                                Sound::Play(Sound::Type::ERROR);
+
                                                 displayMessage("There are no targets for " + party.Members[selection].SpellBook[i].Name + "!", intRD);
                                             }
                                         }
@@ -9252,6 +9398,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                             }
                                             else
                                             {
+                                                Sound::Play(Sound::Type::ERROR);
+
                                                 displayMessage("There are no targets for " + party.Members[selection].SpellBook[i].Name + "!", intRD);
                                             }
                                         }
@@ -9299,6 +9447,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                             }
                                             else
                                             {
+                                                Sound::Play(Sound::Type::ERROR);
+
                                                 displayMessage("There are no targets for " + party.Members[selection].SpellBook[i].Name + "!", intRD);
                                             }
                                         }
@@ -9346,6 +9496,8 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                             }
                                             else
                                             {
+                                                Sound::Play(Sound::Type::ERROR);
+
                                                 displayMessage("There are no targets for " + party.Members[selection].SpellBook[i].Name + "!", intRD);
                                             }
                                         }
@@ -9361,11 +9513,15 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                                             result = selection;
 
+                                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                             done = true;
                                         }
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[selection].Name + " cannot cast " + party.Members[selection].SpellBook[spell[0]].Name + " during combat!", intRD);
                                     }
                                 }
@@ -9379,11 +9535,15 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(party.Members[selection].Name + " cannot cast spells!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You must select the adventurer to cast a spell.", intRD);
                     }
                 }
@@ -9414,11 +9574,15 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                                         message = "You can only choose " + std::string(Team::Descriptions[team]) + "!";
                                     }
 
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage(message, intRD);
                                 }
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(party.Members[current + offset].Name + " is dead!", intRD);
                             }
                         }
@@ -9590,6 +9754,8 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
             {
                 if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
 
                     current = -1;
@@ -9634,12 +9800,16 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
                                         }
                                         else
                                         {
+                                            Sound::Play(Sound::Type::ERROR);
+
                                             displayMessage("There are no targets for " + party.Members[selection].SpellBook[i].Name + "!", intRD);
                                         }
                                     }
 
                                     if (cast)
                                     {
+                                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                         party.Members[selection].SpellBook[i].Charged = false;
 
                                         caster = selection;
@@ -9649,6 +9819,8 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage(party.Members[selection].Name + " cannot cast " + party.Members[selection].SpellBook[spell[0]].Name + " during combat!", intRD);
                                 }
                             }
@@ -9661,11 +9833,15 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(party.Members[selection].Name + " cannot cast spells!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You must select the adventurer to cast a spell.", intRD);
                     }
                 }
@@ -9675,6 +9851,8 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
                     {
                         if (Engine::FIND_LIST(castSpells, current + offset) >= 0)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(party.Members[current + offset].Name + " already cast a spell this round!", intRD);
                         }
                         else if (Engine::IS_ACTIVE(party, current + offset))
@@ -9685,15 +9863,21 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(party.Members[current + offset].Name + " cannot cast spells", intRD);
                             }
                         }
                         else if (Engine::IS_ALIVE(party.Members[current + offset]))
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(party.Members[current + offset].Name + " has been captured!", intRD);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(party.Members[current + offset].Name + " is dead!", intRD);
                         }
                     }
@@ -9864,6 +10048,8 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
             {
                 if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
 
                     current = -1;
@@ -9903,6 +10089,8 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
                                         }
                                         else
                                         {
+                                            Sound::Play(Sound::Type::ERROR);
+
                                             displayMessage("There are no targets for " + party.Members[selection].SpellBook[i].Name + "!", intRD);
                                         }
                                     }
@@ -9918,6 +10106,8 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage(party.Members[selection].Name + " cannot cast " + party.Members[selection].SpellBook[spell[0]].Name + " during combat!", intRD);
                                 }
                             }
@@ -9930,11 +10120,15 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(party.Members[selection].Name + " cannot cast spells!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You must select the adventurer to cast a spell.", intRD);
                     }
                 }
@@ -9944,6 +10138,8 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
                     {
                         if (Engine::FIND_LIST(castSpells, current + offset) >= 0)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(party.Members[current + offset].Name + " already cast a spell this round!", intRD);
                         }
                         else if (Engine::IS_ACTIVE(party, current + offset))
@@ -9954,15 +10150,21 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(party.Members[current + offset].Name + " cannot cast spells!", intRD);
                             }
                         }
                         else if (Engine::IS_ALIVE(party.Members[current + offset]))
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(party.Members[current + offset].Name + " has been captured!", intRD);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(party.Members[current + offset].Name + " is dead!", intRD);
                         }
                     }
@@ -10186,6 +10388,8 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
 
                     current = -1;
@@ -10198,6 +10402,8 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     if ((selection.size() >= team_size && selection.size() <= party.Members.size()) || (selection.size() == Engine::COUNT(party, team) && selection.size() <= team_size))
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         done = true;
 
                         result = skillTestScreen(window, renderer, party, team, selection, skill, difficulty, success, useEquipment);
@@ -10208,6 +10414,8 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You must select the adventurer(s) who will perform the skill check.", intRD);
                     }
                 }
@@ -10237,11 +10445,15 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Members[current + offset].Name + " is not part of the " + std::string(Team::Descriptions[team]) + " team!", intRD);
                                     }
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage(party.Members[current + offset].Name + " is dead!", intRD);
                                 }
                             }
@@ -10405,6 +10617,8 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
             {
                 if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
 
                     current = -1;
@@ -10483,6 +10697,8 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
                 {
                     if (selection >= 0 && selection < attributes.size())
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         done = true;
 
                         result = attributes[selection];
@@ -10493,6 +10709,8 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         flash_message = true;
 
                         message = "You must select an ATTRIBUTE!";
@@ -10500,6 +10718,8 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
                         start_ticks = SDL_GetTicks();
 
                         flash_color = intRD;
+
+                        Sound::Play(Sound::Type::ERROR);
                     }
                 }
                 else if (controls[current].Type == Control::Type::ACTION)
@@ -10749,6 +10969,8 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Cha
                 {
                     if (selection >= 0 && selection < teams_list.size())
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         character.Team = teams_list[selection];
 
                         selected = false;
@@ -10941,6 +11163,8 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
 
                     current = -1;
@@ -11037,12 +11261,14 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     if (assignment_error || Engine::COUNT_TEAMS(party) < min_teams)
                     {
-                        displayMessage("Please complete team selection", intRD);
+                        Sound::Play(Sound::Type::ERROR);
 
-                        done = false;
+                        displayMessage("Please complete team selection", intRD);
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         done = true;
                     }
                 }
@@ -11058,12 +11284,12 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 selectTeam(window, renderer, party.Book, party.Members[selection], teams);
 
-                                controls.clear();
-
                                 controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, false);
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(party.Members[selection].Name + " is dead!", intRD);
                             }
                         }
@@ -11325,6 +11551,8 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
             {
                 if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
 
                     current = -1;
@@ -11413,6 +11641,8 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                 done = true;
 
                                 result = selection;
@@ -11424,6 +11654,8 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             done = true;
 
                             result = selection;
@@ -11446,8 +11678,6 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     {
                         if (selection == current + offset)
                         {
-                            Sound::Play(Sound::Type::BUTTON_CLICK);
-
                             selection = -1;
                         }
                         else
@@ -11476,8 +11706,6 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                                     }
                                     else
                                     {
-                                        Sound::Play(Sound::Type::BUTTON_CLICK);
-
                                         selection = current + offset;
                                     }
                                 }
@@ -11713,6 +11941,8 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, std:
             {
                 if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
 
                     current = -1;
@@ -11792,6 +12022,8 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, std:
                 {
                     if (selection >= 0 && selection < ships.size())
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         done = true;
 
                         result = selection;
@@ -11802,6 +12034,8 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, std:
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You must select a ship!", intRD);
                     }
                 }
@@ -11827,6 +12061,8 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, std:
                                         }
                                         else
                                         {
+                                            Sound::Play(Sound::Type::ERROR);
+
                                             displayMessage("This ship does not have enough space!", intRD);
                                         }
                                     }
@@ -11837,11 +12073,15 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, std:
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage("You can only choose a ship docked at " + std::string(Location::Description[location]) + "!", intRD);
                                 }
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("The " + ships[current + offset].Name + " is destroyed!", intRD);
                             }
                         }
@@ -12079,6 +12319,8 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
             {
                 if (controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
 
                     current = -1;
@@ -12157,6 +12399,8 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                 {
                     if (selection.size() > 0 && (selection.size() >= team_size || selection.size() >= Engine::COUNT(party, team)))
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         done = true;
 
                         selected_party = selection;
@@ -12180,8 +12424,6 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
 
                         if (result >= 0 && result < selection.size())
                         {
-                            Sound::Play(Sound::Type::BUTTON_CLICK);
-
                             selection.erase(selection.begin() + result);
                         }
                         else
@@ -12216,8 +12458,6 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                                     }
                                     else if (selection.size() < team_size)
                                     {
-                                        Sound::Play(Sound::Type::BUTTON_CLICK);
-
                                         selection.push_back(current + offset);
                                     }
                                 }
@@ -12240,7 +12480,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                             else
                             {
                                 Sound::Play(Sound::Type::ERROR);
-                                
+
                                 displayMessage(party.Members[current + offset].Name + " is dead!", intRD);
                             }
                         }
@@ -12555,12 +12795,16 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                         {
                             if (fleeRound == -1)
                             {
+                                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                 done = true;
 
                                 combatResult = Engine::Combat::FLEE;
                             }
                             else if (combatRound == fleeRound)
                             {
+                                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                 done = true;
 
                                 combatResult = Engine::Combat::FLEE;
@@ -12569,16 +12813,22 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                             {
                                 if (combatRound < fleeRound)
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage("You cannot flee at this time.", intRD);
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage("You can no longer flee from this battle.", intRD);
                                 }
                             }
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You cannot flee from this battle.", intRD);
                         }
                     }
@@ -12588,6 +12838,8 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                         {
                             if (hasAttacked)
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("Your ship has already attacked this round.", intRD);
                             }
                             else
@@ -12656,10 +12908,14 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
 
                                     if (combat_spells <= 0)
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage("Your party does not have any usable sea combat spells.", intRD);
                                     }
                                     else if (castSpells.size() >= Engine::SPELLCASTERS(party))
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage("Your party has already cast spells this round.", intRD);
                                     }
                                     else
@@ -12680,11 +12936,15 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage("There are no spell casters in your party!", intRD);
                                 }
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 if (Engine::VERIFY_CODES(party, {Codes::Type::LAST_IN_COMBAT}) && combatRound == 0)
                                 {
                                     displayMessage("Your ship does not get to attack first nor cast spells this round!", intRD);
@@ -12697,6 +12957,8 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You cannot cast spells in this battle!", intRD);
                         }
                     }
@@ -13173,12 +13435,16 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             if (fleeRound == -1)
                             {
+                                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                 done = true;
 
                                 combatResult = Engine::Combat::FLEE;
                             }
                             else if (combatRound == fleeRound)
                             {
+                                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                 done = true;
 
                                 combatResult = Engine::Combat::FLEE;
@@ -13812,6 +14078,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         Engine::REMOVE_STATUS(party, Character::Status::POTION_OF_INVULNERABILITY);
         Engine::REMOVE_STATUS(party, Character::Status::STUNNED);
         Engine::REMOVE_STATUS(party, Character::Status::STUNNED_NEXT_ROUND);
+        Engine::REMOVE_STATUS(party, Character::Status::UNARMED_COMBAT);
 
         Engine::LOSE_CODES(party, {Codes::Type::NO_COMBAT_SPELLS,
                                    Codes::Type::NO_WEAPONS,
@@ -14543,16 +14810,22 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                 message += "[" + ship.Name + "]";
                             }
 
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             displayMessage(message, intLB);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have enough silver coins!", intRD);
                         }
                     }
                 }
                 else
                 {
+                    Sound::Play(Sound::Type::ERROR);
+
                     displayMessage("Please select the ships you wish to buy!", intRD);
                 }
             }
@@ -14653,10 +14926,14 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                     if (sold > unsold)
                     {
+                        Sound::Play(Sound::Type::SUCCESS);
+
                         flash_color = intLB;
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::FAIL);
+
                         flash_color = intRD;
                     }
 
@@ -14664,15 +14941,21 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
                 else
                 {
+                    Sound::Play(Sound::Type::ERROR);
+
                     displayMessage("Please select the ships you wish to sell!", intRD);
                 }
             }
             else if (controls[current].Type == Control::Type::PARTY && !hold)
             {
+                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                 viewParty(window, renderer, party, Team::Type::NONE, false);
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
             {
+                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                 done = true;
             }
         }
@@ -14786,6 +15069,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     if (!Engine::VERIFY_EQUIPMENT_LIMIT(character))
     {
+        Sound::Play(Sound::Type::ERROR);
+
         displayMessage("You are carrying too many items! Drop, sell, or transfer excess items.", intRD);
     }
 
@@ -15323,6 +15608,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                                 inventoryScreen(window, renderer, party, team, character, -1, false);
                             }
 
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             displayMessage(message, intLB);
 
                             controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
@@ -15331,12 +15618,16 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have enough silver coins!", intRD);
                         }
                     }
                 }
                 else
                 {
+                    Sound::Play(Sound::Type::ERROR);
+
                     displayMessage("Please select the items you wish to buy!", intRD);
                 }
 
@@ -15426,10 +15717,14 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                     if (sold > unsold)
                     {
+                        Sound::Play(Sound::Type::SUCCESS);
+
                         flash_color = intLB;
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::FAIL);
+
                         flash_color = intRD;
                     }
 
@@ -15466,6 +15761,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
                 else
                 {
+                    Sound::Play(Sound::Type::ERROR);
+
                     displayMessage("Please select the items you wish to sell!", intRD);
                 }
 
@@ -15479,11 +15776,15 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (Engine::IS_ACTIVE(party, character))
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     inventoryScreen(window, renderer, party, team, character, -1, false);
                 }
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
             {
+                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                 done = true;
             }
         }
@@ -15813,6 +16114,8 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                         if (party.Money < cost)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have enough silver coins!", intRD);
                         }
                         else
@@ -15829,16 +16132,22 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                             if (cost > 0)
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 message = "Your party was healed for " + std::to_string(cost) + " silver coins.";
                             }
                             else
                             {
                                 if (RestPrice > 0)
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     message = "None of your party members are injured.";
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     message = "Your party was healed for free.";
                                 }
                             }
@@ -15873,6 +16182,8 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                         if (party.Money < cost)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have enough silver coins!", intRD);
                         }
                         else
@@ -15889,16 +16200,22 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                             if (cost > 0)
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 message = "Your party was healed for " + std::to_string(cost) + " silver coins.";
                             }
                             else
                             {
                                 if (RestPrice > 0)
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     message = "None of your party members are injured.";
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     message = "Your party was healed for free.";
                                 }
                             }
@@ -15941,15 +16258,21 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             {
                                 if (party.Members[character].SpellBook.size() > 0)
                                 {
+                                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                                     rechargeSpells(window, renderer, party, party.Members[character]);
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage(party.Members[character].Name + "'s spellbook is empty!", intRD);
                                 }
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(party.Members[character].Name + " is not a spell caster!", intRD);
                             }
                         }
@@ -15957,16 +16280,22 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         {
                             if (character >= 0 && character < party.Members.size())
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(party.Members[character].Name + " cannot recharge spells!", intRD);
                             }
                         }
                     }
                     else if (Engine::SPELLCASTERS(party) > 0)
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You cannot recharge your spells here!", intRD);
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You do not have any spell casters in your party!", intRD);
                     }
 
@@ -15974,6 +16303,8 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
                 else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
                 }
             }
@@ -16344,6 +16675,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if (character.Health < character.MaximumHealth)
                         {
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             displayMessage(character.Name + " recovers up to 5 Health points!", intLB);
 
                             Engine::GAIN_HEALTH(character, 5);
@@ -16352,6 +16685,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(character.Name + " is not injured!", intRD);
                         }
                     }
@@ -16428,9 +16763,13 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 current = -1;
 
                                 selection = -1;
+
+                                Sound::Play(Sound::Type::SUCCESS);
                             }
                             else if (target >= 0 && target < party.Members.size() && party.Members[target].Type == Character::Type::SKULLCRACKER)
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(party.Members[target].Name + " refuses to accept it!", intRD);
 
                                 selected = false;
@@ -16471,6 +16810,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             current = -1;
 
                             selection = -1;
+
+                            Sound::Play(Sound::Type::SUCCESS);
                         }
                     }
                     else
@@ -16504,6 +16845,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         current = -1;
 
                         selection = -1;
+
+                        Sound::Play(Sound::Type::SUCCESS);
                     }
                 }
             }
@@ -16526,6 +16869,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (party.Money != start_money)
                     {
+                        Sound::Play(Sound::Type::SUCCESS);
+
                         auto diff = start_money - party.Money;
 
                         if (party.Money < start_money)
@@ -16568,11 +16913,14 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         auto store = std::min<int>(party.Money, 10);
 
                         party.VaultMoney += store;
+
                         party.Money -= store;
                     }
                     else
                     {
-                        displayMessage("You do not any silver to store in the vault", intRD);
+                        Sound::Play(Sound::Type::ERROR);
+
+                        displayMessage("You do not have any silver to store in the vault", intRD);
                     }
 
                     controls_money = popupMoney(window, renderer, party, popupw, popuph, infoh, popupx, popupy);
@@ -16589,11 +16937,14 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         auto withdraw = std::min<int>(party.VaultMoney, 10);
 
                         party.VaultMoney -= withdraw;
+
                         party.Money += withdraw;
                     }
                     else
                     {
-                        displayMessage("You do not any silver to withdraw from the vault", intRD);
+                        Sound::Play(Sound::Type::ERROR);
+
+                        displayMessage("You do not have any silver to withdraw from the vault", intRD);
                     }
 
                     controls_money = popupMoney(window, renderer, party, popupw, popuph, infoh, popupx, popupy);
@@ -16603,6 +16954,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
             {
+                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                 done = true;
             }
         }
@@ -16958,14 +17311,20 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         {
                             if (party.Fleet[offset + current].Location != harbour->Location)
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("The [" + party.Fleet[offset + current].Name + "] is not docked at " + std::string(Location::Description[harbour->Location]) + "!", intRD);
                             }
                             else if (party.Fleet[offset + current].Health >= party.Fleet[offset + current].MaximumHealth)
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("The [" + party.Fleet[offset + current].Name + "] is not damaged!", intRD);
                             }
                             else if (party.Fleet[offset + current].Health <= 0)
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("The [" + party.Fleet[offset + current].Name + "] is damaged beyond repair!", intRD);
                             }
                             else if (selection.size() < party.Fleet.size())
@@ -16992,6 +17351,8 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         if (party.Money < cost)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have enough silver coins!", intRD);
                         }
                         else
@@ -17008,16 +17369,22 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             if (cost > 0)
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 message = "Your ships were repaired for " + std::to_string(cost) + " silver coins.";
                             }
                             else
                             {
                                 if (harbour->ShipRepairPrice > 0)
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     message = "None of your ships are damaged.";
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     message = "Your ships were repaired for free.";
                                 }
                             }
@@ -17052,6 +17419,8 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         if (party.Money < cost)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have enough silver coins!", intRD);
                         }
                         else
@@ -17068,16 +17437,22 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             if (cost > 0)
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 message = "Your ships were repaired for " + std::to_string(cost) + " silver coins.";
                             }
                             else
                             {
                                 if (harbour->ShipRepairPrice > 0)
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     message = "None of your ships are damaged.";
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     message = "Your ships were repaired for free.";
                                 }
                             }
@@ -17101,6 +17476,8 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
                 else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
                 }
             }
@@ -17220,6 +17597,8 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
         {
             message = "You are carrying too many items! Drop or transfer excess items.";
         }
+
+        Sound::Play(Sound::Type::ERROR);
 
         displayMessage(message, intRD);
     }
@@ -17452,10 +17831,14 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                                 Engine::GAIN_STATUS(party.Members[i], Character::Status::ENRAGED);
                             }
 
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             displayMessage("Your party gains +1 Fighting score until end of combat!", intLB);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You cannot use the " + item.Name + " when not in combat!", intRD);
                         }
                     }
@@ -17468,9 +17851,13 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                             Engine::GAIN_STATUS(character, Character::Status::POTION_OF_INVULNERABILITY);
 
                             displayMessage(character.Name + " becomes Invulnerable!", intLB);
+
+                            Sound::Play(Sound::Type::SUCCESS);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You cannot use the " + item.Name + " when not in combat!", intRD);
                         }
                     }
@@ -17483,9 +17870,13 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                             Engine::GAIN_HEALTH(character, 5);
 
                             used_up = true;
+
+                            Sound::Play(Sound::Type::SUCCESS);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(character.Name + " is not injured!", intRD);
                         }
                     }
@@ -17525,6 +17916,8 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                 {
                     if (InCombat)
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You cannot drop items while in combat!", intRD);
                     }
                     else if (character.Type != Character::Type::SKULLCRACKER)
@@ -17552,9 +17945,13 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         message += " dropped!";
 
                         displayMessage(message, intRD);
+
+                        Sound::Play(Sound::Type::FAIL);
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("Skullcracker refuses!", intRD);
                     }
 
@@ -17573,6 +17970,8 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     {
                         if (InCombat)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You cannot transfer items while in combat!", intRD);
                         }
                         else if (character.Team != Team::Type::SOLO)
@@ -17616,6 +18015,8 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                                         current = -1;
 
                                         selection = -1;
+
+                                        Sound::Play(Sound::Type::SUCCESS);
                                     }
                                     else
                                     {
@@ -17623,15 +18024,21 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                                         {
                                             if (party.Members[target].Team != team)
                                             {
+                                                Sound::Play(Sound::Type::ERROR);
+
                                                 displayMessage("You can only transfer to another party member!", intRD);
                                             }
                                             else
                                             {
+                                                Sound::Play(Sound::Type::ERROR);
+
                                                 displayMessage("You can only transfer to another party member within the same team!", intRD);
                                             }
                                         }
                                         else
                                         {
+                                            Sound::Play(Sound::Type::ERROR);
+
                                             displayMessage("Skullcracker refuses!", intRD);
                                         }
                                     }
@@ -17639,16 +18046,22 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("Skullcracker refuses!", intRD);
                             }
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(character.Name + " is alone right now!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("There is no one else in your party!", intRD);
                     }
                 }
@@ -17692,6 +18105,8 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                             current = -1;
 
                             selection = -1;
+
+                            Sound::Play(Sound::Type::SUCCESS);
                         }
                         else
                         {
@@ -17715,11 +18130,15 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     }
                     else
                     {
-                        displayMessage("You cannot access this while in combat!", intRD);
+                        Sound::Play(Sound::Type::ERROR);
+
+                        displayMessage("You cannot access The Vault while in combat!", intRD);
                     }
                 }
                 else
                 {
+                    Sound::Play(Sound::Type::ERROR);
+
                     displayMessage("The Vault is not accessible at this time!", intRD);
                 }
             }
@@ -17727,10 +18146,14 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 if ((equipment_limit > -1 && !Engine::VERIFY_EQUIPMENT_LIMIT(character, equipment_limit)) || !Engine::VERIFY_EQUIPMENT_LIMIT(character))
                 {
+                    Sound::Play(Sound::Type::ERROR);
+
                     displayMessage("You are carrying too many items! Drop or transfer excess items.", intRD);
                 }
                 else
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
                 }
             }
@@ -17867,6 +18290,8 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             {
                 message = "Your spellbook is holding too many spells! You must unlearn spells from your spellbook.";
             }
+
+            Sound::Play(Sound::Type::ERROR);
 
             displayMessage(message, intRD);
         }
@@ -18112,12 +18537,16 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                                 }
                                 else
                                 {
-                                    displayMessage("The vault is not accessible at this time!", intRD);
+                                    Sound::Play(Sound::Type::ERROR);
+
+                                    displayMessage("The Vault is not accessible at this time!", intRD);
                                 }
                             }
                             else
                             {
-                                displayMessage("The magic vault is already accessible!", intRD);
+                                Sound::Play(Sound::Type::ERROR);
+
+                                displayMessage("The Vault is already accessible!", intRD);
                             }
                         }
                         else if (character.SpellBook[selection].Type == Spells::Type::SOOTHING_TOUCH)
@@ -18152,10 +18581,14 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                                         message += " is not injured!";
                                     }
 
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage(message, intRD);
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     Engine::GAIN_HEALTH(party.Members[target], 5);
 
                                     used_up = true;
@@ -18164,11 +18597,15 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage(character.Name + " cannot cast " + character.SpellBook[selection].Name + " at this time!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage(character.Name + " cannot cast " + character.SpellBook[selection].Name + " at this time!", intRD);
                     }
 
@@ -18219,16 +18656,22 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                     current = -1;
 
                     selection = -1;
+
+                    Sound::Play(Sound::Type::FAIL);
                 }
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
             {
                 if (!Engine::VERIFY_SPELL_LIMIT(character))
                 {
+                    Sound::Play(Sound::Type::ERROR);
+
                     displayMessage("Your spellbook is holding too many spells! You must unlearn spells from your spellbook.", intRD);
                 }
                 else
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
                 }
             }
@@ -18342,6 +18785,8 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
     if (Engine::VERIFY_CODES(party, {Codes::Type::RECHARGE_COSTS_HALF}))
     {
         displayMessage("The Everchild will sponsor your spellcasters, allowing you to recharge your spells at half the usual cost.", intLB);
+
+        Sound::Play(Sound::Type::SUCCESS);
     }
 
     while (!done)
@@ -18583,15 +19028,21 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                             displayMessage(character.SpellBook[selection].Name + " charged!", intLB);
 
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, spelly);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You cannot afford to recharge " + character.SpellBook[selection].Name + "!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage(character.SpellBook[selection].Name + " is charged!", intRD);
                     }
                 }
@@ -18868,6 +19319,8 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Boo
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("You can only select units from the " + std::string(Location::Description[garrison]) + " garrison!", intRD);
                             }
                         }
@@ -18887,11 +19340,15 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Boo
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("Please complete your selection!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("Please complete your selection!", intRD);
                     }
                 }
@@ -19149,6 +19606,8 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, Book::T
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("You can only select ships docked at " + std::string(Location::Description[harbour]) + " !", intRD);
                             }
                         }
@@ -19168,11 +19627,15 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, Book::T
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("Please complete your selection!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("Please complete your selection!", intRD);
                     }
                 }
@@ -19217,7 +19680,7 @@ bool IsValidTransfer(Party::Base &party, Location::Type src, Location::Type dst)
         }
     }
 
-    if (Engine::VERIFY_CODES(party, {Codes::A(33)}))
+    if (Engine::VERIFY_CODES(party, {Codes::A(100)}))
     {
         if (src == Location::Type::SALTDAD)
         {
@@ -19608,10 +20071,14 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             // verify Validity of transfer
                             if (src == dst)
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("The " + party.Army[selection].Name + " is already garrisoned at " + std::string(Location::Description[dst]) + "!", intRD);
                             }
                             else if (IsValidTransfer(party, src, dst))
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 displayMessage(party.Army[selection].Name + " from " + std::string(Location::Description[src]) + " barracks transferred to " + std::string(Location::Description[dst]) + ".", intLB);
 
                                 selection = -1;
@@ -19626,19 +20093,27 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("It is not possible to transfer the " + party.Army[selection].Name + " from " + std::string(Location::Description[src]) + " barracks to " + std::string(Location::Description[dst]) + " at this time.", intRD);
                             }
                         }
                         else if (selection >= 0 && selection <= party.Army.size())
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("Please select destination!", intRD);
                         }
                         else if (destination >= 0 && destination <= barracks.size())
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("Please select army unit to transfer!", intRD);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("Please select army unit and destination!", intRD);
                         }
                     }
@@ -19913,6 +20388,8 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             {
                                 if (army[offset + current].Unique && Engine::HAS_UNIT(party, army[offset + current].Type))
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage("You already command the " + army[offset + current].Name + "!", intRD);
                                 }
                                 else
@@ -19944,6 +20421,8 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
                 else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = false;
 
                     break;
@@ -20236,6 +20715,8 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     if (Engine::VERIFY_SPELL(party.Members[character], {learn[i].Type}))
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         learned = true;
 
                                         displayMessage(party.Members[character].Name + " already knows the " + learn[i].Name + " spell!", intRD);
@@ -20284,7 +20765,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                         message += "s";
                                     }
 
-                                    message += " COPIED to " + party.Members[character].Name += "'s spellbook!";
+                                    message += " copied to " + party.Members[character].Name += "'s spellbook!";
 
                                     displayMessage(message, intLB);
 
@@ -20293,10 +20774,14 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                     selected = false;
 
                                     selection.clear();
+
+                                    Sound::Play(Sound::Type::SUCCESS);
                                 }
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage(party.Members[character].Name + " is not a SpellCaster!", intRD);
 
                                 current = -1;
@@ -20312,6 +20797,8 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 }
                 else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = false;
 
                     break;
@@ -20622,6 +21109,8 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
                 else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = false;
 
                     break;
@@ -20880,6 +21369,8 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                                     }
                                     else
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         error = true;
 
                                         message = "You cannot drop this item!";
@@ -20929,9 +21420,13 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                         current = -1;
 
                         selected = false;
+
+                        Sound::Play(Sound::Type::FAIL);
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         error = true;
 
                         message = "You must lose up to the required number of items!";
@@ -21756,10 +22251,14 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 }
                                 else if (party.Fleet[offset + current].Location != harbour->Location)
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage("The [" + party.Fleet[offset + current].Name + "] is not docked at this harbour!", intRD);
                                 }
                                 else if (party.Fleet[offset + current].Cargo.size() <= 0)
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage("The [" + party.Fleet[offset + current].Name + "] is not carrying any cargo!", intRD);
                                 }
                                 else if (party.Fleet[offset + current].Health > 0 && party.Fleet[offset + current].Cargo.size() > 0)
@@ -21769,6 +22268,8 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("You do not have a ship docked at this harbour!", intRD);
                             }
                         }
@@ -21797,12 +22298,16 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::ERROR);
+
                                     displayMessage(std::string(Cargo::Description[cargo]) + " not available at this harbour!", intRD);
                                 }
                             }
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have a ship docked at this harbour!", intRD);
                         }
                     }
@@ -21862,10 +22367,14 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                             if (sold > unsold)
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 flash_color = intLB;
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::FAIL);
+
                                 flash_color = intRD;
                             }
 
@@ -21889,11 +22398,15 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("The [" + party.Fleet[selected_ship].Name + "] is not carrying any cargo!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("Please select the ship containing the cargo you want to sell", intRD);
                     }
 
@@ -21907,6 +22420,8 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if (party.Fleet.size() <= 0)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have any ships!", intRD);
                         }
                         else if (Engine::HAS_SHIP(party, harbour->Location, selected_cargo.size()))
@@ -21946,25 +22461,35 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                         delivery_message += std::string(Cargo::Description[cargo[i]]);
                                     }
 
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     displayMessage(delivery_message + " delivered aboard the [" + party.Fleet[ship].Name + "]!", intLB);
                                 }
                             }
                             else
                             {
+                                Sound::Play(Sound::Type::ERROR);
+
                                 displayMessage("You do not have enough silver coins!", intRD);
                             }
                         }
                         else if (Engine::HAS_SHIP(party, harbour->Location))
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have enough space in your ships!", intRD);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have a ship docked at this harbour!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("Please select the cargo you wish to buy", intRD);
                     }
 
@@ -22194,7 +22719,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
                 if (harbour->ShipRepairPrice >= 0)
                 {
-                    std::string repair_string = "";
+                    std::string repair_string = "\n";
 
                     if (harbour->ShipRepairPrice == 0)
                     {
@@ -22209,7 +22734,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 }
                 else
                 {
-                    putText(renderer, "Ship repair services are not available here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                    putText(renderer, "\nShip repair services are not available here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
             }
             else if (current_mode == Control::Type::BUY_SELL_CARGO)
@@ -22220,7 +22745,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
                 if (harbour->Cargo.size() == 0)
                 {
-                    putText(renderer, "You cannot buy nor sell cargo here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                    putText(renderer, "\nYou cannot buy nor sell cargo here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
             }
             else
@@ -22391,10 +22916,14 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 {
                     if (harbour->Ships.size() > 0)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         shipScreen(window, renderer, party, Team::Type::NONE, harbour->Ships, harbour);
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("Ships cannot be sold nor bought at this harbour!", intRD);
                     }
 
@@ -22404,10 +22933,14 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 {
                     if (Engine::HAS_SHIP(party, harbour->Location))
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         cargoScreen(window, renderer, party, harbour);
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("You do not have a ship docked at " + std::string(Location::Description[harbour->Location]) + "!", intRD);
                     }
 
@@ -22419,15 +22952,21 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                     {
                         if (Engine::HAS_SHIP(party, harbour->Location))
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             repairScreen(window, renderer, party, harbour);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have a ship docked at " + std::string(Location::Description[harbour->Location]) + "!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("It is not possible to repair ships at this harbour!", intRD);
                     }
 
@@ -22831,6 +23370,8 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
             {
                 if (morale.size() == 0)
                 {
+                    Sound::Play(Sound::Type::DICE_ROLL);
+
                     morale = Engine::ROLL_DICE(1);
                 }
 
@@ -22864,8 +23405,12 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
 
                 if (!morale_checked)
                 {
+                    Sound::Play(Sound::Type::FAIL);
+
                     if (morale_score <= unit.Morale)
                     {
+                        Sound::Play(Sound::Type::FAIL);
+
                         Engine::GAIN_MORALE(unit, -1);
 
                         message = "The " + unit.Name + " loses 1 point of Morale!";
@@ -22942,6 +23487,8 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
                 }
                 else if (stage == Engine::MassCombat::MORALE && controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     stage = Engine::MassCombat::END;
 
                     done = true;
@@ -23130,6 +23677,8 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     {
                         if (morale.size() == 0)
                         {
+                            Sound::Play(Sound::Type::DICE_ROLL);
+
                             morale = Engine::ROLL_DICE(1);
                         }
                     }
@@ -23209,12 +23758,16 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                             {
                                 if (party_combat_score < enemy_combat_score)
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     message = "The " + enemyArmy[enemy_unit].Name + " defeats your " + party.Army[party_unit].Name + "!";
 
                                     flash_color = intRD;
                                 }
                                 else if (enemy_combat_score < party_combat_score)
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     message = "Your " + party.Army[party_unit].Name + " defeats the " + enemyArmy[enemy_unit].Name + "!";
 
                                     flash_color = intLB;
@@ -23223,6 +23776,8 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::FAIL);
+
                             message = "The fight is inconclusive!";
 
                             flash_color = intLB;
@@ -23282,12 +23837,16 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                             {
                                 if (morale_score <= party.Army[party_unit].Morale)
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     Engine::GAIN_MORALE(party.Army[party_unit], -1);
 
                                     message = "Your " + party.Army[party_unit].Name + " loses 1 point of Morale!";
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::FAIL);
+
                                     message = "Your " + party.Army[party_unit].Name + " is routed!";
 
                                     party.Army[party_unit].Morale = 0;
@@ -23301,12 +23860,16 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                             {
                                 if (morale_score <= enemyArmy[enemy_unit].Morale)
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     Engine::GAIN_MORALE(enemyArmy[enemy_unit], -1);
 
                                     message = "The " + enemyArmy[enemy_unit].Name + " loses 1 point of Morale!";
                                 }
                                 else
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     message = "The " + enemyArmy[enemy_unit].Name + " is routed!";
 
                                     enemyArmy[enemy_unit].Morale = 0;
@@ -23320,6 +23883,8 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::FAIL);
+
                         message = "The fight is inconclusive!";
 
                         flash_color = intLB;
@@ -23473,6 +24038,8 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                 }
                 else if (stage == Engine::MassCombat::MORALE && controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     stage = Engine::MassCombat::END;
 
                     done = true;
@@ -23717,6 +24284,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 controls = controls_yes;
 
                 enemy_has_cast = true;
+
+                Sound::Play(Sound::Type::FAIL);
             }
 
             if (flash_message)
@@ -23741,6 +24310,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                     {
                         if (current >= 0 && current < 6)
                         {
+                            // TODO: View Army Unit popup?
                         }
 
                         selected = false;
@@ -23750,6 +24320,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 {
                     if (current_mode == Engine::MassCombatMode::NORMAL)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         std::vector<Location::Zone> zones = {Location::Zone::LEFT_FLANK, Location::Zone::CENTER, Location::Zone::RIGHT_FLANK};
 
                         for (auto i = 0; i < zones.size(); i++)
@@ -23835,10 +24407,14 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                         if (combat_spells <= 0)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("Your party does not have any usable mass combat spells.", intRD);
                         }
                         else if (castSpells.size() >= Engine::SPELLCASTERS(party))
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("Your party has already cast spells this round.", intRD);
                         }
                         else
@@ -23859,6 +24435,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("There are no spell casters in your party!", intRD);
                     }
                 }
@@ -23884,10 +24462,14 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
     if (Engine::ZONES(party.Army, enemyArmy) > 1)
     {
+        Sound::Play(Sound::Type::SUCCESS);
+
         combatResult = Engine::Combat::VICTORY;
     }
     else if (Engine::ZONES(enemyArmy, party.Army) > 1)
     {
+        Sound::Play(Sound::Type::FAIL);
+
         combatResult = Engine::Combat::DEFEAT;
     }
 
@@ -24274,10 +24856,14 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                 {
                                     if (party.Army[current + offset].Garrison != location)
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage("You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!", intRD);
                                     }
                                     else if (party.Army[current + offset].Morale <= 0)
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Army[current + offset].Name + " cannot join this battle!", intRD);
                                     }
                                     else
@@ -24313,10 +24899,14 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                 {
                                     if (party.Army[current + offset].Garrison != location)
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage("You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!", intRD);
                                     }
                                     else if (party.Army[current + offset].Morale <= 0)
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Army[current + offset].Name + " cannot join this battle!", intRD);
                                     }
                                     else
@@ -24352,10 +24942,14 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                                 {
                                     if (party.Army[current + offset].Garrison != location)
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage("You can only deploy a unit from the " + std::string(Location::Description[location]) + " barracks!", intRD);
                                     }
                                     else if (party.Army[current + offset].Morale <= 0)
                                     {
+                                        Sound::Play(Sound::Type::ERROR);
+
                                         displayMessage(party.Army[current + offset].Name + " cannot join this battle!", intRD);
                                     }
                                     else
@@ -24383,18 +24977,24 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                     {
                         if (Engine::ZONES(enemyArmy, party.Army) > 1)
                         {
+                            Sound::Play(Sound::Type::FAIL);
+
                             combatResult = Engine::Combat::DEFEAT;
 
                             done = true;
                         }
                         else if (Engine::ZONES(party.Army, enemyArmy) > 1)
                         {
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             combatResult = Engine::Combat::VICTORY;
 
                             done = true;
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             combatResult = massCombatScreen(window, renderer, location, party, enemyArmy, enemySpells, enemyStatus);
 
                             done = true;
@@ -24447,6 +25047,8 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 }
                 else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     if (current_mode == Engine::MassCombatMode::NORMAL)
                     {
                         done = true;
@@ -25381,6 +25983,8 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
         }
         catch (std::exception &ex)
         {
+            Sound::Play(Sound::Type::ERROR);
+
             std::cerr << "Unable to read save directory!" << std::endl;
         }
 
@@ -25552,6 +26156,8 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
             {
                 if (controls[current].Type == Control::Type::BACK && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     result = Control::Type::BACK;
 
                     done = true;
@@ -25662,6 +26268,8 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                     current = -1;
 
                     selected = false;
+
+                    Sound::Play(Sound::Type::SUCCESS);
                 }
                 else if (controls[current].Type == Control::Type::LOAD && !hold)
                 {
@@ -25675,6 +26283,8 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("Please select a game to load!", intRD);
                     }
 
@@ -25690,6 +26300,8 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
                         if (del)
                         {
+                            Sound::Play(Sound::Type::FAIL);
+
                             displayMessage("Game Deleted", intLB);
 
                             entries.erase(entries.begin() + selection);
@@ -25714,11 +26326,15 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("Game not removed!", intRD);
                         }
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("Please select a game to delete!", intRD);
                     }
 
@@ -26343,6 +26959,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         else if (story->Choices[choice].Type == Choice::Type::PARTY_EXCEPT_WITHSTATUS)
                         {
                             auto with_status = Engine::COUNT(party, story->Choices[choice].Status[0]);
+
                             auto party_count = Engine::COUNT(party, story->Choices[choice].Team);
 
                             auto team_size = std::min<int>(2, party_count - with_status);
@@ -27883,7 +28500,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             if (SDL_GetTicks() - start_ticks > duration)
                             {
                                 Sound::Play(Sound::Type::ERROR);
-                                
+
                                 start_ticks = SDL_GetTicks();
                             }
                         }
@@ -27891,6 +28508,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
                 else if (controls[current].Type == Control::Type::ENCYCLOPEDIA && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     encyclopediaScreen(window, renderer, story->BookID);
 
                     current = -1;
@@ -27899,6 +28518,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
                 else if (controls[current].Type == Control::Type::MAP && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     mapScreen(window, renderer, story->BookID);
 
                     current = -1;
@@ -27907,6 +28528,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
                 else if (controls[current].Type == Control::Type::PARTY && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     viewParty(window, renderer, party, story->Team, false);
 
                     current = -1;
@@ -27921,6 +28544,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
             }
         }
+
+        Sound::Play(Sound::Type::BUTTON_CLICK);
 
         if (font_garamond)
         {
@@ -28581,10 +29206,14 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                 if (story->Type == Story::Type::DOOM)
                 {
+                    Sound::Play(Sound::Type::FAIL);
+
                     putText(renderer, "This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
                 else if ((Engine::ALIVE(party) + Engine::OUTSIDE(party)) <= 0)
                 {
+                    Sound::Play(Sound::Type::FAIL);
+
                     putText(renderer, "Your party has died. This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
 
@@ -28880,6 +29509,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::PARTY && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         viewParty(window, renderer, party, story->Team, false);
 
                         current = -1;
@@ -28888,6 +29519,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::MAP && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         mapScreen(window, renderer, story->BookID);
 
                         current = -1;
@@ -28896,6 +29529,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::HARBOUR && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         harbourScreen(window, renderer, party, story);
 
                         current = -1;
@@ -28904,6 +29539,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::SHOP && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         auto result = -1;
 
                         if (Engine::COUNT(party) == 1)
@@ -28926,6 +29563,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::REST && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         restScreen(window, renderer, party, story->RestPrice, story->CanRecharge);
 
                         current = -1;
@@ -28934,6 +29573,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::GAME && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         auto result = gameScreen(window, renderer, saveParty, true);
 
                         if (result == Control::Type::SAVE)
@@ -28964,6 +29605,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         if (current_mode == Control::Type::STORY)
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             current_mode = Control::Type::PREVIEW;
 
                             popup_offset = 0;
@@ -28972,7 +29615,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             if (Engine::COUNT(story->Monsters) > 0 || Engine::COUNT(story->EnemyArmy) > 0 || Engine::COUNT(story->EnemyFleet) > 0)
                             {
-
                                 if (story->Monsters.size() > 0)
                                 {
                                     if (popup_last > story->Monsters.size())
@@ -29020,6 +29662,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::CONTINUE_STORY && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         Engine::Destination final_destination = {Book::Type::NONE, -1};
 
                         if (Engine::COUNT(story->Monsters) > 0)
@@ -29284,6 +29928,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::ENCYCLOPEDIA && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         encyclopediaScreen(window, renderer, story->BookID);
 
                         selected = false;
@@ -29292,10 +29938,14 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         if (Engine::CAN_RECRUIT(party, story->BookID))
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             recruitAdventurer(window, renderer, story->BookID, party, story->RecruitmentPrice);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("There is no one left to recruit in this land!", intRD);
                         }
 
@@ -29305,10 +29955,14 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         if (party.Army.size() <= 0)
                         {
+                            Sound::Play(Sound::Type::ERROR);
+
                             displayMessage("You do not have any troops!", intRD);
                         }
                         else
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             armyTransfer(window, renderer, party);
                         }
 
@@ -29316,6 +29970,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else if (controls[current].Type == Control::Type::QUIT && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         transition = true;
 
                         quit = true;
@@ -29749,6 +30405,8 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     {
                         if ((topic_offset + current) >= 0 && (topic_offset + current) < Topics::ALL.size())
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             topic = topic_offset + current;
 
                             if (text)
@@ -29817,6 +30475,8 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     {
                         if (topic > 0)
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             topic -= 1;
 
                             if (text)
@@ -29887,6 +30547,8 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     {
                         if (topic < Topics::ALL.size() - 1)
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             topic += 1;
 
                             if (text)
@@ -30012,6 +30674,8 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                     }
                     else if (controls[current].Type == Control::Type::BACK && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         quit = true;
                     }
                 }
@@ -30123,6 +30787,8 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
             if (selected && current >= 0 && current < controls.size())
             {
+                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                 switch (controls[current].Type)
                 {
                 case Control::Type::NEW:
@@ -30253,6 +30919,8 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
             if (selected && current >= 0 && current < controls.size())
             {
+                Sound::Play(Sound::Type::BUTTON_CLICK);
+
                 if (controls[current].Type == Control::Type::COMBAT && !hold)
                 {
                     selectParty(window, renderer, Book::Type::BOOK1, Party);
@@ -30383,7 +31051,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 int main(int argc, char **argv)
 {
     SDL_Window *window = NULL;
-    
+
     SDL_Renderer *renderer = NULL;
 
     createWindow(SDL_INIT_VIDEO | SDL_INIT_AUDIO, &window, &renderer, "Legendary Kingdoms", "icons/spidermindgames-48.png");
