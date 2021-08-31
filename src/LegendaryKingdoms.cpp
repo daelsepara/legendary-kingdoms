@@ -15940,7 +15940,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             }
                             else
                             {
-                                cost += (Engine::IS_INJURED(party.Members[selection[i]])) ? RestPrice * (party.Members[selection[i]].MaximumHealth - Engine::HEALTH(party.Members[selection[i]])) : 0;
+                                cost += (Engine::IS_INJURED(party.Members[selection[i]])) ? RestPrice * (party.Members[selection[i]].MaximumHealth - party.Members[selection[i]].Health) : 0;
                             }
                         }
                     }
@@ -16207,7 +16207,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                         for (auto i = 0; i < selection.size(); i++)
                         {
-                            cost += (Engine::IS_INJURED(party.Members[selection[i]])) ? RestPrice * (party.Members[selection[i]].MaximumHealth - Engine::HEALTH(party.Members[selection[i]])) : 0;
+                            cost += (Engine::IS_INJURED(party.Members[selection[i]])) ? RestPrice * (party.Members[selection[i]].MaximumHealth - party.Members[selection[i]].Health) : 0;
                         }
 
                         if (party.Money < cost)
@@ -16222,7 +16222,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             {
                                 if (Engine::IS_INJURED(party.Members[selection[i]]))
                                 {
-                                    Engine::GAIN_HEALTH(party.Members[selection[i]], party.Members[selection[i]].MaximumHealth - Engine::HEALTH(party.Members[selection[i]]));
+                                    Engine::GAIN_HEALTH(party.Members[selection[i]], party.Members[selection[i]].MaximumHealth - party.Members[selection[i]].Health);
                                 }
                             }
 
@@ -22751,11 +22751,11 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
                     if (harbour->ShipRepairPrice == 0)
                     {
-                        repair_string = "You can repair any ship you have here. It costs nothing to restore each Health point. You can restore your ship up to its starting Health value.";
+                        repair_string = "\nYou can repair any ship you have here. It costs nothing to restore each Health point. You can restore your ship up to its starting Health value.";
                     }
                     else
                     {
-                        repair_string = "You can repair any ship you have here. It costs " + std::to_string(harbour->ShipRepairPrice) + " silver coins to restore each Health point. You can restore your ship up to its starting Health value.";
+                        repair_string = "\nYou can repair any ship you have here. It costs " + std::to_string(harbour->ShipRepairPrice) + " silver coins to restore each Health point. You can restore your ship up to its starting Health value.";
                     }
 
                     putText(renderer, repair_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
