@@ -92,6 +92,11 @@ namespace Codes
             Type = type;
             Code = code;
         }
+
+        int Value()
+        {
+            return ((int)Type * 1000 + Code);
+        }
     };
 
     Codes::Base A(int code)

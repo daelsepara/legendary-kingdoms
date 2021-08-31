@@ -2246,9 +2246,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
             for (auto i = 0; i < party.Codes.size(); i++)
             {
-                auto index = ((int)party.Codes[i].Type) * 1000 + party.Codes[i].Code;
-                
-                sorted_codes.insert(std::make_pair(index, party.Codes[i]));
+                sorted_codes.insert(std::make_pair(party.Codes[i].Value(), party.Codes[i]));
             }
 
             if (sorted_codes.size() > 0)
