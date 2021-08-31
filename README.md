@@ -1,7 +1,7 @@
 ![Legendary Kingdoms](/src/images/legendary-kingdoms-logo.png)
-# Legendary Kingdoms 1 - The Valley of the Bones
+# Legendary Kingdoms
 
-An Implementation of Legendary Kingdoms 1 - The Valley of Bones done in C++ and SDL
+An Implementation of Legendary Kingdoms Gamebooks in C++ and SDL. Currently only Book 1 (The Valley of Bones) is implemented.
 
 # Planned Features
 
