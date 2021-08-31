@@ -2671,7 +2671,7 @@ namespace Book1
         {
             Engine::CONSOLIDATE(party);
 
-            Engine::LOSE_CODES(party, {Codes::Type::TWO_HANDED_DISABLED, Codes::Type::ARMOUR_DISABLED});
+            Engine::LOSE_CODES(party, {Codes::Type::TWO_HANDED_DISABLED, Codes::Type::ARMOUR_DISABLED, Codes::Type::RECHARGE_COSTS_HALF});
         }
     };
 
