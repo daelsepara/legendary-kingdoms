@@ -148,8 +148,9 @@ Story::Base *findStory(Engine::Destination destination);
 Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
 Story::Base *renderChoices(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *story);
 
-// description utilities
+// description/string utilities
 std::string characterText(Character::Base &character, bool compact);
+std::string getSavePath();
 std::string itemString(Equipment::Base &equipment);
 std::string monsterString(Monster::Base &monster);
 std::string miniPreview(std::string file_name);
@@ -2188,8 +2189,8 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
         controls[1].X = scrollx;
         controls[1].Y = scrolly;
         controls[2].Type = Control::Type::PARTY;
-        controls[3].Type = Control::Type::MINUS;
-        controls[4].Type = Control::Type::PLUS;
+        controls[3].Type = Control::Type::PREVIOUS;
+        controls[4].Type = Control::Type::NEXT;
         controls[5].Type = Control::Type::EQUIPMENT;
         controls[6].Type = Control::Type::SPELLBOOK;
         controls[7].Type = Control::Type::FOLLOWERS;
@@ -2547,16 +2548,20 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 }
                 else if (controls[current].Type == Control::Type::PARTY && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     partyDetails(window, renderer, party);
 
                     done = false;
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::MINUS && !hold)
+                else if (controls[current].Type == Control::Type::PREVIOUS && !hold)
                 {
                     if (character > 0)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         character -= 1;
                     }
 
@@ -2596,10 +2601,12 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                         text = createText(characterText(party.Members[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                     }
                 }
-                else if (controls[current].Type == Control::Type::PLUS && !hold)
+                else if (controls[current].Type == Control::Type::NEXT && !hold)
                 {
                     if (character < party.Members.size() - 1)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         character += 1;
                     }
 
@@ -2643,7 +2650,13 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 {
                     if (Engine::IS_ACTIVE(party, character))
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         inventoryScreen(window, renderer, party, team, party.Members[character], -1, inCombat);
+                    }
+                    else
+                    {
+                        Sound::Play(Sound::Type::ERROR);
                     }
 
                     selected = false;
@@ -2652,13 +2665,21 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 {
                     if (party.Members[character].SpellCaster && party.Members[character].SpellBook.size() > 0 && !inCombat)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         spellBook(window, renderer, party, party.Members[character], party.Members[character].SpellBookLimit);
+                    }
+                    else
+                    {
+                        Sound::Play(Sound::Type::ERROR);
                     }
 
                     selected = false;
                 }
                 else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
                 }
             }
@@ -3248,10 +3269,8 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
             if (selected && current >= 0 && current < controls->size())
             {
-                switch (controls->at(current).Type)
+                if (controls->at(current).Type == Control::Type::PREVIOUS && !hold)
                 {
-                case Control::Type::PREVIOUS:
-
                     if (character > 0)
                     {
                         character -= 1;
@@ -3280,34 +3299,9 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
                         text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                     }
-
-                    break;
-
-                case Control::Type::PLUS:
-
-                    if (selection.size() < party.Limit)
-                    {
-                        selection.push_back(character);
-                    }
-
-                    break;
-
-                case Control::Type::MINUS:
-
-                    if (selection.size() > 0)
-                    {
-                        auto result = Engine::FIND_LIST(selection, character);
-
-                        if (result >= 0)
-                        {
-                            selection.erase(selection.begin() + result);
-                        }
-                    }
-
-                    break;
-
-                case Control::Type::NEXT:
-
+                }
+                else if (controls->at(current).Type == Control::Type::NEXT && !hold)
+                {
                     if (character < characters.size() - 1)
                     {
                         character += 1;
@@ -3336,11 +3330,32 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
                         text = createText(characterText(characters[character], false).c_str(), FONT_GARAMOND, garamond_size, clrDB, listwidth, TTF_STYLE_NORMAL);
                     }
+                }
+                else if (controls->at(current).Type == Control::Type::PLUS && !hold)
+                {
+                    if (selection.size() < party.Limit)
+                    {
+                        Sound::Play(Sound::Type::SUCCESS);
 
-                    break;
+                        selection.push_back(character);
+                    }
+                }
+                else if (controls->at(current).Type == Control::Type::MINUS && !hold)
+                {
+                    if (selection.size() > 0)
+                    {
+                        auto result = Engine::FIND_LIST(selection, character);
 
-                case Control::Type::NEW:
+                        if (result >= 0)
+                        {
+                            Sound::Play(Sound::Type::FAIL);
 
+                            selection.erase(selection.begin() + result);
+                        }
+                    }
+                }
+                else if (controls->at(current).Type == Control::Type::NEW && !hold)
+                {
                     if (selection.size() == party.Limit)
                     {
                         for (auto i = 0; i < selection.size(); i++)
@@ -3378,7 +3393,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                             }
                         }
 
-                        Sound::Play(Sound::Type::BUTTON_CLICK);
+                        Sound::Play(Sound::Type::SUCCESS);
 
                         done = true;
 
@@ -3398,30 +3413,18 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
                         Sound::Play(Sound::Type::ERROR);
                     }
+                }
+                else if (controls->at(current).Type == Control::Type::ABOUT && !hold)
+                {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
 
-                    break;
-
-                case Control::Type::ABOUT:
-
-                    current = -1;
-
-                    selected = false;
-
-                    break;
-
-                case Control::Type::BACK:
+                    encyclopediaScreen(window, renderer, bookID);
+                }
+                else if (controls->at(current).Type == Control::Type::BACK && !hold)
+                {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
 
                     done = true;
-
-                    break;
-
-                default:
-
-                    selected = false;
-
-                    done = false;
-
-                    break;
                 }
             }
         }
@@ -3497,6 +3500,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
     if (window && renderer && map_local && map_world)
     {
         auto selected = false;
+
         auto current = -1;
 
         auto controls = std::vector<Button>();
@@ -6495,6 +6499,8 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             {
                                 if ((attack_score - 5) > 0)
                                 {
+                                    Sound::Play(Sound::Type::SUCCESS);
+
                                     focus += 1;
                                 }
                                 else
@@ -8867,6 +8873,8 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                         {
                             if ((score1 - 5) > 0 && (score2 - 5) > 0)
                             {
+                                Sound::Play(Sound::Type::SUCCESS);
+
                                 computed_score1 = false;
 
                                 computed_score2 = false;
@@ -16910,6 +16918,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (party.Money > 0)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         auto store = std::min<int>(party.Money, 10);
 
                         party.VaultMoney += store;
@@ -16934,6 +16944,8 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (party.VaultMoney > 0)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         auto withdraw = std::min<int>(party.VaultMoney, 10);
 
                         party.VaultMoney -= withdraw;
@@ -20128,7 +20140,7 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         done = false;
 
-                        break;
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
                     }
                     else if (current_mode == Control::Type::TRANSFER)
                     {
@@ -20143,6 +20155,8 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         selected = false;
 
                         controls_army = armyList(window, renderer, party.Army, offset, last, limit, textx, texty + infoh);
+
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
                     }
                 }
             }
@@ -20792,6 +20806,8 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                     else
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         done = true;
                     }
                 }
@@ -20800,8 +20816,6 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     Sound::Play(Sound::Type::BUTTON_CLICK);
 
                     done = false;
-
-                    break;
                 }
             }
         }
@@ -20855,6 +20869,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
         TTF_SetFontKerning(font_dark11, 0);
@@ -20871,13 +20886,6 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         while (!done)
         {
-            last = offset + limit;
-
-            if (last > equipment.size())
-            {
-                last = equipment.size();
-            }
-
             SDL_SetWindowTitle(window, "Legendary Kingdoms: Take Items");
 
             fillWindow(renderer, intWH);
@@ -21058,6 +21066,8 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
                 else if (controls[current].Type == Control::Type::CONFIRM && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     for (auto i = 0; i < selection.size(); i++)
                     {
                         if (equipment[selection[i]].Type == Equipment::Type::SILVER_COINS)
@@ -21112,8 +21122,6 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     Sound::Play(Sound::Type::BUTTON_CLICK);
 
                     done = false;
-
-                    break;
                 }
             }
         }
@@ -21169,6 +21177,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
         TTF_Init();
 
         auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+
         auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
 
         TTF_SetFontKerning(font_dark11, 0);
@@ -21183,13 +21192,6 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
         while (!done)
         {
-            last = offset + limit;
-
-            if (last > equipment.size())
-            {
-                last = equipment.size();
-            }
-
             SDL_SetWindowTitle(window, "Legendary Kingdoms: Lose Items");
 
             fillWindow(renderer, intWH);
@@ -21394,6 +21396,8 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 {
                     if (selection.size() >= LoseLimit)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         auto items = std::vector<Equipment::Type>();
 
                         for (auto i = 0; i < selection.size(); i++)
@@ -21440,6 +21444,8 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 }
                 else if (controls[current].Type == Control::Type::BACK && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = false;
                 }
             }
@@ -23356,7 +23362,7 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
         auto offsety = starty + infoh + boxh + box_space + infoh + box_space;
         auto offsetx = startx + box_space;
 
-        std::string mass_combat = "Round " + std::to_string(combatRound + 1) + " - Morale Check Results ";
+        std::string mass_combat = "Round " + std::to_string(combatRound + 1) + " - Morale Check Results";
 
         while (!done)
         {
@@ -23409,8 +23415,6 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
 
                     if (morale_score <= unit.Morale)
                     {
-                        Sound::Play(Sound::Type::FAIL);
-
                         Engine::GAIN_MORALE(unit, -1);
 
                         message = "The " + unit.Name + " loses 1 point of Morale!";
@@ -23475,6 +23479,8 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
             {
                 if (stage == Engine::MassCombat::START && controls[current].Type == Control::Type::BACK)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
 
                     current = -1;
@@ -25002,6 +25008,8 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                     }
                     else if (current_mode == Engine::MassCombatMode::DEPLOY)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         Engine::CLEAR_POSITIONS(party.Army);
 
                         if (left_flank.size() > 0)
@@ -25217,12 +25225,8 @@ void equipmentJSON(nlohmann::json &json, std::vector<Equipment::Base> equipment)
     }
 }
 
-void saveGame(Party::Base &party, const char *overwrite)
+std::string getSavePath()
 {
-    auto seed = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
-
-    std::ostringstream buffer;
-
 #if defined(_WIN32)
     PWSTR path_str;
 
@@ -25247,6 +25251,17 @@ void saveGame(Party::Base &party, const char *overwrite)
 
     std::string save = std::string(homedir) + "/Documents/Saved Games/Legendary Kingdoms";
 #endif
+
+    return save;
+}
+
+void saveGame(Party::Base &party, const char *overwrite)
+{
+    auto seed = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+
+    std::ostringstream buffer;
+
+    auto save = getSavePath();
 
     std::string path = save + "/";
 
@@ -25928,31 +25943,8 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
     if (window && renderer)
     {
-#if defined(_WIN32)
-        PWSTR path_str;
+        auto save = getSavePath();
 
-        SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_DEFAULT, NULL, &path_str);
-
-        std::wstring wpath(path_str);
-
-        CoTaskMemFree(path_str);
-
-        std::string save(wpath.length(), ' ');
-
-        std::copy(wpath.begin(), wpath.end(), save.begin());
-
-        save += "/Saved Games/Legendary Kingdoms";
-#else
-        const char *homedir;
-
-        if ((homedir = getenv("HOME")) == NULL)
-        {
-            homedir = getpwuid(getuid())->pw_dir;
-        }
-
-        std::string save = std::string(homedir) + "/Documents/Saved Games/Legendary Kingdoms";
-
-#endif
         std::string path = save + "/";
 
         fs::create_directories(save);
@@ -29655,6 +29647,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         if (current_mode == Control::Type::PREVIEW)
                         {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
                             current_mode = Control::Type::STORY;
                         }
 
@@ -29883,6 +29877,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                 if (story->Bye)
                                 {
                                     auto bye = createText(story->Bye, FONT_GARAMOND, font_size + 4, clrDB, fullwidth - 2 * text_space, TTF_STYLE_NORMAL);
+
                                     auto forward = createImage("icons/next.png");
 
                                     if (bye && forward)
@@ -29903,6 +29898,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                                         SDL_RenderPresent(renderer);
 
                                         Input::WaitForNext(renderer);
+
+                                        Sound::Play(Sound::Type::BUTTON_CLICK);
 
                                         SDL_FreeSurface(bye);
 
@@ -30785,17 +30782,15 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
-            auto result = Control::Type::BACK;
-
             if (selected && current >= 0 && current < controls.size())
             {
                 Sound::Play(Sound::Type::BUTTON_CLICK);
 
-                switch (controls[current].Type)
+                if (controls[current].Type == Control::Type::NEW && !hold)
                 {
-                case Control::Type::NEW:
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
 
-                    done = selectParty(window, renderer, bookID, Party);
+                    selectParty(window, renderer, bookID, Party);
 
                     if (Party.Members.size() == 4)
                     {
@@ -30807,27 +30802,27 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                     selected = false;
 
                     storyID = 1;
-
-                    break;
-
-                case Control::Type::ABOUT:
+                }
+                else if (controls[current].Type == Control::Type::ABOUT && !hold)
+                {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
 
                     encyclopediaScreen(window, renderer, bookID);
 
                     current = -1;
 
                     selected = false;
-
-                    break;
-
-                case Control::Type::LOAD:
-
-                    result = gameScreen(window, renderer, Party, false);
+                }
+                else if (controls[current].Type == Control::Type::LOAD && !hold)
+                {
+                    auto result = gameScreen(window, renderer, Party, false);
 
                     if (result == Control::Type::LOAD)
                     {
                         if (Party.Book != Book::Type::NONE && Party.StoryID != -1)
                         {
+                            Sound::Play(Sound::Type::SUCCESS);
+
                             storyScreen(window, renderer, Party, {Party.Book, Party.StoryID});
                         }
                     }
@@ -30835,20 +30830,10 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
                     current = -1;
 
                     selected = false;
-
-                    break;
-
-                case Control::Type::QUIT:
-
+                }
+                else if (controls[current].Type == Control::Type::QUIT && !hold)
+                {
                     done = true;
-
-                    break;
-
-                default:
-
-                    selected = false;
-
-                    break;
                 }
             }
         }
