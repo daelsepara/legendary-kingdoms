@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Legendary Kingdoms
+Comment=Legendary Kingdoms
+Version=1.0.4
+TryExec=/usr/local/games/LegendaryKingdoms/LegendaryKingdoms.exe
+Exec=/usr/local/games/LegendaryKingdoms/LegendaryKingdoms.exe
+Icon=/usr/local/games/LegendaryKingdoms/icons/legendary-kingdoms-128.png
+Path=/usr/local/games/LegendaryKingdoms
+Terminal=false
+Categories=Game
+Type=Application
+
+Name[en_DK]=Legendary Kingdoms
+Name[en_US]=Legendary Kingdoms

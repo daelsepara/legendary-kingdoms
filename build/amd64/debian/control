@@ -1,0 +1,8 @@
+Package: legendary-kingdoms
+Version: 1.0.0
+Maintainer: Dael Separa <dael.separa@gmail.com>
+Architecture: amd64
+Description: Legendary Kingdoms (SDL)
+Depends: libstdc++6 (>= 10.0.2), libc6 (>= 2.31), libgcc-s1 (>= 10.2), libsdl2-2.0-0 (>= 2.0.10), libsdl2-image-2.0-0 (>= 2.0.5), libsdl2-ttf-2.0-0 (>= 2.0.15), libsdl2-mixer-2.0-0 (>= 2.0.4)
+Priority: optional
+Section: games
