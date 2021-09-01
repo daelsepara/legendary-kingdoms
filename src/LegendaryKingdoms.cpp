@@ -25832,7 +25832,7 @@ std::string previewGame(std::string file_name)
         auto book = !data["book"].is_null() ? static_cast<Book::Type>((int)data["book"]) : Book::Type::NONE;
 
 #if defined(_WIN32) || defined(__arm__)
-        auto epoch = !data["epoch"].is_null() ? (long long)(data["epoch"])) : 0;
+        auto epoch = !data["epoch"].is_null() ? (long long)(data["epoch"]) : 0;
 #else
         auto epoch = !data["epoch"].is_null() ? (long)(data["epoch"]) : 0;
 #endif
