@@ -22410,7 +22410,12 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 flash_color = intRD;
                             }
 
-                            message = "Cargo sold: " + (sold > 0 ? sold_string : "None");
+                            message = "";
+
+                            if (sold > 0)
+                            {
+                                message = "Cargo sold: " + sold_string;
+                            }
 
                             if (unsold > 0)
                             {
@@ -22418,7 +22423,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     message += "\n";
                                 }
-
+                                
                                 message += "Unsold cargo: " + unsold_string;
                             }
 
