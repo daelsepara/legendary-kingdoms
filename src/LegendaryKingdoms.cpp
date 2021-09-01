@@ -25519,9 +25519,9 @@ Party::Base loadGame(std::string file_name)
         party.StoryID = !data["storyID"].is_null() ? (int)data["storyID"] : -1;
 
 #if defined(_WIN32) || defined(__arm__)
-        party.Epoch = !data["epoch"].is_null() ? std::stoull(std::string(data["epoch"])) : 0;
+        party.Epoch = !data["epoch"].is_null() ? (long long)(data["epoch"]) : 0;
 #else
-        party.Epoch = !data["epoch"].is_null() ? std::stol(std::string(data["epoch"])) : 0;
+        party.Epoch = !data["epoch"].is_null() ? (long)(data["epoch"]) : 0;
 #endif
 
         // load party members, attributes, equipment, spellbook, followers, status
@@ -25832,9 +25832,9 @@ std::string previewGame(std::string file_name)
         auto book = !data["book"].is_null() ? static_cast<Book::Type>((int)data["book"]) : Book::Type::NONE;
 
 #if defined(_WIN32) || defined(__arm__)
-        auto epoch = !data["epoch"].is_null() ? std::stoull(std::string(data["epoch"]))) : 0;
+        auto epoch = !data["epoch"].is_null() ? (long long)(data["epoch"])) : 0;
 #else
-        auto epoch = !data["epoch"].is_null() ? std::stol(std::string(data["epoch"])) : 0;
+        auto epoch = !data["epoch"].is_null() ? (long)(data["epoch"]) : 0;
 #endif
 
         preview = std::string(Book::Title[book]) + ": " + std::string(Location::Description[location]) + ", " + std::to_string(money) + " silver coins";
@@ -25885,9 +25885,9 @@ std::string miniPreview(std::string file_name)
         auto location = !data["location"].is_null() ? static_cast<Location::Type>((int)data["location"]) : Location::Type::NONE;
 
 #if defined(_WIN32) || defined(__arm__)
-        auto epoch = !data["epoch"].is_null() ? std::stoull(std::string(data["epoch"])) : 0;
+        auto epoch = !data["epoch"].is_null() ? (long long)(data["epoch"]) : 0;
 #else
-        auto epoch = !data["epoch"].is_null() ? std::stol(std::string(data["epoch"])) : 0;
+        auto epoch = !data["epoch"].is_null() ? (long)(data["epoch"]) : 0;
 #endif
 
         preview = std::string(Location::Description[location]);
