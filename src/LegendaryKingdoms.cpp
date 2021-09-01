@@ -102,7 +102,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, Party::Base &party);
 bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Character::Base &character, std::vector<Engine::TeamAssignment> teams);
 bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Engine::ShipPrices> &shop, Story::Base *harbour);
-bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Engine::EquipmentPrice> &shop, Character::Base &character);
+bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Engine::EquipmentPrice> &shop, int character);
 bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, int team_size, Attribute::Type skill, int difficulty, int success, std::vector<int> &selection, bool useEquipment);
 bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team_type, std::vector<int> team, Attribute::Type Skill, int difficulty, int success, bool useEquipment);
 bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Character::Base &character, int spells_limit);
@@ -1776,7 +1776,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         auto selected = false;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -3361,7 +3361,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                 {
                     if (selection.size() < party.Limit)
                     {
-                        Sound::Play(Sound::Type::SUCCESS);
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
 
                         selection.push_back(character);
                     }
@@ -4714,7 +4714,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -7818,7 +7818,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -8166,7 +8166,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, 
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > enemyFleet.size())
@@ -9149,7 +9149,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -9713,7 +9713,7 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -10007,7 +10007,7 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -10299,7 +10299,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -10574,7 +10574,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         std::vector<Attribute::Type> attributes = {Attribute::Type::FIGHTING, Attribute::Type::STEALTH, Attribute::Type::LORE, Attribute::Type::SURVIVAL, Attribute::Type::CHARISMA};
@@ -10850,7 +10850,7 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Cha
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
 
         auto teams_list = std::vector<Team::Type>();
 
@@ -11119,7 +11119,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -11420,7 +11420,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -11864,7 +11864,7 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, std:
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > ships.size())
@@ -12212,7 +12212,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -12633,7 +12633,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
         auto controls = std::vector<Button>();
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > enemyFleet.size())
@@ -13132,7 +13132,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto controls = std::vector<Button>();
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -14231,7 +14231,9 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (shop.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY));
     controls.push_back(Button(idx + 1, "icons/selling.png", idx, idx + 2, (shop.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::SELL));
     controls.push_back(Button(idx + 2, "icons/items.png", idx + 1, idx + 3, (shop.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::EQUIPMENT));
-    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (shop.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, lastx, buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 3, "icons/previous.png", idx + 2, idx + 4, (shop.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, startx + 3 * gridsize, buttony, Control::Type::PREVIOUS_CHARACTER));
+    controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, (shop.size() > 0 ? ((last - start) - 1) : idx + 4), idx + 4, startx + 4 * gridsize, buttony, Control::Type::NEXT_CHARACTER));
+    controls.push_back(Button(idx + 5, "icons/back-button.png", idx + 4, idx + 5, (shop.size() > 0 ? ((last - start) - 1) : idx + 5), idx + 5, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -14288,7 +14290,9 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (equipment.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY));
     controls.push_back(Button(idx + 1, "icons/selling.png", idx, idx + 2, (equipment.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::SELL));
     controls.push_back(Button(idx + 2, "icons/items.png", idx + 1, idx + 3, (equipment.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::EQUIPMENT));
-    controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (equipment.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, lastx, buttony, Control::Type::BACK));
+    controls.push_back(Button(idx + 3, "icons/previous.png", idx + 2, idx + 4, (equipment.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, startx + 3 * gridsize, buttony, Control::Type::PREVIOUS_CHARACTER));
+    controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, (equipment.size() > 0 ? ((last - start) - 1) : idx + 4), idx + 4, startx + 4 * gridsize, buttony, Control::Type::NEXT_CHARACTER));
+    controls.push_back(Button(idx + 5, "icons/back-button.png", idx + 4, idx + 5, (equipment.size() > 0 ? ((last - start) - 1) : idx + 5), idx + 5, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -14299,7 +14303,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto scrollSpeed = 1;
 
-    auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+    auto limit = (text_bounds - 2 * text_space - infoh) / (96);
 
     auto offset = 0;
 
@@ -15049,13 +15053,13 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
     return false;
 }
 
-bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Engine::EquipmentPrice> &shop, Character::Base &character)
+bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, std::vector<Engine::EquipmentPrice> &shop, int character)
 {
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
     auto scrollSpeed = 1;
 
-    auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+    auto limit = (text_bounds - 2 * text_space - infoh) / (96);
 
     auto offset = 0;
 
@@ -15115,7 +15119,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto current_mode = Control::Type::BUY;
 
-    if (!Engine::VERIFY_EQUIPMENT_LIMIT(character))
+    if (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[character]))
     {
         Sound::Play(Sound::Type::ERROR);
 
@@ -15169,12 +15173,12 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                     last = offset + limit;
 
-                    if (last > character.Equipment.size())
+                    if (last > party.Members[character].Equipment.size())
                     {
-                        last = character.Equipment.size();
+                        last = party.Members[character].Equipment.size();
                     }
 
-                    controls = shopList(window, renderer, character.Equipment, shop, offset, last, limit, textx, offsety);
+                    controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
 
                     current_mode = Control::Type::SELL;
 
@@ -15191,16 +15195,60 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                     last = offset + limit;
 
-                    if (last > character.Equipment.size())
+                    if (last > party.Members[character].Equipment.size())
                     {
-                        last = character.Equipment.size();
+                        last = party.Members[character].Equipment.size();
                     }
 
-                    controls = shopList(window, renderer, character.Equipment, shop, offset, last, limit, textx, offsety);
+                    controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
 
                     current_mode = Control::Type::EQUIPMENT;
 
                     current = FIND_CONTROL(controls, Control::Type::EQUIPMENT);
+                }
+
+                selected = false;
+            }
+            else if (controls[current].Type == Control::Type::PREVIOUS_CHARACTER)
+            {
+                if (current_mode != Control::Type::PREVIOUS_CHARACTER)
+                {
+                    offset = 0;
+
+                    last = offset + limit;
+
+                    if (last > party.Members[character].Equipment.size())
+                    {
+                        last = party.Members[character].Equipment.size();
+                    }
+
+                    controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+
+                    current_mode = Control::Type::PREVIOUS_CHARACTER;
+
+                    current = FIND_CONTROL(controls, Control::Type::PREVIOUS_CHARACTER);
+                }
+
+                selected = false;
+            }
+            else if (controls[current].Type == Control::Type::NEXT_CHARACTER)
+            {
+                if (current_mode != Control::Type::NEXT_CHARACTER)
+                {
+                    offset = 0;
+
+                    last = offset + limit;
+
+                    if (last > party.Members[character].Equipment.size())
+                    {
+                        last = party.Members[character].Equipment.size();
+                    }
+
+                    controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+
+                    current_mode = Control::Type::NEXT_CHARACTER;
+
+                    current = FIND_CONTROL(controls, Control::Type::NEXT_CHARACTER);
                 }
 
                 selected = false;
@@ -15211,7 +15259,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         {
             putHeader(renderer, (buy_selection.size() > 0 ? (std::string("Selected (") + std::to_string(buy_selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
         }
-        else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT)
+        else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT || current_mode == Control::Type::PREVIOUS_CHARACTER || current_mode == Control::Type::NEXT_CHARACTER)
         {
             putHeader(renderer, (sell_selection.size() > 0 ? (std::string("Selected (") + std::to_string(sell_selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
         }
@@ -15241,18 +15289,18 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     }
                 }
             }
-            else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT)
+            else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT || current_mode == Control::Type::PREVIOUS_CHARACTER || current_mode == Control::Type::NEXT_CHARACTER)
             {
                 for (auto i = 0; i < sell_selection.size(); i++)
                 {
-                    if (sell_selection[i] >= 0 && sell_selection[i] < character.Equipment.size())
+                    if (sell_selection[i] >= 0 && sell_selection[i] < party.Members[character].Equipment.size())
                     {
                         if (i > 0)
                         {
                             selection_string += ", ";
                         }
 
-                        auto item = character.Equipment[sell_selection[i]];
+                        auto item = party.Members[character].Equipment[sell_selection[i]];
 
                         selection_string += item.Name;
                     }
@@ -15310,14 +15358,14 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
             else
             {
-                sell_string = character.Name + "'s items";
+                sell_string = party.Members[character].Name + "'s items";
             }
 
             putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
         }
-        else if (current_mode == Control::Type::EQUIPMENT)
+        else if (current_mode == Control::Type::EQUIPMENT || current_mode == Control::Type::PREVIOUS_CHARACTER || current_mode == Control::Type::NEXT_CHARACTER)
         {
-            std::string view_string = character.Name + "'s items";
+            std::string view_string = party.Members[character].Name + "'s items";
 
             putHeader(renderer, view_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
         }
@@ -15412,7 +15460,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         SDL_Delay(50);
                     }
                 }
-                else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT)
+                else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT || current_mode == Control::Type::NEXT_CHARACTER || current_mode == Control::Type::PREVIOUS_CHARACTER)
                 {
                     if (offset > 0)
                     {
@@ -15425,12 +15473,12 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                         last = offset + limit;
 
-                        if (last > character.Equipment.size())
+                        if (last > party.Members[character].Equipment.size())
                         {
-                            last = character.Equipment.size();
+                            last = party.Members[character].Equipment.size();
                         }
 
-                        controls = shopList(window, renderer, character.Equipment, shop, offset, last, limit, textx, offsety);
+                        controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
 
                         SDL_Delay(50);
                     }
@@ -15483,28 +15531,28 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         current = -1;
                     }
                 }
-                else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT)
+                else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT || current_mode == Control::Type::PREVIOUS_CHARACTER || current_mode == Control::Type::NEXT_CHARACTER)
                 {
-                    if (character.Equipment.size() - last > 0)
+                    if (party.Members[character].Equipment.size() - last > 0)
                     {
-                        if (offset < character.Equipment.size() - limit)
+                        if (offset < party.Members[character].Equipment.size() - limit)
                         {
                             offset += scrollSpeed;
                         }
 
-                        if (offset > character.Equipment.size() - limit)
+                        if (offset > party.Members[character].Equipment.size() - limit)
                         {
-                            offset = character.Equipment.size() - limit;
+                            offset = party.Members[character].Equipment.size() - limit;
                         }
 
                         last = offset + limit;
 
-                        if (last > character.Equipment.size())
+                        if (last > party.Members[character].Equipment.size())
                         {
-                            last = character.Equipment.size();
+                            last = party.Members[character].Equipment.size();
                         }
 
-                        controls = shopList(window, renderer, character.Equipment, shop, offset, last, limit, textx, offsety);
+                        controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
 
                         SDL_Delay(50);
 
@@ -15514,7 +15562,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         }
                     }
 
-                    if (character.Equipment.size() - last <= 0)
+                    if (party.Members[character].Equipment.size() - last <= 0)
                     {
                         selected = false;
 
@@ -15542,7 +15590,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             }
                         }
                     }
-                    else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT)
+                    else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT || current_mode == Control::Type::NEXT_CHARACTER || current_mode == Control::Type::PREVIOUS_CHARACTER)
                     {
                         auto result = Engine::FIND_LIST(sell_selection, offset + current);
 
@@ -15552,7 +15600,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         }
                         else
                         {
-                            if ((offset + current) >= 0 && (offset + current) < character.Equipment.size())
+                            if ((offset + current) >= 0 && (offset + current) < party.Members[character].Equipment.size())
                             {
                                 sell_selection.push_back(offset + current);
                             }
@@ -15594,75 +15642,82 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     {
                         if (party.Money >= total)
                         {
-                            Engine::GAIN_MONEY(party, -total);
-
-                            message = "Item";
-
-                            if (items.size() > 1)
+                            if (party.Members[character].Type == Character::Type::SKULLCRACKER)
                             {
-                                message += "s";
+                                displayMessage("Skullcracker refuses to buy anything!", intRD);
                             }
-
-                            message += " purchased: ";
-
-                            for (auto i = 0; i < items.size(); i++)
+                            else
                             {
-                                auto item = std::get<0>(items[i]);
-                                auto index = std::get<1>(items[i]);
+                                Engine::GAIN_MONEY(party, -total);
 
-                                character.Equipment.push_back(item);
+                                message = "Item";
 
-                                if (index >= 0 && index < shop.size())
+                                if (items.size() > 1)
                                 {
-                                    auto supply = std::get<3>(shop[index]);
-                                    auto codes = std::get<4>(shop[index]);
+                                    message += "s";
+                                }
 
-                                    if (supply > 0)
-                                    {
-                                        std::get<3>(shop[index]) = supply - 1;
-                                    }
+                                message += " purchased: ";
 
-                                    if (codes.size() > 0)
+                                for (auto i = 0; i < items.size(); i++)
+                                {
+                                    auto item = std::get<0>(items[i]);
+                                    auto index = std::get<1>(items[i]);
+
+                                    party.Members[character].Equipment.push_back(item);
+
+                                    if (index >= 0 && index < shop.size())
                                     {
-                                        if (!Engine::VERIFY_CODES(party, codes))
+                                        auto supply = std::get<3>(shop[index]);
+                                        auto codes = std::get<4>(shop[index]);
+
+                                        if (supply > 0)
                                         {
-                                            codes_gained.insert(codes_gained.end(), codes.begin(), codes.end());
+                                            std::get<3>(shop[index]) = supply - 1;
                                         }
 
-                                        Engine::GET_CODES(party, codes);
+                                        if (codes.size() > 0)
+                                        {
+                                            if (!Engine::VERIFY_CODES(party, codes))
+                                            {
+                                                codes_gained.insert(codes_gained.end(), codes.begin(), codes.end());
+                                            }
+
+                                            Engine::GET_CODES(party, codes);
+                                        }
+                                    }
+
+                                    if (i > 0)
+                                    {
+                                        message += ", ";
+                                    }
+
+                                    message += item.Name;
+                                }
+
+                                if (codes_gained.size() > 0)
+                                {
+                                    message += ", Codes gained: ";
+
+                                    for (auto i = 0; i < codes_gained.size(); i++)
+                                    {
+                                        message += std::string(Codes::Prefix[codes_gained[i].Type]) + std::to_string(codes_gained[i].Code);
                                     }
                                 }
 
-                                if (i > 0)
+                                while (!Engine::VERIFY_EQUIPMENT_LIMIT(party.Members[character]))
                                 {
-                                    message += ", ";
+                                    inventoryScreen(window, renderer, party, team, party.Members[character], -1, false);
                                 }
 
-                                message += item.Name;
+                                Sound::Play(Sound::Type::SUCCESS);
+
+                                displayMessage(message, intLB);
+
+                                controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
+
+                                buy_selection.clear();
                             }
-
-                            if (codes_gained.size() > 0)
-                            {
-                                message += ", Codes gained: ";
-
-                                for (auto i = 0; i < codes_gained.size(); i++)
-                                {
-                                    message += std::string(Codes::Prefix[codes_gained[i].Type]) + std::to_string(codes_gained[i].Code);
-                                }
-                            }
-
-                            while (!Engine::VERIFY_EQUIPMENT_LIMIT(character))
-                            {
-                                inventoryScreen(window, renderer, party, team, character, -1, false);
-                            }
-
-                            Sound::Play(Sound::Type::SUCCESS);
-
-                            displayMessage(message, intLB);
-
-                            controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
-
-                            buy_selection.clear();
                         }
                         else
                         {
@@ -15687,25 +15742,58 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (sell_selection.size() > 0)
                 {
-                    std::string sold_string = "";
-                    std::string unsold_string = "";
-
-                    auto sold = 0;
-                    auto unsold = 0;
-
-                    auto sold_items = std::vector<int>();
-
-                    for (auto i = 0; i < sell_selection.size(); i++)
+                    if (party.Members[character].Type == Character::Type::SKULLCRACKER)
                     {
-                        if (sell_selection[i] >= 0 && sell_selection[i] < character.Equipment.size())
+                        displayMessage("Skullcracker refuses to sell anything!", intRD);
+                    }
+                    else
+                    {
+                        std::string sold_string = "";
+                        std::string unsold_string = "";
+
+                        auto sold = 0;
+                        auto unsold = 0;
+
+                        auto sold_items = std::vector<int>();
+
+                        for (auto i = 0; i < sell_selection.size(); i++)
                         {
-                            auto item = character.Equipment[sell_selection[i]];
-
-                            auto price = Engine::PRICE_SELL(shop, item.Type);
-
-                            if (price > 0)
+                            if (sell_selection[i] >= 0 && sell_selection[i] < party.Members[character].Equipment.size())
                             {
-                                if (!Engine::VERIFY_EQUIPMENT(character, {item.Type}))
+                                auto item = party.Members[character].Equipment[sell_selection[i]];
+
+                                auto price = Engine::PRICE_SELL(shop, item.Type);
+
+                                if (price > 0)
+                                {
+                                    if (!Engine::VERIFY_EQUIPMENT(party.Members[character], {item.Type}))
+                                    {
+                                        unsold += 1;
+
+                                        if (unsold_string.length() > 0)
+                                        {
+                                            unsold_string += ", ";
+                                        }
+
+                                        unsold_string += item.Name;
+                                    }
+                                    else
+                                    {
+                                        Engine::GAIN_MONEY(party, price);
+
+                                        sold += 1;
+
+                                        if (sold_string.length() > 0)
+                                        {
+                                            sold_string += ", ";
+                                        }
+
+                                        sold_string += item.Name;
+
+                                        sold_items.push_back(sell_selection[i]);
+                                    }
+                                }
+                                else
                                 {
                                     unsold += 1;
 
@@ -15716,95 +15804,69 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                                     unsold_string += item.Name;
                                 }
-                                else
-                                {
-                                    Engine::GAIN_MONEY(party, price);
-
-                                    sold += 1;
-
-                                    if (sold_string.length() > 0)
-                                    {
-                                        sold_string += ", ";
-                                    }
-
-                                    sold_string += item.Name;
-
-                                    sold_items.push_back(sell_selection[i]);
-                                }
-                            }
-                            else
-                            {
-                                unsold += 1;
-
-                                if (unsold_string.length() > 0)
-                                {
-                                    unsold_string += ", ";
-                                }
-
-                                unsold_string += item.Name;
                             }
                         }
-                    }
 
-                    message = "";
+                        message = "";
 
-                    if (sold > 0)
-                    {
-                        message += "Items sold: " + sold_string;
-                    }
-
-                    if (unsold > 0)
-                    {
                         if (sold > 0)
                         {
-                            message += "\n";
+                            message += "Items sold: " + sold_string;
                         }
 
-                        message += "Items not sold: " + unsold_string;
-                    }
-
-                    if (sold > unsold)
-                    {
-                        Sound::Play(Sound::Type::SUCCESS);
-
-                        flash_color = intLB;
-                    }
-                    else
-                    {
-                        Sound::Play(Sound::Type::FAIL);
-
-                        flash_color = intRD;
-                    }
-
-                    displayMessage(message, flash_color);
-
-                    if (sold_items.size() > 0)
-                    {
-                        auto remaining = std::vector<Equipment::Base>();
-
-                        for (auto i = 0; i < character.Equipment.size(); i++)
+                        if (unsold > 0)
                         {
-                            if (Engine::FIND_LIST(sold_items, i) < 0)
+                            if (sold > 0)
                             {
-                                remaining.push_back(character.Equipment[i]);
+                                message += "\n";
                             }
+
+                            message += "Items not sold: " + unsold_string;
                         }
 
-                        character.Equipment = remaining;
-                    }
-
-                    if (sold > 0)
-                    {
-                        offset = 0;
-
-                        last = offset + limit;
-
-                        if (last > character.Equipment.size())
+                        if (sold > unsold)
                         {
-                            last = character.Equipment.size();
+                            Sound::Play(Sound::Type::SUCCESS);
+
+                            flash_color = intLB;
+                        }
+                        else
+                        {
+                            Sound::Play(Sound::Type::FAIL);
+
+                            flash_color = intRD;
                         }
 
-                        controls = shopList(window, renderer, character.Equipment, shop, offset, last, limit, textx, offsety);
+                        displayMessage(message, flash_color);
+
+                        if (sold_items.size() > 0)
+                        {
+                            auto remaining = std::vector<Equipment::Base>();
+
+                            for (auto i = 0; i < party.Members[character].Equipment.size(); i++)
+                            {
+                                if (Engine::FIND_LIST(sold_items, i) < 0)
+                                {
+                                    remaining.push_back(party.Members[character].Equipment[i]);
+                                }
+                            }
+
+                            party.Members[character].Equipment = remaining;
+                        }
+
+                        if (sold > 0)
+                        {
+                            offset = 0;
+
+                            last = offset + limit;
+
+                            if (last > party.Members[character].Equipment.size())
+                            {
+                                last = party.Members[character].Equipment.size();
+                            }
+
+                            controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+                        }
                     }
                 }
                 else
@@ -15826,7 +15888,75 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     Sound::Play(Sound::Type::BUTTON_CLICK);
 
-                    inventoryScreen(window, renderer, party, team, character, -1, false);
+                    inventoryScreen(window, renderer, party, team, party.Members[character], -1, false);
+                }
+            }
+            else if (controls[current].Type == Control::Type::PREVIOUS_CHARACTER && !hold)
+            {
+                if (character > 0)
+                {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
+                    character -= 1;
+
+                    offset = 0;
+
+                    last = offset + limit;
+
+                    if (last > party.Members[character].Equipment.size())
+                    {
+                        last = party.Members[character].Equipment.size();
+                    }
+
+                    controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+
+                    current_mode = Control::Type::PREVIOUS_CHARACTER;
+
+                    current = FIND_CONTROL(controls, Control::Type::PREVIOUS_CHARACTER);
+
+                    sell_selection.clear();
+
+                    buy_selection.clear();
+
+                    selected = false;
+                }
+                else
+                {
+                    Sound::Play(Sound::Type::ERROR);
+                }
+            }
+            else if (controls[current].Type == Control::Type::NEXT_CHARACTER && !hold)
+            {
+                if (character < party.Members.size() - 1)
+                {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
+                    character += 1;
+
+                    offset = 0;
+
+                    last = offset + limit;
+
+                    if (last > party.Members[character].Equipment.size())
+                    {
+                        last = party.Members[character].Equipment.size();
+                    }
+
+                    controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+
+                    current_mode = Control::Type::NEXT_CHARACTER;
+
+                    current = FIND_CONTROL(controls, Control::Type::NEXT_CHARACTER);
+
+                    sell_selection.clear();
+
+                    buy_selection.clear();
+
+                    selected = false;
+                }
+                else
+                {
+                    Sound::Play(Sound::Type::ERROR);
                 }
             }
             else if (controls[current].Type == Control::Type::BACK && !hold)
@@ -15897,7 +16027,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto selection = std::vector<int>();
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -17120,7 +17250,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         auto selection = std::vector<int>();
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Fleet.size())
@@ -19162,7 +19292,7 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Boo
 
         auto scrollSpeed = 1;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > army.size())
@@ -19449,7 +19579,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, Book::T
         auto scrollSpeed = 1;
         auto offset = 0;
 
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > ships.size())
@@ -19805,7 +19935,7 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         auto scrollSpeed = 1;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -20239,7 +20369,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         auto offset = 0;
 
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
 
         auto last = offset + limit;
 
@@ -21954,7 +22084,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto selected = false;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > party.Fleet.size())
@@ -22631,7 +22761,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
         auto selected = false;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > harbour->Ships.size())
@@ -26454,7 +26584,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto scrollSpeed = 1;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
         auto last = offset + limit;
 
         if (last > story->Choices.size())
@@ -28858,6 +28988,14 @@ void renderCaption(SDL_Renderer *renderer, TTF_Font *font_caption, Button contro
     {
         caption = "Create or Overwrite Game";
     }
+    else if (control.Type == Control::Type::PREVIOUS_CHARACTER)
+    {
+        caption = "Previous party member";
+    }
+    else if (control.Type == Control::Type::NEXT_CHARACTER)
+    {
+        caption = "Next party member";
+    }
 
     if (caption.length() > 0)
     {
@@ -29593,7 +29731,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         if (result >= 0 && result < party.Members.size())
                         {
-                            shopScreen(window, renderer, party, story->Team, story->Shop, party.Members[result]);
+                            shopScreen(window, renderer, party, story->Team, story->Shop, result);
                         }
 
                         current = -1;

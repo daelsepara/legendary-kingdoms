@@ -106,7 +106,9 @@ namespace Control
         NEXT_TOPIC,
         PREVIOUS_TOPIC,
         BUY_SHIP,
-        SELL_SHIP
+        SELL_SHIP,
+        NEXT_CHARACTER,
+        PREVIOUS_CHARACTER
     };
 
     class Base
