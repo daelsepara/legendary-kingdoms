@@ -15644,6 +15644,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                         {
                             if (party.Members[character].Type == Character::Type::SKULLCRACKER)
                             {
+                                Sound::Play(Sound::Type::ERROR);
+                                
                                 displayMessage("Skullcracker refuses to buy anything!", intRD);
                             }
                             else
@@ -15744,6 +15746,8 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 {
                     if (party.Members[character].Type == Character::Type::SKULLCRACKER)
                     {
+                        Sound::Play(Sound::Type::ERROR);
+
                         displayMessage("Skullcracker refuses to sell anything!", intRD);
                     }
                     else
