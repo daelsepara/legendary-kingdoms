@@ -3133,27 +3133,29 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     {
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Select adventurers for your party");
 
-        const char *choices_add[5] = {"PREVIOUS", "NEXT", "ADD TO PARTY", "START", "BACK"};
-        const char *choices_del[5] = {"PREVIOUS", "NEXT", "REMOVE", "START", "BACK"};
+        const char *choices_add[6] = {"PREVIOUS", "NEXT", "ADD TO PARTY", "ABOUT", "START", "BACK"};
+        const char *choices_del[6] = {"PREVIOUS", "NEXT", "REMOVE", "ABOUT", "START", "BACK"};
 
         auto current = -1;
 
         auto selected = false;
 
-        auto controls_add = createHTextButtons(choices_add, 5, text_buttonh, startx, text_buttony);
-        auto controls_del = createHTextButtons(choices_del, 5, text_buttonh, startx, text_buttony);
+        auto controls_add = createHTextButtons(choices_add, 6, text_buttonh, startx, text_buttony);
+        auto controls_del = createHTextButtons(choices_del, 6, text_buttonh, startx, text_buttony);
 
         controls_add[0].Type = Control::Type::PREVIOUS;
         controls_add[1].Type = Control::Type::NEXT;
         controls_add[2].Type = Control::Type::PLUS;
-        controls_add[3].Type = Control::Type::NEW;
-        controls_add[4].Type = Control::Type::BACK;
+        controls_add[3].Type = Control::Type::ABOUT;
+        controls_add[4].Type = Control::Type::NEW;
+        controls_add[5].Type = Control::Type::BACK;
 
         controls_del[0].Type = Control::Type::PREVIOUS;
         controls_del[1].Type = Control::Type::NEXT;
         controls_del[2].Type = Control::Type::MINUS;
-        controls_del[3].Type = Control::Type::NEW;
-        controls_del[4].Type = Control::Type::BACK;
+        controls_del[3].Type = Control::Type::ABOUT;
+        controls_del[4].Type = Control::Type::NEW;
+        controls_del[5].Type = Control::Type::BACK;
 
         std::vector<TextButton> *controls;
 

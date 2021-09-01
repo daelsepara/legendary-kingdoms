@@ -28,7 +28,9 @@ An Implementation of Legendary Kingdoms Gamebooks in C++ and SDL. Only book 1 (T
 
 **View Party**
 
-![View Party](/screenshots/view-party.png)
+![Party Details](/screenshots/view-party-1.png)
+
+![Character Details](/screenshots/view-party-2.png)
 
 **Combat Screens**
 
