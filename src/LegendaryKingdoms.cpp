@@ -8682,6 +8682,20 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                 test_string += ", Focus: " + std::to_string(focus);
 
+                if (skill_checked)
+                {
+                    test_string += " - ";
+
+                    if (test_result)
+                    {
+                        test_string += "Passed";
+                    }
+                    else
+                    {
+                        test_string += "Failed";
+                    }
+                }
+
                 putHeader(renderer, test_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                 putHeader(renderer, party.Members[team[0]].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
