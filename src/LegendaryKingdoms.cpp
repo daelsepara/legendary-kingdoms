@@ -22423,7 +22423,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                                 {
                                     message += "\n";
                                 }
-                                
+
                                 message += "Unsold cargo: " + unsold_string;
                             }
 
