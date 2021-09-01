@@ -7,6 +7,10 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#if defined(_WIN32)
+#undef DELETE
+#endif
+
 namespace Control
 {
     enum class Type

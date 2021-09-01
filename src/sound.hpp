@@ -3,6 +3,10 @@
 
 #include <SDL_mixer.h>
 
+#if defined(_WIN32)
+#undef ERROR
+#endif
+
 namespace Sound
 {
     enum class Type
