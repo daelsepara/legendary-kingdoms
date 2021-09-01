@@ -34,6 +34,8 @@ An Implementation of Legendary Kingdoms Gamebooks in C++ and SDL. Only book 1 (T
 
 **Combat Screens**
 
+![Combat Preview](/screenshots/combat-preview.png)
+
 ![Combat Screen 1](/screenshots/combat-screen-1.png)
 
 ![Combat Screen 2](/screenshots/combat-screen-2.png)
