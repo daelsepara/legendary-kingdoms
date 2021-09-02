@@ -1,6 +1,19 @@
 #ifndef __LEGENDARY_KINGDOMS__HPP__
 #define __LEGENDARY_KINGDOMS__HPP__
 
+#include <chrono>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
 #if defined(_WIN32)
 #include <windows.h>
 #include <shlobj.h>

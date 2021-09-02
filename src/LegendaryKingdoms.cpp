@@ -1,17 +1,3 @@
-// Standard IO
-#include <chrono>
-#include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include <vector>
-#include <filesystem>
-
-namespace fs = std::filesystem;
-
 #include "LegendaryKingdoms.hpp"
 
 bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
