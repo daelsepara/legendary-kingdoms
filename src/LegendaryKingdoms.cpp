@@ -187,6 +187,7 @@ std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer);
 std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button);
 std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &monsters, int start, int last, int limit, int offsetx, int offsety, Control::Type mode);
 std::vector<Button> popupArmy(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &army, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
+std::vector<Button> popupConfirm(int popupw, int popuph, int offsetx, int offsety);
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Army::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button);
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Location::Type> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
 std::vector<Button> popupList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Monster::Base> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety);
@@ -23284,6 +23285,16 @@ void renderArmy(SDL_Renderer *renderer, TTF_Font *font, std::vector<Army::Base> 
     }
 }
 
+std::vector<Button> popupConfirm(int popupw, int popuph, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    controls.push_back(Button(0, "icons/yes.png", 0, 1, 0, 0, offsetx + button_space, offsety + popuph - button_space - buttonh, Control::Type::CONFIRM));
+    controls.push_back(Button(1, "icons/no.png", 0, 1, 1, 1, offsetx + popupw - buttonw - button_space, offsety + popuph - button_space - buttonh, Control::Type::BACK));
+
+    return controls;
+}
+
 template <typename T>
 void popupScrolls(std::vector<Button> &controls, std::vector<T> &list, int start, int last, int limit, int popupw, int popuph, int infoh, int offsetx, int offsety, bool back_button)
 {
@@ -29064,6 +29075,15 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         std::vector<Button> controls_normal = {};
         std::vector<Button> controls_popup = {};
 
+        auto popupw = (int)(0.6 * SCREEN_WIDTH);
+        auto popuph = (int)(0.6 * SCREEN_HEIGHT);
+        auto popupx = (SCREEN_WIDTH - popupw) / 2;
+        auto popupy = ((starty + text_bounds) - popuph) / 2;
+        auto popup_speed = 1;
+        auto popup_limit = (popuph - infoh - buttonh - button_space) / (96);
+
+        auto controls_confirm = popupConfirm(popupw, popuph, popupx, popupy);
+
         auto current_mode = Control::Type::STORY;
 
         while (!quit)
@@ -29208,14 +29228,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 controls_normal = Story::ExitControls(compact);
             }
 
-            auto popupw = (int)(0.6 * SCREEN_WIDTH);
-            auto popuph = (int)(0.6 * SCREEN_HEIGHT);
-            auto popupx = (SCREEN_WIDTH - popupw) / 2;
-            auto popupy = ((starty + text_bounds) - popuph) / 2;
-
-            auto popup_speed = 1;
             auto popup_offset = 0;
-            auto popup_limit = (popuph - infoh - buttonh - button_space) / (96);
+
             auto popup_last = popup_offset + popup_limit;
 
             if (story->Monsters.size() > 0 || story->EnemyFleet.size() > 0 || story->EnemyArmy.size() > 0)
@@ -29475,17 +29489,31 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                     controls = controls_popup;
                 }
+                else if (current_mode == Control::Type::CONFIRM)
+                {
+                    renderButtons(renderer, controls_normal, -1, intLB, border_space, border_pts, (!compact && offset > 0), !compact && text && offset < (text->h - text_bounds + 2 * text_space));
+
+                    fillRect(renderer, popupw, popuph, popupx, popupy, intBE);
+
+                    drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
+
+                    putHeader(renderer, "Are you sure?", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+
+                    putText(renderer, "You are about to end this session. Any unsaved progress will be lost.", font_garamond, -1, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popuph - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
+
+                    controls = controls_confirm;
+                }
 
                 if (current_mode == Control::Type::STORY)
                 {
                     renderButtons(renderer, controls, current, intLB, border_space, border_pts, (!compact && offset > 0), !compact && text && offset < (text->h - text_bounds + 2 * text_space));
                 }
-                if (current_mode == Control::Type::PREVIEW)
+                else if (current_mode == Control::Type::PREVIEW || current_mode == Control::Type::CONFIRM)
                 {
                     renderButtons(renderer, controls, current, intLB, border_space, border_pts);
                 }
 
-                if (current >= 0 && current < controls.size() && !selected)
+                if (current >= 0 && current < controls.size() && current_mode == Control::Type::STORY && !selected)
                 {
                     renderCaption(renderer, font_caption, controls[current]);
                 }
@@ -29881,6 +29909,19 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         selected = false;
                     }
+                    else if (controls[current].Type == Control::Type::BACK && !hold)
+                    {
+                        if (current_mode == Control::Type::CONFIRM)
+                        {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
+                            current_mode = Control::Type::STORY;
+                        }
+
+                        current = -1;
+
+                        selected = false;
+                    }
                     else if (controls[current].Type == Control::Type::CONFIRM && !hold)
                     {
                         if (current_mode == Control::Type::PREVIEW)
@@ -29888,6 +29929,14 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             Sound::Play(Sound::Type::BUTTON_CLICK);
 
                             current_mode = Control::Type::STORY;
+                        }
+                        else if (current_mode == Control::Type::CONFIRM)
+                        {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
+                            transition = true;
+
+                            quit = true;
                         }
 
                         current = -1;
@@ -30209,9 +30258,14 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     {
                         Sound::Play(Sound::Type::BUTTON_CLICK);
 
-                        transition = true;
+                        if (current_mode == Control::Type::STORY)
+                        {
+                            current_mode = Control::Type::CONFIRM;
+                        }
 
-                        quit = true;
+                        current = -1;
+
+                        selected = false;
                     }
                 }
             }
