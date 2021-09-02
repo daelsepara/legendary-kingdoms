@@ -3872,10 +3872,10 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (list.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::USE));
-    controls.push_back(Button(idx + 1, "icons/no.png", idx, idx + 2, (list.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::DROP));
-    controls.push_back(Button(idx + 2, "icons/interaction.png", idx + 1, idx + 3, (list.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::TRANSFER));
-    controls.push_back(Button(idx + 3, "icons/vault.png", idx + 2, idx + 4, (list.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, startx + 3 * gridsize, buttony, Control::Type::VAULT));
+    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (list.size() > 0 ? ((last - start) - 1) : idx), idx, textx, buttony, Control::Type::USE));
+    controls.push_back(Button(idx + 1, "icons/no.png", idx, idx + 2, (list.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, textx + gridsize, buttony, Control::Type::DROP));
+    controls.push_back(Button(idx + 2, "icons/interaction.png", idx + 1, idx + 3, (list.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, textx + 2 * gridsize, buttony, Control::Type::TRANSFER));
+    controls.push_back(Button(idx + 3, "icons/vault.png", idx + 2, idx + 4, (list.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, textx + 3 * gridsize, buttony, Control::Type::VAULT));
     controls.push_back(Button(idx + 4, "icons/back-button.png", idx + 3, idx + 4, (list.size() > 0 ? ((last - start) - 1) : idx + 4), idx + 4, lastx, buttony, Control::Type::BACK));
 
     return controls;
@@ -3928,9 +3928,9 @@ std::vector<Button> vaultList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (list.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::USE));
-    controls.push_back(Button(idx + 1, "icons/interaction.png", idx, idx + 2, (list.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::TRANSFER));
-    controls.push_back(Button(idx + 2, "icons/shop.png", idx + 1, idx + 3, (list.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::MONEY));
+    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (list.size() > 0 ? ((last - start) - 1) : idx), idx, textx, buttony, Control::Type::USE));
+    controls.push_back(Button(idx + 1, "icons/interaction.png", idx, idx + 2, (list.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, textx + gridsize, buttony, Control::Type::TRANSFER));
+    controls.push_back(Button(idx + 2, "icons/shop.png", idx + 1, idx + 3, (list.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, textx + 2 * gridsize, buttony, Control::Type::MONEY));
     controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (list.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, lastx, buttony, Control::Type::BACK));
 
     return controls;
@@ -4047,8 +4047,8 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
         }
     }
 
-    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (spells.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::SPELL));
-    controls.push_back(Button(idx + 1, "icons/no.png", idx, idx + 2, (spells.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::UNLEARN));
+    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (spells.size() > 0 ? ((last - start) - 1) : idx), idx, textx, buttony, Control::Type::SPELL));
+    controls.push_back(Button(idx + 1, "icons/no.png", idx, idx + 2, (spells.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, textx + gridsize, buttony, Control::Type::UNLEARN));
     controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, (spells.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, lastx, buttony, Control::Type::BACK));
 
     return controls;
@@ -14228,11 +14228,11 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (shop.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY));
-    controls.push_back(Button(idx + 1, "icons/selling.png", idx, idx + 2, (shop.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::SELL));
-    controls.push_back(Button(idx + 2, "icons/items.png", idx + 1, idx + 3, (shop.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::EQUIPMENT));
-    controls.push_back(Button(idx + 3, "icons/previous.png", idx + 2, idx + 4, (shop.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, startx + 3 * gridsize, buttony, Control::Type::PREVIOUS_CHARACTER));
-    controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, (shop.size() > 0 ? ((last - start) - 1) : idx + 4), idx + 4, startx + 4 * gridsize, buttony, Control::Type::NEXT_CHARACTER));
+    controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (shop.size() > 0 ? ((last - start) - 1) : idx), idx, textx, buttony, Control::Type::BUY));
+    controls.push_back(Button(idx + 1, "icons/selling.png", idx, idx + 2, (shop.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, textx + gridsize, buttony, Control::Type::SELL));
+    controls.push_back(Button(idx + 2, "icons/items.png", idx + 1, idx + 3, (shop.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, textx + 2 * gridsize, buttony, Control::Type::EQUIPMENT));
+    controls.push_back(Button(idx + 3, "icons/previous.png", idx + 2, idx + 4, (shop.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, textx + 3 * gridsize, buttony, Control::Type::PREVIOUS_CHARACTER));
+    controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, (shop.size() > 0 ? ((last - start) - 1) : idx + 4), idx + 4, textx + 4 * gridsize, buttony, Control::Type::NEXT_CHARACTER));
     controls.push_back(Button(idx + 5, "icons/back-button.png", idx + 4, idx + 5, (shop.size() > 0 ? ((last - start) - 1) : idx + 5), idx + 5, lastx, buttony, Control::Type::BACK));
 
     return controls;
@@ -14287,11 +14287,11 @@ std::vector<Button> shopList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (equipment.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY));
-    controls.push_back(Button(idx + 1, "icons/selling.png", idx, idx + 2, (equipment.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::SELL));
-    controls.push_back(Button(idx + 2, "icons/items.png", idx + 1, idx + 3, (equipment.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::EQUIPMENT));
-    controls.push_back(Button(idx + 3, "icons/previous.png", idx + 2, idx + 4, (equipment.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, startx + 3 * gridsize, buttony, Control::Type::PREVIOUS_CHARACTER));
-    controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, (equipment.size() > 0 ? ((last - start) - 1) : idx + 4), idx + 4, startx + 4 * gridsize, buttony, Control::Type::NEXT_CHARACTER));
+    controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (equipment.size() > 0 ? ((last - start) - 1) : idx), idx, textx, buttony, Control::Type::BUY));
+    controls.push_back(Button(idx + 1, "icons/selling.png", idx, idx + 2, (equipment.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, textx + gridsize, buttony, Control::Type::SELL));
+    controls.push_back(Button(idx + 2, "icons/items.png", idx + 1, idx + 3, (equipment.size() > 0 ? ((last - start) - 1) : idx + 2), idx + 2, textx + 2 * gridsize, buttony, Control::Type::EQUIPMENT));
+    controls.push_back(Button(idx + 3, "icons/previous.png", idx + 2, idx + 4, (equipment.size() > 0 ? ((last - start) - 1) : idx + 3), idx + 3, textx + 3 * gridsize, buttony, Control::Type::PREVIOUS_CHARACTER));
+    controls.push_back(Button(idx + 4, "icons/next.png", idx + 3, idx + 5, (equipment.size() > 0 ? ((last - start) - 1) : idx + 4), idx + 4, textx + 4 * gridsize, buttony, Control::Type::NEXT_CHARACTER));
     controls.push_back(Button(idx + 5, "icons/back-button.png", idx + 4, idx + 5, (equipment.size() > 0 ? ((last - start) - 1) : idx + 5), idx + 5, lastx, buttony, Control::Type::BACK));
 
     return controls;
@@ -15169,16 +15169,19 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (current_mode != Control::Type::SELL)
                 {
-                    offset = 0;
-
-                    last = offset + limit;
-
-                    if (last > party.Members[character].Equipment.size())
+                    if (current_mode == Control::Type::BUY)
                     {
-                        last = party.Members[character].Equipment.size();
-                    }
+                        offset = 0;
 
-                    controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+                        last = offset + limit;
+
+                        if (last > party.Members[character].Equipment.size())
+                        {
+                            last = party.Members[character].Equipment.size();
+                        }
+
+                        controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+                    }
 
                     current_mode = Control::Type::SELL;
 
@@ -15191,16 +15194,19 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (current_mode != Control::Type::EQUIPMENT)
                 {
-                    offset = 0;
-
-                    last = offset + limit;
-
-                    if (last > party.Members[character].Equipment.size())
+                    if (current_mode == Control::Type::BUY)
                     {
-                        last = party.Members[character].Equipment.size();
-                    }
+                        offset = 0;
 
-                    controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+                        last = offset + limit;
+
+                        if (last > party.Members[character].Equipment.size())
+                        {
+                            last = party.Members[character].Equipment.size();
+                        }
+
+                        controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+                    }
 
                     current_mode = Control::Type::EQUIPMENT;
 
@@ -15213,16 +15219,19 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (current_mode != Control::Type::PREVIOUS_CHARACTER)
                 {
-                    offset = 0;
-
-                    last = offset + limit;
-
-                    if (last > party.Members[character].Equipment.size())
+                    if (current_mode == Control::Type::BUY)
                     {
-                        last = party.Members[character].Equipment.size();
-                    }
+                        offset = 0;
 
-                    controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+                        last = offset + limit;
+
+                        if (last > party.Members[character].Equipment.size())
+                        {
+                            last = party.Members[character].Equipment.size();
+                        }
+
+                        controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+                    }
 
                     current_mode = Control::Type::PREVIOUS_CHARACTER;
 
@@ -15235,16 +15244,19 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if (current_mode != Control::Type::NEXT_CHARACTER)
                 {
-                    offset = 0;
-
-                    last = offset + limit;
-
-                    if (last > party.Members[character].Equipment.size())
+                    if (current_mode == Control::Type::BUY)
                     {
-                        last = party.Members[character].Equipment.size();
-                    }
+                        offset = 0;
 
-                    controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+                        last = offset + limit;
+
+                        if (last > party.Members[character].Equipment.size())
+                        {
+                            last = party.Members[character].Equipment.size();
+                        }
+
+                        controls = shopList(window, renderer, party.Members[character].Equipment, shop, offset, last, limit, textx, offsety);
+                    }
 
                     current_mode = Control::Type::NEXT_CHARACTER;
 
@@ -15393,7 +15405,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
                         }
                     }
-                    else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT)
+                    else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT || current_mode == Control::Type::PREVIOUS_CHARACTER || current_mode == Control::Type::NEXT_CHARACTER)
                     {
                         if (Engine::FIND_LIST(sell_selection, offset + i) >= 0)
                         {
@@ -15645,7 +15657,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                             if (party.Members[character].Type == Character::Type::SKULLCRACKER)
                             {
                                 Sound::Play(Sound::Type::ERROR);
-                                
+
                                 displayMessage("Skullcracker refuses to buy anything!", intRD);
                             }
                             else
@@ -21753,14 +21765,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     if (buy_button)
     {
-        controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY_SHIP));
+        controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, textx, buttony, Control::Type::BUY_SHIP));
 
         idx += 1;
     }
 
     if (sell_button)
     {
-        controls.push_back(Button(idx, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, (buy_button ? (startx + gridsize) : startx), buttony, Control::Type::SELL_SHIP));
+        controls.push_back(Button(idx, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, (buy_button ? (textx + gridsize) : textx), buttony, Control::Type::SELL_SHIP));
 
         idx += 1;
     }
@@ -21776,7 +21788,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         grid_offset = 1;
     }
 
-    controls.push_back(Button(idx, "icons/user.png", ((buy_button || sell_button) ? idx - 1 : idx), idx + 1, (ships.size() > 0 ? (last - start) - 1 : idx), idx, startx + grid_offset * gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx, "icons/user.png", ((buy_button || sell_button) ? idx - 1 : idx), idx + 1, (ships.size() > 0 ? (last - start) - 1 : idx), idx, textx + grid_offset * gridsize, buttony, Control::Type::PARTY));
     controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, lastx, buttony, Control::Type::BACK));
 
     return controls;
@@ -21833,14 +21845,14 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     if (buy_button)
     {
-        controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::BUY_SHIP));
+        controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, textx, buttony, Control::Type::BUY_SHIP));
 
         idx += 1;
     }
 
     if (sell_button)
     {
-        controls.push_back(Button(idx, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, (buy_button ? (startx + gridsize) : startx), buttony, Control::Type::SELL_SHIP));
+        controls.push_back(Button(idx, "icons/selling.png", buy_button ? idx - 1 : idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx), idx, (buy_button ? (textx + gridsize) : textx), buttony, Control::Type::SELL_SHIP));
 
         idx += 1;
     }
@@ -21856,7 +21868,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         grid_offset = 1;
     }
 
-    controls.push_back(Button(idx, "icons/user.png", ((buy_button || sell_button) ? idx - 1 : idx), idx + 1, (ships.size() > 0 ? (last - start) - 1 : idx), idx, startx + grid_offset * gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx, "icons/user.png", ((buy_button || sell_button) ? idx - 1 : idx), idx + 1, (ships.size() > 0 ? (last - start) - 1 : idx), idx, textx + grid_offset * gridsize, buttony, Control::Type::PARTY));
     controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, (ships.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, lastx, buttony, Control::Type::BACK));
 
     return controls;
@@ -21972,9 +21984,9 @@ std::vector<Button> buyCargo(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/selling.png", idx, idx + 1, (cargo.size() > 0 ? (last - start) - 1 : idx), idx, startx, buttony, Control::Type::SELL_CARGO));
-    controls.push_back(Button(idx + 1, "icons/shop.png", idx, idx + 2, (cargo.size() > 0 ? (last - start) - 1 : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::BUY_CARGO));
-    controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, (cargo.size() > 0 ? (last - start) - 1 : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx, "icons/selling.png", idx, idx + 1, (cargo.size() > 0 ? (last - start) - 1 : idx), idx, textx, buttony, Control::Type::SELL_CARGO));
+    controls.push_back(Button(idx + 1, "icons/shop.png", idx, idx + 2, (cargo.size() > 0 ? (last - start) - 1 : idx + 1), idx + 1, textx + gridsize, buttony, Control::Type::BUY_CARGO));
+    controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, (cargo.size() > 0 ? (last - start) - 1 : idx + 2), idx + 2, textx + 2 * gridsize, buttony, Control::Type::PARTY));
     controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (cargo.size() > 0 ? (last - start) - 1 : idx + 3), idx + 3, lastx, buttony, Control::Type::BACK));
 
     return controls;
@@ -22023,9 +22035,9 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/selling.png", idx, idx + 1, (ships.size() > 0 ? (last - start) - 1 : idx), idx, startx, buttony, Control::Type::SELL_CARGO));
-    controls.push_back(Button(idx + 1, "icons/shop.png", idx, idx + 2, (ships.size() > 0 ? (last - start) - 1 : idx + 1), idx + 1, startx + gridsize, buttony, Control::Type::BUY_CARGO));
-    controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, (ships.size() > 0 ? (last - start) - 1 : idx + 2), idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx, "icons/selling.png", idx, idx + 1, (ships.size() > 0 ? (last - start) - 1 : idx), idx, textx, buttony, Control::Type::SELL_CARGO));
+    controls.push_back(Button(idx + 1, "icons/shop.png", idx, idx + 2, (ships.size() > 0 ? (last - start) - 1 : idx + 1), idx + 1, textx + gridsize, buttony, Control::Type::BUY_CARGO));
+    controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, (ships.size() > 0 ? (last - start) - 1 : idx + 2), idx + 2, textx + 2 * gridsize, buttony, Control::Type::PARTY));
     controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, (ships.size() > 0 ? (last - start) - 1 : idx + 3), idx + 3, lastx, buttony, Control::Type::BACK));
 
     return controls;
@@ -26098,18 +26110,18 @@ std::vector<Button> createFileList(SDL_Window *window, SDL_Renderer *renderer, s
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/open.png", idx, idx + 1, list.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::LOAD));
+    controls.push_back(Button(idx, "icons/open.png", idx, idx + 1, list.size() > 0 ? (last - start) - 1 : idx, idx, textx, buttony, Control::Type::LOAD));
 
     if (save_button)
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/disk.png", idx - 1, idx + 1, list.size() > 0 ? (last - start) - 1 : idx, idx, startx + gridsize, buttony, Control::Type::SAVE));
+        controls.push_back(Button(idx, "icons/disk.png", idx - 1, idx + 1, list.size() > 0 ? (last - start) - 1 : idx, idx, textx + gridsize, buttony, Control::Type::SAVE));
     }
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/no.png", idx - 1, idx + 1, list.size() > 0 ? (last - start) - 1 : idx, idx, (save_button ? (startx + 2 * gridsize) : (startx + gridsize)), buttony, Control::Type::DELETE));
+    controls.push_back(Button(idx, "icons/no.png", idx - 1, idx + 1, list.size() > 0 ? (last - start) - 1 : idx, idx, (save_button ? (textx + 2 * gridsize) : (textx + gridsize)), buttony, Control::Type::DELETE));
 
     controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, list.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, lastx, buttony, Control::Type::BACK));
 
@@ -30299,8 +30311,8 @@ std::vector<Button> topicsList(SDL_Window *window, SDL_Renderer *renderer, std::
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/previous.png", idx, idx + 1, topics.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::PREVIOUS_TOPIC));
-    controls.push_back(Button(idx + 1, "icons/next.png", idx, idx + 2, topics.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + gridsize, buttony, Control::Type::NEXT_TOPIC));
+    controls.push_back(Button(idx, "icons/previous.png", idx, idx + 1, topics.size() > 0 ? (last - start) - 1 : idx, idx, textx, buttony, Control::Type::PREVIOUS_TOPIC));
+    controls.push_back(Button(idx + 1, "icons/next.png", idx, idx + 2, topics.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, textx + gridsize, buttony, Control::Type::NEXT_TOPIC));
     controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, topics.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, lastx, buttony, Control::Type::BACK));
 
     return controls;
