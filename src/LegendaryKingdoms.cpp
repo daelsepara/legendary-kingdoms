@@ -22592,6 +22592,8 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                             Engine::GAIN_MONEY(party, revenue);
 
                             displayMessage(message, flash_color);
+
+                            controls = cargoList(window, renderer, party.Fleet, offset, last, limit, textx, (texty + infoh));
                         }
                         else
                         {
