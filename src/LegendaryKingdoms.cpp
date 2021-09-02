@@ -1275,6 +1275,7 @@ bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
 
     if (window && renderer && splashImage)
     {
+#if !defined(__arm__)
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
         for (Uint8 i = 0; i < (Uint8)255; i += (Uint8)1)
@@ -1289,6 +1290,7 @@ bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
         }
 
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+#endif
 
         fillWindow(renderer, intBK);
 
