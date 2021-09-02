@@ -19112,6 +19112,18 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                 text = NULL;
             }
         }
+        else if (selection >= 0 && selection < character.SpellBook.size())
+        {
+            fillRect(renderer, textwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
+
+            auto text = createText(character.SpellBook[selection].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth, TTF_STYLE_NORMAL);
+
+            renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
+
+            SDL_FreeSurface(text);
+
+            text = NULL;
+        }
 
         renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
