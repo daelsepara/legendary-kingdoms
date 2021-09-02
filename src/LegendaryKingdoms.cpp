@@ -26349,8 +26349,6 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
             if (current_mode == Control::Type::GAME)
             {
-                renderButtons(renderer, controls_normal, current, intLB, text_space, border_pts);
-
                 controls = controls_normal;
             }
             else if (current_mode == Control::Type::CONFIRM)
@@ -26369,8 +26367,10 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
             }
             else
             {
-                renderButtons(renderer, controls_normal, -1, intLB, text_space, border_pts);
+                controls = controls_normal;
             }
+
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
             if (current >= 0 && current < controls.size() && current_mode != Control::Type::CONFIRM)
             {
