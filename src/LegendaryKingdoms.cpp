@@ -26361,7 +26361,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
                 putHeader(renderer, "Are you sure?", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
 
-                putText(renderer, "You are about to delete this game. All progress and resources accumulated will be lost forever.", font_garamond, -1, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popuph - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
+                putText(renderer, "You are about to delete this game. All accumulated progress and resources will be lost forever.", font_garamond, -1, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popuph - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
 
                 controls = controls_confirm;
             }
