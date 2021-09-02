@@ -1466,7 +1466,7 @@ std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Ch
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/yes.png", idx, idx, attributes.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+    controls.push_back(Button(idx, "icons/yes.png", idx, idx, attributes.size() > 0 ? (last - start) - 1 : idx, idx, textx, buttony, Control::Type::CONFIRM));
 
     return controls;
 }
@@ -1527,7 +1527,7 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     }
     else
     {
-        controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, army.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+        controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, army.size() > 0 ? (last - start) - 1 : idx, idx, textx, buttony, Control::Type::CONFIRM));
         controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, army.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, lastx, buttony, Control::Type::BACK));
     }
 
@@ -1749,7 +1749,7 @@ std::vector<Button> teamsList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/yes.png", idx, idx, teams.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+    controls.push_back(Button(idx, "icons/yes.png", idx, idx, teams.size() > 0 ? (last - start) - 1 : idx, idx, textx, buttony, Control::Type::CONFIRM));
     controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, teams.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, lastx, buttony, Control::Type::BACK));
 
     return controls;
@@ -3812,7 +3812,7 @@ std::vector<Button> equipmentList(SDL_Window *window, SDL_Renderer *renderer, st
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/yes.png", idx - 1, (back_button ? idx + 1 : idx), (list.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::CONFIRM));
+        controls.push_back(Button(idx, "icons/yes.png", idx - 1, (back_button ? idx + 1 : idx), (list.size() > 0 ? ((last - start) - 1) : idx), idx, textx, buttony, Control::Type::CONFIRM));
     }
 
     if (back_button)
@@ -3987,7 +3987,7 @@ std::vector<Button> spellList(SDL_Window *window, SDL_Renderer *renderer, std::v
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/yes.png", idx - 1, (back_button ? idx + 1 : idx), spells.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+        controls.push_back(Button(idx, "icons/yes.png", idx - 1, (back_button ? idx + 1 : idx), spells.size() > 0 ? (last - start) - 1 : idx, idx, textx, buttony, Control::Type::CONFIRM));
     }
 
     if (back_button)
@@ -4101,7 +4101,7 @@ std::vector<Button> rechargeList(SDL_Window *window, SDL_Renderer *renderer, std
         }
     }
 
-    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (spells.size() > 0 ? ((last - start) - 1) : idx), idx, startx, buttony, Control::Type::RECHARGE));
+    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, (spells.size() > 0 ? ((last - start) - 1) : idx), idx, textx, buttony, Control::Type::RECHARGE));
     controls.push_back(Button(idx + 1, "icons/back-button.png", idx, idx + 1, (spells.size() > 0 ? ((last - start) - 1) : idx + 1), idx + 1, lastx, buttony, Control::Type::BACK));
 
     return controls;
@@ -4210,7 +4210,7 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/yes.png", idx - 1, (back_button ? idx + 1 : idx), monsters.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+        controls.push_back(Button(idx, "icons/yes.png", idx - 1, (back_button ? idx + 1 : idx), monsters.size() > 0 ? (last - start) - 1 : idx, idx, textx, buttony, Control::Type::CONFIRM));
     }
 
     if (back_button)
@@ -4335,7 +4335,7 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/yes.png", idx, back_button ? idx + 1 : idx, party.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+        controls.push_back(Button(idx, "icons/yes.png", idx, back_button ? idx + 1 : idx, party.size() > 0 ? (last - start) - 1 : idx, idx, textx, buttony, Control::Type::CONFIRM));
     }
 
     if (back_button)
@@ -5297,7 +5297,7 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
     {
         idx = controls.size();
 
-        controls.push_back(Button(idx, "icons/yes.png", idx - 1, (back_button ? idx + 1 : idx), ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, buttony, Control::Type::CONFIRM));
+        controls.push_back(Button(idx, "icons/yes.png", idx - 1, (back_button ? idx + 1 : idx), ships.size() > 0 ? (last - start) - 1 : idx, idx, textx, buttony, Control::Type::CONFIRM));
     }
 
     if (back_button)
@@ -25338,9 +25338,9 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
 
     idx = controls.size();
 
-    controls.push_back(Button(idx, "icons/papyrus.png", idx - 1, idx + 1, idx - 1, idx, startx, buttony, Control::Type::ENCYCLOPEDIA));
-    controls.push_back(Button(idx + 1, "icons/ancient-map.png", idx, idx + 2, idx - 1, idx + 1, startx + gridsize, buttony, Control::Type::MAP));
-    controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, idx - 1, idx + 2, startx + 2 * gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx, "icons/papyrus.png", idx - 1, idx + 1, idx - 1, idx, textx, buttony, Control::Type::ENCYCLOPEDIA));
+    controls.push_back(Button(idx + 1, "icons/ancient-map.png", idx, idx + 2, idx - 1, idx + 1, textx + gridsize, buttony, Control::Type::MAP));
+    controls.push_back(Button(idx + 2, "icons/user.png", idx + 1, idx + 3, idx - 1, idx + 2, textx + 2 * gridsize, buttony, Control::Type::PARTY));
     controls.push_back(Button(idx + 3, "icons/back-button.png", idx + 2, idx + 3, idx - 1, idx + 3, lastx, buttony, Control::Type::BACK));
 
     return controls;
