@@ -4695,7 +4695,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                         {
                             if (rolls > 0)
                             {
-                                if (success > Engine::SCORE(character, attribute))
+                                if (success > Engine::RAW_SCORE(character, attribute, true))
                                 {
                                     Sound::Play(Sound::Type::SUCCESS);
 
@@ -4732,7 +4732,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
                 putHeader(renderer, character.Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
-                std::string attacker_string = std::string(Attribute::Descriptions[attribute]) + " Score: " + std::to_string(Engine::SCORE(character, attribute));
+                std::string attacker_string = std::string(Attribute::Descriptions[attribute]) + " Score: " + std::to_string(Engine::RAW_SCORE(character, attribute, true));
                 putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                 std::string attribute_string = "Raise: " + std::string(Attribute::Descriptions[attribute]);
@@ -8910,7 +8910,16 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
         auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
-        auto controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+        auto controls = std::vector<Button>();
+
+        if (mode == Control::Type::SELECT_LOWEST_ATTRIBUTE)
+        {
+            controls = rawCharacters(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+        }
+        else
+        {
+            controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+        }
 
         auto done = false;
 
@@ -9105,7 +9114,14 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                             last = party.Members.size();
                         }
 
-                        controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+                        if (mode == Control::Type::SELECT_LOWEST_ATTRIBUTE)
+                        {
+                            controls = rawCharacters(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+                        }
+                        else
+                        {
+                            controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+                        }
 
                         SDL_Delay(50);
                     }
@@ -9138,7 +9154,14 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                             last = party.Members.size();
                         }
 
-                        controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+                        if (mode == Control::Type::SELECT_LOWEST_ATTRIBUTE)
+                        {
+                            controls = rawCharacters(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+                        }
+                        else
+                        {
+                            controls = combatantList(window, renderer, party.Members, offset, last, limit, textx, texty + infoh + text_space, true, true);
+                        }
 
                         SDL_Delay(50);
 
@@ -24698,10 +24721,12 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                             if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
                             {
                                 target = party.CurrentCharacter;
+
+                                attribute_min = Engine::RAW_SCORE(party.Members[target], story->Choices[choice].Attributes[0], true);
                             }
                             else if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
                             {
-                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
+                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::SELECT_LOWEST_ATTRIBUTE);
                             }
                             else
                             {
@@ -24710,7 +24735,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (target >= 0 && target < party.Members.size())
                             {
-                                if (Engine::SCORE(party.Members[target], story->Choices[choice].Attributes[0]) == attribute_min)
+                                if (Engine::RAW_SCORE(party.Members[target], story->Choices[choice].Attributes[0], true) == attribute_min)
                                 {
                                     auto increase = gainAttributeScore(window, renderer, party.Book, party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Value, 0);
 
@@ -24735,11 +24760,15 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             auto target = -1;
 
-                            party.CurrentCharacter = Engine::FIND_SOLO(party);
-
-                            if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
+                            if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
                             {
-                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
+                                target = party.CurrentCharacter;
+
+                                attribute_min = Engine::RAW_SCORE(party.Members[target], story->Choices[choice].Attributes[0], true);
+                            }
+                            else if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
+                            {
+                                target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::SELECT_LOWEST_ATTRIBUTE);
                             }
                             else
                             {
@@ -24750,7 +24779,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (Engine::IS_ALIVE(party, target))
                             {
-                                if (Engine::SCORE(party.Members[target], story->Choices[choice].Attributes[0]) == attribute_min)
+                                if (Engine::RAW_SCORE(party.Members[target], story->Choices[choice].Attributes[0], true) == attribute_min)
                                 {
                                     next = findStory(story->Choices[choice].Destination);
 
@@ -24777,10 +24806,12 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
                                 {
                                     target = party.CurrentCharacter;
+
+                                    attribute_min = Engine::RAW_SCORE(party.Members[target], story->Choices[choice].Attributes[0], true);
                                 }
                                 else if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
                                 {
-                                    target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
+                                    target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::SELECT_LOWEST_ATTRIBUTE);
                                 }
                                 else
                                 {
@@ -24789,9 +24820,9 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 if (target >= 0 && target < party.Members.size())
                                 {
-                                    if (Engine::SCORE(party.Members[target], story->Choices[choice].Attributes[0]) == attribute_min)
+                                    if (Engine::RAW_SCORE(party.Members[target], story->Choices[choice].Attributes[0], true) == attribute_min)
                                     {
-                                        if (Engine::SCORE(party.Members[target], story->Choices[choice].Attributes[0]) < story->Choices[choice].Difficulty)
+                                        if (Engine::RAW_SCORE(party.Members[target], story->Choices[choice].Attributes[0], true) < story->Choices[choice].Difficulty)
                                         {
                                             auto increase = gainAttributeScore(window, renderer, party.Book, party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Success, 0);
 
@@ -24851,10 +24882,12 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                 if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
                                 {
                                     target = party.CurrentCharacter;
+
+                                    attribute_min = Engine::RAW_SCORE(party.Members[target], story->Choices[choice].Attributes[0], true);
                                 }
                                 else if (Engine::COUNT(party, story->Choices[choice].Attributes[0], attribute_min) > 1)
                                 {
-                                    target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::RAISE_ATTRIBUTE_SCORE);
+                                    target = selectPartyMember(window, renderer, party, Team::Type::NONE, Equipment::NONE, Control::Type::SELECT_LOWEST_ATTRIBUTE);
                                 }
                                 else
                                 {
@@ -24863,7 +24896,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 if (target >= 0 && target < party.Members.size())
                                 {
-                                    if (Engine::SCORE(party.Members[target], story->Choices[choice].Attributes[0]) == attribute_min)
+                                    if (Engine::RAW_SCORE(party.Members[target], story->Choices[choice].Attributes[0], true) == attribute_min)
                                     {
                                         Engine::GAIN_SCORE(party.Members[target], story->Choices[choice].Attributes[0], story->Choices[choice].Value);
 

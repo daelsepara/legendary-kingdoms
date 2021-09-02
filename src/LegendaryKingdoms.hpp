@@ -742,6 +742,63 @@ std::string characterText(Character::Base &character, bool compact)
     return character_text;
 };
 
+std::string rawCharacterText(Character::Base &character, bool compact)
+{
+    std::string character_text = "";
+
+    if (!compact)
+    {
+        character_text = character.Background;
+    }
+    else
+    {
+        character_text = character.Name;
+
+        if (character.Team != Team::Type::NONE)
+        {
+            if (!Engine::IS_CHARACTER(character.Team))
+            {
+                character_text += ", Team: " + std::string(Team::Descriptions[character.Team]);
+            }
+        }
+
+        if (character.SpellCaster)
+        {
+            character_text += ", SpellCaster";
+        }
+    }
+
+    if (!compact)
+    {
+        character_text += "\n";
+    }
+
+    character_text += "\n";
+
+    for (auto i = 0; i < character.Attributes.size(); i++)
+    {
+        if (i > 0)
+        {
+            character_text += ", ";
+        }
+
+        auto raw_score = Engine::RAW_SCORE(character, character.Attributes[i].Type, true);
+
+        character_text += std::string(Attribute::Descriptions[character.Attributes[i].Type]) + ": " + std::to_string(raw_score);
+    }
+
+    auto raw_health = character.Health;
+
+    character_text += ", Health: " + std::to_string(raw_health);
+
+    if (!compact && character.SpellCaster)
+    {
+        character_text += "\n\nSpellcaster";
+    }
+
+    return character_text;
+};
+
 std::string itemString(Equipment::Base &equipment)
 {
     std::string item_string = equipment.Name;
@@ -2578,6 +2635,66 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
     controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::SPELL));
 
     controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::FLEE));
+
+    return controls;
+}
+
+std::vector<Button> rawCharacters(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> party, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button)
+{
+    auto controls = std::vector<Button>();
+
+    if (party.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto adventurer = party[index];
+
+            std::string adventurer_string = rawCharacterText(adventurer, true);
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), ((i < (last - start) - 1) ? i + 1 : ((back_button || confirm_button) ? i + 1 : i)), offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = controls[i].Surface->w;
+
+            controls[i].H = controls[i].Surface->h;
+        }
+    }
+
+    auto idx = (int)controls.size();
+
+    if (party.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx += 1;
+        }
+
+        if (party.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
+
+            idx += 1;
+        }
+    }
+
+    if (confirm_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/yes.png", idx, back_button ? idx + 1 : idx, party.size() > 0 ? (last - start) - 1 : idx, idx, textx, buttony, Control::Type::CONFIRM));
+    }
+
+    if (back_button)
+    {
+        idx = controls.size();
+
+        controls.push_back(Button(idx, "icons/back-button.png", confirm_button ? idx - 1 : idx, idx, party.size() > 0 ? (last - start) - 1 : idx, idx, lastx, buttony, Control::Type::BACK));
+    }
 
     return controls;
 }

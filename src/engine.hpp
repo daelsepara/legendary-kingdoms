@@ -2861,7 +2861,7 @@ namespace Engine
         {
             if (!Engine::IS_CAPTURED(party.Members[i]))
             {
-                score = std::min<int>(score, Engine::SCORE(party.Members[i], type));
+                score = std::min<int>(score, Engine::RAW_SCORE(party.Members[i], type, true));
             }
         }
 
@@ -2889,7 +2889,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (score == Engine::SCORE(party.Members[i], type) && Engine::IS_ACTIVE(party, i))
+            if (score == Engine::RAW_SCORE(party.Members[i], type, true) && Engine::IS_ACTIVE(party, i))
             {
                 result += 1;
             }
@@ -2941,7 +2941,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (score == Engine::SCORE(party.Members[i], type) && Engine::IS_ACTIVE(party, i))
+            if (score == Engine::RAW_SCORE(party.Members[i], type, true) && Engine::IS_ACTIVE(party, i))
             {
                 result = i;
 
