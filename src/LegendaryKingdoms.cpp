@@ -27347,7 +27347,16 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                             if (Engine::HAS_SHIP(party, location))
                             {
-                                auto result = selectShip(window, renderer, party.Book, party.Fleet, story->Choices[choice].Location, {}, Control::Type::SAIL);
+                                auto result = -1;
+
+                                if (Engine::COUNT(party, location) == 1)
+                                {
+                                    result = Engine::FIND_SHIP(party, location);
+                                }
+                                else
+                                {
+                                    result = selectShip(window, renderer, party.Book, party.Fleet, story->Choices[choice].Location, {}, Control::Type::SAIL);
+                                }
 
                                 if (result >= 0 && result < party.Fleet.size())
                                 {
