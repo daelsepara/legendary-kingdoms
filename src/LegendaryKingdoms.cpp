@@ -26220,7 +26220,14 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
             last = entries.size();
         }
 
-        auto controls = createFileList(window, renderer, entries, offset, last, limit, textx, texty + infoh, save_button);
+        auto popupw = (int)(0.6 * SCREEN_WIDTH);
+        auto popuph = (int)(0.6 * SCREEN_HEIGHT);
+        auto popupx = (SCREEN_WIDTH - popupw) / 2;
+        auto popupy = ((starty + text_bounds) - popuph) / 2;
+
+        auto controls = std::vector<Button>();
+        auto controls_normal = createFileList(window, renderer, entries, offset, last, limit, textx, texty + infoh, save_button);
+        auto controls_confirm = popupConfirm(popupw, popuph, popupx, popupy);
 
         auto current = -1;
         auto selected = false;
@@ -26254,6 +26261,8 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
             start_ticks = SDL_GetTicks();
         };
 
+        auto current_mode = Control::Type::GAME;
+
         while (!done)
         {
             if (save_button)
@@ -26272,19 +26281,19 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            if (current >= 0 && current < controls.size())
+            if (current >= 0 && current < controls_normal.size() && current_mode == Control::Type::GAME)
             {
                 if (selection >= 0 && selection < entries.size())
                 {
-                    if (controls[current].Type == Control::Type::LOAD)
+                    if (controls_normal[current].Type == Control::Type::LOAD)
                     {
                         putText(renderer, "Load Game", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
-                    else if (controls[current].Type == Control::Type::SAVE)
+                    else if (controls_normal[current].Type == Control::Type::SAVE)
                     {
                         putText(renderer, "Overwrite Game", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
-                    else if (controls[current].Type == Control::Type::DELETE)
+                    else if (controls_normal[current].Type == Control::Type::DELETE)
                     {
                         putText(renderer, "Delete Game", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
@@ -26295,7 +26304,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                 }
                 else
                 {
-                    if (controls[current].Type == Control::Type::SAVE)
+                    if (controls_normal[current].Type == Control::Type::SAVE)
                     {
                         putText(renderer, "Save Game", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
@@ -26329,18 +26338,41 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                 {
                     if (selection == offset + i)
                     {
-                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                        thickRect(renderer, controls_normal[i].W + border_pts, controls_normal[i].H + border_pts, controls_normal[i].X - 2, controls_normal[i].Y - 2, intLB, 2);
                     }
                     else
                     {
-                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
+                        drawRect(renderer, controls_normal[i].W + border_space, controls_normal[i].H + border_space, controls_normal[i].X - border_pts, controls_normal[i].Y - border_pts, intBK);
                     }
                 }
             }
 
-            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
+            if (current_mode == Control::Type::GAME)
+            {
+                renderButtons(renderer, controls_normal, current, intLB, text_space, border_pts);
 
-            if (current >= 0 && current < controls.size())
+                controls = controls_normal;
+            }
+            else if (current_mode == Control::Type::CONFIRM)
+            {
+                renderButtons(renderer, controls_normal, -1, intLB, border_space, border_pts);
+
+                fillRect(renderer, popupw, popuph, popupx, popupy, intBE);
+
+                drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
+
+                putHeader(renderer, "Are you sure?", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+
+                putText(renderer, "You are about to delete this game. All progress and resources accumulated will be lost forever.", font_garamond, -1, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popuph - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
+
+                controls = controls_confirm;
+            }
+            else
+            {
+                renderButtons(renderer, controls_normal, -1, intLB, text_space, border_pts);
+            }
+
+            if (current >= 0 && current < controls.size() && current_mode != Control::Type::CONFIRM)
             {
                 renderCaption(renderer, font_caption, controls[current]);
             }
@@ -26365,9 +26397,16 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                 {
                     Sound::Play(Sound::Type::BUTTON_CLICK);
 
-                    result = Control::Type::BACK;
+                    if (current_mode == Control::Type::GAME)
+                    {
+                        result = Control::Type::BACK;
 
-                    done = true;
+                        done = true;
+                    }
+                    else
+                    {
+                        current_mode = Control::Type::GAME;
+                    }
 
                     current = -1;
 
@@ -26391,70 +26430,76 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                 }
                 else if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
                 {
-                    if (offset > 0)
+                    if (current_mode == Control::Type::GAME)
                     {
-                        offset -= scrollSpeed;
-
-                        if (offset < 0)
+                        if (offset > 0)
                         {
-                            offset = 0;
+                            offset -= scrollSpeed;
+
+                            if (offset < 0)
+                            {
+                                offset = 0;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > entries.size())
+                            {
+                                last = entries.size();
+                            }
+
+                            controls_normal = createFileList(window, renderer, entries, offset, last, limit, textx, texty + infoh, save_button);
+
+                            SDL_Delay(50);
                         }
 
-                        last = offset + limit;
-
-                        if (last > entries.size())
+                        if (offset <= 0)
                         {
-                            last = entries.size();
+                            current = -1;
+
+                            selected = false;
                         }
-
-                        controls = createFileList(window, renderer, entries, offset, last, limit, textx, texty + infoh, save_button);
-
-                        SDL_Delay(50);
-                    }
-
-                    if (offset <= 0)
-                    {
-                        current = -1;
-
-                        selected = false;
                     }
                 }
                 else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
                 {
-                    if (entries.size() - last > 0)
+                    if (current_mode == Control::Type::GAME)
                     {
-                        if (offset < entries.size() - limit)
+                        if (entries.size() - last > 0)
                         {
-                            offset += scrollSpeed;
+                            if (offset < entries.size() - limit)
+                            {
+                                offset += scrollSpeed;
+                            }
+
+                            if (offset > entries.size() - limit)
+                            {
+                                offset = entries.size() - limit;
+                            }
+
+                            last = offset + limit;
+
+                            if (last > entries.size())
+                            {
+                                last = entries.size();
+                            }
+
+                            controls_normal = createFileList(window, renderer, entries, offset, last, limit, textx, texty + infoh, save_button);
+
+                            SDL_Delay(50);
+
+                            if (offset > 0)
+                            {
+                                current = FIND_CONTROL(controls_normal, Control::Type::SCROLL_DOWN);
+                            }
                         }
 
-                        if (offset > entries.size() - limit)
+                        if (entries.size() - last <= 0)
                         {
-                            offset = entries.size() - limit;
+                            selected = false;
+
+                            current = -1;
                         }
-
-                        last = offset + limit;
-
-                        if (last > entries.size())
-                        {
-                            last = entries.size();
-                        }
-
-                        controls = createFileList(window, renderer, entries, offset, last, limit, textx, texty + infoh, save_button);
-
-                        SDL_Delay(50);
-
-                        if (offset > 0)
-                        {
-                            current = FIND_CONTROL(controls, Control::Type::SCROLL_DOWN);
-                        }
-                    }
-
-                    if (entries.size() - last <= 0)
-                    {
-                        selected = false;
-
-                        current = -1;
                     }
                 }
                 else if (controls[current].Type == Control::Type::SAVE && !hold)
@@ -26505,6 +26550,32 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                 {
                     if (selection >= 0 && selection < entries.size())
                     {
+                        if (current_mode == Control::Type::GAME)
+                        {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
+                            current_mode = Control::Type::CONFIRM;
+                        }
+                        else
+                        {
+                            Sound::Play(Sound::Type::ERROR);
+                        }
+                    }
+                    else
+                    {
+                        Sound::Play(Sound::Type::ERROR);
+
+                        displayMessage("Please select a game to delete!", intRD);
+                    }
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::CONFIRM && !hold)
+                {
+                    if (current_mode == Control::Type::CONFIRM)
+                    {
                         auto del = fs::remove(entries[selection]);
 
                         if (del)
@@ -26527,7 +26598,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                                 last = entries.size();
                             }
 
-                            controls = createFileList(window, renderer, entries, offset, last, limit, textx, texty + infoh, save_button);
+                            controls_normal = createFileList(window, renderer, entries, offset, last, limit, textx, texty + infoh, save_button);
 
                             selection = -1;
 
@@ -26539,17 +26610,13 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
                             displayMessage("Game not removed!", intRD);
                         }
+
+                        current_mode = Control::Type::GAME;
                     }
                     else
                     {
                         Sound::Play(Sound::Type::ERROR);
-
-                        displayMessage("Please select a game to delete!", intRD);
                     }
-
-                    current = -1;
-
-                    selected = false;
                 }
             }
         }
