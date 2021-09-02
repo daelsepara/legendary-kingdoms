@@ -668,7 +668,7 @@ namespace Engine
     {
         auto score = Engine::SCORE(character, Attribute::Type::FIGHTING);
 
-        score = Engine::HAS_WEAPON(character) ? (score + Engine::MAX_WEAPON(character)) : (Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT) ? score : (score - 1));
+        score = (Engine::HAS_WEAPON(character) && !Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT)) ? (score + Engine::MAX_WEAPON(character)) : (Engine::HAS_STATUS(character, Character::Status::UNARMED_COMBAT) ? score : (score - 1));
 
         if (score < 0)
         {
