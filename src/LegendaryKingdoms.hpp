@@ -2,7 +2,6 @@
 #define __LEGENDARY_KINGDOMS__HPP__
 
 #if defined(_WIN32)
-
 #include <windows.h>
 #include <shlobj.h>
 #else
