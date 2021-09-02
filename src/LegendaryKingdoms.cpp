@@ -20339,7 +20339,7 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 {
                     if (current_mode == Control::Type::ARMY)
                     {
-                        done = false;
+                        done = true;
 
                         Sound::Play(Sound::Type::BUTTON_CLICK);
                     }
