@@ -17101,7 +17101,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                 selected = false;
             }
-            else if (controls[current].Type == Control::Type::PLUS && !hold)
+            else if (controls[current].Type == Control::Type::PLUS)
             {
                 if (current_mode == Control::Type::MONEY)
                 {
@@ -17127,7 +17127,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                 selected = false;
             }
-            else if (controls[current].Type == Control::Type::MINUS && !hold)
+            else if (controls[current].Type == Control::Type::MINUS)
             {
                 if (current_mode == Control::Type::MONEY)
                 {
@@ -23355,19 +23355,17 @@ std::vector<Button> popupMoney(SDL_Window *window, SDL_Renderer *renderer, Party
 {
     auto controls = std::vector<Button>();
 
-    controls.push_back(Button(0, createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Vault Money: " + std::to_string(party.VaultMoney) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, list_buttonh, text_space), 0, 0, 0, 0, offsetx + 2 * text_space, offsety + infoh + 3 * text_space, Control::Type::ACTION));
+    controls.push_back(Button(0, createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Vault Money: " + std::to_string(party.VaultMoney) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, list_buttonh, text_space), 0, 0, 0, 1, offsetx + 2 * text_space, offsety + infoh + 3 * text_space, Control::Type::ACTION));
     controls[0].W = controls[0].Surface->w;
     controls[0].H = controls[0].Surface->h;
 
-    controls.push_back(Button(1, createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Party Money: " + std::to_string(party.Money) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, list_buttonh, text_space), 1, 1, 1, 1, offsetx + 2 * text_space, controls[0].Y + controls[0].H + 3 * text_space, Control::Type::ACTION));
+    controls.push_back(Button(1, createHeaderButton(window, FONT_GARAMOND, 24, (std::string("Party Money: " + std::to_string(party.Money) + " silver coins")).c_str(), clrBK, intBE, popupw - 3 * button_space / 2 - button_space - arrow_size - border_space, list_buttonh, text_space), 1, 1, 0, 2, offsetx + 2 * text_space, controls[0].Y + controls[0].H + 3 * text_space, Control::Type::ACTION));
     controls[1].W = controls[1].Surface->w;
     controls[1].H = controls[1].Surface->h;
 
-    auto idx = (int)controls.size();
-
-    controls.push_back(Button(idx, "icons/yes.png", idx, idx + 1, idx, idx, offsetx + button_space, offsety + popuph - button_space - buttonh, Control::Type::CONFIRM));
-    controls.push_back(Button(idx + 1, "icons/add.png", idx, idx + 2, idx + 1, idx + 1, offsetx + button_space + gridsize, offsety + popuph - button_space - buttonh, Control::Type::PLUS));
-    controls.push_back(Button(idx + 2, "icons/minus.png", idx + 1, idx + 2, idx + 2, idx + 2, offsetx + button_space + 2 * gridsize, offsety + popuph - button_space - buttonh, Control::Type::MINUS));
+    controls.push_back(Button(2, "icons/yes.png", 2, 3, 1, 2, offsetx + button_space, offsety + popuph - button_space - buttonh, Control::Type::CONFIRM));
+    controls.push_back(Button(3, "icons/add.png", 2, 4, 1, 3, offsetx + button_space + gridsize, offsety + popuph - button_space - buttonh, Control::Type::PLUS));
+    controls.push_back(Button(4, "icons/minus.png", 3, 4, 1, 4, offsetx + button_space + 2 * gridsize, offsety + popuph - button_space - buttonh, Control::Type::MINUS));
 
     return controls;
 }
