@@ -20252,7 +20252,7 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         }
                         else if (current_mode == Control::Type::TRANSFER)
                         {
-                            auto transfer = offset + current;
+                            auto transfer = popup_offset + current;
 
                             if (transfer >= 0 && transfer < barracks.size())
                             {
