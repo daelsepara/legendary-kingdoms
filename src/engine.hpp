@@ -2307,6 +2307,26 @@ namespace Engine
         return (result >= 0 && result < party.Fleet.size());
     }
 
+    int COUNT(Party::Base &party, Location::Type location, int needed_space)
+    {
+        auto result = 0;
+
+        if (party.Fleet.size() > 0)
+        {
+            for (auto i = 0; i < party.Fleet.size(); i++)
+            {
+                auto available_space = party.Fleet[i].MaximumCargo - party.Fleet[i].Cargo.size();
+
+                if (party.Fleet[i].Type != Ship::Type::NONE && party.Fleet[i].Location == location && available_space >= needed_space)
+                {
+                    result += 1;
+                }
+            }
+        }
+
+        return result;
+    }
+
     bool HAS_SHIP(Party::Base &party, Location::Type location)
     {
         auto result = false;

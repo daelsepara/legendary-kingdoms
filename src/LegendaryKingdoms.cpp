@@ -22638,7 +22638,16 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                             if (party.Money >= price)
                             {
-                                auto ship = selectShip(window, renderer, party.Book, party.Fleet, harbour->Location, cargo, Control::Type::CARGO);
+                                auto ship = -1;
+
+                                if (Engine::COUNT(party, harbour->Location, cargo.size()) > 1)
+                                {
+                                    ship = selectShip(window, renderer, party.Book, party.Fleet, harbour->Location, cargo, Control::Type::CARGO);
+                                }
+                                else
+                                {
+                                    ship = Engine::FIND_SHIP(party, harbour->Location, cargo.size());
+                                }
 
                                 if (ship >= 0 && ship < party.Fleet.size())
                                 {
@@ -29706,8 +29715,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         viewParty(window, renderer, party, story->Team, false);
 
-                        current = -1;
-
                         selected = false;
                     }
                     else if (controls[current].Type == Control::Type::MAP && !hold)
@@ -29716,17 +29723,38 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         mapScreen(window, renderer, story->BookID);
 
-                        current = -1;
-
                         selected = false;
                     }
                     else if (controls[current].Type == Control::Type::HARBOUR && !hold)
                     {
-                        Sound::Play(Sound::Type::BUTTON_CLICK);
+                        if ((story->Ships.size() > 0 && story->Cargo.size() > 0) || (story->Ships.size() > 0 && story->ShipRepairPrice >= 0) || (story->Cargo.size() > 0 && story->ShipRepairPrice >= 0))
+                        {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
 
-                        harbourScreen(window, renderer, party, story);
+                            harbourScreen(window, renderer, party, story);
+                        }
+                        else if (story->Ships.size() > 0)
+                        {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
 
-                        current = -1;
+                            shipScreen(window, renderer, party, Team::Type::NONE, story->Ships, story);
+                        }
+                        else if (story->Cargo.size() > 0)
+                        {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
+                            cargoScreen(window, renderer, party, story);
+                        }
+                        else if (story->ShipRepairPrice >= 0)
+                        {
+                            Sound::Play(Sound::Type::BUTTON_CLICK);
+
+                            repairScreen(window, renderer, party, story);
+                        }
+                        else
+                        {
+                            Sound::Play(Sound::Type::ERROR);
+                        }
 
                         selected = false;
                     }
@@ -29749,8 +29777,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         {
                             shopScreen(window, renderer, party, story->Team, story->Shop, result);
                         }
-
-                        current = -1;
 
                         selected = false;
                     }
