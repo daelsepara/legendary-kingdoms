@@ -25886,6 +25886,75 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     putText(renderer, "Your party has died. This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
 
+                if (splash && splash->w > listwidth && current_mode != Control::Type::PREVIEW && current_mode != Control::Type::CONFIRM)
+                {
+                    auto mousex = 0;
+                    auto mousey = 0;
+
+                    SDL_GetMouseState(&mousex, &mousey);
+
+                    auto zoomw = textx - startx;
+                    auto zoomh = splashw;
+
+                    clipValue(zoomw, 0, splash->w);
+                    clipValue(zoomh, 0, splash->h);
+
+                    auto offsetx = 0;
+                    auto offsety = splash_h;
+
+                    if (splash->w < listwidth)
+                    {
+                        offsetx = (listwidth - splash->w) / 2;
+
+                        offsety = splash->h;
+                    }
+
+                    if (mousex >= (textx + text_space + offsetx) && mousex <= (textx + textwidth - text_space - offsetx) && mousey >= (texty + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= offsety && ((mousey - (texty + text_space)) <= (offsety - offset)))
+                    {
+                        auto scalex = (double)(mousex - (textx + text_space)) / listwidth;
+                        auto scaley = (double)((mousey - (texty + text_space)) + offset) / offsety;
+
+                        auto centerx = (int)(scalex * (double)splash->w);
+                        auto centery = (int)(scaley * (double)splash->h);
+
+                        clipValue(centerx, zoomw / 2, splash->w - zoomw / 2);
+                        clipValue(centery, zoomh / 2, splash->h - zoomh / 2);
+
+                        if (splashTexture)
+                        {
+                            SDL_Rect src;
+
+                            src.w = zoomw;
+                            src.h = zoomh;
+                            src.x = centerx - zoomw / 2;
+                            src.y = centery - zoomh / 2;
+
+                            SDL_Rect dst;
+
+                            dst.w = zoomw;
+                            dst.h = zoomh;
+                            dst.x = startx / 2;
+                            dst.y = (starty + (text_bounds - zoomh) / 2);
+
+                            fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
+                            SDL_RenderCopy(renderer, splashTexture, &src, &dst);
+                            drawRect(renderer, dst.w + 2, dst.h + 2, dst.x - 1, dst.y - 1, intBK);
+                        }
+                    }
+                }
+
+                if (flash_message)
+                {
+                    if ((SDL_GetTicks() - start_ticks) < duration)
+                    {
+                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                    }
+                    else
+                    {
+                        flash_message = false;
+                    }
+                }
+
                 if (current_mode == Control::Type::STORY)
                 {
                     controls = controls_normal;
@@ -25956,75 +26025,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 if (current >= 0 && current < controls.size() && current_mode == Control::Type::STORY && !selected)
                 {
                     renderCaption(renderer, font_caption, controls[current]);
-                }
-
-                if (splash && splash->w > listwidth && current_mode != Control::Type::PREVIEW)
-                {
-                    auto mousex = 0;
-                    auto mousey = 0;
-
-                    SDL_GetMouseState(&mousex, &mousey);
-
-                    auto zoomw = textx - startx;
-                    auto zoomh = splashw;
-
-                    clipValue(zoomw, 0, splash->w);
-                    clipValue(zoomh, 0, splash->h);
-
-                    auto offsetx = 0;
-                    auto offsety = splash_h;
-
-                    if (splash->w < listwidth)
-                    {
-                        offsetx = (listwidth - splash->w) / 2;
-
-                        offsety = splash->h;
-                    }
-
-                    if (mousex >= (textx + text_space + offsetx) && mousex <= (textx + textwidth - text_space - offsetx) && mousey >= (texty + text_space) && mousey <= (texty + text_bounds - text_space) && offset >= 0 && offset <= offsety && ((mousey - (texty + text_space)) <= (offsety - offset)))
-                    {
-                        auto scalex = (double)(mousex - (textx + text_space)) / listwidth;
-                        auto scaley = (double)((mousey - (texty + text_space)) + offset) / offsety;
-
-                        auto centerx = (int)(scalex * (double)splash->w);
-                        auto centery = (int)(scaley * (double)splash->h);
-
-                        clipValue(centerx, zoomw / 2, splash->w - zoomw / 2);
-                        clipValue(centery, zoomh / 2, splash->h - zoomh / 2);
-
-                        if (splashTexture)
-                        {
-                            SDL_Rect src;
-
-                            src.w = zoomw;
-                            src.h = zoomh;
-                            src.x = centerx - zoomw / 2;
-                            src.y = centery - zoomh / 2;
-
-                            SDL_Rect dst;
-
-                            dst.w = zoomw;
-                            dst.h = zoomh;
-                            dst.x = startx / 2;
-                            dst.y = (starty + (text_bounds - zoomh) / 2);
-
-                            fillRect(renderer, dst.w, dst.h, dst.x, dst.y, intWH);
-                            SDL_RenderCopy(renderer, splashTexture, &src, &dst);
-                            drawRect(renderer, dst.w + 2, dst.h + 2, dst.x - 1, dst.y - 1, intBK);
-                        }
-                    }
-                }
-
-                if (flash_message)
-                {
-                    if ((SDL_GetTicks() - start_ticks) < duration)
-                    {
-                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
-                    }
-                    else
-                    {
-                        flash_message = false;
-                    }
                 }
 
                 Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);

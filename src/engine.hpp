@@ -2859,7 +2859,7 @@ namespace Engine
 
         for (auto i = 0; i < party.Members.size(); i++)
         {
-            if (!Engine::IS_CAPTURED(party.Members[i]))
+            if (!Engine::IS_CAPTURED(party.Members[i]) && Engine::IS_CIVILIZED(party, party.Members[i]))
             {
                 score = std::min<int>(score, Engine::RAW_SCORE(party.Members[i], type, true));
             }

@@ -1012,9 +1012,18 @@ std::string previewGame(std::string file_name)
                     names += 1;
                 }
             }
+
+            if (data["members"].size() > 4)
+            {
+                preview += ", ";
+            }
+            else
+            {
+                preview += "\n";
+            }
         }
 
-        preview += "\n" + time_string(epoch);
+        preview += time_string(epoch);
     }
 
     return preview;

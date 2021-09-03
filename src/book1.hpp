@@ -25635,10 +25635,10 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-			Bye = NULL;
+            Bye = NULL;
 
             temp_string = "";
-            
+
             Choices.clear();
 
             if (Engine::HAS_SPELL(party, {Spells::Type::WITHER}))
