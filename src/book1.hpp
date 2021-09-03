@@ -2350,6 +2350,10 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Bye = NULL;
+
+            temp_string = "";
+
             Choices.clear();
 
             if (Engine::HAS_SPELL_ANY(party, {Spells::Type::ORB_OF_ANNIHILATION, Spells::Type::MAELSTROM}))
@@ -2685,6 +2689,8 @@ namespace Book1
     class Story076 : public Story::Base
     {
     public:
+        std::string PreText = "";
+
         Story076()
         {
             BookID = Book::Type::BOOK1;
@@ -2692,13 +2698,6 @@ namespace Book1
             ID = 76;
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
-
-            Text = "This must be Garon the Bloody-mouthed, whom you were sent to find. His father will no doubt grieve to know his fate, but at least it will solve the mystery of his disappearance. You were not asked to return the body, but if you wish to do so, you can take the BARBARIAN BODY. Unfortunately, it takes up five inventory slots and must be carried by a single character.\n\nWhat now?";
-
-            Choices.clear();
-            Choices.push_back(Choice::Base("Take the BARBARIAN BODY", {Book::Type::BOOK1, -76}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::BARBARIAN_BODY}, {Codes::A(86)}, {}));
-            Choices.push_back(Choice::Base("Examine the missing south wall", {Book::Type::BOOK1, 645}));
-            Choices.push_back(Choice::Base("Leave the room and return to the crossroads", {Book::Type::BOOK1, 566}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -2708,6 +2707,27 @@ namespace Book1
             Bye = NULL;
 
             temp_string = "";
+
+            if (!Engine::VERIFY_CODES(party, {Codes::A(86)}))
+            {
+                PreText = "This must be Garon the Bloody-mouthed, whom you were sent to find. His father will no doubt grieve to know his fate, but at least it will solve the mystery of his disappearance. You were not asked to return the body, but if you wish to do so, you can take the BARBARIAN BODY. Unfortunately, it takes up five inventory slots and must be carried by a single character.\n\nWhat now?";
+            }
+            else
+            {
+                PreText = "You are back in the area where you found Garon the Bloody-mouthed's body.\n\nWhat now?";
+            }
+
+            Choices.clear();
+
+            if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::BARBARIAN_BODY}) && !Engine::VERIFY_CODES(party, {Codes::A(86)}))
+            {
+                Choices.push_back(Choice::Base("Take the BARBARIAN BODY", {Book::Type::BOOK1, -76}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::BARBARIAN_BODY}, {Codes::A(86)}, {}));
+            }
+
+            Choices.push_back(Choice::Base("Examine the missing south wall", {Book::Type::BOOK1, 645}));
+            Choices.push_back(Choice::Base("Leave the room and return to the crossroads", {Book::Type::BOOK1, 566}));
+
+            Text = PreText.c_str();
         }
     };
 
@@ -6445,7 +6465,7 @@ namespace Book1
                 else
                 {
                     Engine::SINK_SHIP(party);
-                    
+
                     return {Book::Type::BOOK1, 484};
                 }
             }
@@ -25615,6 +25635,10 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+			Bye = NULL;
+
+            temp_string = "";
+            
             Choices.clear();
 
             if (Engine::HAS_SPELL(party, {Spells::Type::WITHER}))
@@ -26258,6 +26282,13 @@ namespace Book1
             Choices.push_back(Choice::Base("Fight to stun", {Book::Type::BOOK1, -771}, Choice::Type::GET_CODES, {Codes::Type::FIGHT_TO_STUN}));
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
         }
     };
 
@@ -27931,6 +27962,13 @@ namespace Book1
             Choices.push_back(Choice::Base("Go back to the city centre", {Book::Type::BOOK1, 75}));
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
         }
     };
 
