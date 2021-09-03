@@ -5063,7 +5063,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
                             last = spells.size();
                         }
 
-                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, spell_scrolly, true, false);
+                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, spell_scrolly, true, (mode == Spells::Select::CAST_SPELL ? true : false));
 
                         SDL_Delay(50);
                     }
@@ -5096,7 +5096,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
                             last = spells.size();
                         }
 
-                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, spell_scrolly, true, false);
+                        controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh + text_space, spell_scrolly, true, (mode == Spells::Select::CAST_SPELL ? true : false));
 
                         SDL_Delay(50);
 
