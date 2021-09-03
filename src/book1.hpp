@@ -18442,6 +18442,9 @@ namespace Book1
             PreText += "\n\nThe slab does not block off the way onwards, and you are able to crawl over the slab and towards the coffer.";
 
             Text = PreText.c_str();
+
+            Engine::REMOVE_STATUS(party, Character::Status::FRONT);
+            Engine::REMOVE_STATUS(party, Character::Status::BACK);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 277}; }
@@ -20327,6 +20330,12 @@ namespace Book1
             Choices.clear();
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Engine::REMOVE_STATUS(party, Character::Status::FRONT);
+            Engine::REMOVE_STATUS(party, Character::Status::BACK);
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 277}; }
