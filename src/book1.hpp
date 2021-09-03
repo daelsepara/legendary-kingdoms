@@ -2583,6 +2583,13 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
+        }
     };
 
     class Event073 : public Story::Base
@@ -4499,7 +4506,7 @@ namespace Book1
             {
                 Text = "The calendar is repaired. You receive the blessing of the priests.";
 
-                Choices.push_back(Choice::Base("Choose a member among your party with the lowest survival score", {Book::Type::BOOK1, 75}, Choice::Type::RAISE_LOWEST_ATTRIBUTE, {Attribute::Type::SURVIVAL}, 1));
+                Choices.push_back(Choice::Base("Choose a member among your party with the lowest Survival score", {Book::Type::BOOK1, 75}, Choice::Type::RAISE_LOWEST_ATTRIBUTE, {Attribute::Type::SURVIVAL}, 1));
             }
             else
             {
@@ -5489,6 +5496,13 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
+        }
     };
 
     class Event160 : public Story::Base
@@ -6411,6 +6425,8 @@ namespace Book1
                 }
                 else
                 {
+                    Engine::SINK_SHIP(party);
+                    
                     return {Book::Type::BOOK1, 484};
                 }
             }
@@ -9237,6 +9253,13 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
+        }
     };
 
     class Event273 : public Story::Base
@@ -11020,6 +11043,13 @@ namespace Book1
             Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, -324}, Choice::Type::GAIN_HEALTH, -1));
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
         }
     };
 
@@ -13103,6 +13133,13 @@ namespace Book1
             Choices.push_back(Choice::Base("Choose the party member to lose 1 Health", {Book::Type::BOOK1, 135}, Choice::Type::GAIN_HEALTH, -1));
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
         }
     };
 
@@ -15829,6 +15866,13 @@ namespace Book1
                 return {Book::Type::NONE, -1};
             }
         }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
+        }
     };
 
     class Story473 : public Story::Base
@@ -18021,6 +18065,13 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
+        }
     };
 
     class Event537 : public Story::Base
@@ -18198,6 +18249,13 @@ namespace Book1
             Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, 541}, Choice::Type::GAIN_HEALTH, -1));
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
         }
     };
 
@@ -19665,6 +19723,10 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
+            Bye = NULL;
+
+            temp_string = "";
+
             auto result = Engine::COUNT(5, 3);
 
             Choices.clear();
@@ -19932,6 +19994,13 @@ namespace Book1
             Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, -589}, Choice::Type::GAIN_HEALTH, -1));
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
         }
     };
 
@@ -20211,6 +20280,13 @@ namespace Book1
             Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, 135}, Choice::Type::GAIN_HEALTH, -1));
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
         }
     };
 
@@ -22975,6 +23051,13 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
+        }
     };
 
     class Event676 : public Story::Base
@@ -23483,6 +23566,13 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
+        }
     };
 
     class Event692 : public Story::Base
@@ -23781,7 +23871,7 @@ namespace Book1
 
             Location = Location::Type::CLIFFTOP;
 
-            Text = "The journey to the harbour from the city is a fraught one, the thin path barely wide enough for a single person to traverse. Sometimes you have to give way to traffic coming up the trail on creaky wooden platforms that flex and bend under your weight. The harbour itself is a series of wooden piers hammered into the sides of the cliff face, barnacle encrusted beams peeping from the crashing waves. The ships must";
+            Text = "The journey to the harbour from the city is a fraught one, the thin path barely wide enough for a single person to traverse. Sometimes you have to give way to traffic coming up the trail on creaky wooden platforms that flex and bend under your weight. The harbour itself is a series of wooden piers hammered into the sides of the cliff face, barnacle encrusted beams peeping from the crashing waves. The ships must t be moored tight, or risk smashing into the harbourside.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Board your ship", {Book::Type::BOOK1, 82}, Choice::Type::SAIL, Location::Type::CLIFFTOP));
@@ -30194,6 +30284,13 @@ namespace Book1
             Choices.push_back(Choice::Base("Choose a party member to lose 1 Health", {Book::Type::BOOK1, -886}, Choice::Type::GAIN_HEALTH, -1));
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
         }
     };
 

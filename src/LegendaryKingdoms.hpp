@@ -766,6 +766,8 @@ std::string rawCharacterText(Character::Base &character, bool compact)
         {
             character_text += ", SpellCaster";
         }
+
+        character_text += " [Unmodified]";
     }
 
     if (!compact)
@@ -2647,15 +2649,9 @@ std::vector<Button> rawCharacters(SDL_Window *window, SDL_Renderer *renderer, st
     {
         for (auto i = 0; i < last - start; i++)
         {
-            auto index = start + i;
-
-            auto adventurer = party[index];
-
-            std::string adventurer_string = rawCharacterText(adventurer, true);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), ((i < (last - start) - 1) ? i + 1 : ((back_button || confirm_button) ? i + 1 : i)), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, rawCharacterText(party[start + i], true).c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), ((i < (last - start) - 1) ? i + 1 : ((back_button || confirm_button) ? i + 1 : i)), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
@@ -2707,15 +2703,9 @@ std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, st
     {
         for (auto i = 0; i < last - start; i++)
         {
-            auto index = start + i;
-
-            auto adventurer = party[index];
-
-            std::string adventurer_string = characterText(adventurer, true);
-
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, adventurer_string.c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), ((i < (last - start) - 1) ? i + 1 : ((back_button || confirm_button) ? i + 1 : i)), offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, characterText(party[start + i], true).c_str(), clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), ((i < (last - start) - 1) ? i + 1 : ((back_button || confirm_button) ? i + 1 : i)), offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
