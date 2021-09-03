@@ -2702,6 +2702,13 @@ namespace Book1
 
             Controls = Story::Controls::STANDARD;
         }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
+        }
     };
 
     class Event076 : public Story::Base
@@ -4436,6 +4443,13 @@ namespace Book1
                 return {Book::Type::NONE, -1};
             }
         }
+
+        void Event(Party::Base &party)
+        {
+            Bye = NULL;
+
+            temp_string = "";
+        }
     };
 
     class Story128 : public Story::Base
@@ -4647,13 +4661,18 @@ namespace Book1
 
             Text = "The only item of interest in the tomb is the SILVER SKULL, which seems to have stopped chanting.\n\nThe sarcophagus itself is empty.";
 
-            Bye = "With nowhere else to go, you return to the crossroads.";
-
             Choices.clear();
             Choices.push_back(Choice::Base("Take the SILVER SKULL", {Book::Type::BOOK1, 46}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::SILVER_SKULL}, {Codes::A(47)}, {}));
             Choices.push_back(Choice::Base("Leave it alone", {Book::Type::BOOK1, 46}));
 
             Controls = Story::Controls::STANDARD;
+        }
+
+        void Event(Party::Base &party)
+        {
+            Bye = "With nowhere else to go, you return to the crossroads.";
+
+            temp_string = "";
         }
     };
 
