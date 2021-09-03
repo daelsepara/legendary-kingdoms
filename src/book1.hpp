@@ -5616,8 +5616,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-			Engine::CONSOLIDATE(party);
-			
+            Engine::CONSOLIDATE(party);
+
             Bye = NULL;
 
             temp_string = "";
@@ -22057,8 +22057,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-			Team = Team::Type::EVERCHILD_SECURITY;
-			
+            Team = Team::Type::EVERCHILD_SECURITY;
+
             Monsters = {Monster::Base("Assassin", Monster::Type::EVERCHILD_ASSASSIN, 4, 4, 4, 7, 0)};
         }
 
