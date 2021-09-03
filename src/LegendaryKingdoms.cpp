@@ -22299,7 +22299,7 @@ Party::Base loadGame(std::string file_name)
                         auto follower = Follower::Base();
 
                         follower.Name = !data["members"][i]["followers"][j]["name"].is_null() ? data["members"][i]["followers"][j]["name"] : "";
-                        follower.Type = !data["members"][i]["followers"][j]["type"].is_null() ? static_cast<Follower::Type>((int)data["followers"][i]["followers"][j]["type"]) : follower.Type;
+                        follower.Type = !data["members"][i]["followers"][j]["type"].is_null() ? static_cast<Follower::Type>((int)data["members"][i]["followers"][j]["type"]) : follower.Type;
                         follower.Health = !data["members"][i]["followers"][j]["health"].is_null() ? (int)data["members"][i]["followers"][j]["health"] : follower.Health;
 
                         character.Followers.push_back(follower);
