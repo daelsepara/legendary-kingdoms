@@ -2640,7 +2640,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
             auto size_dice = 64;
 
-            auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+            auto cols = (fullwidth - 2 * box_space) / (size_dice + 2 * box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -2920,7 +2920,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
     auto headerw = (int)(boxwidth * 0.75);
 
-    auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+    auto cols = (fullwidth - 2 * box_space) / (size_dice + 2 * box_space);
 
     auto controls_attack = createFixedTextButtons(choices_attack, 2, text_buttonw, text_buttonh, 10, startx, text_buttony);
     controls_attack[0].Type = Control::Type::CONFIRM;
@@ -3416,7 +3416,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     auto size_dice = 64;
 
-    auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+    auto cols = (fullwidth - 2 * box_space) / (size_dice + 2 * box_space);
 
     const char *choices_attack[4] = {"Attack", "Add Focus", "Remove Focus", "Cancel"};
     const char *choices_skipattack[5] = {"Attack", "Skip", "Add Focus", "Remove Focus", "Cancel"};
@@ -4340,7 +4340,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             auto size_dice = 64;
 
-            auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+            auto cols = (fullwidth - 2 * box_space) / (size_dice + 2 * box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -4629,7 +4629,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
             auto size_dice = 64;
 
-            auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+            auto cols = (fullwidth - 2 * box_space) / (size_dice + 2 * box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -6072,7 +6072,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
             auto size_dice = 64;
 
-            auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+            auto cols = (fullwidth - 2 * box_space) / (size_dice + 2 * box_space);
 
             auto controls = std::vector<TextButton>();
 
@@ -20256,7 +20256,7 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
 
         auto size_dice = 64;
 
-        auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+        auto cols = (fullwidth - 2 * box_space) / (size_dice + 2 * box_space);
 
         auto controls = std::vector<TextButton>();
 
@@ -20524,7 +20524,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
 
         auto size_dice = 64;
 
-        auto cols = (fullwidth - 2 * box_space) / (size_dice + box_space);
+        auto cols = (fullwidth - 2 * box_space) / (size_dice + 2 * box_space);
 
         auto controls = std::vector<TextButton>();
 
