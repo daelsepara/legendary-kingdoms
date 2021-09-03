@@ -528,7 +528,11 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
         if (party.Codes.size() > 0)
         {
-            sort(party.Codes.begin(), party.Codes.end());
+#if defined(__APPLE__)
+            std::sort(party.Codes.begin(), party.Codes.end(), [] (Codes::Base &a, Codes::Base &b) -> bool { return a.Value() < b.Value(); });
+#else
+            std::sort(party.Codes.begin(), party.Codes.end());
+#endif
 
             std::string code_string = "";
 
