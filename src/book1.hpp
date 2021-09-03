@@ -23584,7 +23584,7 @@ namespace Book1
 
             ID = -692;
 
-            DisplayID = 73;
+            DisplayID = 692;
 
             Location = Location::Type::BEYOND_SHADED_GATE;
 
