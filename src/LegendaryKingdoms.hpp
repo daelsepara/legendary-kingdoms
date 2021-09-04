@@ -940,9 +940,7 @@ std::string getSavePath()
 
     SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_DEFAULT, NULL, &path_str);
 
-std:
-shipString:
-    wstring wpath(path_str);
+    std::wstring wpath(path_str);
 
     CoTaskMemFree(path_str);
 
