@@ -22615,7 +22615,7 @@ namespace Book1
         {
             PreText = "You chat with your old partner in crime about your many adventures.";
 
-            if (!Engine::VERIFY_CODES(party, {Codes::A(11)}))
+            if (!Engine::VERIFY_CODES(party, {Codes::A(11)}) || Engine::VERIFY_CODES(party, {Codes::A(93)}))
             {
                 PreText += " After spending a splendid evening together, you retire back to the city.";
             }
@@ -22625,7 +22625,7 @@ namespace Book1
 
         Engine::Destination Continue(Party::Base &party)
         {
-            if (Engine::VERIFY_CODES(party, {Codes::A(11)}))
+            if (Engine::VERIFY_CODES(party, {Codes::A(11)}) && !Engine::VERIFY_CODES(party, {Codes::A(93)}))
             {
                 return {Book::Type::BOOK1, 820};
             }
