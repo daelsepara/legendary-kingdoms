@@ -19822,11 +19822,6 @@ namespace Book1
             }
         }
 
-        void Event(Party::Base &party)
-        {
-            Engine::GAIN_HEALTH(party, -4);
-        }
-
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 19}; }
     };
 
