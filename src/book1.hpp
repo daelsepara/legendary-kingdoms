@@ -19539,7 +19539,7 @@ namespace Book1
 
             for (auto i = 0; i < party.Members.size(); i++)
             {
-                if (Engine::HAS_STATUS(party.Members[i], Character::Status::RITUAL_SCARRING_CURSUS))
+                if (Engine::HAS_STATUS(party.Members[i], Character::Status::RITUAL_SCARRING_CURSUS) || Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::RING_OF_THE_PATRIARCH}))
                 {
                     party.Members[i].Team = Team::Type::ZIGGURAT;
                 }
