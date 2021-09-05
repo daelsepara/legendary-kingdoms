@@ -529,7 +529,8 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
         if (party.Codes.size() > 0)
         {
 #if defined(__APPLE__)
-            std::sort(party.Codes.begin(), party.Codes.end(), [] (Codes::Base &a, Codes::Base &b) -> bool { return a.Value() < b.Value(); });
+            std::sort(party.Codes.begin(), party.Codes.end(), [](Codes::Base &a, Codes::Base &b) -> bool
+                      { return a.Value() < b.Value(); });
 #else
             std::sort(party.Codes.begin(), party.Codes.end());
 #endif
@@ -23901,7 +23902,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 story->temp_string += ".";
 
-                                addBye(story, story->temp_string.c_str());
+                                ByeScreen(renderer, background, story->temp_string.c_str());
 
                                 Engine::GAIN_HEALTH(party.Members[target], story->Choices[choice].Value);
                             }
@@ -23965,7 +23966,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                 story->temp_string += " " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + ".";
 
-                                addBye(story, story->temp_string.c_str());
+                                ByeScreen(renderer, background, story->temp_string.c_str());
 
                                 Engine::GAIN_HEALTH(party.Members[target], story->Choices[choice].Value);
 
@@ -24328,7 +24329,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     bye_string += ".";
 
-                                    addBye(story, bye_string);
+                                    ByeScreen(renderer, background, bye_string.c_str());
                                 }
 
                                 next = findStory(story->Choices[choice].Destination);
@@ -24559,7 +24560,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                     Engine::GAIN_STATUS(party.Members[target], story->Choices[choice].Status[0]);
 
-                                    addBye(story, story->temp_string.c_str());
+                                    ByeScreen(renderer, background, story->temp_string.c_str());
 
                                     next = findStory(story->Choices[choice].Destination);
 
@@ -24834,7 +24835,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                                             {
                                                 if (increase > 0)
                                                 {
-                                                    addBye(story, party.Members[target].Name + " gains +" + std::to_string(increase) + " " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + "!");
+                                                    ByeScreen(renderer, background, (party.Members[target].Name + " gains +" + std::to_string(increase) + " " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + "!").c_str());
                                                 }
 
                                                 Engine::GAIN_MONEY(party, -story->Choices[choice].Value);
@@ -24906,7 +24907,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                                         if (story->Choices[choice].Value > 0)
                                         {
-                                            addBye(story, party.Members[target].Name + " gains +" + std::to_string(story->Choices[choice].Value) + " " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + "!");
+                                            ByeScreen(renderer, background, (party.Members[target].Name + " gains +" + std::to_string(story->Choices[choice].Value) + " " + std::string(Attribute::Descriptions[story->Choices[choice].Attributes[0]]) + "!").c_str());
                                         }
 
                                         Engine::LOSE_EQUIPMENT(party, story->Choices[choice].Team, equipment);
@@ -25117,7 +25118,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                         if (story->Choices[choice].Bye)
                         {
-                            addBye(story, story->Choices[choice].Bye);
+                            ByeScreen(renderer, background, story->Choices[choice].Bye);
                         }
 
                         if (error)
@@ -25270,24 +25271,73 @@ Story::Base *findStory(Engine::Destination destination)
     return next;
 }
 
-void addBye(Story::Base *story, std::string bye)
+void ByeScreen(SDL_Renderer *renderer, SDL_Surface *background, const char *Bye)
 {
-    if (bye.length() > 0)
-    {
-        if (!story->Bye)
-        {
-            story->temp_string = bye;
-        }
-        else
-        {
-            story->temp_string = std::string(story->Bye) + "\n\n" + bye;
-        }
+    auto bye = createText(Bye, FONT_GARAMOND, 32, clrDB, fullwidth - 2 * text_space, TTF_STYLE_NORMAL);
 
-        story->Bye = story->temp_string.c_str();
+    auto forward = createImage("icons/next.png");
+
+    std::vector<Button> controls = {Button(0, "icons/next.png", 0, 0, 0, 0, lastx, buttony, Control::Type::CONTINUE_STORY)};
+
+    if (bye && forward)
+    {
+        auto done = false;
+
+        auto current = -1;
+
+        auto selected = false;
+
+        auto scrollUp = false;
+
+        auto scrollDown = false;
+
+        auto hold = false;
+
+        while (!done)
+        {
+            fillWindow(renderer, intWH);
+
+            if (background)
+            {
+                stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
+            }
+
+            fillRect(renderer, fullwidth, bye->h + 2 * text_space, startx, ((buttony - button_space) - (bye->h + 2 * text_space)) / 2, BE_80);
+
+            renderText(renderer, bye, 0, (SCREEN_WIDTH - bye->w) / 2, ((buttony - button_space) - bye->h) / 2, (buttony - button_space), 0);
+
+            renderButtons(renderer, controls, current, intLB, text_space, border_pts);
+
+            Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if (selected && current >= 0 && current < controls.size())
+            {
+                if (controls[current].Type == Control::Type::CONTINUE_STORY && !hold)
+                {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
+                    done = true;
+                }
+            }
+        }
+    }
+
+    if (bye)
+    {
+        SDL_FreeSurface(bye);
+
+        bye = NULL;
+    }
+
+    if (forward)
+    {
+        SDL_FreeSurface(forward);
+
+        forward = NULL;
     }
 }
 
-void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
+void storyTransition(SDL_Renderer *renderer, SDL_Surface *background, Party::Base &party, Story::Base *story, Story::Base *next)
 {
     std::string temp_string = "";
 
@@ -25309,7 +25359,7 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
 
                 temp_string = party.Members[result].Name + " loses 1 Health point.";
 
-                addBye(story, temp_string);
+                ByeScreen(renderer, background, temp_string.c_str());
             }
         }
 
@@ -25321,7 +25371,7 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
             {
                 party.Members.erase(party.Members.begin() + result);
 
-                addBye(story, "Skullcracker leaves and wanders into the desert.");
+                ByeScreen(renderer, background, "Skullcracker leaves your party and wanders into the desert.");
             }
         }
     }
@@ -25332,7 +25382,7 @@ void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next)
         {
             Engine::LOSE_FOLLOWERS(party, {Follower::Type::MORDAIN_SKELETONS});
 
-            addBye(story, "The [SKELETONS] crumble to dust!");
+            ByeScreen(renderer, background, "The [SKELETONS] crumble to dust!");
         }
     }
 }
@@ -26426,11 +26476,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                                 if (result == Engine::Combat::VICTORY)
                                 {
-                                    addBye(story, "Your forces were victorious in battle.");
+                                    ByeScreen(renderer, background, "Your forces were victorious in battle.");
                                 }
                                 else if (result == Engine::Combat::DEFEAT)
                                 {
-                                    addBye(story, "Your forces were defeated.");
+                                    ByeScreen(renderer, background, "Your forces were defeated.");
                                 }
 
                                 story->EnemyArmy.clear();
@@ -26601,45 +26651,13 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                             book = next->BookID;
 
-                            storyTransition(party, story, next);
+                            storyTransition(renderer, background, party, story, next);
 
                             if ((next->ID != story->ID) || (story->BookID != next->BookID))
                             {
                                 if (story->Bye)
                                 {
-                                    auto bye = createText(story->Bye, FONT_GARAMOND, font_size + 4, clrDB, fullwidth - 2 * text_space, TTF_STYLE_NORMAL);
-
-                                    auto forward = createImage("icons/next.png");
-
-                                    if (bye && forward)
-                                    {
-                                        fillWindow(renderer, intWH);
-
-                                        if (background)
-                                        {
-                                            stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
-                                        }
-
-                                        fillRect(renderer, fullwidth, bye->h + 2 * text_space, startx, ((buttony - button_space) - (bye->h + 2 * text_space)) / 2, BE_80);
-
-                                        renderText(renderer, bye, 0, (SCREEN_WIDTH - bye->w) / 2, ((buttony - button_space) - bye->h) / 2, (buttony - button_space), 0);
-
-                                        renderImage(renderer, forward, lastx, buttony);
-
-                                        SDL_RenderPresent(renderer);
-
-                                        Input::WaitForNext(renderer);
-
-                                        Sound::Play(Sound::Type::BUTTON_CLICK);
-
-                                        SDL_FreeSurface(bye);
-
-                                        bye = NULL;
-
-                                        SDL_FreeSurface(forward);
-
-                                        forward = NULL;
-                                    }
+                                    ByeScreen(renderer, background, story->Bye);
                                 }
 
                                 story = next;

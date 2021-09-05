@@ -80,6 +80,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
 bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Army::Base> army);
 bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party);
 bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::TeamAssignment> teams, int min_teams);
+void ByeScreen(SDL_Renderer *renderer, SDL_Surface *background, const char *Bye);
 bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour);
 bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID);
 bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Team::Type team, Character::Base &character, int equipment_limit, bool InCombat);
@@ -158,12 +159,11 @@ std::string shipString(Ship::Base &ship, bool cargo);
 bool IsValidTransfer(Party::Base &party, Location::Type src, Location::Type dst);
 bool magicRound0(Character::Base &character, int combatRound);
 int FIND_CONTROL(std::vector<Button> &controls, Control::Type control);
-void addBye(Story::Base *story, std::string bye);
 
 // other game/story helper functions
 void renderArmy(SDL_Renderer *renderer, TTF_Font *font, std::vector<Army::Base> &army, int boxw, int army_boxh, int offsety, SDL_Color fg, Uint32 bg);
 void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Type location, Party::Base &party, std::vector<Army::Base> &enemyArmy, std::vector<Engine::BattlefieldSpells> &enemySpells, std::vector<Engine::ArmyStatus> &enemyStatus, Location::Zone zone, int combatRound);
-void storyTransition(Party::Base &party, Story::Base *story, Story::Base *next);
+void storyTransition(SDL_Renderer *renderer, SDL_Surface *background, Party::Base &party, Story::Base *story, Story::Base *next);
 
 // popup List Scroll controls
 template <typename T>
