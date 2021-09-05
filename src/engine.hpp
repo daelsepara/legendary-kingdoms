@@ -3059,7 +3059,7 @@ namespace Engine
 
         if (((left_flank1a >= 0 && left_flank1a < army.size()) || (left_flank1b >= 0 && left_flank1b < army.size())))
         {
-            if (((left_flank2a >= 0 && left_flank2a < army.size()) || (left_flank2b >= 0 && left_flank2b < army.size())))
+            if (((left_flank2a >= 0 && left_flank2a < opposingArmy.size()) || (left_flank2b >= 0 && left_flank2b < opposingArmy.size())))
             {
                 zones -= 1;
             }
@@ -3071,7 +3071,7 @@ namespace Engine
 
         if (((centre1a >= 0 && centre1a < army.size()) || (centre1b >= 0 && centre1b < army.size())))
         {
-            if (((centre2a >= 0 && centre2a < army.size()) || (centre2b >= 0 && centre2b < army.size())))
+            if (((centre2a >= 0 && centre2a < opposingArmy.size()) || (centre2b >= 0 && centre2b < opposingArmy.size())))
             {
                 zones -= 1;
             }
@@ -3083,7 +3083,7 @@ namespace Engine
 
         if (((right_flank1a >= 0 && right_flank1a < army.size()) || (right_flank1b >= 0 && right_flank1b < army.size())))
         {
-            if (((right_flank2a >= 0 && right_flank2a < army.size()) || (right_flank2b >= 0 && right_flank2b < army.size())))
+            if (((right_flank2a >= 0 && right_flank2a < opposingArmy.size()) || (right_flank2b >= 0 && right_flank2b < opposingArmy.size())))
             {
                 zones -= 1;
             }
