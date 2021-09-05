@@ -175,6 +175,7 @@ std::vector<Button> attributeList(SDL_Window *window, SDL_Renderer *renderer, Ch
 std::vector<Button> buyCargo(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargo, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargo, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Ship::Base> &ships, int start, int last, int limit, int offsetx, int offsety);
+std::vector<Button> deliverCargo(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargo, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> combatantList(SDL_Window *window, SDL_Renderer *renderer, std::vector<Character::Base> party, int start, int last, int limit, int offsetx, int offsety, bool confirm_button, bool back_button);
 std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, std::vector<Choice::Base> choices, int start, int last, int limit, int offsetx, int offsety);
 std::vector<Button> createFileList(SDL_Window *window, SDL_Renderer *renderer, std::vector<std::string> list, int start, int last, int limit, int offsetx, int offsety, bool save_button);
@@ -3373,6 +3374,64 @@ std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer)
     controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::REPAIR_SHIP));
     controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BUY_SELL_CARGO));
     controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
+
+    return controls;
+}
+
+std::vector<Button> deliverCargo(SDL_Window *window, SDL_Renderer *renderer, std::vector<Engine::CargoPrices> &cargo, int start, int last, int limit, int offsetx, int offsety)
+{
+    auto controls = std::vector<Button>();
+
+    if (cargo.size() > 0)
+    {
+        for (auto i = 0; i < last - start; i++)
+        {
+            auto index = start + i;
+
+            auto cargo_unit = std::get<0>(cargo[index]);
+
+            auto buy = std::get<1>(cargo[index]);
+
+            auto sell = std::get<2>(cargo[index]);
+
+            std::string cargo_string = Cargo::Description[cargo_unit];
+
+            cargo_string += "\nPrice: " + std::string(buy > 0 ? std::to_string(buy) + " silver coins" : "Not available") + " Sell: " + std::string(sell > 0 ? std::to_string(sell) + " silver coins" : "--");
+
+            auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
+
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 22, cargo_string.c_str(), clrBK, intBE, list_buttonw, 100, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+
+            controls[i].W = controls[i].Surface->w;
+
+            controls[i].H = controls[i].Surface->h;
+        }
+    }
+
+    auto idx = (int)controls.size();
+
+    if (cargo.size() > limit)
+    {
+        if (start > 0)
+        {
+            controls.push_back(Button(idx, "icons/up-arrow.png", idx, idx, idx, idx + 1, scrollx, texty + border_space, Control::Type::SCROLL_UP));
+
+            idx += 1;
+        }
+
+        if (cargo.size() - last > 0)
+        {
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, scrollx, scrolly, Control::Type::SCROLL_DOWN));
+
+            idx += 1;
+        }
+    }
+
+    idx = (int)controls.size();
+
+    controls.push_back(Button(idx, "icons/shop.png", idx, idx + 1, (cargo.size() > 0 ? (last - start) - 1 : idx), idx, textx, buttony, Control::Type::BUY_CARGO));
+    controls.push_back(Button(idx + 1, "icons/user.png", idx, idx + 2, (cargo.size() > 0 ? (last - start) - 1 : idx + 1), idx + 1, textx + gridsize, buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx + 2, "icons/back-button.png", idx + 1, idx + 2, (cargo.size() > 0 ? (last - start) - 1 : idx + 2), idx + 2, lastx, buttony, Control::Type::BACK));
 
     return controls;
 }

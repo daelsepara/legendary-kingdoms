@@ -11032,6 +11032,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     }
                     else if (controls[current].Type == Control::Type::PARTY && !hold)
                     {
+                        Sound::Play(Sound::Type::BUTTON_CLICK);
+
                         viewParty(window, renderer, party, team, true);
 
                         selected = false;
@@ -18957,6 +18959,402 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
     return done;
 }
 
+bool deliveryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::CargoPrices> &Cargo, Location::Type destination)
+{
+    TTF_Init();
+
+    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
+    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
+    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
+    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
+
+    TTF_SetFontKerning(font_dark11, 0);
+
+    if (window && renderer)
+    {
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
+        auto fg = Color::HEADER(party.Book);
+
+        SDL_SetWindowTitle(window, "Legendary Kingdoms: Cargo Delivery");
+
+        auto current = 0;
+
+        auto selected = false;
+
+        auto offset = 0;
+        auto limit = (text_bounds - 2 * text_space - infoh) / (124);
+        auto last = offset + limit;
+
+        if (last > Cargo.size())
+        {
+            last = Cargo.size();
+        }
+
+        auto controls = deliverCargo(window, renderer, Cargo, offset, last, limit, textx, (texty + infoh));
+
+        auto hold = false;
+        auto done = false;
+        auto scrollUp = false;
+        auto scrollDown = false;
+        auto scrollSpeed = 1;
+        auto selection = std::vector<int>();
+
+        while (!done)
+        {
+            fillWindow(renderer, intWH);
+
+            putHeader(renderer, "Destination", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+
+            putText(renderer, Location::Description[party.Location], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
+
+            putHeader(renderer, "Money", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+
+            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+            if (selection.size() > 0)
+            {
+                std::string cargo_string = "";
+
+                for (auto i = 0; i < selection.size(); i++)
+                {
+                    auto cargo = std::get<0>(Cargo[selection[i]]);
+
+                    if (i > 0)
+                    {
+                        cargo_string += ", ";
+                    }
+
+                    cargo_string += Cargo::Description[cargo];
+                }
+
+                putText(renderer, cargo_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            }
+            else
+            {
+                fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+            }
+
+            putHeader(renderer, "Cargo Prices", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+
+            fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
+
+            if (Cargo.size() == 0)
+            {
+                putText(renderer, "You cannot buy any goods here", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+            }
+
+            if (last - offset > 0)
+            {
+                for (auto i = 0; i < last - offset; i++)
+                {
+                    if (Engine::FIND_LIST(selection, offset + i) >= 0)
+                    {
+                        thickRect(renderer, controls[i].W + border_pts, controls[i].H + border_pts, controls[i].X - 2, controls[i].Y - 2, intLB, 2);
+                    }
+                    else
+                    {
+                        drawRect(renderer, controls[i].W + border_space, controls[i].H + border_space, controls[i].X - border_pts, controls[i].Y - border_pts, intBK);
+                    }
+                }
+            }
+
+            renderButtons(renderer, controls, current, intLB, border_space, border_pts);
+
+            if (current >= 0 && current < controls.size())
+            {
+                renderCaption(renderer, font_caption, controls[current]);
+            }
+
+            if (flash_message)
+            {
+                if ((SDL_GetTicks() - start_ticks) < duration)
+                {
+                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                }
+                else
+                {
+                    flash_message = false;
+                }
+            }
+
+            Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
+
+            if ((selected && current >= 0 && current < controls.size()) || scrollUp || scrollDown || hold)
+            {
+                if (controls[current].Type == Control::Type::SCROLL_UP || (controls[current].Type == Control::Type::SCROLL_UP && hold) || scrollUp)
+                {
+                    if (offset > 0)
+                    {
+                        offset -= scrollSpeed;
+
+                        if (offset < 0)
+                        {
+                            offset = 0;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > Cargo.size())
+                        {
+                            last = Cargo.size();
+                        }
+
+                        controls = deliverCargo(window, renderer, Cargo, offset, last, limit, textx, texty + infoh);
+
+                        SDL_Delay(50);
+                    }
+
+                    if (offset <= 0)
+                    {
+                        current = -1;
+
+                        selected = false;
+                    }
+                }
+                else if (controls[current].Type == Control::Type::SCROLL_DOWN || (controls[current].Type == Control::Type::SCROLL_DOWN && hold) || scrollDown)
+                {
+                    if (Cargo.size() - last > 0)
+                    {
+                        if (offset < Cargo.size() - limit)
+                        {
+                            offset += scrollSpeed;
+                        }
+
+                        if (offset > Cargo.size() - limit)
+                        {
+                            offset = Cargo.size() - limit;
+                        }
+
+                        last = offset + limit;
+
+                        if (last > Cargo.size())
+                        {
+                            last = Cargo.size();
+                        }
+
+                        controls = deliverCargo(window, renderer, Cargo, offset, last, limit, textx, texty + infoh);
+
+                        SDL_Delay(50);
+
+                        if (offset > 0)
+                        {
+                            current = FIND_CONTROL(controls, Control::Type::SCROLL_DOWN);
+                        }
+                    }
+
+                    if (Cargo.size() - last <= 0)
+                    {
+                        selected = false;
+
+                        current = -1;
+                    }
+
+                    SDL_Delay(50);
+
+                    if (offset > 0)
+                    {
+                        current = FIND_CONTROL(controls, Control::Type::SCROLL_DOWN);
+                    }
+                }
+                else if (controls[current].Type == Control::Type::ACTION && !hold)
+                {
+                    if (Engine::HAS_SHIP(party, destination))
+                    {
+                        auto found_cargo = Engine::FIND_LIST(selection, offset + current);
+
+                        if (found_cargo >= 0 && found_cargo < selection.size())
+                        {
+                            selection.erase(selection.begin() + found_cargo);
+                        }
+                        else if ((offset + current) >= 0 && (offset + current) < Cargo.size())
+                        {
+                            auto cargo = std::get<0>(Cargo[offset + current]);
+
+                            auto price = std::get<1>(Cargo[offset + current]);
+
+                            if (price >= 0)
+                            {
+                                selection.push_back(offset + current);
+                            }
+                            else
+                            {
+                                Sound::Play(Sound::Type::ERROR);
+
+                                displayMessage(std::string(Cargo::Description[cargo]) + " not available!", intRD);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Sound::Play(Sound::Type::ERROR);
+
+                        displayMessage("You do not have a ship docked at " + std::string(Location::Description[destination]) + "!", intRD);
+                    }
+                }
+                else if (controls[current].Type == Control::Type::BUY_CARGO && !hold)
+                {
+                    if (selection.size() > 0)
+                    {
+                        if (party.Fleet.size() <= 0)
+                        {
+                            Sound::Play(Sound::Type::ERROR);
+
+                            displayMessage("You do not have any ships!", intRD);
+                        }
+                        else if (Engine::HAS_SHIP(party, destination, selection.size()))
+                        {
+                            auto price = 0;
+
+                            auto cargo = std::vector<Cargo::Type>();
+
+                            for (auto i = 0; i < selection.size(); i++)
+                            {
+                                auto goods = std::get<0>(Cargo[selection[i]]);
+
+                                price += Engine::PRICE_BUY(Cargo, goods);
+
+                                cargo.push_back(goods);
+                            }
+
+                            if (party.Money >= price)
+                            {
+                                auto ship = -1;
+
+                                if (Engine::COUNT(party, destination, cargo.size()) > 1)
+                                {
+                                    ship = selectShip(window, renderer, party.Book, party.Fleet, destination, cargo, Control::Type::CARGO);
+                                }
+                                else
+                                {
+                                    ship = Engine::FIND_SHIP(party, destination, cargo.size());
+                                }
+
+                                if (ship >= 0 && ship < party.Fleet.size())
+                                {
+                                    party.Fleet[ship].Cargo.insert(party.Fleet[ship].Cargo.end(), cargo.begin(), cargo.end());
+
+                                    Engine::GAIN_MONEY(party, -price);
+
+                                    std::string delivery_message = "";
+
+                                    for (auto i = 0; i < cargo.size(); i++)
+                                    {
+                                        if (i > 0)
+                                        {
+                                            delivery_message += ", ";
+                                        }
+
+                                        delivery_message += std::string(Cargo::Description[cargo[i]]);
+                                    }
+
+                                    Sound::Play(Sound::Type::SUCCESS);
+
+                                    displayMessage(delivery_message + " delivered aboard the [" + party.Fleet[ship].Name + "]!", intLB);
+                                }
+                            }
+                            else
+                            {
+                                Sound::Play(Sound::Type::ERROR);
+
+                                displayMessage("You do not have enough silver coins!", intRD);
+                            }
+                        }
+                        else if (Engine::HAS_SHIP(party, destination))
+                        {
+                            Sound::Play(Sound::Type::ERROR);
+
+                            displayMessage("You do not have enough space in your ships!", intRD);
+                        }
+                        else
+                        {
+                            Sound::Play(Sound::Type::ERROR);
+
+                            displayMessage("You do not have a ship docked at " + std::string(Location::Description[destination]) + "!", intRD);
+                        }
+                    }
+                    else
+                    {
+                        Sound::Play(Sound::Type::ERROR);
+
+                        displayMessage("Please select the cargo you wish to buy", intRD);
+                    }
+
+                    current = -1;
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::PARTY && !hold)
+                {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
+                    viewParty(window, renderer, party, Team::Type::NONE, false);
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
+                    done = true;
+                }
+            }
+        }
+    }
+
+    if (font_mason)
+    {
+        TTF_CloseFont(font_mason);
+
+        font_mason = NULL;
+    }
+
+    if (font_dark11)
+    {
+        TTF_CloseFont(font_dark11);
+
+        font_dark11 = NULL;
+    }
+
+    if (font_garamond)
+    {
+        TTF_CloseFont(font_garamond);
+
+        font_garamond = NULL;
+    }
+
+    if (font_caption)
+    {
+        TTF_CloseFont(font_caption);
+
+        font_caption = NULL;
+    }
+
+    TTF_Quit();
+
+    return false;
+}
+
 bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
     TTF_Init();
@@ -19605,8 +20003,18 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     selected = false;
                 }
-                else if (controls[current].Type == Control::Type::BACK)
+                else if (controls[current].Type == Control::Type::PARTY && !hold)
                 {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
+                    viewParty(window, renderer, party, Team::Type::NONE, false);
+
+                    selected = false;
+                }
+                else if (controls[current].Type == Control::Type::BACK && !hold)
+                {
+                    Sound::Play(Sound::Type::BUTTON_CLICK);
+
                     done = true;
                 }
             }
@@ -24339,40 +24747,19 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         }
                         else if (story->Choices[choice].Type == Choice::Type::DELIVER)
                         {
-                            if (Engine::HAS_SHIP(party, story->Choices[choice].Location, story->Choices[choice].Cargo.size()))
+                            if (Engine::HAS_SHIP(party, story->Choices[choice].Location))
                             {
-                                if (party.Money >= story->Choices[choice].Value)
-                                {
-                                    auto result = selectShip(window, renderer, party.Book, party.Fleet, story->Choices[choice].Location, story->Choices[choice].Cargo, Control::Type::CARGO);
+                                std::vector<Engine::CargoPrices> cargo = {{story->Choices[choice].Cargo[0], story->Choices[choice].Value, -1}};
 
-                                    if (result >= 0 && result < party.Fleet.size())
-                                    {
-                                        Engine::GAIN_MONEY(party, -story->Choices[choice].Value);
+                                deliveryScreen(window, renderer, party, cargo, story->Choices[choice].Location);
 
-                                        party.Fleet[result].Cargo.insert(party.Fleet[result].Cargo.end(), story->Choices[choice].Cargo.begin(), story->Choices[choice].Cargo.end());
+                                next = findStory(story->Choices[choice].Destination);
 
-                                        next = findStory(story->Choices[choice].Destination);
-
-                                        done = true;
-                                    }
-                                }
-                                else
-                                {
-                                    message = "You do not have enough silver coins!";
-
-                                    error = true;
-                                }
+                                done = true;
                             }
                             else
                             {
-                                if (Engine::HAS_SHIP(party, story->Choices[choice].Location))
-                                {
-                                    message = "You do not have the required cargo space!";
-                                }
-                                else
-                                {
-                                    message = "You do not have a ship at " + std::string(Location::Description[story->Choices[choice].Location]) + "!";
-                                }
+                                message = "You do not have a ship at " + std::string(Location::Description[story->Choices[choice].Location]) + "!";
 
                                 error = true;
                             }

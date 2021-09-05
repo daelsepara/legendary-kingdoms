@@ -3214,12 +3214,10 @@ namespace Book1
 
             Location = Location::Type::WEST_ROAD;
 
-            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful.\n\nIf you have a ship docked in Clifftop, you can also buy up to three cargo units of SALT from the merchants for 500 silver coins each. They will deliver this cargo straight to your ship provided there is room for it.";
+            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful.\n\nNote: If you have a ship docked in Clifftop, you can also buy up to three cargo units of SALT from the merchants for 500 silver coins each. They will deliver this cargo straight to your ship provided there is room for it.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Buy one cargo unit of SALT", {Book::Type::BOOK1, -89}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 500));
-            Choices.push_back(Choice::Base("Buy two cargo units of SALT", {Book::Type::BOOK1, -89}, Choice::Type::DELIVER, {Cargo::Type::SALT, Cargo::Type::SALT}, Location::Type::CLIFFTOP, 1000));
-            Choices.push_back(Choice::Base("Buy three cargo units of SALT", {Book::Type::BOOK1, -89}, Choice::Type::DELIVER, {Cargo::Type::SALT, Cargo::Type::SALT, Cargo::Type::SALT}, Location::Type::CLIFFTOP, 1500));
+            Choices.push_back(Choice::Base("Buy SALT", {Book::Type::BOOK1, -89}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 500));
             Choices.push_back(Choice::Base("You have finished your trading", {Book::Type::BOOK1, 569}));
 
             Controls = Story::Controls::SHOP;
@@ -13451,12 +13449,10 @@ namespace Book1
 
             Location = Location::Type::WEST_ROAD;
 
-            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful. All prices are in silver coins.\n\nIf you have a ship docked in Clifftop, you can also buy up to three cargo units of Salt from the merchants for 500 silver coins each. They will deliver this cargo straight to your ship provided there is room for it.";
+            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful. All prices are in silver coins.\n\nNote: If you have a ship docked in Clifftop, you can also buy up to three cargo units of Salt from the merchants for 500 silver coins each. They will deliver this cargo straight to your ship provided there is room for it.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Buy one cargo unit of SALT", {Book::Type::BOOK1, -397}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 500));
-            Choices.push_back(Choice::Base("Buy two cargo units of SALT", {Book::Type::BOOK1, -397}, Choice::Type::DELIVER, {Cargo::Type::SALT, Cargo::Type::SALT}, Location::Type::CLIFFTOP, 1000));
-            Choices.push_back(Choice::Base("Buy three cargo units of SALT", {Book::Type::BOOK1, -397}, Choice::Type::DELIVER, {Cargo::Type::SALT, Cargo::Type::SALT, Cargo::Type::SALT}, Location::Type::CLIFFTOP, 1500));
+            Choices.push_back(Choice::Base("Buy SALT", {Book::Type::BOOK1, -397}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 500));
             Choices.push_back(Choice::Base("You have finished your trading", {Book::Type::BOOK1, 569}, Choice::Type::RESET_SHOP));
 
             Controls = Story::Controls::SHOP;
@@ -19564,14 +19560,9 @@ namespace Book1
 
             Text = "You can buy salt in bulk for any ships you have moored in Cursus or Clifftop. Each cargo unit costs 450 silver pieces, and will be transported to your ships for free. Your ships must have room in their cargo holds in order for you to buy salt here.";
 
-            // TODO: There has to be smarter way to do this!
             Choices.clear();
-            Choices.push_back(Choice::Base("Buy one cargo unit of SALT for your ship in Cursus", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CURSUS, 450));
-            Choices.push_back(Choice::Base("Buy two cargo units of SALT for your ship in Cursus", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CURSUS, 900));
-            Choices.push_back(Choice::Base("Buy three cargo units of SALT for your ship in Cursus", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CURSUS, 1350));
-            Choices.push_back(Choice::Base("Buy one cargo unit of SALT for your ship in Clifftop", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 450));
-            Choices.push_back(Choice::Base("Buy two cargo units of SALT for your ship in Clifftop", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 900));
-            Choices.push_back(Choice::Base("Buy three cargo units of SALT for your ship in Clifftop", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 1350));
+            Choices.push_back(Choice::Base("Buy SALT for your ship in Cursus", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CURSUS, 450));
+            Choices.push_back(Choice::Base("Buy SALT for your ship in Clifftop", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 450));
             Choices.push_back(Choice::Base("You have finished your business", {Book::Type::BOOK1, 722}));
 
             Controls = Story::Controls::STANDARD;
