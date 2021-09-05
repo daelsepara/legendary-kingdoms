@@ -16583,12 +16583,9 @@ namespace Book1
 
             Location = Location::Type::CAVES_OF_URANU;
 
-            Text = "The area is seemingly pockmarked with caves. You decide to search one at random.";
-
             Choices.clear();
-            Choices.push_back(Choice::Base("Search randomly", {{1, NULL, {Book::Type::BOOK1, 797}}, {2, NULL, {Book::Type::BOOK1, 580}}, {3, NULL, {Book::Type::BOOK1, 78}}, {4, NULL, {Book::Type::BOOK1, 854}}, {6, NULL, {Book::Type::BOOK1, 356}}}, 1));
 
-            Controls = Story::Controls::STANDARD;
+            Controls = Story::Controls::NONE;
         }
 
         Engine::Destination Background(Party::Base &party)
@@ -16599,8 +16596,30 @@ namespace Book1
             }
             else
             {
-                return {Book::Type::NONE, -1};
+                return {Book::Type::BOOK1, -493};
             }
+        }
+    };
+
+    class Event493 : public Story::Base
+    {
+    public:
+        Event493()
+        {
+            BookID = Book::Type::BOOK1;
+
+            ID = -493;
+
+            DisplayID = 493;
+
+            Location = Location::Type::CAVES_OF_URANU;
+
+            Text = "The area is seemingly pockmarked with caves. You decide to search one at random.";
+
+            Choices.clear();
+            Choices.push_back(Choice::Base("Search randomly", {{1, NULL, {Book::Type::BOOK1, 797}}, {2, NULL, {Book::Type::BOOK1, 580}}, {3, NULL, {Book::Type::BOOK1, 78}}, {4, NULL, {Book::Type::BOOK1, 854}}, {6, NULL, {Book::Type::BOOK1, 356}}}, 1));
+
+            Controls = Story::Controls::STANDARD;
         }
     };
 
@@ -23830,7 +23849,7 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("Let Akihiro undertake this quest now", {Book::Type::BOOK1, 154}));
-            Choices.push_back(Choice::Base("You would rather stay together for the moment", {Book::Type::BOOK1, 493}));
+            Choices.push_back(Choice::Base("You would rather stay together for the moment", {Book::Type::BOOK1, -493}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -31640,6 +31659,7 @@ namespace Book1
     auto story491 = Story491();
     auto story492 = Story492();
     auto story493 = Story493();
+    auto event493 = Event493();
     auto story494 = Story494();
     auto story495 = Story495();
     auto story496 = Story496();
@@ -32096,11 +32116,11 @@ namespace Book1
             &event018, &event027, &event028, &event044, &event067, &event073, &event076, &event078, &e087_001, &e087_002,
             &e087_003, &event089, &event098, &event102, &event115, &e128_001, &e128_002, &event160, &event183, &event186,
             &event188, &event202, &event207, &event223, &event224, &event272, &event273, &event316, &event324, &event343,
-            &event352, &event388, &event397, &event400, &event406, &event408, &event466, &event504, &event509, &event529,
-            &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580, &event589,
-            &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692, &event725,
-            &event744, &event760, &event770, &event771, &event776, &event788, &event789, &event824, &event841, &e866_001,
-            &e866_002, &event886, &event891, &event896, &e903_001, &e903_002,
+            &event352, &event388, &event397, &event400, &event406, &event408, &event466, &event493, &event504, &event509,
+            &event529, &event537, &event541, &event545, &event558, &event570, &e573_001, &e573_002, &event575, &event580,
+            &event589, &event597, &event617, &event626, &event639, &event657, &event666, &event676, &event690, &event692,
+            &event725, &event744, &event760, &event770, &event771, &event776, &event788, &event789, &event824, &event841,
+            &e866_001, &e866_002, &event886, &event891, &event896, &e903_001, &e903_002,
             &story001, &story002, &story003, &story004, &story005, &story006, &story007, &story008, &story009,
             &story010, &story011, &story012, &story013, &story014, &story015, &story016, &story017, &story018, &story019,
             &story020, &story021, &story022, &story023, &story024, &story025, &story026, &story027, &story028, &story029,

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Legendary Kingdoms
 Comment=Legendary Kingdoms
-Version=1.0.3
+Version=1.0.4
 TryExec=/usr/local/games/LegendaryKingdoms/LegendaryKingdoms.exe
 Exec=/usr/local/games/LegendaryKingdoms/LegendaryKingdoms.exe
 Icon=/usr/local/games/LegendaryKingdoms/icons/legendary-kingdoms-red-128.png
