@@ -23439,7 +23439,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto scrollSpeed = 1;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space) / (96);
         auto last = offset + limit;
 
         if (last > story->Choices.size())
