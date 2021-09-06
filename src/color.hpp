@@ -17,7 +17,7 @@ namespace Color
         }
         else if (book == Book::Type::BOOK2)
         {
-            fg = intGR;
+            fg = intGN;
         }
         else
         {
