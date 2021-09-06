@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Legendary Kingdoms
+Exec=LegendaryKingdoms.exe
+TryExec=LegendaryKingdoms.exe
+Icon=legendary-kingdoms-red-128
+Terminal=false
+Categories=Game
+Type=Application
+Name[en_DK]=Legendary Kingdoms
+Name[en_US]=Legendary Kingdoms
