@@ -25980,6 +25980,27 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
     if (window && renderer)
     {
+        auto flash_message = false;
+
+        auto flash_color = intRD;
+
+        std::string message = "";
+
+        Uint32 start_ticks = 0;
+
+        Uint32 duration = 3000;
+
+        auto displayMessage = [&](std::string msg, Uint32 color)
+        {
+            flash_message = true;
+
+            message = msg;
+
+            flash_color = color;
+
+            start_ticks = SDL_GetTicks();
+        };
+
         TTF_Init();
 
         auto font_size = 28;
@@ -26017,27 +26038,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             SDL_Surface *splash = NULL;
             SDL_Texture *splashTexture = NULL;
             SDL_Surface *text = NULL;
-
-            auto flash_message = false;
-
-            auto flash_color = intRD;
-
-            std::string message = "";
-
-            Uint32 start_ticks = 0;
-
-            Uint32 duration = 3000;
-
-            auto displayMessage = [&](std::string msg, Uint32 color)
-            {
-                flash_message = true;
-
-                message = msg;
-
-                flash_color = color;
-
-                start_ticks = SDL_GetTicks();
-            };
 
             party.StoryID = story->ID;
 
