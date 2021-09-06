@@ -21501,8 +21501,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             }
         }
 
-        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_DARK11, 28, "Fight", clrWH, intDB, text_buttonw, 48, -1), 6, 7, 3, 6, startx, text_buttony, Control::Type::CONFIRM));
-        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_DARK11, 28, "Cast Spell", clrWH, intDB, text_buttonw, 48, -1), 6, 7, 4, 7, startx + text_gridsize, text_buttony, Control::Type::SPELL));
+        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_DARK11, 28, "Fight", clrWH, intDB, text_buttonw, text_buttonh, -1), 6, 7, 3, 6, startx, text_buttony, Control::Type::CONFIRM));
+        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_DARK11, 28, "Cast Spell", clrWH, intDB, text_buttonw, text_buttonh, -1), 6, 7, 4, 7, startx + text_gridsize, text_buttony, Control::Type::SPELL));
 
         auto current = -1;
         auto selected = false;
@@ -21909,8 +21909,8 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             }
         }
 
-        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_DARK11, font_size, "Start Battle", clrWH, intDB, text_buttonw, 48, -1), 6, 7, 3, 6, startx, text_buttony, Control::Type::CONFIRM));
-        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_DARK11, font_size, "Cancel", clrWH, intDB, text_buttonw, 48, -1), 6, 7, 4, 7, startx + text_gridsize, text_buttony, Control::Type::BACK));
+        controls_battlefield.push_back(Button(6, createHeaderButton(window, FONT_DARK11, font_size, "Start Battle", clrWH, intDB, text_buttonw, text_buttonh, -1), 6, 7, 3, 6, startx, text_buttony, Control::Type::CONFIRM));
+        controls_battlefield.push_back(Button(7, createHeaderButton(window, FONT_DARK11, font_size, "Cancel", clrWH, intDB, text_buttonw, text_buttonh, -1), 6, 7, 4, 7, startx + text_gridsize, text_buttony, Control::Type::BACK));
 
         auto controls_deploy = popupArmy(window, renderer, party.Army, offset, last, limit, popupw, popuph, infoh, popupx, popupy);
 
@@ -23411,6 +23411,15 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
     SDL_Surface *background = NULL;
 
+    if (story->BookID == Book::Type::BOOK1)
+    {
+        background = createImage("images/book1/background.png");
+    }
+    else if (story->BookID == Book::Type::BOOK2)
+    {
+        background = createImage("images/book2/background.png");
+    }
+
     if (renderer && story->Choices.size() > 0)
     {
         SDL_Surface *splash = NULL;
@@ -23503,6 +23512,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             if (splash)
             {
                 splash_h = fitImage(renderer, splash, startx, starty, splashw, text_bounds);
+
+                drawRect(renderer, splashw, splash_h, startx, starty, intBK);
             }
 
             if (!splash || (splash && splash_h < (text_bounds - 2 * boxh - infoh)))
@@ -23536,16 +23547,26 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         count += 1;
                     }
 
-                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
                 }
                 else
                 {
-                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, BE_80);
+
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
                 }
             }
 
             if (!splash)
             {
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
                 std::string title_string = std::string(Book::Title[story->BookID]) + "\n";
 
                 if (story->ID != -1)
@@ -23559,14 +23580,16 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                     title_string += std::string(3 - std::to_string(std::abs(storyID)).length(), '0') + std::to_string(std::abs(storyID));
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
                 else
                 {
                     title_string += "Not Implemented";
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
+
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
             }
 
             if ((!splash || (splash && splash_h < (text_bounds - 4 * boxh - 2 * infoh - box_space))) && (Engine::COUNT_TEAMS(party) > 0 || story->Team != Team::Type::NONE))
@@ -23593,6 +23616,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     teams = Engine::GET_TEAMS(party);
                 }
 
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
                 if (teams.size() > 0)
                 {
                     std::string teams_string = "";
@@ -23611,14 +23636,20 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
                 else
                 {
-                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space, intBE);
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space, BE_80);
                 }
+
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
             }
             else if (!splash || (splash && splash_h < (text_bounds - 3 * boxh - 2 * infoh - box_space)))
             {
                 putHeader(renderer, "Money", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
 
-                putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+                putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
             }
 
             fillRect(renderer, textwidth, text_bounds, textx, texty, BE_80);
@@ -23702,6 +23733,8 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
                     putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+
+                    drawRect(renderer, splashw * 2, boxh * 2, (SCREEN_WIDTH - splashw * 2) / 2, (SCREEN_HEIGHT - boxh * 2) / 2, intBK);
                 }
                 else
                 {
@@ -25967,6 +26000,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         auto current_mode = Control::Type::STORY;
 
+        auto current_book = Book::Type::NONE;
+
         while (!quit)
         {
             setWindowIcon(window, "icons/spidermindgames-48.png");
@@ -26027,6 +26062,50 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
 
                 story->Event(party);
+            }
+
+            if (story->BookID == Book::Type::BOOK1)
+            {
+                if (current_book != Book::Type::BOOK1)
+                {
+                    if (background)
+                    {
+                        SDL_FreeSurface(background);
+
+                        background = NULL;
+                    }
+
+                    background = createImage("images/book1/background.png");
+
+                    current_book = Book::Type::BOOK1;
+                }
+            }
+            else if (story->BookID == Book::Type::BOOK2)
+            {
+                if (current_book != Book::Type::BOOK2)
+                {
+                    if (background)
+                    {
+                        SDL_FreeSurface(background);
+
+                        background = NULL;
+                    }
+
+                    background = createImage("images/book2/background.png");
+
+                    current_book = Book::Type::BOOK2;
+                }
+            }
+            else
+            {
+                if (background)
+                {
+                    SDL_FreeSurface(background);
+
+                    background = NULL;
+                }
+
+                current_book = story->BookID;
             }
 
             if (story->Location != Location::Type::NONE)
@@ -26191,6 +26270,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                 std::string title_string = std::string(Book::Title[book]) + "\n";
 
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
                 if (story->ID != -1)
                 {
                     auto storyID = story->ID;
@@ -26202,16 +26283,20 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                     title_string += std::string(3 - std::to_string(std::abs(storyID)).length(), '0') + std::to_string(std::abs(storyID));
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
                 else
                 {
                     title_string += "Not Implemented";
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
 
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+
                 putHeader(renderer, "Party", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
                 if (Engine::COUNT(party) > 0)
                 {
@@ -26240,12 +26325,14 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         count += 1;
                     }
 
-                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
-                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, BE_80);
                 }
+
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
                 if (Engine::COUNT_TEAMS(party) > 0 || story->Team != Team::Type::NONE)
                 {
@@ -26271,6 +26358,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         teams = Engine::GET_TEAMS(party);
                     }
 
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
                     if (teams.size() > 0)
                     {
                         std::string teams_string = "";
@@ -26285,18 +26374,24 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             teams_string += Team::Descriptions[teams[i]];
                         }
 
-                        putText(renderer, teams_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
+                        putText(renderer, teams_string.c_str(), font_mason, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
                     }
                     else
                     {
-                        fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space, intBE);
+                        fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space, BE_80);
                     }
+
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
                 }
                 else
                 {
                     putHeader(renderer, "Money", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
 
-                    putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+                    putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+
+                    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
                 }
 
                 fillRect(renderer, textwidth, text_bounds, textx, texty, BE_80);

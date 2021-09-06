@@ -78,9 +78,9 @@ int buttonh = 64;
 
 int buttony = (int)(SCREEN_HEIGHT * (1.0 - Margin) - buttonh);
 
-int infoh = 48;
+int infoh = 56;
 
-int text_buttonh = 48;
+int text_buttonh = 56;
 
 int text_buttonw = 240;
 

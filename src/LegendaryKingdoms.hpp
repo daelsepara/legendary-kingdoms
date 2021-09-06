@@ -613,10 +613,10 @@ SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_s
         dst.x = 0;
         dst.y = 0;
 
-        SDL_FillRect(button, NULL, bg);
-
         dst.x = x < 0 ? (button->w - text_surface->w) / 2 : x;
         dst.y = (button->h - text_surface->h) / 2;
+
+        SDL_FillRect(button, NULL, bg);
 
         SDL_BlitSurface(text_surface, NULL, button, &dst);
     }
@@ -1180,7 +1180,7 @@ void createWindow(Uint32 flags, SDL_Window **window, SDL_Renderer **renderer, co
             setWindowIcon(*window, icon);
         }
 
-        //Initialize SDL_mixer
+        // Initialize SDL_mixer
         if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
         {
             std::cerr << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
@@ -1629,6 +1629,11 @@ void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int cur
         {
             SDL_Rect rect;
 
+            if (controls[i].Type == Control::Type::SCROLL_UP || controls[i].Type == Control::Type::SCROLL_DOWN)
+            {
+                fillRect(renderer, controls[i].W + 2 * border_space, controls[i].H + 2 * border_space, controls[i].X - border_space, controls[i].Y - border_space, intWH);
+            }
+
             renderImage(renderer, controls[i].Surface, controls[i].X, controls[i].Y);
 
             if (i == current)
@@ -1996,10 +2001,10 @@ std::vector<Button> armyList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     if (party_controls)
     {
-        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, army.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ARMY));
-        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, army.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FLEET));
-        controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, army.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::ROMANCE));
-        controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, army.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
+        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, army.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ARMY));
+        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, army.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FLEET));
+        controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 1, idx + 3, army.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::ROMANCE));
+        controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 2, idx + 3, army.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
     }
     else
     {
@@ -2123,10 +2128,10 @@ std::vector<Button> romanceList(SDL_Window *window, SDL_Renderer *renderer, std:
 
     idx = (int)controls.size();
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, hearts.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ARMY));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, hearts.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FLEET));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, hearts.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::ROMANCE));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, hearts.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, hearts.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ARMY));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, hearts.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FLEET));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 1, idx + 3, hearts.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::ROMANCE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 2, idx + 3, hearts.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -2627,24 +2632,24 @@ std::vector<Button> monsterList(SDL_Window *window, SDL_Renderer *renderer, std:
         }
     }
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "VIEW PARTY", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, monsters.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::PARTY));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "VIEW PARTY", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, monsters.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::PARTY));
 
     if (mode == Control::Type::ATTACK)
     {
-        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "ATTACK", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::ATTACK));
+        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "ATTACK", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::ATTACK));
     }
     else if (mode == Control::Type::DEFEND)
     {
-        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "DEFEND", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::ATTACK));
+        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "DEFEND", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::ATTACK));
     }
     else if (mode == Control::Type::NEXT)
     {
-        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "NEXT ROUND", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::ATTACK));
+        controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "NEXT ROUND", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, monsters.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::ATTACK));
     }
 
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::SPELL));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 1, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::SPELL));
 
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::FLEE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 2, idx + 3, monsters.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::FLEE));
 
     return controls;
 }
@@ -2800,10 +2805,10 @@ std::vector<Button> restList(SDL_Window *window, SDL_Renderer *renderer, std::ve
         }
     }
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "HEAL 1", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, party.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::HEAL1));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FULLY RECOVER", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, party.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FULL_RECOVERY));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "RECHARGE SPELLS", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, party.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::RECHARGE));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, party.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "HEAL 1", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, party.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::HEAL1));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FULLY RECOVER", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, party.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FULL_RECOVERY));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "RECHARGE SPELLS", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 1, idx + 3, party.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::RECHARGE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 2, idx + 3, party.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -2851,10 +2856,10 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = (int)controls.size();
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ARMY));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FLEET));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::ROMANCE));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ARMY", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ARMY));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FLEET", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FLEET));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "ROMANCE", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 1, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::ROMANCE));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 2, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -2960,20 +2965,20 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     if (mode == Control::Type::ATTACK)
     {
-        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ATTACK", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ATTACK));
+        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "ATTACK", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ATTACK));
     }
     else if (mode == Control::Type::DEFEND)
     {
-        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "DEFEND", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ATTACK));
+        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "DEFEND", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ATTACK));
     }
     else if (mode == Control::Type::NEXT)
     {
-        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "NEXT ROUND", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ATTACK));
+        controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "NEXT ROUND", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::ATTACK));
     }
 
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::SPELL));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "CAST SPELL", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::SPELL));
 
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::FLEE));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "FLEE", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 1, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::FLEE));
 
     return controls;
 }
@@ -3029,10 +3034,10 @@ std::vector<Button> shipList(SDL_Window *window, SDL_Renderer *renderer, std::ve
 
     idx = (int)controls.size();
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::BUY_SELL_SHIP));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::REPAIR_SHIP));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BUY_SELL_CARGO));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 1, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 2, idx + 3, ships.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -3305,10 +3310,10 @@ std::vector<Button> cargoList(SDL_Window *window, SDL_Renderer *renderer, std::v
 
     idx = (int)controls.size();
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, cargo.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::BUY_SELL_SHIP));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, cargo.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::REPAIR_SHIP));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, cargo.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BUY_SELL_CARGO));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, cargo.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, cargo.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, cargo.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 1, idx + 3, cargo.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 2, idx + 3, cargo.size() > 0 ? (last - start) - 1 : idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -3370,10 +3375,10 @@ std::vector<Button> harbourControls(SDL_Window *window, SDL_Renderer *renderer)
 
     auto idx = 0;
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, idx, idx, startx, text_buttony, Control::Type::BUY_SELL_SHIP));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::REPAIR_SHIP));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 3, idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BUY_SELL_CARGO));
-    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 2, idx + 3, idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL SHIPS", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, idx, idx, startx, text_buttony, Control::Type::BUY_SELL_SHIP));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "REPAIR SHIP", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::REPAIR_SHIP));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BUY/SELL CARGO", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 1, idx + 3, idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BUY_SELL_CARGO));
+    controls.push_back(Button(idx + 3, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 2, idx + 3, idx + 3, idx + 3, startx + 3 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
@@ -3618,9 +3623,9 @@ std::vector<Button> repairList(SDL_Window *window, SDL_Renderer *renderer, std::
         }
     }
 
-    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "REPAIR 1", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::REPAIR1));
-    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FULLY REPAIR", clrWH, intDB, text_buttonw, 48, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FULL_REPAIR));
-    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, 48, -1), idx + 1, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BACK));
+    controls.push_back(Button(idx, createHeaderButton(window, FONT_DARK11, 22, "REPAIR 1", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 1, ships.size() > 0 ? (last - start) - 1 : idx, idx, startx, text_buttony, Control::Type::REPAIR1));
+    controls.push_back(Button(idx + 1, createHeaderButton(window, FONT_DARK11, 22, "FULLY REPAIR", clrWH, intDB, text_buttonw, text_buttonh, -1), idx, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 1, idx + 1, startx + text_gridsize, text_buttony, Control::Type::FULL_REPAIR));
+    controls.push_back(Button(idx + 2, createHeaderButton(window, FONT_DARK11, 22, "BACK", clrWH, intDB, text_buttonw, text_buttonh, -1), idx + 1, idx + 2, ships.size() > 0 ? (last - start) - 1 : idx + 2, idx + 2, startx + 2 * text_gridsize, text_buttony, Control::Type::BACK));
 
     return controls;
 }
