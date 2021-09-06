@@ -506,9 +506,11 @@ SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Co
 SDL_Surface *createTextAndImage(const char *text, const char *image, const char *ttf, int font_size, SDL_Color textColor, Uint32 bg, int wrap, int style)
 {
     SDL_Surface *surface = NULL;
+
     SDL_Surface *converted_surface = NULL;
 
     auto image_surface = createImage(image);
+
     auto text_surface = createText(text, ttf, font_size, textColor, wrap, style);
 
     if (image_surface && text_surface)
@@ -522,14 +524,11 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
             image_h = (int)(image_surface->h * image_scale);
         }
 
-        Uint32 amask;
-
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-        amask = 0x000000ff;
+        surface = SDL_CreateRGBSurface(0, wrap, image_h + text_space + text_surface->h, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
 #else
-        amask = 0xff000000;
+        surface = SDL_CreateRGBSurface(0, wrap, image_h + text_space + text_surface->h, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
 #endif
-        surface = SDL_CreateRGBSurface(0, wrap, image_h + text_space + text_surface->h, 32, 0, 0, 0, amask);
 
         SDL_Rect dst;
 
@@ -545,7 +544,7 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
         text_dst.x = 0;
         text_dst.y = image_h + text_space;
 
-        SDL_FillRect(surface, NULL, bg);
+        SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 0, 0, 0, 0));
 
         dst.h = image_h;
 
@@ -561,6 +560,10 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
         }
 
         converted_surface = SDL_ConvertSurface(image_surface, surface->format, 0);
+
+        SDL_SetSurfaceAlphaMod(converted_surface, SDL_ALPHA_OPAQUE);
+
+        SDL_SetSurfaceAlphaMod(text_surface, SDL_ALPHA_OPAQUE);
 
         SDL_BlitScaled(converted_surface, NULL, surface, &dst);
 
@@ -593,15 +596,12 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
 
 SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_size, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x)
 {
-    Uint32 amask;
-
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    amask = 0x000000ff;
+    auto button = SDL_CreateRGBSurface(0, w, h, 32, bg == 0 ? 0xFF000000 : 0, bg == 0 ? 0x00FF0000 : 0, bg == 0 ? 0x0000FF00 : 0, bg == 0 ? 0x000000FF : 0);
 #else
-    amask = 0xff000000;
+    auto button = SDL_CreateRGBSurface(0, w, h, 32, bg == 0 ? 0x000000FF : 0, bg == 0 ? 0x0000FF00 : 0, bg == 0 ? 0x00FF0000 : 0, bg == 0 ? 0xFF000000 : 0);
 #endif
 
-    auto button = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, amask);
     auto text_surface = createText(text, font, font_size, color, w, TTF_STYLE_NORMAL);
 
     if (button && text_surface)
@@ -616,7 +616,16 @@ SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_s
         dst.x = x < 0 ? (button->w - text_surface->w) / 2 : x;
         dst.y = (button->h - text_surface->h) / 2;
 
-        SDL_FillRect(button, NULL, bg);
+        if (bg != 0)
+        {
+            SDL_FillRect(button, NULL, bg);
+        }
+        else
+        {
+            SDL_FillRect(button, NULL, SDL_MapRGBA(button->format, 0, 0, 0, 0));
+
+            SDL_SetSurfaceAlphaMod(text_surface, SDL_ALPHA_OPAQUE);
+        }
 
         SDL_BlitSurface(text_surface, NULL, button, &dst);
     }
@@ -1862,7 +1871,7 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, choices[index].Text, clrBK, intBE, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, choices[index].Text, clrBK, 0, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 

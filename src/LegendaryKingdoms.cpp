@@ -23549,7 +23549,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
 
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
                 }
@@ -23557,7 +23557,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 {
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, BE_80);
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, BE_50);
 
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
                 }
@@ -23580,13 +23580,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                     title_string += std::string(3 - std::to_string(std::abs(storyID)).length(), '0') + std::to_string(std::abs(storyID));
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
                 else
                 {
                     title_string += "Not Implemented";
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
@@ -23636,7 +23636,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
                 else
                 {
-                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space, BE_80);
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space, BE_50);
                 }
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
@@ -23647,14 +23647,18 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-                putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+                putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
             }
 
-            fillRect(renderer, textwidth, text_bounds, textx, texty, BE_80);
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+            fillRect(renderer, textwidth, text_bounds, textx, texty, BE_50);
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
+
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
             if (current >= 0 && current < controls.size() && !selected)
             {
@@ -25722,7 +25726,7 @@ void ByeScreen(SDL_Renderer *renderer, SDL_Surface *background, const char *Bye)
                 stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
             }
 
-            fillRect(renderer, fullwidth, bye->h + 2 * text_space, startx, ((buttony - button_space) - (bye->h + 2 * text_space)) / 2, BE_80);
+            fillRect(renderer, fullwidth, bye->h + 2 * text_space, startx, ((buttony - button_space) - (bye->h + 2 * text_space)) / 2, BE_50);
 
             renderText(renderer, bye, 0, (SCREEN_WIDTH - bye->w) / 2, ((buttony - button_space) - bye->h) / 2, (buttony - button_space), 0);
 
@@ -26283,13 +26287,13 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                     title_string += std::string(3 - std::to_string(std::abs(storyID)).length(), '0') + std::to_string(std::abs(storyID));
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
                 else
                 {
                     title_string += "Not Implemented";
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
@@ -26325,11 +26329,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         count += 1;
                     }
 
-                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
-                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, BE_80);
+                    fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, BE_50);
                 }
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
@@ -26374,11 +26378,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             teams_string += Team::Descriptions[teams[i]];
                         }
 
-                        putText(renderer, teams_string.c_str(), font_mason, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
+                        putText(renderer, teams_string.c_str(), font_mason, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
                     }
                     else
                     {
-                        fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space, BE_80);
+                        fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space, BE_50);
                     }
 
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
@@ -26389,12 +26393,14 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-                    putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, BE_80, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+                    putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
 
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
                 }
 
-                fillRect(renderer, textwidth, text_bounds, textx, texty, BE_80);
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+                fillRect(renderer, textwidth, text_bounds, textx, texty, BE_50);
 
                 if (story->Text && text && story->Image && splash)
                 {
@@ -26404,6 +26410,8 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 {
                     renderText(renderer, text, 0, textx + text_space, texty + text_space, text_bounds - 2 * text_space, offset);
                 }
+
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
                 auto scrollUp = false;
 
@@ -27422,11 +27430,11 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                 putHeader(renderer, "Topics", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
 
-                fillRect(renderer, splashw, text_bounds - infoh, startx, texty + infoh, BE_80);
+                fillRect(renderer, splashw, text_bounds - infoh, startx, texty + infoh, BE_50);
 
                 putHeader(renderer, Topics::ALL[topic].Title.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, BE_80);
+                fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, BE_50);
 
                 if (Topics::ALL[topic].Image.length() > 0 && text)
                 {
