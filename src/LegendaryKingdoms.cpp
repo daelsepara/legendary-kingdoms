@@ -25726,9 +25726,13 @@ void ByeScreen(SDL_Renderer *renderer, SDL_Surface *background, const char *Bye)
                 stretchImage(renderer, background, 0, 0, SCREEN_WIDTH, buttony - button_space);
             }
 
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
             fillRect(renderer, fullwidth, bye->h + 2 * text_space, startx, ((buttony - button_space) - (bye->h + 2 * text_space)) / 2, BE_50);
 
             renderText(renderer, bye, 0, (SCREEN_WIDTH - bye->w) / 2, ((buttony - button_space) - bye->h) / 2, (buttony - button_space), 0);
+
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
