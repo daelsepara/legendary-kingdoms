@@ -1110,7 +1110,7 @@ void popupScrolls(std::vector<Button> &controls, std::vector<T> &list, int start
 
         if (list.size() - last > 0)
         {
-            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + (popuph - arrow_size - 2 * border_space - buttonh - infoh), Control::Type::SCROLL_DOWN));
+            controls.push_back(Button(idx, "icons/down-arrow.png", idx, idx, start > 0 ? idx - 1 : idx, idx + 1, offsetx + (popupw - arrow_size - button_space), offsety + (popuph - arrow_size - buttonh - infoh), Control::Type::SCROLL_DOWN));
 
             idx += 1;
         }

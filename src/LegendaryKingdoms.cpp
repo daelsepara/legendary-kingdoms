@@ -2328,7 +2328,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -4892,7 +4892,7 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
         auto font_size = 24;
 
         auto offset = 0;
-        auto limit = (int)((booksize - 2 * text_space) / (96));
+        auto limit = (int)((booksize - 2 * text_space) / (88));
         auto last = offset + limit;
 
         if (last > spells.size())
@@ -5313,7 +5313,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -6634,7 +6634,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -7198,7 +7198,7 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -7492,7 +7492,7 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -7784,7 +7784,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -8059,7 +8059,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         std::vector<Attribute::Type> attributes = {Attribute::Type::FIGHTING, Attribute::Type::STEALTH, Attribute::Type::LORE, Attribute::Type::SURVIVAL, Attribute::Type::CHARISMA};
@@ -8335,7 +8335,7 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Cha
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
 
         auto teams_list = std::vector<Team::Type>();
 
@@ -8604,7 +8604,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -8905,7 +8905,7 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -9720,7 +9720,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
         TTF_SetFontKerning(font_dark11, 0);
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -10640,7 +10640,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto controls = std::vector<Button>();
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > monsters.size())
@@ -12408,7 +12408,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto scrollSpeed = 1;
 
-    auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+    auto limit = (text_bounds - 2 * text_space - infoh) / (88);
 
     auto offset = 0;
 
@@ -13392,7 +13392,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto selection = std::vector<int>();
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Members.size())
@@ -14567,7 +14567,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         auto selection = std::vector<int>();
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Fleet.size())
@@ -15706,7 +15706,7 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
     auto font_size = 28;
 
     auto scrollSpeed = 1;
-    auto limit = (int)((booksize - 2 * text_space) / (96));
+    auto limit = (int)((booksize - 2 * text_space) / (88));
 
     auto offset = 0;
 
@@ -16236,7 +16236,7 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
     auto font_size = 28;
 
     auto scrollSpeed = 1;
-    auto limit = (int)((booksize - 2 * text_space) / (96));
+    auto limit = (int)((booksize - 2 * text_space) / (88));
 
     auto offset = 0;
 
@@ -17241,7 +17241,7 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         auto popup_speed = 1;
         auto popup_offset = 0;
-        auto popup_limit = (popuph - infoh - buttonh - button_space) / (96);
+        auto popup_limit = (popuph - infoh - buttonh - button_space) / (88);
         auto popup_last = popup_offset + popup_limit;
 
         if (popup_last > barracks.size())
@@ -17253,7 +17253,7 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
         auto scrollSpeed = 1;
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space - infoh) / (96);
+        auto limit = (text_bounds - 2 * text_space - infoh) / (88);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -17963,7 +17963,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto scrollSpeed = 1;
         auto offset = 0;
 
-        auto limit = (int)((booksize - 2 * text_space) / (96));
+        auto limit = (int)((booksize - 2 * text_space) / (88));
         auto last = offset + limit;
 
         if (last > spells.size())
@@ -21848,7 +21848,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         auto popupy = ((starty + text_bounds) - popuph) / 2;
 
         auto offset = 0;
-        auto limit = (popuph - infoh - buttonh - button_space) / (96);
+        auto limit = (popuph - infoh - buttonh - button_space) / (88);
         auto last = offset + limit;
 
         if (last > party.Army.size())
@@ -23439,7 +23439,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
         auto scrollSpeed = 1;
 
         auto offset = 0;
-        auto limit = (text_bounds - 2 * text_space) / (96);
+        auto limit = (text_bounds - 2 * text_space) / (88);
         auto last = offset + limit;
 
         if (last > story->Choices.size())
@@ -25994,7 +25994,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         auto popupx = (SCREEN_WIDTH - popupw) / 2;
         auto popupy = ((starty + text_bounds) - popuph) / 2;
         auto popup_speed = 1;
-        auto popup_limit = (popuph - infoh - buttonh - button_space) / (96);
+        auto popup_limit = (popuph - infoh - buttonh - button_space) / (88);
 
         auto controls_confirm = popupConfirm(popupw, popuph, popupx, popupy);
 
@@ -27327,7 +27327,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
             auto topic_speed = 1;
 
-            auto topic_limit = (text_bounds - 2 * text_space - infoh) / (96);
+            auto topic_limit = (text_bounds - 2 * text_space - infoh) / (88);
 
             if (topic_offset > (Topics::ALL.size() - topic_limit))
             {
