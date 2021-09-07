@@ -3015,6 +3015,7 @@ namespace Engine
         for (auto i = 0; i < army.size(); i++)
         {
             army[i].Position = Location::BattleField::NONE;
+            army[i].Deployed = false;
         }
     }
 

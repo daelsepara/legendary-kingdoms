@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+	<id>com.games.LegendaryKingdoms</id>
+	<metadata_license>CC0-1.0</metadata_license>
+	<project_license>GPL-3.0</project_license>
+	<name>com.games.LegendaryKingdoms</name>
+	<summary>Legendary Kingdoms (SDL)</summary>
+	<description>
+		<p>This is an Implementation of Legendary Kingdoms gamebook series in C++ and SDL. Only Book 1, The Valley of Bones is implemented as of now.</p>
+	</description>
+	<url type="homepage">https://github.com/daelsepara/legendary-kingdoms/</url>
+	<screenshots>
+		<screenshot typegi="default">
+			<image>https://raw.githubusercontent.com/daelsepara/legendary-kingdoms/main/src/images/legendary-kingdoms-logo.png</image>
+		</screenshot>
+	</screenshots>
+	<provides>
+		<id>LegendaryKingdoms.com.desktop</id>
+	</provides>
+</component>

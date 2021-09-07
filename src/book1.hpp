@@ -1459,7 +1459,7 @@ namespace Book1
                 location = Location::Type::SALTDAD;
             }
 
-            party.Army.push_back(Army::Base("Lhasbreath Berserkers", Army::Type::LHASBREATH_BERSERKERS, location, 5, 2));
+            party.Army.push_back(Army::Base("Lhasbreath Berserkers", Army::Type::LHASBREATH_BERSERKERS, location, 5, 2, false));
 
             Engine::GET_CODES(party, {Codes::A(16)});
 
@@ -5628,12 +5628,12 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::A(40)}))
             {
-                EnemyArmy.push_back(Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 4, 4, false));
+                EnemyArmy.push_back(Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 4, 4, false, true));
             }
             else
             {
-                EnemyArmy.push_back(Army::Base("Curzite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 4, 5, false));
-                EnemyArmy.push_back(Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_SUPPORT, 4, 4, false));
+                EnemyArmy.push_back(Army::Base("Curzite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 4, 5, false, true));
+                EnemyArmy.push_back(Army::Base("Cursite Infantry", Army::Type::CURSITE_INFANTRY, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_SUPPORT, 4, 4, false, true));
             }
 
             if (!Engine::VERIFY_CODES(party, {Codes::A(95)}))
@@ -5646,17 +5646,17 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::A(96)}))
             {
-                EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CURSUS, Location::BattleField::CENTER_FRONT, 2, 4, false));
-                EnemyArmy.push_back(Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false));
+                EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CURSUS, Location::BattleField::CENTER_FRONT, 2, 4, false, true));
+                EnemyArmy.push_back(Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false, true));
             }
             else
             {
                 EnemyArmyStatus.push_back({Army::Status::STRENGTH1, EnemyArmy.size(), 0, 1});
 
-                EnemyArmy.push_back(Army::Base("Mercenary Knights", Army::Type::MERCENARY_KNIGHTS, Location::Type::CURSUS, Location::BattleField::CENTER_FRONT, 5, 3, false));
-                EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CURSUS, Location::BattleField::CENTER_SUPPORT, 2, 4, false));
-                EnemyArmy.push_back(Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false));
-                EnemyArmy.push_back(Army::Base("Mercenary Spears", Army::Type::MERCENARY_SPEARS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_SUPPORT, 3, 2, false));
+                EnemyArmy.push_back(Army::Base("Mercenary Knights", Army::Type::MERCENARY_KNIGHTS, Location::Type::CURSUS, Location::BattleField::CENTER_FRONT, 5, 3, false, true));
+                EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CURSUS, Location::BattleField::CENTER_SUPPORT, 2, 4, false, true));
+                EnemyArmy.push_back(Army::Base("Cursite Riders", Army::Type::CURSITE_RIDERS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 5, 4, false, true));
+                EnemyArmy.push_back(Army::Base("Mercenary Spears", Army::Type::MERCENARY_SPEARS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_SUPPORT, 3, 2, false, true));
             }
         }
 
@@ -9895,8 +9895,8 @@ namespace Book1
                 location = Location::Type::SALTDAD;
             }
 
-            party.Army.push_back(Army::Base("Kensai Warriors", Army::Type::KENSAI_WARRIORS, location, 4, 4));
-            party.Army.push_back(Army::Base("Chalice Archers", Army::Type::CHALICE_ARCHERS, location, 2, 3));
+            party.Army.push_back(Army::Base("Kensai Warriors", Army::Type::KENSAI_WARRIORS, location, 4, 4, false));
+            party.Army.push_back(Army::Base("Chalice Archers", Army::Type::CHALICE_ARCHERS, location, 2, 3, false));
 
             Engine::GET_CODES(party, {Codes::A(20)});
         }
@@ -10840,31 +10840,31 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::A(96)}))
             {
-                EnemyArmy.push_back(Army::Base("Cursite Citizens", Army::Type::CURSITE_CITIZENS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 2, 3, false));
+                EnemyArmy.push_back(Army::Base("Cursite Citizens", Army::Type::CURSITE_CITIZENS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 2, 3, false, true));
 
                 if (!Engine::VERIFY_CODES(party, {Codes::A(40)}))
                 {
-                    EnemyArmy.push_back(Army::Base("Cursite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 4, 5, false));
+                    EnemyArmy.push_back(Army::Base("Cursite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 4, 5, false, true));
                 }
             }
             else
             {
-                EnemyArmy.push_back(Army::Base("Mercenary Men-at-Arms", Army::Type::MERCENARY_MEN_AT_ARMS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 4, 2, false));
-                EnemyArmy.push_back(Army::Base("Cursite Citizens", Army::Type::CURSITE_CITIZENS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_SUPPORT, 2, 3, false));
+                EnemyArmy.push_back(Army::Base("Mercenary Men-at-Arms", Army::Type::MERCENARY_MEN_AT_ARMS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_FRONT, 4, 2, false, true));
+                EnemyArmy.push_back(Army::Base("Cursite Citizens", Army::Type::CURSITE_CITIZENS, Location::Type::CURSUS, Location::BattleField::LEFT_FLANK_SUPPORT, 2, 3, false, true));
 
                 if (!Engine::VERIFY_CODES(party, {Codes::A(40)}))
                 {
-                    EnemyArmy.push_back(Army::Base("Cursite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 4, 5, false));
-                    EnemyArmy.push_back(Army::Base("Mercenary Crossbows", Army::Type::MERCENARY_CROSSBOWS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_SUPPORT, 2, 2, false));
+                    EnemyArmy.push_back(Army::Base("Cursite Zealots", Army::Type::CURSITE_ZEALOTS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 4, 5, false, true));
+                    EnemyArmy.push_back(Army::Base("Mercenary Crossbows", Army::Type::MERCENARY_CROSSBOWS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_SUPPORT, 2, 2, false, true));
                 }
                 else
                 {
-                    EnemyArmy.push_back(Army::Base("Mercenary Crossbows", Army::Type::MERCENARY_CROSSBOWS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 2, 2, false));
+                    EnemyArmy.push_back(Army::Base("Mercenary Crossbows", Army::Type::MERCENARY_CROSSBOWS, Location::Type::CURSUS, Location::BattleField::RIGHT_FLANK_FRONT, 2, 2, false, true));
                 }
             }
 
-            EnemyArmy.push_back(Army::Base("Temple Guard", Army::Type::TEMPLE_GUARD, Location::Type::CURSUS, Location::BattleField::CENTER_FRONT, 5, 4, false));
-            EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CURSUS, Location::BattleField::CENTER_SUPPORT, 2, 4, false));
+            EnemyArmy.push_back(Army::Base("Temple Guard", Army::Type::TEMPLE_GUARD, Location::Type::CURSUS, Location::BattleField::CENTER_FRONT, 5, 4, false, true));
+            EnemyArmy.push_back(Army::Base("Citizen Archers", Army::Type::CITIZEN_ARCHERS, Location::Type::CURSUS, Location::BattleField::CENTER_SUPPORT, 2, 4, false, true));
         }
 
         Engine::Destination Continue(Party::Base &party) { return destination; }
@@ -12233,8 +12233,8 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            party.Army.push_back(Army::Base("Kensai Warriors", Army::Type::LUUTANESH_SPEARS, Location::Type::LUUTANESH, 3, 3));
-            party.Army.push_back(Army::Base("Chalice Archers", Army::Type::FAITHFUL_IRREGULARS, Location::Type::LUUTANESH, 1, 4));
+            party.Army.push_back(Army::Base("Kensai Warriors", Army::Type::LUUTANESH_SPEARS, Location::Type::LUUTANESH, 3, 3, false));
+            party.Army.push_back(Army::Base("Chalice Archers", Army::Type::FAITHFUL_IRREGULARS, Location::Type::LUUTANESH, 1, 4, false));
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 263}; }
@@ -12658,16 +12658,16 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::A(8)}))
             {
-                EnemyArmy.push_back(Army::Base("Peasant Levies", Army::Type::CURSITE_INFANTRY, Location::Type::LUUTANESH, Location::BattleField::CENTER_FRONT, 1, 1, false));
+                EnemyArmy.push_back(Army::Base("Peasant Levies", Army::Type::CURSITE_INFANTRY, Location::Type::LUUTANESH, Location::BattleField::CENTER_FRONT, 1, 1, false, true));
             }
             else
             {
-                EnemyArmy.push_back(Army::Base("Bronzeguard", Army::Type::BRONZEGUARD, Location::Type::LUUTANESH, Location::BattleField::CENTER_FRONT, 5, 5, true));
-                EnemyArmy.push_back(Army::Base("Peasant Levies", Army::Type::CURSITE_INFANTRY, Location::Type::LUUTANESH, Location::BattleField::CENTER_SUPPORT, 1, 1, false));
+                EnemyArmy.push_back(Army::Base("Bronzeguard", Army::Type::BRONZEGUARD, Location::Type::LUUTANESH, Location::BattleField::CENTER_FRONT, 5, 5, true, true));
+                EnemyArmy.push_back(Army::Base("Peasant Levies", Army::Type::CURSITE_INFANTRY, Location::Type::LUUTANESH, Location::BattleField::CENTER_SUPPORT, 1, 1, false, true));
             }
 
-            EnemyArmy.push_back(Army::Base("Spearmen of Saltdad", Army::Type::SPEARMEN_OF_SALTDAD, Location::Type::LUUTANESH, Location::BattleField::LEFT_FLANK_FRONT, 2, 2, false));
-            EnemyArmy.push_back(Army::Base("Mercenary Swords", Army::Type::MERCENARY_SWORDS, Location::Type::LUUTANESH, Location::BattleField::RIGHT_FLANK_FRONT, 3, 2, false));
+            EnemyArmy.push_back(Army::Base("Spearmen of Saltdad", Army::Type::SPEARMEN_OF_SALTDAD, Location::Type::LUUTANESH, Location::BattleField::LEFT_FLANK_FRONT, 2, 2, false, true));
+            EnemyArmy.push_back(Army::Base("Mercenary Swords", Army::Type::MERCENARY_SWORDS, Location::Type::LUUTANESH, Location::BattleField::RIGHT_FLANK_FRONT, 3, 2, false, true));
         }
 
         Engine::Destination Continue(Party::Base &party) { return destination; }
@@ -20831,12 +20831,12 @@ namespace Book1
             Barracks = Location::Type::SALTDAD;
 
             EnemyArmy = {
-                Army::Base("Landsmen Cavalry", Army::Type::LANDSMEN_CAVALRY, Location::Type::DESERT, Location::BattleField::LEFT_FLANK_FRONT, 4, 2, false),
-                Army::Base("Field Overseers", Army::Type::FIELD_OVERSEERS, Location::Type::DESERT, Location::BattleField::LEFT_FLANK_SUPPORT, 2, 2, false),
-                Army::Base("Cursite Fanatics", Army::Type::CURSITE_FANATICS, Location::Type::DESERT, Location::BattleField::CENTER_FRONT, 3, 5, false),
-                Army::Base("Slave Levies", Army::Type::SLAVE_LEVIES, Location::Type::DESERT, Location::BattleField::CENTER_SUPPORT, 1, 1, false),
-                Army::Base("Clifftop Infantry", Army::Type::CLIFFTOP_INFANTRY, Location::Type::DESERT, Location::BattleField::RIGHT_FLANK_FRONT, 3, 3, false),
-                Army::Base("Thalsian Mercenaries", Army::Type::THALSIAN_MERCENARIES, Location::Type::DESERT, Location::BattleField::RIGHT_FLANK_SUPPORT, 2, 3, false)};
+                Army::Base("Landsmen Cavalry", Army::Type::LANDSMEN_CAVALRY, Location::Type::DESERT, Location::BattleField::LEFT_FLANK_FRONT, 4, 2, false, true),
+                Army::Base("Field Overseers", Army::Type::FIELD_OVERSEERS, Location::Type::DESERT, Location::BattleField::LEFT_FLANK_SUPPORT, 2, 2, false, true),
+                Army::Base("Cursite Fanatics", Army::Type::CURSITE_FANATICS, Location::Type::DESERT, Location::BattleField::CENTER_FRONT, 3, 5, false, true),
+                Army::Base("Slave Levies", Army::Type::SLAVE_LEVIES, Location::Type::DESERT, Location::BattleField::CENTER_SUPPORT, 1, 1, false, true),
+                Army::Base("Clifftop Infantry", Army::Type::CLIFFTOP_INFANTRY, Location::Type::DESERT, Location::BattleField::RIGHT_FLANK_FRONT, 3, 3, false, true),
+                Army::Base("Thalsian Mercenaries", Army::Type::THALSIAN_MERCENARIES, Location::Type::DESERT, Location::BattleField::RIGHT_FLANK_SUPPORT, 2, 3, false, true)};
         }
 
         Engine::Destination Continue(Party::Base &party) { return destination; }

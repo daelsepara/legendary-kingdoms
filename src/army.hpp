@@ -71,6 +71,8 @@ namespace Army
 
         bool Unique = false;
 
+        bool Deployed = false;
+
         Location::BattleField Position = Location::BattleField::NONE;
 
         // Special effects and the combat round they went into effect
@@ -139,6 +141,29 @@ namespace Army
             MaximumMorale = morale;
 
             Unique = unique;
+        }
+
+        Base(const char *name, Army::Type type, Location::Type garrison, Location::BattleField position, int strength, int morale, bool unique, bool deployed)
+        {
+            Name = name;
+
+            Type = type;
+
+            Garrison = garrison;
+
+            Position = position;
+
+            Strength = strength;
+
+            MaximumStrength = strength;
+
+            Morale = morale;
+
+            MaximumMorale = morale;
+
+            Unique = unique;
+
+            Deployed = deployed;
         }
     };
 }

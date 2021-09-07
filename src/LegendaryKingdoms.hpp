@@ -2,6 +2,7 @@
 #define __LEGENDARY_KINGDOMS__HPP__
 
 #include <chrono>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
