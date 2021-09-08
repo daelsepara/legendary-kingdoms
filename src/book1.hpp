@@ -918,7 +918,7 @@ namespace Book1
                 PreText += "\n\n\"I suppose you are here about the troglodytes,\" sighs Clavod, the mine master. \"We are losing so many slaves it starts to become worth protecting them after a while. The deal is 25 silver for each troglodyte head you bring me. Take it or leave it.\"\n\nClavod sees your blank expression. \"Unless you came to arrange salt transportation, of course,\" he says hastily. \"We can transport salt to ships moored in Clifftop or Cursus.\"";
 
                 Choices.push_back(Choice::Base("Accept the mission to hunt the troglodytes", {Book::Type::BOOK1, 681}));
-                Choices.push_back(Choice::Base("Sell him some TROGLODYTE HEADS", {Book::Type::BOOK1, 233}, {Equipment::TROGLODYTE_HEAD}));
+                Choices.push_back(Choice::Base("Sell him some <b>troglodyte heads</b>", {Book::Type::BOOK1, 233}, {Equipment::TROGLODYTE_HEAD}));
                 Choices.push_back(Choice::Base("Express interest in buying salt for your ships", {Book::Type::BOOK1, 575}));
                 Choices.push_back(Choice::Base("Apologise for wasting the mine master's time and leave", {Book::Type::BOOK1, 722}));
             }
@@ -978,7 +978,7 @@ namespace Book1
             Choices.push_back(Choice::Base("Give the mercenaries a <b>gold bullion</b> bar", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, Team::Type::MERCENARY, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION1}, 1));
             Choices.push_back(Choice::Base("Give the mercenaries two <b>gold bullion</b> bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, Team::Type::MERCENARY, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 2));
             Choices.push_back(Choice::Base("Give the mercenaries three <b>gold bullion</b> bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, Team::Type::MERCENARY, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 3));
-            Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::MERCENARY, {Attribute::Type::CHARISMA}, 6, 7));
+            Choices.push_back(Choice::Base("Bribe the mercenaries (Team check: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::MERCENARY, {Attribute::Type::CHARISMA}, 6, 7));
 
             Team = Team::Type::MERCENARY;
 
@@ -1246,7 +1246,7 @@ namespace Book1
 
             Location = Location::Type::CURSUS;
 
-            Text = "The harbour of Cursus is long and shallow. The jetties reach far out beyond the coast, each wide enough for a pair of dragonyaks to drag the cargoes of ships to the warehouses on the beach.\n\nNote: You may buy a ship here, if you have enough money. The largest vessel for sale is the CURSITE WAR GALLEY, a coastal-hugging warship which carries little cargo, but is the only vessel that can even hope to compete with the more advanced vessels of Royce and Drakehallow. A smaller, but more efficient, single-masted COG is also available. The WAR GALLEY will cost 1500 silver coins, and the COG 800 silver coins. When you buy a ship note that it is currently docked in Cursus harbour.\n\nYou can repair any ship you have in Cursus harbour. Each Health point you restore costs 50 silver coins. You can restore your ship up to its starting Health value. You can sell a COG here for 250 silver coins, a CURSITE WAR GALLEY for 500 silver coins and a CARRACK for 1500 silver coins. You cannot sell other kinds of ship here.\n\nYou can buy cargo for your ship here, as well. These goods are too large for your characters to carry, but they can be loaded onto any ship you have in Cursus harbour. You cannot buy more cargo units than you can store in your ship (for instance, a Cog can carry 2 Cargo Units). You can also sell any goods you are carrying in your ships for the same price as well:\n\nSALT: 600 silver coins\nCROPS: 500 silver coins\nSTEEL: 3000 silver coins\nSPICES: 3300 silver coins\nWINE: 2100 silver coins\nSLAVES: 1000 silver coins";
+            Text = "The harbour of Cursus is long and shallow. The jetties reach far out beyond the coast, each wide enough for a pair of dragonyaks to drag the cargoes of ships to the warehouses on the beach.\n\nNote: You may buy a ship here, if you have enough money. The largest vessel for sale is the <b>Cursite War Galley</b>, a coastal-hugging warship which carries little cargo, but is the only vessel that can even hope to compete with the more advanced vessels of Royce and Drakehallow. A smaller, but more efficient, single-masted Cog is also available. The war galley will cost 1500 silver coins, and the <b>Cog</b> 800 silver coins. When you buy a ship note that it is currently docked in Cursus harbour.\n\nYou can repair any ship you have in Cursus harbour. Each Health point you restore costs 50 silver coins. You can restore your ship up to its starting Health value. You can sell a Cog here for 250 silver coins, a Cursite War Galley for 500 silver coins and a <b>Carrack</b> for 1500 silver coins. You cannot sell other kinds of ship here.\n\nYou can buy cargo for your ship here, as well. These goods are too large for your characters to carry, but they can be loaded onto any ship you have in Cursus harbour. You cannot buy more cargo units than you can store in your ship (for instance, a Cog can carry 2 Cargo Units). You can also sell any goods you are carrying in your ships for the same price as well:\n\nSALT: 600 silver coins\nCROPS: 500 silver coins\nSTEEL: 3000 silver coins\nSPICES: 3300 silver coins\nWINE: 2100 silver coins\nSLAVES: 1000 silver coins";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Return to the city centre", {Book::Type::BOOK1, 340}));
@@ -1259,9 +1259,9 @@ namespace Book1
         {
             // TODO: Carrack Stats
             Ships = {
-                {Ship::Base("COG", Ship::Type::COG, Location::Type::CURSUS, 4, 7, 2), 800, 250},
-                {Ship::Base("CURSITE WAR GALLEY", Ship::Type::CURSITE_WAR_GALLEY, Location::Type::CURSUS, 6, 9, 1), 1500, 500},
-                {Ship::Base("CARRACK", Ship::Type::CARRACK, Location::Type::CURSUS, 6, 9, 1), -1, 1500}};
+                {Ship::Base("Cog", Ship::Type::COG, Location::Type::CURSUS, 4, 7, 2), 800, 250},
+                {Ship::Base("Cursite War Galley", Ship::Type::CURSITE_WAR_GALLEY, Location::Type::CURSUS, 6, 9, 1), 1500, 500},
+                {Ship::Base("Carrack", Ship::Type::CARRACK, Location::Type::CURSUS, 6, 9, 1), -1, 1500}};
 
             Cargo = {
                 {Cargo::Type::SALT, 600, 600},
@@ -1440,7 +1440,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "With a dramatic flourish you unroll the <b>dragon head</b> from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou add the following soldiers to your army:\n\n[Lhasbreath Berserkers]: Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nNote: You gained the code A16.";
+            Text = "With a dramatic flourish you unroll the <b>dragon head</b> from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou add the following soldiers to your army:\n\n<b>Lhasbreath Berserkers</b> - Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nNote: You gained the code A16.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Survival", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
@@ -4014,7 +4014,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN;
 
-            Text = "Your new crew cheer as you come aboard. The ship is large and shabbily built -- but perhaps you can make something of it?\n\n[HULK] Fighting: 3, Health: 5, Cargo: 3 units\n\nNote: Your new ship is in Mordain harbour. What will you do now?";
+            Text = "Your new crew cheer as you come aboard. The ship is large and shabbily built -- but perhaps you can make something of it?\n\n<b>Hulk</b> Fighting: 3, Health: 5, Cargo: 3 units\n\nNote: Your new ship is in Mordain harbour. What will you do now?";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Depart in your new ship", {Book::Type::BOOK1, 851}, Choice::Type::SAIL, Location::Type::MORDAIN));
@@ -4025,7 +4025,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            party.Fleet.push_back(Ship::Base("HULK", Ship::Type::HULK, Location::Type::MORDAIN, 3, 5, 3));
+            party.Fleet.push_back(Ship::Base("Hulk", Ship::Type::HULK, Location::Type::MORDAIN, 3, 5, 3));
         }
     };
 
@@ -4999,7 +4999,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You spend a full month with Che Long training up the Bronzeguard. They are a formidable sight in their gleaming bronze armour and powerful steel weapons. Only the best recruits are permitted to stay in training, and soon you have a unit of the Everchild's fiercest supporters dressed in enchanted armour. The unit's morale is exceptional, and they are sure to make a powerful impression on the battlefield.\n\nYou add the following unit to the Saltdad garrison:\n\n[Bronzeguard]: Strength 5, Morale 5\n\nNote: You cannot have more than one unit of [Bronzeguard] in existence at any given time as their equipment is irreplaceable. If the [Bronzeguard] are ever destroyed, you can train new recruits to use their equipment by spending another two <b>gold bullion</b> bars.";
+            Text = "You spend a full month with Che Long training up the Bronzeguard. They are a formidable sight in their gleaming bronze armour and powerful steel weapons. Only the best recruits are permitted to stay in training, and soon you have a unit of the Everchild's fiercest supporters dressed in enchanted armour. The unit's morale is exceptional, and they are sure to make a powerful impression on the battlefield.\n\nYou add the following unit to the Saltdad garrison:\n\n<b>Bronzeguard</b> - Strength 5, Morale 5\n\nNote: You cannot have more than one unit of Bronzeguard in existence at any given time as their equipment is irreplaceable. If the Bronzeguard are ever destroyed, you can train new recruits to use their equipment by spending another two <b>gold bullion</b> bars.";
 
             Bye = "Feeling nigh indestructible, you return to the palace.";
 
@@ -5738,7 +5738,7 @@ namespace Book1
             Text = "You are in a short corridor that twists to the west. A locked door is set in the nearby western wall. Around the bend the corridor terminates in another door with a large red 'x' painted across it. You try the nearby door but find it securely locked.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Unlock the nearby door using a RUSTY KEY", {Book::Type::BOOK1, 896}, {Equipment::RUSTY_KEY}));
+            Choices.push_back(Choice::Base("Unlock the nearby door using a <b>rusty key</b>", {Book::Type::BOOK1, 896}, {Equipment::RUSTY_KEY}));
             Choices.push_back(Choice::Base("Go through the door with red 'x' on it", {Book::Type::BOOK1, 793}));
             Choices.push_back(Choice::Base("Go back to the long corridor", {Book::Type::BOOK1, 634}));
 
@@ -6339,7 +6339,7 @@ namespace Book1
 
             Location = Location::Type::CAVES_OF_URANU;
 
-            Text = "You are almost sad as Yu Yan sprawls to the ground. The woman fought well, and it was a shame such talent should go to waste. You search her, her STONECUTTER SWORD (Fighting +2) is the most interesting possession she has. This weapon inflicts two points of Health damage for each success you score against rocky or stony opponents.\n\nShe also carries 135 silver pieces and, to your delight, a <b>silver idol</b>. You shake your head in amazement. You almost let the object of your quest slip through your fingers!";
+            Text = "You are almost sad as Yu Yan sprawls to the ground. The woman fought well, and it was a shame such talent should go to waste. You search her, her <b>stonecutter sword (Fighting +2)</b> is the most interesting possession she has. This weapon inflicts two points of Health damage for each success you score against rocky or stony opponents.\n\nShe also carries 135 silver pieces and, to your delight, a <b>silver idol</b>. You shake your head in amazement. You almost let the object of your quest slip through your fingers!";
 
             Bye = "Pleased to have completed your quest so promptly, you make your way out of the cave, and back to the temple in Chalice.";
 
@@ -8011,7 +8011,7 @@ namespace Book1
 
             if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::GOLDEN_CANDLESTICK}))
             {
-                Choices.push_back(Choice::Base("Snatch the GOLDEN CANDLESTICK, if you haven't already", {Book::Type::BOOK1, 644}));
+                Choices.push_back(Choice::Base("Snatch the <b>golden candlestick</b>, if you haven't already", {Book::Type::BOOK1, 644}));
             }
 
             Choices.push_back(Choice::Base("Head upstairs to help the climbing team", {Book::Type::BOOK1, 92}));
@@ -8575,7 +8575,7 @@ namespace Book1
 
             Location = Location::Type::WITHERED_STEPPES;
 
-            Text = "The dragonyak bull bows to you as you speak in the ancient tongue of beasts. \"You are an animal friend,\" he intones. \"Our legends say that it has been an eon since any dragonyak was so addressed. You honour us.\" The dragonyak unleashes a bellowing roar, which is repeated by his herd. One dragonyak immerses herself in the water of the oasis and emerges sometime later with a CLOAK, sodden with water, but miraculously unharmed by the passage of years. The bull insists you take the cloak, for he is aware that man-apes such as yourself favour them.\n\nYou take THE <b>rugged cloak (Survival +2)</b> so as not to offend the mighty bull and make your way onwards.\n\nNote: You gained the code A38.";
+            Text = "The dragonyak bull bows to you as you speak in the ancient tongue of beasts. \"You are an animal friend,\" he intones. \"Our legends say that it has been an eon since any dragonyak was so addressed. You honour us.\" The dragonyak unleashes a bellowing roar, which is repeated by his herd. One dragonyak immerses herself in the water of the oasis and emerges sometime later with a cloak, sodden with water, but miraculously unharmed by the passage of years. The bull insists you take the cloak, for he is aware that man-apes such as yourself favour them.\n\nYou take the <b>rugged cloak (Survival +2)</b> so as not to offend the mighty bull and make your way onwards.\n\nNote: You gained the code A38.";
 
             Choices.clear();
 
@@ -9876,7 +9876,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The sister bows as you present her with the letter, and immediately escorts you into the chamber of the God King. The king takes the letter, glancing over it with a casual eye. Long before he could have finished reading it, he stands.\n\n\"Yes, this is the Everchild as I remember her,\" nods the God King. \"I officially place the armies of Chalice at her disposal. My kensai warriors shall attend her, a full five hundred men. An additional six hundred archers shall provide her with support. Once she is queen, we shall defer our city to her policies as they relate to all international affairs.\"\n\nYou are dumbstruck. Could the God King really have changed his mind from a quick glance at a letter? Or has he received council since your last meeting and was going to back the Everchild no matter what? You suppose you shall never know.\n\nYou thank the God King for his support, leaving the chamber in amazement at your success.\n\nYou add the following soldiers to your army:\n\n[Kensai Warriors]: Strength 4, Morale 4\n[Chalice Archers]: Strength 2, Morale 3\n\nGaining the God King's support has been quite an endeavour.\n\nNote: You gained the code A20.";
+            Text = "The sister bows as you present her with the letter, and immediately escorts you into the chamber of the God King. The king takes the letter, glancing over it with a casual eye. Long before he could have finished reading it, he stands.\n\n\"Yes, this is the Everchild as I remember her,\" nods the God King. \"I officially place the armies of Chalice at her disposal. My kensai warriors shall attend her, a full five hundred men. An additional six hundred archers shall provide her with support. Once she is queen, we shall defer our city to her policies as they relate to all international affairs.\"\n\nYou are dumbstruck. Could the God King really have changed his mind from a quick glance at a letter? Or has he received council since your last meeting and was going to back the Everchild no matter what? You suppose you shall never know.\n\nYou thank the God King for his support, leaving the chamber in amazement at your success.\n\nYou add the following soldiers to your army:\n\n<b>Kensai Warriors</b> - Strength 4, Morale 4\n<b>Chalice Archers</b> - Strength 2, Morale 3\n\nGaining the God King's support has been quite an endeavour.\n\nNote: You gained the code A20.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Charisma", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::CHARISMA}, 1, 2, 0));
@@ -11369,7 +11369,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "Fastilon falls to the ground, quite dead, his glowing sword vanishing in his hand. He appears to be wearing nothing of value on his person, despite the power he summoned to fight you. Checking that the MADSHARDs are still in your possession, you return to the surface. Your workers have gone, scared away by the sounds of battle, leaving you alone amongst the ruins.\n\nNote: You gained the code A81.";
+            Text = "Fastilon falls to the ground, quite dead, his glowing sword vanishing in his hand. He appears to be wearing nothing of value on his person, despite the power he summoned to fight you. Checking that the <b>madshards</b> are still in your possession, you return to the surface. Your workers have gone, scared away by the sounds of battle, leaving you alone amongst the ruins.\n\nNote: You gained the code A81.";
 
             Choices.clear();
 
@@ -12222,7 +12222,7 @@ namespace Book1
 
             Location = Location::Type::LUUTANESH;
 
-            Text = "You travel a few miles outside the village before coming to the Everchild's training grounds. Her soldiers are divided into two types. The guards of Luutanesh are easily the best, well-provisioned and equipped with hide armour and long spears. They are disciplined and well trained. The other half of her army are less impressive, peasants and freed slaves armed with crude weapons, and only a few with shields. They are eager, and evidently their morale is quite good. Still, you wouldn't want to use them in battle as anything except reserve troops.\n\n\"As they say in Royce, from small seeds mighty trees grow,\" quotes the Everchild. \"Still, I am eager for more soldiers. I will even accept foreign mercenaries if you have access to them. However, Lhasbreath and Chalice are your best bets in the short term.\"\n\nShe cocks her head thoughtfully. \"I find that I trust you well,\" she says. \"I am happy to launch the attack on Saltdad as soon as you think we have enough soldiers, and the Iron King is suitably diminished in power. We shall only have one chance, so choose our moment well.\"\n\nYou take note of the following soldiers added to your Army:\n\n[Luutanesh Spears]: Strength 3, Morale 3\n[Faithful Irregulars]: Strength 1, Morale 4\n\nThese forces are currently in Luutanesh garrison. You cannot transfer troops from the Luutanesh barracks without permission from the Everchild. Because the Everchild does not yet own a port city, you also cannot transfer troops you might own in other barracks to the Luutanesh barracks.";
+            Text = "You travel a few miles outside the village before coming to the Everchild's training grounds. Her soldiers are divided into two types. The guards of Luutanesh are easily the best, well-provisioned and equipped with hide armour and long spears. They are disciplined and well trained. The other half of her army are less impressive, peasants and freed slaves armed with crude weapons, and only a few with shields. They are eager, and evidently their morale is quite good. Still, you wouldn't want to use them in battle as anything except reserve troops.\n\n\"As they say in Royce, from small seeds mighty trees grow,\" quotes the Everchild. \"Still, I am eager for more soldiers. I will even accept foreign mercenaries if you have access to them. However, Lhasbreath and Chalice are your best bets in the short term.\"\n\nShe cocks her head thoughtfully. \"I find that I trust you well,\" she says. \"I am happy to launch the attack on Saltdad as soon as you think we have enough soldiers, and the Iron King is suitably diminished in power. We shall only have one chance, so choose our moment well.\"\n\nYou take note of the following soldiers added to your Army:\n\n<b>Luutanesh Spears</b> - Strength 3, Morale 3\n<b>Faithful Irregulars</b> - Strength 1, Morale 4\n\nThese forces are currently in Luutanesh garrison. You cannot transfer troops from the Luutanesh barracks without permission from the Everchild. Because the Everchild does not yet own a port city, you also cannot transfer troops you might own in other barracks to the Luutanesh barracks.";
 
             Bye = "At that she kisses you on your cheeks and departs for her chambers at the Cold River Inn.";
 
@@ -14534,7 +14534,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            EnemyFleet = {Ship::Base("PIRATE PINNACE", Ship::Type::PIRATE_PINNACE, Location::Type::NONE, 5, 6, 0)};
+            EnemyFleet = {Ship::Base("Pirate Pinnance", Ship::Type::PIRATE_PINNACE, Location::Type::NONE, 5, 6, 0)};
         }
 
         Engine::Destination Continue(Party::Base &party) { return destination; }
@@ -16160,7 +16160,7 @@ namespace Book1
 
             Location = Location::Type::SHADED_GATE;
 
-            Text = "The WAYFINDER ROD seems to hum and vibrate in your pack. Pulling it out you see that the strength of the vibrations lead in a south-easterly direction. You follow it for some time, every so often the rod bidding you to change direction, and you walk through the strange, cool, sunless desert for many hours.\n\nFinally, you arrive at an obelisk, carved with mystic runes. The WAYFINDER ROD crumbles away in your hands. Examining the obelisk you find a strange spell carved into its surface.\n\nOddly, the Shaded Gate has appeared again, the rich colour of the real world blazing through the aperture\n\nNote: You can learn the following spell:\n\nShadow Door (Adventure)\n\nYou can detect the secret doors installed by the penumbral lords when they ruled the land.\n\nRecharge: 50 silver";
+            Text = "The <b>wayfinder rod</b> seems to hum and vibrate in your pack. Pulling it out you see that the strength of the vibrations lead in a south-easterly direction. You follow it for some time, every so often the rod bidding you to change direction, and you walk through the strange, cool, sunless desert for many hours.\n\nFinally, you arrive at an obelisk, carved with mystic runes. The <b>wayfinder rod</b> crumbles away in your hands. Examining the obelisk you find a strange spell carved into its surface.\n\nOddly, the Shaded Gate has appeared again, the rich colour of the real world blazing through the aperture\n\nNote: You can learn the following spell:\n\nShadow Door (Adventure)\n\nYou can detect the secret doors installed by the penumbral lords when they ruled the land.\n\nRecharge: 50 silver";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Go through the Shaded Gate", {Book::Type::BOOK1, 140}));
@@ -20447,7 +20447,7 @@ namespace Book1
                 PreText += "Akihiro";
             }
 
-            PreText += " looks particularly handsome in his fine KENSAI ROBES, and the loving praise being heaped upon him makes him seem even more attractive.\n\nThe family curse is broken, Akihiro is at last at peace.\n\nNote: Akihiro's Charisma score increases by 1 point.\n\nNote: You gained the code A53.";
+            PreText += " looks particularly handsome in his fine kensai robes, and the loving praise being heaped upon him makes him seem even more attractive.\n\nThe family curse is broken, Akihiro is at last at peace.\n\nNote: Akihiro's Charisma score increases by 1 point.\n\nNote: You gained the code A53.";
 
             Engine::GET_EQUIPMENT(party, Character::Type::AKIHIRO_OF_CHALICE, {Equipment::KENSAI_ROBES3});
 
@@ -23224,7 +23224,7 @@ namespace Book1
         {
             Engine::GET_CODES(party, {Codes::Type::CANNOT_USE_SHIPWEAPONS});
 
-            EnemyFleet = {Ship::Base("WAR CANOES", Ship::Type::WAR_CANOES, Location::Type::VIAAN_ISLAND, 3, 10, 0)};
+            EnemyFleet = {Ship::Base("War Canoes", Ship::Type::WAR_CANOES, Location::Type::VIAAN_ISLAND, 3, 10, 0)};
         }
 
         Engine::Destination Continue(Party::Base &party) { return destination; }
@@ -23953,13 +23953,13 @@ namespace Book1
 
             Location = Location::Type::BANDO_VILLAGE;
 
-            Text = "\"A trade, for bringing me the weave,\" announces the shaman, brightly. \"I brew potions for the tribe. Choose one, and it shall be yours.\" The shaman offers you one of two potions.\n\nYou also ask for more information about the 'man with hatred in his heart' that the shaman spoke to you about before. He looks blankly at you, and then laughs. \"No doubt a piece of prophesy from my visions. Pay it no mind. My dreams are as insubstantial as air. But I do have one piece of advice for you. When the queen comes to take the bishop, bring gold to take the knights.\"\n\n\"Another one of your visions?\" you ask dryly.\n\nThe shaman shrugs. \"Take it or leave it,\" he says philosophically.\n\nNote:  The first is a HEALING POTION (restore 5 Health), which you can drink at any time, including during combat. The second is a POTION OF FLUENCY (3 Charisma successes), which you can drink during a Charisma skill check to automatically gain 3 extra successes. You can only choose one potion.";
+            Text = "\"A trade, for bringing me the weave,\" announces the shaman, brightly. \"I brew potions for the tribe. Choose one, and it shall be yours.\" The shaman offers you one of two potions.\n\nYou also ask for more information about the 'man with hatred in his heart' that the shaman spoke to you about before. He looks blankly at you, and then laughs. \"No doubt a piece of prophesy from my visions. Pay it no mind. My dreams are as insubstantial as air. But I do have one piece of advice for you. When the queen comes to take the bishop, bring gold to take the knights.\"\n\n\"Another one of your visions?\" you ask dryly.\n\nThe shaman shrugs. \"Take it or leave it,\" he says philosophically.\n\nNote:  The first is a <b>healing potion (restore 5 Health)</b>, which you can drink at any time, including during combat. The second is a <b>potion of fluency (+3 Charisma successes)</b>, which you can drink during a Charisma skill check to automatically gain 3 extra successes. You can only choose one potion.";
 
             Bye = "Thanking him for his time, you return to your ship and weigh anchor.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Take the HEALING POTION", {Book::Type::BOOK1, 144}, Choice::Type::GET_EQUIPMENT, {Equipment::HEALING_POTION}));
-            Choices.push_back(Choice::Base("Take the POTION OF FLUENCY (3 Charisma Successes)", {Book::Type::BOOK1, 144}, Choice::Type::GET_EQUIPMENT, {Equipment::POTION_OF_CHARISMA}));
+            Choices.push_back(Choice::Base("Take the <b>healing potion (restore 5 Health)</b>", {Book::Type::BOOK1, 144}, Choice::Type::GET_EQUIPMENT, {Equipment::HEALING_POTION}));
+            Choices.push_back(Choice::Base("Take the <b>potion of fluency (+3 Charisma successes)</b>", {Book::Type::BOOK1, 144}, Choice::Type::GET_EQUIPMENT, {Equipment::POTION_OF_CHARISMA}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -24465,7 +24465,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            EnemyFleet = {Ship::Base("ORK HULK", Ship::Type::ORC_HULK, Location::Type::NONE, 3, 5, 0)};
+            EnemyFleet = {Ship::Base("Ork Hulk", Ship::Type::ORC_HULK, Location::Type::NONE, 3, 5, 0)};
         }
 
         Engine::Destination Continue(Party::Base &party) { return {Book::Type::BOOK1, 796}; }
@@ -24943,7 +24943,7 @@ namespace Book1
             Text = "You are in a long corridor, that runs north-south. A heavy looking door is in the west wall bearing a large lock. In the east wall is a more ordinary looking door. To the north is a door from which pleasant food smells waft. You think you see a crossroads to the south.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Unlock the west door with the IRON KEY", {Book::Type::BOOK1, 306}, {Equipment::IRON_KEY}));
+            Choices.push_back(Choice::Base("Unlock the west door with the <b>iron key</b>", {Book::Type::BOOK1, 306}, {Equipment::IRON_KEY}));
             Choices.push_back(Choice::Base("Go through the east door", {Book::Type::BOOK1, 723}));
             Choices.push_back(Choice::Base("Go through the north door", {Book::Type::BOOK1, 551}));
             Choices.push_back(Choice::Base("Go south to the crossroads", {Book::Type::BOOK1, 566}));
@@ -24963,7 +24963,7 @@ namespace Book1
 
             Location = Location::Type::WITHERED_STEPPES;
 
-            Text = "You broach the subject of the queen, and her requirement for more soldiers to prosecute her war against the patriarch of Cursus. He laughs as you extol her virtues as a ruler. \"You do not have to tell me what she is like, why, she is my own daughter,\" he laughs.\n\n\"You are the Everchild's father?\" you gasp.\n\n\"I am Milagros's father,\" he chides. \"This tale about her being the eternal queen is just so much nonsense. The girl was too easily led by her aunt, who was a fabulous storyteller, but didn't have an ounce of wit about her.\"\n\n\"But surely her magical powers are enough to convince...\" you begin.\n\n\"She can cast a spell or two, to be sure, but no more than she has learnt from the hedge wizards of her own tribe,\" he smiles indulgently. \"The Everchild of legend could raise mountains and turn seas to fire. Have you ever seen Milagros do that?\"\n\nYou are silent, suddenly filled with doubt.\n\n\"Mark my words, many in the valley will meet their deaths before my child is done with her ambitions, and you'll not see a whit of change for the better,\" he warns.\n\nYou rise, now uncertain that you have backed the right monarch, but the nomad chief calls you back. \"She is still family,\" he shrugs. \"Tell her she shall have my finest horsemen, but bid her remember where she comes from. It is not out of the pages of a story book, that is for certain.\"\n\nNote: These soldiers are added to your Saltdad barracks:\n\n[Nomad Horsemen]: Strength 4, Morale 3\n\nYou gained the code A37.";
+            Text = "You broach the subject of the queen, and her requirement for more soldiers to prosecute her war against the patriarch of Cursus. He laughs as you extol her virtues as a ruler. \"You do not have to tell me what she is like, why, she is my own daughter,\" he laughs.\n\n\"You are the Everchild's father?\" you gasp.\n\n\"I am Milagros's father,\" he chides. \"This tale about her being the eternal queen is just so much nonsense. The girl was too easily led by her aunt, who was a fabulous storyteller, but didn't have an ounce of wit about her.\"\n\n\"But surely her magical powers are enough to convince...\" you begin.\n\n\"She can cast a spell or two, to be sure, but no more than she has learnt from the hedge wizards of her own tribe,\" he smiles indulgently. \"The Everchild of legend could raise mountains and turn seas to fire. Have you ever seen Milagros do that?\"\n\nYou are silent, suddenly filled with doubt.\n\n\"Mark my words, many in the valley will meet their deaths before my child is done with her ambitions, and you'll not see a whit of change for the better,\" he warns.\n\nYou rise, now uncertain that you have backed the right monarch, but the nomad chief calls you back. \"She is still family,\" he shrugs. \"Tell her she shall have my finest horsemen, but bid her remember where she comes from. It is not out of the pages of a story book, that is for certain.\"\n\nNote: These soldiers are added to your Saltdad barracks:\n\n<b>Nomad Horsemen</b> - Strength 4, Morale 3\n\nYou gained the code A37.";
 
             Choices.clear();
 
@@ -25703,7 +25703,7 @@ namespace Book1
 
             Location = Location::Type::CLIFFTOP;
 
-            Text = "There is only a single ship for sale here, a battered old Cog, available for 500 silver coins.\n\n\"Why so cheap?\" you ask the harbourmaster.\n\n\"It's barely seaworthy,\" he explains. \"The crew are desperate for a new captain to lead them away from this dump. But it's a toss of the coin as to whether she'll even make it out of harbour.\"\n\n\"You're the worst salesman in the world,\" you respond.\n\nYou can sell a Cog here for 250 silver coins, a Cursite War Galley for 500 silver coins and a Carrack for 1500 silver coins. You cannot sell other kinds of ship here.";
+            Text = "There is only a single ship for sale here, a battered old Cog, available for 500 silver coins.\n\n\"Why so cheap?\" you ask the harbourmaster.\n\n\"It's barely seaworthy,\" he explains. \"The crew are desperate for a new captain to lead them away from this dump. But it's a toss of the coin as to whether she'll even make it out of harbour.\"\n\n\"You're the worst salesman in the world,\" you respond.\n\nYou can sell a <b>Cog</b> here for 250 silver coins, a <b>Cursite War Galley</b> for 500 silver coins and a <b>Carrack</b> for 1500 silver coins. You cannot sell other kinds of ship here.";
 
             Choices.clear();
 
@@ -25714,9 +25714,9 @@ namespace Book1
         {
             // TODO: Carrack Stats
             Ships = {
-                {Ship::Base("COG", Ship::Type::COG, Location::Type::CLIFFTOP, 4, 7, 2), 500, 250},
-                {Ship::Base("CURSITE WAR GALLEY", Ship::Type::CURSITE_WAR_GALLEY, Location::Type::CLIFFTOP, 6, 9, 1), -1, 500},
-                {Ship::Base("CARRACK", Ship::Type::CARRACK, Location::Type::CURSUS, 6, 9, 1), -1, 1500}};
+                {Ship::Base("Cog", Ship::Type::COG, Location::Type::CLIFFTOP, 4, 7, 2), 500, 250},
+                {Ship::Base("Cursite War Galley", Ship::Type::CURSITE_WAR_GALLEY, Location::Type::CLIFFTOP, 6, 9, 1), -1, 500},
+                {Ship::Base("Carrack", Ship::Type::CARRACK, Location::Type::CURSUS, 6, 9, 1), -1, 1500}};
 
             Cargo.clear();
 
@@ -27890,7 +27890,7 @@ namespace Book1
 
             Location = Location::Type::PALACE_OF_UNBRAAKI;
 
-            Text = "Unbraaki's eyes rise in astonishment as you produce the <b>black prism</b>. He eagerly snatches it from your grasp. \"You have done well... very well indeed,\" he purrs, almost seeming to stroke the prism with his thin hands. \"The Everchild shall have my soldiers. She may dispose of them as she wishes.\"\n\nUnbraaki's soldiers are dependable, professional soldiers, who obey orders well.\n\nNote: The following soldiers are added to the Saltdad barracks:\n\n[Spears of Unbraaki]: Strength 3, Morale 4\n\nYou gained the code A89.";
+            Text = "Unbraaki's eyes rise in astonishment as you produce the <b>black prism</b>. He eagerly snatches it from your grasp. \"You have done well... very well indeed,\" he purrs, almost seeming to stroke the prism with his thin hands. \"The Everchild shall have my soldiers. She may dispose of them as she wishes.\"\n\nUnbraaki's soldiers are dependable, professional soldiers, who obey orders well.\n\nNote: The following soldiers are added to the Saltdad barracks:\n\n<b>Spears of Unbraaki</b> - Strength 3, Morale 4\n\nYou gained the code A89.";
 
             Bye = "Thanking the dread sorcerer for his time, you depart.";
 
@@ -28482,7 +28482,7 @@ namespace Book1
                 PreText += std::string(party.Members[has_silver_idol].Name) + " loses 1 point of Survival skill permanently.\n\n";
             }
 
-            PreText += "You rendezvous in the storm drains of Saltdad with your ill-gotten gains. You lay out your valuables, which Brekken will estimate into a cash value:\n\nBronze Scorpion: 25\n\nCalligraphy Ink: 100\n\nGold Portrait: 125\n\nGolden Candlestick: 75\n\nJewellery Box: 250\n\nPrecious Tomes: 150\n\nSilver Idol: 50";
+            PreText += "You rendezvous in the storm drains of Saltdad with your ill-gotten gains. You lay out your valuables, which Brekken will estimate into a cash value:\n\n<b>Bronze Scorpion:</b> 25\n<b>Calligraphy Ink:</b> 100\n<b>Gold Portrait:</b> 125\n<b>Golden Candlestick:</b> 75\n<b>Jewellery Box:</b> 250\n<b>Precious Tomes:</b> 150\n<b>Silver Idol:</b> 50";
 
             Shop = {
                 {Equipment::BRONZE_SCORPION, 25, -1, 1, {}},
@@ -29163,7 +29163,7 @@ namespace Book1
 
                 if (Engine::HAS_UNIT(party, Army::Type::LHASBREATH_BERSERKERS))
                 {
-                    PreText += "\n\nYou replace the Berserkers with some:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
+                    PreText += "\n\nYou replace the Berserkers with some:\n\n<b>Lhasbreath Barbarians</b> - Strength 3, Morale 2";
 
                     auto berserkers = Engine::FIND_UNIT(party.Army, Army::Type::LHASBREATH_BERSERKERS);
 
@@ -29173,14 +29173,14 @@ namespace Book1
                     }
                     else
                     {
-                        PreText += "\n\nYou replace the Berserkers with some:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
+                        PreText += "\n\nYou replace the Berserkers with some:\n\n<b>Lhasbreath Barbarians</b> - Strength 3, Morale 2";
 
                         party.Army.push_back(Army::Base("Lhasbreath Barbarians", Army::Type::LHASBREATH_BARBARIANS, location, 3, 2));
                     }
                 }
                 else
                 {
-                    PreText += "\n\nYou replace the Berserkers with some:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
+                    PreText += "\n\nYou replace the Berserkers with some:\n\n<b>Lhasbreath Barbarians</b> - Strength 3, Morale 2";
 
                     party.Army.push_back(Army::Base("Lhasbreath Barbarians", Army::Type::LHASBREATH_BARBARIANS, location, 3, 2));
                 }
@@ -29191,7 +29191,7 @@ namespace Book1
             }
             else
             {
-                PreText += "\n\nYou add following unit to your " + std::string(Location::Description[location]) + " barracks:\n\n[Lhasbreath Barbarians]: Strength 3, Morale 2";
+                PreText += "\n\nYou add following unit to your " + std::string(Location::Description[location]) + " barracks:\n\n<b>Lhasbreath Barbarians</b> - Strength 3, Morale 2";
 
                 party.Army.push_back(Army::Base("Lhasbreath Barbarians", Army::Type::LHASBREATH_BARBARIANS, location, 3, 2));
             }
@@ -30231,7 +30231,7 @@ namespace Book1
 
             Location = Location::Type::DESERT;
 
-            Text = "Your blades clash as fast as fury, a blur of steel on steel. Your father cannot keep up with the speed of your blows. Your balanced mind is like a fortress, thwarting his attacks whilst strengthening your own. The end comes suddenly, your blade cutting through his ghostly torso, to split his form in two. The revenant unleashes a howl as its form begins to split into pieces.\n\n\"This is not the end!\" vows the revenant. \"It was the dark one's will that we serve him! One day, you too shall bow to him in death.\"\n\n\"Begone, old man!\" you bellow. \"Get you to your rest!\"\n\nThe revenant gives a sigh, his blade thudding into the sand, his spirit dissolving.\n\nYou are surprised to see that the sword remains when the ghost departs. You take your father's MASTERWORK LONGSWORD (Fighting +3).\n\nNote: Akihiro's Fighting and maximum, unwounded Health are increased by 1 point. You gained the code A52.";
+            Text = "Your blades clash as fast as fury, a blur of steel on steel. Your father cannot keep up with the speed of your blows. Your balanced mind is like a fortress, thwarting his attacks whilst strengthening your own. The end comes suddenly, your blade cutting through his ghostly torso, to split his form in two. The revenant unleashes a howl as its form begins to split into pieces.\n\n\"This is not the end!\" vows the revenant. \"It was the dark one's will that we serve him! One day, you too shall bow to him in death.\"\n\n\"Begone, old man!\" you bellow. \"Get you to your rest!\"\n\nThe revenant gives a sigh, his blade thudding into the sand, his spirit dissolving.\n\nYou are surprised to see that the sword remains when the ghost departs. You take your father's <b>masterwork longsword (Fighting +3)</b>.\n\nNote: Akihiro's Fighting and maximum, unwounded Health are increased by 1 point. You gained the code A52.";
 
             Bye = "The sun rises a rich red on the eastern horizon, and your companions emerge from the tent greet you, now that the fear cast by the revenant has passed. You inhale deeply. It is a new day for you, from now until the end of your days.";
 
@@ -30657,15 +30657,15 @@ namespace Book1
 
             if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
             {
-                PreText += "\n\nYou replace your old ship with this one:\n\n[HULK] Fighting: 3, Health: 5, Cargo: 3 units";
+                PreText += "\n\nYou replace your old ship with this one:\n\n<b>Hulk</b> - Fighting: 3, Health: 5, Cargo: 3 units";
 
-                party.Fleet[party.CurrentShip] = Ship::Base("HULK", Ship::Type::HULK, Location::Type::MORDAIN, 3, 5, 3);
+                party.Fleet[party.CurrentShip] = Ship::Base("Hulk", Ship::Type::HULK, Location::Type::MORDAIN, 3, 5, 3);
             }
             else
             {
-                PreText += "\n\nYou have taken command of this ship:\n\n[HULK] Fighting: 3, Health: 5, Cargo: 3 units";
+                PreText += "\n\nYou have taken command of this ship:\n\n<b>Hulk</b> - Fighting: 3, Health: 5, Cargo: 3 units";
 
-                party.Fleet.push_back(Ship::Base("HULK", Ship::Type::HULK, Location::Type::MORDAIN, 3, 5, 3));
+                party.Fleet.push_back(Ship::Base("Hulk", Ship::Type::HULK, Location::Type::MORDAIN, 3, 5, 3));
 
                 party.CurrentShip = party.Fleet.size() - 1;
             }
@@ -30770,7 +30770,7 @@ namespace Book1
                     Equipment::INCENSE,
                     Equipment::DRAGONYAK_HORN};
 
-                PreText = "After some time searching through the pile of trash, you found the following items: 200 silver coins, IRON BATTLEAXE (Fighting +2), <b>bone armour (Armour +2)</b>, <b>soft boots (Stealth +1)</b>, <b>reference book (Lore +1)</b>, 150 silver coins, Vial of <b>quicksilver</b>, <b>grey talisman</b>, <b>incense</b>, <b>dragonyak horn</b>. You can only take " + std::to_string(Limit) + ".";
+                PreText = "After some time searching through the pile of trash, you found the following items: 200 silver coins, <b>iron battleaxe (Fighting +2)</b>, <b>bone armour (Armour +2)</b>, <b>soft boots (Stealth +1)</b>, <b>reference book (Lore +1)</b>, 150 silver coins, Vial of <b>quicksilver</b>, <b>grey talisman</b>, <b>incense</b>, <b>dragonyak horn</b>. You can only take " + std::to_string(Limit) + ".";
             }
             else
             {
@@ -30918,7 +30918,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You spend the next several weeks helping to equip and train just over five hundred soldiers for the Everchild's army. They are well equipped with hide armour, a shield and good iron shortswords. The following unit was added to the Saltdad garrison:\n\n[Saltdad Infantry]: Strength 2, Morale 3\n\nNote: You can hire as many units of Saltdad Infantry as you wish, though each unit costs one bar of <b>gold bullion</b>.";
+            Text = "You spend the next several weeks helping to equip and train just over five hundred soldiers for the Everchild's army. They are well equipped with hide armour, a shield and good iron shortswords. The following unit was added to the Saltdad garrison:\n\n<b>Saltdad Infantry</b> - Strength 2, Morale 3\n\nNote: You can hire as many units of Saltdad Infantry as you wish, though each unit costs one bar of <b>gold bullion</b>.";
 
             Bye = "Pleased with your new troops, you return to the palace.";
 
