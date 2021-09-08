@@ -185,6 +185,27 @@ namespace Glyphs
             }
         }
 
+        // estimate last word
+        if (word)
+        {
+            auto subw = 0;
+
+            auto sub = copy.substr(start, copy.length() - start);
+
+            Glyphs::Sanitize(sub);
+
+            TTF_SetFontStyle(font, current_style);
+
+            TTF_SizeText(font, sub.c_str(), &subw, NULL);
+
+            word = false;
+
+            if (x + subw > width)
+            {
+                lines += 1;
+            }
+        }
+
         if (h != NULL)
         {
             *h = TTF_FontLineSkip(font) * lines;
@@ -343,8 +364,6 @@ namespace Glyphs
 
                         word = false;
 
-                        TTF_SetFontStyle(font, current_style);
-
                         if (x + subw > width)
                         {
                             x = subw;
@@ -441,6 +460,8 @@ namespace Glyphs
 
             if (word)
             {
+                auto subw = 0;
+
                 // render last word
                 auto sub = copy.substr(start, copy.length() - start);
 
@@ -448,7 +469,26 @@ namespace Glyphs
 
                 TTF_SetFontStyle(font, current_style);
 
-                Glyphs::RenderText(sub.c_str(), font, textColor, surface, x, y);
+                TTF_SizeText(font, sub.c_str(), &subw, NULL);
+
+                word = false;
+
+                if (x + subw > width)
+                {
+                    x = subw;
+
+                    x += space;
+
+                    lines += 1;
+
+                    y = lines * skip;
+
+                    Glyphs::RenderText(sub.c_str(), font, textColor, surface, 0, y);
+                }
+                else
+                {
+                    Glyphs::RenderText(sub.c_str(), font, textColor, surface, x, y);
+                }
             }
         }
 
