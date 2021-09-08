@@ -68,6 +68,8 @@ namespace Glyphs
 
         auto space = 0;
 
+        TTF_SetFontStyle(font, current_style);
+
         TTF_GlyphMetrics(font, ' ', NULL, NULL, NULL, NULL, &space);
 
         for (auto i = 0; i < copy.length(); i++)
@@ -90,6 +92,8 @@ namespace Glyphs
             {
                 if (word)
                 {
+                    word = false;
+
                     auto subw = 0;
 
                     auto sub = copy.substr(start, i - start);
@@ -99,8 +103,6 @@ namespace Glyphs
                     TTF_SetFontStyle(font, current_style);
 
                     TTF_SizeText(font, sub.c_str(), &subw, NULL);
-
-                    word = false;
 
                     if (x + subw > width)
                     {
@@ -117,9 +119,16 @@ namespace Glyphs
                 if (c == '\t' || c == ' ')
                 {
                     x += space;
+
+                    if (x > width)
+                    {
+                        x = 0;
+
+                        lines += 1;
+                    }
                 }
 
-                if (x > width || c == '\n' || c == '\r')
+                if (c == '\n' || c == '\r')
                 {
                     x = 0;
 
@@ -198,8 +207,6 @@ namespace Glyphs
 
             TTF_SizeText(font, sub.c_str(), &subw, NULL);
 
-            word = false;
-
             if (x + subw > width)
             {
                 lines += 1;
@@ -266,6 +273,8 @@ namespace Glyphs
 
             auto skip = TTF_FontLineSkip(font);
 
+            TTF_SetFontStyle(font, current_style);
+
             TTF_GlyphMetrics(font, ' ', NULL, NULL, NULL, NULL, &space);
 
             auto closeBold = false;
@@ -292,6 +301,8 @@ namespace Glyphs
                 {
                     if (word)
                     {
+                        word = false;
+
                         auto subw = 0;
 
                         auto sub = copy.substr(start, i - start);
@@ -301,8 +312,6 @@ namespace Glyphs
                         TTF_SetFontStyle(font, current_style);
 
                         TTF_SizeText(font, sub.c_str(), &subw, NULL);
-
-                        word = false;
 
                         if (x + subw > width)
                         {
@@ -323,9 +332,16 @@ namespace Glyphs
                     if (c == '\t' || c == ' ')
                     {
                         x += space;
+
+                        if (x > width)
+                        {
+                            x = 0;
+
+                            lines += 1;
+                        }
                     }
 
-                    if (x > width || c == '\n' || c == '\r')
+                    if (c == '\n' || c == '\r')
                     {
                         x = 0;
 
@@ -406,14 +422,8 @@ namespace Glyphs
 
                 TTF_SizeText(font, sub.c_str(), &subw, NULL);
 
-                word = false;
-
                 if (x + subw > width)
                 {
-                    x = subw;
-
-                    x += space;
-
                     lines += 1;
 
                     y = lines * skip;
