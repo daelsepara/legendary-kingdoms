@@ -27347,9 +27347,9 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                 topic = 0;
             }
 
-            if (topic >= (Topics::ALL.size() - 1))
+            if (topic > (Topics::ALL.size() - 1))
             {
-                topic = Topics::ALL.size();
+                topic = Topics::ALL.size() - 1;
             }
 
             if (topic_offset < 0)
