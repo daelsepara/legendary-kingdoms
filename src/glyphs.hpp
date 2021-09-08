@@ -92,9 +92,9 @@ namespace Glyphs
 
                     if (x + subw > width)
                     {
-                        lines += 1;
-
                         x = subw;
+
+                        lines += 1;
                     }
                     else
                     {
@@ -345,6 +345,8 @@ namespace Glyphs
                             x = subw;
 
                             lines += 1;
+
+                            y = lines * skip;
 
                             Glyphs::RenderText(sub.c_str(), font, textColor, surface, 0, y);
                         }

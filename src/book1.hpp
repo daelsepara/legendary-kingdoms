@@ -4444,7 +4444,7 @@ namespace Book1
             Bye = "There is nothing else of value in the room, so you exit by the only door.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Take the SCROLL OF RAGE", {Book::Type::BOOK1, 494}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::SCROLL_OF_RAGE}, {Codes::A(59)}, {Codes::Type::FIRST_TIME_SCROLL_OF_RAGE}));
+            Choices.push_back(Choice::Base("Take the <b>scroll of rage</b>", {Book::Type::BOOK1, 494}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::SCROLL_OF_RAGE}, {Codes::A(59)}, {Codes::Type::FIRST_TIME_SCROLL_OF_RAGE}));
             Choices.push_back(Choice::Base("Leave it alone", {Book::Type::BOOK1, 494}));
 
             Controls = Story::Controls::STANDARD;
