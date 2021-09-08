@@ -514,7 +514,7 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
 
     auto image_surface = createImage(image);
 
-    auto text_surface = Glyphs::createText(text, ttf, font_size, textColor, wrap);
+    auto text_surface = Glyphs::FormattedText(text, ttf, font_size, textColor, wrap);
 
     if (image_surface && text_surface)
     {
@@ -651,7 +651,7 @@ SDL_Surface *formattedHeaderButton(SDL_Window *window, const char *font, int fon
     auto button = SDL_CreateRGBSurface(0, w, h, 32, bg == 0 ? 0x000000FF : 0, bg == 0 ? 0x0000FF00 : 0, bg == 0 ? 0x00FF0000 : 0, bg == 0 ? 0xFF000000 : 0);
 #endif
 
-    auto text_surface = Glyphs::createText(text, font, font_size, color, w);
+    auto text_surface = Glyphs::FormattedText(text, font, font_size, color, w);
 
     if (button && text_surface)
     {

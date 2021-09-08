@@ -26168,7 +26168,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             }
             else if (story->Text)
             {
-                text = Glyphs::createText(story->Text, FONT_GARAMOND, font_size, clrDB, listwidth);
+                text = Glyphs::FormattedText(story->Text, FONT_GARAMOND, font_size, clrDB, listwidth);
             }
 
             auto compact = (text && text->h <= text_bounds - 2 * text_space) || !text;
@@ -27391,7 +27391,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
             }
             else if (Topics::ALL[topic].Text.length() > 0)
             {
-                text = Glyphs::createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth);
+                text = Glyphs::FormattedText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth);
             }
 
             auto compact = (text && text->h <= (text_bounds - 2 * text_space - infoh)) || !text;
@@ -27629,7 +27629,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             }
                             else if (Topics::ALL[topic].Text.length() > 0)
                             {
-                                text = Glyphs::createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth);
+                                text = Glyphs::FormattedText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth);
                             }
 
                             if (splash)
@@ -27699,7 +27699,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             }
                             else if (Topics::ALL[topic].Text.length() > 0)
                             {
-                                text = Glyphs::createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth);
+                                text = Glyphs::FormattedText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth);
                             }
 
                             if (splash)
@@ -27771,7 +27771,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
                             }
                             else if (Topics::ALL[topic].Text.length() > 0)
                             {
-                                text = Glyphs::createText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth);
+                                text = Glyphs::FormattedText(Topics::ALL[topic].Text.c_str(), FONT_GARAMOND, font_size, clrDB, listwidth);
                             }
 
                             if (splash)

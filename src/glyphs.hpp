@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <regex>
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -11,23 +12,34 @@
 
 namespace Glyphs
 {
-    // https://stackoverflow.com/questions/49333136/removing-html-tags-from-a-string-of-text
-    // Probably a slow implementation
     void Sanitize(std::string &str)
     {
-        for (auto a = 0; a < str.length(); a++)
-        {
-            if (str[a] == '<')
-            {
-                for (int b = a; b < str.length(); b++)
-                {
-                    if (str[b] == '>')
-                    {
-                        str.erase(a, (b - a + 1));
+        std::regex tags("<[^<]*>");
 
-                        break;
-                    }
-                }
+        str = std::regex_replace(str, tags, "");
+    }
+
+    // TODO: Use faster implementation, i.e. Render from Glyph Atlas with Kernering
+    void RenderText(const char *text, TTF_Font *font, SDL_Color textColor, SDL_Surface *surface, int x, int y)
+    {
+        if (font)
+        {
+            SDL_Rect dst;
+
+            dst.w = surface->w;
+            dst.h = surface->h;
+            dst.x = x;
+            dst.y = y;
+
+            auto text_surface = TTF_RenderText_Blended(font, text, textColor);
+
+            if (text_surface)
+            {
+                SDL_BlitSurface(text_surface, NULL, surface, &dst);
+
+                SDL_FreeSurface(text_surface);
+
+                text_surface = NULL;
             }
         }
     }
@@ -76,10 +88,10 @@ namespace Glyphs
 
             if (c == '\r' || c == '\n' || c == '\t' || c == ' ')
             {
-                auto subw = 0;
-
                 if (word)
                 {
+                    auto subw = 0;
+
                     auto sub = copy.substr(start, i - start);
 
                     Glyphs::Sanitize(sub);
@@ -100,55 +112,32 @@ namespace Glyphs
                     {
                         x += subw;
                     }
-
-                    if (c == '\t' || c == ' ')
-                    {
-                        x += space;
-
-                        if (x > width)
-                        {
-                            x = 0;
-
-                            lines += 1;                    
-                        }
-                    }
-                    else if (c == '\n' || c == '\r')
-                    {
-                        x = 0;
-
-                        lines += 1;
-                    }
-
-                    if (closeBold)
-                    {
-                        isBold = false;
-
-                        closeBold = false;
-                    }
-
-                    if (closeItalic)
-                    {
-                        isItalic = false;
-
-                        closeItalic = false;
-                    }
                 }
-                else if (c == ' ' || c == '\t')
+
+                if (c == '\t' || c == ' ')
                 {
                     x += space;
-
-                    if (x > width)
-                    {
-                        x = 0;
-
-                        lines += 1;
-                    }
                 }
-                else if (c == '\n' || c == '\r')
+
+                if (x > width || c == '\n' || c == '\r')
                 {
                     x = 0;
 
                     lines += 1;
+                }
+
+                if (closeBold)
+                {
+                    isBold = false;
+
+                    closeBold = false;
+                }
+
+                if (closeItalic)
+                {
+                    isItalic = false;
+
+                    closeItalic = false;
                 }
             }
             else if (c == '<')
@@ -223,32 +212,7 @@ namespace Glyphs
         }
     }
 
-    // TODO: Use faster implementation, i.e. Render from Glyph Atlas with Kernering
-    void RenderText(const char *text, TTF_Font *font, SDL_Color textColor, SDL_Surface *surface, int x, int y)
-    {
-        if (font)
-        {
-            SDL_Rect dst;
-
-            dst.w = surface->w;
-            dst.h = surface->h;
-            dst.x = x;
-            dst.y = y;
-
-            auto text_surface = TTF_RenderText_Blended(font, text, textColor);
-
-            if (text_surface)
-            {
-                SDL_BlitSurface(text_surface, NULL, surface, &dst);
-
-                SDL_FreeSurface(text_surface);
-
-                text_surface = NULL;
-            }
-        }
-    }
-
-    SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Color textColor, int wrap)
+    SDL_Surface *FormattedText(const char *text, const char *ttf, int font_size, SDL_Color textColor, int wrap)
     {
         TTF_Init();
 
@@ -346,9 +310,7 @@ namespace Glyphs
 
                             lines += 1;
 
-                            y = lines * skip;
-
-                            Glyphs::RenderText(sub.c_str(), font, textColor, surface, 0, y);
+                            Glyphs::RenderText(sub.c_str(), font, textColor, surface, 0, lines * skip);
                         }
                         else
                         {
@@ -356,53 +318,14 @@ namespace Glyphs
 
                             x += subw;
                         }
-
-                        if (c == '\t' || c == ' ')
-                        {
-                            x += space;
-
-                            if (x > width)
-                            {
-                                x = 0;
-
-                                lines += 1;                    
-                            }
-                        }
-                        else if (c == '\n' || c == '\r')
-                        {
-                            x = 0;
-
-                            lines += 1;
-                        }
-
-                        y = lines * skip;
-
-                        if (closeBold)
-                        {
-                            isBold = false;
-
-                            closeBold = false;
-                        }
-
-                        if (closeItalic)
-                        {
-                            isItalic = false;
-
-                            closeItalic = false;
-                        }
                     }
-                    else if (c == '\t' || c == ' ')
+
+                    if (c == '\t' || c == ' ')
                     {
                         x += space;
-
-                        if (x > width)
-                        {
-                            x = 0;
-
-                            lines += 1;     
-                        }
                     }
-                    else if (c == '\n' || c == '\r')
+
+                    if (x > width || c == '\n' || c == '\r')
                     {
                         x = 0;
 
@@ -410,6 +333,20 @@ namespace Glyphs
                     }
 
                     y = lines * skip;
+
+                    if (closeBold)
+                    {
+                        isBold = false;
+
+                        closeBold = false;
+                    }
+
+                    if (closeItalic)
+                    {
+                        isItalic = false;
+
+                        closeItalic = false;
+                    }
                 }
                 else if (c == '<')
                 {
