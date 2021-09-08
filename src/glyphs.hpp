@@ -74,18 +74,7 @@ namespace Glyphs
 
             auto c = copy.at(i);
 
-            if (c == '\r' || c == '\n')
-            {
-                if (word)
-                {
-                    word = false;
-                }
-
-                lines += 1;
-
-                x = 0;
-            }
-            else if (c == '\t' || c == ' ')
+            if (c == '\r' || c == '\n' || c == '\t' || c == ' ')
             {
                 auto subw = 0;
 
@@ -105,13 +94,29 @@ namespace Glyphs
                     {
                         lines += 1;
 
-                        x = subw + space;
+                        x = subw;
                     }
                     else
                     {
                         x += subw;
+                    }
 
+                    if (c == '\t' || c == ' ')
+                    {
                         x += space;
+
+                        if (x > width)
+                        {
+                            x = 0;
+
+                            lines += 1;                    
+                        }
+                    }
+                    else if (c == '\n' || c == '\r')
+                    {
+                        x = 0;
+
+                        lines += 1;
                     }
 
                     if (closeBold)
@@ -128,7 +133,7 @@ namespace Glyphs
                         closeItalic = false;
                     }
                 }
-                else
+                else if (c == ' ' || c == '\t')
                 {
                     x += space;
 
@@ -138,6 +143,12 @@ namespace Glyphs
 
                         lines += 1;
                     }
+                }
+                else if (c == '\n' || c == '\r')
+                {
+                    x = 0;
+
+                    lines += 1;
                 }
             }
             else if (c == '<')
@@ -313,47 +324,12 @@ namespace Glyphs
 
                 auto c = copy.at(i);
 
-                if (c == '\r' || c == '\n')
+                if (c == '\r' || c == '\n' || c == '\t' || c == ' ')
                 {
                     if (word)
                     {
-                        auto sub = copy.substr(start, i - start);
+                        auto subw = 0;
 
-                        Glyphs::Sanitize(sub);
-
-                        TTF_SetFontStyle(font, current_style);
-
-                        Glyphs::RenderText(sub.c_str(), font, textColor, surface, x, y);
-
-                        word = false;
-
-                        if (closeBold)
-                        {
-                            isBold = false;
-
-                            closeBold = false;
-                        }
-
-                        if (closeItalic)
-                        {
-                            isItalic = false;
-
-                            closeItalic = false;
-                        }
-                    }
-
-                    lines += 1;
-
-                    y = lines * skip;
-
-                    x = 0;
-                }
-                else if (c == '\t' || c == ' ')
-                {
-                    auto subw = 0;
-
-                    if (word)
-                    {
                         auto sub = copy.substr(start, i - start);
 
                         Glyphs::Sanitize(sub);
@@ -368,11 +344,7 @@ namespace Glyphs
                         {
                             x = subw;
 
-                            x += space;
-
                             lines += 1;
-
-                            y = lines * skip;
 
                             Glyphs::RenderText(sub.c_str(), font, textColor, surface, 0, y);
                         }
@@ -381,9 +353,27 @@ namespace Glyphs
                             Glyphs::RenderText(sub.c_str(), font, textColor, surface, x, y);
 
                             x += subw;
-
-                            x += space;
                         }
+
+                        if (c == '\t' || c == ' ')
+                        {
+                            x += space;
+
+                            if (x > width)
+                            {
+                                x = 0;
+
+                                lines += 1;                    
+                            }
+                        }
+                        else if (c == '\n' || c == '\r')
+                        {
+                            x = 0;
+
+                            lines += 1;
+                        }
+
+                        y = lines * skip;
 
                         if (closeBold)
                         {
@@ -399,7 +389,7 @@ namespace Glyphs
                             closeItalic = false;
                         }
                     }
-                    else
+                    else if (c == '\t' || c == ' ')
                     {
                         x += space;
 
@@ -407,11 +397,17 @@ namespace Glyphs
                         {
                             x = 0;
 
-                            lines += 1;
-
-                            y = lines * skip;
+                            lines += 1;     
                         }
                     }
+                    else if (c == '\n' || c == '\r')
+                    {
+                        x = 0;
+
+                        lines += 1;
+                    }
+
+                    y = lines * skip;
                 }
                 else if (c == '<')
                 {
