@@ -54,6 +54,7 @@ SDL_Surface *createImage(const char *image);
 SDL_Surface *createImage(const char *image, int w, Uint32 bg);
 SDL_Surface *createText(const char *text, const char *ttf, int font_size, SDL_Color textColor, int wrap, int style);
 SDL_Surface *createTextAndImage(const char *text, const char *image, const char *ttf, int font_size, SDL_Color textColor, Uint32 bg, int wrap, int style);
+SDL_Surface *formattedHeaderButton(SDL_Window *window, const char *font, int font_size, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x);
 
 // sdl helper functions
 void clipValue(int &val, int min, int max);
@@ -597,6 +598,52 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
 }
 
 SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_size, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x)
+{
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    auto button = SDL_CreateRGBSurface(0, w, h, 32, bg == 0 ? 0xFF000000 : 0, bg == 0 ? 0x00FF0000 : 0, bg == 0 ? 0x0000FF00 : 0, bg == 0 ? 0x000000FF : 0);
+#else
+    auto button = SDL_CreateRGBSurface(0, w, h, 32, bg == 0 ? 0x000000FF : 0, bg == 0 ? 0x0000FF00 : 0, bg == 0 ? 0x00FF0000 : 0, bg == 0 ? 0xFF000000 : 0);
+#endif
+
+    auto text_surface = createText(text, font, font_size, color, w, TTF_STYLE_NORMAL);
+
+    if (button && text_surface)
+    {
+        SDL_Rect dst;
+
+        dst.w = button->w;
+        dst.h = button->h;
+        dst.x = 0;
+        dst.y = 0;
+
+        dst.x = x < 0 ? (button->w - text_surface->w) / 2 : x;
+        dst.y = (button->h - text_surface->h) / 2;
+
+        if (bg != 0)
+        {
+            SDL_FillRect(button, NULL, bg);
+        }
+        else
+        {
+            SDL_FillRect(button, NULL, SDL_MapRGBA(button->format, 0, 0, 0, 0));
+
+            SDL_SetSurfaceAlphaMod(text_surface, SDL_ALPHA_OPAQUE);
+        }
+
+        SDL_BlitSurface(text_surface, NULL, button, &dst);
+    }
+
+    if (text_surface)
+    {
+        SDL_FreeSurface(text_surface);
+
+        text_surface = NULL;
+    }
+
+    return button;
+}
+
+SDL_Surface *formattedHeaderButton(SDL_Window *window, const char *font, int font_size, const char *text, SDL_Color color, Uint32 bg, int w, int h, int x)
 {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     auto button = SDL_CreateRGBSurface(0, w, h, 32, bg == 0 ? 0xFF000000 : 0, bg == 0 ? 0x00FF0000 : 0, bg == 0 ? 0x0000FF00 : 0, bg == 0 ? 0x000000FF : 0);
@@ -1873,7 +1920,7 @@ std::vector<Button> createChoices(SDL_Window *window, SDL_Renderer *renderer, st
 
             auto y = (i > 0 ? controls[i - 1].Y + controls[i - 1].H + 3 * text_space : offsety + 2 * text_space);
 
-            controls.push_back(Button(i, createHeaderButton(window, FONT_GARAMOND, 24, choices[index].Text, clrBK, 0, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
+            controls.push_back(Button(i, formattedHeaderButton(window, FONT_GARAMOND, 24, choices[index].Text, clrBK, 0, list_buttonw, list_buttonh, text_space), i, i, (i > 0 ? i - 1 : i), i + 1, offsetx + 2 * text_space, y, Control::Type::ACTION));
 
             controls[i].W = controls[i].Surface->w;
 
