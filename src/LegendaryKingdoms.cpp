@@ -26168,7 +26168,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             }
             else if (story->Text)
             {
-                text = createText(story->Text, FONT_GARAMOND, font_size, clrDB, listwidth, TTF_STYLE_NORMAL);
+                text = Glyphs::createText(story->Text, FONT_GARAMOND, font_size, clrDB, listwidth);
             }
 
             auto compact = (text && text->h <= text_bounds - 2 * text_space) || !text;

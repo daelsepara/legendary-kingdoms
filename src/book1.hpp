@@ -119,7 +119,7 @@ namespace Book1
 
             Location = Location::Type::UNDERGROUND_TUNNELS;
 
-            Text = "The treasure chest contains 200 silver coins and a BLUESTONE. Take what you wish.\n\nNote: You gained the code A45.";
+            Text = "The treasure chest contains 200 silver coins and a <b>bluestone</b>. Take what you wish.\n\nNote: You gained the code A45.";
 
             Bye = "Not wishing to tarry longer, you depart the chamber and return to the crossroads.";
 
@@ -212,7 +212,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            PreText = "You have already attempted to find a SILVER IDOL in the Caves of Uranu.";
+            PreText = "You have already attempted to find a <b>silver idol</b> in the Caves of Uranu.";
 
             if (Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::SILVER_IDOL}))
             {
@@ -368,7 +368,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "With a high kick you send the final monk sprawling. The other monks in the temple lower their eyes and return to their duties, unwilling to block your progress further. You retrieve your weapon and march smartly into the temple.\n\nHonnu is waiting for you, cross-legged on the floor. You join him in meditation for an hour or so, your companions venturing elsewhere in the city now they can see you are safe. \"It is rare for a supplicant to be granted the trials of perfection twice, but you are an unusual man, Akihiro. You must know that your father never returned from the trials. But I sense in you a steel he never had.\"\n\n\"Thank you, Honnu,\" you say, bowing your head.\n\n\"There would be little point in having you study at the temple, you are already skilled in your craft,\" shrugs Honnu. \"Instead I shall send you straight onto your tasks. Two must be completed before you are deemed worthy. It is traditional to send an applicant to retrieve some trifling artefact as proof of dedication; a tedious matter, since the only item of true worth is enlightenment. Therefore, I bid you find me a SILVER IDOL. Find yourself, Akihiro, whilst you are at it.\"\n\n\"Where can I find a SILVER IDOL?\" you ask unsurely.\n\n\"I'm sure more than one exists, but a man of open mind and willing to embrace his destiny might find one in the caves of Uranu,\" suggests Honnu. \"That place has tested, and slain, many a kensai aspirant. Go wisely, Akihiro. I shall see you soon.\"\n\nNote: You gained the code A50.";
+            Text = "With a high kick you send the final monk sprawling. The other monks in the temple lower their eyes and return to their duties, unwilling to block your progress further. You retrieve your weapon and march smartly into the temple.\n\nHonnu is waiting for you, cross-legged on the floor. You join him in meditation for an hour or so, your companions venturing elsewhere in the city now they can see you are safe. \"It is rare for a supplicant to be granted the trials of perfection twice, but you are an unusual man, Akihiro. You must know that your father never returned from the trials. But I sense in you a steel he never had.\"\n\n\"Thank you, Honnu,\" you say, bowing your head.\n\n\"There would be little point in having you study at the temple, you are already skilled in your craft,\" shrugs Honnu. \"Instead I shall send you straight onto your tasks. Two must be completed before you are deemed worthy. It is traditional to send an applicant to retrieve some trifling artefact as proof of dedication; a tedious matter, since the only item of true worth is enlightenment. Therefore, I bid you find me a <b>silver idol</b>. Find yourself, Akihiro, whilst you are at it.\"\n\n\"Where can I find a <b>silver idol</b>?\" you ask unsurely.\n\n\"I'm sure more than one exists, but a man of open mind and willing to embrace his destiny might find one in the caves of Uranu,\" suggests Honnu. \"That place has tested, and slain, many a kensai aspirant. Go wisely, Akihiro. I shall see you soon.\"\n\nNote: You gained the code A50.";
 
             Bye = "You rise, bow, and go to re-join your companions.";
 
@@ -757,7 +757,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::A(41)}))
             {
-                PreText += "\n\n\"We have betrayed no one!\" you reply. \"You have trapped us here. Allow us to leave and we will do you no harm.\"\n\n\"Liars! You have stolen our god!\" spits the snakeman priest. \"Our breed faulters and dies. Now, you shall die with us!\" The snakeman hisses foul words of sorcery. Suddenly the temple walls begin to crack, and blocks of stone rain down upon you. Even as the temple collapses the snakeman priest advances towards you, brandishing his staff.\n\nNote: At the end of each of the Snakeman Priest's turns, blocks of stone come raining down from the walls. The priest and each party member loses 1 Health. This continues each round until the priest has been slain. If you have a HYGLIPH FLOWER the priest is put off by its pungent odour and requires a 5+ on his attack rolls to inflict damage during this battle.";
+                PreText += "\n\n\"We have betrayed no one!\" you reply. \"You have trapped us here. Allow us to leave and we will do you no harm.\"\n\n\"Liars! You have stolen our god!\" spits the snakeman priest. \"Our breed faulters and dies. Now, you shall die with us!\" The snakeman hisses foul words of sorcery. Suddenly the temple walls begin to crack, and blocks of stone rain down upon you. Even as the temple collapses the snakeman priest advances towards you, brandishing his staff.\n\nNote: At the end of each of the Snakeman Priest's turns, blocks of stone come raining down from the walls. The priest and each party member loses 1 Health. This continues each round until the priest has been slain. If you have a <b>hygliph flower</b> the priest is put off by its pungent odour and requires a 5+ on his attack rolls to inflict damage during this battle.";
 
                 Monsters = {Monster::Base("Snakeman Priest", Monster::Type::SNAKEMAN_PRIEST, 4, 4, 3, 16, 0)};
             }
@@ -802,7 +802,7 @@ namespace Book1
             {
                 Choices.push_back(Choice::Base("Sail north towards Clifftop", {Book::Type::BOOK1, 82}));
                 Choices.push_back(Choice::Base("Sail east towards Cursus", {Book::Type::BOOK1, 814}));
-                Choices.push_back(Choice::Base("(The Savage Lands) Sail west towards the Savage Lands", {Book::Type::BOOK5, 75}));
+                Choices.push_back(Choice::Base("<b>(The Savage Lands)</b> Sail west towards the Savage Lands", {Book::Type::BOOK5, 75}));
             }
         }
 
@@ -822,7 +822,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Avoiding Chellar's room, you still manage to secure a pretty horde of items. You may take any or all of the following: JEWELLERY BOX, CALLIGRAPHY INK, SILVER IDOL, GOLD PORTRAIT, BRONZE SCORPION. You emerge with Brekken back onto the landing. You decide, with a mutual nod, that you have pushed your luck far enough in the house and make your way back out of the windows and into the streets of the city.";
+            Text = "Avoiding Chellar's room, you still manage to secure a pretty horde of items. You may take any or all of the following: <b>jewellery box</b>, <b>calligraphy ink</b>, <b>silver idol</b>, <b>gold portrait</b>, <b>bronze scorpion</b>. You emerge with Brekken back onto the landing. You decide, with a mutual nod, that you have pushed your luck far enough in the house and make your way back out of the windows and into the streets of the city.";
 
             Choices.clear();
 
@@ -967,7 +967,7 @@ namespace Book1
 
             Location = Location::Type::CURSUS;
 
-            Text = "The Everchild presents you with a bar of GOLD BULLION to help convince the mercenaries to change sides. Ayleta has been in private communication with the mercenaries for some time and has already negotiated a safe path between the mercenary encampment and the Everchild's forces.\n\nYou are received coolly by the unit captain, who cautiously welcomes you into his tent with his officers and bodyguards around him. You state your opinion that the Everchild's victory in the coming conflict is all but certain, and that she is willing to let mercenary companies that co-operate with her depart safely. Matters soon turn to money, with the mercenary captain suggesting that quite a lot of additional money will be coming his way should the patriarch win the battle, and Saltdad and other cities need to be supressed. He is also worried about his reputation if he plays turncoat without fighting even a single battle for his employer.\n\nNote: Only party members assigned to the MERCENARY TEAM may assist with this skill check. If you give the mercenaries a bar of GOLD BULLION, the DC of this check becomes 5+. If you give them two bars, the DC becomes 4+. If you give them three bars the DC becomes 2+.";
+            Text = "The Everchild presents you with a bar of <b>gold bullion</b> to help convince the mercenaries to change sides. Ayleta has been in private communication with the mercenaries for some time and has already negotiated a safe path between the mercenary encampment and the Everchild's forces.\n\nYou are received coolly by the unit captain, who cautiously welcomes you into his tent with his officers and bodyguards around him. You state your opinion that the Everchild's victory in the coming conflict is all but certain, and that she is willing to let mercenary companies that co-operate with her depart safely. Matters soon turn to money, with the mercenary captain suggesting that quite a lot of additional money will be coming his way should the patriarch win the battle, and Saltdad and other cities need to be supressed. He is also worried about his reputation if he plays turncoat without fighting even a single battle for his employer.\n\nNote: Only party members assigned to the <i>mercenary team</i> may assist with this skill check. If you give the mercenaries a bar of <b>gold bullion</b>, the DC of this check becomes 5+. If you give them two bars, the DC becomes 4+. If you give them three bars the DC becomes 2+.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -975,9 +975,9 @@ namespace Book1
         void Event(Party::Base &party)
         {
             Choices.clear();
-            Choices.push_back(Choice::Base("Give the mercenaries a GOLD BULLION bar", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, Team::Type::MERCENARY, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION1}, 1));
-            Choices.push_back(Choice::Base("Give the mercenaries two GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, Team::Type::MERCENARY, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 2));
-            Choices.push_back(Choice::Base("Give the mercenaries three GOLD BULLION bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, Team::Type::MERCENARY, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 3));
+            Choices.push_back(Choice::Base("Give the mercenaries a <b>gold bullion</b> bar", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, Team::Type::MERCENARY, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION1}, 1));
+            Choices.push_back(Choice::Base("Give the mercenaries two <b>gold bullion</b> bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, Team::Type::MERCENARY, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 2));
+            Choices.push_back(Choice::Base("Give the mercenaries three <b>gold bullion</b> bars", {Book::Type::BOOK1, -27}, Choice::Type::BRIBE_CODEWORD_ITEM, Team::Type::MERCENARY, {Equipment::GOLD_BULLION}, {Codes::Type::BRIBE_GOLD_BULLION2}, 3));
             Choices.push_back(Choice::Base("Bribe the Mercenaries (Team check: Charisma 6+, Successes: 7)", {Book::Type::BOOK1, 122}, {Book::Type::BOOK1, 832}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::MERCENARY, {Attribute::Type::CHARISMA}, 6, 7));
 
             Team = Team::Type::MERCENARY;
@@ -1001,7 +1001,7 @@ namespace Book1
 
             Location = Location::Type::CURSUS;
 
-            Text = "Only party members assigned to the MERCENARY TEAM may assist with this skill check.";
+            Text = "Only party members assigned to the <i>mercenary team</i> may assist with this skill check.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -1440,7 +1440,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "With a dramatic flourish you unroll the DRAGON HEAD from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou add the following soldiers to your army:\n\n[Lhasbreath Berserkers]: Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nNote: You gained the code A16.";
+            Text = "With a dramatic flourish you unroll the <b>dragon head</b> from its wrappings. King Scarrenden stands in amazement, and a gasp echoes across the chamber. His councillors flock round the head, to confirm its origins.\n\n\"This is indeed impressive,\" agrees the king. \"I set you a challenge and you have overcome it. Therefore, I shall be as good as my word. I shall send the Everchild my finest berserkers to aid her struggle. She also has the loyalty of my city. May she be victorious in her endeavours, and may her glory be ours!\"\n\nThere is a mixed cheer from the hall. Not all are pleased that King Scarrenden has submitted his city to the rule of child. However, even here the Everchild's fame is evident, and the enthusiasm of some of the warriors cannot be mistaken.\n\nYou add the following soldiers to your army:\n\n[Lhasbreath Berserkers]: Strength 5, Morale 2\n\nThese berserkers are strong but flighty troops, who will fight for you as long as the going is good.\n\nGaining King Scarrenden's support has been quite an endeavour.\n\nNote: You gained the code A16.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Survival", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
@@ -1532,7 +1532,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::FIRST_TIME_SCROLL_OF_RAGE}))
             {
-                PreText += "\n\nYou find a SCROLL OF RAGE here.";
+                PreText += "\n\nYou find a <b>scroll of rage</b> here.";
 
                 Engine::GET_CODES(party, {Codes::Type::FIRST_TIME_SCROLL_OF_RAGE});
             }
@@ -1540,7 +1540,7 @@ namespace Book1
             {
                 if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::SCROLL_OF_RAGE}))
                 {
-                    PreText += "\n\nYou are surprised to see the SCROLL OF RAGE back on the shelf, in the same place you found it last time. It seems that the scroll teleports back here each time it is used.";
+                    PreText += "\n\nYou are surprised to see the <b>scroll of rage</b> back on the shelf, in the same place you found it last time. It seems that the scroll teleports back here each time it is used.";
                 }
                 else
                 {
@@ -1559,7 +1559,7 @@ namespace Book1
                 Limit = 1;
             }
 
-            PreText += "\n\nNote: You cannot have more than one SCROLL OF RAGE equipped at any given time. You can use it in combat to increase the Fighting score of each of your party members by 1 point until the end of the combat. After one use it will teleport back to the bookshelf in this room.";
+            PreText += "\n\nNote: You cannot have more than one <b>scroll of rage</b> equipped at any given time. You can use it in combat to increase the Fighting score of each of your party members by 1 point until the end of the combat. After one use it will teleport back to the bookshelf in this room.";
 
             Text = PreText.c_str();
         }
@@ -1677,7 +1677,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Timing it just right, you begin to shove one another in the water queue. To make it convincing, you start to exchange a few hard blows, attempting to drag other slaves in the queue into your rumble.\n\nEach party member involved in the fight loses 1 Health point.\n\nNote: Only party members assigned to the DISTRACTION TEAM can contribute to the check.";
+            Text = "Timing it just right, you begin to shove one another in the water queue. To make it convincing, you start to exchange a few hard blows, attempting to drag other slaves in the queue into your rumble.\n\nEach party member involved in the fight loses 1 Health point.\n\nNote: Only party members assigned to the <i>distraction team</i> can contribute to the check.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -1777,7 +1777,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are restored to maximum Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive 600 silver coins as a reward. In addition, he presents you with a SEAL OF HOUSE ROSS. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nNote: You gained the code A85.";
+            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are restored to maximum Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive 600 silver coins as a reward. In addition, he presents you with a <b>Seal of House Ross</b>. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nNote: You gained the code A85.";
 
             Bye = "Thanking Sir Lawrence and Emlyn for their generosity, you depart into the city.";
 
@@ -1812,7 +1812,7 @@ namespace Book1
 
             Location = Location::Type::WEST_ROAD;
 
-            Text = "You manage to translate the brightly painted calendar, to the delight of Kopu. He is impressed with your work and presents you with a BLUESTONE as a reward. You ask what the stone is for.\n\n\"It is sacred to our priesthood,\" admits Kopu. \"You can exchange it for blessings at our temples.\"\n\n\"I thought you said Kalu had no temples anymore?\" you press.\n\n\"Well,\" he says. \"It's the thought that counts.\"\n\nGrumbling somewhat, you get some sleep whilst you wait out the storm.";
+            Text = "You manage to translate the brightly painted calendar, to the delight of Kopu. He is impressed with your work and presents you with a <b>bluestone</b> as a reward. You ask what the stone is for.\n\n\"It is sacred to our priesthood,\" admits Kopu. \"You can exchange it for blessings at our temples.\"\n\n\"I thought you said Kalu had no temples anymore?\" you press.\n\n\"Well,\" he says. \"It's the thought that counts.\"\n\nGrumbling somewhat, you get some sleep whilst you wait out the storm.";
 
             Choices.clear();
 
@@ -2424,7 +2424,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Akini is delighted as you return her aunt to the family home. She thanks you profusely. \"I do not understand why strangers would perform such a kindness for me, but you have my eternal thanks,\" she smiles. She presents you with some FINE BOOTS (Stealth +2). \"These were cast out by my lady because one has a tiny scuff on the heel,\" says Akini. \"I shall never wear noble garments again. Let them be worn by those of noble heart, such as you.\"";
+            Text = "Akini is delighted as you return her aunt to the family home. She thanks you profusely. \"I do not understand why strangers would perform such a kindness for me, but you have my eternal thanks,\" she smiles. She presents you with some <b>fine boots (Stealth +2)</b>. \"These were cast out by my lady because one has a tiny scuff on the heel,\" says Akini. \"I shall never wear noble garments again. Let them be worn by those of noble heart, such as you.\"";
 
             Bye = "You bow and take your leave.";
 
@@ -2488,7 +2488,7 @@ namespace Book1
 
             Location = Location::Type::CLIFFTOP;
 
-            Text = "You track down Damned Suzanna through the dusty gulches in Clifftop. Eventually you find her, recovering from the wounds of her beating, sweltering in her open-doored shack. When she sees you her eyes light up, and she eagerly snatches the proffered REGISTRY PAPERS from your hands. She gazes with confusion as she reads.\n\n\"This can't be right!\" she exclaims. \"It says here that my grandfather legally sold his land to Unbraaki fifty years ago. But my father said...\"\n\n\"I'm afraid it was countersigned by the priests of Cursus,\" you say. \"I suppose it's possible that there was a conspiracy against your family, but it's rare for priests to conspire with sorcerers.\"\n\nSuzanna slumps upon her bed. \"Everything my father told me was a lie,\" she groans. \"I'm not the inheritor of a massive estate, I'm just... me.\"\n\n\"That should be good enough,\" you say. \"Wealth rarely comes to those who sit around for it. If you want to make something of yourself, get out there and do it. You're certainly tough enough.\"\n\nShe nods. \"You're right. It's time I stopped waiting for my life to get better; I've got nothing to lose going adventuring. I'll sign on with the next ship in port.\" She presses a GREY TALISMAN into your hand. \"It's not much, but I want you to have this. It was the last thing my father gave me. Time for a new life.\"\n\nNote: You gained the code A36.";
+            Text = "You track down Damned Suzanna through the dusty gulches in Clifftop. Eventually you find her, recovering from the wounds of her beating, sweltering in her open-doored shack. When she sees you her eyes light up, and she eagerly snatches the proffered <b>registry papers</b> from your hands. She gazes with confusion as she reads.\n\n\"This can't be right!\" she exclaims. \"It says here that my grandfather legally sold his land to Unbraaki fifty years ago. But my father said...\"\n\n\"I'm afraid it was countersigned by the priests of Cursus,\" you say. \"I suppose it's possible that there was a conspiracy against your family, but it's rare for priests to conspire with sorcerers.\"\n\nSuzanna slumps upon her bed. \"Everything my father told me was a lie,\" she groans. \"I'm not the inheritor of a massive estate, I'm just... me.\"\n\n\"That should be good enough,\" you say. \"Wealth rarely comes to those who sit around for it. If you want to make something of yourself, get out there and do it. You're certainly tough enough.\"\n\nShe nods. \"You're right. It's time I stopped waiting for my life to get better; I've got nothing to lose going adventuring. I'll sign on with the next ship in port.\" She presses a <b>grey talisman</b> into your hand. \"It's not much, but I want you to have this. It was the last thing my father gave me. Time for a new life.\"\n\nNote: You gained the code A36.";
 
             Bye = "Waving Damned Suzanna farewell, you make your way on.";
 
@@ -2552,7 +2552,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "You can take up to four SHIELDs (Armour +2) from the fallen snakemen if you wish. Their weapons have unusual grips and are not useable for humans.\n\nYou glance around the temple chamber. Despite the cracks and structural damage the room has been kept in good condition, regularly swept clean of dirt and filth. But why would inhuman monsters care for an old Cursus temple?\n\nYou try lifting the portcullis, but it will not shift an inch. You will have to find another way out. Glancing around the chamber you can see a door in the back wall, and an archway in which a ramp leads upwards into the ziggurat. Which direction would you like to investigate?";
+            Text = "You can take up to four <b>shields (Armour +2)</b> from the fallen snakemen if you wish. Their weapons have unusual grips and are not useable for humans.\n\nYou glance around the temple chamber. Despite the cracks and structural damage the room has been kept in good condition, regularly swept clean of dirt and filth. But why would inhuman monsters care for an old Cursus temple?\n\nYou try lifting the portcullis, but it will not shift an inch. You will have to find another way out. Glancing around the chamber you can see a door in the back wall, and an archway in which a ramp leads upwards into the ziggurat. Which direction would you like to investigate?";
 
             Choices.clear();
             Choices.push_back(Choice::Base("The door", {Book::Type::BOOK1, 380}));
@@ -2710,7 +2710,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::A(86)}))
             {
-                PreText = "This must be Garon the Bloody-mouthed, whom you were sent to find. His father will no doubt grieve to know his fate, but at least it will solve the mystery of his disappearance. You were not asked to return the body, but if you wish to do so, you can take the BARBARIAN BODY. Unfortunately, it takes up five inventory slots and must be carried by a single character.\n\nWhat now?";
+                PreText = "This must be Garon the Bloody-mouthed, whom you were sent to find. His father will no doubt grieve to know his fate, but at least it will solve the mystery of his disappearance. You were not asked to return the body, but if you wish to do so, you can take the <b>barbarian body</b>. Unfortunately, it takes up five inventory slots and must be carried by a single character.\n\nWhat now?";
             }
             else
             {
@@ -2721,7 +2721,7 @@ namespace Book1
 
             if (!Engine::VERIFY_EQUIPMENT(party, {Equipment::Type::BARBARIAN_BODY}) && !Engine::VERIFY_CODES(party, {Codes::A(86)}))
             {
-                Choices.push_back(Choice::Base("Take the BARBARIAN BODY", {Book::Type::BOOK1, -76}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::BARBARIAN_BODY}, {Codes::A(86)}, {}));
+                Choices.push_back(Choice::Base("Take the <b>barbarian body</b>", {Book::Type::BOOK1, -76}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::BARBARIAN_BODY}, {Codes::A(86)}, {}));
             }
 
             Choices.push_back(Choice::Base("Examine the missing south wall", {Book::Type::BOOK1, 645}));
@@ -2911,8 +2911,8 @@ namespace Book1
         {
             Choices.clear();
             Choices.push_back(Choice::Base("Pull into Clifftop harbour", {Book::Type::BOOK1, 703}));
-            Choices.push_back(Choice::Base("(Drakehallow) Sail north, past the Stonewalls", {Book::Type::BOOK6, 420}));
-            Choices.push_back(Choice::Base("(Crown and Tower) Sail west into the Bayswater Channel", {Book::Type::BOOK2, 392}));
+            Choices.push_back(Choice::Base("<b>(Drakehallow)</b> Sail north, past the Stonewalls", {Book::Type::BOOK6, 420}));
+            Choices.push_back(Choice::Base("<b>(Crown and Tower)</b> Sail west into the Bayswater Channel", {Book::Type::BOOK2, 392}));
             Choices.push_back(Choice::Base("Sail south to Cape Porta", {Book::Type::BOOK1, 21}));
 
             if (Engine::VERIFY_CODES(party, {Codes::A(32)}))
@@ -2935,7 +2935,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You hold out the ENGAGEMENT RING. \"The RING was not sold, it was stolen,\" you insist. \"I found this in the hideout of a group of nefarious thieves. She wants you to have it. She loved you, she was not using you.\"\n\nDulcimer takes the RING, swallowing hard.\n\n\"Is my lord really so poor a judge of character?\" you continue. \"The girl has a noble spirit and an honest temperament. It was not witchcraft but love that was the cause of her deception. Do not damage your family name further with this ridiculous feud with a common house. There is nothing to gain but dishonour.\"\n\nDulcimer's father agrees. \"Now that there is no financial loss to the family this matter should be closed quickly. You may take the girl's aunt back to her family. However, Akini is not to cross our path again.\"\n\nAkini's aunt is released, and you escort her back to her home.";
+            Text = "You hold out the <b>engagement ring</b>. \"The RING was not sold, it was stolen,\" you insist. \"I found this in the hideout of a group of nefarious thieves. She wants you to have it. She loved you, she was not using you.\"\n\nDulcimer takes the RING, swallowing hard.\n\n\"Is my lord really so poor a judge of character?\" you continue. \"The girl has a noble spirit and an honest temperament. It was not witchcraft but love that was the cause of her deception. Do not damage your family name further with this ridiculous feud with a common house. There is nothing to gain but dishonour.\"\n\nDulcimer's father agrees. \"Now that there is no financial loss to the family this matter should be closed quickly. You may take the girl's aunt back to her family. However, Akini is not to cross our path again.\"\n\nAkini's aunt is released, and you escort her back to her home.";
 
             Choices.clear();
 
@@ -3184,7 +3184,7 @@ namespace Book1
 
             Location = Location::Type::CHALICE_HILLSIDE;
 
-            Text = "You dash after Yu Yan, the thief frantically attempting to negotiate the ledge, which you navigate with the skill of a mountain goat. She stumbles, and only just manages to catch the ledge before falling. You dash to her side.\n\n\"Need a hand?\" you ask.\n\n\"Let me guess... you want the damn SILVER IDOL, yes?\"\n\n\"I think I'll need all the treasure; it's only weighing you down,\" you respond smartly.\n\nYu Yan groans, but throws her loot bag up to you. It contains not only the SILVER IDOL, but 200 silver pieces as well. Grinning, you give her a hand up on to the ledge. She grasps the sides of the wall, breathing heavily as you lean casually against the hillside.\n\n\"Make yourself scarce, Yu Yan,\" you say to her. \"Up here, in the hills, this is my domain.\"\n\nShe thanks you for your mercy and shuffles away, dashing over the hillside as soon as she is on safer ground. You make your way back along the ledge, hoping to find the beautiful vista again, but you cannot find it. Perhaps it is the time of night, but the surroundings no longer look so beautiful and peaceful as they were before. You shrug, but you are pleased with your victory.";
+            Text = "You dash after Yu Yan, the thief frantically attempting to negotiate the ledge, which you navigate with the skill of a mountain goat. She stumbles, and only just manages to catch the ledge before falling. You dash to her side.\n\n\"Need a hand?\" you ask.\n\n\"Let me guess... you want the damn <b>silver idol</b>, yes?\"\n\n\"I think I'll need all the treasure; it's only weighing you down,\" you respond smartly.\n\nYu Yan groans, but throws her loot bag up to you. It contains not only the <b>silver idol</b>, but 200 silver pieces as well. Grinning, you give her a hand up on to the ledge. She grasps the sides of the wall, breathing heavily as you lean casually against the hillside.\n\n\"Make yourself scarce, Yu Yan,\" you say to her. \"Up here, in the hills, this is my domain.\"\n\nShe thanks you for your mercy and shuffles away, dashing over the hillside as soon as she is on safer ground. You make your way back along the ledge, hoping to find the beautiful vista again, but you cannot find it. Perhaps it is the time of night, but the surroundings no longer look so beautiful and peaceful as they were before. You shrug, but you are pleased with your victory.";
 
             Bye = "You make your way back to the temple in Chalice.";
 
@@ -3374,7 +3374,7 @@ namespace Book1
 
             Location = Location::Type::UNDERGROUND_TUNNELS;
 
-            Text = "You carefully lower yourself into the pit, being careful to avoid the spikes. Moving aside the timbers you check over the body. You find 15 silver coins spilling from a rotten pouch and a still intact DRAGONYAK HORN.\n\nNote: You gained the code A46.";
+            Text = "You carefully lower yourself into the pit, being careful to avoid the spikes. Moving aside the timbers you check over the body. You find 15 silver coins spilling from a rotten pouch and a still intact <b>dragonyak horn</b>.\n\nNote: You gained the code A46.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Climb up the far side of the pit", {Book::Type::BOOK1, 303}));
@@ -4151,7 +4151,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You creep across the landing, looting rooms as you go.\n\nNote: Only members of the Wall-climbing team may help with the check.";
+            Text = "You creep across the landing, looting rooms as you go.\n\nNote: Only members of the <i>wall-climbing team</i> may help with the check.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -4439,7 +4439,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "The door opens into a small room which contains a bookcase and a broken reading chair. Searching the shelves is an unpleasant experience, as the books are damp and fall to pieces on contact with your fingers. You do manage to find a magic scroll which seems undamaged. It is a SCROLL OF RAGE. You can use it in combat to increase the Fighting score of each of your party members by 1 point until the end of the combat. After one use it will vanish.";
+            Text = "The door opens into a small room which contains a bookcase and a broken reading chair. Searching the shelves is an unpleasant experience, as the books are damp and fall to pieces on contact with your fingers. You do manage to find a magic scroll which seems undamaged. It is a <b>scroll of rage</b>. You can use it in combat to increase the Fighting score of each of your party members by 1 point until the end of the combat. After one use it will vanish.";
 
             Bye = "There is nothing else of value in the room, so you exit by the only door.";
 
@@ -4483,7 +4483,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The Temple of Kalu is a squat tower of blue stone, built in a jumble-like pattern from the ruins of the old temple. The Everchild has decreed the temple should be rebuilt in defiance of the laws laid down by the patriarch of Cursus.\n\nWithin the temple tiny bells are softly chimed every minute, with parishioners and priests taking it in turns to strike the correct bell according to the time of day. The great calendar, a mosaic and guide to the planting dates of the year, is still incomplete, and requires more BLUESTONES to finish the work.\n\nIf you have any BLUESTONES you may exchange one for a blessing from the priests. If you are blessed, find the party member with the lowest Survival score in the team and increase their Survival by 1 point. You can assist with the repairs to the calendar.\n\nNote: You can only assist the priests with repairs to the calendar once.";
+            Text = "The Temple of Kalu is a squat tower of blue stone, built in a jumble-like pattern from the ruins of the old temple. The Everchild has decreed the temple should be rebuilt in defiance of the laws laid down by the patriarch of Cursus.\n\nWithin the temple tiny bells are softly chimed every minute, with parishioners and priests taking it in turns to strike the correct bell according to the time of day. The great calendar, a mosaic and guide to the planting dates of the year, is still incomplete, and requires more <b>bluestones</b> to finish the work.\n\nIf you have any <b>bluestones</b> you may exchange one for a blessing from the priests. If you are blessed, find the party member with the lowest Survival score in the team and increase their Survival by 1 point. You can assist with the repairs to the calendar.\n\nNote: You can only assist the priests with repairs to the calendar once.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -4494,7 +4494,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
             {
-                Choices.push_back(Choice::Base("Exchange a BLUESTONE for a blessing", {Book::Type::BOOK1, -128002}, {Equipment::BLUESTONE}));
+                Choices.push_back(Choice::Base("Exchange a <b>bluestone</b> for a blessing", {Book::Type::BOOK1, -128002}, {Equipment::BLUESTONE}));
             }
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::REPAIR_CALENDAR_KALU}))
@@ -4647,7 +4647,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            PreText = "The RUNESWORD (FIGHTING +3) is a powerful weapon, however it also has the dreadful side effect of slowly leaching the wielder's life. If you carry this sword, the character bearing it loses 1 Health point each time you turn to a new reference number. You can share the sword around the party in order to spread out the damage, if you wish. You can discard the sword at any time to end the curse, but you cannot sell it, since its curse is immediately apparent to anyone who holds it.";
+            PreText = "The <b>runesword (Fighting +3)</b> is a powerful weapon, however it also has the dreadful side effect of slowly leaching the wielder's life. If you carry this sword, the character bearing it loses 1 Health point each time you turn to a new reference number. You can share the sword around the party in order to spread out the damage, if you wish. You can discard the sword at any time to end the curse, but you cannot sell it, since its curse is immediately apparent to anyone who holds it.";
 
             if (Engine::IS_ACTIVE(party, party.LastSelected))
             {
@@ -4677,7 +4677,7 @@ namespace Book1
 
             Location = Location::Type::UNDERGROUND_TUNNELS;
 
-            Text = "The only item of interest in the tomb is the SILVER SKULL, which seems to have stopped chanting.\n\nThe sarcophagus itself is empty.";
+            Text = "The only item of interest in the tomb is the <b>silver skull</b>, which seems to have stopped chanting.\n\nThe sarcophagus itself is empty.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Take the SILVER SKULL", {Book::Type::BOOK1, 46}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::SILVER_SKULL}, {Codes::A(47)}, {}));
@@ -4784,7 +4784,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "You complete the finishing touches, grinding the components to the necessary fineness, and sprinkling them with confidence into the brew. Soon you have completed two POTIONS OF INVULNERABILITY. Pleased with your new finds, you store them in your pack.\n\nNote: When a party member drinks this potion at the start of a combat round, they can ignore any amount of damage they take from the next attack that hits them. The potion wears off after absorbing the first hit, or if the combat ends.\n\nYou gained the code A73.";
+            Text = "You complete the finishing touches, grinding the components to the necessary fineness, and sprinkling them with confidence into the brew. Soon you have completed two <b>potions of invulnerability</b>. Pleased with your new finds, you store them in your pack.\n\nNote: When a party member drinks this potion at the start of a combat round, they can ignore any amount of damage they take from the next attack that hits them. The potion wears off after absorbing the first hit, or if the combat ends.\n\nYou gained the code A73.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Pass through the door in the western wall", {Book::Type::BOOK1, 256}));
@@ -4999,7 +4999,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You spend a full month with Che Long training up the Bronzeguard. They are a formidable sight in their gleaming bronze armour and powerful steel weapons. Only the best recruits are permitted to stay in training, and soon you have a unit of the Everchild's fiercest supporters dressed in enchanted armour. The unit's morale is exceptional, and they are sure to make a powerful impression on the battlefield.\n\nYou add the following unit to the Saltdad garrison:\n\n[Bronzeguard]: Strength 5, Morale 5\n\nNote: You cannot have more than one unit of [Bronzeguard] in existence at any given time as their equipment is irreplaceable. If the [Bronzeguard] are ever destroyed, you can train new recruits to use their equipment by spending another two GOLD BULLION bars.";
+            Text = "You spend a full month with Che Long training up the Bronzeguard. They are a formidable sight in their gleaming bronze armour and powerful steel weapons. Only the best recruits are permitted to stay in training, and soon you have a unit of the Everchild's fiercest supporters dressed in enchanted armour. The unit's morale is exceptional, and they are sure to make a powerful impression on the battlefield.\n\nYou add the following unit to the Saltdad garrison:\n\n[Bronzeguard]: Strength 5, Morale 5\n\nNote: You cannot have more than one unit of [Bronzeguard] in existence at any given time as their equipment is irreplaceable. If the [Bronzeguard] are ever destroyed, you can train new recruits to use their equipment by spending another two <b>gold bullion</b> bars.";
 
             Bye = "Feeling nigh indestructible, you return to the palace.";
 
@@ -5065,7 +5065,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "You manage to recall the correct incantations to dispel darkness of this kind, and suddenly your lanterns illuminate the room. Within you can see strange coffers, some of which have loose piles of coin scattered over them. Opening the coffers you find a good deal more, some 200 silver coins in total, and a set of ornate BONE ARMOUR (Armour +2).";
+            Text = "You manage to recall the correct incantations to dispel darkness of this kind, and suddenly your lanterns illuminate the room. Within you can see strange coffers, some of which have loose piles of coin scattered over them. Opening the coffers you find a good deal more, some 200 silver coins in total, and a set of ornate <b>bone armour (Armour +2)</b>.";
 
             Bye = "Unsure if your reward was worth the dreadful battle to get it, you move on.";
 
@@ -5297,7 +5297,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You show Mannus, the keeper of the holy purse, the IRON SCEPTRE -- a symbol that you speak with the Iron King's authority. He takes it and welcomes you, commanding a slave to pour you some wine and close the door. You begin to discuss the Saltdad tithe and convey the Iron King's wishes that it should be modified downwards as a point of principal. You also add that, coincidentally, the Iron King understands that Mannus is poorly compensated for his time in the tax office and that good conscience compels him to see that changed.";
+            Text = "You show Mannus, the keeper of the holy purse, the <b>iron sceptre</b> -- a symbol that you speak with the Iron King's authority. He takes it and welcomes you, commanding a slave to pour you some wine and close the door. You begin to discuss the Saltdad tithe and convey the Iron King's wishes that it should be modified downwards as a point of principal. You also add that, coincidentally, the Iron King understands that Mannus is poorly compensated for his time in the tax office and that good conscience compels him to see that changed.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Bribe the official (Team check: Charisma 4+, Successes: 4)", {Book::Type::BOOK1, 476}, {Book::Type::BOOK1, 560}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::ZIGGURAT, {Attribute::Type::CHARISMA}, 4, 4));
@@ -5382,7 +5382,7 @@ namespace Book1
 
             Location = Location::Type::LHASBREATH_JUNGLE;
 
-            Text = "The CRIER BIRD should fetch a tidy sum in a big city. Pleased with your find, you make your way out of the jungle.";
+            Text = "The <b>crier bird</b> should fetch a tidy sum in a big city. Pleased with your find, you make your way out of the jungle.";
 
             Choices.clear();
 
@@ -5412,7 +5412,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The sound of drums and crowds roaring echo in your ears as you are once again lined up in the gatehouse in preparation for your latest bout. Up to four CRUDE BLADES (Fighting +0) can be equipped by your characters. Again, one character may be armed with a SHIELD (Armour +2), and another with a two-handed MAUL* (Fighting +1).\n\nEquip your characters as you wish.";
+            Text = "The sound of drums and crowds roaring echo in your ears as you are once again lined up in the gatehouse in preparation for your latest bout. Up to four <b>crude blades (Fighting +0)</b> can be equipped by your characters. Again, one character may be armed with a <b>shield (Armour +2)</b>, and another with a two-handed <b>maul* (Fighting +1)</b>.\n\nEquip your characters as you wish.";
 
             Choices.clear();
 
@@ -6095,7 +6095,7 @@ namespace Book1
 
             Location = Location::Type::UNDERGROUND_TUNNELS;
 
-            Text = "The final giant skeleton topples with a mighty crash. The treasures of the ancients are now yours to seize! There are 2250 silver coins to take. You also find a GOLDWAX CANDLE, a bar of GOLD BULLION and a CLOAK OF PROTECTION (Survival +3). In the coffin of the king, you prise a MAGICAL SHORTSWORD (Fighting +4) from his grasp.";
+            Text = "The final giant skeleton topples with a mighty crash. The treasures of the ancients are now yours to seize! There are 2250 silver coins to take. You also find a <b>goldwax candle</b>, a bar of <b>gold bullion</b> and a <b>cloak of protection (Survival +3)</b>. In the coffin of the king, you prise a <b>magical shortsword (Fighting +4)</b> from his grasp.";
 
             Bye = "Pleased with your finds you stride out of the chamber with your treasures, the curious door slamming shut behind you as you leave.";
 
@@ -6339,7 +6339,7 @@ namespace Book1
 
             Location = Location::Type::CAVES_OF_URANU;
 
-            Text = "You are almost sad as Yu Yan sprawls to the ground. The woman fought well, and it was a shame such talent should go to waste. You search her, her STONECUTTER SWORD (Fighting +2) is the most interesting possession she has. This weapon inflicts two points of Health damage for each success you score against rocky or stony opponents.\n\nShe also carries 135 silver pieces and, to your delight, a SILVER IDOL. You shake your head in amazement. You almost let the object of your quest slip through your fingers!";
+            Text = "You are almost sad as Yu Yan sprawls to the ground. The woman fought well, and it was a shame such talent should go to waste. You search her, her STONECUTTER SWORD (Fighting +2) is the most interesting possession she has. This weapon inflicts two points of Health damage for each success you score against rocky or stony opponents.\n\nShe also carries 135 silver pieces and, to your delight, a <b>silver idol</b>. You shake your head in amazement. You almost let the object of your quest slip through your fingers!";
 
             Bye = "Pleased to have completed your quest so promptly, you make your way out of the cave, and back to the temple in Chalice.";
 
@@ -6828,7 +6828,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You point out that the definition of a religious ceremony and a funeral observance are quite different things in Chalice law. Simply passing by a temple is not a ceremony in itself, and therefore no law is broken. The kensai pause a moment to consult a monk in a nearby temple, but soon realise that you are correct in the most literal sense. In deference to the dead man's life of selfless service to the state they allow the casket to pass.\n\nThe mourners give a most impious cheer before continuing their wake. The monk who advised the kensai congratulates you. \"Young men are good at war, but poor in wisdom,\" he says. \"With the exception of the young people I see before me. Thank you for avoiding bloodshed. Perhaps this gift will aid you in gaining even greater wisdom?\"\n\nThe monk presents you with a block of INCENSE.";
+            Text = "You point out that the definition of a religious ceremony and a funeral observance are quite different things in Chalice law. Simply passing by a temple is not a ceremony in itself, and therefore no law is broken. The kensai pause a moment to consult a monk in a nearby temple, but soon realise that you are correct in the most literal sense. In deference to the dead man's life of selfless service to the state they allow the casket to pass.\n\nThe mourners give a most impious cheer before continuing their wake. The monk who advised the kensai congratulates you. \"Young men are good at war, but poor in wisdom,\" he says. \"With the exception of the young people I see before me. Thank you for avoiding bloodshed. Perhaps this gift will aid you in gaining even greater wisdom?\"\n\nThe monk presents you with a block of <b>incense</b>.";
 
             Choices.clear();
 
@@ -7144,7 +7144,7 @@ namespace Book1
 
             Location = Location::Type::BANDO_VILLAGE;
 
-            Text = "You greet the Bando tribesmen like old friends, and soon there is singing and cheering across the village. As a good will offering you present the Bando with a few surplus tools and ropes from the ship, and you are presented in turn with sweet, intoxicating fruit drinks and a well-crafted SPEAR (Fighting +0).";
+            Text = "You greet the Bando tribesmen like old friends, and soon there is singing and cheering across the village. As a good will offering you present the Bando with a few surplus tools and ropes from the ship, and you are presented in turn with sweet, intoxicating fruit drinks and a well-crafted <b>spear (Fighting +0)</b>.";
 
             Bye = "Soon you are escorted to see the shaman.";
 
@@ -7767,7 +7767,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Soon it is time for another bloody battle in the arena. Each character is given a CRUDE BLADE (Fighting +0) and pushed out to face the current arena champions.";
+            Text = "Soon it is time for another bloody battle in the arena. Each character is given a <b>crude blade (Fighting +0)</b> and pushed out to face the current arena champions.";
 
             Choices.clear();
 
@@ -8000,7 +8000,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The bookcase contains a number of valuable tomes, including a REFERENCE BOOK (LORE +1). There is also an interesting tome on herb lore. You flick through it briefly, and come upon a reference to the Lhasbreath Jungles, here in the Valley of Bones. \"...it is a well-known fact that the yellow Hygliph Flower is proof against all snakes, even the wicked snakemen in the Temple of the Unbroken, who react poorly to its pungent perfume.\" Interesting.\n\nYou may take the REFERENCE BOOK. You grab a few of the more PRECIOUS TOMES AS well.";
+            Text = "The bookcase contains a number of valuable tomes, including a <b>reference book (+1 Lore)</b>. There is also an interesting tome on herb lore. You flick through it briefly, and come upon a reference to the Lhasbreath Jungles, here in the Valley of Bones. \"...it is a well-known fact that the yellow Hygliph Flower is proof against all snakes, even the wicked snakemen in the Temple of the Unbroken, who react poorly to its pungent perfume.\" Interesting.\n\nYou may take the reference book. You grab a few of the more <b>precious tomes</b> as well.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -8106,7 +8106,7 @@ namespace Book1
 
             Engine::GAIN_MONEY(party, count * 25);
 
-            PreText = "You received " + std::to_string(count * 25) + " silver coins for the TROGLODYTE HEADs.\n\n\"Keep up the good work,\" he enthuses. \"I'm sure the slaves appreciate your valiant efforts.\"";
+            PreText = "You received " + std::to_string(count * 25) + " silver coins for the <b>troglodyte heads</b>.\n\n\"Keep up the good work,\" he enthuses. \"I'm sure the slaves appreciate your valiant efforts.\"";
 
             Engine::LOSE_EQUIPMENT(party, Equipment::Type::TROGLODYTE_HEAD, count);
 
@@ -8154,12 +8154,12 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("The Palace of Unbraaki", {Book::Type::BOOK1, 484}));
-            Choices.push_back(Choice::Base("(Crown and Tower) The city of Longport", {Book::Type::BOOK2, 321}));
-            Choices.push_back(Choice::Base("(Pirates of the Splintered) Thalsia", {Book::Type::BOOK3, 108}));
-            Choices.push_back(Choice::Base("(The Gilded Throne) Ozury", {Book::Type::BOOK4, 500}));
-            Choices.push_back(Choice::Base("(The Savage Lands) The Hallowed Grove", {Book::Type::BOOK5, 45}));
-            Choices.push_back(Choice::Base("(Drakehallow) Dagon", {Book::Type::BOOK6, 230}));
-            Choices.push_back(Choice::Base("(Drakehallow) Animus Mast", {Book::Type::BOOK6, 600}));
+            Choices.push_back(Choice::Base("<b>(Crown and Tower)</b> The city of Longport", {Book::Type::BOOK2, 321}));
+            Choices.push_back(Choice::Base("<b>(Pirates of the Splintered)</b> Thalsia", {Book::Type::BOOK3, 108}));
+            Choices.push_back(Choice::Base("<b>(The Gilded Throne)</b> Ozury", {Book::Type::BOOK4, 500}));
+            Choices.push_back(Choice::Base("<b>(The Savage Lands)</b> The Hallowed Grove", {Book::Type::BOOK5, 45}));
+            Choices.push_back(Choice::Base("<b>(Drakehallow)</b> Dagon", {Book::Type::BOOK6, 230}));
+            Choices.push_back(Choice::Base("<b>(Drakehallow)</b> Animus Mast", {Book::Type::BOOK6, 600}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -8382,7 +8382,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You report your failure to retrieve the SILVER IDOL but speak instead of the revelation you had on the hilltop. \"Excellent!\" claps Honnu. \"Well, I think we can skip the bit about you bringing me the SILVER IDOL.\"\n\nYou flinch. \"But surely if I am to pass the test...?\" \"What do I need of a silver idol, anyway?\" snaps Honnu. \"You will not find your kensai spirit stamped on the base of an idol. Let the thief be pleased with herself. Your spiritual reward will last longer than her reward in coin, I promise you that.\"\n\nYou smile at the cunning old man. Clearly there is more to these tests than meets the eye.";
+            Text = "You report your failure to retrieve the <b>silver idol</b> but speak instead of the revelation you had on the hilltop. \"Excellent!\" claps Honnu. \"Well, I think we can skip the bit about you bringing me the <b>silver idol</b>.\"\n\nYou flinch. \"But surely if I am to pass the test...?\" \"What do I need of a silver idol, anyway?\" snaps Honnu. \"You will not find your kensai spirit stamped on the base of an idol. Let the thief be pleased with herself. Your spiritual reward will last longer than her reward in coin, I promise you that.\"\n\nYou smile at the cunning old man. Clearly there is more to these tests than meets the eye.";
 
             Choices.clear();
 
@@ -8468,7 +8468,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "The ogre seems stunned that such thin and puny creatures could possess so much money. \"Beats me why you wander 'round dungeons when you have that kind of dosh lining your pockets, but well'a'day.\"\n\nThe ogre rises to his feet. \"Skullcracker's the name,\" he says. \"I don't do cities, and I don't do boats. Other than that, I'll hang around with you for a bit.\n\nSkullcracker hands you a RUSTY KEY. \"This is the key to the room I'm supposed to be guarding,\" he says. \"Why don't we loot it, instead? Just go north, then east a bit, and you'll find it.\"\n\nNote: Skullcracker can be treated just like an ordinary party member. He possesses the following skills:\n\nFighting: 8, Stealth: 1, Lore: 1, Survival: 3, Charisma: 2, Health: 12\n\nSkullcracker has a number of special rules as a party member:\n\n* He is lazy and he will not carry any equipment for you, even items that boost his skills. Skullcracker wields a CLUB, but it is nothing special. Should the party ever lose their equipment he will be able to replace the CLUB instantly with a bit of large bone, table leg or other such item. Effectively, Skullcracker is never disarmed.\n\n* He won't enter a city, which includes the following locations: Chalice, Clifftop, Cursus, Lhasbreath, Luutanesh or Saltdad. If you go to these places, Skullcracker will wait outside until you leave. Ogres aren't very popular in civilised places.\n\n* Even though he can't stay in human inns, Skullcracker will recover Health points at the same rate as your other party members when you pay to stay at an inn.\n\n* He won't board a ship. He had a queasy tummy on the orc boat and won't tolerate going aboard another. If you insist on going sailing, he will leave the party.\n\n* His contract with you ends when you travel to another land. At this point, Skullcracker with take his leave and wander into the desert.\n\nYou gained the code A76.";
+            Text = "The ogre seems stunned that such thin and puny creatures could possess so much money. \"Beats me why you wander 'round dungeons when you have that kind of dosh lining your pockets, but well'a'day.\"\n\nThe ogre rises to his feet. \"Skullcracker's the name,\" he says. \"I don't do cities, and I don't do boats. Other than that, I'll hang around with you for a bit.\n\nSkullcracker hands you a <b>rusty key</b>. \"This is the key to the room I'm supposed to be guarding,\" he says. \"Why don't we loot it, instead? Just go north, then east a bit, and you'll find it.\"\n\nNote: Skullcracker can be treated just like an ordinary party member. He possesses the following skills:\n\nFighting: 8, Stealth: 1, Lore: 1, Survival: 3, Charisma: 2, Health: 12\n\nSkullcracker has a number of special rules as a party member:\n\n* He is lazy and he will not carry any equipment for you, even items that boost his skills. Skullcracker wields a <b>club (Fighting +0)</b>, but it is nothing special. Should the party ever lose their equipment he will be able to replace the club instantly with a bit of large bone, table leg or other such item. Effectively, Skullcracker is never disarmed.\n\n* He won't enter a city, which includes the following locations: Chalice, Clifftop, Cursus, Lhasbreath, Luutanesh or Saltdad. If you go to these places, Skullcracker will wait outside until you leave. Ogres aren't very popular in civilised places.\n\n* Even though he can't stay in human inns, Skullcracker will recover Health points at the same rate as your other party members when you pay to stay at an inn.\n\n* He won't board a ship. He had a queasy tummy on the orc boat and won't tolerate going aboard another. If you insist on going sailing, he will leave the party.\n\n* His contract with you ends when you travel to another land. At this point, Skullcracker with take his leave and wander into the desert.\n\nYou gained the code A76.";
 
             Bye = "Thanking your new companion, you return to the crossroads.";
 
@@ -8507,7 +8507,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The king nods as he scans over the document with his eyes. \"A good reduction, and a modest bribe, this is well,\" he concedes. \"Though it pains me to sully our court with the intrigues of foreigners. Take your reward and never come in our presence again.\"\n\nThe Iron King waves to one of his councillors, who reluctantly places 350 silver pieces and an IRON GREATAXE* (Fighting +2) into your hands.";
+            Text = "The king nods as he scans over the document with his eyes. \"A good reduction, and a modest bribe, this is well,\" he concedes. \"Though it pains me to sully our court with the intrigues of foreigners. Take your reward and never come in our presence again.\"\n\nThe Iron King waves to one of his councillors, who reluctantly places 350 silver pieces and an <b>iron greataxe* (Fighting +2)</b> into your hands.";
 
             Bye = "Not wishing to tarry longer, you depart the chamber and return to the crossroads.";
 
@@ -8575,7 +8575,7 @@ namespace Book1
 
             Location = Location::Type::WITHERED_STEPPES;
 
-            Text = "The dragonyak bull bows to you as you speak in the ancient tongue of beasts. \"You are an animal friend,\" he intones. \"Our legends say that it has been an eon since any dragonyak was so addressed. You honour us.\" The dragonyak unleashes a bellowing roar, which is repeated by his herd. One dragonyak immerses herself in the water of the oasis and emerges sometime later with a CLOAK, sodden with water, but miraculously unharmed by the passage of years. The bull insists you take the cloak, for he is aware that man-apes such as yourself favour them.\n\nYou take THE RUGGED CLOAK (Survival +2) so as not to offend the mighty bull and make your way onwards.\n\nNote: You gained the code A38.";
+            Text = "The dragonyak bull bows to you as you speak in the ancient tongue of beasts. \"You are an animal friend,\" he intones. \"Our legends say that it has been an eon since any dragonyak was so addressed. You honour us.\" The dragonyak unleashes a bellowing roar, which is repeated by his herd. One dragonyak immerses herself in the water of the oasis and emerges sometime later with a CLOAK, sodden with water, but miraculously unharmed by the passage of years. The bull insists you take the cloak, for he is aware that man-apes such as yourself favour them.\n\nYou take THE <b>rugged cloak (Survival +2)</b> so as not to offend the mighty bull and make your way onwards.\n\nNote: You gained the code A38.";
 
             Choices.clear();
 
@@ -8621,7 +8621,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You seek out the father of Garon the Bloody Mouthed. He is still sitting sadly upon his doorstep when you return, bearing his son's body in your arms. The father gives a great howl and clasps his son's body.\n\n\"It is as I feared,\" he weeps. \"I thank you for returning his body so it may be buried with honour. I was to present my son with his grandfather's magical amulet upon his successful return -- but now I have no sons left to inherit. I wish you to have it. It is what Garon would have wanted.\"\n\nThe old man presents you with an AMULET OF HEALTH (Health +1). It would be churlish to refuse it. You leave the old man to his sorrows.\n\nNote: You gained the code A86.";
+            Text = "You seek out the father of Garon the Bloody Mouthed. He is still sitting sadly upon his doorstep when you return, bearing his son's body in your arms. The father gives a great howl and clasps his son's body.\n\n\"It is as I feared,\" he weeps. \"I thank you for returning his body so it may be buried with honour. I was to present my son with his grandfather's magical amulet upon his successful return -- but now I have no sons left to inherit. I wish you to have it. It is what Garon would have wanted.\"\n\nThe old man presents you with an <b>amulet of health (Health +1)</b>. It would be churlish to refuse it. You leave the old man to his sorrows.\n\nNote: You gained the code A86.";
 
             Choices.clear();
 
@@ -8685,10 +8685,10 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "With the beetles destroyed you brush them away from the mystic circle and examine it. It appears to be some kind of health boosting magic circle with a small indentation in the middle, not unlike an ink well. Indeed, the instructions for its use have been usefully painted upon the walls of the chamber. It appears that if you pour some QUICKSILVER into the central well the circle will activate and imbue you with power.\n\nNote: You gained the code A61.";
+            Text = "With the beetles destroyed you brush them away from the mystic circle and examine it. It appears to be some kind of health boosting magic circle with a small indentation in the middle, not unlike an ink well. Indeed, the instructions for its use have been usefully painted upon the walls of the chamber. It appears that if you pour some <b>quicksilver</b> into the central well the circle will activate and imbue you with power.\n\nNote: You gained the code A61.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("You have some QUICKSILVER and want to try it out", {Book::Type::BOOK1, 26}, {Equipment::QUICKSILVER}));
+            Choices.push_back(Choice::Base("You have some <b>quicksilver</b> and want to try it out", {Book::Type::BOOK1, 26}, {Equipment::QUICKSILVER}));
             Choices.push_back(Choice::Base("There is nothing more to do here: Return to the crossroads", {Book::Type::BOOK1, 566}));
 
             Controls = Story::Controls::STANDARD;
@@ -9228,7 +9228,7 @@ namespace Book1
 
             ID = 272;
 
-            Text = "Even the smaller temples to Cursus are fantastic in their ornamentation. Gold ornaments lustre against the deep black stone, and haunting choral odes echo through the square chamber, as if the singers were surrounding you.\n\nIf you have any INCENSE, you may exchange some for a blessing from the priests. Find the party member with the lowest Stealth score in the team and increase their Stealth by 1 point.\n\nYou may also receive some Ritual Scarring (Cursus), which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some Ritual Scarring (Cursus), they must lose 1 point of Health permanently.";
+            Text = "Even the smaller temples to Cursus are fantastic in their ornamentation. Gold ornaments lustre against the deep black stone, and haunting choral odes echo through the square chamber, as if the singers were surrounding you.\n\nIf you have any <b>incense</b>, you may exchange some for a blessing from the priests. Find the party member with the lowest Stealth score in the team and increase their Stealth by 1 point.\n\nYou may also receive some Ritual Scarring (Cursus), which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some Ritual Scarring (Cursus), they must lose 1 point of Health permanently.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -9243,7 +9243,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
             {
-                Choices.push_back(Choice::Base("(INCENSE) Select party member with lowest Stealth score", {Book::Type::BOOK1, -272}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::INCENSE}, {Attribute::Type::STEALTH}, 1));
+                Choices.push_back(Choice::Base("<b>(incense)</b> Select party member with lowest Stealth score", {Book::Type::BOOK1, -272}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::INCENSE}, {Attribute::Type::STEALTH}, 1));
             }
 
             Choices.push_back(Choice::Base("Receive some Ritual Scarring (Cursus)", {Book::Type::BOOK1, -272}, Choice::Type::PAYFORSTATUS_WITH_HEALTH, {Character::Status::RITUAL_SCARRING_CURSUS}, -1));
@@ -9429,7 +9429,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "You examine the coffer carefully, but it does not seem to be trapped. Inside are 125 silver coins and a BRONZE LOCKET.";
+            Text = "You examine the coffer carefully, but it does not seem to be trapped. Inside are 125 silver coins and a <b>bronze locket</b>.";
 
             Bye = "You continue down the tunnel.";
 
@@ -9461,7 +9461,7 @@ namespace Book1
 
             Location = Location::Type::DESERT;
 
-            Text = "Clearly your allegiance to the Everchild has not gone unnoticed. You search the zealots, finding three CRUDE BLADES (Fighting +0), 60 silver coins and the Sorcerer's spell book! Sadly, the book has been badly damaged in the battle, but at least one interesting spell has survived:\n\nDazing Lights (Combat)\n\nSwirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.\n\nRecharge: 50 silver\n\nNote: Any of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time. You gained the code A22.";
+            Text = "Clearly your allegiance to the Everchild has not gone unnoticed. You search the zealots, finding three <b>crude blades (Fighting +0)</b>, 60 silver coins and the Sorcerer's spell book! Sadly, the book has been badly damaged in the battle, but at least one interesting spell has survived:\n\nDazing Lights (Combat)\n\nSwirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.\n\nRecharge: 50 silver\n\nNote: Any of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time. You gained the code A22.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -10638,7 +10638,7 @@ namespace Book1
 
             Location = Location::Type::TOMB_OF_IMOPPOSH;
 
-            Text = "Imopposh gives an unearthly howl before collapsing into piles of dust. You are relieved that the foul sorcerer has finally met his end.\n\nYour rewards are considerable. A MASTERWORK BLADE (Fighting +3) and some CHAIN ARMOUR (Armour +2) are stuffed into an urn, along with 900 silver coins. In an ancient wooden box stuffed underneath rotten funeral garbs you discover a GLITTERING NECKLACE (Charisma +2). You may also take a MAGICAL WEAVE from Imopposh's funeral bandages.\n\nNote: You gained the code A39.";
+            Text = "Imopposh gives an unearthly howl before collapsing into piles of dust. You are relieved that the foul sorcerer has finally met his end.\n\nYour rewards are considerable. A <b>masterwork blade (Fighting +3)</b> and some <b>chain armour (Armour +2)</b> are stuffed into an urn, along with 900 silver coins. In an ancient wooden box stuffed underneath rotten funeral garbs you discover a <b>glittering necklace (Charisma +2)</b>. You may also take a <b>magical weave</b> from Imopposh's funeral bandages.\n\nNote: You gained the code A39.";
 
             Bye = "When you have finished your looting, you return to the desert.";
 
@@ -11011,7 +11011,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You approach the door carefully, examining the mystic runes carved around its edge.\n\nNote: Only those party members assigned to the door may contribute to this check.";
+            Text = "You approach the door carefully, examining the mystic runes carved around its edge.\n\nNote: Only those party members <i>assigned to the door</i> may contribute to this check.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Examine the runes (Team check: Lore 4+, Successes: 4)", {Book::Type::BOOK1, 420}, {Book::Type::BOOK1, 464}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::MAGICAL_DOOR, {Attribute::Type::LORE}, 4, 4));
@@ -11199,7 +11199,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The aftermath of the battle is bloody indeed. A dozen thieves, as well as one of the Everchild's men, lie dead. Reasoning that you might as well take the thieves' ill-gotten gains, you open the chests and crates to examine what kind of goods they had stolen. You count 75 silver coins, a REFERENCE BOOK (Lore +1), an ENGAGEMENT RING, as well as large amounts of clothes. Thinking quickly, you strip off your slave rags and change into more common garb, the Everchild and her followers doing the same.\n\nYou slip out of the thieves' hideaway and into the storm drains beneath the city.";
+            Text = "The aftermath of the battle is bloody indeed. A dozen thieves, as well as one of the Everchild's men, lie dead. Reasoning that you might as well take the thieves' ill-gotten gains, you open the chests and crates to examine what kind of goods they had stolen. You count 75 silver coins, a <b>reference book (Lore +1)</b>, an <b>engagement ring</b>, as well as large amounts of clothes. Thinking quickly, you strip off your slave rags and change into more common garb, the Everchild and her followers doing the same.\n\nYou slip out of the thieves' hideaway and into the storm drains beneath the city.";
 
             Bye = "After an hour's wandering you eventually come to a ladder, leading up to a drain cover. You cautiously make your way upwards.";
 
@@ -11254,7 +11254,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You present the Everchild with CALLIGRAPHY INK and ask her to write a letter to the God King of Chalice. She spends a full day working on her note, pleading for aid in a beautiful hand. The resultant BEAUTIFUL LETTER from the Everchild is a work of art.\n\n\"Let us hope that he likes what he sees,\" muses the Everchild. \"Thank you for pursuing this matter. I shall pray for your success.\"";
+            Text = "You present the Everchild with <b>calligraphy ink</b> and ask her to write a letter to the God King of Chalice. She spends a full day working on her note, pleading for aid in a beautiful hand. The resultant <b>beautiful letter</b> from the Everchild is a work of art.\n\n\"Let us hope that he likes what he sees,\" muses the Everchild. \"Thank you for pursuing this matter. I shall pray for your success.\"";
 
             Choices.clear();
 
@@ -11585,7 +11585,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "You sheathe your weapons and search through the coffin, somewhat gingerly given the amount of oozing fluid puddling in the bottom.\n\nYou manage to stomach extracting 240 silver coins and an AMULET OF DEFENCE (Armour +1). You also discover the FAIRBROTHER FAMILY CREST, which was tucked into corner covered in ooze-soaked cloth.\n\nTake what you wish.\n\nNote: You gained the code A58.";
+            Text = "You sheathe your weapons and search through the coffin, somewhat gingerly given the amount of oozing fluid puddling in the bottom.\n\nYou manage to stomach extracting 240 silver coins and an <b>amulet of defence (Armour +1)</b>. You also discover the <b>Fairbrother Family Crest</b>, which was tucked into corner covered in ooze-soaked cloth.\n\nTake what you wish.\n\nNote: You gained the code A58.";
 
             Choices.clear();
 
@@ -11701,7 +11701,7 @@ namespace Book1
             Text = "You have returned to the dragon's lair, now long since looted. The tunnel the dragon made into the lands of Drakehallow is still here.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("(Drakehallow) Follow the tunnel", {Book::Type::BOOK6, 33}));
+            Choices.push_back(Choice::Base("<b>(Drakehallow)</b> Follow the tunnel", {Book::Type::BOOK6, 33}));
             Choices.push_back(Choice::Base("Go back to the lift", {Book::Type::BOOK1, 135}));
 
             Controls = Story::Controls::STANDARD;
@@ -11983,7 +11983,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The armoury is quiet at this time of night. A cluster of spears line the far wall, but it is the complete suit of BRONZE ARMOUR (Armour +4) that catches your eye. The rumours about its incredible durability are true, the magical armour is indeed stronger than the steel plate of Royce and weighs only half as much. Take it, if you wish.\n\nNote: You gained the code A9.";
+            Text = "The armoury is quiet at this time of night. A cluster of spears line the far wall, but it is the complete suit of <b>bronze armour (Armour +4)</b> that catches your eye. The rumours about its incredible durability are true, the magical armour is indeed stronger than the steel plate of Royce and weighs only half as much. Take it, if you wish.\n\nNote: You gained the code A9.";
 
             Choices.clear();
 
@@ -12142,7 +12142,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The old father is tearful with gratitude. \"I have no money to give you, obviously,\" he says. \"But I insist you have this. In my youth I travelled the world, and made a pilgrimage to Pendrilor, where St. Elias, the holiest man in the world, blessed this humble wooden talisman for me. It kept me safe from the grasp of undead horrors, but it's powers only work here in the Valley. Please, take it with my thanks.\"\n\nHe presses the TALISMAN of St. Elias into your hands. It is little more than a humble wooden pendant.\n\nTake it if you wish.";
+            Text = "The old father is tearful with gratitude. \"I have no money to give you, obviously,\" he says. \"But I insist you have this. In my youth I travelled the world, and made a pilgrimage to Pendrilor, where St. Elias, the holiest man in the world, blessed this humble wooden talisman for me. It kept me safe from the grasp of undead horrors, but it's powers only work here in the Valley. Please, take it with my thanks.\"\n\nHe presses the <b>talisman of St. Elias</b> into your hands. It is little more than a humble wooden pendant.\n\nTake it if you wish.";
 
             Choices.clear();
 
@@ -12453,7 +12453,7 @@ namespace Book1
             Text = "You are walking through the Streel, a marketplace in Cursus that sells the most exclusive ornaments and clothing for the well-to-do. One stall is particularly impressive, stacked top to bottom with exotic birds in cages. Though you have no business in buying a bird, you cannot help but examine some of the fascinating (and noisy) specimens on sale. The seller, named Haatchi, is generous with his time, explaining where each creature came from and the lengths he had to go to acquire them.\n\n\"You look adventurous sorts,\" he grins. \"Perhaps you can help me resolve a commission? I've been trying to acquire a crier bird, a relatively rare specimen that lives in the Lhasbreath jungles. It is not much to look at, but its voice is so uncanny it almost sounds human. If you can retrieve one for me, there is 100 silver in it for you.\"";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("You have a CRIER BIRD", {Book::Type::BOOK1, 441}, {Equipment::CRIER_BIRD}));
+            Choices.push_back(Choice::Base("You have a <b>crier bird</b>", {Book::Type::BOOK1, 441}, {Equipment::CRIER_BIRD}));
             Choices.push_back(Choice::Base("Promise to keep a look out for the bird, should you ever head out that way", {Book::Type::BOOK1, 340}));
 
             Controls = Story::Controls::STANDARD;
@@ -12525,7 +12525,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::A(1)}))
             {
-                Choices.push_back(Choice::Base("Sell some TROGLODYTE HEADs to Clavod", {Book::Type::BOOK1, 233}, {Equipment::TROGLODYTE_HEAD}));
+                Choices.push_back(Choice::Base("Sell some <b>troglodyte heads</b> to Clavod", {Book::Type::BOOK1, 233}, {Equipment::TROGLODYTE_HEAD}));
                 Choices.push_back(Choice::Base("Make your way onwards", {Book::Type::BOOK1, 722}));
             }
         }
@@ -12544,7 +12544,7 @@ namespace Book1
 
             Location = Location::Type::UNDERGROUND_TUNNELS;
 
-            Text = "You have returned to the sinister chamber where you found the SILVER SKULL. However, that grim artefact is now missing from its pedestal. There is nothing more to be found here, so you make your way back to the crossroads.";
+            Text = "You have returned to the sinister chamber where you found the <b>silver skull</b>. However, that grim artefact is now missing from its pedestal. There is nothing more to be found here, so you make your way back to the crossroads.";
 
             Choices.clear();
 
@@ -12698,7 +12698,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The thief reluctantly hands over 100 silver coins. When the rest of your party climb through the window, he also decides to throw in a HANDSOME BROOCH (Charisma +1) to discourage any further extortion.";
+            Text = "The thief reluctantly hands over 100 silver coins. When the rest of your party climb through the window, he also decides to throw in a <b>handsome brooch (Charisma +1)</b> to discourage any further extortion.";
 
             Bye = "You slip away into the streets together, the thief soon vanishing from sight.";
 
@@ -12732,7 +12732,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Kopu is astounded you have learned this forbidden language. \"You keep divine company, for the only man I know who understands the Drear tongue is St. Elias himself. He would not have taught you such a language unless the world itself was at stake.\"\n\nKopu waves his hands and a magical cabinet made of purple wood appears, floating in the air. From the cabinet he retrieves a CLOAK OF WONDER (all skills +3). \"Take it!\" he insists. \"And banish the darkness from our land once and for all!\" You vow to do so.\n\nNote: In addition, all injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
+            Text = "Kopu is astounded you have learned this forbidden language. \"You keep divine company, for the only man I know who understands the Drear tongue is St. Elias himself. He would not have taught you such a language unless the world itself was at stake.\"\n\nKopu waves his hands and a magical cabinet made of purple wood appears, floating in the air. From the cabinet he retrieves a <b>cloak of wonder (all skills +3)</b>. \"Take it!\" he insists. \"And banish the darkness from our land once and for all!\" You vow to do so.\n\nNote: In addition, all injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
 
             Choices.clear();
 
@@ -12810,7 +12810,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "The door is unlocked and leads to a priest's sanctum. There is a small altar with a block of INCENSE and 15 silver coins on it. The place is tidy, but there are no comfortable bits of furniture such as chairs or tables here.";
+            Text = "The door is unlocked and leads to a priest's sanctum. There is a small altar with a block of <b>incense</b> and 15 silver coins on it. The place is tidy, but there are no comfortable bits of furniture such as chairs or tables here.";
 
             Bye = "With no other exits available, you make your way to the archway.";
 
@@ -13004,7 +13004,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "Hardly daring to breathe, your party member manages to step carefully across the chamber, avoiding every pressure plate and hidden tripwire. You may take the BLACK PRISM from the pedestal. You only hope it was worth the danger retrieving it!\n\nRetracing your steps with a heart-thumping precision, you manage to make it out of the chamber to the warm congratulations of your colleagues.\n\nNote: You gained the code A80.";
+            Text = "Hardly daring to breathe, your party member manages to step carefully across the chamber, avoiding every pressure plate and hidden tripwire. You may take the <b>black prism</b> from the pedestal. You only hope it was worth the danger retrieving it!\n\nRetracing your steps with a heart-thumping precision, you manage to make it out of the chamber to the warm congratulations of your colleagues.\n\nNote: You gained the code A80.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Gain 1 point of Survival", {Book::Type::BOOK1, 310}, Choice::Type::LASTCHARACTER_ROLLS_FOR_ATTRIBUTEINCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
@@ -13270,7 +13270,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The thief lies dead at your feet. You may take his IRON SHORTSWORD (Fighting +1), his LEATHER ARMOUR (Armour +1) and a pair of SOFT BOOTS (Stealth +1). He also carries 30 silver coins. Eventually the city guards arrive and you inform them what has just happened. Fortunately, they have been looking for this thief for some time and so believe your story.\n\nThe thief's victim, a local magistrate, is delighted with your kindness. He promises to put in a good word with the authorities whilst you are in Chalice.\n\nNote: From now on, any time you have to make a Charisma skill check in the city of Chalice, you may pass it automatically.";
+            Text = "The thief lies dead at your feet. You may take his <b>iron shortsword (Fighting +1)</b>, his <b>leather armour (Armour +1)</b> and a pair of <b>soft boots (Stealth +1)</b>. He also carries 30 silver coins. Eventually the city guards arrive and you inform them what has just happened. Fortunately, they have been looking for this thief for some time and so believe your story.\n\nThe thief's victim, a local magistrate, is delighted with your kindness. He promises to put in a good word with the authorities whilst you are in Chalice.\n\nNote: From now on, any time you have to make a Charisma skill check in the city of Chalice, you may pass it automatically.";
 
             Choices.clear();
 
@@ -13823,7 +13823,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Picking up a nearby bench you attempt to ram the gatehouse door.\n\nNote: Only members of the weapon stealing team may help in this test.";
+            Text = "Picking up a nearby bench you attempt to ram the gatehouse door.\n\nNote: Only members of the <i>weapon stealing team</i> may help in this test.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -14137,7 +14137,7 @@ namespace Book1
 
             Image = "images/book1/yu_yuan.png";
 
-            Text = "\"And you are?\" she asks.\n\n\"Akihiro of Chalice, and you?\"\n\n\"Yu Yan,\" she says, offering the smallest of bows in return. She sheathes her sword. \"I take it you are here treasure hunting?\"\n\n\"In a fashion -- I seek a SILVER IDOL for my master, Honnu,\" you admit.\n\n\"That could be a problem,\" says Yu Yan. \"I am not used to sharing. And I am here to treasure hunt.\"\n\nYou frown. You do not seek conflict with this woman, but nor can you just leave without the statue.";
+            Text = "\"And you are?\" she asks.\n\n\"Akihiro of Chalice, and you?\"\n\n\"Yu Yan,\" she says, offering the smallest of bows in return. She sheathes her sword. \"I take it you are here treasure hunting?\"\n\n\"In a fashion -- I seek a <b>silver idol</b> for my master, Honnu,\" you admit.\n\n\"That could be a problem,\" says Yu Yan. \"I am not used to sharing. And I am here to treasure hunt.\"\n\nYou frown. You do not seek conflict with this woman, but nor can you just leave without the statue.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Offer to work together with Yu Yan", {Book::Type::BOOK1, 454}));
@@ -14169,7 +14169,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            PreText = "You rub your hands together with glee as you behold the stores of treasure. It's time to get looting!\n\nThe following items are in the vault:\n\n1500 silver pieces\nA bar GOLD BULLION\nA MAGICAL WEAVE\nA pile of REGISTRY PAPERS\nA GLITTERING NECKLACE (Charisma +2)\nA TOME OF KNOWLEDGE (Lore +2)\nA SILVER IDOL\n\nWhat will you do now?\n\nNote: You may take what you wish. You gained the code A93.";
+            PreText = "You rub your hands together with glee as you behold the stores of treasure. It's time to get looting!\n\nThe following items are in the vault:\n\n1500 silver pieces\nA bar <b>gold bullion</b>\nA <b>magical weave</b>\nA pile of <b>registry papers</b>\nA <b>glittering necklace (Charisma +2)</b>\nA <b>tome of knowledge (Lore +2)</b>\nA <b>silver idol</b>\n\nWhat will you do now?\n\nNote: You may take what you wish. You gained the code A93.";
 
             Take = {
                 Equipment::Base("1500 silver pieces", "1500 silver pieces", Equipment::Class::NORMAL, Equipment::Type::SILVER_COINS, Attribute::Type::NONE, 0, 0, 1500, false),
@@ -14207,7 +14207,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The overseers have no intention of messing with armed warriors, and quickly leave their sport. The woman staggers to her feet, blood flowing from her face.\n\n\"Barbarians!\" she spits. \"They beat me because I am down on my luck. My family used to own half the land in Clifftop, but my grandfather was forced off his land by the vile sorcerer Unbraaki who stole his land documents. You look like adventurous sorts. If you find me the REGISTRY PAPERS from Unbraaki's vault, I'll reward you!\"\n\n\"And you are?\" you ask.\n\n\"They call me Damned Suzanna,\" she shrugs. \"At least, that's what I'm called when people see me. Find those REGISTRY PAPERS and I'll split the land value with you.\"\n\nIt might be worth looking out for.";
+            Text = "The overseers have no intention of messing with armed warriors, and quickly leave their sport. The woman staggers to her feet, blood flowing from her face.\n\n\"Barbarians!\" she spits. \"They beat me because I am down on my luck. My family used to own half the land in Clifftop, but my grandfather was forced off his land by the vile sorcerer Unbraaki who stole his land documents. You look like adventurous sorts. If you find me the <b>registry papers</b> from Unbraaki's vault, I'll reward you!\"\n\n\"And you are?\" you ask.\n\n\"They call me Damned Suzanna,\" she shrugs. \"At least, that's what I'm called when people see me. Find those <b>registry papers</b> and I'll split the land value with you.\"\n\nIt might be worth looking out for.";
 
             Choices.clear();
 
@@ -14593,7 +14593,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "You find 123 silver coins and a RUSTY KEY on the bodies.\n\nNote: If you paid any bribes to an ogre, you can recover that money as well.\n\nNote: You also gain any bribes you have paid to an ogre. You gained the code A76.";
+            Text = "You find 123 silver coins and a <b>rusty key</b> on the bodies.\n\nNote: If you paid any bribes to an ogre, you can recover that money as well.\n\nNote: You also gain any bribes you have paid to an ogre. You gained the code A76.";
 
             Choices.clear();
 
@@ -14660,7 +14660,7 @@ namespace Book1
 
             Location = Location::Type::CAVES_OF_URANU;
 
-            Text = "You chase after her but stumble up the steps as you run. The stairs lead out onto the side of the hilltop, but by the time you emerge you have lost sight of her. You curse loudly. It is unlikely she will be found now. Perhaps there is some other way of finding a SILVER IDOL? Musing on your failure, you return to Chalice.";
+            Text = "You chase after her but stumble up the steps as you run. The stairs lead out onto the side of the hilltop, but by the time you emerge you have lost sight of her. You curse loudly. It is unlikely she will be found now. Perhaps there is some other way of finding a <b>silver idol</b>? Musing on your failure, you return to Chalice.";
 
             Choices.clear();
 
@@ -14884,7 +14884,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Haatchi is delighted as you produce the CRIER BIRD for him. He quickly hangs it in pride of place in his collection, the bird singing a mournful but sweet tune. True to his word, Haatchi hands over a purse of 100 silver coins. \"If you find any others, just bring them to me,\" he insists.";
+            Text = "Haatchi is delighted as you produce the <b>crier bird</b> for him. He quickly hangs it in pride of place in his collection, the bird singing a mournful but sweet tune. True to his word, Haatchi hands over a purse of 100 silver coins. \"If you find any others, just bring them to me,\" he insists.";
 
             Bye = "Wishing him a good day, you stroll on.";
 
@@ -14963,7 +14963,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Kopu is impressed with your learnedness. \"Few people live long enough amongst orcs to grasp their language,\" admits Kopu. \"This requires a significant reward.\"\n\nHe rummages through his notes until he finds some SCROLLS OF LORE (Lore +3). \"These magical scrolls contain vast amounts of knowledge, practically an entire library's worth. I was looking for someone worthy to pass them on to. Consider them yours.\"\n\nNote: In addition, all injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
+            Text = "Kopu is impressed with your learnedness. \"Few people live long enough amongst orcs to grasp their language,\" admits Kopu. \"This requires a significant reward.\"\n\nHe rummages through his notes until he finds some <b>scrolls of lore (Lore +3)</b>. \"These magical scrolls contain vast amounts of knowledge, practically an entire library's worth. I was looking for someone worthy to pass them on to. Consider them yours.\"\n\nNote: In addition, all injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
 
             Choices.clear();
 
@@ -15079,7 +15079,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "Realising your peril, you raise the talisman high in front of you. The green skeletons let out a terrible screech as blue light burns away the scummy slime from their bones, causing them to collapse in a heap. Skallos, roars with hatred, unleashing a great blast of energy from his mouth. The light from the amulet dims for a moment, before shining back into pure radiance. The undead knight cannot stand against its power, igniting into white flames. Soon his body and possessions have turned to dust, all that is left is his sword and a whispered cry for vengeance.\n\nYou may take the SKALLOS RUNEBLADE (Fighting +3, Lore +2) if you wish. Whatever else the black knight might have possessed is now naught but ash.\n\nNote: You gained the code A79.";
+            Text = "Realising your peril, you raise the talisman high in front of you. The green skeletons let out a terrible screech as blue light burns away the scummy slime from their bones, causing them to collapse in a heap. Skallos, roars with hatred, unleashing a great blast of energy from his mouth. The light from the amulet dims for a moment, before shining back into pure radiance. The undead knight cannot stand against its power, igniting into white flames. Soon his body and possessions have turned to dust, all that is left is his sword and a whispered cry for vengeance.\n\nYou may take the <b>Skallos Runeblade (Fighting +3, Lore +2)</b> if you wish. Whatever else the black knight might have possessed is now naught but ash.\n\nNote: You gained the code A79.";
 
             Bye = "There are no additional exits from this room, so you return to the corridor outside.";
 
@@ -16002,7 +16002,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Mannus understands what you are driving at. He looks very pleased at the thought of accepting the Iron King's bribes and quickly pens an official document. Soon you have a very favourable TITHE REPORT that greatly reduces the amount Saltdad is required to pay.";
+            Text = "Mannus understands what you are driving at. He looks very pleased at the thought of accepting the Iron King's bribes and quickly pens an official document. Soon you have a very favourable <b>tithe report</b> that greatly reduces the amount Saltdad is required to pay.";
 
             Bye = "Thanking each other for your time, you depart.";
 
@@ -16054,7 +16054,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "With the orcs defeated you quickly search their guard room. In total 20 silver coins lies scattered across the table. You can take either orc's CRUDE BLADE (Fighting +0) if you are short on weapons. The first orc also carried a shield (Armour +2).\n\nNote: You gained the code A56.";
+            Text = "With the orcs defeated you quickly search their guard room. In total 20 silver coins lies scattered across the table. You can take either orc's <b>crude blade (Fighting +0)</b> if you are short on weapons. The first orc also carried a <b>shield (Armour +2)</b>.\n\nNote: You gained the code A56.";
 
             Bye = "You return to the corridor outside.";
 
@@ -16116,7 +16116,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Since this is the first time you have taught this language Kopu is delighted. He offers you a BLUESTONE in exchange.\n\nNote: In addition, any injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
+            Text = "Since this is the first time you have taught this language Kopu is delighted. He offers you a <b>bluestone</b> in exchange.\n\nNote: In addition, any injured party members are restored to full Health, as you spend many days resting in the tower whilst you teach the language to Kopu.";
 
             Choices.clear();
 
@@ -16726,7 +16726,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "You step through the archway, the chamber as black as pitch. You carefully shuffle your feet as you walk, nervous of stepping on anything unpleasant, such as trap. You join hands to keep track of where you are, eventually getting the idea of the shape of the room. The jingle of coins through your fingers as you come to a few flat surfaces suggest that something valuable is here. Sadly, you are not alone. Two snakemen are hiding, weapons drawn, in the corners of the room. Though they are blind like you, they can smell you with their tongues and feel an impression of your body heat. You cannot be certain of where the exit is and must fight to the death!\n\nNote: The snakemen strike first in this battle because they are ambushing you. If you have a HYGLIPH FLOWER the snakemen are put off by its pungent odour and require a 6+ on their attack rolls to inflict damage during this battle.";
+            Text = "You step through the archway, the chamber as black as pitch. You carefully shuffle your feet as you walk, nervous of stepping on anything unpleasant, such as trap. You join hands to keep track of where you are, eventually getting the idea of the shape of the room. The jingle of coins through your fingers as you come to a few flat surfaces suggest that something valuable is here. Sadly, you are not alone. Two snakemen are hiding, weapons drawn, in the corners of the room. Though they are blind like you, they can smell you with their tongues and feel an impression of your body heat. You cannot be certain of where the exit is and must fight to the death!\n\nNote: The snakemen strike first in this battle because they are ambushing you. If you have a <b>hygliph flower</b> the snakemen are put off by its pungent odour and require a 6+ on their attack rolls to inflict damage during this battle.";
 
             Choices.clear();
 
@@ -16758,7 +16758,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Straining every sinew, you scrape the door open inch by inch. To your anger you see that this door merely leads to the vault's antechamber, an even large vault door standing on the other side that would take a dozen men to open. Fortunately, the antechamber does contain some easily accessible treasure. You find 500 silver coins, an odd crystalline wand labelled as a wayfinder rod, a bar of GOLD BULLION and a block of INCENSE.\n\nThere are also a number of financial records, none of which look valuable at first. However, one book catches your eye. It is a ROYAL LEDGER, which bears the crest and authority of House Goldwell, the royal family of Royce. In it are detailed a number of transactions to purchase slaves from Cursus for the royal plantations in the Splintered Isles. The purchase of slaves is illegal in Royce... what is the king up to? Take the ledger, if you wish.\n\nBreaking into the patriarch's vault has been the heist of a lifetime.\n\nNote: You gained the code A83.";
+            Text = "Straining every sinew, you scrape the door open inch by inch. To your anger you see that this door merely leads to the vault's antechamber, an even large vault door standing on the other side that would take a dozen men to open. Fortunately, the antechamber does contain some easily accessible treasure. You find 500 silver coins, an odd crystalline wand labelled as a wayfinder rod, a bar of <b>gold bullion</b> and a block of <b>incense</b>.\n\nThere are also a number of financial records, none of which look valuable at first. However, one book catches your eye. It is a <b>royal ledger</b>, which bears the crest and authority of House Goldwell, the royal family of Royce. In it are detailed a number of transactions to purchase slaves from Cursus for the royal plantations in the Splintered Isles. The purchase of slaves is illegal in Royce... what is the king up to? Take the ledger, if you wish.\n\nBreaking into the patriarch's vault has been the heist of a lifetime.\n\nNote: You gained the code A83.";
 
             Bye = "You silently return to the ground floor of the pyramid.";
 
@@ -16926,7 +16926,7 @@ namespace Book1
 
             ID = 503;
 
-            Text = "Holding your breath, you plunge into the cold water, swimming through the black tunnel. Eventually you spy the tiniest glimpse of light, and swim onwards, your lungs bursting. You emerge into a small but tall chamber, filled with half-submerged smashed pottery. Light streams through a tiny crack in the ceiling, and you can hear sounds of the city high above you.\n\nThe walls are unscalable, but searching the broken vases nets you 40 silver pieces and a HANDSOME BROOCH (Charisma +1).";
+            Text = "Holding your breath, you plunge into the cold water, swimming through the black tunnel. Eventually you spy the tiniest glimpse of light, and swim onwards, your lungs bursting. You emerge into a small but tall chamber, filled with half-submerged smashed pottery. Light streams through a tiny crack in the ceiling, and you can hear sounds of the city high above you.\n\nThe walls are unscalable, but searching the broken vases nets you 40 silver pieces and a <b>handsome brooch (Charisma +1)</b>.";
 
             Bye = "Pleased with your find, you swim back to the Everchild and make your report. Satisfied that the only way to go is through the dry arch, she beckons you onwards.";
 
@@ -17184,8 +17184,8 @@ namespace Book1
             IsCity = true;
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Spend one GOLD BULLION on some light infantry", {Book::Type::BOOK1, 900}, Choice::Type::PAY_WITH, {Equipment::GOLD_BULLION}, 1));
-            Choices.push_back(Choice::Base("Spend two GOLD BULLION on restoring the Bronzeguard", {Book::Type::BOOK1, 143}, Choice::Type::PAY_WITH, {Equipment::GOLD_BULLION}, 2));
+            Choices.push_back(Choice::Base("Spend one <b>gold bullion</b> on some light infantry", {Book::Type::BOOK1, 900}, Choice::Type::PAY_WITH, {Equipment::GOLD_BULLION}, 1));
+            Choices.push_back(Choice::Base("Spend two <b>gold bullion</b> on restoring the Bronzeguard", {Book::Type::BOOK1, 143}, Choice::Type::PAY_WITH, {Equipment::GOLD_BULLION}, 2));
             Choices.push_back(Choice::Base("Leave the training ground", {Book::Type::BOOK1, 620}));
 
             Controls = Story::Controls::BARRACKS;
@@ -17195,7 +17195,7 @@ namespace Book1
         {
             Engine::GET_CODES(party, {Codes::Type::MAGIC_VAULT});
 
-            PreText = "You make your way to the training grounds, where you see the soldiers of the Everchild at practice. All the troops you have gathered for her can be found here, their armour and weapons glinting in the unforgiving sun.\n\n\"We can always use more soldiers,\" comments general Che Long. \"I know the Everchild has asked you to find some more from the leaders in the valley, but we can also muster more troops here if we can find the money.\"\n\n\"How much will it cost to levy more troops?\" you ask, checking your purse.\n\n\"More than any number of silver coins!\" laughs Che Long. \"We are talking about hundreds of soldiers, including weapons and supplies. You would need bars of GOLD BULLION to fully pay for the cost.\"\n\nYou ponder Che Long's request. \"If I found some, what kind of soldiers could we raise?\"\n\n\"For one bar of GOLD BULLION we could raise a decent troop of light infantry,\" says Che Long. \"But ideally, we would want two GOLD BULLION bars. With that we could retrain and equip the Bronzeguard. We still have their armour and equipment -- but teaching men to fight to that standard is a long and expensive process.\"\n\nNote: If you have any bars of GOLD BULLION you can purchase additional troops for the Everchild.";
+            PreText = "You make your way to the training grounds, where you see the soldiers of the Everchild at practice. All the troops you have gathered for her can be found here, their armour and weapons glinting in the unforgiving sun.\n\n\"We can always use more soldiers,\" comments general Che Long. \"I know the Everchild has asked you to find some more from the leaders in the valley, but we can also muster more troops here if we can find the money.\"\n\n\"How much will it cost to levy more troops?\" you ask, checking your purse.\n\n\"More than any number of silver coins!\" laughs Che Long. \"We are talking about hundreds of soldiers, including weapons and supplies. You would need bars of <b>gold bullion</b> to fully pay for the cost.\"\n\nYou ponder Che Long's request. \"If I found some, what kind of soldiers could we raise?\"\n\n\"For one bar of <b>gold bullion</b> we could raise a decent troop of light infantry,\" says Che Long. \"But ideally, we would want two <b>gold bullion</b> bars. With that we could retrain and equip the Bronzeguard. We still have their armour and equipment -- but teaching men to fight to that standard is a long and expensive process.\"\n\nNote: If you have any bars of <b>gold bullion</b> you can purchase additional troops for the Everchild.";
 
             if (!Engine::VERIFY_CODES_ANY(party, {Codes::A(33), Codes::A(100)}))
             {
@@ -17812,7 +17812,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The heist began well, with you being able to snatch a GOLD PORTRAIT and a BRONZE SCORPION.";
+            Text = "The heist began well, with you being able to snatch a <b>gold portrait</b> and a <b>bronze scorpion</b>.";
 
             Choices.clear();
 
@@ -18166,7 +18166,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "The tunnel emerges into a larger temple room, in which snakemen appear to be at worship by a flat-black altar. They hiss in alarm as you enter, reaching for their wickedly curved swords. You narrow your eyes in concentration as their swaying bodies slither towards you.\n\nNote: If you have a HYGLIPH FLOWER the snakemen are put off by its pungent odour and require a 5+ on their attack rolls to inflict damage during this battle.";
+            Text = "The tunnel emerges into a larger temple room, in which snakemen appear to be at worship by a flat-black altar. They hiss in alarm as you enter, reaching for their wickedly curved swords. You narrow your eyes in concentration as their swaying bodies slither towards you.\n\nNote: If you have a <b>hygliph flower</b> the snakemen are put off by its pungent odour and require a 5+ on their attack rolls to inflict damage during this battle.";
 
             Choices.clear();
 
@@ -18800,7 +18800,7 @@ namespace Book1
             Text = "This battle has taught you much about combat strategy.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of FIGHTING", {Book::Type::BOOK1, 3}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 1, 0));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Fighting", {Book::Type::BOOK1, 3}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 1, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -19648,7 +19648,7 @@ namespace Book1
 
             Image = "images/book1/nightmare_room.png";
 
-            Text = "The door opens into a room out of your worst nightmares. Bright silver sawblades are suspended on long, mechanical arms which jut from the side of the walls. Spear holes cover the floor at uneven intervals. You can see the dismembered bodies of orcs, literally chopped to pieces, scattered across the ground.\n\nOne orc has been impaled from his seat to his neck, and is still suspended in the air, dripping blood.\n\nAt the far end of the room you can see a pedestal, on which sits a BLACK PRISM of some kind.";
+            Text = "The door opens into a room out of your worst nightmares. Bright silver sawblades are suspended on long, mechanical arms which jut from the side of the walls. Spear holes cover the floor at uneven intervals. You can see the dismembered bodies of orcs, literally chopped to pieces, scattered across the ground.\n\nOne orc has been impaled from his seat to his neck, and is still suspended in the air, dripping blood.\n\nAt the far end of the room you can see a pedestal, on which sits a <b>black prism</b> of some kind.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Close the door on this room of horrors", {Book::Type::BOOK1, 310}));
@@ -20150,7 +20150,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You are quickly recognised as the queen's champions by the cruel arena master. Grovelling obsequiously, he apologises for your detention, and even offers you 100 silver coins by way of apology. You may also take up to four CRUDE BLADES (Fighting +0) from the armoury to replace your lost weapons.";
+            Text = "You are quickly recognised as the queen's champions by the cruel arena master. Grovelling obsequiously, he apologises for your detention, and even offers you 100 silver coins by way of apology. You may also take up to four <b>crude blades (Fighting +0)</b> from the armoury to replace your lost weapons.";
 
             Bye = "Banishing the arena master with a cuff to his ear, you march smartly into the city.";
 
@@ -20409,7 +20409,7 @@ namespace Book1
         {
             Engine::CONSOLIDATE(party);
 
-            PreText = "As you make your way to the steps of the temple you can see monks lining up on both sides. Many of the God King's kensai bow deeply as you pass, recognising you as one of their own. You can see your family is also gathered here, including your mother and sister, looking so proud they are fit to burst.\n\nHonnu, now dressed in the shell-blue robes of a kensai, greets you with a bow. He takes you aside behind a screen, where you are presented with high-collared KENSAI ROBES (Armour +3) to change into. You emerge to cheers, the great and the good of Chalice turning out to applaud you.\n\n";
+            PreText = "As you make your way to the steps of the temple you can see monks lining up on both sides. Many of the God King's kensai bow deeply as you pass, recognising you as one of their own. You can see your family is also gathered here, including your mother and sister, looking so proud they are fit to burst.\n\nHonnu, now dressed in the shell-blue robes of a kensai, greets you with a bow. He takes you aside behind a screen, where you are presented with high-collared <b>kensai robes (Armour +3)</b> to change into. You emerge to cheers, the great and the good of Chalice turning out to applaud you.\n\n";
 
             Choices.clear();
 
@@ -20672,7 +20672,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You quickly examine the bodies before the housecarls arrive on the scene. You find a little money, 20 silver coins. Most damningly you find a RING OF THE PATRIARCH. These rings are only given out to the most loyal servants of Cursus. Clearly your allegiance to the Everchild will mean you shall be hounded by these fanatics until the end of your days! Shaking your head, you quickly flee the scene.\n\nNote: You gained the code A90.";
+            Text = "You quickly examine the bodies before the housecarls arrive on the scene. You find a little money, 20 silver coins. Most damningly you find a <b>ring of the patriarch</b>. These rings are only given out to the most loyal servants of Cursus. Clearly your allegiance to the Everchild will mean you shall be hounded by these fanatics until the end of your days! Shaking your head, you quickly flee the scene.\n\nNote: You gained the code A90.";
 
             Choices.clear();
 
@@ -20867,7 +20867,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The gatehouse's weapon store is open to you. You may take any of the following items:\n\nHIDE ARMOUR (Armour +1)\nSHIELD (Armour +2)\nMAUL* (Fighting +1)\nIRON SHORTSWORD (Fighting +1)\nCRUDE BLADE (Fighting +0) -- you may take up to four CRUDE BLADES.\n\nYou also grab a number of crude weapons for the Everchild and her followers, before fleeing the gatehouse, closing the door behind you.";
+            Text = "The gatehouse's weapon store is open to you. You may take any of the following items:\n\n<b>hide armour (Armour +1)</b>\n<b>shield (Armour +2)</b>\n<b>maul* (Fighting +1)</b>\n<b>iron shortsword (Fighting +1)</b>\n<b>crude blade (Fighting +0)</b> -- you may take up to four crude blades.\n\nYou also grab a number of crude weapons for the Everchild and her followers, before fleeing the gatehouse, closing the door behind you.";
 
             Choices.clear();
 
@@ -21374,7 +21374,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You've seen the priest's longing gazes at your body. Now all you have to do is turn that lust into love and you'll have him eating out of the palm of your hand. Soon you are engaged in many deep and meaningful chats in the dead of night, listening to the priest's worries, massaging his troubles away, whilst lamenting your own enslavement when you feel his pity upon you.\n\nOne morning the priest sends you away. He is on the verge of breaking his vows and can no longer bear to have such a beautiful creature working for him. You tell him that you will not leave without your friends, so he reluctantly frees them too.\n\nAs a parting gift he presents you with 120 silver coins and a HANDSOME BROOCH (Charisma +1) so you can always think of him in the future.";
+            Text = "You've seen the priest's longing gazes at your body. Now all you have to do is turn that lust into love and you'll have him eating out of the palm of your hand. Soon you are engaged in many deep and meaningful chats in the dead of night, listening to the priest's worries, massaging his troubles away, whilst lamenting your own enslavement when you feel his pity upon you.\n\nOne morning the priest sends you away. He is on the verge of breaking his vows and can no longer bear to have such a beautiful creature working for him. You tell him that you will not leave without your friends, so he reluctantly frees them too.\n\nAs a parting gift he presents you with 120 silver coins and a <b>handsome brooch (Charisma +1)</b> so you can always think of him in the future.";
 
             Bye = "Giving him a chaste but meaningful kiss goodbye, you quickly flee into the city centre before he can change his mind.";
 
@@ -21636,7 +21636,7 @@ namespace Book1
 
             Location = Location::Type::CAVES_OF_URANU;
 
-            Text = "You manage to slay the bulky creature, its thick blood leaking into the stones. Yu Yan nods to you. \"Impressive swordsmanship,\" she says. \"I'm pleased I made this partnership. Speaking of which, I have some treasure to gather.\"\n\nYou watch idly as she begins to pile the silver coins and jewellery into her sack. Curious, you look inside, only to see the SILVER IDOL you have been searching for peeking out of her sack. The devious looter has already found the object of your quest!\n\n\"Yu Yan! That silver idol is mine, by the terms of our agreement!\" you protest. \"Hand it over, now!\"\n\n\"I found it before we made that agreement, it's mine!\" she insists.\n\n\"Don't let this come to blows, Yu Yan,\" you threaten.\n\n\"The idol! Now!\"\n\nYu Yan looks crestfallen. She nods slowly, reaching into her bag. Suddenly a shower of silver coins are hurled into your face, sending you staggering back. Yu Yan giggles, and dashes up the stairs. Snarling, you go in pursuit.";
+            Text = "You manage to slay the bulky creature, its thick blood leaking into the stones. Yu Yan nods to you. \"Impressive swordsmanship,\" she says. \"I'm pleased I made this partnership. Speaking of which, I have some treasure to gather.\"\n\nYou watch idly as she begins to pile the silver coins and jewellery into her sack. Curious, you look inside, only to see the <b>silver idol</b> you have been searching for peeking out of her sack. The devious looter has already found the object of your quest!\n\n\"Yu Yan! That silver idol is mine, by the terms of our agreement!\" you protest. \"Hand it over, now!\"\n\n\"I found it before we made that agreement, it's mine!\" she insists.\n\n\"Don't let this come to blows, Yu Yan,\" you threaten.\n\n\"The idol! Now!\"\n\nYu Yan looks crestfallen. She nods slowly, reaching into her bag. Suddenly a shower of silver coins are hurled into your face, sending you staggering back. Yu Yan giggles, and dashes up the stairs. Snarling, you go in pursuit.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Chase Yu Yan (Individual check: Survival 4+, Successes: 3)", {Book::Type::BOOK1, 899}, {Book::Type::BOOK1, 433}, {Attribute::Type::SURVIVAL}, 4, 3));
@@ -21693,7 +21693,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You gain the sense of something obscured in the stonework. Casting your spell, a section of the wall dissolves into darkness. Shining your lanterns within reveals a circular room filled with sturdy shelves and boxes. Your heart hammers in excitement. This is a treasury room, probably one of the smaller treasuries built during the reign of the first Everchild.\n\nSadly, much of the money has already been taken, and many boxes are empty. Perhaps there was some sort of disaster in the waning years of the Everchild's reign? There is still some money to be found, however, including 600 silver coins and a bar of GOLD BULLION.\n\nNote: You gained the code A97.";
+            Text = "You gain the sense of something obscured in the stonework. Casting your spell, a section of the wall dissolves into darkness. Shining your lanterns within reveals a circular room filled with sturdy shelves and boxes. Your heart hammers in excitement. This is a treasury room, probably one of the smaller treasuries built during the reign of the first Everchild.\n\nSadly, much of the money has already been taken, and many boxes are empty. Perhaps there was some sort of disaster in the waning years of the Everchild's reign? There is still some money to be found, however, including 600 silver coins and a bar of <b>gold bullion</b>.\n\nNote: You gained the code A97.";
 
             Bye = "Stuffing your bags with coins, you depart.";
 
@@ -21927,7 +21927,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The GOLDEN CANDLESTICK looks valuable, but ordinary. You can add it to your equipment.";
+            Text = "The <b>golden candlestick</b> looks valuable, but ordinary. You can add it to your equipment.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Examine the bookcase", {Book::Type::BOOK1, 230}));
@@ -22154,7 +22154,7 @@ namespace Book1
 
             Location = Location::Type::UNDERGROUND_TUNNELS;
 
-            Text = "With the ghouls defeated you begin a grizzly search through the remains in the burial chamber. You find 125 silver coins and a strangely intact pair of SOFT BOOTS (Stealth +1).\n\nYou find a bronze tablet, set into the wall, upon which a powerful spell has been inscribed:\n\nWisdom (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\nRecharge: 50 silver.\n\nNote: You gained the code A48.";
+            Text = "With the ghouls defeated you begin a grizzly search through the remains in the burial chamber. You find 125 silver coins and a strangely intact pair of <b>soft boots (Stealth +1)</b>.\n\nYou find a bronze tablet, set into the wall, upon which a powerful spell has been inscribed:\n\nWisdom (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\nRecharge: 50 silver.\n\nNote: You gained the code A48.";
 
             Bye = "With nowhere else to go, you return to the crossroads.";
 
@@ -22456,7 +22456,7 @@ namespace Book1
 
             Location = Location::Type::PALACE_OF_UNBRAAKI;
 
-            Text = "You quietly prowl the corridors until you come to the open door of Unbraaki's study. Except for the occasional monkey, proudly strutting down the corridor in a tall hat, there is no one about. You peek inside the room. It is a treasure house of knowledge and spells, quills and ink. You may take some CALLIGRAPHY INK if you wish. You find books that contain all of the common spells of the world. Additionally, you find a very special spell indeed:\n\nClinging Dread (Mass Combat)\n\nDoubt and uncertainty fill the hearts of the enemy soldiers. Reduce the Morale score of an enemy unit by 1 point.\n\nRecharge: 50 silver.\n\nPleased with your findings you decide to quickly move on.\n\nNote: You can only cast this spell during Mass Combat (when entire armies clash). It has no effect on personal combat. You gained the code A91.";
+            Text = "You quietly prowl the corridors until you come to the open door of Unbraaki's study. Except for the occasional monkey, proudly strutting down the corridor in a tall hat, there is no one about. You peek inside the room. It is a treasure house of knowledge and spells, quills and ink. You may take some <b>calligraphy ink</b> if you wish. You find books that contain all of the common spells of the world. Additionally, you find a very special spell indeed:\n\nClinging Dread (Mass Combat)\n\nDoubt and uncertainty fill the hearts of the enemy soldiers. Reduce the Morale score of an enemy unit by 1 point.\n\nRecharge: 50 silver.\n\nPleased with your findings you decide to quickly move on.\n\nNote: You can only cast this spell during Mass Combat (when entire armies clash). It has no effect on personal combat. You gained the code A91.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("To the library", {Book::Type::BOOK1, 459}));
@@ -22531,7 +22531,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Almost casually you empty in the VIAL OF POISON as if it were nothing more than another herb or spice, before drifting away into the shadows. The cooks are blissfully unaware of your modifications, and soon begin to dish out the stew into hundreds of wooden bowls. There is nothing more you can do here, so you quietly slip away into the city.\n\nThe next morning the Bronzeguard compound is closed, and only regular guards appear to be patrolling the streets. The lack of enormous, armoured warriors is immediately obvious, and rumours and petty crime begin to sweep the city. There can be no doubt that the Bronzeguard, if not completely destroyed, have been dealt a dreadful blow.\n\nNote: You gained the code A8.";
+            Text = "Almost casually you empty in the <b>vial of poison</b> as if it were nothing more than another herb or spice, before drifting away into the shadows. The cooks are blissfully unaware of your modifications, and soon begin to dish out the stew into hundreds of wooden bowls. There is nothing more you can do here, so you quietly slip away into the city.\n\nThe next morning the Bronzeguard compound is closed, and only regular guards appear to be patrolling the streets. The lack of enormous, armoured warriors is immediately obvious, and rumours and petty crime begin to sweep the city. There can be no doubt that the Bronzeguard, if not completely destroyed, have been dealt a dreadful blow.\n\nNote: You gained the code A8.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Stealth", {Book::Type::BOOK1, 75}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::STEALTH}, 1, 2, 0));
@@ -22887,7 +22887,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "With the orcs dead you move to loot the room and examine their wargear. The leader has a mighty IRON GREATAXE* (Fighting +2) and is wearing a fine suit of BONE ARMOUR (Armour +2). Three IRON SWORDS (Fighting +1) can be looted from the common warriors. Searching the room you find an iron key and a WARM CLOAK (Survival +1). Oddly, there are only 10 silver coins, not much for such a mighty leader. Where will you go now?\n\nNote: You gained the code 64.";
+            Text = "With the orcs dead you move to loot the room and examine their wargear. The leader has a mighty <b>iron greataxe* (Fighting +2)</b> and is wearing a fine suit of <b>bone armour (Armour +2)</b>. Three <b>iron swords (Fighting +1)</b> can be looted from the common warriors. Searching the room you find an iron key and a <b>warm cloak (Survival +1)</b>. Oddly, there are only 10 silver coins, not much for such a mighty leader. Where will you go now?\n\nNote: You gained the code 64.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Go through the west door", {Book::Type::BOOK1, 736}));
@@ -23075,7 +23075,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Honnu nods as you hand over the SILVER IDOL. He looks at it briefly, and then tosses it to a nearby beggar in meditation. The astonished old beggar thanks the monk and dashes off to the marketplace to turn his donation into coins.\n\n\"Well, that's the tedious part of your tests complete,\" shrugs Honnu. The whole matter has been rather an anti-climax, but you seem to have passed.";
+            Text = "Honnu nods as you hand over the <b>silver idol</b>. He looks at it briefly, and then tosses it to a nearby beggar in meditation. The astonished old beggar thanks the monk and dashes off to the marketplace to turn his donation into coins.\n\n\"Well, that's the tedious part of your tests complete,\" shrugs Honnu. The whole matter has been rather an anti-climax, but you seem to have passed.";
 
             Choices.clear();
 
@@ -23400,7 +23400,7 @@ namespace Book1
             Text = "You have returned to the room with the magic circle. It will require quicksilver in order to operate.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Pour some QUICKSILVER into the circle", {Book::Type::BOOK1, 26}, {Equipment::QUICKSILVER}));
+            Choices.push_back(Choice::Base("Pour some <b>quicksilver</b> into the circle", {Book::Type::BOOK1, 26}, {Equipment::QUICKSILVER}));
             Choices.push_back(Choice::Base("Return to the crossroads", {Book::Type::BOOK1, 566}));
 
             Controls = Story::Controls::STANDARD;
@@ -24047,7 +24047,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "The slaves give a mighty cheer as the last orc falls dead. They quickly take up the orc's weapons, though you may seize the CHAIN ARMOUR (Armour +2) from the orc leader, if you wish. The slaves heap glory upon you.\n\nYou ask the slaves what the orcs were digging for, but they can tell you little. The orcs would not reveal the object of their search, but they seemed frantic to find it, whatever it was. It is certainly unusual for orcs to travel so far, with so many supplies, and with such stealth into an enemy nation. You wonder what to make of it all.\n\nThe slaves thank you again, and let you know that they intend to find their own way out of the dungeon and to find a new life for themselves.\n\nNote: You gained the code A69.";
+            Text = "The slaves give a mighty cheer as the last orc falls dead. They quickly take up the orc's weapons, though you may seize the <b>chain armour (Armour +2)</b> from the orc leader, if you wish. The slaves heap glory upon you.\n\nYou ask the slaves what the orcs were digging for, but they can tell you little. The orcs would not reveal the object of their search, but they seemed frantic to find it, whatever it was. It is certainly unusual for orcs to travel so far, with so many supplies, and with such stealth into an enemy nation. You wonder what to make of it all.\n\nThe slaves thank you again, and let you know that they intend to find their own way out of the dungeon and to find a new life for themselves.\n\nNote: You gained the code A69.";
 
             Bye = "You wish them luck, and then turn your attention back to the cavern.";
 
@@ -24078,7 +24078,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "You step cautiously through a crooked black stone archway and into a wide pillared chamber. You are just taking your bearings when you head a slam of rusted metal. Spinning around you can see that you have been cut off from the exit by a large portcullis. Worse, you can hear a savage hissing from all around the temple chamber. Drawing your weapons, you are startled to see a number of hideous snakemen, serpentine creatures with the arms of men and the bodies of a giant cobra. There is no escape, you must fight!\n\nNote: If you have a HYGLIPH FLOWER the snakemen are put off by its pungent odour and require a 5+ on their attack rolls to inflict damage during this battle.";
+            Text = "You step cautiously through a crooked black stone archway and into a wide pillared chamber. You are just taking your bearings when you head a slam of rusted metal. Spinning around you can see that you have been cut off from the exit by a large portcullis. Worse, you can hear a savage hissing from all around the temple chamber. Drawing your weapons, you are startled to see a number of hideous snakemen, serpentine creatures with the arms of men and the bodies of a giant cobra. There is no escape, you must fight!\n\nNote: If you have a <b>hygliph flower</b> the snakemen are put off by its pungent odour and require a 5+ on their attack rolls to inflict damage during this battle.";
 
             Choices.clear();
 
@@ -24237,7 +24237,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "You believe you have pieced together the mystery of this place. \"You are a priest of Cursus, then? The god of judgement?\"\n\n\"I am!\" he hisses. \"And I was high priest of all your kind once. When the demon lord came, we slithered from our underground dwellings from the cracks in the earth he smote with his sword. We took pity on you, took you as our slaves from your ruined cities. Gave you a home and pious work to perform, building temples in the name of Cursus. So cunning you were! Joined us in the worship of Cursus, your voices singing with ours... and then betrayal! You stole our god for your own! Escaped your chains and built your own temples without us. Your monuments were so magnificent that Cursus abandoned us for your kind.\"\n\n\"So Cursus was originally... a serpent god?\" you ask unsurely.\n\nThe priest seems angry. \"How can you doubt it?\" he snarls. \"Here! Look! The scrolls of Cursus, the original documents of our faith. Take them back to the foul priests in your monument-cluttered land! No human hand wrote this! This is the work of serpents...the true folk!\"\n\nHe thrusts the SCROLLS OF CURSUS into your hands. You gaze at them in wonder. If these documents were ever presented to the followers of Cursus it could cause untold damage to the faithful. Cursites have always been an intolerant folk. What would they make of the revelation that their faith was serpent-born?\n\nThe snakeman priest has slithered away, muttering dark words of sorcery. \"All is lost! My kin... too few in number to rebuild. The temple must not fall into human hands!\" Suddenly cracks begin forming in the walls, and a dreadful rumbling can be felt through the temple.\n\nYou have to get out of here!";
+            Text = "You believe you have pieced together the mystery of this place. \"You are a priest of Cursus, then? The god of judgement?\"\n\n\"I am!\" he hisses. \"And I was high priest of all your kind once. When the demon lord came, we slithered from our underground dwellings from the cracks in the earth he smote with his sword. We took pity on you, took you as our slaves from your ruined cities. Gave you a home and pious work to perform, building temples in the name of Cursus. So cunning you were! Joined us in the worship of Cursus, your voices singing with ours... and then betrayal! You stole our god for your own! Escaped your chains and built your own temples without us. Your monuments were so magnificent that Cursus abandoned us for your kind.\"\n\n\"So Cursus was originally... a serpent god?\" you ask unsurely.\n\nThe priest seems angry. \"How can you doubt it?\" he snarls. \"Here! Look! The scrolls of Cursus, the original documents of our faith. Take them back to the foul priests in your monument-cluttered land! No human hand wrote this! This is the work of serpents...the true folk!\"\n\nHe thrusts the <b>scrolls of cursus</b> into your hands. You gaze at them in wonder. If these documents were ever presented to the followers of Cursus it could cause untold damage to the faithful. Cursites have always been an intolerant folk. What would they make of the revelation that their faith was serpent-born?\n\nThe snakeman priest has slithered away, muttering dark words of sorcery. \"All is lost! My kin... too few in number to rebuild. The temple must not fall into human hands!\" Suddenly cracks begin forming in the walls, and a dreadful rumbling can be felt through the temple.\n\nYou have to get out of here!";
 
             Choices.clear();
 
@@ -24676,7 +24676,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "\"Forgive me, holy ones,\" you beg. \"But I found these sacred scrolls of Cursus in a long-abandoned ruin. I knew I had to bring them to you.\"\n\nThe High Zealot raises his eyebrows and takes the SCROLLS OF CURSUS. He scans over the sheets. \"They are written in the old hand! They are original works -- not translations! Praise be!\"\n\n\"Praise be!\" chant the other zealots, abasing themselves before the scrolls.\n\nAs the High Zealot reads his face contorts in confusion... and then horror. \"No! It cannot be!\" he cries. \"Cursus? A serpent god? A foul beast deity, with no more right to occupy heaven than a dog? We are deceived, brothers! Our faith is little more than a tool of spiritual slavery!\"\n\n\"No!\" cries another. \"These are lies!\"\n\n\"But they are written in the old hand, it cannot be lies!\" insists the High Zealot.\n\nYou discreetly leave the chamber as you hear the sounds of swords being drawn in anger. You have been forgotten, and there is much 'religious dialogue' to take place in your absence. Perhaps this is the beginning of the end of the Cursus religion, perhaps not. Either way, the zealots of Cursus will destroy each other.\n\nNote: You gained the code A40.";
+            Text = "\"Forgive me, holy ones,\" you beg. \"But I found these sacred scrolls of Cursus in a long-abandoned ruin. I knew I had to bring them to you.\"\n\nThe High Zealot raises his eyebrows and takes the <b>scrolls of cursus</b>. He scans over the sheets. \"They are written in the old hand! They are original works -- not translations! Praise be!\"\n\n\"Praise be!\" chant the other zealots, abasing themselves before the scrolls.\n\nAs the High Zealot reads his face contorts in confusion... and then horror. \"No! It cannot be!\" he cries. \"Cursus? A serpent god? A foul beast deity, with no more right to occupy heaven than a dog? We are deceived, brothers! Our faith is little more than a tool of spiritual slavery!\"\n\n\"No!\" cries another. \"These are lies!\"\n\n\"But they are written in the old hand, it cannot be lies!\" insists the High Zealot.\n\nYou discreetly leave the chamber as you hear the sounds of swords being drawn in anger. You have been forgotten, and there is much 'religious dialogue' to take place in your absence. Perhaps this is the beginning of the end of the Cursus religion, perhaps not. Either way, the zealots of Cursus will destroy each other.\n\nNote: You gained the code A40.";
 
             Choices.clear();
 
@@ -24791,7 +24791,7 @@ namespace Book1
 
             Location = Location::Type::SALT_PLAINS;
 
-            Text = "You spy a body in the distance, little more than a pile of bones. Approaching you can see it is the remains of a Lhasbreath warrior, his grim BONE ARMOUR glistening in the waterless waste. The poor devil has no use for his things now. You can take his BONE ARMOUR (Armour +2), his IRON SHORTSWORD (Fighting +1) and 30 silver coins. Lamenting that he died so close to water, you look to leave the savage wasteland.\n\nNote: You gained the code A18.";
+            Text = "You spy a body in the distance, little more than a pile of bones. Approaching you can see it is the remains of a Lhasbreath warrior, his grim <b>bone armour</b> glistening in the waterless waste. The poor devil has no use for his things now. You can take his <b>bone armour (Armour +2)</b>, his <b>iron shortsword (Fighting +1)</b> and 30 silver coins. Lamenting that he died so close to water, you look to leave the savage wasteland.\n\nNote: You gained the code A18.";
 
             Choices.clear();
 
@@ -24879,7 +24879,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "You have slain the orcs, their blood weeping into the ancient flagstones. You found five CRUDE BLADES (Fighting +0). Turning your attention to the table you examine the artefacts that the orcs seem to have dug up from the earth. Is this what the orc expedition is about? Simple treasure hunting?\n\nSome of the artefacts are simple bits of pottery with no real value, but you do find a HANDSOME BROOCH (Charisma +1) and several other pieces of jewellery you can sell for 350 silver coins.\n\nThere are two exits from the chamber.\n\nNote: You gained the code A74.";
+            Text = "You have slain the orcs, their blood weeping into the ancient flagstones. You found five <b>crude blades (Fighting +0)</b>. Turning your attention to the table you examine the artefacts that the orcs seem to have dug up from the earth. Is this what the orc expedition is about? Simple treasure hunting?\n\nSome of the artefacts are simple bits of pottery with no real value, but you do find a <b>handsome brooch (Charisma +1)</b> and several other pieces of jewellery you can sell for 350 silver coins.\n\nThere are two exits from the chamber.\n\nNote: You gained the code A74.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Go through the north door", {Book::Type::BOOK1, 23}));
@@ -25376,7 +25376,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "\"The God King wishes to see my handwriting?\" says the Everchild aghast. \"Whatever for?\"\n\n\"He believes that through your hand he may glimpse the honesty of your soul,\" you explain sheepishly. \"He will not be moved otherwise.\"\n\nThe Everchild sighs and closes her eyes. \"Such a letter will require the finest components. I will need some CALLIGRAPHY INK. This is not easily found in the Valley of Bones.\"\n\n\"Any suggestions where we could find some?\" you ask.\n\n\"Powerful sorcerers might own such a thing,\" suggests the Everchild. \"Otherwise the markets of the sea cities might have it for sale, though it would cost a fortune.\"\n\nWhy is nothing simple?";
+            Text = "\"The God King wishes to see my handwriting?\" says the Everchild aghast. \"Whatever for?\"\n\n\"He believes that through your hand he may glimpse the honesty of your soul,\" you explain sheepishly. \"He will not be moved otherwise.\"\n\nThe Everchild sighs and closes her eyes. \"Such a letter will require the finest components. I will need some <b>calligraphy ink</b>. This is not easily found in the Valley of Bones.\"\n\n\"Any suggestions where we could find some?\" you ask.\n\n\"Powerful sorcerers might own such a thing,\" suggests the Everchild. \"Otherwise the markets of the sea cities might have it for sale, though it would cost a fortune.\"\n\nWhy is nothing simple?";
 
             Choices.clear();
 
@@ -25430,7 +25430,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "You wonder how many more snakemen can fit into this temple! In the devastation you find plenty of religious silverwork worth 250 silver coins. A HANDSOME BROOCH (Charisma +1) lies amongst the chalices and statuettes you loot. There is a way onwards, your torchlight reflecting some bronze plating ahead. Intrigued you make your way down the passageway.";
+            Text = "You wonder how many more snakemen can fit into this temple! In the devastation you find plenty of religious silverwork worth 250 silver coins. A <b>handsome brooch (Charisma +1)</b> lies amongst the chalices and statuettes you loot. There is a way onwards, your torchlight reflecting some bronze plating ahead. Intrigued you make your way down the passageway.";
 
             Choices.clear();
 
@@ -25508,7 +25508,7 @@ namespace Book1
 
             Image = "images/book1/the_everchild.png";
 
-            Text = "You encounter Che Long waiting by the inn's desk. He nods to you and takes you to the back of the inn, into a beautiful chamber of yellow silks and handsome blue tapestries. Perched cross-legged on a cushion is the Everchild, no longer a ragged waif, but a beautiful golden-haired girl with piercing blue eyes, dressed in flowing robes of Chalice silk.\n\n\"My champions,\" she smiles warmly. \"I had hoped you would come. I presume that your presence here means that you are willing to assist me in my claims on the throne of Saltdad? By now you will have seen the Iron King's cruelty firsthand, and perhaps even encountered the savage zealotry of the true ruler of the valley, the patriarch of Cursus? These vile men must be deposed if we are to have any hope of restoring justice and civilisation to the valley.\"\n\nThe Everchild indicates a map of the Valley of Bones that lies spread out in front of her. \"First things first,\" she says. \"Historically the Everchild has always ruled from Saltdad, so that is our first target. To take Saltdad we must defeat the army of the Iron King in battle. I have begun the process of raising my own army in secret, from amongst the downtrodden and oppressed in his kingdom. Alas, I still have only half as many men as the king has. I must have more if I am to be successful. The cities of Chalice, and even Lhasbreath, might be willing to lend us aid if they could be convinced. I would like you to speak with them on my behalf and ask them to send soldiers to aid my revolution.\"\n\nThe Everchild clears her throat. \"Of course, I would not need as many troops if the forces of the Iron King were depleted.\" She clicks her fingers and Che Long steps forwards to present you with a small bottle. It is a VIAL OF POISON, the pale-yellow liquid promising death to any who drink it. Take it, if you wish.\n\n\"The Bronzeguard are the elite force of the Iron King, wearing enchanted armour that makes them almost invulnerable in battle,\" explains the Everchild. \"In order to foster a sense of brotherhood, the Bronzeguard all live in a single barracks in the centre of Saltdad. This leaves them vulnerable to... accidents. If they were to be removed from the king's forces, I would need fewer reinforcements.\"\n\n\"Lastly, all attempts on the Iron King's life have failed thanks to the attentions of his golem bodyguard, Malronac the Deathengine,\" says the Everchild. \"We believe he acquired this monstrosity from the ruins of the palace. It has since acted as both his personal guard and a crude assassin of the Iron King's enemies. The villain will often be found wandering the streets on some bloody errand. If you can get him alone, and end him, our victory would be all the more likely.\"\n\nThe Everchild rises from her cushions.\n\n\"Come,\" she says. \"Let me show you my soldiers.\"\n\nNote: You gained the code A7.";
+            Text = "You encounter Che Long waiting by the inn's desk. He nods to you and takes you to the back of the inn, into a beautiful chamber of yellow silks and handsome blue tapestries. Perched cross-legged on a cushion is the Everchild, no longer a ragged waif, but a beautiful golden-haired girl with piercing blue eyes, dressed in flowing robes of Chalice silk.\n\n\"My champions,\" she smiles warmly. \"I had hoped you would come. I presume that your presence here means that you are willing to assist me in my claims on the throne of Saltdad? By now you will have seen the Iron King's cruelty firsthand, and perhaps even encountered the savage zealotry of the true ruler of the valley, the patriarch of Cursus? These vile men must be deposed if we are to have any hope of restoring justice and civilisation to the valley.\"\n\nThe Everchild indicates a map of the Valley of Bones that lies spread out in front of her. \"First things first,\" she says. \"Historically the Everchild has always ruled from Saltdad, so that is our first target. To take Saltdad we must defeat the army of the Iron King in battle. I have begun the process of raising my own army in secret, from amongst the downtrodden and oppressed in his kingdom. Alas, I still have only half as many men as the king has. I must have more if I am to be successful. The cities of Chalice, and even Lhasbreath, might be willing to lend us aid if they could be convinced. I would like you to speak with them on my behalf and ask them to send soldiers to aid my revolution.\"\n\nThe Everchild clears her throat. \"Of course, I would not need as many troops if the forces of the Iron King were depleted.\" She clicks her fingers and Che Long steps forwards to present you with a small bottle. It is a <b>vial of poison</b>, the pale-yellow liquid promising death to any who drink it. Take it, if you wish.\n\n\"The Bronzeguard are the elite force of the Iron King, wearing enchanted armour that makes them almost invulnerable in battle,\" explains the Everchild. \"In order to foster a sense of brotherhood, the Bronzeguard all live in a single barracks in the centre of Saltdad. This leaves them vulnerable to... accidents. If they were to be removed from the king's forces, I would need fewer reinforcements.\"\n\n\"Lastly, all attempts on the Iron King's life have failed thanks to the attentions of his golem bodyguard, Malronac the Deathengine,\" says the Everchild. \"We believe he acquired this monstrosity from the ruins of the palace. It has since acted as both his personal guard and a crude assassin of the Iron King's enemies. The villain will often be found wandering the streets on some bloody errand. If you can get him alone, and end him, our victory would be all the more likely.\"\n\nThe Everchild rises from her cushions.\n\n\"Come,\" she says. \"Let me show you my soldiers.\"\n\nNote: You gained the code A7.";
 
             Choices.clear();
 
@@ -25842,7 +25842,7 @@ namespace Book1
 
             ID = 760;
 
-            Text = "The temple of Krom is a tall, timber building made to resemble the maw of a mighty beast. Inside hang weapons and armour made of bone. Krom is the god of war and athleticism in Lhasbreath, the patron of warriors and those who take what they wish by right of strength. Initiates of the temple wrestle in a circular pit set into the floor, scratches and deep gouges marring their bodies.\n\nIf you have a GREY TALISMAN you may exchange one for a blessing from the priests. Find the party member with the lowest Fighting score in the team and increase their Fighting by 1 point.";
+            Text = "The temple of Krom is a tall, timber building made to resemble the maw of a mighty beast. Inside hang weapons and armour made of bone. Krom is the god of war and athleticism in Lhasbreath, the patron of warriors and those who take what they wish by right of strength. Initiates of the temple wrestle in a circular pit set into the floor, scratches and deep gouges marring their bodies.\n\nIf you have a <b>grey talisman</b> you may exchange one for a blessing from the priests. Find the party member with the lowest Fighting score in the team and increase their Fighting by 1 point.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -25857,7 +25857,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
             {
-                Choices.push_back(Choice::Base("(GREY TALISMAN) Select party member with lowest Fighting score", {Book::Type::BOOK1, -760}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::GREY_TALISMAN}, {Attribute::Type::FIGHTING}, 1));
+                Choices.push_back(Choice::Base("(<b>grey talisman</b>) Select party member with lowest Fighting score", {Book::Type::BOOK1, -760}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::GREY_TALISMAN}, {Attribute::Type::FIGHTING}, 1));
             }
 
             Choices.push_back(Choice::Base("You are done here", {Book::Type::BOOK1, 775}));
@@ -26074,7 +26074,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            PreText = "The chief ululates in pleasure as he produces the MAGICAL WEAVE from your pack and presents it to the shaman.";
+            PreText = "The chief ululates in pleasure as he produces the <b>magical weave</b> from your pack and presents it to the shaman.";
 
             Engine::LOSE_EQUIPMENT(party, {Equipment::Type::MAGICAL_WEAVE});
 
@@ -26227,7 +26227,7 @@ namespace Book1
 
             ID = 770;
 
-            Text = "The temple of Cursus in Saltdad is a flat-topped, black stone ziggurat some three stories high. Inside its cool depths incense burns and the ragged poor beg for mercy from the hard-faced priests of Cursus, god of Judgement.\n\nNote: If you have any INCENSE you may exchange some for a blessing from the priests. Find the party member with the lowest Stealth score in the team and increase their Stealth by 1 point.\n\nYou may also receive some ritual scarring; these are runes sacred to Cursus carved across your chest. The priests are bound to perform this service for any who request it. If one of your party members wants some ritual scarring, they must lose 1 point of Health permanently.";
+            Text = "The temple of Cursus in Saltdad is a flat-topped, black stone ziggurat some three stories high. Inside its cool depths incense burns and the ragged poor beg for mercy from the hard-faced priests of Cursus, god of Judgement.\n\nNote: If you have any <b>incense</b> you may exchange some for a blessing from the priests. Find the party member with the lowest Stealth score in the team and increase their Stealth by 1 point.\n\nYou may also receive some ritual scarring; these are runes sacred to Cursus carved across your chest. The priests are bound to perform this service for any who request it. If one of your party members wants some ritual scarring, they must lose 1 point of Health permanently.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -26242,7 +26242,7 @@ namespace Book1
 
             if (!Engine::VERIFY_CODES(party, {Codes::Type::NO_BLESSINGS_FOREVER}))
             {
-                Choices.push_back(Choice::Base("(INCENSE) Select party member with lowest Stealth score", {Book::Type::BOOK1, -770}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::INCENSE}, {Attribute::Type::STEALTH}, 1));
+                Choices.push_back(Choice::Base("<b>(incense)</b> Select party member with lowest Stealth score", {Book::Type::BOOK1, -770}, Choice::Type::PAYFORBLESSING_WITH_ITEM, {Equipment::INCENSE}, {Attribute::Type::STEALTH}, 1));
             }
 
             Choices.push_back(Choice::Base("Receive some Ritual Scarring (Cursus)", {Book::Type::BOOK1, -770}, Choice::Type::PAYFORSTATUS_WITH_HEALTH, {Character::Status::RITUAL_SCARRING_CURSUS}, -1));
@@ -26439,7 +26439,7 @@ namespace Book1
 
             Location = Location::Type::CAVES_OF_URANU;
 
-            Text = "The naga has no treasure, but you may take a MAGICAL WEAVE from its skin before you leave the cave.";
+            Text = "The naga has no treasure, but you may take a <b>magical weave</b> from its skin before you leave the cave.";
 
             Choices.clear();
 
@@ -26585,10 +26585,10 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The mighty metal horror comes crashing to the floor, the lights in his eyes fading. You may take his STEEL GREATSWORD (Fighting +3)* if you wish. Garrick the healer thanks you profusely for saving his life. He restores your entire party to their starting Health before quickly packing up to leave the city forever.\n\nYou have achieved a mighty feat of arms here today.\n\nNote: You gained the code A13.";
+            Text = "The mighty metal horror comes crashing to the floor, the lights in his eyes fading. You may take his <b>steel greatsword* (Fighting +3)</b> if you wish. Garrick the healer thanks you profusely for saving his life. He restores your entire party to their starting Health before quickly packing up to leave the city forever.\n\nYou have achieved a mighty feat of arms here today.\n\nNote: You gained the code A13.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of FIGHTING", {Book::Type::BOOK1, 75}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 2, 0));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Fighting", {Book::Type::BOOK1, 75}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -27631,7 +27631,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "It might be possible to dispel this enchanted darkness with the right techniques.\n\nNote: For this skill check only spellcasters can contribute their Lore skill.";
+            Text = "It might be possible to dispel this enchanted darkness with the right techniques.\n\nNote: For this skill check only <i>spellcasters</i> can contribute their Lore skill.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Dispel the darkness (Team check: Lore 5+, Successes: 3)", {Book::Type::BOOK1, 145}, {Book::Type::BOOK1, 93}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::SPELLCASTERS, {Attribute::Type::LORE}, 5, 3));
@@ -27686,7 +27686,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "Skallos collapses with a whispered cry of vengeance. There is silence in the chamber at last. Skallos was a well-equipped champion of darkness. You may claim his BLACK PLATE ARMOUR (Armour +3) and take the SKALLOS RUNEBLADE (Fighting +3, Lore +2). In addition, he wears a RUGGED CLOAK (Survival +2) and has 750 silver pieces in jewellery about his body.\n\nThis was a mighty battle.\n\nNote: You gained the code A79.";
+            Text = "Skallos collapses with a whispered cry of vengeance. There is silence in the chamber at last. Skallos was a well-equipped champion of darkness. You may claim his <b>black plate armour (Armour +3)</b> and take the <b>Skallos Runeblade (Fighting +3, Lore +2)</b>. In addition, he wears a <b>rugged cloak (Survival +2)</b> and has 750 silver pieces in jewellery about his body.\n\nThis was a mighty battle.\n\nNote: You gained the code A79.";
 
             Bye = "As there are no more exits from this chamber, you leave the way you came.";
 
@@ -27835,7 +27835,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "With the hounds dead you rifle though the crates. There is a good deal of spare clothing and foodstuffs here, as well as a large crate that holds a few shovels. Evidently most of the shovels have already been removed. There are certainly enough supplies here for three or four dozen orcs for quite some time...\n\nFortunately, there are also some valuables, including 400 silver coins a GREY TALISMAN and some SOFT BOOTS (Stealth +1).\n\nYou gained the code A65.";
+            Text = "With the hounds dead you rifle though the crates. There is a good deal of spare clothing and foodstuffs here, as well as a large crate that holds a few shovels. Evidently most of the shovels have already been removed. There are certainly enough supplies here for three or four dozen orcs for quite some time...\n\nFortunately, there are also some valuables, including 400 silver coins a <b>grey talisman</b> and some <b>soft boots (Stealth +1)</b>.\n\nYou gained the code A65.";
 
             Bye = "You leave once you have looted your fill.";
 
@@ -27890,7 +27890,7 @@ namespace Book1
 
             Location = Location::Type::PALACE_OF_UNBRAAKI;
 
-            Text = "Unbraaki's eyes rise in astonishment as you produce the BLACK PRISM. He eagerly snatches it from your grasp. \"You have done well... very well indeed,\" he purrs, almost seeming to stroke the prism with his thin hands. \"The Everchild shall have my soldiers. She may dispose of them as she wishes.\"\n\nUnbraaki's soldiers are dependable, professional soldiers, who obey orders well.\n\nNote: The following soldiers are added to the Saltdad barracks:\n\n[Spears of Unbraaki]: Strength 3, Morale 4\n\nYou gained the code A89.";
+            Text = "Unbraaki's eyes rise in astonishment as you produce the <b>black prism</b>. He eagerly snatches it from your grasp. \"You have done well... very well indeed,\" he purrs, almost seeming to stroke the prism with his thin hands. \"The Everchild shall have my soldiers. She may dispose of them as she wishes.\"\n\nUnbraaki's soldiers are dependable, professional soldiers, who obey orders well.\n\nNote: The following soldiers are added to the Saltdad barracks:\n\n[Spears of Unbraaki]: Strength 3, Morale 4\n\nYou gained the code A89.";
 
             Bye = "Thanking the dread sorcerer for his time, you depart.";
 
@@ -28330,7 +28330,7 @@ namespace Book1
             Text = "Eventually you manage to get the goblins on your side. They are being enslaved by the orcs, whose leader resides in a room to the south. The orc leader is a very fierce warrior, by all accounts, and the goblins greatly fear him. However, he does possess the key to the tribe's storage cave. The goblins would be delighted if the orcs would conveniently disappear.\n\nNote: You gained the code A62.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("You have a VIAL OF POISON and would like to use it", {Book::Type::BOOK1, 486}, {Equipment::VIAL_OF_POISON}));
+            Choices.push_back(Choice::Base("You have a <b>vial of poison</b> and would like to use it", {Book::Type::BOOK1, 486}, {Equipment::VIAL_OF_POISON}));
             Choices.push_back(Choice::Base("Leave the kitchen through the north door", {Book::Type::BOOK1, 366}, "You bid the goblins farewell and move on."));
             Choices.push_back(Choice::Base("Leave the kitchen through the south door", {Book::Type::BOOK1, 736}, "You bid the goblins farewell and move on."));
 
@@ -28565,7 +28565,7 @@ namespace Book1
 
             if (!Engine::HAS_WEAPON(party))
             {
-                PreText += "He gifts each party member with a CRUDE BLADE (Fighting +0).";
+                PreText += "He gifts each party member with a <b>crude blade (Fighting +0)</b>.";
 
                 for (auto i = 0; i < party.Members.size(); i++)
                 {
@@ -28579,7 +28579,7 @@ namespace Book1
 
             if (benefited)
             {
-                PreText += " The merciful king also provides one suit of BONE ARMOUR (Armour +2).";
+                PreText += " The merciful king also provides one suit of <b>bone armour (Armour +2)</b>.";
 
                 Take.push_back(Equipment::BONE_ARMOUR2);
 
@@ -28791,10 +28791,10 @@ namespace Book1
 
             Location = Location::Type::SALT_MINES;
 
-            Text = "You drop to your knees in exhaustion. The battle is won and you are triumphant. You eagerly sift through the dragon's treasure. Although much of it is merely old bones, you still manage to find 1000 silver pieces, a GLITTERING NECKLACE (Charisma +2), and a STEEL LONGSWORD (Fighting +2).\n\nThis was a mighty battle.\n\nNote: Feel free to take the DRAGON HEAD as a memento of your glorious struggle. You gained the code A27.";
+            Text = "You drop to your knees in exhaustion. The battle is won and you are triumphant. You eagerly sift through the dragon's treasure. Although much of it is merely old bones, you still manage to find 1000 silver pieces, a <b>glittering necklace (Charisma +2)</b>, and a <b>steel longsword (Fighting +2)</b>.\n\nThis was a mighty battle.\n\nNote: Feel free to take the <b>dragon head</b> as a memento of your glorious struggle. You gained the code A27.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of FIGHTING", {Book::Type::BOOK1, -841}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 2, 0));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Fighting", {Book::Type::BOOK1, -841}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 2, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -28827,7 +28827,7 @@ namespace Book1
             Text = "Peering deeper into the chamber you can make out where the dragon came from. It has dug a tunnel under the mountains, that looks like it is so long it might go all the way to Drakehallow in the north.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("(Drakehallow) Follow this tunnel", {Book::Type::BOOK6, 33}));
+            Choices.push_back(Choice::Base("<b>(Drakehallow)</b> Follow this tunnel", {Book::Type::BOOK6, 33}));
             Choices.push_back(Choice::Base("You dare not enter that strange land: return to the mine lift", {Book::Type::BOOK1, 135}));
 
             Controls = Story::Controls::STANDARD;
@@ -29410,9 +29410,9 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("The Library of Chalice", {Book::Type::BOOK1, 680}));
-            Choices.push_back(Choice::Base("(Crown and Tower) The city of Longport", {Book::Type::BOOK2, 321}));
-            Choices.push_back(Choice::Base("(Drakehallow) Dagon", {Book::Type::BOOK6, 230}));
-            Choices.push_back(Choice::Base("(Drakehallow) Animus Mast", {Book::Type::BOOK6, 600}));
+            Choices.push_back(Choice::Base("<b>(Crown and Tower)</b> The city of Longport", {Book::Type::BOOK2, 321}));
+            Choices.push_back(Choice::Base("<b>(Drakehallow)</b> Dagon", {Book::Type::BOOK6, 230}));
+            Choices.push_back(Choice::Base("<b>(Drakehallow)</b> Animus Mast", {Book::Type::BOOK6, 600}));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -29568,7 +29568,7 @@ namespace Book1
 
             Image = "images/book1/milagros.png";
 
-            Text = "You are almost relieved when the cruel overseers of the arena call you out of the filthy living hall for your first battle. You are fed water by children wearing neck chains in a narrow, dusty chamber, who present it to you in deep bowls from which you are expected to slurp. One of the children, a pretty blonde girl called Milagros, quietly advises you to keep to the edge of the arena and not to engage in the central melee.\n\n\"Don't use magic,\" she hisses. \"They'll take your tongue...\"\n\nGuards push you on before you can question her further. You are unchained and shoved into one of the gate-rooms. Through the heavy portcullis you can hear the crowd muttering in anticipation. You can see a number of crude weapons laid out for selection.\n\nNote: Any party member may take a single CRUDE BLADE (Fighting +0). In addition, a single WOODEN SHIELD (Armour +2), and a MAUL* (Fighting +1) are here to be taken. Remember that the MAUL is a two handed weapon and the party member wielding it cannot use a shield at the same time.";
+            Text = "You are almost relieved when the cruel overseers of the arena call you out of the filthy living hall for your first battle. You are fed water by children wearing neck chains in a narrow, dusty chamber, who present it to you in deep bowls from which you are expected to slurp. One of the children, a pretty blonde girl called Milagros, quietly advises you to keep to the edge of the arena and not to engage in the central melee.\n\n\"Don't use magic,\" she hisses. \"They'll take your tongue...\"\n\nGuards push you on before you can question her further. You are unchained and shoved into one of the gate-rooms. Through the heavy portcullis you can hear the crowd muttering in anticipation. You can see a number of crude weapons laid out for selection.\n\nNote: Any party member may take a single <b>crude blade (Fighting +0)</b>. In addition, a single <b>wooden shield (Armour +2)</b>, and a <b>maul* (Fighting +1)</b> are here to be taken. Remember that the maul is a two handed weapon and the party member wielding it cannot use a shield at the same time.";
 
             Bye = "All too soon the portcullis opens to a roar from the crowd. Blinking in the glare of the sun, you emerge into the deadly arena.";
 
@@ -29762,7 +29762,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The Iron King sits upon a stone throne, a jagged iron crown perched upon his wide head. He is surrounded by bronze-plated bodyguards and long-robed councillors, who constantly whisper in his ear even as he speaks. You are pushed onto your knees by his guards as he surveys you coldly.\n\n\"I have use for people like you,\" he concedes.\n\n\"The treasury of Saltdad pays heavy tithes to the priests of Cursus. We are a vassal state and must pay our dues. However, the amount of our tithe varies with each year, and there is room for negotiation as to exactly how much the state should pay. I wish you to speak with Mannus, keeper of the holy purse in Cursus. Let him know that the Iron King understands he is under-appreciated in the church, and that he would stand to gain much if he became our friend. Gift him with this, to demonstrate our goodwill, and negotiate a good tithe on our behalf. Do this, and you will earn my friendship.\"\n\nOne of the king's councillors presents you with an IRON SCEPTRE.\n\n\"Go now,\" intones the king. \"And do not return without good news.\"";
+            Text = "The Iron King sits upon a stone throne, a jagged iron crown perched upon his wide head. He is surrounded by bronze-plated bodyguards and long-robed councillors, who constantly whisper in his ear even as he speaks. You are pushed onto your knees by his guards as he surveys you coldly.\n\n\"I have use for people like you,\" he concedes.\n\n\"The treasury of Saltdad pays heavy tithes to the priests of Cursus. We are a vassal state and must pay our dues. However, the amount of our tithe varies with each year, and there is room for negotiation as to exactly how much the state should pay. I wish you to speak with Mannus, keeper of the holy purse in Cursus. Let him know that the Iron King understands he is under-appreciated in the church, and that he would stand to gain much if he became our friend. Gift him with this, to demonstrate our goodwill, and negotiate a good tithe on our behalf. Do this, and you will earn my friendship.\"\n\nOne of the king's councillors presents you with an <b>iron sceptre</b>.\n\n\"Go now,\" intones the king. \"And do not return without good news.\"";
 
             Bye = "Bowing all the way out, you leave the king's presence.";
 
@@ -29990,12 +29990,12 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The mourners are shocked that anyone would so brazenly fight and kill a kensai. They disperse before you, abandoning the casket on the ground. The kensai master had a well-made STEEL LONGSWORD (Fighting +2) which you can take, if you wish.\n\nThis has been a tough fight against many skilled opponents.";
+            Text = "The mourners are shocked that anyone would so brazenly fight and kill a kensai. They disperse before you, abandoning the casket on the ground. The kensai master had a well-made <b>steel longsword (Fighting +2)</b> which you can take, if you wish.\n\nThis has been a tough fight against many skilled opponents.";
 
             Bye = "You flee the scene before more guards arrive.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of FIGHTING", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 1, 0));
+            Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Fighting", {Book::Type::BOOK1, 450}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 1, 0));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -30111,7 +30111,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "There are 200 silver coins and a HANDSOME BROOCH (Charisma +1) in the bag. But can you really keep such stolen property?";
+            Text = "There are 200 silver coins and a <b>handsome brooch (Charisma +1)</b> in the bag. But can you really keep such stolen property?";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -30161,7 +30161,7 @@ namespace Book1
 
             Location = Location::Type::CURSUS;
 
-            Text = "You must steal into the night, staying clear of the vigilant forces of Cursus, and find a way into the tent of Descantos.\n\nNote: Only members assigned to the Assassination team can make this check.";
+            Text = "You must steal into the night, staying clear of the vigilant forces of Cursus, and find a way into the tent of Descantos.\n\nNote: Only members assigned to the <i>assassination team</i> can make this check.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Sneak past the army (Team check: Stealth 4+, Successes: 7)", {Book::Type::BOOK1, 365}, {Book::Type::BOOK1, 226}, Choice::Type::TEAM_ATTRIBUTES, Team::Type::ASSASSINATION_DESCANTOS, {Attribute::Type::STEALTH}, 4, 7));
@@ -30269,7 +30269,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Benches line the wall of this small room, each with a number of hooks upon which hang mouldy rags. Only one garment has weathered the test of time, a WARM CLOAK (Survival +1).";
+            Text = "Benches line the wall of this small room, each with a number of hooks upon which hang mouldy rags. Only one garment has weathered the test of time, a <b>warm cloak (Survival +1)</b>.";
 
             Bye = "You continue down the tunnel.";
 
@@ -30770,7 +30770,7 @@ namespace Book1
                     Equipment::INCENSE,
                     Equipment::DRAGONYAK_HORN};
 
-                PreText = "After some time searching through the pile of trash, you found the following items: 200 silver coins, IRON BATTLEAXE (Fighting +2), BONE ARMOUR (Armour +2), SOFT BOOTS (Stealth +1), REFERENCE BOOK (Lore +1), 150 silver coins, Vial of QUICKSILVER, GREY TALISMAN, INCENSE, DRAGONYAK HORN. You can only take " + std::to_string(Limit) + ".";
+                PreText = "After some time searching through the pile of trash, you found the following items: 200 silver coins, IRON BATTLEAXE (Fighting +2), <b>bone armour (Armour +2)</b>, <b>soft boots (Stealth +1)</b>, <b>reference book (Lore +1)</b>, 150 silver coins, Vial of <b>quicksilver</b>, <b>grey talisman</b>, <b>incense</b>, <b>dragonyak horn</b>. You can only take " + std::to_string(Limit) + ".";
             }
             else
             {
@@ -30835,7 +30835,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You speak with the Everchild about your adventures, the young queen hanging onto your every word as you describe the dangers you have faced. She thanks you for any aid you have given her so far, particularly if you have harmed the Iron King or raised new armies for her.\n\nNote: If you have fallen on hard times and have no money or equipment, including anything in your vault, she will transfer a CRUDE BLADE (Fighting +0) to each party member and give you 100 silver coins.";
+            Text = "You speak with the Everchild about your adventures, the young queen hanging onto your every word as you describe the dangers you have faced. She thanks you for any aid you have given her so far, particularly if you have harmed the Iron King or raised new armies for her.\n\nNote: If you have fallen on hard times and have no money or equipment, including anything in your vault, she will transfer a <b>crude blade (Fighting +0)</b> to each party member and give you 100 silver coins.";
 
             Bye = "After your discussions you bow and take your leave.";
 
@@ -30918,7 +30918,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You spend the next several weeks helping to equip and train just over five hundred soldiers for the Everchild's army. They are well equipped with hide armour, a shield and good iron shortswords. The following unit was added to the Saltdad garrison:\n\n[Saltdad Infantry]: Strength 2, Morale 3\n\nNote: You can hire as many units of Saltdad Infantry as you wish, though each unit costs one bar of GOLD BULLION.";
+            Text = "You spend the next several weeks helping to equip and train just over five hundred soldiers for the Everchild's army. They are well equipped with hide armour, a shield and good iron shortswords. The following unit was added to the Saltdad garrison:\n\n[Saltdad Infantry]: Strength 2, Morale 3\n\nNote: You can hire as many units of Saltdad Infantry as you wish, though each unit costs one bar of <b>gold bullion</b>.";
 
             Bye = "Pleased with your new troops, you return to the palace.";
 
@@ -31008,7 +31008,7 @@ namespace Book1
 
             Team = Team::Type::SHADOW_ROOM;
 
-            Text = "You enter the room, examining the tunnel curiously. Suddenly there is a loud crunch! Spinning around you see that a stone block has fallen to block off the shadow door. There is a fearful gurgling sound and suddenly water is pouring out of the tunnel with incredible force. It is not all bad news.\n\nA RING OF HEALTH (Health +2) comes washing out with the torrent of water. You may take it if you wish.\n\nNote: You gained the code A60.";
+            Text = "You enter the room, examining the tunnel curiously. Suddenly there is a loud crunch! Spinning around you see that a stone block has fallen to block off the shadow door. There is a fearful gurgling sound and suddenly water is pouring out of the tunnel with incredible force. It is not all bad news.\n\nA <b>ring of health (Health +2)</b> comes washing out with the torrent of water. You may take it if you wish.\n\nNote: You gained the code A60.";
 
             Choices.clear();
 
@@ -31042,7 +31042,7 @@ namespace Book1
 
             Team = Team::Type::SHADOW_ROOM;
 
-            Text = "Your thoughts soon turn to escape, the water is already waist deep, and is getting deeper by the second! You try to lift up the stone block to allow you to get back to the shadow door.\n\nNote: Only party members who entered the room may make this skill check; the shadow door's strange field makes it impossible for your friends outside to help.";
+            Text = "Your thoughts soon turn to escape, the water is already waist deep, and is getting deeper by the second! You try to lift up the stone block to allow you to get back to the shadow door.\n\nNote: Only party members who <i>entered the room</i> may make this skill check; the shadow door's strange field makes it impossible for your friends outside to help.";
 
             Controls = Story::Controls::STANDARD;
         }

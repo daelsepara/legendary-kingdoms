@@ -36,6 +36,7 @@ namespace fs = std::filesystem;
 #include "color.hpp"
 #include "controls.hpp"
 #include "engine.hpp"
+#include "glyphs.hpp"
 #include "location.hpp"
 #include "input.hpp"
 #include "ship.hpp"
@@ -512,7 +513,7 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
 
     auto image_surface = createImage(image);
 
-    auto text_surface = createText(text, ttf, font_size, textColor, wrap, style);
+    auto text_surface = Glyphs::createText(text, ttf, font_size, textColor, wrap);
 
     if (image_surface && text_surface)
     {
@@ -603,7 +604,7 @@ SDL_Surface *createHeaderButton(SDL_Window *window, const char *font, int font_s
     auto button = SDL_CreateRGBSurface(0, w, h, 32, bg == 0 ? 0x000000FF : 0, bg == 0 ? 0x0000FF00 : 0, bg == 0 ? 0x00FF0000 : 0, bg == 0 ? 0xFF000000 : 0);
 #endif
 
-    auto text_surface = createText(text, font, font_size, color, w, TTF_STYLE_NORMAL);
+    auto text_surface = Glyphs::createText(text, font, font_size, color, w);
 
     if (button && text_surface)
     {
