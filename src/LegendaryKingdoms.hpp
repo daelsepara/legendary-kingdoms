@@ -512,6 +512,8 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
 
     SDL_Surface *converted_surface = NULL;
 
+    SDL_Surface *converted_text = NULL;
+
     auto image_surface = createImage(image);
 
     auto text_surface = Glyphs::FormattedText(text, ttf, font_size, textColor, wrap);
@@ -564,13 +566,15 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
 
         converted_surface = SDL_ConvertSurface(image_surface, surface->format, 0);
 
+        converted_text = SDL_ConvertSurface(text_surface, surface->format, 0);
+
         SDL_SetSurfaceAlphaMod(converted_surface, SDL_ALPHA_OPAQUE);
 
-        SDL_SetSurfaceAlphaMod(text_surface, SDL_ALPHA_OPAQUE);
+        SDL_SetSurfaceAlphaMod(converted_text, SDL_ALPHA_OPAQUE);
 
         SDL_BlitScaled(converted_surface, NULL, surface, &dst);
 
-        SDL_BlitSurface(text_surface, NULL, surface, &text_dst);
+        SDL_BlitSurface(converted_text, NULL, surface, &text_dst);
     }
 
     if (image_surface)
@@ -592,6 +596,13 @@ SDL_Surface *createTextAndImage(const char *text, const char *image, const char 
         SDL_FreeSurface(converted_surface);
 
         converted_surface = NULL;
+    }
+
+    if (converted_text)
+    {
+        SDL_FreeSurface(converted_text);
+
+        converted_text = NULL;
     }
 
     return surface;
@@ -653,6 +664,8 @@ SDL_Surface *formattedHeaderButton(SDL_Window *window, const char *font, int fon
 
     auto text_surface = Glyphs::FormattedText(text, font, font_size, color, w);
 
+    SDL_Surface *converted_text = NULL;
+
     if (button && text_surface)
     {
         SDL_Rect dst;
@@ -668,15 +681,19 @@ SDL_Surface *formattedHeaderButton(SDL_Window *window, const char *font, int fon
         if (bg != 0)
         {
             SDL_FillRect(button, NULL, bg);
+
+            SDL_BlitSurface(text_surface, NULL, button, &dst);
         }
         else
         {
             SDL_FillRect(button, NULL, SDL_MapRGBA(button->format, 0, 0, 0, 0));
 
-            SDL_SetSurfaceAlphaMod(text_surface, SDL_ALPHA_OPAQUE);
-        }
+            converted_text = SDL_ConvertSurface(text_surface, button->format, 0);
 
-        SDL_BlitSurface(text_surface, NULL, button, &dst);
+            SDL_SetSurfaceAlphaMod(converted_text, SDL_ALPHA_OPAQUE);
+
+            SDL_BlitSurface(converted_text, NULL, button, &dst);
+        }
     }
 
     if (text_surface)
@@ -684,6 +701,13 @@ SDL_Surface *formattedHeaderButton(SDL_Window *window, const char *font, int fon
         SDL_FreeSurface(text_surface);
 
         text_surface = NULL;
+    }
+
+    if (converted_text)
+    {
+        SDL_FreeSurface(converted_text);
+
+        converted_text = NULL;
     }
 
     return button;
