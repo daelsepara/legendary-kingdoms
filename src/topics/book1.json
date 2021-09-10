@@ -109,7 +109,7 @@
         },
         {
             "title": "Discovering new spells",
-            "text": "Spells can crop up in the strangest of places, so keep an eye out for any opportunity to learn new ones. You can hold a maximum of six spells in your spell book at any given time. If your spell book is full and you discover a new spell you really want, you can rub out an old spell to make room for a new one. All new spells you learn begin charged.\n\nYou cannot learn the same spell more than once in your spell book. Your starting spellcaster cannot, for example, learn three <b>Ice Bolt</b> spells!"
+            "text": "Spells can crop up in the strangest of places, so keep an eye out for any opportunity to learn new ones. You can hold a maximum of six spells in your spell book at any given time. If your spell book is full and you discover a new spell you really want, you can rub out an old spell to make room for a new one. All new spells you learn begin charged.\n\nYou cannot learn the same spell more than once in your spell book. Your starting spellcaster cannot, for example, learn three <b><i>Ice Bolt</i></b> spells!"
         },
         {
             "title": "Equipment",
@@ -129,7 +129,7 @@
         },
         {
             "title": "The Vault",
-            "text": "The Vault is a magical storehouse where your party can keep items of equipment and silver coins that they want to keep safe, but not on their person. There are many ways to access The Vault.\n\nThe easiest is with the <b>magic cabinet</b> spell which grants you immediate access at a time of your choosing. Some buildings might also grant access to The Vault as well. No matter where you access The Vault from, the items you store in it will be the same.\n\nFor example, if you put a magical ring into The Vault in Drakehallow, you will find it there when you open The Vault in the Valley of Bones. There is no limit to the items you can store in The Vault, although you might have to write very, very small if you want to store lots of things!"
+            "text": "The Vault is a magical storehouse where your party can keep items of equipment and silver coins that they want to keep safe, but not on their person. There are many ways to access The Vault.\n\nThe easiest is with the <b><i>magic cabinet</i></b> spell which grants you immediate access at a time of your choosing. Some buildings might also grant access to The Vault as well. No matter where you access The Vault from, the items you store in it will be the same.\n\nFor example, if you put a magical ring into The Vault in Drakehallow, you will find it there when you open The Vault in the Valley of Bones. There is no limit to the items you can store in The Vault, although you might have to write very, very small if you want to store lots of things!"
         },
         {
             "title": "Codes",

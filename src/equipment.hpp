@@ -220,7 +220,7 @@ namespace Equipment
     auto DRAGON_HEAD = Equipment::Base("dragon head", "dragon head", Equipment::Class::NORMAL, Equipment::Type::DRAGON_HEAD, Attribute::Type::NONE, 0, false);
     auto SCROLL_OF_RAGE = Equipment::Base("scroll of rage", "scroll of rage", Equipment::Class::NORMAL, Equipment::Type::SCROLL_OF_RAGE, Attribute::Type::NONE, 0, false);
     auto BRONZE_LOCKET = Equipment::Base("bronze locket", "bronze locket", Equipment::Class::NORMAL, Equipment::Type::BRONZE_LOCKET, Attribute::Type::NONE, 0, false);
-    auto SEAL_OF_HOUSE_ROSS = Equipment::Base("Seal of House Ross", "Seal of House Ross", Equipment::Class::NORMAL, Equipment::Type::SEAL_OF_HOUSE_ROSS, Attribute::Type::NONE, 0, false);
+    auto SEAL_OF_HOUSE_ROSS = Equipment::Base("seal of House Ross", "seal of House Ross", Equipment::Class::NORMAL, Equipment::Type::SEAL_OF_HOUSE_ROSS, Attribute::Type::NONE, 0, false);
     auto VIAL_OF_POISON = Equipment::Base("vial of poison", "vial of poison", Equipment::Class::NORMAL, Equipment::Type::VIAL_OF_POISON, Attribute::Type::NONE, 0, false);
     auto FINE_BOOTS2 = Equipment::Base("fine boots", "fine boots", Equipment::Class::NORMAL, Equipment::Type::FINE_BOOTS2, Attribute::Type::STEALTH, 2, false);
     auto REGISTRY_PAPERS = Equipment::Base("registry papers", "registry papers", Equipment::Class::NORMAL, Equipment::Type::REGISTRY_PAPERS, Attribute::Type::NONE, 0, false);

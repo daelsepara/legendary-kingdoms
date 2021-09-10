@@ -119,7 +119,7 @@ namespace Book1
 
             Location = Location::Type::UNDERGROUND_TUNNELS;
 
-            Text = "The treasure chest contains 200 silver coins and a <b>bluestone</b>. Take what you wish.\n\nNote: You gained the code A45.";
+            Text = "The treasure chest contains <b>200 silver coins</b> and a <b>bluestone</b>. Take what you wish.\n\nNote: You gained the code A45.";
 
             Bye = "Not wishing to tarry longer, you depart the chamber and return to the crossroads.";
 
@@ -516,7 +516,7 @@ namespace Book1
 
             Location = Location::Type::CAVES_OF_URANU;
 
-            Text = "There are few valuables amongst the goblins, though you manage to scavenge 15 silver coins from the entire horde.";
+            Text = "There are few valuables amongst the goblins, though you manage to scavenge <b>15 silver coins</b> from the entire horde.";
 
             Bye = "Pleased to have survived you make your way onwards.";
 
@@ -1246,7 +1246,7 @@ namespace Book1
 
             Location = Location::Type::CURSUS;
 
-            Text = "The harbour of Cursus is long and shallow. The jetties reach far out beyond the coast, each wide enough for a pair of dragonyaks to drag the cargoes of ships to the warehouses on the beach.\n\nNote: You may buy a ship here, if you have enough money. The largest vessel for sale is the <b>Cursite War Galley</b>, a coastal-hugging warship which carries little cargo, but is the only vessel that can even hope to compete with the more advanced vessels of Royce and Drakehallow. A smaller, but more efficient, single-masted Cog is also available. The war galley will cost 1500 silver coins, and the <b>Cog</b> 800 silver coins. When you buy a ship note that it is currently docked in Cursus harbour.\n\nYou can repair any ship you have in Cursus harbour. Each Health point you restore costs 50 silver coins. You can restore your ship up to its starting Health value. You can sell a Cog here for 250 silver coins, a Cursite War Galley for 500 silver coins and a <b>Carrack</b> for 1500 silver coins. You cannot sell other kinds of ship here.\n\nYou can buy cargo for your ship here, as well. These goods are too large for your characters to carry, but they can be loaded onto any ship you have in Cursus harbour. You cannot buy more cargo units than you can store in your ship (for instance, a Cog can carry 2 Cargo Units). You can also sell any goods you are carrying in your ships for the same price as well:\n\nSALT: 600 silver coins\nCROPS: 500 silver coins\nSTEEL: 3000 silver coins\nSPICES: 3300 silver coins\nWINE: 2100 silver coins\nSLAVES: 1000 silver coins";
+            Text = "The harbour of Cursus is long and shallow. The jetties reach far out beyond the coast, each wide enough for a pair of dragonyaks to drag the cargoes of ships to the warehouses on the beach.\n\nNote: You may buy a ship here, if you have enough money. The largest vessel for sale is the Cursite War Galley, a coastal-hugging warship which carries little cargo, but is the only vessel that can even hope to compete with the more advanced vessels of Royce and Drakehallow. A smaller, but more efficient, single-masted cog is also available. The war galley will cost <b>1500 silver coins</b>, and the cog <b>800 silver coins</b>. When you buy a ship note that it is currently docked in Cursus harbour.\n\nYou can repair any ship you have in Cursus harbour. Each Health point you restore costs <b>50 silver coins</b>. You can restore your ship up to its starting Health value. You can sell a Cog here for <b>250 silver coins</b>, a Cursite War Galley for <b>500 silver coins</b> and a Carrack for <b>1500 silver coins</b>. You cannot sell other kinds of ship here.\n\nYou can buy cargo for your ship here, as well. These goods are too large for your characters to carry, but they can be loaded onto any ship you have in Cursus harbour. You cannot buy more cargo units than you can store in your ship (for instance, a Cog can carry 2 Cargo Units). You can also sell any goods you are carrying in your ships for the same price as well:\n\nSalt <b>600 silver coins</b>\nCrops <b>500 silver coins</b>\nSteel <b>3000 silver coins</b>\nSpices <b>3300 silver coins</b>\nWine <b>2100 silver coins</b>\nSlaves <b>1000 silver coins</b>";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Return to the city centre", {Book::Type::BOOK1, 340}));
@@ -1286,7 +1286,7 @@ namespace Book1
 
             Location = Location::Type::UNDERGROUND_TUNNELS;
 
-            Text = "You return to the large burial chamber. The ghouls are long gone, and there is no more treasure to be found here. If you wish you can scribe the spell on the bronze tablet into your spellbook, if you have had reason to remove it:\n\n<b>Wisdom</b> (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\n<b>Recharge: 50 silver</b>";
+            Text = "You return to the large burial chamber. The ghouls are long gone, and there is no more treasure to be found here. If you wish you can scribe the spell on the bronze tablet into your spellbook, if you have had reason to remove it:\n\n<b>Wisdom</b> (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\n<b>Recharge: 75 silver</b>";
 
             Bye = "You return to the crossroads.";
 
@@ -1777,7 +1777,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are restored to maximum Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive 600 silver coins as a reward. In addition, he presents you with a <b>Seal of House Ross</b>. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nNote: You gained the code A85.";
+            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nAll your party members are restored to maximum Health.\n\nWhen Emlyn reports her findings, the news is good. \"There are several herbs that appear to have medicinal qualities,\" she smiles. \"Additionally, one of the flowers is producing a sweet pepper which seems edible and delicious. If we can find a source of these in the wild, House Ross can enter the spice market.\"\n\nSir Lawrence is overjoyed with these results. You receive <b>600 silver coins</b> as a reward. In addition, he presents you with a <b>seal of House Ross</b>. \"Should you ever travel to Strongstone, present this to the castle steward, Wyrran Glenpetre. You will be treated as an honoured guest.\"\n\nThis has been an amazing adventure.\n\nNote: You gained the code A85.";
 
             Bye = "Thanking Sir Lawrence and Emlyn for their generosity, you depart into the city.";
 
@@ -2233,7 +2233,7 @@ namespace Book1
 
             Location = Location::Type::DESERT;
 
-            Text = "The zealots had a few minor talismans and some gaudy jewellery you sell at a marketplace for 25 silver coins. It seems a paltry reward for such a battle.\n\nWhere will you travel now?";
+            Text = "The zealots had a few minor talismans and some gaudy jewellery you sell at a marketplace for <b>25 silver coins</b>. It seems a paltry reward for such a battle.\n\nWhere will you travel now?";
 
             Choices.clear();
             Choices.push_back(Choice::Base("North, towards the Temple of the Unbroken", {Book::Type::BOOK1, 535}));
@@ -2306,7 +2306,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You spend several days in the handsomely appointed Cold River Inn.\n\nNote: For every 5 silver coins you spend, each party member can recover 1 Health point.\n\nSpell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
+            Text = "You spend several days in the handsomely appointed Cold River Inn.\n\nNote: For every <b>5 silver coins</b> you spend, each party member can recover 1 Health point.\n\nSpell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
 
             RestPrice = 5;
 
@@ -3184,7 +3184,7 @@ namespace Book1
 
             Location = Location::Type::CHALICE_HILLSIDE;
 
-            Text = "You dash after Yu Yan, the thief frantically attempting to negotiate the ledge, which you navigate with the skill of a mountain goat. She stumbles, and only just manages to catch the ledge before falling. You dash to her side.\n\n\"Need a hand?\" you ask.\n\n\"Let me guess... you want the damn <b>silver idol</b>, yes?\"\n\n\"I think I'll need all the treasure; it's only weighing you down,\" you respond smartly.\n\nYu Yan groans, but throws her loot bag up to you. It contains not only the <b>silver idol</b>, but 200 silver pieces as well. Grinning, you give her a hand up on to the ledge. She grasps the sides of the wall, breathing heavily as you lean casually against the hillside.\n\n\"Make yourself scarce, Yu Yan,\" you say to her. \"Up here, in the hills, this is my domain.\"\n\nShe thanks you for your mercy and shuffles away, dashing over the hillside as soon as she is on safer ground. You make your way back along the ledge, hoping to find the beautiful vista again, but you cannot find it. Perhaps it is the time of night, but the surroundings no longer look so beautiful and peaceful as they were before. You shrug, but you are pleased with your victory.";
+            Text = "You dash after Yu Yan, the thief frantically attempting to negotiate the ledge, which you navigate with the skill of a mountain goat. She stumbles, and only just manages to catch the ledge before falling. You dash to her side.\n\n\"Need a hand?\" you ask.\n\n\"Let me guess... you want the damn <b>silver idol</b>, yes?\"\n\n\"I think I'll need all the treasure; it's only weighing you down,\" you respond smartly.\n\nYu Yan groans, but throws her loot bag up to you. It contains not only the <b>silver idol</b>, but <b>200 silver pieces</b> as well. Grinning, you give her a hand up on to the ledge. She grasps the sides of the wall, breathing heavily as you lean casually against the hillside.\n\n\"Make yourself scarce, Yu Yan,\" you say to her. \"Up here, in the hills, this is my domain.\"\n\nShe thanks you for your mercy and shuffles away, dashing over the hillside as soon as she is on safer ground. You make your way back along the ledge, hoping to find the beautiful vista again, but you cannot find it. Perhaps it is the time of night, but the surroundings no longer look so beautiful and peaceful as they were before. You shrug, but you are pleased with your victory.";
 
             Bye = "You make your way back to the temple in Chalice.";
 
@@ -3214,10 +3214,10 @@ namespace Book1
 
             Location = Location::Type::WEST_ROAD;
 
-            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful.\n\nNote: If you have a ship docked in Clifftop, you can also buy up to three cargo units of SALT from the merchants for 500 silver coins each. They will deliver this cargo straight to your ship provided there is room for it.";
+            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful.\n\nNote: If you have a ship docked in Clifftop, you can also buy up to three cargo units of Salt from the merchants for <b>500 silver coins</b> each. They will deliver this cargo straight to your ship provided there is room for it.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Buy SALT", {Book::Type::BOOK1, -89}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 500));
+            Choices.push_back(Choice::Base("Buy Salt", {Book::Type::BOOK1, -89}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 500));
             Choices.push_back(Choice::Base("You have finished your trading", {Book::Type::BOOK1, 569}));
 
             Controls = Story::Controls::SHOP;
@@ -3269,7 +3269,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nWhen Emlyn reports her findings, the news is rather disappointing. \"We have recovered many pretty blooms,\" she admits. \"Certainly, the fragrances are quite striking... however, there are no medicinal or culinary plants, as far as I can tell. Nothing sellable.\"\n\n\"Curses!\" grumbles Sir Lawrence. \"This expedition is turning into an expensive failure.\"\n\nStill, Sir Lawrence is good to his word and presents you with a purse of 150 silver coins. Offering your consolations over the failed mission, you depart into the city.\n\nAlthough the expedition did not go perfectly you have learned a lot.\n\nNote: You gained the code A85.";
+            Text = "Your return trip to Lhasbreath is mercifully uneventful, and Sir Lawrence Ross lays on a grand banquet upon your arrival. You spend several days with the Ross's, recovering your strength and discussing your adventures.\n\nWhen Emlyn reports her findings, the news is rather disappointing. \"We have recovered many pretty blooms,\" she admits. \"Certainly, the fragrances are quite striking... however, there are no medicinal or culinary plants, as far as I can tell. Nothing sellable.\"\n\n\"Curses!\" grumbles Sir Lawrence. \"This expedition is turning into an expensive failure.\"\n\nStill, Sir Lawrence is good to his word and presents you with a purse of <b>150 silver coins</b>. Offering your consolations over the failed mission, you depart into the city.\n\nAlthough the expedition did not go perfectly you have learned a lot.\n\nNote: You gained the code A85.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Survival", {Book::Type::BOOK1, 775}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::SURVIVAL}, 1, 2, 0));
@@ -3374,7 +3374,7 @@ namespace Book1
 
             Location = Location::Type::UNDERGROUND_TUNNELS;
 
-            Text = "You carefully lower yourself into the pit, being careful to avoid the spikes. Moving aside the timbers you check over the body. You find 15 silver coins spilling from a rotten pouch and a still intact <b>dragonyak horn</b>.\n\nNote: You gained the code A46.";
+            Text = "You carefully lower yourself into the pit, being careful to avoid the spikes. Moving aside the timbers you check over the body. You find <b>15 silver coins</b> spilling from a rotten pouch and a still intact <b>dragonyak horn</b>.\n\nNote: You gained the code A46.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Climb up the far side of the pit", {Book::Type::BOOK1, 303}));
@@ -3757,7 +3757,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You pretend to offer aid; anything to get out of sight of the Everchild's rebellious followers. At the first opportunity you inform the guards about the rebel's intentions. A few days later Che Long, Milagros and her followers have vanished from the arena. Word reaches you about a bloody struggle in the cells, but there are few details. Not long after, the arena master releases you under orders of the Iron King. \"His majesty is most pleased with your loyalty; the identity of the rebel leaders has been a well-kept secret. He offers you this reward and asks you to attend him at his palace if you seek further remunerating work.\"\n\nThe arena master presents you with 200 silver pieces.\n\nNote: You gained the code A4.";
+            Text = "You pretend to offer aid; anything to get out of sight of the Everchild's rebellious followers. At the first opportunity you inform the guards about the rebel's intentions. A few days later Che Long, Milagros and her followers have vanished from the arena. Word reaches you about a bloody struggle in the cells, but there are few details. Not long after, the arena master releases you under orders of the Iron King. \"His majesty is most pleased with your loyalty; the identity of the rebel leaders has been a well-kept secret. He offers you this reward and asks you to attend him at his palace if you seek further remunerating work.\"\n\nThe arena master presents you with <b>200 silver pieces</b>.\n\nNote: You gained the code A4.";
 
             Bye = "Weighing the price of treachery with a smile, you gleefully leave the arena.";
 
@@ -4739,7 +4739,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You manage to find one fellow, a young and dynamic looking man, who claims he can arrange an appointment for you. However, it will cost 600 silver coins in administrative fees.";
+            Text = "You manage to find one fellow, a young and dynamic looking man, who claims he can arrange an appointment for you. However, it will cost <b>600 silver coins</b> in administrative fees.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Pay the administrative fees (600 silver coins)", {Book::Type::BOOK1, 171}, Choice::Type::GAIN_MONEY, -600));
@@ -5065,7 +5065,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "You manage to recall the correct incantations to dispel darkness of this kind, and suddenly your lanterns illuminate the room. Within you can see strange coffers, some of which have loose piles of coin scattered over them. Opening the coffers you find a good deal more, some 200 silver coins in total, and a set of ornate <b>bone armour (Armour +2)</b>.";
+            Text = "You manage to recall the correct incantations to dispel darkness of this kind, and suddenly your lanterns illuminate the room. Within you can see strange coffers, some of which have loose piles of coin scattered over them. Opening the coffers you find a good deal more, some <b>200 silver coins</b> in total, and a set of ornate <b>bone armour (Armour +2)</b>.";
 
             Bye = "Unsure if your reward was worth the dreadful battle to get it, you move on.";
 
@@ -5272,7 +5272,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The slaves of Clifftop are a lucky breed, compared to the citizens. Having paid money to acquire them, most masters are unwilling to whip their slaves to death, unlike the deathly ill peasants who toil in the fields.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
+            Text = "The slaves of Clifftop are a lucky breed, compared to the citizens. Having paid money to acquire them, most masters are unwilling to whip their slaves to death, unlike the deathly ill peasants who toil in the fields.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs <b>200 silver coins</b> to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
 
             RecruitmentPrice = 200;
 
@@ -5950,7 +5950,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You find lodging at a large inn, The Iron Crown, which serves coffee and warm beer in a courtyard surrounded by rentable rooms. For every 5 silver coins you spend, each party member can recover 1 Health point. Spellcasters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nDuring your stay you ask about the nearby landmarks. \"The Blackwall is a place of ill reputation,\" confides a serving wench. \"No one knows why it was built, or what it is walling off, since it is easy to go around it. Still, those who become obsessed with it tend to disappear, never to be seen again!\" Frightening stuff!";
+            Text = "You find lodging at a large inn, The Iron Crown, which serves coffee and warm beer in a courtyard surrounded by rentable rooms. For every <b>5 silver coins</b> you spend, each party member can recover 1 Health point. Spellcasters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nDuring your stay you ask about the nearby landmarks. \"The Blackwall is a place of ill reputation,\" confides a serving wench. \"No one knows why it was built, or what it is walling off, since it is easy to go around it. Still, those who become obsessed with it tend to disappear, never to be seen again!\" Frightening stuff!";
 
             RestPrice = 5;
 
@@ -6095,7 +6095,7 @@ namespace Book1
 
             Location = Location::Type::UNDERGROUND_TUNNELS;
 
-            Text = "The final giant skeleton topples with a mighty crash. The treasures of the ancients are now yours to seize! There are 2250 silver coins to take. You also find a <b>goldwax candle</b>, a bar of <b>gold bullion</b> and a <b>cloak of protection (Survival +3)</b>. In the coffin of the king, you prise a <b>magical shortsword (Fighting +4)</b> from his grasp.";
+            Text = "The final giant skeleton topples with a mighty crash. The treasures of the ancients are now yours to seize! There are <b>2250 silver coins</b> to take. You also find a <b>goldwax candle</b>, a bar of <b>gold bullion</b> and a <b>cloak of protection (Survival +3)</b>. In the coffin of the king, you prise a <b>magical shortsword (Fighting +4)</b> from his grasp.";
 
             Bye = "Pleased with your finds you stride out of the chamber with your treasures, the curious door slamming shut behind you as you leave.";
 
@@ -6339,7 +6339,7 @@ namespace Book1
 
             Location = Location::Type::CAVES_OF_URANU;
 
-            Text = "You are almost sad as Yu Yan sprawls to the ground. The woman fought well, and it was a shame such talent should go to waste. You search her, her <b>stonecutter sword (Fighting +2)</b> is the most interesting possession she has. This weapon inflicts two points of Health damage for each success you score against rocky or stony opponents.\n\nShe also carries 135 silver pieces and, to your delight, a <b>silver idol</b>. You shake your head in amazement. You almost let the object of your quest slip through your fingers!";
+            Text = "You are almost sad as Yu Yan sprawls to the ground. The woman fought well, and it was a shame such talent should go to waste. You search her, her <b>stonecutter sword (Fighting +2)</b> is the most interesting possession she has. This weapon inflicts two points of Health damage for each success you score against rocky or stony opponents.\n\nShe also carries <b>135 silver pieces</b> and, to your delight, a <b>silver idol</b>. You shake your head in amazement. You almost let the object of your quest slip through your fingers!";
 
             Bye = "Pleased to have completed your quest so promptly, you make your way out of the cave, and back to the temple in Chalice.";
 
@@ -6751,7 +6751,7 @@ namespace Book1
 
             Location = Location::Type::CAVES_OF_URANU;
 
-            Text = "You believe you have deciphered the clever code in the writing. You find a narrow knothole in the rock and plunge your arm inside. You pull out a magnificent silver chalice, which you can sell in town for 100 silver coins.";
+            Text = "You believe you have deciphered the clever code in the writing. You find a narrow knothole in the rock and plunge your arm inside. You pull out a magnificent silver chalice, which you can sell in town for <b>100 silver coins.</b>";
 
             Bye = "Pleased with your find, you depart.";
 
@@ -6984,7 +6984,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "At first you fear you will have to stay in one of the religious hostelries that dot the city. A nightly whipping does not appeal, so fortunately you discover a single inn that caters to foreigners; The Sign of the Sand, built in the harbour district. Though it is built of stone, it reminds you of the kind of traditional inn you might find in Royce, with warm beer and comfortable rooms aplenty. It was built with the permission of the priests a hundred years ago, to encourage sea trade to the city. Its future is constantly in doubt, as hard-line priests detest its presence in the city, but so far economics has trumped religious politics.\n\nFor every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nYou get into a discussion with some travellers from Drakehallow, who seem set on exploring the ruins of Mordain. \"There are vast tunnels and dungeons located beneath the surface,\" says one, a wizard from the magical school Animus Mast. \"No one has mapped them all, but a wise explorer will try. It's easy to get turned around in those deathly arcades.\"";
+            Text = "At first you fear you will have to stay in one of the religious hostelries that dot the city. A nightly whipping does not appeal, so fortunately you discover a single inn that caters to foreigners; The Sign of the Sand, built in the harbour district. Though it is built of stone, it reminds you of the kind of traditional inn you might find in Royce, with warm beer and comfortable rooms aplenty. It was built with the permission of the priests a hundred years ago, to encourage sea trade to the city. Its future is constantly in doubt, as hard-line priests detest its presence in the city, but so far economics has trumped religious politics.\n\nFor every <b>5 silver coins</b> you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nYou get into a discussion with some travellers from Drakehallow, who seem set on exploring the ruins of Mordain. \"There are vast tunnels and dungeons located beneath the surface,\" says one, a wizard from the magical school Animus Mast. \"No one has mapped them all, but a wise explorer will try. It's easy to get turned around in those deathly arcades.\"";
 
             RestPrice = 5;
 
@@ -7176,7 +7176,7 @@ namespace Book1
 
             ID = 207;
 
-            Text = "The Church of Cursus in Clifftop is unique in the valley, in that it is made of jungle timbers rather than stone. The city is poor, and not even the faithful have the means to pay for the impressive black stone ziggurats more common to Cursus temples. Within the hall you can see flagellated parishioners begging for forgiveness from their distant god, whilst poor priests while away the endless hours with chants they must recite from memory for lack of expensive books to refer to.\n\nThe high priest is eager for donations. If you pay him 1,000 silver coins he will clumsily bless you. Find the party member with the lowest Stealth score in the team, and if their Stealth score is less than 3, increase their Stealth by 1 point. If all your party member's Stealth scores are already 3 or above, the blessing will have no effect.\n\nYou may also receive some Ritual Scarring (Cursus), which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some Ritual Scarring (Cursus), they must lose 1 point of Health permanently.";
+            Text = "The Church of Cursus in Clifftop is unique in the valley, in that it is made of jungle timbers rather than stone. The city is poor, and not even the faithful have the means to pay for the impressive black stone ziggurats more common to Cursus temples. Within the hall you can see flagellated parishioners begging for forgiveness from their distant god, whilst poor priests while away the endless hours with chants they must recite from memory for lack of expensive books to refer to.\n\nThe high priest is eager for donations. If you pay him <b>1,000 silver coins</b> he will clumsily bless you. Find the party member with the lowest Stealth score in the team, and if their Stealth score is less than 3, increase their Stealth by 1 point. If all your party member's Stealth scores are already 3 or above, the blessing will have no effect.\n\nYou may also receive some Ritual Scarring (Cursus), which are runes sacred to Cursus carved across the chest of the subject. The priests are bound to perform this service to any who ask for it. If one of your party members wants some Ritual Scarring (Cursus), they must lose 1 point of Health permanently.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -8106,7 +8106,7 @@ namespace Book1
 
             Engine::GAIN_MONEY(party, count * 25);
 
-            PreText = "You received " + std::to_string(count * 25) + " silver coins for the <b>troglodyte heads</b>.\n\n\"Keep up the good work,\" he enthuses. \"I'm sure the slaves appreciate your valiant efforts.\"";
+            PreText = "You received <b>" + std::to_string(count * 25) + " silver coins</b> for the <b>troglodyte heads</b>.\n\n\"Keep up the good work,\" he enthuses. \"I'm sure the slaves appreciate your valiant efforts.\"";
 
             Engine::LOSE_EQUIPMENT(party, Equipment::Type::TROGLODYTE_HEAD, count);
 
@@ -8250,7 +8250,7 @@ namespace Book1
 
             Text = "You must fend them off!";
 
-            Bye = "You loot 20 silver coins from their bodies before moving on.";
+            Bye = "You loot <b>20 silver coins</b> from their bodies before moving on.";
 
             Choices.clear();
 
@@ -8507,7 +8507,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The king nods as he scans over the document with his eyes. \"A good reduction, and a modest bribe, this is well,\" he concedes. \"Though it pains me to sully our court with the intrigues of foreigners. Take your reward and never come in our presence again.\"\n\nThe Iron King waves to one of his councillors, who reluctantly places 350 silver pieces and an <b>iron greataxe* (Fighting +2)</b> into your hands.";
+            Text = "The king nods as he scans over the document with his eyes. \"A good reduction, and a modest bribe, this is well,\" he concedes. \"Though it pains me to sully our court with the intrigues of foreigners. Take your reward and never come in our presence again.\"\n\nThe Iron King waves to one of his councillors, who reluctantly places <b>350 silver pieces</b> and an <b>iron greataxe* (Fighting +2)</b> into your hands.";
 
             Bye = "Not wishing to tarry longer, you depart the chamber and return to the crossroads.";
 
@@ -9406,7 +9406,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The inns are a little unusual in Lhasbreath. Rather than being solid structures, inns are vast canvas tents without separate rooms. Here you rub shoulders with many young and old barbarians who are not successful enough to own their own houses. They are known as 'doss tents', and great casks and tables occupy the centre of the tent where ale and food is served. Loud music and singing make sleep difficult, and you must stay constantly vigilant for thieves. For every 3 silver coins you spend, each party member can recover 1 Health point. However, spellcasters cannot recharge their spells here, as there is not enough privacy to attain the necessary meditative state. You are warned by a hairy barbarian not to venture into the Salt Plains. \"The lack of moisture there will suck the water right from your bones and leave you as dry as a husk,\" he roars, spittle drooling from his chin. \"Only the most experienced ranger stands a chance of survival.\"";
+            Text = "The inns are a little unusual in Lhasbreath. Rather than being solid structures, inns are vast canvas tents without separate rooms. Here you rub shoulders with many young and old barbarians who are not successful enough to own their own houses. They are known as 'doss tents', and great casks and tables occupy the centre of the tent where ale and food is served. Loud music and singing make sleep difficult, and you must stay constantly vigilant for thieves. For every <b>3 silver coins</b> you spend, each party member can recover 1 Health point. However, spellcasters cannot recharge their spells here, as there is not enough privacy to attain the necessary meditative state. You are warned by a hairy barbarian not to venture into the Salt Plains. \"The lack of moisture there will suck the water right from your bones and leave you as dry as a husk,\" he roars, spittle drooling from his chin. \"Only the most experienced ranger stands a chance of survival.\"";
 
             RestPrice = 3;
 
@@ -9429,7 +9429,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "You examine the coffer carefully, but it does not seem to be trapped. Inside are 125 silver coins and a <b>bronze locket</b>.";
+            Text = "You examine the coffer carefully, but it does not seem to be trapped. Inside are <b>125 silver coins</b> and a <b>bronze locket</b>.";
 
             Bye = "You continue down the tunnel.";
 
@@ -9461,7 +9461,7 @@ namespace Book1
 
             Location = Location::Type::DESERT;
 
-            Text = "Clearly your allegiance to the Everchild has not gone unnoticed. You search the zealots, finding three <b>crude blades (Fighting +0)</b>, 60 silver coins and the Sorcerer's spell book! Sadly, the book has been badly damaged in the battle, but at least one interesting spell has survived:\n\n<b>Dazing Lights</b> (Combat)\n\nSwirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.\n\n<b>Recharge: 50 silver</b>\n\nNote: Any of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time. You gained the code A22.";
+            Text = "Clearly your allegiance to the Everchild has not gone unnoticed. You search the zealots, finding <b>three crude blades (Fighting +0)</b>, <b>60 silver coins</b> and the Sorcerer's spell book! Sadly, the book has been badly damaged in the battle, but at least one interesting spell has survived:\n\n<b>Dazing Lights</b> (Combat)\n\nSwirling lights dazzle your foes' eyes. When your opponent's attack this round, they must reduce the score of each of their dice by 1 point.\n\n<b>Recharge: 50 silver</b>\n\nNote: Any of your spellcasters can add this spell to their spellbooks if they wish, but remember that you cannot have more than six spells in a single spellbook at any given time. You gained the code A22.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -9563,7 +9563,7 @@ namespace Book1
 
             ID = 280;
 
-            Text = "Over the next few days the Everchild consolidates her rule. The Everchild presents you with 1250 silver coins for your labours to gain her the throne.\n\n\"Our next target is Clifftop,\" says the Everchild as you attend her war council. \"I need access to a good port if I am to take full control of the valley. Their King, Lothor the Ugly, is a zealous follower of Cursus so he cannot be swayed. Lothor has more troops than the Iron King, so I am reluctant to attack straight away.\"\n\n\"Is there anyone else who can reinforce us?\" you ask.\n\n\"It's possible that Unbraaki might,\" she says. \"He is a sorcerer of some power who lives in a palace just south of Clifftop. He would never have considered sending soldiers to me whilst I was a revolutionary, but he might be willing to do so now I am a queen. Ask him what he wants in exchange for support and see if he can be accommodated. You might also have some luck with the nomads of the desert. I have some connection with these people so they might be swayed. Good fortune to you, friends.\"\n\nNote:  All your soldiers in the Luutanesh barracks are transferred to the Saltdad barracks. The morale of all your soldiers is restored to maximum.";
+            Text = "Over the next few days the Everchild consolidates her rule. The Everchild presents you with <b>1250 silver coins</b> for your labours to gain her the throne.\n\n\"Our next target is Clifftop,\" says the Everchild as you attend her war council. \"I need access to a good port if I am to take full control of the valley. Their King, Lothor the Ugly, is a zealous follower of Cursus so he cannot be swayed. Lothor has more troops than the Iron King, so I am reluctant to attack straight away.\"\n\n\"Is there anyone else who can reinforce us?\" you ask.\n\n\"It's possible that Unbraaki might,\" she says. \"He is a sorcerer of some power who lives in a palace just south of Clifftop. He would never have considered sending soldiers to me whilst I was a revolutionary, but he might be willing to do so now I am a queen. Ask him what he wants in exchange for support and see if he can be accommodated. You might also have some luck with the nomads of the desert. I have some connection with these people so they might be swayed. Good fortune to you, friends.\"\n\nNote:  All your soldiers in the Luutanesh barracks are transferred to the Saltdad barracks. The morale of all your soldiers is restored to maximum.";
 
             Bye = "You bow and leave the palace.";
 
@@ -9700,7 +9700,7 @@ namespace Book1
 
                 Controls = Story::Controls::REST;
 
-                PreText += "\n\nYou may stay at the inn and recover your strength. For every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nDuring your stay meet a frustrated archaeologist, fresh from his digs at the Tumblestones just north of Lhasbreath. \"First we were constantly exploited by barbarians from the south, and then our trenches are refilled from the blasted sandstorms as quickly as we could dig them,\" he grumbles. \"I'm certain there are amazing discoveries to be made, but I'll be blown if it's worth all the hassle of finding them!\"";
+                PreText += "\n\nYou may stay at the inn and recover your strength. For every <b>5 silver coins</b> you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.\n\nDuring your stay meet a frustrated archaeologist, fresh from his digs at the Tumblestones just north of Lhasbreath. \"First we were constantly exploited by barbarians from the south, and then our trenches are refilled from the blasted sandstorms as quickly as we could dig them,\" he grumbles. \"I'm certain there are amazing discoveries to be made, but I'll be blown if it's worth all the hassle of finding them!\"";
             }
             else
             {
@@ -10209,7 +10209,7 @@ namespace Book1
 
             if (Engine::SPELLCASTERS(party) < 1)
             {
-                PreText += "\n\nYou manage to grasp 15 silver coins before groping your way to the chamber exit and making your way further into the temple.";
+                PreText += "\n\nYou manage to grasp <b>15 silver coins</b> before groping your way to the chamber exit and making your way further into the temple.";
 
                 Engine::GAIN_MONEY(party, 15);
             }
@@ -10638,7 +10638,7 @@ namespace Book1
 
             Location = Location::Type::TOMB_OF_IMOPPOSH;
 
-            Text = "Imopposh gives an unearthly howl before collapsing into piles of dust. You are relieved that the foul sorcerer has finally met his end.\n\nYour rewards are considerable. A <b>masterwork blade (Fighting +3)</b> and some <b>chain armour (Armour +2)</b> are stuffed into an urn, along with 900 silver coins. In an ancient wooden box stuffed underneath rotten funeral garbs you discover a <b>glittering necklace (Charisma +2)</b>. You may also take a <b>magical weave</b> from Imopposh's funeral bandages.\n\nNote: You gained the code A39.";
+            Text = "Imopposh gives an unearthly howl before collapsing into piles of dust. You are relieved that the foul sorcerer has finally met his end.\n\nYour rewards are considerable. A <b>masterwork blade (Fighting +3)</b> and some <b>chain armour (Armour +2)</b> are stuffed into an urn, along with <b>900 silver coins</b>. In an ancient wooden box stuffed underneath rotten funeral garbs you discover a <b>glittering necklace (Charisma +2)</b>. You may also take a <b>magical weave</b> from Imopposh's funeral bandages.\n\nNote: You gained the code A39.";
 
             Bye = "When you have finished your looting, you return to the desert.";
 
@@ -11151,7 +11151,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The Saltdad slave markets sell flesh from all across the valley. Some are unfortunates who have crossed the jealous desert kings, others have been plucked, dying from dehydration, from the waterless wastes. Most are miserable-looking specimens in rags and heavy chains, but every so often a promising candidate will show up.\n\nNote: If you have fewer than four party members in your team, you may recruit some more from the slave market. It costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
+            Text = "The Saltdad slave markets sell flesh from all across the valley. Some are unfortunates who have crossed the jealous desert kings, others have been plucked, dying from dehydration, from the waterless wastes. Most are miserable-looking specimens in rags and heavy chains, but every so often a promising candidate will show up.\n\nNote: If you have fewer than four party members in your team, you may recruit some more from the slave market. It costs <b>200 silver coins</b> to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
 
             RecruitmentPrice = 200;
 
@@ -11199,7 +11199,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The aftermath of the battle is bloody indeed. A dozen thieves, as well as one of the Everchild's men, lie dead. Reasoning that you might as well take the thieves' ill-gotten gains, you open the chests and crates to examine what kind of goods they had stolen. You count 75 silver coins, a <b>reference book (Lore +1)</b>, an <b>engagement ring</b>, as well as large amounts of clothes. Thinking quickly, you strip off your slave rags and change into more common garb, the Everchild and her followers doing the same.\n\nYou slip out of the thieves' hideaway and into the storm drains beneath the city.";
+            Text = "The aftermath of the battle is bloody indeed. A dozen thieves, as well as one of the Everchild's men, lie dead. Reasoning that you might as well take the thieves' ill-gotten gains, you open the chests and crates to examine what kind of goods they had stolen. You count <b>75 silver coins</b>, a <b>reference book (Lore +1)</b>, an <b>engagement ring</b>, as well as large amounts of clothes. Thinking quickly, you strip off your slave rags and change into more common garb, the Everchild and her followers doing the same.\n\nYou slip out of the thieves' hideaway and into the storm drains beneath the city.";
 
             Bye = "After an hour's wandering you eventually come to a ladder, leading up to a drain cover. You cautiously make your way upwards.";
 
@@ -11492,7 +11492,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The ghastly screams of the man echo in your head long after his eyes have been torn from his skull. Lothor congratulates you for your choice of punishments, gifting you a purse of 20 silver coins, but you shall pay a hefty price spiritually. The gods despise a torturer -- from now on you cannot receive any blessings from any priest in the world.\n\nNote: You gained the code A34.";
+            Text = "The ghastly screams of the man echo in your head long after his eyes have been torn from his skull. Lothor congratulates you for your choice of punishments, gifting you a purse of <b>20 silver coins</b>, but you shall pay a hefty price spiritually. The gods despise a torturer -- from now on you cannot receive any blessings from any priest in the world.\n\nNote: You gained the code A34.";
 
             Bye = "Feeling dead inside, you depart.";
 
@@ -11585,7 +11585,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "You sheathe your weapons and search through the coffin, somewhat gingerly given the amount of oozing fluid puddling in the bottom.\n\nYou manage to stomach extracting 240 silver coins and an <b>amulet of defence (Armour +1)</b>. You also discover the <b>Fairbrother Family Crest</b>, which was tucked into corner covered in ooze-soaked cloth.\n\nTake what you wish.\n\nNote: You gained the code A58.";
+            Text = "You sheathe your weapons and search through the coffin, somewhat gingerly given the amount of oozing fluid puddling in the bottom.\n\nYou manage to stomach extracting <b>240 silver coins</b> and an <b>amulet of defence (Armour +1)</b>. You also discover the <b>Fairbrother Family Crest</b>, which was tucked into corner covered in ooze-soaked cloth.\n\nTake what you wish.\n\nNote: You gained the code A58.";
 
             Choices.clear();
 
@@ -11924,7 +11924,7 @@ namespace Book1
 
             Location = Location::Type::CLIFFTOP;
 
-            Text = "Heaving with steady progress, you eventually pull the great cogwheel from the sea and roll it into the boat. Your jollyboat floats low in the water, and you waste no time rowing it to shore. There is a great cheer from the harbour crew as you moor up. The harbourmaster gratefully presents you with a purse of 300 silver coins. Soon the cogwheel is cleaned up and reinstalled into the crane.\n\nNote: You gained the code A31.";
+            Text = "Heaving with steady progress, you eventually pull the great cogwheel from the sea and roll it into the boat. Your jollyboat floats low in the water, and you waste no time rowing it to shore. There is a great cheer from the harbour crew as you moor up. The harbourmaster gratefully presents you with a purse of <b>300 silver coins</b>. Soon the cogwheel is cleaned up and reinstalled into the crane.\n\nNote: You gained the code A31.";
 
             Bye = "Waving the harbour crew goodbye you return to your ship.";
 
@@ -12698,7 +12698,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The thief reluctantly hands over 100 silver coins. When the rest of your party climb through the window, he also decides to throw in a <b>handsome brooch (Charisma +1)</b> to discourage any further extortion.";
+            Text = "The thief reluctantly hands over <b>100 silver coins</b>. When the rest of your party climb through the window, he also decides to throw in a <b>handsome brooch (Charisma +1)</b> to discourage any further extortion.";
 
             Bye = "You slip away into the streets together, the thief soon vanishing from sight.";
 
@@ -12810,7 +12810,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "The door is unlocked and leads to a priest's sanctum. There is a small altar with a block of <b>incense</b> and 15 silver coins on it. The place is tidy, but there are no comfortable bits of furniture such as chairs or tables here.";
+            Text = "The door is unlocked and leads to a priest's sanctum. There is a small altar with a block of <b>incense</b> and <b>15 silver coins</b> on it. The place is tidy, but there are no comfortable bits of furniture such as chairs or tables here.";
 
             Bye = "With no other exits available, you make your way to the archway.";
 
@@ -13270,7 +13270,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The thief lies dead at your feet. You may take his <b>iron shortsword (Fighting +1)</b>, his <b>leather armour (Armour +1)</b> and a pair of <b>soft boots (Stealth +1)</b>. He also carries 30 silver coins. Eventually the city guards arrive and you inform them what has just happened. Fortunately, they have been looking for this thief for some time and so believe your story.\n\nThe thief's victim, a local magistrate, is delighted with your kindness. He promises to put in a good word with the authorities whilst you are in Chalice.\n\nNote: From now on, any time you have to make a Charisma skill check in the city of Chalice, you may pass it automatically.";
+            Text = "The thief lies dead at your feet. You may take his <b>iron shortsword (Fighting +1)</b>, his <b>leather armour (Armour +1)</b> and a pair of <b>soft boots (Stealth +1)</b>. He also carries <b>30 silver coins</b>. Eventually the city guards arrive and you inform them what has just happened. Fortunately, they have been looking for this thief for some time and so believe your story.\n\nThe thief's victim, a local magistrate, is delighted with your kindness. He promises to put in a good word with the authorities whilst you are in Chalice.\n\nNote: From now on, any time you have to make a Charisma skill check in the city of Chalice, you may pass it automatically.";
 
             Choices.clear();
 
@@ -13449,10 +13449,10 @@ namespace Book1
 
             Location = Location::Type::WEST_ROAD;
 
-            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful. All prices are in silver coins.\n\nNote: If you have a ship docked in Clifftop, you can also buy up to three cargo units of Salt from the merchants for 500 silver coins each. They will deliver this cargo straight to your ship provided there is room for it.";
+            Text = "A great caravan of salt merchants, enroute to Clifftop, offer you their services. Their merchants have various odds and ends you might find useful. All prices are in silver coins.\n\nNote: If you have a ship docked in Clifftop, you can also buy up to three cargo units of Salt from the merchants for <b>500 silver coins</b> each. They will deliver this cargo straight to your ship provided there is room for it.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Buy SALT", {Book::Type::BOOK1, -397}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 500));
+            Choices.push_back(Choice::Base("Buy Salt", {Book::Type::BOOK1, -397}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 500));
             Choices.push_back(Choice::Base("You have finished your trading", {Book::Type::BOOK1, 569}, Choice::Type::RESET_SHOP));
 
             Controls = Story::Controls::SHOP;
@@ -13637,7 +13637,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The Everchild is generous and awards you 2000 silver coins.";
+            Text = "The Everchild is generous and awards you <b>2000 silver coins</b>.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Escort her back to Saltdad", {Book::Type::BOOK1, 75}));
@@ -13734,7 +13734,7 @@ namespace Book1
 
             Location = Location::Type::CLIFFTOP;
 
-            Text = "With the cargo crane in operation you can buy goods in Cargo Units from Clifftop. These goods are too large for your characters to carry, but they can be loaded onto any ship you have in Clifftop harbour. You cannot buy more cargo units than you can store in your ship (for instance, a Cog can carry 2 Cargo Units). You can also sell any goods you are carrying in your ships for the same price as well:\n\nSALT: 550 silver coins\nCROPS: 600 silver coins\nSTEEL: 3000 silver coins\nSPICES: 3200 silver coins\nWINE: 2000 silver coins\nSLAVES: 700 silver coins";
+            Text = "With the cargo crane in operation you can buy goods in Cargo Units from Clifftop. These goods are too large for your characters to carry, but they can be loaded onto any ship you have in Clifftop harbour. You cannot buy more cargo units than you can store in your ship (for instance, a Cog can carry 2 Cargo Units). You can also sell any goods you are carrying in your ships for the same price as well:\n\nSalt <b>550 silver coins</b>\nCrops <b>600 silver coins</b>\nSteel <b>3000 silver coins</b>\nSpices <b>3200 silver coins</b>\nWine <b>2000 silver coins</b>\nSlaves <b>700 silver coins</b>";
 
             Choices.clear();
 
@@ -14169,7 +14169,7 @@ namespace Book1
 
         void Event(Party::Base &party)
         {
-            PreText = "You rub your hands together with glee as you behold the stores of treasure. It's time to get looting!\n\nThe following items are in the vault:\n\n1500 silver pieces\nA bar <b>gold bullion</b>\nA <b>magical weave</b>\nA pile of <b>registry papers</b>\nA <b>glittering necklace (Charisma +2)</b>\nA <b>tome of knowledge (Lore +2)</b>\nA <b>silver idol</b>\n\nWhat will you do now?\n\nNote: You may take what you wish. You gained the code A93.";
+            PreText = "You rub your hands together with glee as you behold the stores of treasure. It's time to get looting!\n\nThe following items are in the vault:\n\n<b>1500 silver pieces</b>\nA bar <b>gold bullion</b>\nA <b>magical weave</b>\nA pile of <b>registry papers</b>\nA <b>glittering necklace (Charisma +2)</b>\nA <b>tome of knowledge (Lore +2)</b>\nA <b>silver idol</b>\n\nWhat will you do now?\n\nNote: You may take what you wish. You gained the code A93.";
 
             Take = {
                 Equipment::Base("1500 silver pieces", "1500 silver pieces", Equipment::Class::NORMAL, Equipment::Type::SILVER_COINS, Attribute::Type::NONE, 0, 0, 1500, false),
@@ -14593,7 +14593,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "You find 123 silver coins and a <b>rusty key</b> on the bodies.\n\nNote: If you paid any bribes to an ogre, you can recover that money as well.\n\nNote: You also gain any bribes you have paid to an ogre. You gained the code A76.";
+            Text = "You find <b>123 silver coins</b> and a <b>rusty key</b> on the bodies.\n\nNote: If you paid any bribes to an ogre, you can recover that money as well.\n\nNote: You also gain any bribes you have paid to an ogre. You gained the code A76.";
 
             Choices.clear();
 
@@ -14884,7 +14884,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Haatchi is delighted as you produce the <b>crier bird</b> for him. He quickly hangs it in pride of place in his collection, the bird singing a mournful but sweet tune. True to his word, Haatchi hands over a purse of 100 silver coins. \"If you find any others, just bring them to me,\" he insists.";
+            Text = "Haatchi is delighted as you produce the <b>crier bird</b> for him. He quickly hangs it in pride of place in his collection, the bird singing a mournful but sweet tune. True to his word, Haatchi hands over a purse of <b>100 silver coins</b>. \"If you find any others, just bring them to me,\" he insists.";
 
             Bye = "Wishing him a good day, you stroll on.";
 
@@ -14914,10 +14914,10 @@ namespace Book1
 
             Location = Location::Type::COLD_RIVER;
 
-            Text = "You have come to the banks of a wide river that separates the city of Chalice from the rest of the valley. The Cold River pours from the craggy mountain tops of the Stonewalls and bisects the desert like a sword blade. Spanning this river is an ancient bridge, built shortly after the demon lord Abraxas destroyed the elder civilisation. Originally built as an act of faith to restart society, its designers could not hold back the wave of savagery left in the demon's wake as the fine cities of the elders were brought to ruin.\n\nThe bridge, however, still stands, wide and strong. Dozens of heavy wagons ply its ancient length and without it the city of Chalice would be entirely cut off. A fee of 40 silver coins is required to cross it, a steep price normally paid only by merchants. You notice that slimmer, flimsier bridges made of rope and wood also cross the river, through few people seem willing to use them. There is no toll for their use.";
+            Text = "You have come to the banks of a wide river that separates the city of Chalice from the rest of the valley. The Cold River pours from the craggy mountain tops of the Stonewalls and bisects the desert like a sword blade. Spanning this river is an ancient bridge, built shortly after the demon lord Abraxas destroyed the elder civilisation. Originally built as an act of faith to restart society, its designers could not hold back the wave of savagery left in the demon's wake as the fine cities of the elders were brought to ruin.\n\nThe bridge, however, still stands, wide and strong. Dozens of heavy wagons ply its ancient length and without it the city of Chalice would be entirely cut off. A fee of <b>40 silver coins</b> is required to cross it, a steep price normally paid only by merchants. You notice that slimmer, flimsier bridges made of rope and wood also cross the river, through few people seem willing to use them. There is no toll for their use.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Pay 40 silver coins and cross the stone bridge", {Book::Type::BOOK1, 450}, Choice::Type::GAIN_MONEY, -40));
+            Choices.push_back(Choice::Base("Pay <b>40 silver coins</b> and cross the stone bridge", {Book::Type::BOOK1, 450}, Choice::Type::GAIN_MONEY, -40));
             Choices.push_back(Choice::Base("Cross the river using one of the rope bridges", {Book::Type::BOOK1, 329}));
             Choices.push_back(Choice::Base("Head back to Luutanesh", {Book::Type::BOOK1, 614}));
 
@@ -16054,7 +16054,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "With the orcs defeated you quickly search their guard room. In total 20 silver coins lies scattered across the table. You can take either orc's <b>crude blade (Fighting +0)</b> if you are short on weapons. The first orc also carried a <b>shield (Armour +2)</b>.\n\nNote: You gained the code A56.";
+            Text = "With the orcs defeated you quickly search their guard room. In total <b>20 silver coins</b> lies scattered across the table. You can take either orc's <b>crude blade (Fighting +0)</b> if you are short on weapons. The first orc also carried a <b>shield (Armour +2)</b>.\n\nNote: You gained the code A56.";
 
             Bye = "You return to the corridor outside.";
 
@@ -16088,7 +16088,7 @@ namespace Book1
 
             Location = Location::Type::SALTDAD;
 
-            Text = "After days of wandering you reach the outskirts of a ramshackle city which stands in the shadow of a ruined palace. Some peasant girls take pity on you, feeding you with precious water. Thanking them you make your way into the city centre.\n\nNote: You lose 5 silver coins, if you have them.";
+            Text = "After days of wandering you reach the outskirts of a ramshackle city which stands in the shadow of a ruined palace. Some peasant girls take pity on you, feeding you with precious water. Thanking them you make your way into the city centre.\n\nNote: You lose <b>5 silver coins</b>, if you have them.";
 
             Choices.clear();
 
@@ -16549,7 +16549,7 @@ namespace Book1
             Text = "You close your eyes and focus. You can feel them... madshards reverberating in the earth, beneath the temple. Extracting them won't be easy. You will need hundreds of diggers to tear up the unwilling earth. What you will find below... who knows?";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Hire workers from Cursus to excavate the ruins for 5000 silver coins", {Book::Type::BOOK1, 571}, Choice::Type::GAIN_MONEY, -5000));
+            Choices.push_back(Choice::Base("Hire workers from Cursus to excavate the ruins for <b>5000 silver coins</b>", {Book::Type::BOOK1, 571}, Choice::Type::GAIN_MONEY, -5000));
             Choices.push_back(Choice::Base("Leave the wretched fragments in their earthy tomb", {Book::Type::BOOK1, 515}));
 
             Controls = Story::Controls::STANDARD;
@@ -16758,7 +16758,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Straining every sinew, you scrape the door open inch by inch. To your anger you see that this door merely leads to the vault's antechamber, an even large vault door standing on the other side that would take a dozen men to open. Fortunately, the antechamber does contain some easily accessible treasure. You find 500 silver coins, an odd crystalline wand labelled as a wayfinder rod, a bar of <b>gold bullion</b> and a block of <b>incense</b>.\n\nThere are also a number of financial records, none of which look valuable at first. However, one book catches your eye. It is a <b>royal ledger</b>, which bears the crest and authority of House Goldwell, the royal family of Royce. In it are detailed a number of transactions to purchase slaves from Cursus for the royal plantations in the Splintered Isles. The purchase of slaves is illegal in Royce... what is the king up to? Take the ledger, if you wish.\n\nBreaking into the patriarch's vault has been the heist of a lifetime.\n\nNote: You gained the code A83.";
+            Text = "Straining every sinew, you scrape the door open inch by inch. To your anger you see that this door merely leads to the vault's antechamber, an even large vault door standing on the other side that would take a dozen men to open. Fortunately, the antechamber does contain some easily accessible treasure. You find <b>500 silver coins</b>, an odd crystalline wand labelled as a wayfinder rod, a bar of <b>gold bullion</b> and a block of <b>incense</b>.\n\nThere are also a number of financial records, none of which look valuable at first. However, one book catches your eye. It is a <b>royal ledger</b>, which bears the crest and authority of House Goldwell, the royal family of Royce. In it are detailed a number of transactions to purchase slaves from Cursus for the royal plantations in the Splintered Isles. The purchase of slaves is illegal in Royce... what is the king up to? Take the ledger, if you wish.\n\nBreaking into the patriarch's vault has been the heist of a lifetime.\n\nNote: You gained the code A83.";
 
             Bye = "You silently return to the ground floor of the pyramid.";
 
@@ -16926,7 +16926,7 @@ namespace Book1
 
             ID = 503;
 
-            Text = "Holding your breath, you plunge into the cold water, swimming through the black tunnel. Eventually you spy the tiniest glimpse of light, and swim onwards, your lungs bursting. You emerge into a small but tall chamber, filled with half-submerged smashed pottery. Light streams through a tiny crack in the ceiling, and you can hear sounds of the city high above you.\n\nThe walls are unscalable, but searching the broken vases nets you 40 silver pieces and a <b>handsome brooch (Charisma +1)</b>.";
+            Text = "Holding your breath, you plunge into the cold water, swimming through the black tunnel. Eventually you spy the tiniest glimpse of light, and swim onwards, your lungs bursting. You emerge into a small but tall chamber, filled with half-submerged smashed pottery. Light streams through a tiny crack in the ceiling, and you can hear sounds of the city high above you.\n\nThe walls are unscalable, but searching the broken vases nets you <b>40 silver pieces</b> and a <b>handsome brooch (Charisma +1)</b>.";
 
             Bye = "Pleased with your find, you swim back to the Everchild and make your report. Satisfied that the only way to go is through the dry arch, she beckons you onwards.";
 
@@ -17049,7 +17049,7 @@ namespace Book1
 
             Location = Location::Type::CLIFFTOP;
 
-            Text = "A row of rowdy taverns stand on the wooden boardwalk built for the harbourside. The taverns are frequently flooded by the incoming tide, and no attempts have been made to sweep away the pooled saltwater that settles in their sunken floors. Frothy waves splash at the windows as you down a tankard of cheap grog at your table, and you wonder how the building manages to stay up.\n\nA nearby sailor sings a sad song about the Maiden of the Depths. She was a pure-hearted girl who was tossed over the side of a ship during one of the frequent storms in the Passage of Illikein around the Splintered Isles. The legend goes that those who present the Maiden with flowers receive rich rewards from sunken hulks beneath the waves.\n\nNote: You may stay at the tavern and recover your strength. For every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms. You gained the code A30.";
+            Text = "A row of rowdy taverns stand on the wooden boardwalk built for the harbourside. The taverns are frequently flooded by the incoming tide, and no attempts have been made to sweep away the pooled saltwater that settles in their sunken floors. Frothy waves splash at the windows as you down a tankard of cheap grog at your table, and you wonder how the building manages to stay up.\n\nA nearby sailor sings a sad song about the Maiden of the Depths. She was a pure-hearted girl who was tossed over the side of a ship during one of the frequent storms in the Passage of Illikein around the Splintered Isles. The legend goes that those who present the Maiden with flowers receive rich rewards from sunken hulks beneath the waves.\n\nNote: You may stay at the tavern and recover your strength. For every <b>5 silver coins</b> you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms. You gained the code A30.";
 
             RestPrice = 5;
 
@@ -18326,7 +18326,7 @@ namespace Book1
 
             Location = Location::Type::NORTH_ROAD;
 
-            Text = "Your marshal tone cannot be denied. You form an impenetrable thicket of soldiers against the cavalry charge. Your archers pepper the hesitating nomads with arrows. Realising that their shock tactics have failed, the nomads flee back into the desert rather than face a long, bloody combat for a few barrels of salt.\n\nA great cheer goes up from the caravan guards. The merchants, delighted with your brave actions, reward you with 100 silver coins.";
+            Text = "Your marshal tone cannot be denied. You form an impenetrable thicket of soldiers against the cavalry charge. Your archers pepper the hesitating nomads with arrows. Realising that their shock tactics have failed, the nomads flee back into the desert rather than face a long, bloody combat for a few barrels of salt.\n\nA great cheer goes up from the caravan guards. The merchants, delighted with your brave actions, reward you with <b>100 silver coins</b>.";
 
             Bye = "After a brief rest you continue on your way.";
 
@@ -19558,11 +19558,11 @@ namespace Book1
 
             Location = Location::Type::SALT_MINES;
 
-            Text = "You can buy salt in bulk for any ships you have moored in Cursus or Clifftop. Each cargo unit costs 450 silver pieces, and will be transported to your ships for free. Your ships must have room in their cargo holds in order for you to buy salt here.";
+            Text = "You can buy salt in bulk for any ships you have moored in Cursus or Clifftop. Each cargo unit costs <b>450 silver pieces</b>, and will be transported to your ships for free. Your ships must have room in their cargo holds in order for you to buy salt here.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Buy SALT for your ship in Cursus", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CURSUS, 450));
-            Choices.push_back(Choice::Base("Buy SALT for your ship in Clifftop", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 450));
+            Choices.push_back(Choice::Base("Buy Salt for your ship in Cursus", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CURSUS, 450));
+            Choices.push_back(Choice::Base("Buy Salt for your ship in Clifftop", {Book::Type::BOOK1, -575}, Choice::Type::DELIVER, {Cargo::Type::SALT}, Location::Type::CLIFFTOP, 450));
             Choices.push_back(Choice::Base("You have finished your business", {Book::Type::BOOK1, 722}));
 
             Controls = Story::Controls::STANDARD;
@@ -19604,7 +19604,7 @@ namespace Book1
             Text = "\"You couldn't afford me!\" laughs the ogre.\n\n\"How much?\" you press.\n\n\"Eight hundred silver,\" grins the ogre. \"I'd charge a thousand, but I'll give you a discount since I've been stuck in this hole for months.\"";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Pay the ogre 800 silver coins", {Book::Type::BOOK1, 245}, Choice::Type::GAIN_MONEY, -800));
+            Choices.push_back(Choice::Base("Pay the ogre <b>800 silver coins</b>", {Book::Type::BOOK1, 245}, Choice::Type::GAIN_MONEY, -800));
             Choices.push_back(Choice::Base("Kill the ogre", {Book::Type::BOOK1, 117}));
             Choices.push_back(Choice::Base("Leave the ogre in peace", {Book::Type::BOOK1, 310}));
 
@@ -19681,7 +19681,7 @@ namespace Book1
 
             Location = Location::Type::LHASBREATH_PYRAMID;
 
-            Text = "In the aftermath of the battle you enter the step pyramid to see if any more horrors lurk within. Fortunately the pyramid is not large, and you seem to have cleared away all the snakemen. You help yourself to 200 silver coins worth of jewels and artefacts before returning to the scholars.\n\nNow the area is safe Emlyn begins to take samples of the exotic plants growing on the temple. It is impossible to take them all, so only the most likely candidates should be picked. She asks your advice on what should be taken, also getting guidance from her fellow scholars.\n\nNote: The difficulty of this skill check depends on how many scholars died on the trip through the jungle. If no scholars died, the difficulty is 3+. If one died it is 4+, if two died it is 5+, and if three died it is 6+.";
+            Text = "In the aftermath of the battle you enter the step pyramid to see if any more horrors lurk within. Fortunately the pyramid is not large, and you seem to have cleared away all the snakemen. You help yourself to <b>200 silver coins</b> worth of jewels and artefacts before returning to the scholars.\n\nNow the area is safe Emlyn begins to take samples of the exotic plants growing on the temple. It is impossible to take them all, so only the most likely candidates should be picked. She asks your advice on what should be taken, also getting guidance from her fellow scholars.\n\nNote: The difficulty of this skill check depends on how many scholars died on the trip through the jungle. If no scholars died, the difficulty is 3+. If one died it is 4+, if two died it is 5+, and if three died it is 6+.";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -20150,7 +20150,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You are quickly recognised as the queen's champions by the cruel arena master. Grovelling obsequiously, he apologises for your detention, and even offers you 100 silver coins by way of apology. You may also take up to four <b>crude blades (Fighting +0)</b> from the armoury to replace your lost weapons.";
+            Text = "You are quickly recognised as the queen's champions by the cruel arena master. Grovelling obsequiously, he apologises for your detention, and even offers you <b>100 silver coins</b> by way of apology. You may also take up to four <b>crude blades (Fighting +0)</b> from the armoury to replace your lost weapons.";
 
             Bye = "Banishing the arena master with a cuff to his ear, you march smartly into the city.";
 
@@ -20210,7 +20210,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "After all you've been through Amelia deserves a chance to cut loose, and you watch idly as she walks away with some soldiers. She doesn't speak about what happened the next morning, but she is missing a fair quantity of money.\n\nNote: You lost 35 silver coins.";
+            Text = "After all you've been through Amelia deserves a chance to cut loose, and you watch idly as she walks away with some soldiers. She doesn't speak about what happened the next morning, but she is missing a fair quantity of money.\n\nNote: You lost <b>35 silver coins</b>.";
 
             Choices.clear();
 
@@ -20238,7 +20238,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "Slaves are expensive in Cursus, and do not remain unsold for long. The auction platforms have long stood in the shadow of a lesser temple and are fortified against theft. Only strong and healthy slaves can be found here... the god of judgement will not tolerate those who cannot work.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
+            Text = "Slaves are expensive in Cursus, and do not remain unsold for long. The auction platforms have long stood in the shadow of a lesser temple and are fortified against theft. Only strong and healthy slaves can be found here... the god of judgement will not tolerate those who cannot work.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs <b>200 silver coins</b> to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
 
             RecruitmentPrice = 200;
 
@@ -20672,7 +20672,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You quickly examine the bodies before the housecarls arrive on the scene. You find a little money, 20 silver coins. Most damningly you find a <b>ring of the patriarch</b>. These rings are only given out to the most loyal servants of Cursus. Clearly your allegiance to the Everchild will mean you shall be hounded by these fanatics until the end of your days! Shaking your head, you quickly flee the scene.\n\nNote: You gained the code A90.";
+            Text = "You quickly examine the bodies before the housecarls arrive on the scene. You find a little money, <b>20 silver coins</b>. Most damningly you find a <b>ring of the patriarch</b>. These rings are only given out to the most loyal servants of Cursus. Clearly your allegiance to the Everchild will mean you shall be hounded by these fanatics until the end of your days! Shaking your head, you quickly flee the scene.\n\nNote: You gained the code A90.";
 
             Choices.clear();
 
@@ -21318,7 +21318,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The next morning the surviving landlords and masters of Clifftop fill the King's Hall to kneel before the Everchild. Resplendent in her yellow and blue silks and glittering silver crown, she immediately repeals the rights of the taskmasters to execute or mutilate their workers. Upstanding members of the revolution are awarded sweeping areas of land, the cruellest taskmasters are efficiently executed, and the Everchild goes amongst the workers to heal the lame and sick with her magic. Many fall in love with the queen that day, and soon her name is being chanted across city.\n\nThe Everchild award rulership of the city to Ayleta the Traveller, a mysterious mystic who has done good work in administrating the changes in Saltdad. You and your party are publicly honoured and presented with 1000 silver coins in compensation for your labours. Capturing this city has been a grand step forward for the Everchild's goals.\n\nNote: Any units that didn't rout can restore their Morale back to their starting value.";
+            Text = "The next morning the surviving landlords and masters of Clifftop fill the King's Hall to kneel before the Everchild. Resplendent in her yellow and blue silks and glittering silver crown, she immediately repeals the rights of the taskmasters to execute or mutilate their workers. Upstanding members of the revolution are awarded sweeping areas of land, the cruellest taskmasters are efficiently executed, and the Everchild goes amongst the workers to heal the lame and sick with her magic. Many fall in love with the queen that day, and soon her name is being chanted across city.\n\nThe Everchild award rulership of the city to Ayleta the Traveller, a mysterious mystic who has done good work in administrating the changes in Saltdad. You and your party are publicly honoured and presented with <b>1000 silver coins</b> in compensation for your labours. Capturing this city has been a grand step forward for the Everchild's goals.\n\nNote: Any units that didn't rout can restore their Morale back to their starting value.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Choose two party members and raise their maximum, unwounded Health scores by 1 point", {Book::Type::BOOK1, -626}, Choice::Type::TEAM_MAX_HEALTH, 2, 1));
@@ -21374,7 +21374,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You've seen the priest's longing gazes at your body. Now all you have to do is turn that lust into love and you'll have him eating out of the palm of your hand. Soon you are engaged in many deep and meaningful chats in the dead of night, listening to the priest's worries, massaging his troubles away, whilst lamenting your own enslavement when you feel his pity upon you.\n\nOne morning the priest sends you away. He is on the verge of breaking his vows and can no longer bear to have such a beautiful creature working for him. You tell him that you will not leave without your friends, so he reluctantly frees them too.\n\nAs a parting gift he presents you with 120 silver coins and a <b>handsome brooch (Charisma +1)</b> so you can always think of him in the future.";
+            Text = "You've seen the priest's longing gazes at your body. Now all you have to do is turn that lust into love and you'll have him eating out of the palm of your hand. Soon you are engaged in many deep and meaningful chats in the dead of night, listening to the priest's worries, massaging his troubles away, whilst lamenting your own enslavement when you feel his pity upon you.\n\nOne morning the priest sends you away. He is on the verge of breaking his vows and can no longer bear to have such a beautiful creature working for him. You tell him that you will not leave without your friends, so he reluctantly frees them too.\n\nAs a parting gift he presents you with <b>120 silver coins</b> and a <b>handsome brooch (Charisma +1)</b> so you can always think of him in the future.";
 
             Bye = "Giving him a chaste but meaningful kiss goodbye, you quickly flee into the city centre before he can change his mind.";
 
@@ -21693,7 +21693,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You gain the sense of something obscured in the stonework. Casting your spell, a section of the wall dissolves into darkness. Shining your lanterns within reveals a circular room filled with sturdy shelves and boxes. Your heart hammers in excitement. This is a treasury room, probably one of the smaller treasuries built during the reign of the first Everchild.\n\nSadly, much of the money has already been taken, and many boxes are empty. Perhaps there was some sort of disaster in the waning years of the Everchild's reign? There is still some money to be found, however, including 600 silver coins and a bar of <b>gold bullion</b>.\n\nNote: You gained the code A97.";
+            Text = "You gain the sense of something obscured in the stonework. Casting your spell, a section of the wall dissolves into darkness. Shining your lanterns within reveals a circular room filled with sturdy shelves and boxes. Your heart hammers in excitement. This is a treasury room, probably one of the smaller treasuries built during the reign of the first Everchild.\n\nSadly, much of the money has already been taken, and many boxes are empty. Perhaps there was some sort of disaster in the waning years of the Everchild's reign? There is still some money to be found, however, including <b>600 silver coins</b> and a bar of <b>gold bullion</b>.\n\nNote: You gained the code A97.";
 
             Bye = "Stuffing your bags with coins, you depart.";
 
@@ -22154,7 +22154,7 @@ namespace Book1
 
             Location = Location::Type::UNDERGROUND_TUNNELS;
 
-            Text = "With the ghouls defeated you begin a grizzly search through the remains in the burial chamber. You find 125 silver coins and a strangely intact pair of <b>soft boots (Stealth +1)</b>.\n\nYou find a bronze tablet, set into the wall, upon which a powerful spell has been inscribed:\n\n<b>Wisdom</b> (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\nRecharge: 50 silver\n\nNote: You gained the code A48.";
+            Text = "With the ghouls defeated you begin a grizzly search through the remains in the burial chamber. You find <b>125 silver coins</b> and a strangely intact pair of <b>soft boots (Stealth +1)</b>.\n\nYou find a bronze tablet, set into the wall, upon which a powerful spell has been inscribed:\n\n<b>Wisdom</b> (Adventure)\n\nYour mind awakens with ancient knowledge. Cast this spell when you have failed a Lore check. You gain 3 automatic successes for this check only.\n\n<b>Recharge: 75 silver</b>\n\nNote: You gained the code A48.";
 
             Bye = "With nowhere else to go, you return to the crossroads.";
 
@@ -22190,7 +22190,7 @@ namespace Book1
 
             Location = Location::Type::CLIFFTOP;
 
-            Text = "It costs 50 silver coins to repair one Health point on any ship you have docked in Cursus harbour. You can repair a ship up to its maximum starting health.";
+            Text = "It costs <b>50 silver coins</b> to repair one Health point on any ship you have docked in Cursus harbour. You can repair a ship up to its maximum starting health.";
 
             Choices.clear();
 
@@ -22310,7 +22310,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The slave market of Lhasbreath contains many varied peoples from across the valley, seized in raids by the barbarian warriors that rule the town. Most will be here only temporarily; the best slaves are sold on to the richer cities of the valley for farm work, or to perish in the terrible arena in Saltdad.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs 200 silver coins to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
+            Text = "The slave market of Lhasbreath contains many varied peoples from across the valley, seized in raids by the barbarian warriors that rule the town. Most will be here only temporarily; the best slaves are sold on to the richer cities of the valley for farm work, or to perish in the terrible arena in Saltdad.\n\nNote: If you have less than four party members in your team you may recruit some more from the slave market.\n\nIt costs <b>200 silver coins</b> to buy another party member, and they start with no equipment. A party member without a weapon has their Fighting score reduced by 1 point in combat.";
 
             RecruitmentPrice = 200;
 
@@ -22456,7 +22456,9 @@ namespace Book1
 
             Location = Location::Type::PALACE_OF_UNBRAAKI;
 
-            Text = "You quietly prowl the corridors until you come to the open door of Unbraaki's study. Except for the occasional monkey, proudly strutting down the corridor in a tall hat, there is no one about. You peek inside the room. It is a treasure house of knowledge and spells, quills and ink. You may take some <b>calligraphy ink</b> if you wish. You find books that contain all of the common spells of the world. Additionally, you find a very special spell indeed:\n\n<b>Clinging Dread</b> (Mass Combat)\n\nDoubt and uncertainty fill the hearts of the enemy soldiers. Reduce the Morale score of an enemy unit by 1 point.\n\nRecharge: 50 silver\n\nPleased with your findings you decide to quickly move on.\n\nNote: You can only cast this spell during Mass Combat (when entire armies clash). It has no effect on personal combat. You gained the code A91.";
+            Text = "You quietly prowl the corridors until you come to the open door of Unbraaki's study. Except for the occasional monkey, proudly strutting down the corridor in a tall hat, there is no one about. You peek inside the room. It is a treasure house of knowledge and spells, quills and ink. You may take some <b>calligraphy ink</b> if you wish. You find books that contain all of the common spells of the world. Additionally, you find a very special spell indeed:\n\n<b>Clinging Dread</b> (Mass Combat)\n\nDoubt and uncertainty fill the hearts of the enemy soldiers. Reduce the Morale score of an enemy unit by 1 point.\n\n<b>Recharge: 50 silver</b>\n\nNote: You can only cast this spell during Mass Combat (when entire armies clash). It has no effect on personal combat. You gained the code A91.";
+
+            Bye = "Pleased with your findings you decide to quickly move on.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("To the library", {Book::Type::BOOK1, 459}));
@@ -22681,7 +22683,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The foreign quarter is the place for merchants and travellers who do not follow the meditative teachings of the God King. It is noisier than the rest of Chalice, and the inn itself buzzes with activity from the traders and slaves who are tasked with shipping rice to the other starving cities of the valley. The inn you have found is typical of one in the foreign quarter, slightly shabby, with a mix of all races from dour Clifftop folk to the bone-clad barbarians of Lhasbreath.\n\nA chatty merchant advises you to avoid the Salt Plains, even if you are travelling on foot. \"It is the driest place in the valley and can suck the moisture from your gums quicker than the noonday sun,\" she says. \"It's not even a shortcut... the Westroad is a faster way to Clifftop. All you'll find in the Salt Plains are the bodies of the dead.\"\n\nNote: For every 5 silver coins you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
+            Text = "The foreign quarter is the place for merchants and travellers who do not follow the meditative teachings of the God King. It is noisier than the rest of Chalice, and the inn itself buzzes with activity from the traders and slaves who are tasked with shipping rice to the other starving cities of the valley. The inn you have found is typical of one in the foreign quarter, slightly shabby, with a mix of all races from dour Clifftop folk to the bone-clad barbarians of Lhasbreath.\n\nA chatty merchant advises you to avoid the Salt Plains, even if you are travelling on foot. \"It is the driest place in the valley and can suck the moisture from your gums quicker than the noonday sun,\" she says. \"It's not even a shortcut... the Westroad is a faster way to Clifftop. All you'll find in the Salt Plains are the bodies of the dead.\"\n\nNote: For every <b>5 silver coins</b> you spend, each party member can recover 1 Health point. Spell casters can also spend silver here to recharge their spells, purchasing components in the nearby marketplace and going into meditation in the privacy of their rooms.";
 
             RestPrice = 5;
 
@@ -22887,7 +22889,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "With the orcs dead you move to loot the room and examine their wargear. The leader has a mighty <b>iron greataxe* (Fighting +2)</b> and is wearing a fine suit of <b>bone armour (Armour +2)</b>. Three <b>iron swords (Fighting +1)</b> can be looted from the common warriors. Searching the room you find an iron key and a <b>warm cloak (Survival +1)</b>. Oddly, there are only 10 silver coins, not much for such a mighty leader. Where will you go now?\n\nNote: You gained the code 64.";
+            Text = "With the orcs dead you move to loot the room and examine their wargear. The leader has a mighty <b>iron greataxe* (Fighting +2)</b> and is wearing a fine suit of <b>bone armour (Armour +2)</b>. Three <b>iron swords (Fighting +1)</b> can be looted from the common warriors. Searching the room you find an iron key and a <b>warm cloak (Survival +1)</b>. Oddly, there are only <b>10 silver coins</b>, not much for such a mighty leader. Where will you go now?\n\nNote: You gained the code 64.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Go through the west door", {Book::Type::BOOK1, 736}));
@@ -22970,7 +22972,7 @@ namespace Book1
 
             Location = Location::Type::LHASBREATH_JUNGLE;
 
-            Text = "The monkeys mob you, their hands reaching into your pockets and packs, attempting to pull away items from you. \n\nThey eventually depart with their ill-gotten gains. Cursing the thieving monkeys, you make your way onwards.\n\nNote: Each character loses one item of equipment (not armour -- the monkeys aren't that good at stealing things!). In addition, you lose up to 170 silver coins. If you do not have that much, you lose all the silver coins you have.";
+            Text = "The monkeys mob you, their hands reaching into your pockets and packs, attempting to pull away items from you. \n\nThey eventually depart with their ill-gotten gains. Cursing the thieving monkeys, you make your way onwards.\n\nNote: Each character loses one item of equipment (not armour -- the monkeys aren't that good at stealing things!). In addition, you lose up to <b>170 silver coins</b>. If you do not have that much, you lose all the silver coins you have.";
             Choices.clear();
             Choices.push_back(Choice::Base("Lose one item from each party member", {Book::Type::BOOK1, 740}, Choice::Type::EVERYONE_LOSES_EQUIPMENT, {Equipment::Class::ARMOUR}, 1));
 
@@ -24211,7 +24213,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The priest is delighted to be surrounded by such devout followers of the faith. In a grand ceremony in front of his other slaves he publicly releases you. In a warm gesture he even offers you 50 silver coins to help you get started in your new lives. Grovelling appropriately, you depart for the city centre.";
+            Text = "The priest is delighted to be surrounded by such devout followers of the faith. In a grand ceremony in front of his other slaves he publicly releases you. In a warm gesture he even offers you <b>50 silver coins</b> to help you get started in your new lives. Grovelling appropriately, you depart for the city centre.";
 
             Choices.clear();
 
@@ -24791,7 +24793,7 @@ namespace Book1
 
             Location = Location::Type::SALT_PLAINS;
 
-            Text = "You spy a body in the distance, little more than a pile of bones. Approaching you can see it is the remains of a Lhasbreath warrior, his grim <b>bone armour</b> glistening in the waterless waste. The poor devil has no use for his things now. You can take his <b>bone armour (Armour +2)</b>, his <b>iron shortsword (Fighting +1)</b> and 30 silver coins. Lamenting that he died so close to water, you look to leave the savage wasteland.\n\nNote: You gained the code A18.";
+            Text = "You spy a body in the distance, little more than a pile of bones. Approaching you can see it is the remains of a Lhasbreath warrior, his grim <b>bone armour</b> glistening in the waterless waste. The poor devil has no use for his things now. You can take his <b>bone armour (Armour +2)</b>, his <b>iron shortsword (Fighting +1)</b> and <b>30 silver coins</b>. Lamenting that he died so close to water, you look to leave the savage wasteland.\n\nNote: You gained the code A18.";
 
             Choices.clear();
 
@@ -24879,7 +24881,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "You have slain the orcs, their blood weeping into the ancient flagstones. You found five <b>crude blades (Fighting +0)</b>. Turning your attention to the table you examine the artefacts that the orcs seem to have dug up from the earth. Is this what the orc expedition is about? Simple treasure hunting?\n\nSome of the artefacts are simple bits of pottery with no real value, but you do find a <b>handsome brooch (Charisma +1)</b> and several other pieces of jewellery you can sell for 350 silver coins.\n\nThere are two exits from the chamber.\n\nNote: You gained the code A74.";
+            Text = "You have slain the orcs, their blood weeping into the ancient flagstones. You found five <b>crude blades (Fighting +0)</b>. Turning your attention to the table you examine the artefacts that the orcs seem to have dug up from the earth. Is this what the orc expedition is about? Simple treasure hunting?\n\nSome of the artefacts are simple bits of pottery with no real value, but you do find a <b>handsome brooch (Charisma +1)</b> and several other pieces of jewellery you can sell for <b>350 silver coins</b>.\n\nThere are two exits from the chamber.\n\nNote: You gained the code A74.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Go through the north door", {Book::Type::BOOK1, 23}));
@@ -25430,7 +25432,7 @@ namespace Book1
 
             Location = Location::Type::TEMPLE_OFTHE_UNBROKEN;
 
-            Text = "You wonder how many more snakemen can fit into this temple! In the devastation you find plenty of religious silverwork worth 250 silver coins. A <b>handsome brooch (Charisma +1)</b> lies amongst the chalices and statuettes you loot. There is a way onwards, your torchlight reflecting some bronze plating ahead. Intrigued you make your way down the passageway.";
+            Text = "You wonder how many more snakemen can fit into this temple! In the devastation you find plenty of religious silverwork worth <b>250 silver coins</b>. A <b>handsome brooch (Charisma +1)</b> lies amongst the chalices and statuettes you loot. There is a way onwards, your torchlight reflecting some bronze plating ahead. Intrigued you make your way down the passageway.";
 
             Choices.clear();
 
@@ -25703,7 +25705,7 @@ namespace Book1
 
             Location = Location::Type::CLIFFTOP;
 
-            Text = "There is only a single ship for sale here, a battered old Cog, available for 500 silver coins.\n\n\"Why so cheap?\" you ask the harbourmaster.\n\n\"It's barely seaworthy,\" he explains. \"The crew are desperate for a new captain to lead them away from this dump. But it's a toss of the coin as to whether she'll even make it out of harbour.\"\n\n\"You're the worst salesman in the world,\" you respond.\n\nYou can sell a <b>Cog</b> here for 250 silver coins, a <b>Cursite War Galley</b> for 500 silver coins and a <b>Carrack</b> for 1500 silver coins. You cannot sell other kinds of ship here.";
+            Text = "There is only a single ship for sale here, a battered old Cog, available for <b>500 silver coins</b>.\n\n\"Why so cheap?\" you ask the harbourmaster.\n\n\"It's barely seaworthy,\" he explains. \"The crew are desperate for a new captain to lead them away from this dump. But it's a toss of the coin as to whether she'll even make it out of harbour.\"\n\n\"You're the worst salesman in the world,\" you respond.\n\nYou can sell a Cog here for <b>250 silver coins</b>, a Cursite War Galley for <b>500 silver coins</b> and a Carrack for <b>1500 silver coins</b>. You cannot sell other kinds of ship here.";
 
             Choices.clear();
 
@@ -26532,8 +26534,8 @@ namespace Book1
 
             Choices.clear();
             Choices.push_back(Choice::Base("Convince the ogre to talk (Team check: Charisma 5+, Successes: 4)", {Book::Type::BOOK1, 141}, {Book::Type::BOOK1, 295}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 5, 4));
-            Choices.push_back(Choice::Base("Give the ogre 100 silver coins", {Book::Type::BOOK1, -776}, Choice::Type::BRIBE_CODEWORD_AMOUNT, {Codes::Type::BRIBE_OGRE_100}, 100));
-            Choices.push_back(Choice::Base("Give the ogre 100 silver coins", {Book::Type::BOOK1, -776}, Choice::Type::BRIBE_CODEWORD_AMOUNT, {Codes::Type::BRIBE_OGRE_200}, 100));
+            Choices.push_back(Choice::Base("Give the ogre <b>100 silver coins</b>", {Book::Type::BOOK1, -776}, Choice::Type::BRIBE_CODEWORD_AMOUNT, {Codes::Type::BRIBE_OGRE_100}, 100));
+            Choices.push_back(Choice::Base("Give the ogre <b>100 silver coins</b>", {Book::Type::BOOK1, -776}, Choice::Type::BRIBE_CODEWORD_AMOUNT, {Codes::Type::BRIBE_OGRE_200}, 200));
 
             Controls = Story::Controls::STANDARD;
         }
@@ -26559,13 +26561,13 @@ namespace Book1
 
             if (Engine::VERIFY_CODES(party, {Codes::Type::BRIBE_OGRE_100}))
             {
-                Text = "You gave the ogre a bribe of 100 silver coins";
+                Text = "You gave the ogre a bribe of <b>100 silver coins</b>.";
 
                 Choices.push_back(Choice::Base("Convince the ogre to talk (Team check: Charisma 4+, Successes: 4)", {Book::Type::BOOK1, 141}, {Book::Type::BOOK1, 295}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 4));
             }
             else
             {
-                Text = "You gave the ogre a bribe of 200 silver coins";
+                Text = "You gave the ogre a bribe of <b>200 silver coins</b>.";
 
                 Choices.push_back(Choice::Base("Convince the ogre to talk (Team check: Charisma 3+, Successes: 4)", {Book::Type::BOOK1, 141}, {Book::Type::BOOK1, 295}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 3, 4));
             }
@@ -27591,7 +27593,7 @@ namespace Book1
             Text = "The family owe the Iron King 200 silver pieces, with an additional 50 silver collection tax.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Pay the family's tax (250 silver coins)", {Book::Type::BOOK1, 357}, Choice::Type::GAIN_MONEY, -250));
+            Choices.push_back(Choice::Base("Pay the family's tax <b>(250 silver coins)</b>", {Book::Type::BOOK1, 357}, Choice::Type::GAIN_MONEY, -250));
             Choices.push_back(Choice::Base("Save money by slaying the guards", {Book::Type::BOOK1, 554}));
             Choices.push_back(Choice::Base("Simply leave", {Book::Type::BOOK1, 75}));
 
@@ -27668,7 +27670,7 @@ namespace Book1
         {
             if (outcome)
             {
-                Bye = "The darkness remains absolute. You manage to scavenge 15 silver coins from the chamber before groping your way to the exit.";
+                Bye = "The darkness remains absolute. You manage to scavenge <b>15 silver coins</b> from the chamber before groping your way to the exit.";
 
                 Engine::GAIN_MONEY(party, 15);
             }
@@ -27686,7 +27688,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "Skallos collapses with a whispered cry of vengeance. There is silence in the chamber at last. Skallos was a well-equipped champion of darkness. You may claim his <b>black plate armour (Armour +3)</b> and take the <b>Skallos Runeblade (Fighting +3, Lore +2)</b>. In addition, he wears a <b>rugged cloak (Survival +2)</b> and has 750 silver pieces in jewellery about his body.\n\nThis was a mighty battle.\n\nNote: You gained the code A79.";
+            Text = "Skallos collapses with a whispered cry of vengeance. There is silence in the chamber at last. Skallos was a well-equipped champion of darkness. You may claim his <b>black plate armour (Armour +3)</b> and take the <b>Skallos Runeblade (Fighting +3, Lore +2)</b>. In addition, he wears a <b>rugged cloak (Survival +2)</b> and has <b>750 silver pieces</b> in jewellery about his body.\n\nThis was a mighty battle.\n\nNote: You gained the code A79.";
 
             Bye = "As there are no more exits from this chamber, you leave the way you came.";
 
@@ -27835,7 +27837,7 @@ namespace Book1
 
             Location = Location::Type::MORDAIN_EXCAVATED_DUNGEONS;
 
-            Text = "With the hounds dead you rifle though the crates. There is a good deal of spare clothing and foodstuffs here, as well as a large crate that holds a few shovels. Evidently most of the shovels have already been removed. There are certainly enough supplies here for three or four dozen orcs for quite some time...\n\nFortunately, there are also some valuables, including 400 silver coins a <b>grey talisman</b> and some <b>soft boots (Stealth +1)</b>.\n\nYou gained the code A65.";
+            Text = "With the hounds dead you rifle though the crates. There is a good deal of spare clothing and foodstuffs here, as well as a large crate that holds a few shovels. Evidently most of the shovels have already been removed. There are certainly enough supplies here for three or four dozen orcs for quite some time...\n\nFortunately, there are also some valuables, including <b>400 silver coins</b> a <b>grey talisman</b> and some <b>soft boots (Stealth +1)</b>.\n\nYou gained the code A65.";
 
             Bye = "You leave once you have looted your fill.";
 
@@ -28044,7 +28046,7 @@ namespace Book1
 
                 if (tax > 0)
                 {
-                    temp_string = "Pay the Cursite taxmen " + std::to_string(tax) + " silver coins";
+                    temp_string = "Pay the Cursite taxmen <b>" + std::to_string(tax) + " silver coins</b>";
 
                     Choices.push_back(Choice::Base(temp_string.c_str(), {Book::Type::BOOK1, 458}, Choice::Type::GAIN_MONEY, -tax, "Grumbling at the greed of priests you march on having paid the extortionate tax"));
                     Choices.push_back(Choice::Base("You cannot or will not pay the taxmen", {Book::Type::BOOK1, 109}));
@@ -28507,16 +28509,16 @@ namespace Book1
 
             goods_stolen /= 2;
 
-            PreText += "\n\nBrekken's gang has found 500 silver pieces worth of goods. You are presented with 250 silver pieces.";
+            PreText += "\n\nBrekken's gang has found 500 silver pieces worth of goods. You are presented with <b>250 silver pieces</b>.";
 
             if (goods_stolen > 0)
             {
-                PreText += " Your party stole about " + std::to_string(goods_stolen) + " silver coins worth of goods.";
+                PreText += " Your party stole about <b>" + std::to_string(goods_stolen) + " silver coins</b> worth of goods.";
             }
 
             Engine::GAIN_MONEY(party, 250 + goods_stolen);
 
-            PreText += " In total, you made " + std::to_string(250 + goods_stolen) + " silver coins extra money on the heist.\n\nYou have learned much on this mission.\n\nNote: If there are any items on the list that you wish to own after selling them, you can buy them here at the listed price.";
+            PreText += " In total, you made <b>" + std::to_string(250 + goods_stolen) + "</b> silver coins extra money on the heist.\n\nYou have learned much on this mission.\n\nNote: If there are any items on the list that you wish to own after selling them, you can buy them here at the listed price.";
 
             Text = PreText.c_str();
         }
@@ -28552,7 +28554,7 @@ namespace Book1
 
             if (party.Money < 100)
             {
-                PreText += " The king tops up your money to 100 silver coins. ";
+                PreText += " The king tops up your money to <b>100 silver coins</b>. ";
 
                 party.Money = 100;
 
@@ -28791,7 +28793,7 @@ namespace Book1
 
             Location = Location::Type::SALT_MINES;
 
-            Text = "You drop to your knees in exhaustion. The battle is won and you are triumphant. You eagerly sift through the dragon's treasure. Although much of it is merely old bones, you still manage to find 1000 silver pieces, a <b>glittering necklace (Charisma +2)</b>, and a <b>steel longsword (Fighting +2)</b>.\n\nThis was a mighty battle.\n\nNote: Feel free to take the <b>dragon head</b> as a memento of your glorious struggle. You gained the code A27.";
+            Text = "You drop to your knees in exhaustion. The battle is won and you are triumphant. You eagerly sift through the dragon's treasure. Although much of it is merely old bones, you still manage to find <b>1000 silver pieces</b>, a <b>glittering necklace (Charisma +2)</b>, and a <b>steel longsword (Fighting +2)</b>.\n\nThis was a mighty battle.\n\nNote: Feel free to take the <b>dragon head</b> as a memento of your glorious struggle. You gained the code A27.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Choose a party member to gain 1 point of Fighting", {Book::Type::BOOK1, -841}, Choice::Type::ROLL_FOR_ATTRIBUTE_INCREASE, {Attribute::Type::FIGHTING}, 1, 2, 0));
@@ -28896,7 +28898,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "The king nods and snaps his fingers. A purse of 250 silver coins is presented into your hands. At this the king barges past you to continue his revelries elsewhere. You bow and leave the merry monarch to it.";
+            Text = "The king nods and snaps his fingers. A purse of <b>250 silver coins</b> is presented into your hands. At this the king barges past you to continue his revelries elsewhere. You bow and leave the merry monarch to it.";
 
             Choices.clear();
 
@@ -30111,7 +30113,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "There are 200 silver coins and a <b>handsome brooch (Charisma +1)</b> in the bag. But can you really keep such stolen property?";
+            Text = "There are <b>200 silver coins</b> and a <b>handsome brooch (Charisma +1)</b> in the bag. But can you really keep such stolen property?";
 
             Controls = Story::Controls::STANDARD;
         }
@@ -30770,7 +30772,7 @@ namespace Book1
                     Equipment::INCENSE,
                     Equipment::DRAGONYAK_HORN};
 
-                PreText = "After some time searching through the pile of trash, you found the following items: 200 silver coins, <b>iron battleaxe (Fighting +2)</b>, <b>bone armour (Armour +2)</b>, <b>soft boots (Stealth +1)</b>, <b>reference book (Lore +1)</b>, 150 silver coins, Vial of <b>quicksilver</b>, <b>grey talisman</b>, <b>incense</b>, <b>dragonyak horn</b>. You can only take " + std::to_string(Limit) + ".";
+                PreText = "After some time searching through the pile of trash, you found the following items: <b>200 silver coins</b>, <b>iron battleaxe (Fighting +2)</b>, <b>bone armour (Armour +2)</b>, <b>soft boots (Stealth +1)</b>, <b>reference book (Lore +1)</b>, <b>150 silver coins</b>, Vial of <b>quicksilver</b>, <b>grey talisman</b>, <b>incense</b>, <b>dragonyak horn</b>. You can only take " + std::to_string(Limit) + ".";
             }
             else
             {
@@ -30835,7 +30837,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You speak with the Everchild about your adventures, the young queen hanging onto your every word as you describe the dangers you have faced. She thanks you for any aid you have given her so far, particularly if you have harmed the Iron King or raised new armies for her.\n\nNote: If you have fallen on hard times and have no money or equipment, including anything in your vault, she will transfer a <b>crude blade (Fighting +0)</b> to each party member and give you 100 silver coins.";
+            Text = "You speak with the Everchild about your adventures, the young queen hanging onto your every word as you describe the dangers you have faced. She thanks you for any aid you have given her so far, particularly if you have harmed the Iron King or raised new armies for her.\n\nNote: If you have fallen on hard times and have no money or equipment, including anything in your vault, she will transfer a <b>crude blade (Fighting +0)</b> to each party member and give you <b>100 silver coins</b>.";
 
             Bye = "After your discussions you bow and take your leave.";
 
@@ -30979,7 +30981,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You hire a room in a local inn and change into humble garb.\n\nAs early evening approaches you pretend to be cooks, joining a queue of servants as they shamble into the compound. This won't be easy. Security is tight, and the Bronzeguard know their servants well.\n\nNote: You lose 5 silver coins. During this mission you will not be wearing your armour or carrying any two-handed weapons. They are not removed, but you cannot use them until you have left the compound.";
+            Text = "You hire a room in a local inn and change into humble garb.\n\nAs early evening approaches you pretend to be cooks, joining a queue of servants as they shamble into the compound. This won't be easy. Security is tight, and the Bronzeguard know their servants well.\n\nNote: You lose <b>5 silver coins</b>. During this mission you will not be wearing your armour or carrying any two-handed weapons. They are not removed, but you cannot use them until you have left the compound.";
 
             Choices.clear();
             Choices.push_back(Choice::Base("Fool the Bronzeguard (Team check: Charisma 4+, Successes: 6)", {Book::Type::BOOK1, 164}, {Book::Type::BOOK1, 706}, Choice::Type::TEAM_ATTRIBUTES, {Attribute::Type::CHARISMA}, 4, 6));

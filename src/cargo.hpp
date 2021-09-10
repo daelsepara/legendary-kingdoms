@@ -18,12 +18,12 @@ namespace Cargo
 
     std::map<Cargo::Type, const char *> Description = {
         {Cargo::Type::NONE, "(None)"},
-        {Cargo::Type::SALT, "SALT"},
-        {Cargo::Type::CROPS, "CROPS"},
-        {Cargo::Type::STEEL, "STEEL"},
-        {Cargo::Type::SPICES, "SPICES"},
-        {Cargo::Type::WINE, "WINE"},
-        {Cargo::Type::SLAVES, "SLAVES"}};
+        {Cargo::Type::SALT, "Salt"},
+        {Cargo::Type::CROPS, "Crops"},
+        {Cargo::Type::STEEL, "Steel"},
+        {Cargo::Type::SPICES, "Spices"},
+        {Cargo::Type::WINE, "Wine"},
+        {Cargo::Type::SLAVES, "Slaves"}};
 }
 
 #endif

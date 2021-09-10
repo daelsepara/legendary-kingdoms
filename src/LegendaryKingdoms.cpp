@@ -25717,7 +25717,7 @@ Story::Base *findStory(Engine::Destination destination)
 
 void ByeScreen(SDL_Renderer *renderer, SDL_Surface *background, const char *Bye)
 {
-    auto bye = createText(Bye, FONT_GARAMOND, 32, clrDB, fullwidth - 2 * text_space, TTF_STYLE_NORMAL);
+    auto bye = Glyphs::FormattedText(Bye, FONT_GARAMOND, 32, clrDB, fullwidth - 2 * text_space);
 
     auto forward = createImage("icons/next.png");
 
