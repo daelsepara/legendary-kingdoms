@@ -36,6 +36,7 @@ namespace fs = std::filesystem;
 #include "color.hpp"
 #include "controls.hpp"
 #include "engine.hpp"
+#include "fonts.hpp"
 #include "glyphs.hpp"
 #include "location.hpp"
 #include "input.hpp"
@@ -66,7 +67,7 @@ void putHeader(SDL_Renderer *renderer, const char *text, TTF_Font *font, int spa
 void putText(SDL_Renderer *renderer, const char *text, TTF_Font *font, int space, SDL_Color fg, Uint32 bg, int style, int w, int h, int x, int y);
 void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts);
 void renderButtons(SDL_Renderer *renderer, std::vector<Button> controls, int current, int fg, int space, int pts, bool scroll_up, bool scroll_dn);
-void renderCaption(SDL_Renderer *renderer, TTF_Font *font_caption, Button control);
+void renderCaption(SDL_Renderer *renderer, Button control);
 void renderImage(SDL_Renderer *renderer, SDL_Surface *image, int x, int y);
 void renderImage(SDL_Renderer *renderer, SDL_Surface *text, int x, int y, int bounds, int offset);
 void renderText(SDL_Renderer *renderer, SDL_Surface *text, Uint32 bg, int x, int y, int bounds, int offset);

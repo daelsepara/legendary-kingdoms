@@ -43,16 +43,6 @@ bool introScreen(SDL_Window *window, SDL_Renderer *renderer)
 
 bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party)
 {
-    auto font_size = 28;
-
-    TTF_Init();
-
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
     if (window && renderer)
     {
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Party");
@@ -87,13 +77,13 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         {
             fillWindow(renderer, intWH);
 
-            putHeader(renderer, "Location", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
-            putText(renderer, Location::Description[party.Location], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
+            putHeader(renderer, "Location", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+            putText(renderer, Location::Description[party.Location], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
 
-            putHeader(renderer, "Money", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
-            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+            putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
 
-            putHeader(renderer, "Party", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Party", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (Engine::ALIVE(party) > 0)
             {
@@ -122,7 +112,7 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     count += 1;
                 }
 
-                putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, party_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             if (current >= 0 && current < controls.size())
@@ -191,15 +181,15 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             if (current_mode == Control::Type::ARMY)
             {
-                putHeader(renderer, "Army", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Army", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (current_mode == Control::Type::FLEET)
             {
-                putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Fleet", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (current_mode == Control::Type::ROMANCE)
             {
-                putHeader(renderer, "Romance", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Romance", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else
             {
@@ -412,29 +402,6 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         }
     }
 
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    TTF_Quit();
-
     return false;
 }
 
@@ -445,18 +412,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
     SDL_Surface *text = NULL;
     SDL_Surface *code_text = NULL;
 
-    auto font_size = 20;
     auto garamond_size = 24;
-
-    TTF_Init();
-
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-    auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
     auto character_box = (int)(text_bounds * 2 / 3);
     auto offset = 0;
 
@@ -578,13 +534,13 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
             }
             else
             {
-                putHeader(renderer, "Location", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
-                putText(renderer, Location::Description[party.Location], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
+                putHeader(renderer, "Location", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                putText(renderer, Location::Description[party.Location], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
 
-                putHeader(renderer, "Money", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
-                putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+                putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+                putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
 
-                putHeader(renderer, "Party", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Party", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (Engine::ALIVE(party) > 0)
                 {
@@ -613,10 +569,10 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                         count += 1;
                     }
 
-                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
 
-                putHeader(renderer, "Codes", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Codes", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
@@ -635,14 +591,14 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
             if (current_mode != Control::Type::PARTY && character >= 0 && character < party.Members.size())
             {
-                putText(renderer, party.Members[character].Name.c_str(), font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+                putText(renderer, party.Members[character].Name.c_str(), Fonts::Mason24, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
             }
 
             if (current_mode != Control::Type::PARTY && character >= 0 && character < party.Members.size())
             {
                 if ((party.Members[character].Status.size() > 0) || (party.Members[character].Team != Team::Type::NONE && !Engine::IS_CHARACTER(party.Members[character].Team)))
                 {
-                    putHeader(renderer, "Status", font_mason2, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                    putHeader(renderer, "Status", Fonts::Mason22, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string status_string = "";
 
@@ -674,7 +630,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                         }
                     }
 
-                    putText(renderer, status_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                    putText(renderer, status_string.c_str(), Fonts::Garamond24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
             }
 
@@ -682,7 +638,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
             {
                 if (current_mode == Control::Type::SPELLBOOK && party.Members[character].SpellCaster && party.Members[character].SpellBook.size() > 0)
                 {
-                    putHeader(renderer, "SPELLBOOK", font_mason2, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                    putHeader(renderer, "SPELLBOOK", Fonts::Mason22, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string spellbook_string = "";
 
@@ -696,11 +652,11 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                         spellbook_string += party.Members[character].SpellBook[i].Name;
                     }
 
-                    putText(renderer, spellbook_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                    putText(renderer, spellbook_string.c_str(), Fonts::Garamond24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
                 else if (current_mode == Control::Type::EQUIPMENT && party.Members[character].Equipment.size() > 0)
                 {
-                    putHeader(renderer, "EQUIPMENT", font_mason2, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                    putHeader(renderer, "EQUIPMENT", Fonts::Mason22, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string equipment_string = "";
 
@@ -714,11 +670,11 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                         equipment_string += itemString(party.Members[character].Equipment[i]);
                     }
 
-                    putText(renderer, equipment_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                    putText(renderer, equipment_string.c_str(), Fonts::Garamond24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
                 else if (current_mode == Control::Type::FOLLOWERS && party.Members[character].Followers.size() > 0)
                 {
-                    putHeader(renderer, "FOLLOWERS", font_mason2, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                    putHeader(renderer, "FOLLOWERS", Fonts::Mason22, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string followers_string = "";
 
@@ -732,11 +688,11 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                         followers_string += party.Members[character].Followers[i].Name + " (Health: " + std::to_string(party.Members[character].Followers[i].Health) + ")";
                     }
 
-                    putText(renderer, followers_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                    putText(renderer, followers_string.c_str(), Fonts::Garamond24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
                 }
             }
 
-            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, scrollx, scrolly, ((current_mode != Control::Type::PARTY || compact) ? true : false), TTF_STYLE_NORMAL);
+            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, 22, scrollx, scrolly, ((current_mode != Control::Type::PARTY || compact) ? true : false), TTF_STYLE_NORMAL);
 
             auto scrollUp = false;
             auto scrollDown = false;
@@ -1022,36 +978,6 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
         code_text = NULL;
     }
 
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_mason2)
-    {
-        TTF_CloseFont(font_mason2);
-
-        font_mason2 = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    TTF_Quit();
-
     return false;
 }
 
@@ -1060,13 +986,8 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
     SDL_Surface *adventurer = NULL;
     SDL_Surface *text = NULL;
 
-    auto font_size = 20;
     auto garamond_size = 24;
 
-    TTF_Init();
-
-    auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
     auto character_box = (int)(text_bounds * 2 / 3);
 
     auto flash_message = false;
@@ -1187,10 +1108,10 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
                 if (character >= 0 && character < characters.size() && adventurer)
                 {
-                    putText(renderer, characters[character].Name.c_str(), font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+                    putText(renderer, characters[character].Name.c_str(), Fonts::Mason32, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
                 }
 
-                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, 22, TTF_STYLE_NORMAL);
 
                 auto scrollUp = false;
                 auto scrollDown = false;
@@ -1200,7 +1121,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -1348,7 +1269,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                         {
                             Sound::Play(Sound::Type::ERROR);
 
-                            displayMessage("You already have full party!", intRD);
+                            displayMessage("You already have a full party!", intRD);
                         }
                     }
                     else if (controls[current].Type == Control::Type::BACK && !hold)
@@ -1376,22 +1297,6 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
         text = NULL;
     }
 
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    TTF_Quit();
-
     return false;
 }
 
@@ -1400,16 +1305,10 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
     party.Members.clear();
 
     SDL_Surface *adventurer = NULL;
+
     SDL_Surface *text = NULL;
 
-    auto font_size = 20;
     auto garamond_size = 24;
-
-    TTF_Init();
-
-    auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-    auto font_mason2 = TTF_OpenFont(FONT_MASON, 22);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, garamond_size);
 
     auto character_box = (int)(text_bounds * 2 / 3);
 
@@ -1514,12 +1413,12 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
             if (character >= 0 && character < characters.size() && adventurer)
             {
-                putText(renderer, characters[character].Name.c_str(), font_mason, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+                putText(renderer, characters[character].Name.c_str(), Fonts::Mason32, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
             }
 
             if (selection.size() > 0)
             {
-                putHeader(renderer, std::string("PARTY (Limit: " + std::to_string(party.Limit) + ")").c_str(), font_mason2, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                putHeader(renderer, std::string("PARTY (Limit: " + std::to_string(party.Limit) + ")").c_str(), Fonts::Mason22, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                 std::string party_string = "";
 
@@ -1536,18 +1435,18 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
                     }
                 }
 
-                putText(renderer, party_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
+                putText(renderer, party_string.c_str(), Fonts::Garamond24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, (text_bounds - character_box) - infoh - box_space, textx, starty + text_bounds + infoh - (text_bounds - character_box) + box_space);
             }
 
             if (Engine::FIND_LIST(selection, character) >= 0)
             {
-                renderTextButtons(renderer, controls_del, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+                renderTextButtons(renderer, controls_del, FONT_DARK11, current, clrWH, intDB, intLB, 22, TTF_STYLE_NORMAL);
 
                 controls = &controls_del;
             }
             else
             {
-                renderTextButtons(renderer, controls_add, FONT_DARK11, current, clrWH, intDB, intLB, font_size + 2, TTF_STYLE_NORMAL);
+                renderTextButtons(renderer, controls_add, FONT_DARK11, current, clrWH, intDB, intLB, 22, TTF_STYLE_NORMAL);
 
                 controls = &controls_add;
             }
@@ -1560,7 +1459,7 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -1766,37 +1665,11 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
         text = NULL;
     }
 
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_mason2)
-    {
-        TTF_CloseFont(font_mason2);
-
-        font_mason2 = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    TTF_Quit();
-
     return false;
 }
 
 bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
 {
-    TTF_Init();
-
-    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
 
     auto done = false;
 
@@ -1974,7 +1847,7 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
 
             if (current >= 0 && current < controls.size() && !hold)
             {
-                renderCaption(renderer, font_caption, controls[current]);
+                renderCaption(renderer, controls[current]);
             }
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
@@ -2006,15 +1879,6 @@ bool mapScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type book)
         texture_kingdom = NULL;
     }
 
-    if (font_caption)
-    {
-        TTF_CloseFont(font_caption);
-
-        font_caption = NULL;
-    }
-
-    TTF_Quit();
-
     return done;
 }
 
@@ -2044,12 +1908,6 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
             auto stage = Engine::ArmourSave::START;
 
             SDL_SetWindowTitle(window, "Legendary Kingdoms: Armour Save");
-
-            TTF_Init();
-
-            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
 
             auto font_size = 24;
 
@@ -2112,7 +1970,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Armour save results", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Armour save results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -2201,14 +2059,14 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
 
                 std::string defender_string = "";
 
-                putHeader(renderer, character.Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, character.Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
                 defender_string = "Armour Save: +" + std::to_string(save_score);
                 defender_string += "\nHealth: " + std::to_string(Engine::HEALTH(character));
 
-                putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                putText(renderer, defender_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                 if (stage == Engine::ArmourSave::START)
                 {
@@ -2227,7 +2085,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), Fonts::Garamond32, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -2263,22 +2121,6 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
                     }
                 }
             }
-
-            if (font_mason)
-            {
-                TTF_CloseFont(font_mason);
-
-                font_mason = NULL;
-            }
-
-            if (font_garamond)
-            {
-                TTF_CloseFont(font_garamond);
-
-                font_garamond = NULL;
-            }
-
-            TTF_Quit();
 
             for (auto i = 0; i < 6; i++)
             {
@@ -2324,14 +2166,6 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             start_ticks = SDL_GetTicks();
         };
 
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -2370,7 +2204,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            putHeader(renderer, "Party", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Party", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -2405,13 +2239,13 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
-            putHeader(renderer, (std::string("Deal " + std::to_string(combat_damage) + " damage to")).c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, (std::string("Deal " + std::to_string(combat_damage) + " damage to")).c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection >= 0 && selection < party.Members.size())
             {
                 if (Engine::IS_ALIVE(party.Members[selection]))
                 {
-                    putText(renderer, party.Members[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party.Members[selection].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -2427,7 +2261,7 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -2523,29 +2357,6 @@ int assignDamage(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -2602,14 +2413,6 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
             auto stage = Engine::Attack::START;
 
             SDL_SetWindowTitle(window, "Legendary Kingdoms: Magic Attack");
-
-            TTF_Init();
-
-            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
-
-            auto font_size = 24;
 
             const char *choices_attack[2] = {"Attack", "Cancel"};
             const char *choices_damage[1] = {"Deal Damage"};
@@ -2669,7 +2472,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Attack Results", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Attack Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -2761,18 +2564,18 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     }
                 }
 
-                putHeader(renderer, party.Members[combatant].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Members[combatant].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
                 std::string attacker_string = "Magic Fighting Score: " + std::to_string(fighting_score);
-                putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                putText(renderer, attacker_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
-                putHeader(renderer, monsters[opponent].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                putHeader(renderer, monsters[opponent].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                 fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
                 std::string defender_string = "Defence: " + std::to_string(Defence) + "+\nHealth: " + std::to_string(monsters[opponent].Health);
-                putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+                putText(renderer, defender_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
-                std::string spell_string = "SPELL: " + spell.Name;
-                putHeader(renderer, spell_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+                std::string spell_string = "Spell: " + spell.Name;
+                putHeader(renderer, spell_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                 if (stage == Engine::Attack::START)
                 {
@@ -2791,7 +2594,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), Fonts::Garamond32, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -2799,7 +2602,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     }
                 }
 
-                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, 24, TTF_STYLE_NORMAL);
 
                 Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -2840,22 +2643,6 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 }
             }
 
-            if (font_mason)
-            {
-                TTF_CloseFont(font_mason);
-
-                font_mason = NULL;
-            }
-
-            if (font_garamond)
-            {
-                TTF_CloseFont(font_garamond);
-
-                font_garamond = NULL;
-            }
-
-            TTF_Quit();
-
             for (auto i = 0; i < 6; i++)
             {
                 if (dice[i])
@@ -2895,14 +2682,6 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
     };
 
     auto fg = Color::HEADER(party.Book);
-
-    TTF_Init();
-
-    auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
-
-    auto font_size = 24;
 
     SDL_Surface *dice[6];
 
@@ -2983,7 +2762,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                 {
                     fillWindow(renderer, intWH);
 
-                    putHeader(renderer, "Attack Results", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                    putHeader(renderer, "Attack Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                     fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -3099,7 +2878,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, party.Fleet[party.CurrentShip].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                        putHeader(renderer, party.Fleet[party.CurrentShip].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                         attack_score = party.Fleet[party.CurrentShip].Fighting;
 
@@ -3118,7 +2897,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     }
                     else
                     {
-                        putHeader(renderer, enemyFleet[opponent].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                        putHeader(renderer, enemyFleet[opponent].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                         attack_score = enemyFleet[opponent].Fighting;
 
@@ -3133,26 +2912,26 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                     fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
-                    putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                    putText(renderer, attacker_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                     std::string defender_string = "";
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, enemyFleet[opponent].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, enemyFleet[opponent].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Defence: " + std::to_string(Difficulty) + "+";
                         defender_string += "\nHealth: " + std::to_string(enemyFleet[opponent].Health);
                     }
                     else
                     {
-                        putHeader(renderer, party.Fleet[party.CurrentShip].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, party.Fleet[party.CurrentShip].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Defence: " + std::to_string(Difficulty) + "+";
                         defender_string += "\nHealth: " + std::to_string(party.Fleet[party.CurrentShip].Health);
                     }
 
                     fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
 
-                    putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+                    putText(renderer, defender_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
                     if (stage == Engine::Attack::START)
                     {
@@ -3178,7 +2957,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     {
                         if ((SDL_GetTicks() - start_ticks) < duration)
                         {
-                            putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                            putHeader(renderer, message.c_str(), Fonts::Garamond32, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                         }
                         else
                         {
@@ -3186,7 +2965,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                         }
                     }
 
-                    renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+                    renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, 24, TTF_STYLE_NORMAL);
 
                     Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -3259,22 +3038,6 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             }
         }
     }
-
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    TTF_Quit();
 
     for (auto i = 0; i < 6; i++)
     {
@@ -3416,14 +3179,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     auto fg = Color::HEADER(party.Book);
 
-    TTF_Init();
-
-    auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
-
-    auto font_size = 24;
-
     auto size_dice = 64;
 
     auto cols = (fullwidth - 2 * box_space) / (size_dice + 2 * box_space);
@@ -3513,11 +3268,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     fillWindow(renderer, intWH);
 
-                    putHeader(renderer, "Attack Results", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + boxh + box_space);
+                    putHeader(renderer, "Attack Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + boxh + box_space);
 
                     fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
-                    putHeader(renderer, (std::string("Focus: " + std::to_string(focus))).c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+                    putHeader(renderer, (std::string("Focus: " + std::to_string(focus))).c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                     if (stage != Engine::Attack::START)
                     {
@@ -3817,7 +3572,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, party.Members[combatant].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
+                        putHeader(renderer, party.Members[combatant].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
 
                         if (useEquipment)
                         {
@@ -3852,7 +3607,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                     else
                     {
-                        putHeader(renderer, monsters[opponent].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
+                        putHeader(renderer, monsters[opponent].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
 
                         attack_score = monsters[opponent].Attack;
 
@@ -3909,13 +3664,13 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
-                    putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                    putText(renderer, attacker_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                     std::string defender_string = "";
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, monsters[opponent].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, monsters[opponent].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Defence: " + std::to_string(Defence - focus) + "+";
                         defender_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
                     }
@@ -3923,18 +3678,18 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if (combatant == -1)
                         {
-                            putHeader(renderer, "To be determined", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
+                            putHeader(renderer, "To be determined", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
                         }
                         else
                         {
-                            putHeader(renderer, party.Members[combatant].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
+                            putHeader(renderer, party.Members[combatant].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
                             defender_string = "Health: " + std::to_string(Engine::HEALTH(party.Members[combatant]));
                         }
                     }
 
                     fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
 
-                    putText(renderer, defender_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+                    putText(renderer, defender_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
                     if (stage == Engine::Attack::START)
                     {
@@ -3981,7 +3736,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if ((SDL_GetTicks() - start_ticks) < duration)
                         {
-                            putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                            putHeader(renderer, message.c_str(), Fonts::Garamond32, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                         }
                         else
                         {
@@ -3989,7 +3744,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         }
                     }
 
-                    renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+                    renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, 24, TTF_STYLE_NORMAL);
 
                     Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -4232,22 +3987,6 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         }
     }
 
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    TTF_Quit();
-
     for (auto i = 0; i < 6; i++)
     {
         if (dice[i])
@@ -4306,14 +4045,6 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             SDL_SetWindowTitle(window, "Legendary Kingdoms: Retreat Army");
 
-            TTF_Init();
-
-            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
-
-            auto font_size = 24;
-
             const char *choices_retreat[1] = {"Retreat"};
             const char *choices_confirm[1] = {"Confirm"};
             const char *choices_end[1] = {"Done"};
@@ -4360,7 +4091,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Results", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -4455,13 +4186,13 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                 }
 
-                putHeader(renderer, party.Army[unit].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Army[unit].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
                 std::string army_string = "Strength: " + std::to_string(party.Army[unit].Strength) + " Morale: " + std::to_string(party.Army[unit].Morale) + "\nPosition: " + Location::BattleFieldDescription[party.Army[unit].Position];
-                putText(renderer, army_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                putText(renderer, army_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                 std::string attribute_string = "Retreat: Difficulty " + std::to_string(threshold);
-                putHeader(renderer, attribute_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+                putHeader(renderer, attribute_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                 if (stage == Engine::Retreat::START)
                 {
@@ -4480,7 +4211,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), Fonts::Garamond32, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -4488,7 +4219,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                 }
 
-                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, 24, TTF_STYLE_NORMAL);
 
                 Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -4523,22 +4254,6 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                 }
             }
-
-            if (font_mason)
-            {
-                TTF_CloseFont(font_mason);
-
-                font_mason = NULL;
-            }
-
-            if (font_garamond)
-            {
-                TTF_CloseFont(font_garamond);
-
-                font_garamond = NULL;
-            }
-
-            TTF_Quit();
 
             for (auto i = 0; i < 6; i++)
             {
@@ -4594,14 +4309,6 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
             SDL_SetWindowTitle(window, "Legendary Kingdoms: Increase Attribute");
 
-            TTF_Init();
-
-            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
-
-            auto font_size = 24;
-
             const char *choices_raise[2] = {"Raise Attribute", "Cancel"};
             const char *choices_confirm[1] = {"Confirm"};
             const char *choices_end[1] = {"Done"};
@@ -4649,7 +4356,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Results", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -4740,13 +4447,13 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                     }
                 }
 
-                putHeader(renderer, character.Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, character.Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
                 std::string attacker_string = std::string(Attribute::Descriptions[attribute]) + " Score: " + std::to_string(Engine::RAW_SCORE(character, attribute, true));
-                putText(renderer, attacker_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                putText(renderer, attacker_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                 std::string attribute_string = "Raise: " + std::string(Attribute::Descriptions[attribute]);
-                putHeader(renderer, attribute_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+                putHeader(renderer, attribute_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                 if (stage == Engine::RaiseAttribute::START)
                 {
@@ -4765,7 +4472,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), Fonts::Garamond32, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -4773,7 +4480,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                     }
                 }
 
-                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, 24, TTF_STYLE_NORMAL);
 
                 Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -4823,22 +4530,6 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                 }
             }
 
-            if (font_mason)
-            {
-                TTF_CloseFont(font_mason);
-
-                font_mason = NULL;
-            }
-
-            if (font_garamond)
-            {
-                TTF_CloseFont(font_garamond);
-
-                font_garamond = NULL;
-            }
-
-            TTF_Quit();
-
             for (auto i = 0; i < 6; i++)
             {
                 if (dice[i])
@@ -4884,15 +4575,6 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
         };
 
         auto fg = Color::HEADER(book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_garamond2 = TTF_OpenFont(FONT_GARAMOND, 28);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
 
         auto font_size = 24;
 
@@ -5004,9 +4686,9 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
                 list_header = "unlearn";
             }
 
-            putHeader(renderer, list_header.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, list_header.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
-            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection.size() > 0)
             {
@@ -5027,23 +4709,23 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
 
                 if (spells_string.length() > 0)
                 {
-                    putText(renderer, spells_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, spells_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
-                    putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
             }
             else
             {
-                putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond2, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -5237,36 +4919,6 @@ std::vector<int> selectSpell(SDL_Window *window, SDL_Renderer *renderer, Book::T
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_garamond2)
-        {
-            TTF_CloseFont(font_garamond2);
-
-            font_garamond2 = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -5309,14 +4961,6 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
         auto fg = Color::HEADER(party.Book);
 
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -5355,7 +4999,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Select Opponent", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -5389,22 +5033,22 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
             if (mode == Control::Type::COMBAT)
             {
-                putHeader(renderer, "Attacker", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                putHeader(renderer, "Attacker", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
             }
             else if (mode == Control::Type::SPELL)
             {
-                putHeader(renderer, "Spell Caster", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                putHeader(renderer, "Spell Caster", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
             }
 
-            putText(renderer, party.Members[attacker].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+            putText(renderer, party.Members[attacker].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
 
-            putHeader(renderer, "Opponent", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Opponent", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection >= 0 && selection < monsters.size())
             {
                 if (monsters[selection].Health > 0)
                 {
-                    putText(renderer, monsters[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, monsters[selection].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -5420,7 +5064,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -5585,36 +5229,6 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -5656,15 +5270,6 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, 
         };
 
         auto fg = Color::HEADER(book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (124);
         auto last = offset + limit;
@@ -5703,7 +5308,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, 
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            putHeader(renderer, "Select Opponent", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Select Opponent", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -5728,13 +5333,13 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, 
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
-            putHeader(renderer, "Opponent", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Opponent", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection >= 0 && selection < enemyFleet.size())
             {
                 if (enemyFleet[selection].Health > 0)
                 {
-                    putText(renderer, enemyFleet[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, enemyFleet[selection].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -5750,7 +5355,7 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, 
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -5913,36 +5518,6 @@ int selectOpponent(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, 
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -5997,14 +5572,6 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             auto stage = Attribute::Test::START;
 
             SDL_SetWindowTitle(window, "Legendary Kingdoms: Skill Check");
-
-            TTF_Init();
-
-            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 32);
-
-            auto font_size = 24;
 
             const char *choices_skill[3] = {"Skill Check", "Add Focus", "Remove Focus"};
             const char *choices_confirm[1] = {"Confirm"};
@@ -6094,7 +5661,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Skill Check Results", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Skill Check Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -6196,9 +5763,9 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     }
                 }
 
-                putHeader(renderer, test_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+                putHeader(renderer, test_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
-                putHeader(renderer, party.Members[team[0]].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Members[team[0]].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
@@ -6256,11 +5823,11 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                 std::string adventurer1 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score1);
 
-                putText(renderer, adventurer1.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                putText(renderer, adventurer1.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                 if (team.size() > 1)
                 {
-                    putHeader(renderer, party.Members[team[1]].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                    putHeader(renderer, party.Members[team[1]].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
 
                     fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
 
@@ -6318,7 +5885,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                     std::string adventurer2 = std::string(Attribute::Descriptions[Skill]) + ": " + std::to_string(score2);
 
-                    putText(renderer, adventurer2.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+                    putText(renderer, adventurer2.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
                 }
 
                 if (skill_score > 20)
@@ -6389,7 +5956,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), Fonts::Garamond32, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -6397,7 +5964,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                     }
                 }
 
-                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+                renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, 24, TTF_STYLE_NORMAL);
 
                 Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -6558,22 +6125,6 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
                 }
             }
 
-            if (font_mason)
-            {
-                TTF_CloseFont(font_mason);
-
-                font_mason = NULL;
-            }
-
-            if (font_garamond)
-            {
-                TTF_CloseFont(font_garamond);
-
-                font_garamond = NULL;
-            }
-
-            TTF_Quit();
-
             for (auto i = 0; i < 6; i++)
             {
                 if (dice[i])
@@ -6629,15 +6180,6 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         };
 
         auto fg = Color::HEADER(party.Book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -6674,7 +6216,7 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Select Caster", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -6699,22 +6241,22 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
-            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection >= 0 && selection < party.Members.size())
             {
-                putText(renderer, party.Members[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, party.Members[selection].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
             else
             {
-                putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -7129,29 +6671,6 @@ int castCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -7193,15 +6712,6 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
         };
 
         auto fg = Color::HEADER(party.Book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -7238,7 +6748,7 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Select Caster", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -7263,22 +6773,22 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
-            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection >= 0 && selection < party.Members.size())
             {
-                putText(renderer, party.Members[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, party.Members[selection].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
             else
             {
-                putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -7423,29 +6933,6 @@ int castMassCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base 
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -7487,15 +6974,6 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
         };
 
         auto fg = Color::HEADER(party.Book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -7532,7 +7010,7 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            putHeader(renderer, "Select Caster", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Select Caster", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -7557,22 +7035,22 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
-            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection >= 0 && selection < party.Members.size())
             {
-                putText(renderer, party.Members[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, party.Members[selection].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
             else
             {
-                putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -7710,29 +7188,6 @@ int castSeaCombatSpell(SDL_Window *window, SDL_Renderer *renderer, Party::Base &
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -7779,15 +7234,6 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         };
 
         auto fg = Color::HEADER(party.Book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -7826,11 +7272,11 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
             if (team_size > 1)
             {
-                putHeader(renderer, "Select Adventurers", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Select Adventurers", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else
             {
-                putHeader(renderer, "Select Adventurer", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Select Adventurer", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
@@ -7872,7 +7318,7 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
-            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection.size() >= 0)
             {
@@ -7896,23 +7342,23 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                 if (adventurers.length() > 0)
                 {
-                    putText(renderer, adventurers.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, adventurers.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
-                    putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
             }
             else
             {
-                putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -8001,29 +7447,6 @@ bool skillCheck(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -8054,15 +7477,6 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
         Uint32 duration = 3000;
 
         auto fg = Color::HEADER(book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -8105,7 +7519,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
 
             std::string select_string = "Which of " + character.Name + "'s attributes will be raised by " + std::to_string(increase) + "?";
 
-            putHeader(renderer, select_string.c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, select_string.c_str(), Fonts::Garamond24, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -8126,11 +7540,11 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
-            putHeader(renderer, "Attribute", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Attribute", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection >= 0 && selection < attributes.size())
             {
-                putText(renderer, Attribute::Descriptions[attributes[selection]], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, Attribute::Descriptions[attributes[selection]], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
             else
             {
@@ -8141,7 +7555,7 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -8277,29 +7691,6 @@ Attribute::Type selectAttribute(SDL_Window *window, SDL_Renderer *renderer, Book
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -8330,15 +7721,6 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Cha
         Uint32 duration = 3000;
 
         auto fg = Color::HEADER(book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
 
@@ -8387,7 +7769,7 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Cha
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            putHeader(renderer, "Select Team", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Select Team", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -8408,22 +7790,22 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Cha
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
-            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection >= 0 && selection < teams_list.size())
             {
-                putText(renderer, Team::Descriptions[teams_list[selection]], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, Team::Descriptions[teams_list[selection]], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
             else
             {
-                putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -8535,29 +7917,6 @@ bool selectTeam(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Cha
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -8599,15 +7958,6 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         };
 
         auto fg = Color::HEADER(party.Book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -8646,7 +7996,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 fitImage(renderer, splash, startx, starty, splashw, text_bounds);
             }
 
-            putHeader(renderer, "Assign Party Member to a Team", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Assign Party Member to a Team", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -8660,7 +8010,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
-            putHeader(renderer, "Teams", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Teams", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (teams.size() > 0)
             {
@@ -8676,7 +8026,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     teams_string += std::string(Team::Descriptions[std::get<0>(teams[i])]);
                 }
 
-                putText(renderer, teams_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, teams_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
             else
             {
@@ -8687,7 +8037,7 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -8836,29 +8186,6 @@ bool assignTeams(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -8900,15 +8227,6 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
         };
 
         auto fg = Color::HEADER(party.Book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -8958,23 +8276,23 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
             if (mode == Control::Type::COMBAT)
             {
-                putHeader(renderer, "Choose the party member attacking this round", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose the party member attacking this round", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::SPELL_TARGET)
             {
-                putHeader(renderer, "Choose target for this spell", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose target for this spell", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::ROLL_FOR_ATTRIBUTE_INCREASE || mode == Control::Type::RAISE_ATTRIBUTE_SCORE)
             {
-                putHeader(renderer, "Choose party member to receive attibute increase", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member to receive attibute increase", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::SELECT_LOWEST_ATTRIBUTE)
             {
-                putHeader(renderer, "Choose party member with the lowest attibute score", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member with the lowest attibute score", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::LEARN_SPELL)
             {
-                putHeader(renderer, "Choose the spellcaster who learns this spell", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose the spellcaster who learns this spell", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::EQUIPMENT)
             {
@@ -8982,36 +8300,36 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                 {
                     std::string equipment_string = "Give the " + equipment.Name + " to";
 
-                    putHeader(renderer, equipment_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, equipment_string.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, "Give the item(s) to", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Give the item(s) to", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else if (mode == Control::Type::HEALTH)
             {
-                putHeader(renderer, "Choose party member to receive Maximum Health increase", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member to receive Maximum Health increase", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::GAIN_HEALTH)
             {
-                putHeader(renderer, "Choose party member to recover health point(s)", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member to recover health point(s)", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::LOSE_HEALTH)
             {
-                putHeader(renderer, "Choose party member to lose health point(s)", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member to lose health point(s)", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::ENTER_SHOP)
             {
-                putHeader(renderer, "Choose party member to enter shop", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member to enter shop", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::PARTY)
             {
-                putHeader(renderer, "Choose party member", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else
             {
-                putHeader(renderer, "Choose Party Member", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose Party Member", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
@@ -9057,34 +8375,34 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
 
             if (mode == Control::Type::EQUIPMENT && equipment.Type != Equipment::Type::NONE)
             {
-                putHeader(renderer, "Details", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                putHeader(renderer, "Details", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
 
-                putText(renderer, itemString(equipment).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+                putText(renderer, itemString(equipment).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
             }
 
-            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection >= 0 && selection < party.Members.size())
             {
                 if (Engine::IS_ALIVE(party.Members[selection]))
                 {
-                    putText(renderer, party.Members[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party.Members[selection].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
-                    putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
             }
             else
             {
-                putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -9298,29 +8616,6 @@ int selectPartyMember(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -9367,15 +8662,6 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, std:
         };
 
         auto fg = Color::HEADER(book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (124);
         auto last = offset + limit;
@@ -9416,31 +8702,31 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, std:
 
             if (mode == Control::Type::COMBAT)
             {
-                putHeader(renderer, "Choose the ship attacking this round", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose the ship attacking this round", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::CARGO)
             {
-                putHeader(renderer, "Choose the ship to receive cargo", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose the ship to receive cargo", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::SPELL_TARGET)
             {
-                putHeader(renderer, "Choose target ship for this spell", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose target ship for this spell", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::GAIN_HEALTH)
             {
-                putHeader(renderer, "Choose the ship to repair", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose the ship to repair", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::LOSE_HEALTH)
             {
-                putHeader(renderer, "Choose the ship to receive damage", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose the ship to receive damage", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::SAIL)
             {
-                putHeader(renderer, "Choose the ship to board", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose the ship to board", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else
             {
-                putHeader(renderer, "Choose ship", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose ship", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
@@ -9466,29 +8752,29 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, std:
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
-            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection >= 0 && selection < ships.size())
             {
                 if (ships[selection].Health > 0)
                 {
-                    putText(renderer, ships[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, ships[selection].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
-                    putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
             }
             else
             {
-                putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -9651,29 +8937,6 @@ int selectShip(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, std:
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -9715,15 +8978,6 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
         };
 
         auto fg = Color::HEADER(party.Book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -9764,31 +9018,31 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
 
             if (mode == Control::Type::SPELL_TARGET)
             {
-                putHeader(renderer, "Choose target(s) for this spell", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose target(s) for this spell", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::SKILL)
             {
-                putHeader(renderer, "Choose party member(s) to perform skill check", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member(s) to perform skill check", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::RAISE_MAX_HEALTH)
             {
-                putHeader(renderer, "Choose party member(s) to raise maximum health points", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member(s) to raise maximum health points", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::GAIN_HEALTH)
             {
-                putHeader(renderer, "Choose party member(s) to recover health points", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member(s) to recover health points", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::LOSE_HEALTH)
             {
-                putHeader(renderer, "Choose party member(s) to lose health points", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose party member(s) to lose health points", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else if (mode == Control::Type::SELECT_ORDER)
             {
-                putHeader(renderer, "Select the order of characters to perform the task", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Select the order of characters to perform the task", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
             else
             {
-                putHeader(renderer, "Choose Party Member(s)", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Choose Party Member(s)", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
@@ -9830,7 +9084,7 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
 
             renderButtons(renderer, controls, current, intLB, text_space, border_pts);
 
-            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection.size() > 0)
             {
@@ -9855,18 +9109,18 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
                     }
                 }
 
-                putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, party_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
             else
             {
-                putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -10050,29 +9304,6 @@ std::vector<int> selectPartyMembers(SDL_Window *window, SDL_Renderer *renderer, 
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -10133,18 +9364,8 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
             start_ticks = SDL_GetTicks();
         };
 
-        auto fg = Color::HEADER(party.Book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto controls = std::vector<Button>();
-
+        auto fg = Color::HEADER(party.Book);
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (124);
         auto last = offset + limit;
@@ -10223,7 +9444,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                putHeader(renderer, "Opponents", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Opponents", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -10251,7 +9472,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                     }
                 }
 
-                putHeader(renderer, "Current Ship", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Current Ship", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (party.CurrentShip >= 0 && party.CurrentShip < party.Fleet.size())
                 {
@@ -10259,7 +9480,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                     ship_string += "\nFighting: " + std::to_string(party.Fleet[party.CurrentShip].Fighting);
                     ship_string += "\nHealth: " + std::to_string(party.Fleet[party.CurrentShip].Health);
 
-                    putText(renderer, ship_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, ship_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -10270,7 +9491,7 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -10537,29 +9758,6 @@ Engine::Combat seaCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Party
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -10632,18 +9830,8 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
             start_ticks = SDL_GetTicks();
         };
 
-        auto fg = Color::HEADER(party.Book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 24);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto controls = std::vector<Button>();
-
+        auto fg = Color::HEADER(party.Book);
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (88);
         auto last = offset + limit;
@@ -10795,7 +9983,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                     fitImage(renderer, splash, startx, starty, splashw, text_bounds);
                 }
 
-                putHeader(renderer, "Opponents", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Opponents", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -10834,17 +10022,17 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 {
                     if (Engine::IS_CHARACTER(team))
                     {
-                        putHeader(renderer, "Current", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                        putHeader(renderer, "Current", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
                     }
                     else
                     {
-                        putHeader(renderer, "Team", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                        putHeader(renderer, "Team", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
                     }
 
-                    putText(renderer, Team::Descriptions[team], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+                    putText(renderer, Team::Descriptions[team], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
                 }
 
-                putHeader(renderer, "Party", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Party", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (Engine::COUNT(party, team) > 0)
                 {
@@ -10887,7 +10075,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         count += 1;
                     }
 
-                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -10898,7 +10086,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -10910,7 +10098,7 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                        putHeader(renderer, message.c_str(), Fonts::Garamond24, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                     }
                     else
                     {
@@ -11591,29 +10779,6 @@ Engine::Combat combatScreen(SDL_Window *window, SDL_Renderer *renderer, Party::B
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -11697,15 +10862,6 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto controls = shipList(window, renderer, shop, offset, last, limit, textx, offsety, true, true);
 
-    TTF_Init();
-
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
     auto selected = false;
     auto current = -1;
     auto scrollUp = false;
@@ -11728,9 +10884,9 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
 
-        putHeader(renderer, "Money", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (5 * bigger_boxh / 2) - 2 * infoh - box_space);
+        putHeader(renderer, "Money", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (5 * bigger_boxh / 2) - 2 * infoh - box_space);
 
-        putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh / 2, startx, starty + text_bounds - (5 * bigger_boxh / 2) - infoh - box_space);
+        putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh / 2, startx, starty + text_bounds - (5 * bigger_boxh / 2) - infoh - box_space);
 
         if (current >= 0 && current < controls.size())
         {
@@ -11804,11 +10960,11 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         if (current_mode == Control::Type::BUY_SHIP)
         {
-            putHeader(renderer, (buy_selection.size() > 0 ? (std::string("Selected (") + std::to_string(buy_selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
+            putHeader(renderer, (buy_selection.size() > 0 ? (std::string("Selected (") + std::to_string(buy_selection.size()) + std::string(")")).c_str() : "Selected"), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
         }
         else if (current_mode == Control::Type::SELL_SHIP || current_mode == Control::Type::PARTY)
         {
-            putHeader(renderer, (sell_selection.size() > 0 ? (std::string("Selected (") + std::to_string(sell_selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
+            putHeader(renderer, (sell_selection.size() > 0 ? (std::string("Selected (") + std::to_string(sell_selection.size()) + std::string(")")).c_str() : "Selected"), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
         }
         else
         {
@@ -11872,7 +11028,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         }
         else
         {
-            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
+            putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
         }
 
         if (current_mode == Control::Type::BUY_SHIP)
@@ -11892,7 +11048,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 buy_string = "Ships for sale";
             }
 
-            putHeader(renderer, buy_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, buy_string.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
         }
         else if (current_mode == Control::Type::SELL_SHIP)
         {
@@ -11911,11 +11067,11 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 sell_string = "Fleet";
             }
 
-            putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, sell_string.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
         }
         else if (current_mode == Control::Type::PARTY)
         {
-            putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Fleet", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
         }
         else
         {
@@ -11964,14 +11120,14 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         if (current >= 0 && current < controls.size())
         {
-            renderCaption(renderer, font_caption, controls[current]);
+            renderCaption(renderer, controls[current]);
         }
 
         if (flash_message)
         {
             if ((SDL_GetTicks() - start_ticks) < duration)
             {
-                putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
+                putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
             }
             else
             {
@@ -12367,36 +11523,6 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         }
     }
 
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    if (font_caption)
-    {
-        TTF_CloseFont(font_caption);
-
-        font_caption = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    TTF_Quit();
-
     if (splash)
     {
         SDL_FreeSurface(splash);
@@ -12453,15 +11579,6 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
     auto controls = shopList(window, renderer, shop, offset, last, limit, textx, offsety);
 
-    TTF_Init();
-
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
     auto selected = false;
     auto current = -1;
     auto scrollUp = false;
@@ -12491,9 +11608,9 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
 
-        putHeader(renderer, "Money", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (5 * bigger_boxh / 2) - 2 * infoh - box_space);
+        putHeader(renderer, "Money", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (5 * bigger_boxh / 2) - 2 * infoh - box_space);
 
-        putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh / 2, startx, starty + text_bounds - (5 * bigger_boxh / 2) - infoh - box_space);
+        putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh / 2, startx, starty + text_bounds - (5 * bigger_boxh / 2) - infoh - box_space);
 
         if (current >= 0 && current < controls.size())
         {
@@ -12623,11 +11740,11 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         if (current_mode == Control::Type::BUY)
         {
-            putHeader(renderer, (buy_selection.size() > 0 ? (std::string("Selected (") + std::to_string(buy_selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
+            putHeader(renderer, (buy_selection.size() > 0 ? (std::string("Selected (") + std::to_string(buy_selection.size()) + std::string(")")).c_str() : "Selected"), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
         }
         else if (current_mode == Control::Type::SELL || current_mode == Control::Type::EQUIPMENT || current_mode == Control::Type::PREVIOUS_CHARACTER || current_mode == Control::Type::NEXT_CHARACTER)
         {
-            putHeader(renderer, (sell_selection.size() > 0 ? (std::string("Selected (") + std::to_string(sell_selection.size()) + std::string(")")).c_str() : "Selected"), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
+            putHeader(renderer, (sell_selection.size() > 0 ? (std::string("Selected (") + std::to_string(sell_selection.size()) + std::string(")")).c_str() : "Selected"), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
         }
         else
         {
@@ -12688,7 +11805,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         }
         else
         {
-            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
+            putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
         }
 
         if (current_mode == Control::Type::BUY)
@@ -12708,7 +11825,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 buy_string = "Items for sale";
             }
 
-            putHeader(renderer, buy_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, buy_string.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
         }
         else if (current_mode == Control::Type::SELL)
         {
@@ -12727,13 +11844,13 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 sell_string = party.Members[character].Name + "'s items";
             }
 
-            putHeader(renderer, sell_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, sell_string.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
         }
         else if (current_mode == Control::Type::EQUIPMENT || current_mode == Control::Type::PREVIOUS_CHARACTER || current_mode == Control::Type::NEXT_CHARACTER)
         {
             std::string view_string = party.Members[character].Name + "'s items";
 
-            putHeader(renderer, view_string.c_str(), font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, view_string.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
         }
         else
         {
@@ -12782,14 +11899,14 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         if (current >= 0 && current < controls.size())
         {
-            renderCaption(renderer, font_caption, controls[current]);
+            renderCaption(renderer, controls[current]);
         }
 
         if (flash_message)
         {
             if ((SDL_GetTicks() - start_ticks) < duration)
             {
-                putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
+                putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
             }
             else
             {
@@ -13338,36 +12455,6 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         }
     }
 
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    if (font_caption)
-    {
-        TTF_CloseFont(font_caption);
-
-        font_caption = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    TTF_Quit();
-
     if (splash)
     {
         SDL_FreeSurface(splash);
@@ -13380,14 +12467,6 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
 bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, int RestPrice, bool CanRecharge)
 {
-    TTF_Init();
-
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
     if (window && renderer)
     {
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Rest and Recovery");
@@ -13478,21 +12557,21 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                         heal_string += ")";
 
-                        putText(renderer, heal_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putText(renderer, heal_string.c_str(), Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else
                     {
-                        putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                 }
                 else
                 {
-                    putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                    putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                 }
             }
             else
             {
-                putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
             }
 
             std::string party_string = "";
@@ -13510,18 +12589,18 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
             }
 
-            putText(renderer, selection.size() > 0 ? party_string.c_str() : "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            putText(renderer, selection.size() > 0 ? party_string.c_str() : "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
 
-            putHeader(renderer, "Money", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
-            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + infoh);
+            putHeader(renderer, "Money", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + infoh);
 
             if (RestPrice >= 0)
             {
-                putHeader(renderer, "Healing Costs", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
-                putText(renderer, (RestPrice > 0 ? std::to_string(RestPrice) + std::string(" silver coins") : std::string("Free")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+                putHeader(renderer, "Healing Costs", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+                putText(renderer, (RestPrice > 0 ? std::to_string(RestPrice) + std::string(" silver coins") : std::string("Free")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
             }
 
-            putHeader(renderer, "Party", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Party", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -13546,7 +12625,7 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
                 }
                 else
                 {
@@ -13859,29 +12938,6 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         }
     }
 
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    TTF_Quit();
-
     return false;
 }
 
@@ -13939,15 +12995,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
     controls_vault = vaultList(window, renderer, party.Vault, offset, last, limit, offsety, scrolly);
     controls_money = popupMoney(window, renderer, party, popupw, popuph, infoh, popupx, popupy);
 
-    TTF_Init();
-
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
     auto selected = false;
     auto current = -1;
     auto scrollUp = false;
@@ -13976,21 +13023,21 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
 
-        putHeader(renderer, "Money in Vault", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - 2 * (bigger_boxh + infoh) - box_space);
+        putHeader(renderer, "Money in Vault", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - 2 * (bigger_boxh + infoh) - box_space);
 
-        putText(renderer, (std::to_string(party.VaultMoney) + " silver coins").c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh - infoh - box_space);
+        putText(renderer, (std::to_string(party.VaultMoney) + " silver coins").c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh - infoh - box_space);
 
-        putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (bigger_boxh + infoh));
+        putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (bigger_boxh + infoh));
 
         if (selection >= 0 && selection < party.Vault.size())
         {
             auto item_string = itemString(party.Vault[selection]);
 
-            putText(renderer, item_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - bigger_boxh);
+            putText(renderer, item_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - bigger_boxh);
         }
         else
         {
-            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - bigger_boxh);
+            putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - bigger_boxh);
         }
 
         if (selection >= 0 && selection < party.Vault.size())
@@ -14003,29 +13050,29 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (controls_vault[current].Type == Control::Type::USE)
                     {
-                        putHeader(renderer, (std::string("Use the ") + item.Name).c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                        putHeader(renderer, (std::string("Use the ") + item.Name).c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else if (controls_vault[current].Type == Control::Type::TRANSFER)
                     {
-                        putHeader(renderer, (std::string("Transfer the ") + item.Name).c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                        putHeader(renderer, (std::string("Transfer the ") + item.Name).c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else if (controls_vault[current].Type == Control::Type::MONEY)
                     {
-                        putHeader(renderer, "Access money in vault", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                        putHeader(renderer, "Access money in vault", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else
                     {
-                        putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                        putHeader(renderer, "Items inside the Vault", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                 }
                 else
                 {
-                    putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Items inside the Vault", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Items inside the Vault", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
         else
@@ -14036,29 +13083,29 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     if (controls_vault[current].Type == Control::Type::USE)
                     {
-                        putHeader(renderer, "Use item", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                        putHeader(renderer, "Use item", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else if (controls_vault[current].Type == Control::Type::TRANSFER)
                     {
-                        putHeader(renderer, "Transfer item to another party member", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                        putHeader(renderer, "Transfer item to another party member", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else if (controls_vault[current].Type == Control::Type::MONEY)
                     {
-                        putHeader(renderer, "Access money in vault", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                        putHeader(renderer, "Access money in vault", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                     else
                     {
-                        putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                        putHeader(renderer, "Items inside the Vault", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                     }
                 }
                 else
                 {
-                    putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Items inside the Vault", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, "Items inside the Vault", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Items inside the Vault", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
 
@@ -14093,7 +13140,7 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
 
-            putHeader(renderer, "Transfer money", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+            putHeader(renderer, "Transfer money", Fonts::Dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
 
             drawRect(renderer, controls_money[0].W + border_space, controls_money[0].H + border_space, controls_money[0].X - border_pts, controls_money[0].Y - border_pts, intBK);
             drawRect(renderer, controls_money[1].W + border_space, controls_money[1].H + border_space, controls_money[1].X - border_pts, controls_money[1].Y - border_pts, intBK);
@@ -14105,14 +13152,14 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
         if (current >= 0 && current < controls.size())
         {
-            renderCaption(renderer, font_caption, controls[current]);
+            renderCaption(renderer, controls[current]);
         }
 
         if (flash_message)
         {
             if ((SDL_GetTicks() - start_ticks) < duration)
             {
-                putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
+                putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
             }
             else
             {
@@ -14513,36 +13560,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         }
     }
 
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    if (font_caption)
-    {
-        TTF_CloseFont(font_caption);
-
-        font_caption = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    TTF_Quit();
-
     if (splash)
     {
         SDL_FreeSurface(splash);
@@ -14555,14 +13572,6 @@ bool vaultScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
 bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
-    TTF_Init();
-
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
     if (window && renderer)
     {
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Repairs");
@@ -14652,21 +13661,21 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         repair_string += ")";
 
-                        putText(renderer, repair_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putText(renderer, repair_string.c_str(), Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else
                     {
-                        putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                 }
                 else
                 {
-                    putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                    putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                 }
             }
             else
             {
-                putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
             }
 
             std::string fleet_string = "";
@@ -14684,19 +13693,19 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
             }
 
-            putText(renderer, selection.size() > 0 ? fleet_string.c_str() : "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+            putText(renderer, selection.size() > 0 ? fleet_string.c_str() : "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
 
-            putHeader(renderer, "Money", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
-            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + infoh);
+            putHeader(renderer, "Money", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + infoh);
 
             if (harbour->ShipRepairPrice >= 0)
             {
-                putHeader(renderer, "Repair Costs", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+                putHeader(renderer, "Repair Costs", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
 
-                putText(renderer, (harbour->ShipRepairPrice > 0 ? std::to_string(harbour->ShipRepairPrice) + std::string(" silver coins") : std::string("Free")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+                putText(renderer, (harbour->ShipRepairPrice > 0 ? std::to_string(harbour->ShipRepairPrice) + std::string(" silver coins") : std::string("Free")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
             }
 
-            putHeader(renderer, "Fleet", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Fleet", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -14721,7 +13730,7 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
                 }
                 else
                 {
@@ -14988,29 +13997,6 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
         }
     }
 
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    TTF_Quit();
-
     return false;
 }
 
@@ -15059,15 +14045,6 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
     auto offsety = (texty + infoh);
 
     auto controls = equipmentList(window, renderer, character.Equipment, offset, last, limit, offsety, scrolly);
-
-    TTF_Init();
-
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
-    TTF_SetFontKerning(font_dark11, 0);
 
     auto selected = false;
     auto current = -1;
@@ -15118,15 +14095,15 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
 
-        putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (bigger_boxh + infoh));
+        putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (bigger_boxh + infoh));
 
         if (selection >= 0 && selection < character.Equipment.size())
         {
-            putText(renderer, itemString(character.Equipment[selection]).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - bigger_boxh);
+            putText(renderer, itemString(character.Equipment[selection]).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - bigger_boxh);
         }
         else
         {
-            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - bigger_boxh);
+            putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - bigger_boxh);
         }
 
         if (selection >= 0 && selection < character.Equipment.size())
@@ -15137,28 +14114,28 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 if (controls[current].Type == Control::Type::USE)
                 {
-                    putHeader(renderer, (std::string("Use the ") + item.Name).c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Use the ") + item.Name).c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::DROP)
                 {
-                    putHeader(renderer, (std::string("Drop the ") + item.Name).c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Drop the ") + item.Name).c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::TRANSFER)
                 {
-                    putHeader(renderer, (std::string("Transfer the ") + item.Name).c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Transfer the ") + item.Name).c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::VAULT)
                 {
-                    putHeader(renderer, (std::string("Send the ") + item.Name + " to the vault").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Send the ") + item.Name + " to the vault").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s items").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s items").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
         else
@@ -15167,28 +14144,28 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 if (controls[current].Type == Control::Type::USE)
                 {
-                    putHeader(renderer, "Use item", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Use item", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::DROP)
                 {
-                    putHeader(renderer, "Drop item", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Drop item", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::TRANSFER)
                 {
-                    putHeader(renderer, "Transfer item to another party member", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Transfer item to another party member", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::VAULT)
                 {
-                    putHeader(renderer, "Access magic vault", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Access magic vault", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s items").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s items").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s items").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
 
@@ -15213,14 +14190,14 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
         if (current >= 0 && current < controls.size())
         {
-            renderCaption(renderer, font_caption, controls[current]);
+            renderCaption(renderer, controls[current]);
         }
 
         if (flash_message)
         {
             if ((SDL_GetTicks() - start_ticks) < duration)
             {
-                putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
+                putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
             }
             else
             {
@@ -15664,36 +14641,6 @@ bool inventoryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
         }
     }
 
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    if (font_caption)
-    {
-        TTF_CloseFont(font_caption);
-
-        font_caption = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    TTF_Quit();
-
     if (splash)
     {
         SDL_FreeSurface(splash);
@@ -15709,12 +14656,9 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
     auto font_size = 28;
-
     auto scrollSpeed = 1;
     auto limit = (int)((booksize - 2 * text_space) / (88));
-
     auto offset = 0;
-
     auto last = offset + limit;
 
     if (last > character.SpellBook.size())
@@ -15750,15 +14694,6 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
     auto offsety = (texty + infoh);
 
     auto controls = spellList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, spelly);
-
-    TTF_Init();
-
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
-    TTF_SetFontKerning(font_dark11, 0);
 
     auto selected = false;
     auto current = -1;
@@ -15816,15 +14751,15 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
 
-        putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
+        putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
 
         if (selection >= 0 && selection < character.SpellBook.size())
         {
-            putText(renderer, character.SpellBook[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
+            putText(renderer, character.SpellBook[selection].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
         }
         else
         {
-            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
+            putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
         }
 
         if (selection >= 0 && selection < character.SpellBook.size())
@@ -15835,20 +14770,20 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             {
                 if (controls[current].Type == Control::Type::SPELL)
                 {
-                    putHeader(renderer, (std::string("Cast ") + spell.Name).c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Cast ") + spell.Name).c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::UNLEARN)
                 {
-                    putHeader(renderer, (std::string("Unlearn ") + spell.Name).c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Unlearn ") + spell.Name).c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s spells").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s spells").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s spellbook").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
         else
@@ -15857,20 +14792,20 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             {
                 if (controls[current].Type == Control::Type::SPELL)
                 {
-                    putHeader(renderer, "Cast spell", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Cast spell", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else if (controls[current].Type == Control::Type::UNLEARN)
                 {
-                    putHeader(renderer, "Unlearn Spell", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Unlearn Spell", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s spellbook").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s spellbook").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
 
@@ -15930,14 +14865,14 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
         if (current >= 0 && current < controls.size())
         {
-            renderCaption(renderer, font_caption, controls[current]);
+            renderCaption(renderer, controls[current]);
         }
 
         if (flash_message)
         {
             if ((SDL_GetTicks() - start_ticks) < duration)
             {
-                putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
+                putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
             }
             else
             {
@@ -16194,36 +15129,6 @@ bool spellBook(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
         }
     }
 
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    if (font_caption)
-    {
-        TTF_CloseFont(font_caption);
-
-        font_caption = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    TTF_Quit();
-
     if (splash)
     {
         SDL_FreeSurface(splash);
@@ -16239,12 +15144,9 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
     auto splash = createImage("images/legendary-kingdoms-logo-bw.png");
 
     auto font_size = 28;
-
     auto scrollSpeed = 1;
     auto limit = (int)((booksize - 2 * text_space) / (88));
-
     auto offset = 0;
-
     auto last = offset + limit;
 
     if (last > character.SpellBook.size())
@@ -16281,15 +15183,6 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
     auto controls = rechargeList(window, renderer, character.SpellBook, offset, last, limit, textx, offsety, spelly);
 
-    TTF_Init();
-
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
     auto selected = false;
     auto current = -1;
     auto scrollUp = false;
@@ -16323,18 +15216,18 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
 
-        putHeader(renderer, "Money", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * bigger_boxh + 2 * infoh + box_space - 1));
-        putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - (3 * bigger_boxh + infoh + box_space));
+        putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * bigger_boxh + 2 * infoh + box_space - 1));
+        putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh, startx, starty + text_bounds - (3 * bigger_boxh + infoh + box_space));
 
-        putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
+        putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * bigger_boxh + infoh));
 
         if (selection >= 0 && selection < character.SpellBook.size())
         {
-            putText(renderer, character.SpellBook[selection].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
+            putText(renderer, character.SpellBook[selection].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
         }
         else
         {
-            putText(renderer, "(None)", font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
+            putText(renderer, "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * bigger_boxh, startx, starty + text_bounds - 2 * bigger_boxh);
         }
 
         if (selection >= 0 && selection < character.SpellBook.size())
@@ -16345,16 +15238,16 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             {
                 if (controls[current].Type == Control::Type::RECHARGE)
                 {
-                    putHeader(renderer, (std::string("Recharge ") + spell.Name).c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (std::string("Recharge ") + spell.Name).c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s spells").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s spells").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s spellbook").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
         else
@@ -16363,16 +15256,16 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             {
                 if (controls[current].Type == Control::Type::RECHARGE)
                 {
-                    putHeader(renderer, "Recharge spell", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, "Recharge spell", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
                 else
                 {
-                    putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                    putHeader(renderer, (character.Name + "'s spellbook").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
                 }
             }
             else
             {
-                putHeader(renderer, (character.Name + "'s spellbook").c_str(), font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, (character.Name + "'s spellbook").c_str(), Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
             }
         }
 
@@ -16432,14 +15325,14 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
         if (current >= 0 && current < controls.size())
         {
-            renderCaption(renderer, font_caption, controls[current]);
+            renderCaption(renderer, controls[current]);
         }
 
         if (flash_message)
         {
             if ((SDL_GetTicks() - start_ticks) < duration)
             {
-                putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
+                putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, bigger_boxh * 2, -1, -1);
             }
             else
             {
@@ -16588,36 +15481,6 @@ bool rechargeSpells(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         }
     }
 
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    if (font_caption)
-    {
-        TTF_CloseFont(font_caption);
-
-        font_caption = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    TTF_Quit();
-
     if (splash)
     {
         SDL_FreeSurface(splash);
@@ -16634,8 +15497,6 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Boo
 
     if (army.size() > 0)
     {
-        auto font_size = 28;
-
         auto scrollSpeed = 1;
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (124);
@@ -16670,13 +15531,6 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Boo
         auto fg = Color::HEADER(book);
 
         auto controls = armyList(window, renderer, army, offset, last, limit, textx, texty + infoh, false);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
 
         auto selected = false;
         auto current = -1;
@@ -16718,10 +15572,10 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Boo
                 }
             }
 
-            putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
-            putText(renderer, selection.size() > 0 ? army_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putText(renderer, selection.size() > 0 ? army_string.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "Select units", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Select units", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -16744,7 +15598,7 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Boo
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
                 }
                 else
                 {
@@ -16888,22 +15742,6 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Boo
                 }
             }
         }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        TTF_Quit();
     }
 
     return selected_units;
@@ -16920,11 +15758,8 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, Book::T
 
     if (ships.size() > 0)
     {
-        auto font_size = 28;
-
         auto scrollSpeed = 1;
         auto offset = 0;
-
         auto limit = (text_bounds - 5 * text_space - infoh) / (124);
         auto last = offset + limit;
 
@@ -16955,25 +15790,16 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, Book::T
         };
 
         auto fg = Color::HEADER(book);
-
-        auto controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, back_button);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto selected = false;
         auto current = -1;
         auto scrollUp = false;
         auto scrollDown = false;
         auto hold = false;
+        auto done = false;
 
         auto selection = std::vector<int>();
 
-        auto done = false;
+        auto controls = shipList(window, renderer, ships, offset, last, limit, textx, texty + infoh, true, true, back_button);
 
         while (!done)
         {
@@ -17005,10 +15831,10 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, Book::T
                 }
             }
 
-            putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
-            putText(renderer, selection.size() > 0 ? fleet_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putText(renderer, selection.size() > 0 ? fleet_string.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "Select ships", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Select ships", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -17031,7 +15857,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, Book::T
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
                 }
                 else
                 {
@@ -17175,22 +16001,6 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, Book::T
                 }
             }
         }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        TTF_Quit();
     }
 
     return selected_units;
@@ -17200,13 +16010,6 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 {
     if (window && renderer && party.Army.size() > 0)
     {
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto selected = false;
         auto current = -1;
         auto scrollUp = false;
@@ -17307,11 +16110,11 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 army_string = party.Army[selection].Name;
             }
 
-            putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
 
-            putText(renderer, (selection >= 0 && selection < party.Army.size()) ? army_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+            putText(renderer, (selection >= 0 && selection < party.Army.size()) ? army_string.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "Troop Transfer", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Troop Transfer", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -17342,7 +16145,7 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                 drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
 
-                putHeader(renderer, "Select Destination", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+                putHeader(renderer, "Select Destination", Fonts::Dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
 
                 if (popup_last - popup_offset > 0)
                 {
@@ -17368,7 +16171,7 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
                 }
                 else
                 {
@@ -17663,22 +16466,6 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             splash = NULL;
         }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        TTF_Quit();
     }
 
     return false;
@@ -17725,16 +16512,6 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         };
 
         auto fg = Color::HEADER(party.Book);
-
-        auto controls = armyList(window, renderer, army, offset, last, limit, textx, texty + infoh, false);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto selected = false;
         auto current = -1;
         auto scrollUp = false;
@@ -17742,6 +16519,8 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
         auto hold = false;
 
         auto selection = std::vector<int>();
+
+        auto controls = armyList(window, renderer, army, offset, last, limit, textx, texty + infoh, false);
 
         while (!done)
         {
@@ -17773,10 +16552,10 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
             }
 
-            putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
-            putText(renderer, selection.size() > 0 ? army_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putText(renderer, selection.size() > 0 ? army_string.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "Select the units to add to your army", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Select the units to add to your army", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -17799,7 +16578,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
                 }
                 else
                 {
@@ -17938,22 +16717,6 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
             }
         }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        TTF_Quit();
     }
 
     return done;
@@ -17965,11 +16728,8 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
     if (spells.size() > 0)
     {
-        auto font_size = 28;
-
         auto scrollSpeed = 1;
         auto offset = 0;
-
         auto limit = (int)((booksize - 2 * text_space) / (88));
         auto last = offset + limit;
 
@@ -18000,16 +16760,6 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         };
 
         auto fg = Color::HEADER(party.Book);
-
-        auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, spelly, true, true);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto selected = false;
         auto current = -1;
         auto scrollUp = false;
@@ -18017,6 +16767,8 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         auto hold = false;
 
         auto selection = std::vector<int>();
+
+        auto controls = spellList(window, renderer, spells, offset, last, limit, textx, texty + infoh, spelly, true, true);
 
         while (!done)
         {
@@ -18048,10 +16800,10 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 }
             }
 
-            putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
-            putText(renderer, selection.size() > 0 ? spell_string.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putText(renderer, selection.size() > 0 ? spell_string.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
-            putHeader(renderer, "You can copy the following spells", font_garamond, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "You can copy the following spells", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, booksize, textx, texty + infoh, intBE);
 
@@ -18074,7 +16826,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 fillRect(renderer, textwidth, text_bounds / 3, textx, texty + 2 * text_bounds / 3, intLB);
 
-                auto text = createText(spells[current + offset].Description.c_str(), FONT_GARAMOND, font_size, clrWH, listwidth, TTF_STYLE_NORMAL);
+                auto text = createText(spells[current + offset].Description.c_str(), FONT_GARAMOND, 28, clrWH, listwidth, TTF_STYLE_NORMAL);
 
                 renderText(renderer, text, intLB, textx + text_space, texty + 2 * text_bounds / 3 + text_space, text_bounds / 3 - 2 * text_space, 0);
 
@@ -18089,7 +16841,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
                 }
                 else
                 {
@@ -18314,22 +17066,6 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 }
             }
         }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        TTF_Quit();
     }
 
     return done;
@@ -18359,16 +17095,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         Uint32 duration = 3000;
 
-        auto controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
+        auto fg = Color::HEADER(party.Book);
         auto selected = false;
         auto current = -1;
         auto scrollUp = false;
@@ -18377,7 +17104,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
         auto selection = std::vector<int>();
 
-        auto fg = Color::HEADER(party.Book);
+        auto controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
 
         while (!done)
         {
@@ -18402,8 +17129,8 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
             }
 
-            putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
-            putText(renderer, selection.size() > 0 ? take.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putText(renderer, selection.size() > 0 ? take.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
             fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
 
@@ -18428,7 +17155,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putText(renderer, message, font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh * 2, startx, starty);
+                    putText(renderer, message, Fonts::Garamond28, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh * 2, startx, starty);
                 }
                 else
                 {
@@ -18463,7 +17190,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                     take_message = "Keep this item?";
                 }
 
-                putText(renderer, take_message.c_str(), font_garamond, text_space, clrWH, intLB, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                putText(renderer, take_message.c_str(), Fonts::Garamond28, text_space, clrWH, intLB, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
             }
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
@@ -18620,22 +17347,6 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
             }
         }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        TTF_Quit();
     }
 
     return done;
@@ -18666,17 +17377,6 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
         Uint32 duration = 3000;
 
         auto fg = Color::HEADER(party.Book);
-
-        auto controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto selected = false;
         auto current = -1;
         auto scrollUp = false;
@@ -18684,6 +17384,8 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
         auto hold = false;
 
         auto selection = std::vector<int>();
+
+        auto controls = equipmentList(window, renderer, equipment, offset, last, limit, true, back_button);
 
         while (!done)
         {
@@ -18708,8 +17410,8 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 }
             }
 
-            putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
-            putText(renderer, selection.size() > 0 ? lose.c_str() : "(None)", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
+            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putText(renderer, selection.size() > 0 ? lose.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
             fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
 
@@ -18734,7 +17436,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putText(renderer, message, font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh * 2, startx, starty);
+                    putText(renderer, message, Fonts::Garamond28, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh * 2, startx, starty);
                 }
                 else
                 {
@@ -18769,7 +17471,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                     lose_message = "Lose this item?";
                 }
 
-                putText(renderer, lose_message.c_str(), font_garamond, text_space, clrWH, intLB, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                putText(renderer, lose_message.c_str(), Fonts::Garamond28, text_space, clrWH, intLB, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
             }
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
@@ -18945,22 +17647,6 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 }
             }
         }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        TTF_Quit();
     }
 
     return done;
@@ -18968,15 +17654,6 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
 
 bool deliveryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, std::vector<Engine::CargoPrices> &Cargo, Location::Type destination)
 {
-    TTF_Init();
-
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
     if (window && renderer)
     {
         auto flash_message = false;
@@ -19030,14 +17707,14 @@ bool deliveryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         {
             fillWindow(renderer, intWH);
 
-            putHeader(renderer, "Destination", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+            putHeader(renderer, "Destination", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
 
-            putText(renderer, Location::Description[party.Location], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
+            putText(renderer, Location::Description[party.Location], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
 
-            putHeader(renderer, "Money", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
-            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+            putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
 
-            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection.size() > 0)
             {
@@ -19055,20 +17732,20 @@ bool deliveryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     cargo_string += Cargo::Description[cargo];
                 }
 
-                putText(renderer, cargo_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, cargo_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
             else
             {
                 fillRect(renderer, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh, intBE);
             }
 
-            putHeader(renderer, "Cargo Prices", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Cargo Prices", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
             if (Cargo.size() == 0)
             {
-                putText(renderer, "You cannot buy any goods here", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                putText(renderer, "You cannot buy any goods here", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
             }
 
             if (last - offset > 0)
@@ -19090,14 +17767,14 @@ bool deliveryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
             if (current >= 0 && current < controls.size())
             {
-                renderCaption(renderer, font_caption, controls[current]);
+                renderCaption(renderer, controls[current]);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -19329,50 +18006,11 @@ bool deliveryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
         }
     }
 
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    if (font_caption)
-    {
-        TTF_CloseFont(font_caption);
-
-        font_caption = NULL;
-    }
-
-    TTF_Quit();
-
     return false;
 }
 
 bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
-    TTF_Init();
-
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-    auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
     if (window && renderer)
     {
         auto flash_message = false;
@@ -19429,20 +18067,20 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         {
             fillWindow(renderer, intWH);
 
-            putHeader(renderer, "Harbour", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+            putHeader(renderer, "Harbour", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
 
-            putText(renderer, Location::Description[party.Location], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
+            putText(renderer, Location::Description[party.Location], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
 
-            putHeader(renderer, "Money", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
-            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+            putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
 
-            putHeader(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (current_mode == Control::Type::SELL_CARGO)
             {
                 if (selected_ship >= 0 && selected_ship < party.Fleet.size())
                 {
-                    putText(renderer, party.Fleet[selected_ship].Name.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party.Fleet[selected_ship].Name.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -19467,7 +18105,7 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                         cargo_string += Cargo::Description[cargo];
                     }
 
-                    putText(renderer, cargo_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, cargo_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -19541,24 +18179,24 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             if (current_mode == Control::Type::SELL_CARGO)
             {
-                putHeader(renderer, "Your Fleet", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Your Fleet", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
                 if (party.Fleet.size() == 0)
                 {
-                    putText(renderer, "\nYou do not have any ships", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                    putText(renderer, "\nYou do not have any ships", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
             }
             else if (current_mode == Control::Type::BUY_CARGO)
             {
-                putHeader(renderer, "Cargo Prices", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Cargo Prices", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
                 if (harbour->Cargo.size() == 0)
                 {
-                    putText(renderer, "You cannot buy nor sell any goods here", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                    putText(renderer, "You cannot buy nor sell any goods here", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
             }
             else
@@ -19587,14 +18225,14 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
             if (current >= 0 && current < controls.size())
             {
-                renderCaption(renderer, font_caption, controls[current]);
+                renderCaption(renderer, controls[current]);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -20028,49 +18666,11 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
         }
     }
 
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    if (font_caption)
-    {
-        TTF_CloseFont(font_caption);
-
-        font_caption = NULL;
-    }
-
-    TTF_Quit();
-
     return false;
 }
 
 bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, Story::Base *harbour)
 {
-    TTF_Init();
-
-    auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-    auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-    auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-    TTF_SetFontKerning(font_dark11, 0);
-
     if (window && renderer)
     {
         auto flash_message = false;
@@ -20126,13 +18726,13 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
         {
             fillWindow(renderer, intWH);
 
-            putHeader(renderer, "Location", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
-            putText(renderer, Location::Description[party.Location], font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
+            putHeader(renderer, "Location", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+            putText(renderer, Location::Description[party.Location], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
 
-            putHeader(renderer, "Money", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
-            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
+            putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+            putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
 
-            putHeader(renderer, "Party", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+            putHeader(renderer, "Party", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (Engine::COUNT(party) > 0)
             {
@@ -20161,7 +18761,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                     count += 1;
                 }
 
-                putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, party_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
             if (current >= 0 && current < controls.size())
@@ -20225,18 +18825,18 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
             if (current_mode == Control::Type::BUY_SELL_SHIP)
             {
-                putHeader(renderer, "Ship Prices", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Ship Prices", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
                 if (harbour->Ships.size() == 0)
                 {
-                    putText(renderer, "\nYou cannot buy nor sell ships here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                    putText(renderer, "\nYou cannot buy nor sell ships here.", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
             }
             else if (current_mode == Control::Type::REPAIR_SHIP)
             {
-                putHeader(renderer, "Repair Costs", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Repair Costs", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
@@ -20253,22 +18853,22 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
                         repair_string = "\nYou can repair any ship you have here. It costs " + std::to_string(harbour->ShipRepairPrice) + " silver coins to restore each Health point. You can restore your ship up to its starting Health value.";
                     }
 
-                    putText(renderer, repair_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                    putText(renderer, repair_string.c_str(), Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
                 else
                 {
-                    putText(renderer, "\nShip repair services are not available here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                    putText(renderer, "\nShip repair services are not available here.", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
             }
             else if (current_mode == Control::Type::BUY_SELL_CARGO)
             {
-                putHeader(renderer, "Cargo Prices", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, "Cargo Prices", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 fillRect(renderer, textwidth, (text_bounds - infoh), textx, (texty + infoh), intBE);
 
                 if (harbour->Cargo.size() == 0)
                 {
-                    putText(renderer, "\nYou cannot buy nor sell cargo here.", font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
+                    putText(renderer, "\nYou cannot buy nor sell cargo here.", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, textwidth, text_bounds - infoh, textx, texty + infoh);
                 }
             }
             else
@@ -20295,7 +18895,7 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -20503,29 +19103,6 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
         }
     }
 
-    if (font_mason)
-    {
-        TTF_CloseFont(font_mason);
-
-        font_mason = NULL;
-    }
-
-    if (font_dark11)
-    {
-        TTF_CloseFont(font_dark11);
-
-        font_dark11 = NULL;
-    }
-
-    if (font_garamond)
-    {
-        TTF_CloseFont(font_garamond);
-
-        font_garamond = NULL;
-    }
-
-    TTF_Quit();
-
     return false;
 }
 
@@ -20634,15 +19211,8 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
 
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Morale Check");
 
-        TTF_Init();
-
-        auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-
-        auto font_size = 28;
-
         const char *choices_morale[1] = {"Check Morale"};
+
         const char *choices_end[1] = {"Done"};
 
         SDL_Surface *dice[6];
@@ -20691,7 +19261,7 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
         {
             fillWindow(renderer, intWH);
 
-            putHeader(renderer, mass_combat.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + infoh + boxh + box_space);
+            putHeader(renderer, mass_combat.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + infoh + boxh + box_space);
 
             fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -20759,18 +19329,18 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
                 }
             }
 
-            putHeader(renderer, unit.Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+            putHeader(renderer, unit.Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
             std::string unit_string = "Strength: " + std::to_string(unit.Strength);
             unit_string += "\nMorale: " + std::to_string(unit.Morale);
 
-            putText(renderer, unit_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+            putText(renderer, unit_string.c_str(), Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
             if (stage == Engine::MassCombat::MORALE)
             {
                 std::string morale_string = "Morale Check: " + std::to_string(morale_score);
 
-                putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                putHeader(renderer, morale_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
             }
 
             if (stage == Engine::MassCombat::START)
@@ -20786,7 +19356,7 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -20794,7 +19364,7 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
                 }
             }
 
-            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, 28, TTF_STYLE_NORMAL);
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -20828,22 +19398,6 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
                 }
             }
         }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        TTF_Quit();
 
         for (auto i = 0; i < 6; i++)
         {
@@ -20893,14 +19447,6 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
         auto stage = Engine::MassCombat::START;
 
         SDL_SetWindowTitle(window, "Legendary Kingdoms: Resolve Mass Combat");
-
-        TTF_Init();
-
-        auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-
-        auto font_size = 28;
 
         const char *choices_combat[1] = {"Resolve Combat"};
         const char *choices_morale[1] = {"Check Morale"};
@@ -20976,7 +19522,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
         {
             fillWindow(renderer, intWH);
 
-            putHeader(renderer, mass_combat.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + infoh + boxh + box_space);
+            putHeader(renderer, mass_combat.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + infoh + boxh + box_space);
 
             fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -21229,12 +19775,12 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             {
                 std::string army_string = "";
 
-                putHeader(renderer, party.Army[party_unit].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Army[party_unit].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 army_string = "Strength: " + std::to_string(party.Army[party_unit].Strength);
                 army_string += "\nMorale: " + std::to_string(party.Army[party_unit].Morale);
 
-                putText(renderer, army_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
+                putText(renderer, army_string.c_str(), Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                 if (party_combat_score > 0)
                 {
@@ -21242,7 +19788,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     {
                         std::string combat_string = "Combat Result: " + std::to_string(party_combat_score);
 
-                        putHeader(renderer, combat_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                        putHeader(renderer, combat_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                     }
                     else if (stage == Engine::MassCombat::MORALE)
                     {
@@ -21250,7 +19796,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                         {
                             std::string morale_string = "Morale Check: " + std::to_string(morale_score);
 
-                            putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                            putHeader(renderer, morale_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                         }
                     }
                 }
@@ -21266,7 +19812,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             {
                 std::string enemy_string = "";
 
-                putHeader(renderer, enemyArmy[enemy_unit].Name.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                putHeader(renderer, enemyArmy[enemy_unit].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
 
                 auto score = enemyArmy[enemy_unit].Strength;
 
@@ -21281,7 +19827,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                 enemy_string = "Strength: " + std::to_string(score);
                 enemy_string += "\nMorale: " + std::to_string(enemyArmy[enemy_unit].Morale);
 
-                putText(renderer, enemy_string.c_str(), font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
+                putText(renderer, enemy_string.c_str(), Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
                 if (enemy_combat_score > 0)
                 {
@@ -21289,7 +19835,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                     {
                         std::string combat_string = "Combat Result: " + std::to_string(enemy_combat_score);
 
-                        putHeader(renderer, combat_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                        putHeader(renderer, combat_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                     }
                     else if (stage == Engine::MassCombat::MORALE)
                     {
@@ -21297,7 +19843,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                         {
                             std::string morale_string = "Morale Check: " + std::to_string(morale_score);
 
-                            putHeader(renderer, morale_string.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
+                            putHeader(renderer, morale_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty + infoh + 4 * boxh + 2 * box_space + infoh);
                         }
                     }
                 }
@@ -21335,7 +19881,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -21343,7 +19889,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                 }
             }
 
-            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, font_size, TTF_STYLE_NORMAL);
+            renderTextButtons(renderer, controls, FONT_DARK11, current, clrWH, intDB, intLB, 28, TTF_STYLE_NORMAL);
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
@@ -21379,22 +19925,6 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
                 }
             }
         }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        TTF_Quit();
 
         for (auto i = 0; i < 6; i++)
         {
@@ -21438,18 +19968,8 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
         };
 
         auto fg = Color::HEADER(party.Book);
-
-        TTF_Init();
-
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto boxw = (int)((fullwidth - 2 * box_space) / 3);
-
         auto combat_boxh = (int)((text_bounds - box_space - infoh) / 2);
-
         auto popupw = (int)(0.6 * SCREEN_WIDTH);
         auto popuph = (int)(0.6 * SCREEN_HEIGHT);
         auto popupx = (SCREEN_WIDTH - popupw) / 2;
@@ -21577,9 +20097,9 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 }
             }
 
-            putHeader(renderer, "Left Flank", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx, starty);
-            putHeader(renderer, "Center", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx + (boxw + box_space), starty);
-            putHeader(renderer, "Right Flank", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx + 2 * (boxw + box_space), starty);
+            putHeader(renderer, "Left Flank", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx, starty);
+            putHeader(renderer, "Center", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx + (boxw + box_space), starty);
+            putHeader(renderer, "Right Flank", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx + 2 * (boxw + box_space), starty);
 
             if (current_mode == Engine::MassCombatMode::NORMAL)
             {
@@ -21592,9 +20112,9 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 renderButtons(renderer, controls_battlefield, -1, intLB, border_space, border_pts);
             }
 
-            renderArmy(renderer, font_garamond, enemyArmy, boxw, combat_boxh, starty + infoh, clrBK, intBE);
+            renderArmy(renderer, Fonts::Garamond28, enemyArmy, boxw, combat_boxh, starty + infoh, clrBK, intBE);
 
-            renderArmy(renderer, font_garamond, party.Army, boxw, combat_boxh, starty + infoh + combat_boxh + box_space, clrBK, intBE);
+            renderArmy(renderer, Fonts::Garamond28, party.Army, boxw, combat_boxh, starty + infoh + combat_boxh + box_space, clrBK, intBE);
 
             if (current_mode == Engine::MassCombatMode::SPELL)
             {
@@ -21602,11 +20122,11 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
                 drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
 
-                putText(renderer, Spells::MassCombatDescriptions[enemy_spell], font_garamond, text_space, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popupy - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
+                putText(renderer, Spells::MassCombatDescriptions[enemy_spell], Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popupy - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
 
                 std::string spell_string = "Your enemy has cast " + std::string(Spells::MassCombatNames[enemy_spell]);
 
-                putHeader(renderer, spell_string.c_str(), font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+                putHeader(renderer, spell_string.c_str(), Fonts::Dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
 
                 renderButtons(renderer, controls_yes, current, intLB, border_space, border_pts);
 
@@ -21621,7 +20141,7 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, -1, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, messageh, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, -1, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, messageh, -1, -1);
                 }
                 else
                 {
@@ -21771,22 +20291,6 @@ Engine::Combat massCombatScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 }
             }
         }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        TTF_Quit();
     }
 
     if (Engine::ZONES(party.Army, enemyArmy) > 1)
@@ -21836,24 +20340,13 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
 
         auto fg = Color::HEADER(party.Book);
 
-        TTF_Init();
-
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto font_size = 28;
-
         auto boxw = (int)((fullwidth - 2 * box_space) / 3);
-
         auto deployment_boxh = (int)((text_bounds - box_space - infoh) / 2);
-
         auto popupw = (int)(0.6 * SCREEN_WIDTH);
         auto popuph = (int)(0.6 * SCREEN_HEIGHT);
         auto popupx = (SCREEN_WIDTH - popupw) / 2;
         auto popupy = ((starty + text_bounds) - popuph) / 2;
-
         auto offset = 0;
         auto limit = (popuph - infoh - buttonh - button_space) / (88);
         auto last = offset + limit;
@@ -21965,9 +20458,9 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 }
             }
 
-            putHeader(renderer, "Left Flank", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx, starty);
-            putHeader(renderer, "Center", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx + (boxw + box_space), starty);
-            putHeader(renderer, "Right Flank", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx + 2 * (boxw + box_space), starty);
+            putHeader(renderer, "Left Flank", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx, starty);
+            putHeader(renderer, "Center", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx + (boxw + box_space), starty);
+            putHeader(renderer, "Right Flank", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxw, infoh, startx + 2 * (boxw + box_space), starty);
 
             if (current_mode == Engine::MassCombatMode::NORMAL)
             {
@@ -21980,9 +20473,9 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 renderButtons(renderer, controls_battlefield, -1, intLB, border_space, border_pts);
             }
 
-            renderArmy(renderer, font_garamond, enemyArmy, boxw, deployment_boxh, starty + infoh, clrBK, intBE);
+            renderArmy(renderer, Fonts::Garamond28, enemyArmy, boxw, deployment_boxh, starty + infoh, clrBK, intBE);
 
-            renderArmy(renderer, font_garamond, party.Army, boxw, deployment_boxh, starty + infoh + deployment_boxh + box_space, clrBK, intBE);
+            renderArmy(renderer, Fonts::Garamond28, party.Army, boxw, deployment_boxh, starty + infoh + deployment_boxh + box_space, clrBK, intBE);
 
             if (current_mode == Engine::MassCombatMode::DEPLOY)
             {
@@ -22009,7 +20502,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                     deploy_string += "battlefield";
                 }
 
-                putHeader(renderer, deploy_string.c_str(), font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+                putHeader(renderer, deploy_string.c_str(), Fonts::Dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
 
                 controls = controls_deploy;
 
@@ -22050,7 +20543,7 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, -1, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, messageh, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, -1, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, messageh, -1, -1);
                 }
                 else
                 {
@@ -22403,22 +20896,6 @@ Engine::Combat deploymentScreen(SDL_Window *window, SDL_Renderer *renderer, Loca
                 }
             }
         }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        TTF_Quit();
     }
 
     return combatResult;
@@ -22955,16 +21432,6 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
         }
 
         auto fg = Color::HEADER(party.Book);
-
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-        auto font_garamond2 = TTF_OpenFont(FONT_GARAMOND, 22);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-        auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto offset = 0;
         auto limit = (text_bounds - 5 * text_space - infoh) / (124);
         auto last = offset + limit;
@@ -22989,9 +21456,7 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
         auto scrollDown = false;
         auto hold = false;
         auto scrollSpeed = 1;
-
         auto selection = -1;
-
         auto done = false;
 
         std::string message = "";
@@ -23041,48 +21506,48 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                 {
                     if (controls_normal[current].Type == Control::Type::LOAD)
                     {
-                        putText(renderer, "Load Game", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putText(renderer, "Load Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else if (controls_normal[current].Type == Control::Type::SAVE)
                     {
-                        putText(renderer, "Overwrite Game", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putText(renderer, "Overwrite Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else if (controls_normal[current].Type == Control::Type::DELETE)
                     {
-                        putText(renderer, "Delete Game", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putText(renderer, "Delete Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else
                     {
-                        putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                 }
                 else
                 {
                     if (controls_normal[current].Type == Control::Type::SAVE)
                     {
-                        putText(renderer, "Save Game", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putText(renderer, "Save Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else
                     {
-                        putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                 }
             }
             else
             {
-                putText(renderer, "Selected", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
             }
 
             if (selection >= 0 && selection < entries.size())
             {
-                putText(renderer, miniPreview(entries[selection]).c_str(), font_garamond2, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, miniPreview(entries[selection]).c_str(), Fonts::Garamond22, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
             else
             {
-                putText(renderer, "(None)", font_garamond2, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                putText(renderer, "(None)", Fonts::Garamond22, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
             }
 
-            putHeader(renderer, "Games", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+            putHeader(renderer, "Games", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
             fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, intBE);
 
@@ -23113,9 +21578,9 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
                 drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
 
-                putHeader(renderer, "Are you sure?", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+                putHeader(renderer, "Are you sure?", Fonts::Dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
 
-                putText(renderer, "You are about to delete this game. All accumulated progress and resources will be lost forever.", font_garamond, -1, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popuph - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
+                putText(renderer, "You are about to delete this game. All accumulated progress and resources will be lost forever.", Fonts::Garamond28, -1, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popuph - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
 
                 controls = controls_confirm;
             }
@@ -23128,14 +21593,14 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
 
             if (current >= 0 && current < controls.size() && current_mode != Control::Type::CONFIRM)
             {
-                renderCaption(renderer, font_caption, controls[current]);
+                renderCaption(renderer, controls[current]);
             }
 
             if (flash_message)
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw * 2, infoh * 2, -1, -1);
                 }
                 else
                 {
@@ -23375,34 +21840,6 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
             }
         }
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_garamond2)
-        {
-            TTF_CloseFont(font_garamond2);
-
-            font_garamond2 = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_dark11 = NULL;
-        }
-
-        if (font_caption)
-        {
-            TTF_CloseFont(font_caption);
-
-            font_caption = NULL;
-        }
-
         if (splash)
         {
             SDL_FreeSurface(splash);
@@ -23466,16 +21903,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         auto fg = Color::HEADER(story->BookID);
 
-        TTF_Init();
-
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, 28);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_mason2 = TTF_OpenFont(FONT_MASON, 28);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-        auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-
-        TTF_SetFontKerning(font_dark11, 0);
-
         auto splash_h = splashw;
 
         if (splash)
@@ -23533,7 +21960,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             if (!splash || (splash && splash_h < (text_bounds - 2 * boxh - infoh)))
             {
-                putHeader(renderer, "Party", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Party", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (Engine::COUNT(party) > 0)
                 {
@@ -23564,7 +21991,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party_string.c_str(), Fonts::Mason24, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
 
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
                 }
@@ -23595,13 +22022,13 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                     title_string += std::string(3 - std::to_string(std::abs(storyID)).length(), '0') + std::to_string(std::abs(storyID));
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), Fonts::Mason28, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
                 else
                 {
                     title_string += "Not Implemented";
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), Fonts::Mason28, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
@@ -23613,7 +22040,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
                 if (Engine::IS_ACTIVE(party, party.CurrentCharacter) || story->Team != Team::Type::NONE)
                 {
-                    putHeader(renderer, "Current", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+                    putHeader(renderer, "Current", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
 
                     if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
                     {
@@ -23626,7 +22053,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                 }
                 else
                 {
-                    putHeader(renderer, "Teams", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+                    putHeader(renderer, "Teams", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
 
                     teams = Engine::GET_TEAMS(party);
                 }
@@ -23647,7 +22074,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         teams_string += Team::Descriptions[teams[i]];
                     }
 
-                    putText(renderer, teams_string.c_str(), font_mason, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
+                    putText(renderer, teams_string.c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
                 }
                 else
                 {
@@ -23658,11 +22085,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             }
             else if (!splash || (splash && splash_h < (text_bounds - 3 * boxh - 2 * infoh - box_space)))
             {
-                putHeader(renderer, "Money", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-                putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+                putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), Fonts::Mason24, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
             }
@@ -23677,7 +22104,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
             if (current >= 0 && current < controls.size() && !selected)
             {
-                renderCaption(renderer, font_caption, controls[current]);
+                renderCaption(renderer, controls[current]);
             }
 
             for (auto i = offset; i < last; i++)
@@ -23751,7 +22178,7 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
             {
                 if ((SDL_GetTicks() - start_ticks) < duration)
                 {
-                    putHeader(renderer, message.c_str(), font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
+                    putHeader(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw * 2, boxh * 2, -1, -1);
 
                     drawRect(renderer, splashw * 2, boxh * 2, (SCREEN_WIDTH - splashw * 2) / 2, (SCREEN_HEIGHT - boxh * 2) / 2, intBK);
                 }
@@ -25617,43 +24044,6 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
 
         Sound::Play(Sound::Type::BUTTON_CLICK);
 
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_caption)
-        {
-            TTF_CloseFont(font_caption);
-
-            font_caption = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_mason = NULL;
-        }
-
-        if (font_mason2)
-        {
-            TTF_CloseFont(font_mason2);
-
-            font_mason2 = NULL;
-        }
-
-        TTF_Quit();
-
         if (splashTexture)
         {
             SDL_DestroyTexture(splashTexture);
@@ -25835,9 +24225,9 @@ void storyTransition(SDL_Renderer *renderer, SDL_Surface *background, Party::Bas
     }
 }
 
-void renderCaption(SDL_Renderer *renderer, TTF_Font *font_caption, Button control)
+void renderCaption(SDL_Renderer *renderer, Button control)
 {
-    auto caption_size = TTF_FontHeight(font_caption);
+    auto caption_size = TTF_FontHeight(Fonts::Caption);
     auto captiony = buttony + buttonh + border_space;
     auto captionx = control.X - text_space;
 
@@ -25990,7 +24380,7 @@ void renderCaption(SDL_Renderer *renderer, TTF_Font *font_caption, Button contro
 
     if (caption.length() > 0)
     {
-        putText(renderer, caption.c_str(), font_caption, border_pts, clrDB, intWH, TTF_STYLE_NORMAL, textwidth, caption_size, captionx, captiony);
+        putText(renderer, caption.c_str(), Fonts::Caption, border_pts, clrDB, intWH, TTF_STYLE_NORMAL, textwidth, caption_size, captionx, captiony);
     }
 }
 
@@ -26021,16 +24411,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
             start_ticks = SDL_GetTicks();
         };
 
-        TTF_Init();
-
         auto font_size = 28;
-        auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-        auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
-        auto font_mason = TTF_OpenFont(FONT_MASON, 24);
-        auto font_mason2 = TTF_OpenFont(FONT_MASON, 28);
-        auto font_dark11 = TTF_OpenFont(FONT_DARK11, 32);
-
-        TTF_SetFontKerning(font_dark11, 0);
 
         SDL_Surface *background = NULL;
 
@@ -26311,18 +24692,18 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                     title_string += std::string(3 - std::to_string(std::abs(storyID)).length(), '0') + std::to_string(std::abs(storyID));
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), Fonts::Mason28, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
                 else
                 {
                     title_string += "Not Implemented";
 
-                    putText(renderer, title_string.c_str(), font_mason2, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                    putText(renderer, title_string.c_str(), Fonts::Mason28, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 }
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
-                putHeader(renderer, "Party", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
+                putHeader(renderer, "Party", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
@@ -26353,7 +24734,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         count += 1;
                     }
 
-                    putText(renderer, party_string.c_str(), font_mason, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
+                    putText(renderer, party_string.c_str(), Fonts::Mason24, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
                 }
                 else
                 {
@@ -26368,7 +24749,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                     if (Engine::IS_ACTIVE(party, party.CurrentCharacter) || story->Team != Team::Type::NONE)
                     {
-                        putHeader(renderer, "Current", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+                        putHeader(renderer, "Current", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
 
                         if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
                         {
@@ -26381,7 +24762,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                     }
                     else
                     {
-                        putHeader(renderer, "Teams", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
+                        putHeader(renderer, "Teams", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (4 * boxh + 2 * infoh + box_space));
 
                         teams = Engine::GET_TEAMS(party);
                     }
@@ -26402,7 +24783,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                             teams_string += Team::Descriptions[teams[i]];
                         }
 
-                        putText(renderer, teams_string.c_str(), font_mason, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
+                        putText(renderer, teams_string.c_str(), Fonts::Mason24, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 4 * boxh - infoh - box_space);
                     }
                     else
                     {
@@ -26413,11 +24794,11 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 }
                 else
                 {
-                    putHeader(renderer, "Money", font_dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
+                    putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space));
 
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-                    putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), font_mason, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
+                    putText(renderer, (std::to_string(party.Money) + " silver coins").c_str(), Fonts::Mason24, text_space, clrBK, BE_50, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - 3 * boxh - infoh - box_space);
 
                     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
                 }
@@ -26445,13 +24826,13 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 {
                     Sound::Play(Sound::Type::FAIL);
 
-                    putText(renderer, "This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                    putText(renderer, "This adventure is over.", Fonts::Garamond28, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
                 else if ((Engine::ALIVE(party) + Engine::OUTSIDE(party)) <= 0)
                 {
                     Sound::Play(Sound::Type::FAIL);
 
-                    putText(renderer, "Your party has died. This adventure is over.", font_garamond, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                    putText(renderer, "Your party has died. This adventure is over.", Fonts::Garamond28, text_space, clrWH, intRD, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                 }
 
                 if (splash && splash->w > listwidth && current_mode != Control::Type::PREVIEW && current_mode != Control::Type::CONFIRM)
@@ -26515,7 +24896,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 {
                     if ((SDL_GetTicks() - start_ticks) < duration)
                     {
-                        putText(renderer, message.c_str(), font_garamond, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
+                        putText(renderer, message.c_str(), Fonts::Garamond28, text_space, clrWH, flash_color, TTF_STYLE_NORMAL, splashw, boxh, startx, starty);
                     }
                     else
                     {
@@ -26554,7 +24935,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                         preview_string = "Battle Preview";
                     }
 
-                    putHeader(renderer, preview_string.c_str(), font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+                    putHeader(renderer, preview_string.c_str(), Fonts::Dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
 
                     if (popup_last - popup_offset > 0)
                     {
@@ -26574,9 +24955,9 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                     drawRect(renderer, popupw, popuph, popupx, popupy, intBK);
 
-                    putHeader(renderer, "Are you sure?", font_dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
+                    putHeader(renderer, "Are you sure?", Fonts::Dark11, text_space, clrWH, intDB, TTF_STYLE_NORMAL, popupw, infoh, popupx, popupy);
 
-                    putText(renderer, "You are about to end this session. Any unsaved progress will be lost.", font_garamond, -1, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popuph - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
+                    putText(renderer, "You are about to end this session. Any unsaved progress will be lost.", Fonts::Garamond28, -1, clrBK, intBE, TTF_STYLE_NORMAL, popupw - 2 * text_space, popuph - infoh - 2 * text_space, popupx + text_space, popupy + infoh + text_space);
 
                     controls = controls_confirm;
                 }
@@ -26592,7 +24973,7 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                 if (current >= 0 && current < controls.size() && current_mode == Control::Type::STORY && !selected)
                 {
-                    renderCaption(renderer, font_caption, controls[current]);
+                    renderCaption(renderer, controls[current]);
                 }
 
                 Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
@@ -27274,43 +25655,6 @@ bool processStory(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             background = NULL;
         }
-
-        if (font_garamond)
-        {
-            TTF_CloseFont(font_garamond);
-
-            font_garamond = NULL;
-        }
-
-        if (font_caption)
-        {
-            TTF_CloseFont(font_caption);
-
-            font_caption = NULL;
-        }
-
-        if (font_mason)
-        {
-            TTF_CloseFont(font_mason);
-
-            font_mason = NULL;
-        }
-
-        if (font_mason2)
-        {
-            TTF_CloseFont(font_mason2);
-
-            font_mason2 = NULL;
-        }
-
-        if (font_dark11)
-        {
-            TTF_CloseFont(font_dark11);
-
-            font_mason = NULL;
-        }
-
-        TTF_Quit();
     }
 
     return quit;
@@ -27339,8 +25683,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
         if (Topics::ALL.size() > 0)
         {
             auto font_size = 28;
-
-            TTF_Init();
 
             if (topic < 0)
             {
@@ -27374,12 +25716,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
             }
 
             SDL_Surface *text = NULL;
-
-            auto font_garamond = TTF_OpenFont(FONT_GARAMOND, font_size);
-
-            auto font_mason = TTF_OpenFont(FONT_MASON, 32);
-
-            auto font_caption = TTF_OpenFont(FONT_GARAMOND, 22);
 
             if (Topics::ALL[topic].Text.length() > 0 && Topics::ALL[topic].Image.length() > 0)
             {
@@ -27452,11 +25788,11 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Topics", font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                putHeader(renderer, "Topics", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
 
                 fillRect(renderer, splashw, text_bounds - infoh, startx, texty + infoh, BE_50);
 
-                putHeader(renderer, Topics::ALL[topic].Title.c_str(), font_mason, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, Topics::ALL[topic].Title.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, BE_50);
 
@@ -27490,7 +25826,7 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                 if (current >= 0 && current < controls.size())
                 {
-                    renderCaption(renderer, font_caption, controls[current]);
+                    renderCaption(renderer, controls[current]);
                 }
 
                 if (splash && splash->w > listwidth)
@@ -27904,29 +26240,6 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                 text = NULL;
             }
-
-            if (font_garamond)
-            {
-                TTF_CloseFont(font_garamond);
-
-                font_garamond = NULL;
-            }
-
-            if (font_caption)
-            {
-                TTF_CloseFont(font_caption);
-
-                font_caption = NULL;
-            }
-
-            if (font_mason)
-            {
-                TTF_CloseFont(font_mason);
-
-                font_mason = NULL;
-            }
-
-            TTF_Quit();
         }
     }
 
@@ -28251,6 +26564,10 @@ int main(int argc, char **argv)
 
     Sound::Initialize();
 
+    TTF_Init();
+
+    Fonts::Initialize();
+
     auto storyID = 1;
 
     auto bookID = Book::Type::BOOK1;
@@ -28290,7 +26607,11 @@ int main(int argc, char **argv)
 
     Sound::Free();
 
+    Fonts::Free();
+
     // Quit SDL Subsystems
+    TTF_Quit();
+
     Mix_Quit();
 
     IMG_Quit();
