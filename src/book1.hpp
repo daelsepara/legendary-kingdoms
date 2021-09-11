@@ -2935,7 +2935,7 @@ namespace Book1
 
             IsCity = true;
 
-            Text = "You hold out the <b>engagement ring</b>. \"The RING was not sold, it was stolen,\" you insist. \"I found this in the hideout of a group of nefarious thieves. She wants you to have it. She loved you, she was not using you.\"\n\nDulcimer takes the RING, swallowing hard.\n\n\"Is my lord really so poor a judge of character?\" you continue. \"The girl has a noble spirit and an honest temperament. It was not witchcraft but love that was the cause of her deception. Do not damage your family name further with this ridiculous feud with a common house. There is nothing to gain but dishonour.\"\n\nDulcimer's father agrees. \"Now that there is no financial loss to the family this matter should be closed quickly. You may take the girl's aunt back to her family. However, Akini is not to cross our path again.\"\n\nAkini's aunt is released, and you escort her back to her home.";
+            Text = "You hold out the <b>engagement ring</b>. \"The ring was not sold, it was stolen,\" you insist. \"I found this in the hideout of a group of nefarious thieves. She wants you to have it. She loved you, she was not using you.\"\n\nDulcimer takes the ring, swallowing hard.\n\n\"Is my lord really so poor a judge of character?\" you continue. \"The girl has a noble spirit and an honest temperament. It was not witchcraft but love that was the cause of her deception. Do not damage your family name further with this ridiculous feud with a common house. There is nothing to gain but dishonour.\"\n\nDulcimer's father agrees. \"Now that there is no financial loss to the family this matter should be closed quickly. You may take the girl's aunt back to her family. However, Akini is not to cross our path again.\"\n\nAkini's aunt is released, and you escort her back to her home.";
 
             Choices.clear();
 
@@ -4680,7 +4680,7 @@ namespace Book1
             Text = "The only item of interest in the tomb is the <b>silver skull</b>, which seems to have stopped chanting.\n\nThe sarcophagus itself is empty.";
 
             Choices.clear();
-            Choices.push_back(Choice::Base("Take the SILVER SKULL", {Book::Type::BOOK1, 46}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::SILVER_SKULL}, {Codes::A(47)}, {}));
+            Choices.push_back(Choice::Base("Take the <b>silver skull</b>", {Book::Type::BOOK1, 46}, Choice::Type::GET_EQUIPMENT_CODE, {Equipment::SILVER_SKULL}, {Codes::A(47)}, {}));
             Choices.push_back(Choice::Base("Leave it alone", {Book::Type::BOOK1, 46}));
 
             Controls = Story::Controls::STANDARD;

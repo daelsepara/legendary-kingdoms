@@ -79,10 +79,8 @@ bool partyDetails(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             putHeader(renderer, "Location", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
             putText(renderer, Location::Description[party.Location], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
-
             putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
             putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
-
             putHeader(renderer, "Party", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (Engine::ALIVE(party) > 0)
@@ -536,10 +534,8 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
             {
                 putHeader(renderer, "Location", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
                 putText(renderer, Location::Description[party.Location], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
-
                 putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
                 putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
-
                 putHeader(renderer, "Party", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
                 if (Engine::ALIVE(party) > 0)
@@ -591,14 +587,14 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
 
             if (current_mode != Control::Type::PARTY && character >= 0 && character < party.Members.size())
             {
-                putText(renderer, party.Members[character].Name.c_str(), Fonts::Mason24, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+                putHeader(renderer, party.Members[character].Name.c_str(), Fonts::Mason24, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
             }
 
             if (current_mode != Control::Type::PARTY && character >= 0 && character < party.Members.size())
             {
                 if ((party.Members[character].Status.size() > 0) || (party.Members[character].Team != Team::Type::NONE && !Engine::IS_CHARACTER(party.Members[character].Team)))
                 {
-                    putHeader(renderer, "Status", Fonts::Mason22, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                    putHeader(renderer, "Status", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string status_string = "";
 
@@ -638,7 +634,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
             {
                 if (current_mode == Control::Type::SPELLBOOK && party.Members[character].SpellCaster && party.Members[character].SpellBook.size() > 0)
                 {
-                    putHeader(renderer, "SPELLBOOK", Fonts::Mason22, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                    putHeader(renderer, "Spellbook", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string spellbook_string = "";
 
@@ -656,7 +652,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 }
                 else if (current_mode == Control::Type::EQUIPMENT && party.Members[character].Equipment.size() > 0)
                 {
-                    putHeader(renderer, "EQUIPMENT", Fonts::Mason22, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                    putHeader(renderer, "Equipment", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string equipment_string = "";
 
@@ -674,7 +670,7 @@ bool viewParty(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, T
                 }
                 else if (current_mode == Control::Type::FOLLOWERS && party.Members[character].Followers.size() > 0)
                 {
-                    putHeader(renderer, "FOLLOWERS", Fonts::Mason22, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                    putHeader(renderer, "Followers", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                     std::string followers_string = "";
 
@@ -1108,7 +1104,7 @@ bool recruitAdventurer(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
 
                 if (character >= 0 && character < characters.size() && adventurer)
                 {
-                    putText(renderer, characters[character].Name.c_str(), Fonts::Mason32, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+                    putHeader(renderer, characters[character].Name.c_str(), Fonts::Dark11, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
                 }
 
                 renderTextButtons(renderer, controls, FONT_MASON, current, clrWH, intDB, intLB, 22, TTF_STYLE_NORMAL);
@@ -1413,12 +1409,12 @@ bool selectParty(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, 
 
             if (character >= 0 && character < characters.size() && adventurer)
             {
-                putText(renderer, characters[character].Name.c_str(), Fonts::Mason32, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
+                putHeader(renderer, characters[character].Name.c_str(), Fonts::Dark11, -1, clrDB, intWH, TTF_STYLE_NORMAL, splashw, infoh, startx, adventurerh + infoh - text_space);
             }
 
             if (selection.size() > 0)
             {
-                putHeader(renderer, std::string("PARTY (Limit: " + std::to_string(party.Limit) + ")").c_str(), Fonts::Mason22, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
+                putHeader(renderer, std::string("PARTY (Limit: " + std::to_string(party.Limit) + ")").c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, starty + character_box + 10);
 
                 std::string party_string = "";
 
@@ -1970,7 +1966,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Armour save results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Armour save results", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -2059,7 +2055,7 @@ int armourSave(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Char
 
                 std::string defender_string = "";
 
-                putHeader(renderer, character.Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, character.Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
@@ -2472,7 +2468,7 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Attack Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Attack Results", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -2564,18 +2560,18 @@ int magicAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &p
                     }
                 }
 
-                putHeader(renderer, party.Members[combatant].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Members[combatant].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
                 std::string attacker_string = "Magic Fighting Score: " + std::to_string(fighting_score);
                 putText(renderer, attacker_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
-                putHeader(renderer, monsters[opponent].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                putHeader(renderer, monsters[opponent].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                 fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
                 std::string defender_string = "Defence: " + std::to_string(Defence) + "+\nHealth: " + std::to_string(monsters[opponent].Health);
                 putText(renderer, defender_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh);
 
                 std::string spell_string = "Spell: " + spell.Name;
-                putHeader(renderer, spell_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+                putHeader(renderer, spell_string.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                 if (stage == Engine::Attack::START)
                 {
@@ -2762,7 +2758,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                 {
                     fillWindow(renderer, intWH);
 
-                    putHeader(renderer, "Attack Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                    putHeader(renderer, "Attack Results", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                     fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -2878,7 +2874,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, party.Fleet[party.CurrentShip].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                        putHeader(renderer, party.Fleet[party.CurrentShip].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                         attack_score = party.Fleet[party.CurrentShip].Fighting;
 
@@ -2897,7 +2893,7 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
                     }
                     else
                     {
-                        putHeader(renderer, enemyFleet[opponent].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                        putHeader(renderer, enemyFleet[opponent].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                         attack_score = enemyFleet[opponent].Fighting;
 
@@ -2918,13 +2914,13 @@ int seaAttackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, enemyFleet[opponent].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, enemyFleet[opponent].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Defence: " + std::to_string(Difficulty) + "+";
                         defender_string += "\nHealth: " + std::to_string(enemyFleet[opponent].Health);
                     }
                     else
                     {
-                        putHeader(renderer, party.Fleet[party.CurrentShip].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, party.Fleet[party.CurrentShip].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Defence: " + std::to_string(Difficulty) + "+";
                         defender_string += "\nHealth: " + std::to_string(party.Fleet[party.CurrentShip].Health);
                     }
@@ -3268,7 +3264,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 {
                     fillWindow(renderer, intWH);
 
-                    putHeader(renderer, "Attack Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + boxh + box_space);
+                    putHeader(renderer, "Attack Results", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + infoh + boxh + box_space);
 
                     fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -3572,7 +3568,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, party.Members[combatant].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
+                        putHeader(renderer, party.Members[combatant].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
 
                         if (useEquipment)
                         {
@@ -3607,7 +3603,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                     else
                     {
-                        putHeader(renderer, monsters[opponent].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
+                        putHeader(renderer, monsters[opponent].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty);
 
                         attack_score = monsters[opponent].Attack;
 
@@ -3670,7 +3666,7 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
 
                     if (direction == 0)
                     {
-                        putHeader(renderer, monsters[opponent].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
+                        putHeader(renderer, monsters[opponent].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
                         defender_string = "Defence: " + std::to_string(Defence - focus) + "+";
                         defender_string += "\nHealth: " + std::to_string(monsters[opponent].Health);
                     }
@@ -3678,11 +3674,11 @@ int attackScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     {
                         if (combatant == -1)
                         {
-                            putHeader(renderer, "To be determined", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
+                            putHeader(renderer, "To be determined", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
                         }
                         else
                         {
-                            putHeader(renderer, party.Members[combatant].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
+                            putHeader(renderer, party.Members[combatant].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx + boxwidth + marginx, starty);
                             defender_string = "Health: " + std::to_string(Engine::HEALTH(party.Members[combatant]));
                         }
                     }
@@ -4091,7 +4087,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Results", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -4186,7 +4182,7 @@ bool retreatArmy(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                     }
                 }
 
-                putHeader(renderer, party.Army[unit].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Army[unit].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
                 std::string army_string = "Strength: " + std::to_string(party.Army[unit].Strength) + " Morale: " + std::to_string(party.Army[unit].Morale) + "\nPosition: " + Location::BattleFieldDescription[party.Army[unit].Position];
                 putText(renderer, army_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
@@ -4356,7 +4352,7 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Results", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -4447,13 +4443,13 @@ int gainAttributeScore(SDL_Window *window, SDL_Renderer *renderer, Book::Type bo
                     }
                 }
 
-                putHeader(renderer, character.Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, character.Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
                 std::string attacker_string = std::string(Attribute::Descriptions[attribute]) + " Score: " + std::to_string(Engine::RAW_SCORE(character, attribute, true));
                 putText(renderer, attacker_string.c_str(), Fonts::Garamond32, text_space, clrBK, intBE, TTF_STYLE_NORMAL, boxwidth, boxh, startx, starty + infoh);
 
                 std::string attribute_string = "Raise: " + std::string(Attribute::Descriptions[attribute]);
-                putHeader(renderer, attribute_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
+                putHeader(renderer, attribute_string.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, boxwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
                 if (stage == Engine::RaiseAttribute::START)
                 {
@@ -5661,7 +5657,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
             {
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Skill Check Results", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
+                putHeader(renderer, "Skill Check Results", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty + infoh + boxh + box_space);
 
                 fillRect(renderer, fullwidth, boxh * 3, startx, starty + infoh + boxh + box_space + infoh, intBE);
 
@@ -5765,7 +5761,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                 putHeader(renderer, test_string.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, fullwidth, infoh, startx, starty + 2 * infoh + 4 * boxh + 2 * box_space);
 
-                putHeader(renderer, party.Members[team[0]].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Members[team[0]].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 fillRect(renderer, boxwidth, boxh, startx, starty + infoh, intBE);
 
@@ -5827,7 +5823,7 @@ bool skillTestScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &pa
 
                 if (team.size() > 1)
                 {
-                    putHeader(renderer, party.Members[team[1]].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                    putHeader(renderer, party.Members[team[1]].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
 
                     fillRect(renderer, boxwidth, boxh, startx + boxwidth + marginx, starty + infoh, intBE);
 
@@ -10884,7 +10880,7 @@ bool shipScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
 
-        putHeader(renderer, "Money", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (5 * bigger_boxh / 2) - 2 * infoh - box_space);
+        putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (5 * bigger_boxh / 2) - 2 * infoh - box_space);
 
         putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh / 2, startx, starty + text_bounds - (5 * bigger_boxh / 2) - infoh - box_space);
 
@@ -11608,7 +11604,7 @@ bool shopScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
             fitImage(renderer, splash, startx, starty, splashw, text_bounds);
         }
 
-        putHeader(renderer, "Money", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (5 * bigger_boxh / 2) - 2 * infoh - box_space);
+        putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (5 * bigger_boxh / 2) - 2 * infoh - box_space);
 
         putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, bigger_boxh / 2, startx, starty + text_bounds - (5 * bigger_boxh / 2) - infoh - box_space);
 
@@ -12557,21 +12553,21 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
                         heal_string += ")";
 
-                        putText(renderer, heal_string.c_str(), Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putHeader(renderer, heal_string.c_str(), Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else
                     {
-                        putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                 }
                 else
                 {
-                    putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                    putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                 }
             }
             else
             {
-                putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
             }
 
             std::string party_string = "";
@@ -12591,12 +12587,12 @@ bool restScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
 
             putText(renderer, selection.size() > 0 ? party_string.c_str() : "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
 
-            putHeader(renderer, "Money", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+            putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
             putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + infoh);
 
             if (RestPrice >= 0)
             {
-                putHeader(renderer, "Healing Costs", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+                putHeader(renderer, "Healing Costs", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
                 putText(renderer, (RestPrice > 0 ? std::to_string(RestPrice) + std::string(" silver coins") : std::string("Free")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
             }
 
@@ -13661,21 +13657,21 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
                         repair_string += ")";
 
-                        putText(renderer, repair_string.c_str(), Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putHeader(renderer, repair_string.c_str(), Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else
                     {
-                        putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                 }
                 else
                 {
-                    putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                    putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                 }
             }
             else
             {
-                putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
             }
 
             std::string fleet_string = "";
@@ -13695,12 +13691,12 @@ bool repairScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
 
             putText(renderer, selection.size() > 0 ? fleet_string.c_str() : "(None)", Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 2 * boxh, startx, starty + text_bounds - 2 * boxh);
 
-            putHeader(renderer, "Money", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+            putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
             putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + infoh);
 
             if (harbour->ShipRepairPrice >= 0)
             {
-                putHeader(renderer, "Repair Costs", Fonts::Mason24, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
+                putHeader(renderer, "Repair Costs", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
 
                 putText(renderer, (harbour->ShipRepairPrice > 0 ? std::to_string(harbour->ShipRepairPrice) + std::string(" silver coins") : std::string("Free")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
             }
@@ -15572,7 +15568,7 @@ std::vector<int> selectArmyUnits(SDL_Window *window, SDL_Renderer *renderer, Boo
                 }
             }
 
-            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? army_string.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
             putHeader(renderer, "Select units", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -15831,7 +15827,7 @@ std::vector<int> selectShips(SDL_Window *window, SDL_Renderer *renderer, Book::T
                 }
             }
 
-            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? fleet_string.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
             putHeader(renderer, "Select ships", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -16110,7 +16106,7 @@ bool armyTransfer(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party
                 army_string = party.Army[selection].Name;
             }
 
-            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
 
             putText(renderer, (selection >= 0 && selection < party.Army.size()) ? army_string.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
@@ -16552,7 +16548,7 @@ bool armyScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
             }
 
-            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? army_string.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
             putHeader(renderer, "Select the units to add to your army", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -16800,7 +16796,7 @@ bool spellScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
                 }
             }
 
-            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? spell_string.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
             putHeader(renderer, "You can copy the following spells", Fonts::Garamond28, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
@@ -17129,7 +17125,7 @@ bool takeScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, 
                 }
             }
 
-            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? take.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
             fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
@@ -17410,7 +17406,7 @@ bool loseItems(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party, C
                 }
             }
 
-            putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
+            putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + infoh - 1));
             putText(renderer, selection.size() > 0 ? lose.c_str() : "(None)", Fonts::Garamond28, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, 3 * boxh, startx, starty + text_bounds - 3 * boxh);
 
             fillRect(renderer, textwidth, text_bounds, textx, texty, intBE);
@@ -17708,12 +17704,9 @@ bool deliveryScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &par
             fillWindow(renderer, intWH);
 
             putHeader(renderer, "Destination", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
-
             putText(renderer, Location::Description[party.Location], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
-
             putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
             putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
-
             putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (selection.size() > 0)
@@ -18068,12 +18061,9 @@ bool cargoScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &party,
             fillWindow(renderer, intWH);
 
             putHeader(renderer, "Harbour", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
-
             putText(renderer, Location::Description[party.Location], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
-
             putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
             putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
-
             putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (current_mode == Control::Type::SELL_CARGO)
@@ -18728,10 +18718,8 @@ bool harbourScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base &part
 
             putHeader(renderer, "Location", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
             putText(renderer, Location::Description[party.Location], Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + infoh);
-
             putHeader(renderer, "Money", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (3 * boxh + 2 * infoh + box_space - 1));
             putText(renderer, (std::to_string(party.Money) + std::string(" silver coins")).c_str(), Fonts::Mason24, text_space, clrBK, intBE, TTF_STYLE_NORMAL, splashw, boxh, startx, starty + text_bounds - (3 * boxh + infoh + box_space));
-
             putHeader(renderer, "Party", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh));
 
             if (Engine::COUNT(party) > 0)
@@ -19329,7 +19317,7 @@ bool moraleCheck(SDL_Window *window, SDL_Renderer *renderer, Book::Type book, Ar
                 }
             }
 
-            putHeader(renderer, unit.Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+            putHeader(renderer, unit.Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
             std::string unit_string = "Strength: " + std::to_string(unit.Strength);
             unit_string += "\nMorale: " + std::to_string(unit.Morale);
@@ -19775,7 +19763,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             {
                 std::string army_string = "";
 
-                putHeader(renderer, party.Army[party_unit].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
+                putHeader(renderer, party.Army[party_unit].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx, starty);
 
                 army_string = "Strength: " + std::to_string(party.Army[party_unit].Strength);
                 army_string += "\nMorale: " + std::to_string(party.Army[party_unit].Morale);
@@ -19812,7 +19800,7 @@ void resolveMassCombat(SDL_Window *window, SDL_Renderer *renderer, Location::Typ
             {
                 std::string enemy_string = "";
 
-                putHeader(renderer, enemyArmy[enemy_unit].Name.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
+                putHeader(renderer, enemyArmy[enemy_unit].Name.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, headerw, infoh, startx + boxwidth + marginx, starty);
 
                 auto score = enemyArmy[enemy_unit].Strength;
 
@@ -21506,36 +21494,36 @@ Control::Type gameScreen(SDL_Window *window, SDL_Renderer *renderer, Party::Base
                 {
                     if (controls_normal[current].Type == Control::Type::LOAD)
                     {
-                        putText(renderer, "Load Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putHeader(renderer, "Load Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else if (controls_normal[current].Type == Control::Type::SAVE)
                     {
-                        putText(renderer, "Overwrite Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putHeader(renderer, "Overwrite Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else if (controls_normal[current].Type == Control::Type::DELETE)
                     {
-                        putText(renderer, "Delete Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putHeader(renderer, "Delete Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else
                     {
-                        putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                 }
                 else
                 {
                     if (controls_normal[current].Type == Control::Type::SAVE)
                     {
-                        putText(renderer, "Save Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putHeader(renderer, "Save Game", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                     else
                     {
-                        putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                        putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
                     }
                 }
             }
             else
             {
-                putText(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
+                putHeader(renderer, "Selected", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty + text_bounds - (2 * boxh + infoh - 1));
             }
 
             if (selection >= 0 && selection < entries.size())
@@ -25788,11 +25776,11 @@ bool encyclopediaScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type b
 
                 fillWindow(renderer, intWH);
 
-                putHeader(renderer, "Topics", Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
+                putHeader(renderer, "Topics", Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, splashw, infoh, startx, starty);
 
                 fillRect(renderer, splashw, text_bounds - infoh, startx, texty + infoh, BE_50);
 
-                putHeader(renderer, Topics::ALL[topic].Title.c_str(), Fonts::Mason32, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
+                putHeader(renderer, Topics::ALL[topic].Title.c_str(), Fonts::Dark11, text_space, clrWH, fg, TTF_STYLE_NORMAL, textwidth, infoh, textx, texty);
 
                 fillRect(renderer, textwidth, text_bounds - infoh, textx, texty + infoh, BE_50);
 
