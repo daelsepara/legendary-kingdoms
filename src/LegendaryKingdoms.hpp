@@ -158,6 +158,11 @@ std::string monsterString(Monster::Base &monster);
 std::string miniPreview(std::string file_name);
 std::string previewGame(std::string file_name);
 std::string shipString(Ship::Base &ship, bool cargo);
+#if defined(_WIN32) || defined(__arm__) || defined(__APPLE__)
+std::string time_string(long long deserialised);
+#else
+std::string time_string(long deserialised);
+#endif
 
 // miscellaneous functions
 bool IsValidTransfer(Party::Base &party, Location::Type src, Location::Type dst);
@@ -982,8 +987,11 @@ std::string shipString(Ship::Base &ship, bool cargo)
     return ship_string;
 }
 
-#if defined(_WIN32) || defined(__arm__) || defined(__APPLE__)
+#if defined(_WIN32) || defined(__arm__) || defined(__APPLE__) || defined(i386)
 std::string time_string(long long deserialised)
+#else
+std::string time_string(long deserialised)
+#endif
 {
     auto epoch = std::chrono::time_point<std::chrono::system_clock>();
     auto since_epoch = std::chrono::milliseconds(deserialised);
@@ -1000,22 +1008,6 @@ std::string time_string(long long deserialised)
 
     return ss.str();
 }
-#else
-std::string time_string(long deserialised)
-{
-    auto epoch = std::chrono::time_point<std::chrono::high_resolution_clock>();
-    auto since_epoch = std::chrono::milliseconds(deserialised);
-    auto timestamp = epoch + since_epoch;
-
-    auto in_time_t = std::chrono::system_clock::to_time_t(timestamp);
-
-    std::stringstream ss;
-
-    ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d %X");
-
-    return ss.str();
-}
-#endif
 
 std::string getSavePath()
 {
