@@ -362,7 +362,7 @@ namespace Party
         int StoryID = 0;
 
         // Party Last Modified Date
-#if defined(_WIN32) || defined(__arm__) || defined(i386)
+#if defined(_WIN32) || defined(__arm__) || defined(__APPLE__) || defined(i386)
         long long Epoch = 0;
 #else
         long Epoch = 0;

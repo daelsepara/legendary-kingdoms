@@ -158,7 +158,7 @@ std::string monsterString(Monster::Base &monster);
 std::string miniPreview(std::string file_name);
 std::string previewGame(std::string file_name);
 std::string shipString(Ship::Base &ship, bool cargo);
-#if defined(_WIN32) || defined(__arm__) || defined(__APPLE__)
+#if defined(_WIN32) || defined(__arm__) || defined(__APPLE__) || defined(i386)
 std::string time_string(long long deserialised);
 #else
 std::string time_string(long deserialised);
@@ -1055,7 +1055,7 @@ std::string previewGame(std::string file_name)
         auto money = !data["money"].is_null() ? (int)data["money"] : 0;
         auto book = !data["book"].is_null() ? static_cast<Book::Type>((int)data["book"]) : Book::Type::NONE;
 
-#if defined(_WIN32) || defined(__arm__)
+#if defined(_WIN32) || defined(__arm__) || defined(__APPLE__) || defined(i386)
         auto epoch = !data["epoch"].is_null() ? (long long)(data["epoch"]) : 0;
 #else
         auto epoch = !data["epoch"].is_null() ? (long)(data["epoch"]) : 0;
@@ -1117,7 +1117,7 @@ std::string miniPreview(std::string file_name)
 
         auto location = !data["location"].is_null() ? static_cast<Location::Type>((int)data["location"]) : Location::Type::NONE;
 
-#if defined(_WIN32) || defined(__arm__)
+#if defined(_WIN32) || defined(__arm__) || defined(__APPLE__) || defined(i386)
         auto epoch = !data["epoch"].is_null() ? (long long)(data["epoch"]) : 0;
 #else
         auto epoch = !data["epoch"].is_null() ? (long)(data["epoch"]) : 0;
