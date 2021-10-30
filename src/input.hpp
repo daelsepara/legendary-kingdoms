@@ -53,20 +53,22 @@ namespace Input
     template <typename T>
     bool GetInput(SDL_Renderer *renderer, std::vector<T> choices, int &current, bool &selected, bool &scrollUp, bool &scrollDown, bool &hold, int delay)
     {
-        // Update the renderer
-        SDL_RenderPresent(renderer);
-
-        SDL_Event result;
+        auto start_ticks = SDL_GetTicks();
 
         auto quit = false;
 
-        selected = false;
-        scrollUp = false;
-        scrollDown = false;
-
         auto sensitivity = 32000;
 
-        auto start_ticks = SDL_GetTicks();
+        selected = false;
+        
+        scrollUp = false;
+        
+        scrollDown = false;
+
+        SDL_Event result;
+
+        // Update the renderer
+        SDL_RenderPresent(renderer);
 
         while (1)
         {
@@ -80,14 +82,14 @@ namespace Input
             }
             else if (result.type == SDL_WINDOWEVENT)
             {
-                if (result.window.event == SDL_WINDOWEVENT_RESTORED || result.window.event == SDL_WINDOWEVENT_MAXIMIZED || result.window.event == SDL_WINDOWEVENT_SHOWN || result.window.event == SDL_WINDOWEVENT_EXPOSED)
+                if (result.window.event == SDL_WINDOWEVENT_RESTORED || result.window.event == SDL_WINDOWEVENT_MAXIMIZED || result.window.event == SDL_WINDOWEVENT_SHOWN)
                 {
                     SDL_RenderPresent(renderer);
                 }
             }
             else if (result.type == SDL_CONTROLLERDEVICEADDED)
             {
-                InitializeGamePads();
+                Input::InitializeGamePads();
 
                 continue;
             }
@@ -96,6 +98,7 @@ namespace Input
                 if (result.key.keysym.sym == SDLK_PAGEUP)
                 {
                     scrollUp = true;
+                    
                     scrollDown = false;
 
                     current = -1;
@@ -105,6 +108,7 @@ namespace Input
                 else if (result.key.keysym.sym == SDLK_PAGEDOWN)
                 {
                     scrollDown = true;
+                    
                     scrollUp = false;
 
                     current = -1;
@@ -219,6 +223,7 @@ namespace Input
             else if (result.type == SDL_CONTROLLERBUTTONUP)
             {
                 selected = false;
+                
                 hold = false;
 
                 if (current < 0)
@@ -306,11 +311,13 @@ namespace Input
                 if (result.wheel.y < 0 || result.wheel.x < 0)
                 {
                     scrollUp = false;
+                    
                     scrollDown = true;
                 }
                 else
                 {
                     scrollUp = true;
+                    
                     scrollDown = false;
                 }
 
@@ -355,14 +362,14 @@ namespace Input
             }
             else if (result.type == SDL_WINDOWEVENT)
             {
-                if (result.window.event == SDL_WINDOWEVENT_RESTORED || result.window.event == SDL_WINDOWEVENT_MAXIMIZED || result.window.event == SDL_WINDOWEVENT_SHOWN || result.window.event == SDL_WINDOWEVENT_EXPOSED)
+                if (result.window.event == SDL_WINDOWEVENT_RESTORED || result.window.event == SDL_WINDOWEVENT_MAXIMIZED || result.window.event == SDL_WINDOWEVENT_SHOWN)
                 {
                     SDL_RenderPresent(renderer);
                 }
             }
             else if (result.type == SDL_CONTROLLERDEVICEADDED)
             {
-                InitializeGamePads();
+                Input::InitializeGamePads();
             }
             else if (result.type == SDL_KEYDOWN)
             {
