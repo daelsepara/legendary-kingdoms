@@ -1,3 +1,5 @@
+[![C/C++ CI](https://github.com/daelsepara/legendary-kingdoms/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/daelsepara/legendary-kingdoms/actions/workflows/c-cpp.yml)
+
 ![Legendary Kingdoms](/src/images/legendary-kingdoms-logo.png)
 # Legendary Kingdoms
 
