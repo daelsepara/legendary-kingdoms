@@ -1,7 +1,8 @@
 ![Legendary Kingdoms](/src/images/legendary-kingdoms-logo.png)
 # Legendary Kingdoms
 [![C/C++ CI](https://github.com/daelsepara/legendary-kingdoms/actions/workflows/LegendaryKingdoms.yml/badge.svg)](https://github.com/daelsepara/legendary-kingdoms/actions/workflows/LegendaryKingdoms.yml)
-
+ [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+ 
 An Implementation of Legendary Kingdoms Gamebooks in C++ and SDL. Only book 1 (The Valley of Bones) in the series is implemented as of now.
 
 # Planned Features
