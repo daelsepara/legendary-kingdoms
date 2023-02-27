@@ -22894,15 +22894,11 @@ Story::Base *processChoices(SDL_Window *window, SDL_Renderer *renderer, Party::B
                         {
                             auto target = -1;
 
-                            auto team = story->Choices[choice].Team;
-
                             party.CurrentCharacter = Engine::FIND_SOLO(party);
 
                             if (Engine::IS_ACTIVE(party, party.CurrentCharacter))
                             {
                                 target = party.CurrentCharacter;
-
-                                team = party.Members[party.CurrentCharacter].Team;
                             }
                             else if (Engine::COUNT(party, story->Choices[choice].Team) == 1)
                             {
@@ -26407,8 +26403,6 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
-            auto combat = Engine::Combat::NONE;
-
             if (selected && current >= 0 && current < controls.size())
             {
                 Sound::Play(Sound::Type::BUTTON_CLICK);
@@ -26423,7 +26417,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     std::vector<Allies::Type> allies = {};
 
-                    combat = combatScreen(window, renderer, Party, Team::Type::NONE, monsters, allies, true, -1, -1, false);
+                    combatScreen(window, renderer, Party, Team::Type::NONE, monsters, allies, true, -1, -1, false);
 
                     current = -1;
 
@@ -26515,7 +26509,7 @@ bool testScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
                     std::vector<Allies::Type> allies = {};
 
-                    combat = seaCombatScreen(window, renderer, Party, enemyFleet, true, 0, -1);
+                    seaCombatScreen(window, renderer, Party, enemyFleet, true, 0, -1);
 
                     current = -1;
 
