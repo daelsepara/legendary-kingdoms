@@ -3,7 +3,7 @@
 [![C/C++ CI](https://github.com/daelsepara/legendary-kingdoms/actions/workflows/LegendaryKingdoms.yml/badge.svg)](https://github.com/daelsepara/legendary-kingdoms/actions/workflows/LegendaryKingdoms.yml)
  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
  [![Release](https://img.shields.io/github/v/release/daelsepara/legendary-kingdoms.svg)](https://img.shields.io/github/v/release/daelsepara/legendary-kingdoms.svg)
- 
+
 An Implementation of Legendary Kingdoms Gamebooks in C++ and SDL. Only book 1 (The Valley of Bones) in the series is implemented as of now.
 
 # Planned Features
@@ -98,7 +98,7 @@ An Implementation of Legendary Kingdoms Gamebooks in C++ and SDL. Only book 1 (T
 - Recruitment
 - Combat/Skill checks focus
 
-# Copyright Information 
+# Copyright Information
 
 ```
 (c) 2019 Spidermind Games

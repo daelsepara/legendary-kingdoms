@@ -60,9 +60,9 @@ namespace Input
         auto sensitivity = 32000;
 
         selected = false;
-        
+
         scrollUp = false;
-        
+
         scrollDown = false;
 
         SDL_Event result;
@@ -98,7 +98,7 @@ namespace Input
                 if (result.key.keysym.sym == SDLK_PAGEUP)
                 {
                     scrollUp = true;
-                    
+
                     scrollDown = false;
 
                     current = -1;
@@ -108,7 +108,7 @@ namespace Input
                 else if (result.key.keysym.sym == SDLK_PAGEDOWN)
                 {
                     scrollDown = true;
-                    
+
                     scrollUp = false;
 
                     current = -1;
@@ -223,7 +223,7 @@ namespace Input
             else if (result.type == SDL_CONTROLLERBUTTONUP)
             {
                 selected = false;
-                
+
                 hold = false;
 
                 if (current < 0)
@@ -311,13 +311,13 @@ namespace Input
                 if (result.wheel.y < 0 || result.wheel.x < 0)
                 {
                     scrollUp = false;
-                    
+
                     scrollDown = true;
                 }
                 else
                 {
                     scrollUp = true;
-                    
+
                     scrollDown = false;
                 }
 

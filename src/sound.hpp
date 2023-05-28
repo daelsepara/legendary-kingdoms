@@ -24,7 +24,7 @@ namespace Sound
     Mix_Chunk *gSuccess = NULL;
     Mix_Chunk *gFail = NULL;
     Mix_Chunk *gError = NULL;
-    
+
     void Initialize()
     {
         gButtonClick = Mix_LoadWAV("sounds/button_click.wav");
