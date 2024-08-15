@@ -72,7 +72,7 @@ namespace Input
 
         while (1)
         {
-            SDL_PollEvent(&result);
+            SDL_WaitEvent(&result);
 
             if (result.type == SDL_QUIT)
             {
@@ -354,7 +354,7 @@ namespace Input
 
         while (1)
         {
-            SDL_PollEvent(&result);
+            SDL_WaitEvent(&result);
 
             if (result.type == SDL_QUIT)
             {
