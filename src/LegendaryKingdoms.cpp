@@ -26261,6 +26261,8 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
 
         auto done = false;
 
+        auto first = true;
+
         while (!done)
         {
             SDL_SetWindowTitle(window, "Legendary Kingdoms");
@@ -26280,6 +26282,27 @@ bool mainScreen(SDL_Window *window, SDL_Renderer *renderer, Book::Type bookID, i
             auto scrollUp = false;
             auto scrollDown = false;
             auto hold = false;
+
+            if (first)
+            {
+                SDL_Event user_event;
+
+                user_event.type = SDL_MOUSEMOTION;
+
+                user_event.motion.x = controls[0].X;
+
+                user_event.motion.y = controls[0].Y;
+
+                user_event.motion.xrel = controls[0].W / 2;
+
+                user_event.motion.yrel = controls[0].H / 2;
+
+                SDL_PushEvent(&user_event);
+
+                SDL_PumpEvents();
+
+                first = false;
+            }
 
             Input::GetInput(renderer, controls, current, selected, scrollUp, scrollDown, hold);
 
